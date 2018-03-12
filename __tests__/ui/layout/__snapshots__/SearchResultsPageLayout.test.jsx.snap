@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SearchResultsPageLayout component should render 1`] = `
+<div
+  className="search-results-page-layout"
+>
+  <b>
+    Search Results: 
+  </b>
+  <a
+    href="/"
+    onClick={[Function]}
+  >
+    Go back to Home page
+  </a>
+  <div
+    className="default-page-conent"
+  >
+    <h3>
+      Works
+    </h3>
+  </div>
+</div>
+`;

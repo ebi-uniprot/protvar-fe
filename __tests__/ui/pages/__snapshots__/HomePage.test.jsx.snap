@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HomePage component should render 1`] = `
+<div
+  className="default-page-layout"
+>
+  You are viewing 
+  <b>
+    Home Page
+  </b>
+  <br />
+  <div
+    className="default-page-conent"
+  >
+    <h3>
+      Welcome!
+    </h3>
+    <a
+      href="/sample-page"
+      onClick={[Function]}
+    >
+      Go to Sample Page
+    </a>
+  </div>
+</div>
+`;

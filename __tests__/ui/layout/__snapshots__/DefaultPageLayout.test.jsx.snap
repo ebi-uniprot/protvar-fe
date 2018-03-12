@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DefaultPageLayout component should render 1`] = `
+<div
+  className="default-page-layout"
+>
+  You are viewing 
+  <b>
+    Works
+  </b>
+  <br />
+  <div
+    className="default-page-conent"
+  >
+    <h3>
+      Works
+    </h3>
+  </div>
+</div>
+`;

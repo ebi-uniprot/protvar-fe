@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DefaultPageContent component should render 1`] = `
+<div
+  className="default-page-conent"
+>
+  Works
+</div>
+`;
