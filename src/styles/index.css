@@ -1,0 +1,19 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0; }
+
+textarea,
+input,
+button {
+  outline: none; }
+
+*:focus {
+  outline-color: transparent;
+  outline-style: none; }
+
+a, a:hover, a:visited, a:active {
+  text-decoration: none; }
+
+.masthead {
+  background-color: #FFB300; }

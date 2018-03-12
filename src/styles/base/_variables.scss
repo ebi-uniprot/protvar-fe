@@ -1,0 +1,36 @@
+
+
+
+// Font Settings
+// -------------
+$base-font-size:            1rem;
+$base-font-weight:          400;
+$heavy-font-weight:         700;
+$primary-font-family:       "Fira Sans", sans-serif;
+$secondary-font-family:     '';
+
+
+
+// Colours
+// -------
+$primary-colour:            #FFB300;
+$secondary-colour:          #EAE8E8;
+$neutral-colour:            #EAE8E8;
+$white-colour:              #FFFFFF;
+$black-colour:              #212121;
+
+
+
+// Spacing: Margins, Paddings, Gutters, etc.
+// -----------------------------------------
+$default-margin:            $base-font-size;
+$default-padding:           $base-font-size;
+$default-radius:            $base-font-size;
+
+
+
+// Buttons
+// -------
+$default-button-height:     2.5 * $base-font-size;
+$default-button-padding:    0 $default-padding;
+$default-button-radius:     $default-button-height / 2;
