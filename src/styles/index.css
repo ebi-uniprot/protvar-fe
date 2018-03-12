@@ -12,8 +12,11 @@ button {
   outline-color: transparent;
   outline-style: none; }
 
-a, a:hover, a:visited, a:active {
+a,
+a:hover,
+a:visited,
+a:active {
   text-decoration: none; }
 
 .masthead {
-  background-color: #FFB300; }
+  background-color: #ffb300; }

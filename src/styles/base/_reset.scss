@@ -10,6 +10,8 @@
   //font-family: $primary-font-family;
 }
 
+
+
 // Disable 'glow' effect on focus
 // ------------------------------
 textarea,
@@ -27,6 +29,9 @@ button {
 
 // Anchor Tag
 // ----------
-a, a:hover, a:visited, a:active {
+a,
+a:hover,
+a:visited,
+a:active {
   text-decoration: none;
 }
