@@ -21,5 +21,8 @@ a:active {
 .masthead {
   background-color: #ffb300; }
 
+#ebi-standard-search-field {
+  display: none; }
+
 .simple-search {
   margin-top: 3rem; }

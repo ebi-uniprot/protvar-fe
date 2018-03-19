@@ -44,6 +44,7 @@ const SearchResults = props => (
 
 class HomePageContent extends Component {
   state = {
+    searchTerm: null,
     searchResults: null
   }
 
@@ -55,26 +56,31 @@ class HomePageContent extends Component {
     axios.get(apiURI)
       .then(response => {
         this.setState({
+          searchTerm: term,
           searchResults: response.data
         });
       });
   }
 
   render() {
-    const { searchResults } = this.state;
+    const { searchTerm, searchResults } = this.state;
     const rows = (null !== searchResults && searchResults.proteins)
       ? searchResults.proteins
       : {};
+    const ebiSearch = document.querySelector('#ebi-standard-search-field');
+    const ebiSearchField = document.querySelector('#ebi-standard-search-field #query');
+
+    ebiSearchField.value = searchTerm;
+
+    if (null !== searchResults) {
+        ebiSearch.style.display = 'block';
+    }
 
     return(
       <Fragment>
-        <SimpleSearch
-          onSubmit={this.onSearchSubmit.bind(this)}
-        />
-
-        { null !== searchResults
-          ? <SearchResults rows={rows} />
-          : ''
+        { null === searchResults
+          ? <SimpleSearch onSubmit={this.onSearchSubmit.bind(this)} />
+          : <SearchResults rows={rows} />
         }
       </Fragment>
     )
