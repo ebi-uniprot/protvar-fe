@@ -15,8 +15,10 @@ class SimpleSearch extends Component {
     });
   }
 
-  handleSubmit() {
+  handleSubmit(e) {
     this.props.onSubmit(this.state.searchTerm);
+    e.preventDefault();
+    e.stopPropagation();
   }
 
   render() {
@@ -24,18 +26,21 @@ class SimpleSearch extends Component {
     const { buttonLabel } = this.props;
 
     return(
-      <div className="simple-search">
+      <form className="input-group simple-search">
         <input
-          type="text"
+          type="search"
+          className="input-group-field"
           placeholder="Search..."
           value={this.state.searchTerm}
           onChange={this.handleInputChange.bind(this)}
+          onSubmit={this.handleSubmit.bind(this)}
         />
-
-        <Button onClick={this.handleSubmit.bind(this)} >
-          {buttonLabel}
-        </Button>
-      </div>
+        <div className="input-group-button">
+          <Button type="submit" onClick={this.handleSubmit.bind(this)}>
+            {buttonLabel}
+          </Button>
+        </div>
+      </form>
     )
   }
 }
