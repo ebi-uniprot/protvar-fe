@@ -20,18 +20,21 @@ const SearchResults = props => (
           <th>Impact</th>
         </tr>
 
-        {props.rows.map(row => {
-          return (
-            <tr key={row.accession}>
-              <td>{row.accession}</td>
-              <td>{row.name}</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-          );
+        {Object.keys(props.rows)
+          .map(key => {
+            const row = props.rows[key];
+
+            return (
+              <tr key={row.accession}>
+                <td>{row.accession}</td>
+                <td>{row.name}</td>
+                <td>{row.geneName}</td>
+                <td>{row.transcriptId}</td>
+                <td>{row.position.start}</td>
+                <td>{row.position.end}</td>
+                <td></td>
+              </tr>
+            );
         })}
       </tbody>
     </table>
@@ -61,7 +64,7 @@ class HomePageContent extends Component {
     const { searchResults } = this.state;
     const rows = (null !== searchResults && searchResults.proteins)
       ? searchResults.proteins
-      : [];
+      : {};
 
     return(
       <Fragment>
