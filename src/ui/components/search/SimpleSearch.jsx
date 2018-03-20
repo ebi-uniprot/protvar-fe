@@ -23,17 +23,19 @@ class SimpleSearch extends Component {
 
   render() {
 
-    const { buttonLabel } = this.props;
+    const { searchTerm, buttonLabel } = this.props;
 
     return(
-      <form className="input-group simple-search">
+      <form
+        className="input-group simple-search"
+        onSubmit={this.handleSubmit.bind(this)}
+        >
         <input
           type="search"
           className="input-group-field"
           placeholder="Search..."
-          value={this.state.searchTerm}
+          value={searchTerm}
           onChange={this.handleInputChange.bind(this)}
-          onSubmit={this.handleSubmit.bind(this)}
         />
         <div className="input-group-button">
           <Button type="submit" onClick={this.handleSubmit.bind(this)}>

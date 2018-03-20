@@ -70,7 +70,9 @@ class HomePageContent extends Component {
     const ebiSearch = document.querySelector('#ebi-standard-search-field');
     const ebiSearchField = document.querySelector('#ebi-standard-search-field #query');
 
-    ebiSearchField.value = searchTerm;
+    if (ebiSearchField) {
+      ebiSearchField.value = searchTerm;
+    }
 
     if (null !== searchResults) {
         ebiSearch.style.display = 'block';
