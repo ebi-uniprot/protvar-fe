@@ -10,7 +10,8 @@ module.exports = {
   entry: __dirname + '/src/ui/index.jsx',
   output: {
     path: __dirname + '/build',
-    filename: 'app.[hash].bundle.js'
+    filename: 'app.[hash].bundle.js',
+    publicPath: '/'
   },
   resolve: {
     extensions: [".jsx", ".js"]
@@ -59,5 +60,6 @@ module.exports = {
     compress: true,
     host: 'localhost',
     port: 39093,
+    historyApiFallback: true
   }
 };

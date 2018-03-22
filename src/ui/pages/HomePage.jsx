@@ -1,98 +1,53 @@
 
-import React, { Component, Fragment } from 'react';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
+import React, { Fragment } from 'react';
 
 import DefaultPageLayout from '../layout/DefaultPageLayout';
 import SimpleSearch from '../components/search/SimpleSearch';
 
-const SearchResults = props => (
-  <div className="search-results">
-    <table>
-      <tbody>
-        <tr>
-          <th>Protein accession</th>
-          <th>Protein name</th>
-          <th>Gene name</th>
-          <th>Transcript Id</th>
-          <th>Start position</th>
-          <th>End position</th>
-          <th>Impact</th>
-        </tr>
 
-        {Object.keys(props.rows)
-          .map(key => {
-            const row = props.rows[key];
 
-            return (
-              <tr key={row.accession}>
-                <td>{row.accession}</td>
-                <td>{row.name}</td>
-                <td>{row.geneName}</td>
-                <td>{row.transcriptId}</td>
-                <td>{row.position.start}</td>
-                <td>{row.position.end}</td>
-                <td></td>
-              </tr>
-            );
-        })}
-      </tbody>
-    </table>
-    {props.results}
-  </div>
-);
+// class __HomePageContent extends Component {
 
-class HomePageContent extends Component {
-  state = {
-    searchTerm: null,
-    searchResults: null
-  }
+//   render() {
 
-  onSearchSubmit(term) {
+//     const { searchTerm, searchResults } = this.state;
+//     const rows = (null !== searchResults && searchResults.proteins)
+//       ? searchResults.proteins
+//       : {};
+//     const ebiSearch = document.querySelector('#ebi-standard-search-field');
+//     const ebiSearchField = document.querySelector('#ebi-standard-search-field #query');
 
-    const accession = term;
-    const apiURI = `http://localhost:3687/protein/${accession}`;
+//     if (ebiSearchField) {
+//       ebiSearchField.value = searchTerm;
+//     }
 
-    axios.get(apiURI)
-      .then(response => {
-        this.setState({
-          searchTerm: term,
-          searchResults: response.data
-        });
-      });
-  }
+//     if (null !== searchResults) {
+//       ebiSearch.style.display = 'block';
+//     }
 
-  render() {
-    const { searchTerm, searchResults } = this.state;
-    const rows = (null !== searchResults && searchResults.proteins)
-      ? searchResults.proteins
-      : {};
-    const ebiSearch = document.querySelector('#ebi-standard-search-field');
-    const ebiSearchField = document.querySelector('#ebi-standard-search-field #query');
+//     return(
+//       <Fragment>
+//         { null === searchResults
+//           ? <SimpleSearch onSubmit={this.props.handleSearch} />
+//           : <SearchResults rows={rows} />
+//         }
+//       </Fragment>
+//     )
+//   }
+// };
 
-    if (ebiSearchField) {
-      ebiSearchField.value = searchTerm;
-    }
-
-    if (null !== searchResults) {
-        ebiSearch.style.display = 'block';
-    }
-
-    return(
-      <Fragment>
-        { null === searchResults
-          ? <SimpleSearch onSubmit={this.onSearchSubmit.bind(this)} />
-          : <SearchResults rows={rows} />
-        }
-      </Fragment>
-    )
-  }
+const HomePageContent = props => {
+  return (
+    <Fragment>
+      <SimpleSearch onSubmit={props.handleSearch} />
+    </Fragment>
+  );
 };
 
-const HomePage = () => (
+const HomePage = props => (
   <DefaultPageLayout
     title="Home Page"
-    content={<HomePageContent />}
+    content={<HomePageContent {...props} />}
   />
 );
 
