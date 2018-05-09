@@ -2,7 +2,8 @@
 import React, { Fragment } from 'react';
 
 import DefaultPageLayout from '../layout/DefaultPageLayout';
-import SimpleSearch from '../components/search/SimpleSearch';
+// import SimpleSearch from '../components/search/SimpleSearch';
+import TextAreaSearch from '../components/search/TextAreaSearch';
 
 
 
@@ -39,7 +40,8 @@ import SimpleSearch from '../components/search/SimpleSearch';
 const HomePageContent = props => {
   return (
     <Fragment>
-      <SimpleSearch onSubmit={props.handleSearch} />
+      {/* <SimpleSearch onSubmit={props.handleSearch} /> */}
+      <TextAreaSearch onSubmit={props.handleSearch} />
     </Fragment>
   );
 };

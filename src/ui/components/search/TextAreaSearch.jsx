@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import Button from '../../elements/form/Button';
 
-class SimpleSearch extends Component {
+class TextAreaSearch extends Component {
   state = {
     searchTerm: '1 182712 182712 A/C 1'
   }
@@ -20,7 +20,7 @@ class SimpleSearch extends Component {
     e.preventDefault();
     e.stopPropagation();
 
-    console.log("SimpleSearch:", this.state.searchTerm);
+console.log("TextAreaSearch:", this.state.searchTerm);
     this.props.onSubmit(this.state.searchTerm);
   }
 
@@ -31,16 +31,13 @@ class SimpleSearch extends Component {
 
     return(
       <form
-        className="input-group simple-search"
+        className="input-group text-area-search"
         onSubmit={this.handleSubmit.bind(this)}
         >
-        <input
-          type="search"
-          className="input-group-field"
-          placeholder="Search..."
+        <textarea
           value={searchTerm}
           onChange={this.handleInputChange.bind(this)}
-        />
+        ></textarea>
         <div className="input-group-button">
           <Button type="submit" onClick={this.handleSubmit.bind(this)}>
             {buttonLabel}
@@ -51,14 +48,14 @@ class SimpleSearch extends Component {
   }
 }
 
-SimpleSearch.propTypes = {
+TextAreaSearch.propTypes = {
   buttonLabel: PropTypes.string,
   onSubmit: PropTypes.func,
 };
 
-SimpleSearch.defaultProps = {
+TextAreaSearch.defaultProps = {
   buttonLabel: 'Search',
   onSubmit: () => undefined,
 };
 
-export default SimpleSearch;
+export default TextAreaSearch;

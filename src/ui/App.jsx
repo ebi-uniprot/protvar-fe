@@ -9,6 +9,9 @@ import {
 } from 'react-router-dom';
 import axios from 'axios';
 
+// import VEPEnsemblDefaultInputParser from '../input-parser';
+import VEPVCFTextInputHandler from '../input-parser';
+
 import HomePage from './pages/HomePage';
 import SearchResultsPage from './pages/SearchResultsPage';
 import SamplePage from './pages/SamplePage';
@@ -23,18 +26,27 @@ class App extends Component {
     };
   }
 
-  handleSearch (term) {
-    const accession = term;
-    const apiURI = `http://localhost:3687/protein/${accession}`;
+  handleSearch (input) {
+    // const accession = term;
+    // const apiURI = `http://localhost:3687/protein/${accession}`;
 
-    axios.get(apiURI)
+    // axios.get(apiURI)
+    //   .then(response => {
+    //     this.setState({
+    //       searchTerm: term,
+    //       searchResults: response.data
+    //     });
+
+    //     this.props.history.push('search');
+    //   });
+
+    const apiURI = `http://localhost:3687/parser`;
+    // const data = VEPEnsemblDefaultInputParser(term);
+    const data = VEPVCFTextInputHandler(input);
+
+    axios.post(apiURI, {input: data})
       .then(response => {
-        this.setState({
-          searchTerm: term,
-          searchResults: response.data
-        });
-
-        this.props.history.push('search');
+console.log('response:', response.data);
       });
   }
 
