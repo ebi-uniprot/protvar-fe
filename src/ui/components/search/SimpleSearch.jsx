@@ -1,5 +1,5 @@
 
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import Button from '../../elements/form/Button';
@@ -30,23 +30,25 @@ class SimpleSearch extends Component {
     const { buttonLabel } = this.props;
 
     return(
-      <form
-        className="input-group simple-search"
-        onSubmit={this.handleSubmit.bind(this)}
-        >
-        <input
-          type="search"
-          className="input-group-field"
-          placeholder="Search..."
-          value={searchTerm}
-          onChange={this.handleInputChange.bind(this)}
-        />
-        <div className="input-group-button">
-          <Button type="submit" onClick={this.handleSubmit.bind(this)}>
-            {buttonLabel}
-          </Button>
-        </div>
-      </form>
+      <Fragment>
+        <form
+          className="input-group simple-search"
+          onSubmit={this.handleSubmit.bind(this)}
+          >
+          <input
+            type="search"
+            className="input-group-field"
+            placeholder="Search..."
+            value={searchTerm}
+            onChange={this.handleInputChange.bind(this)}
+          />
+          <div className="input-group-button">
+            <Button type="submit" onClick={this.handleSubmit.bind(this)}>
+              {buttonLabel}
+            </Button>
+          </div>
+        </form>
+      </Fragment>
     )
   }
 }

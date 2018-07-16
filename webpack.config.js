@@ -7,7 +7,7 @@ const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 module.exports = {
   context: __dirname,
   devtool: 'inline-sourcemap',
-  entry: __dirname + '/src/ui/index.jsx',
+  entry: ['babel-polyfill', __dirname + '/src/ui/index.jsx'],
   output: {
     path: __dirname + '/build',
     filename: 'app.[hash].bundle.js',
