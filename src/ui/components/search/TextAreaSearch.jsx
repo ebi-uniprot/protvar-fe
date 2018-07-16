@@ -9,7 +9,8 @@ import axios from 'axios';
 
 class TextAreaSearch extends Component {
   state = {
-    searchTerm: '1 182712 182712 A/C 1'
+    // searchTerm: '1 182712 182712 A/C 1'
+    searchTerm: '19 110747 . G GT . . .'
   }
 
   handleInputChange(e) {
@@ -174,7 +175,7 @@ console.log("TextAreaSearch:", this.state.searchTerm);
             </Button>
           </div>
         </form>
-        {pagination}
+        {/* pagination */}
       </Fragment>
     )
   }

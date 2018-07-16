@@ -27,26 +27,19 @@ class App extends Component {
   }
 
   handleSearch (input) {
-    // const accession = term;
-    // const apiURI = `http://localhost:3687/protein/${accession}`;
-
-    // axios.get(apiURI)
-    //   .then(response => {
-    //     this.setState({
-    //       searchTerm: term,
-    //       searchResults: response.data
-    //     });
-
-    //     this.props.history.push('search');
-    //   });
-
     const apiURI = `http://localhost:3687/parser`;
     // const data = VEPEnsemblDefaultInputParser(term);
     const data = VEPVCFTextInputHandler(input);
 
-    axios.post(apiURI, {input: data})
+    axios.post(apiURI, { input: data })
       .then(response => {
-console.log('response:', response.data);
+console.log(">>> search response:", response.data);
+        this.setState({
+          searchTerm: input,
+          searchResults: response.data
+        });
+
+        this.props.history.push('search');
       });
   }
 
