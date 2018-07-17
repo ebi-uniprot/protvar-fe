@@ -19,11 +19,11 @@ const ImpactSearchResults = props => (
             const row = props.rows[key];
 console.log("++ row:", row);
             return (
-              <tr key={`${row.proteinAccession}-${row.geneName}`}>
+              <tr key={`${row.proteinAccession}-${row.geneName}-${row.transcriptId}`}>
                 <td>{row.proteinAccession}</td>
                 <td>{row.proteinName}</td>
                 <td>{row.geneName}</td>
-                <td>{row.transcriptIds}</td>
+                <td>{row.transcriptId}</td>
                 <td>{`${row.chromosome}:${row.start}-${row.end}`}</td>
                 <td></td>
               </tr>
