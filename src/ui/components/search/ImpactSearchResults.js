@@ -11,7 +11,8 @@ const ImpactSearchResults = props => (
           <th>Gene name</th>
           <th>Transcript Id</th>
           <th>Position</th>
-          <th>Impact</th>
+          <th>Change</th>
+          <th>Transcript Impact</th>
         </tr>
 
         {Object.keys(props.rows)
@@ -25,7 +26,8 @@ console.log("++ row:", row);
                 <td>{row.geneName}</td>
                 <td>{row.transcriptId}</td>
                 <td>{`${row.chromosome}:${row.start}-${row.end}`}</td>
-                <td></td>
+                <td>{row.allele}</td>
+                <td>{row.impact}</td>
               </tr>
             );
         })}
