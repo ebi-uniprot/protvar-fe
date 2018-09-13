@@ -1,5 +1,17 @@
 
 /**
+ * Default Parser
+ * @param {string} input
+ */
+function defaultParser(input) {
+  return input;
+}
+
+module.exports.defaultParser = defaultParser;
+
+
+
+/**
  * Parser for VeP's "Ensembl Default" user input format
  * @param {string} input
  */
@@ -25,7 +37,7 @@ console.log("parser:", parsed);
   return parsed;
 }
 
-module.exports = VEPEnsemblDefaultInputParser;
+module.exports.VEPEnsemblDefaultInputParser = VEPEnsemblDefaultInputParser;
 
 
 
@@ -40,4 +52,4 @@ console.log("vcf lines:", vcfLines);
   return vcfLines;
 }
 
-module.exports = VEPVCFTextInputHandler;
+module.exports.VEPVCFTextInputHandler = VEPVCFTextInputHandler;

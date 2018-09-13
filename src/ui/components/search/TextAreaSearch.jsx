@@ -9,8 +9,16 @@ import axios from 'axios';
 
 class TextAreaSearch extends Component {
   state = {
+    // searchTerm: '19 110747 . G GT . . .'
     // searchTerm: '1 182712 182712 A/C 1'
-    searchTerm: '19 110747 . G GT . . .'
+    // searchTerm: 'X 139561916 139561916 A/G . . .'
+    // searchTerm: '1 230704270 230704270 G/A . . .'
+    // searchTerm: '20 58909365 58909365 C/A . . .'
+    searchTerm: `1 182712 . A C . . .
+3 319780 . GA G . . .
+19 110747 . G GT . . .
+1 160283 sv1 . <DUP> . . SVTYPE=DUP;END=471362 .
+1 1385015 sv2 . <DEL> . . SVTYPE=DEL;END=1387562 .`
   }
 
   handleInputChange(e) {

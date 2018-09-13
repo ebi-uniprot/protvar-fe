@@ -6,7 +6,9 @@ import Button from '../../elements/form/Button';
 
 class SimpleSearch extends Component {
   state = {
-    searchTerm: '1 182712 182712 A/C 1'
+    // searchTerm: '1 182712 182712 A/C 1'
+    searchTerm: 'X 139561916 139561916 A/G . . .'
+    // searchTerm: '1 230704270 230704270 G/A . . .'
   }
 
   handleInputChange(e) {

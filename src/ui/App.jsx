@@ -9,8 +9,7 @@ import {
 } from 'react-router-dom';
 import axios from 'axios';
 
-// import VEPEnsemblDefaultInputParser from '../input-parser';
-import VEPVCFTextInputHandler from '../input-parser';
+import { defaultParser } from '../input-parser';
 
 import HomePage from './pages/HomePage';
 import SearchResultsPage from './pages/SearchResultsPage';
@@ -28,15 +27,15 @@ class App extends Component {
 
   handleSearch (input) {
     const apiURI = `http://localhost:3687/parser`;
-    // const data = VEPEnsemblDefaultInputParser(term);
-    const data = VEPVCFTextInputHandler(input);
+    const data = defaultParser(input);
 
-    axios.post(apiURI, { input: data })
+    axios
+      .post(apiURI, { input: data })
       .then(response => {
 console.log(">>> search response:", response.data);
         this.setState({
           searchTerm: input,
-          searchResults: response.data
+          searchResults: response.data,
         });
 
         this.props.history.push('search');

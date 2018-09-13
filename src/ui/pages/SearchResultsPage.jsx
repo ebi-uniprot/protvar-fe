@@ -7,12 +7,6 @@ import ImpactSearchResults from '../components/search/ImpactSearchResults';
 const SearchResultsPageContent = props => {
 console.log("results:", props);
   const { searchResults } = props;
-  // return (
-  //   <ImpactSearchResults
-  //     rows={searchResults.proteins}
-  //   />
-  // );
-
   return (
     <ImpactSearchResults
       rows={searchResults}
