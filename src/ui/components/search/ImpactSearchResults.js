@@ -10,6 +10,7 @@ const ImpactSearchResults = props => {
         <tbody>
           <tr>
             <th rowSpan="2">#</th>
+            <th rowSpan="2">Gene Name</th>
             <th colSpan="4">Protein</th>
             <th colSpan="4">Genomic</th>
             <th rowSpan="2">Significance</th>
@@ -31,7 +32,7 @@ const ImpactSearchResults = props => {
               return (
                 <Fragment key={`${group.key}`}>
                   <tr>
-                    <td colSpan="10">Query: {group.input}</td>
+                    <td colSpan="11">Query: {group.input}</td>
                   </tr>
                   {group.rows.map((row, i) => {
                     const { protein, gene } = row;
@@ -43,6 +44,7 @@ const ImpactSearchResults = props => {
                     return (
                       <tr key={`${group.key}-${i}`}>
                         <td>{++counter}</td>
+                        <td>{gene.name}</td>
                         <td></td>
                         <td></td>
                         <td>{proteinPosition || '-'}</td>
