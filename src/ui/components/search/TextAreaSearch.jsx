@@ -11,9 +11,15 @@ class TextAreaSearch extends Component {
   state = {
     // searchTerm: '19 110747 . G GT . . .'
     // searchTerm: '1 182712 182712 A/C 1'
-    searchTerm: 'X 139561916 139561916 A/G . . .'
+    // searchTerm: 'X 139561916 139561916 A/G . . .'
     // searchTerm: '1 230704270 230704270 G/A . . .'
     // searchTerm: '20 58909365 58909365 C/A . . .'
+
+    searchTerm: `20 58909365 58909365 C/A . . .
+X 139561916 139561916 A/G . . .
+1 230704270 230704270 G/A . . .
+MT  8533  rs386829039  G  A `
+
 //     searchTerm: `1 182712 . A C . . .
 // 3 319780 . GA G . . .
 // 19 110747 . G GT . . .
@@ -174,6 +180,7 @@ console.log("TextAreaSearch:", this.state.searchTerm);
           onSubmit={this.handleSubmit.bind(this)}
           >
           <textarea
+            style={{height: '400px'}}
             value={searchTerm}
             onChange={this.handleInputChange.bind(this)}
           ></textarea>
