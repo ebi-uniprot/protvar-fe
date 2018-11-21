@@ -17,7 +17,10 @@ class TextAreaSearch extends Component {
 
     searchTerm: `20 58909365 58909365 C/A . . .
 X 139561916 139561916 A/G . . .
-1 230704270 230704270 G/A . . .`
+1 230704270 230704270 G/A . . .
+NC_000014.9:g.73198117C>G
+NC_000003.12:g.165830358T>C`
+
 // MT  8533  rs386829039  G  A `
 
 //     searchTerm: `1 182712 . A C . . .
