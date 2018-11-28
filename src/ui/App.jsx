@@ -26,7 +26,7 @@ class App extends Component {
   }
 
   handleSearch (input) {
-    const apiURI = `http://localhost:3687/parser`;
+    const apiURI = `${BASE_URL}/parser`;
     const data = defaultParser(input);
 
     axios

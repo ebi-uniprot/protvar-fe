@@ -4,7 +4,7 @@ const path = require('path');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 
-module.exports = {
+module.exports = (env, argv) => ({
   context: __dirname,
   devtool: 'inline-sourcemap',
   entry: ['babel-polyfill', __dirname + '/src/ui/index.jsx'],
@@ -53,7 +53,12 @@ module.exports = {
       ui: false
     }, {
       reload: false
-    })
+    }),
+    new webpack.DefinePlugin({
+      BASE_URL: (argv.mode === 'production')
+        ? JSON.stringify('http://wp-np2-ca:3687')
+        : JSON.stringify('http://localhost:3687')
+    }),
   ],
   devServer: {
     contentBase: path.join(__dirname, 'build'),
@@ -62,4 +67,4 @@ module.exports = {
     port: 39093,
     historyApiFallback: true
   }
-};
+});
