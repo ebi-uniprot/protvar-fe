@@ -61,7 +61,7 @@ class ImpactSearchResults extends Component {
                         : `${protein.start}-${protein.end}`;
                       const geneLocation = `${gene.chromosome}:${gene.start}-${gene.end}`;
                       const rowKey = `${group.key}-${i}`;
-                      
+
                       const ExpandedPositionalSignificance = props => {
                         const { data } = props;
                         return (
@@ -98,7 +98,6 @@ class ImpactSearchResults extends Component {
 
                       const ExpandedTranscriptSignificance = props => {
                         const { data } = props;
-                        console.log("TS Props:", data);
                         return (
                           <tr>
                             <td colSpan="11">
@@ -131,6 +130,53 @@ class ImpactSearchResults extends Component {
                         );
                       }
 
+                      const ExpandedClinicalSignificance = props => {
+                        const { data } = props;
+                        return (
+                          <tr>
+                            <td colSpan="11">
+                              <h4>Clinical Significances</h4>
+                              <span>{data.categories.join(', ')}</span>
+                              <br />
+                              Association:
+                              <ul>
+                                {data.association.map(a => {
+                                  const links = a.evidences.map(({ source }) => {
+                                    if ('pubmed' === source.name) {
+                                      return <a href={`${source.url}`} target="_blank">{source.name}</a>;
+                                    }
+
+                                    if ('ClinVar' === source.name) {
+                                      return <a href={`https://www.ncbi.nlm.nih.gov/clinvar/${source.id}/`} target="_target">{source.name}</a>;
+                                    }
+                                  });
+
+                                  return <li>{a.name}. {links}</li>;
+                                })}
+                              </ul>
+                            </td>
+                          </tr>
+                        );
+                      }
+
+                      const ExpandedStructuralSignificance = props => {
+                        const { data } = props;
+                        return (
+                          <tr>
+                            <td colSpan="11">
+                              <h4>Structural Significances</h4>
+                                <ul>
+                                  {data.map(s => {
+                                    return <li>
+                                        <a href={`https://www.ebi.ac.uk/pdbe/entry/pdb/${s.id}`} target="_blank">{s.id}</a>
+                                      </li>;
+                                  })}
+                                </ul>
+                            </td>
+                          </tr>
+                        );
+                      }
+
                       return (
                         <Fragment>
                           <tr key={rowKey}>
@@ -140,8 +186,8 @@ class ImpactSearchResults extends Component {
                             <td></td>
                             <td>{proteinPosition || '-'}</td>
                             <td>{protein.variant || '-'}</td>
-                            <td>{gene.ensgId.substring(4)}</td>
-                            <td>{gene.enstId.substring(4)}</td>
+                            <td>{gene.ensgId}</td>
+                            <td>{gene.enstId}</td>
                             <td>{geneLocation}</td>
                             <td>{gene.allele}</td>
                             <td>
@@ -149,8 +195,16 @@ class ImpactSearchResults extends Component {
                                 ? <Button onClick={() => this.toggleSignificanceRow(rowKey, 'positional')}>P</Button>
                                 : null }
 
+                              {('undefined' !== typeof significances.clinical)
+                                ? <Button onClick={() => this.toggleSignificanceRow(rowKey, 'clinical')}>C</Button>
+                                : null }
+
                               {('undefined' !== typeof significances.transcript)
                                 ? <Button onClick={() => this.toggleSignificanceRow(rowKey, 'transcript')}>T</Button>
+                                : null }
+
+                              {('undefined' !== typeof significances.structural)
+                                ? <Button onClick={() => this.toggleSignificanceRow(rowKey, 'structural')}>S</Button>
                                 : null }
                             </td>
                           </tr>
@@ -158,8 +212,16 @@ class ImpactSearchResults extends Component {
                             ? <ExpandedPositionalSignificance data={significances.positional} />
                             : null }
 
+                          {(`${rowKey}:clinical` === expandedRow)
+                            ? <ExpandedClinicalSignificance data={significances.clinical} />
+                            : null }
+
                           {(`${rowKey}:transcript` === expandedRow)
                             ? <ExpandedTranscriptSignificance data={significances.transcript} />
+                            : null }
+
+                          {(`${rowKey}:structural` === expandedRow)
+                            ? <ExpandedStructuralSignificance data={significances.structural} />
                             : null }
                         </Fragment>
                       )
