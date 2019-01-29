@@ -2,6 +2,10 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import Button from '../../elements/form/Button';
+import ExpandedPositionalSignificance from '../significances/ExpandedPositionalSignificance';
+import ExpandedTranscriptSignificance from '../significances/ExpandedTranscriptSignificance';
+import ExpandedClinicalSignificance from '../significances/ExpandedClinicalSignificance';
+import ExpandedStructuralSignificance from '../significances/ExpandedStructuralSignificance';
 
 class ImpactSearchResults extends Component {
   state = {
@@ -26,7 +30,7 @@ class ImpactSearchResults extends Component {
 
     return (
       <div className="search-results">
-        <table border="1" className="unstriped">
+        <table border="0" className="unstriped" cellpadding="0" cellspacing="0">
           <tbody>
             <tr>
               <th rowSpan="2">#</th>
@@ -52,7 +56,7 @@ class ImpactSearchResults extends Component {
                 return (
                   <Fragment key={`${group.key}`}>
                     <tr>
-                      <td colSpan="11">Query: {group.input}</td>
+                      <td colSpan="11" className="query-row">Query: {group.input}</td>
                     </tr>
                     {group.rows.map((row, i) => {
                       const { protein, gene, significances } = row;
@@ -61,121 +65,6 @@ class ImpactSearchResults extends Component {
                         : `${protein.start}-${protein.end}`;
                       const geneLocation = `${gene.chromosome}:${gene.start}-${gene.end}`;
                       const rowKey = `${group.key}-${i}`;
-
-                      const ExpandedPositionalSignificance = props => {
-                        const { data } = props;
-                        return (
-                          <tr>
-                            <td colSpan="11">
-                              <h4>Positional Significances</h4>
-                              <br />
-                              { data.features.map(feature => {
-                                return (
-                                  <div>
-                                    <b>Type:</b> <span>{feature.type}</span>
-                                    <br />
-                                    <b>Category:</b> <span>{feature.category}</span>
-                                    <br />
-                                    <b>Begin/End:</b> <span>{feature.begin} / {feature.end}</span>
-                                    <br />
-                                    <p><b>Description:</b> {feature.description}</p>
-                                    {(0 < feature.evidences.length)
-                                      ? (<div>
-                                          <b>Evidences:</b>
-                                            <ul>
-                                              {feature.evidences.map(e => <li>ID: {e.sourceId} [{e.sourceName}]</li>)}
-                                            </ul>
-                                          </div>)
-                                      : null}
-                                    <hr />
-                                  </div>
-                                );
-                              })}
-                            </td>
-                          </tr>
-                        );
-                      }
-
-                      const ExpandedTranscriptSignificance = props => {
-                        const { data } = props;
-                        return (
-                          <tr>
-                            <td colSpan="11">
-                              <h4>Transcript Significances</h4>
-                              <br />
-                              { data.map(ts => {
-                                console.log("TS:", ts);
-                                return (
-                                  <div>
-                                    <b>Impact:</b> <span>{ts.impact}</span>
-                                    <br />
-                                    <b>Codons:</b> <span>{ts.codons}</span>
-                                    <br />
-                                    <b>Polyphen Prediction / Score:</b>
-                                      &nbsp;<span>{ts.polyphenPrediction} / {ts.polyphenScore}</span>
-                                    <br />
-                                    <b>Sift Prediction / Score:</b>
-                                      &nbsp;<span>{ts.siftPrediction} / {ts.siftScore}</span>
-                                    <br />
-                                    <b>Consequence Terms:</b>
-                                      <ul>
-                                        {ts.consequenceTerms.map(t => <li>{t}</li>)}
-                                      </ul>
-                                    <hr />
-                                  </div>
-                                );
-                              })}
-                            </td>
-                          </tr>
-                        );
-                      }
-
-                      const ExpandedClinicalSignificance = props => {
-                        const { data } = props;
-                        return (
-                          <tr>
-                            <td colSpan="11">
-                              <h4>Clinical Significances</h4>
-                              <span>{data.categories.join(', ')}</span>
-                              <br />
-                              Association:
-                              <ul>
-                                {data.association.map(a => {
-                                  const links = a.evidences.map(({ source }) => {
-                                    if ('pubmed' === source.name) {
-                                      return <a href={`${source.url}`} target="_blank">{source.name}</a>;
-                                    }
-
-                                    if ('ClinVar' === source.name) {
-                                      return <a href={`https://www.ncbi.nlm.nih.gov/clinvar/${source.id}/`} target="_target">{source.name}</a>;
-                                    }
-                                  });
-
-                                  return <li>{a.name}. {links}</li>;
-                                })}
-                              </ul>
-                            </td>
-                          </tr>
-                        );
-                      }
-
-                      const ExpandedStructuralSignificance = props => {
-                        const { data } = props;
-                        return (
-                          <tr>
-                            <td colSpan="11">
-                              <h4>Structural Significances</h4>
-                                <ul>
-                                  {data.map(s => {
-                                    return <li>
-                                        <a href={`https://www.ebi.ac.uk/pdbe/entry/pdb/${s.id}`} target="_blank">{s.id}</a>
-                                      </li>;
-                                  })}
-                                </ul>
-                            </td>
-                          </tr>
-                        );
-                      }
 
                       return (
                         <Fragment>
@@ -192,19 +81,19 @@ class ImpactSearchResults extends Component {
                             <td>{gene.allele}</td>
                             <td>
                               {('undefined' !== typeof significances.positional)
-                                ? <Button onClick={() => this.toggleSignificanceRow(rowKey, 'positional')}>P</Button>
+                                ? <Button onClick={() => this.toggleSignificanceRow(rowKey, 'positional')} className="button--round button--positional">P</Button>
                                 : null }
 
                               {('undefined' !== typeof significances.clinical)
-                                ? <Button onClick={() => this.toggleSignificanceRow(rowKey, 'clinical')}>C</Button>
+                                ? <Button onClick={() => this.toggleSignificanceRow(rowKey, 'clinical')} className="button--round button--clinical">C</Button>
                                 : null }
 
                               {('undefined' !== typeof significances.transcript)
-                                ? <Button onClick={() => this.toggleSignificanceRow(rowKey, 'transcript')}>T</Button>
+                                ? <Button onClick={() => this.toggleSignificanceRow(rowKey, 'transcript')} className="button--round button--transcript">T</Button>
                                 : null }
 
                               {('undefined' !== typeof significances.structural)
-                                ? <Button onClick={() => this.toggleSignificanceRow(rowKey, 'structural')}>S</Button>
+                                ? <Button onClick={() => this.toggleSignificanceRow(rowKey, 'structural')} className="button--round button--structural">S</Button>
                                 : null }
                             </td>
                           </tr>

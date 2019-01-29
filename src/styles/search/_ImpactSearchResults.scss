@@ -1,0 +1,28 @@
+
+// Impact Search Results
+// ---------------------
+
+.search-results {
+  padding-top: 4rem;
+
+  table {
+    border: 1px solid #c7c0a9;
+
+    th {
+      background-color: #005F6B;
+      color: $white-colour;
+      // border: 0.5px solid lighten($black-colour, 20%);
+      text-transform: uppercase;
+      font-size: 1rem;
+    }
+
+    td {
+      border-bottom: 1px solid #dcd5c0;
+    }
+
+    td.query-row {
+      background-color: #F8ECC9;
+      
+    }
+  }
+}

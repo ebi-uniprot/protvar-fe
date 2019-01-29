@@ -5,8 +5,6 @@ import DefaultPageLayout from '../layout/DefaultPageLayout';
 // import SimpleSearch from '../components/search/SimpleSearch';
 import TextAreaSearch from '../components/search/TextAreaSearch';
 
-
-
 // class __HomePageContent extends Component {
 
 //   render() {

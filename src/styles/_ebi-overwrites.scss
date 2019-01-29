@@ -14,3 +14,21 @@
 #ebi-standard-search-field {
   display: none;
 }
+
+
+
+// Text Headings
+// -------------
+body h1,
+body h2,
+body h3 {
+  font-weight: 700;
+}
+
+
+
+// Keep EBI font for Header
+// ------------------------
+#masthead-black-bar {
+  font-family: Helvetica, Arial, FreeSans, "Liberation Sans", sans-serif;
+}

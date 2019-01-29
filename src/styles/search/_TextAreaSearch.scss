@@ -1,0 +1,64 @@
+
+
+
+// Text-area search field
+// ----------------------
+#main-textarea-search-field {
+  min-height: 30vh;
+  border-radius: 5px;
+  padding: .7rem 1rem;
+  line-height: 1.7rem;
+  font-family: "Courier New", monospace;
+  font-size: 1rem;
+  resize: none;
+}
+
+
+
+// Search button-group
+// -------------------
+#search-button-group {
+  margin: 2rem 0;
+  display: flex;
+
+  button {
+    width: 49%;
+
+    &:first-child {
+      margin-right: 2%;
+    }
+  }
+}
+
+
+
+// Search Area
+// -----------
+.text-area-search {
+  width: 60%;
+  float: left;
+
+  .input-examples {
+    border: 1px solid #ffb100;
+    margin: 1rem 0 2rem 0;
+    padding: .5rem 1rem;
+    border-radius: 5px;
+    background-color: #f7f5f1;
+
+    span {
+      width: 10%;
+      display: inline-block;
+    }
+
+    .variant-example {
+      width: 40%;
+      color: #4949c7;
+      padding-left: 1rem;
+    }
+  }
+
+  .assemly-ref-note {
+    font-weight: 700;
+    margin-right: 2rem;
+  }
+}

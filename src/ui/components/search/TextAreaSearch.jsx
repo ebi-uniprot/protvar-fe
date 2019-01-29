@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 import Button from '../../elements/form/Button';
 import Paginator  from '../paginator';
+import AboutSection from '../other/AboutSection';
 
 import axios from 'axios';
 
@@ -179,22 +180,48 @@ console.log("TextAreaSearch:", this.state.searchTerm);
 
     return(
       <Fragment>
-        <form
-          className="input-group text-area-search"
-          onSubmit={this.handleSubmit.bind(this)}
-          >
-          <textarea
-            style={{height: '400px'}}
-            value={searchTerm}
-            onChange={this.handleInputChange.bind(this)}
-          ></textarea>
-          <div className="input-group-button">
-            <Button type="submit" onClick={this.handleSubmit.bind(this)}>
-              {buttonLabel}
-            </Button>
+        <div className="text-area-search">
+          <h3>Variations</h3>
+
+          <div className="input-examples">
+            <b>Examples</b>
+            <br />
+            <span>Protein:</span>
+            <span className="variant-example">P19544:p. Cys355Arg</span>
+            <span>Gene:</span>
+            <span className="variant-example">3 165830358 165830358 T/C</span>
           </div>
-        </form>
-        {/* pagination */}
+
+          <form onSubmit={this.handleSubmit.bind(this)}>
+
+            <textarea
+              id="main-textarea-search-field"
+              value={searchTerm}
+              onChange={this.handleInputChange.bind(this)}
+            ></textarea>
+
+            <span className="assemly-ref-note">
+              Reference Genome Assembly: GRCh38 (hg38)
+            </span>
+
+            <a herf="http://www.ensembl.org/Homo_sapiens/Tools/AssemblyConverter?db=core" target="_blank">
+              Open Ensembl Assembly Remapping
+            </a>
+
+            <div id="search-button-group">
+              <Button className="button--primary">
+                File Upload
+              </Button>
+
+              <Button type="submit" onClick={this.handleSubmit.bind(this)}>
+                {buttonLabel}
+              </Button>
+            </div>
+
+          </form>
+        </div>
+
+        <AboutSection />
       </Fragment>
     )
   }

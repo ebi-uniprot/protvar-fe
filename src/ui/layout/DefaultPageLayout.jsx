@@ -42,7 +42,9 @@ const DefaultPageLayout = props => (
         <div className="masthead-inner row">
           { /* <!-- local-title --> */ }
           <div className="columns medium-7" id="local-title">
-            <h1><a href="../../" title="Back to [service-name] homepage">PepVEP</a></h1>
+            <h1>
+              <a href="../../" title="Back to PepVEP's homepage">PepVEP</a>
+            </h1>
           </div>
           { /* <!-- /local-title --> */ }
           <EBIStandardSearch />
@@ -58,7 +60,7 @@ const DefaultPageLayout = props => (
     </div>
 
     { /* <!-- Suggested layout containers --> */ }
-    <section id="main-content-area" className="row" role="main">
+    <section className="row" role="main">
       { /* <!-- Your menu structure should make a breadcrumb redundant, but if a breadcrump is needed uncomment the below --> */ }
       { /* <!-- <nav aria-label="You are here:" role="navigation">
         <ul className="breadcrumbs columns">
@@ -72,17 +74,11 @@ const DefaultPageLayout = props => (
 
       <div id="main-content-area" className="row">
         <div className="small-12 columns">
-
-
-  <div className="default-page-layout">
-    <DefaultPageContent>
-      {props.content}
-    </DefaultPageContent>
-  </div>
-
-
-
-
+          <div className="default-page-layout">
+            <DefaultPageContent>
+              {props.content}
+            </DefaultPageContent>
+          </div>
         </div>
       </div>
 

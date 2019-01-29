@@ -1,0 +1,70 @@
+
+// Button
+// ------
+.button {
+
+  margin-right: 0.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+
+  &--round {
+    border-radius: 50%;
+  }
+
+  &--primary {
+    color: $black-colour;
+    background-color: $primary-colour;
+  }
+
+  &--secondary {
+    color: $white-colour;
+    background-color: $secondary-colour;
+  }
+
+  &--positional {
+    background-color: #EB9F9F;
+    &:focus {
+      background-color: #EB9F9F;
+      border: 2px solid darken(#EB9F9F, 30%);
+    }
+    &:hover {
+      background-color: darken(#EB9F9F, 10%);
+    }
+  }
+  
+  &--clinical {
+    background-color: #EB6841;
+    &:focus {
+      background-color: #EB6841;
+      border: 2px solid darken(#EB6841, 30%);
+    }
+    &:hover {
+      background-color: darken(#EB6841, 10%);
+    }
+  }
+  
+  &--transcript {
+    background-color: #C7F464;
+    color: #333;
+    &:focus {
+      background-color: #C7F464;
+      border: 2px solid darken(#C7F464, 30%);
+      color: #333;
+    }
+    &:hover {
+      background-color: darken(#C7F464, 10%);
+      color: #333;
+    }
+  }
+
+  &--structural {
+    background-color: #00DFFC;
+    &:focus {
+      background-color: #00DFFC;
+      border: 2px solid darken(#00DFFC, 30%);
+    }
+    &:hover {
+      background-color: darken(#00DFFC, 10%);
+    }
+  }
+}
