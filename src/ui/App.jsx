@@ -13,7 +13,6 @@ import { defaultParser } from '../input-parser';
 
 import HomePage from './pages/HomePage';
 import SearchResultsPage from './pages/SearchResultsPage';
-import SamplePage from './pages/SamplePage';
 
 class App extends Component {
   constructor(props, context) {
@@ -52,9 +51,8 @@ console.log(">>> search response:", response.data);
 
     return (
       <Switch>
-        <Route path="/" exact render={props => <HomePage {...appProps} />} />
-        <Route path="/search" render={props => <SearchResultsPage {...appProps} />} />
-        <Route path="/sample-page" component={SamplePage} />
+        <Route path={`${BASE_URL}/`} exact render={props => <HomePage {...appProps} />} />
+        <Route path={`${BASE_URL}/search`} render={props => <SearchResultsPage {...appProps} />} />
       </Switch>
     );
   }
