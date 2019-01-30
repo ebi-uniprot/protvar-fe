@@ -53,7 +53,7 @@ console.log(">>> search response:", response.data);
       <Switch>
         <Route path={`${BASE_URL}/`} exact render={props => <HomePage {...appProps} />} />
         <Route path={`${BASE_URL}/search`} render={props => <SearchResultsPage {...appProps} />} />
-        <Route component={() => <h3>404</h3>} />
+        <Route component={({ location }) => <h3>404: Can't find {location.pathname}</h3>} />
       </Switch>
     );
   }
