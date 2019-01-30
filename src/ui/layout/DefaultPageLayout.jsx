@@ -42,7 +42,7 @@ const DefaultPageLayout = props => (
         <div className="masthead-inner row">
           { /* <!-- local-title --> */ }
           <div className="columns medium-7" id="local-title">
-            <a href="../../" title="Back to PepVEP's homepage">PepVEP</a>
+            <a href={`${BASE_URL}/`} title="Back to PepVEP's homepage">PepVEP</a>
           </div>
           { /* <!-- /local-title --> */ }
           <EBIStandardSearch />
