@@ -181,7 +181,7 @@ console.log("TextAreaSearch:", this.state.searchTerm);
     return(
       <Fragment>
         <div className="text-area-search">
-          <h3>Variations</h3>
+          <h3>Variant Input</h3>
 
           <div className="input-examples">
             <b>Examples</b>

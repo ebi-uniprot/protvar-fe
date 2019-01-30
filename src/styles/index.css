@@ -12,6 +12,10 @@ body h3 {
 #masthead-black-bar {
   font-family: Helvetica, Arial, FreeSans, "Liberation Sans", sans-serif; }
 
+#local-title {
+  font-size: 3rem;
+  font-style: italic; }
+
 html,
 body {
   font-family: "Open Sans Condensed", sans-serif; }
