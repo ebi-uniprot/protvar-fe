@@ -17,7 +17,7 @@ module.exports = merge(common, {
       filename: 'index.html'
     }),
     new webpack.DefinePlugin({
-      BASE_URL: JSON.stringify('http://wp-np2-ca:3687/uniprot/pepvep')
+      BASE_URL: JSON.stringify('/uniprot/pepvep')
     }),
   ],
 });
