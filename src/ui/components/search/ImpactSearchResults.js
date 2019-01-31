@@ -30,7 +30,7 @@ class ImpactSearchResults extends Component {
 
     return (
       <div className="search-results">
-        <table border="0" className="unstriped" cellpadding="0" cellspacing="0">
+        <table border="0" className="unstriped" cellPadding="0" cellSpacing="1">
           <tbody>
             <tr>
               <th rowSpan="2">#</th>
@@ -70,9 +70,9 @@ class ImpactSearchResults extends Component {
                         <Fragment>
                           <tr key={rowKey}>
                             <td>{++counter}</td>
-                            <td>{gene.name}</td>
+                            <td>{gene.symbol}</td>
                             <td>{protein.accession}</td>
-                            <td></td>
+                            <td>{protein.length}</td>
                             <td>{proteinPosition || '-'}</td>
                             <td>{protein.variant || '-'}</td>
                             <td>{gene.ensgId}</td>

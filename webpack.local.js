@@ -29,7 +29,8 @@ module.exports = merge(common, {
       reload: false
     }),
     new webpack.DefinePlugin({
-      BASE_URL: JSON.stringify('http://localhost:3687')
+      BASE_URL: JSON.stringify(''),
+      API_URL: JSON.stringify('http://localhost:3687')
     }),
   ],
   devServer: {
