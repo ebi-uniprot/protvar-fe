@@ -3,13 +3,12 @@
 // ---------------------
 
 .search-results {
-  padding-top: 4rem;
 
   table {
     border: 1px solid #c7c0a9;
 
     th {
-      background-color: #005F6B;
+      background-color: #057D9F;
       color: $white-colour;
       // border: 0.5px solid lighten($black-colour, 20%);
       text-transform: uppercase;
@@ -21,8 +20,83 @@
     }
 
     td.query-row {
-      background-color: #F8ECC9;
+      background-color: #ebf6fb;
       
     }
+  }
+
+  .significances-groups {
+    width: 100%;
+    display: flex;
+
+    .column {
+      min-height: 150px;
+    }
+  }
+
+  .significance-data-block {
+    border-bottom: 1px solid #ddd;
+    padding: 1rem 0;
+
+    &:last-child {
+      border: 0;
+    }
+  }
+
+  .positional-feature-type {
+    font-weight: 700;
+  }
+
+  .positional-feature-position {
+    width: 100%;
+
+    span {
+      width: 50%;
+      display: inline-block;
+    }
+  }
+
+  .publications-label {
+    display: block;
+    background-color: #ffb100;
+    padding: .1rem .5rem;
+    width: fit-content;
+    border-radius: 5px;
+    font-size: 1rem;
+    margin-top: .5rem;
+  }
+
+  .legends {
+    float: right;
+    margin-right: 4rem;
+    margin-bottom: 2rem;
+
+    &-item {
+      margin: .5rem 0;
+    }
+
+    &-icon {
+      width: 30px;
+      height: 30px;
+      text-align: center;
+      line-height: 30px;
+      font-weight: 900;
+      display: inline-block;
+      border-radius: 50%;
+      font-size: 1rem;
+      margin-right: .7rem;
+    }
+  }
+
+  .results-counter {
+    font-weight: 700;
+    width: 100%;
+    display: block;
+    margin-bottom: 4rem;
+    font-size: 2.5rem;
+  }
+
+  .results-and-counter {
+    float:left;
   }
 }

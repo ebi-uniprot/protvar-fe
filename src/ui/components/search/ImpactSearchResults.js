@@ -28,8 +28,34 @@ class ImpactSearchResults extends Component {
     const { rows } = this.props;
     let counter = 0;
 
+    const totalCounts = Object.values(rows)
+      .reduce((total, current) => {
+        return total + current.rows.length;
+      }, 0);
+
     return (
       <div className="search-results">
+        <div className="results-and-counter">
+          <span className="results-counter">
+            {totalCounts} Results Found
+          </span>
+          <Button>Download</Button>
+        </div>
+        <div className="legends">
+          <div className="legends-item">
+            <span className="legends-icon button--positional">P</span> Positional
+          </div>
+          <div className="legends-item">
+            <span className="legends-icon button--clinical">C</span> Clinical
+          </div>
+          <div className="legends-item">
+            <span className="legends-icon button--structural">S</span> Structural
+          </div>
+          <div className="legends-item">
+            <span className="legends-icon button--transcript">T</span> Transcript
+          </div>
+        </div>
+
         <table border="0" className="unstriped" cellPadding="0" cellSpacing="1">
           <tbody>
             <tr>
@@ -74,7 +100,9 @@ class ImpactSearchResults extends Component {
                             <td>{protein.accession}</td>
                             <td>{protein.length}</td>
                             <td>{proteinPosition || '-'}</td>
-                            <td>{protein.variant || '-'}</td>
+                            <td>
+                              <span title={protein.variant}>{protein.threeLetterCodes || '-'}</span>
+                            </td>
                             <td>{gene.ensgId}</td>
                             <td>{gene.enstId}</td>
                             <td>{geneLocation}</td>

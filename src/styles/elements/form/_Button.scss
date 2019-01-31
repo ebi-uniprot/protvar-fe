@@ -22,6 +22,7 @@
   }
 
   &--positional {
+    color: $white-colour;
     background-color: #EB9F9F;
     &:focus {
       background-color: #EB9F9F;
@@ -33,6 +34,7 @@
   }
   
   &--clinical {
+    color: $white-colour;
     background-color: #EB6841;
     &:focus {
       background-color: #EB6841;
@@ -44,6 +46,7 @@
   }
   
   &--transcript {
+    color: $black-colour;
     background-color: #C7F464;
     color: #333;
     &:focus {
@@ -58,6 +61,7 @@
   }
 
   &--structural {
+    color: $white-colour;
     background-color: #00DFFC;
     &:focus {
       background-color: #00DFFC;

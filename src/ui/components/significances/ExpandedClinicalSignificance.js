@@ -7,6 +7,20 @@ const ExpandedClinicalSignificance = props => {
     <tr>
       <td colSpan="11">
         <h4>Clinical Significances</h4>
+
+        <div className="significances-groups">
+          <div className="column">
+            <b>Disease Summary</b>
+            
+          </div>
+          <div className="column">
+            <b>Drugs & Therapies</b>
+          </div>
+          <div className="column">
+            <b>Tissue and Subcellular Specificity</b>
+          </div>
+        </div>
+
         <span>{data.categories.join(', ')}</span>
         <br />
         Association:
