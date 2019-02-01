@@ -43,16 +43,16 @@ class ImpactSearchResults extends Component {
         </div>
         <div className="legends">
           <div className="legends-item">
-            <span className="legends-icon button--positional">P</span> Positional
+            <span className="legends-icon button--positional">P</span> Positional Significances
           </div>
           <div className="legends-item">
-            <span className="legends-icon button--clinical">C</span> Clinical
+            <span className="legends-icon button--clinical">C</span> Clinical Significances
           </div>
           <div className="legends-item">
-            <span className="legends-icon button--structural">S</span> Structural
+            <span className="legends-icon button--structural">S</span> Structural Significances
           </div>
           <div className="legends-item">
-            <span className="legends-icon button--transcript">T</span> Transcript
+            <span className="legends-icon button--transcript">T</span> Transcript Significances
           </div>
         </div>
 
@@ -91,6 +91,17 @@ class ImpactSearchResults extends Component {
                         : `${protein.start}-${protein.end}`;
                       const geneLocation = `${gene.chromosome}:${gene.start}-${gene.end}`;
                       const rowKey = `${group.key}-${i}`;
+
+                      significances.transcript
+                        .forEach(t => {
+                          t.hgvsg = gene.hgvsg;
+                          t.hgvsp = gene.hgvsp;
+                          t.canonical = protein.canonical;
+                          t.codons = gene.codons;
+                          t.aminoAcids = protein.variant;
+                          t.start = protein.start;
+                          t.end = protein.end;
+                        });
 
                       return (
                         <Fragment>

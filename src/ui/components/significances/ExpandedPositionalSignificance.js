@@ -24,7 +24,9 @@ const ExpandedPositionalSignificance = props => {
 
                   <div className="positional-feature-position">
                     <span>Start: {feature.begin}</span>
-                    <span>End: {feature.end}</span>
+                    {(feature.begin !== feature.end)
+                      ? <span>End: {feature.end}</span>
+                      : null}
                   </div>
 
                   {(0 < feature.evidences.length)
@@ -105,7 +107,9 @@ const ExpandedPositionalSignificance = props => {
 
                   <div className="positional-feature-position">
                     <span>Start: {feature.begin}</span>
-                    <span>End: {feature.end}</span>
+                    {(feature.begin !== feature.end)
+                      ? <span>End: {feature.end}</span>
+                      : null}
                   </div>
 
                   {(0 < feature.evidences.length)
@@ -132,7 +136,9 @@ const ExpandedPositionalSignificance = props => {
 
                   <div className="positional-feature-position">
                     <span>Start: {feature.begin}</span>
-                    <span>End: {feature.end}</span>
+                    {(feature.begin !== feature.end)
+                      ? <span>End: {feature.end}</span>
+                      : null}
                   </div>
 
                   {(0 < feature.evidences.length)

@@ -1,6 +1,8 @@
 
 import React from 'react';
 
+import { removeSnakeAndKebabCases } from '../../other/helpers';
+
 const ExpandedClinicalSignificance = props => {
   const { data } = props;
   return (
@@ -11,34 +13,49 @@ const ExpandedClinicalSignificance = props => {
         <div className="significances-groups">
           <div className="column">
             <b>Disease Summary</b>
-            
+
+            <div>
+              {(0 < data.association.length)
+                ? <span className="publications-label">Associated to disease</span>
+                : <span>No disease association</span>}
+            </div>
+
+            <br />
+            <div className="capital-text">
+              <b>
+                {data.categories
+                  .map(c => removeSnakeAndKebabCases(c))
+                  .join(', ')}
+              </b>
+            </div>
+
+            <div className="associated-disease-list">
+              {data.association.map((a, i) => {
+                const links = a.evidences.map(({ source }) => {
+                  if ('pubmed' === source.name) {
+                    return <a href={`${source.url}`} target="_blank">{source.name}</a>;
+                  }
+
+                  if ('ClinVar' === source.name) {
+                    return <a href={`https://www.ncbi.nlm.nih.gov/clinvar/${source.id}/`} target="_target">{source.name}</a>;
+                  }
+                });
+
+                return <div className="associated-disease">{`Disease #${i + 1}`}: {a.name}. {links}</div>;
+              })}
+            </div>
+
           </div>
           <div className="column">
             <b>Drugs & Therapies</b>
+            <div className="significance-data-block">
+
+            </div>
           </div>
           <div className="column">
             <b>Tissue and Subcellular Specificity</b>
           </div>
         </div>
-
-        <span>{data.categories.join(', ')}</span>
-        <br />
-        Association:
-        <ul>
-          {data.association.map(a => {
-            const links = a.evidences.map(({ source }) => {
-              if ('pubmed' === source.name) {
-                return <a href={`${source.url}`} target="_blank">{source.name}</a>;
-              }
-
-              if ('ClinVar' === source.name) {
-                return <a href={`https://www.ncbi.nlm.nih.gov/clinvar/${source.id}/`} target="_target">{source.name}</a>;
-              }
-            });
-
-            return <li>{a.name}. {links}</li>;
-          })}
-        </ul>
       </td>
     </tr>
   );

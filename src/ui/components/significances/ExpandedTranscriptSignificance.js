@@ -1,31 +1,105 @@
 
 import React from 'react';
 
+import { removeSnakeAndKebabCases } from '../../other/helpers';
+
 const ExpandedTranscriptSignificance = props => {
   const { data } = props;
   return (
     <tr>
       <td colSpan="11">
         <h4>Transcript Significances</h4>
-        <br />
+
         { data.map(ts => {
           return (
-            <div>
-              <b>Impact:</b> <span>{ts.impact}</span>
-              <br />
-              <b>Codons:</b> <span>{ts.codons}</span>
-              <br />
-              <b>Polyphen Prediction / Score:</b>
-                &nbsp;<span>{ts.polyphenPrediction} / {ts.polyphenScore}</span>
-              <br />
-              <b>Sift Prediction / Score:</b>
-                &nbsp;<span>{ts.siftPrediction} / {ts.siftScore}</span>
-              <br />
-              <b>Consequence Terms:</b>
-                <ul>
-                  {ts.consequenceTerms.map(t => <li>{t}</li>)}
-                </ul>
-              <hr />
+            <div className="significances-groups">
+              <div className="column">
+                <b>Genomic Summary</b>
+                <div className="significance-data-block">
+                  <div>
+                    <span>HGVSg: </span> {ts.hgvsg}
+                  </div>
+                  <div>
+                    <span>Most Severe Consequence: </span>
+                    <span className="capital-text">
+                      {removeSnakeAndKebabCases(ts.mostSevereConsequence)}
+                    </span>
+                  </div>
+
+                  <span className="publications-label">Population Frequency: 0</span>
+                </div>
+
+                {/* <div className="significance-data-block">
+                  <b>Population Frequency</b>
+                  <div>Data Not Available</div>
+                </div> */}
+              </div>
+
+              <div className="column">
+                <b>Transcript Evidences</b>
+                <div className="significance-data-block">
+                  <div>
+                    <span>Consequences: </span>
+                    <span className="capital-text">
+                      {ts.consequenceTerms
+                        .map(ct => removeSnakeAndKebabCases(ct))
+                        .join(', ')}
+                    </span>
+                  </div>
+                  <div>
+                    <span>Impact: </span> <span className="capital-text">{removeSnakeAndKebabCases(ts.impact)}</span>
+                  </div>
+                  <div>
+                    <span>{(ts.canonical) ? 'SELECT' : 'Isoform'} Transcript</span>
+                  </div>
+                  <div>
+                    {/* <span>Biotype:</span>  */}
+                    <span className="capital-text">{removeSnakeAndKebabCases(ts.biotype)}</span>
+                  </div>
+                  <div>
+                    {/* <span>Codons:</span>  */}{ts.codons}
+                  </div>
+                </div>
+
+              </div>
+
+              <div className="column">
+                <b>Translations Evidences</b>
+                  <div>
+                    <span>Amino Acid Change: </span> {ts.aminoAcids}
+                  </div>
+                  <div>
+                    <span>HGVSp: </span> {ts.hgvsp}
+                  </div>
+                  <div className="positional-feature-position2">
+                    <span>Start: {ts.start}</span>
+                    {(ts.start !== ts.end)
+                      ? <span>End: {ts.end}</span>
+                      : null}
+                  </div>
+              </div>
+
+              <div className="column">
+                <b>Consequence Predections</b>
+
+                <div className="significance-data-block">
+                  <div>
+                    <span>SIFT: </span>
+                    <span className="capital-text">{removeSnakeAndKebabCases(ts.siftPrediction)}, {ts.siftScore}</span>
+                  </div>
+                  <div>
+                    <span>Polyphen: </span>
+                    <span className="capital-text">{removeSnakeAndKebabCases(ts.polyphenPrediction)}, {ts.polyphenScore}</span>
+                  </div>
+
+                  <span className="publications-label">Other Predections: 0</span>
+                </div>
+
+                {/* <div className="significance-data-block">
+                  <b>Other Predections</b>
+                  <div>Data Not Available</div>
+                </div> */}
+              </div>
             </div>
           );
         })}
