@@ -23,9 +23,11 @@ const ExpandedClinicalSignificance = props => {
             <br />
             <div className="capital-text">
               <b>
-                {data.categories
-                  .map(c => removeSnakeAndKebabCases(c))
-                  .join(', ')}
+                {(0 < data.categories.length)
+                  ? data.categories
+                    // .map(c => removeSnakeAndKebabCases(c))
+                    .join(', ')
+                  : null}
               </b>
             </div>
 
@@ -41,7 +43,11 @@ const ExpandedClinicalSignificance = props => {
                   }
                 });
 
-                return <div className="associated-disease">{`Disease #${i + 1}`}: {a.name}. {links}</div>;
+                {/* return <div className="associated-disease">{`Disease #${i + 1}`}: {a.name}.<br />{links}</div>; */}
+                return (<div className="associated-disease">
+                    {`Disease #${i + 1}`}: {a.name}.<br />
+                    <span className="publications-label">{links.length} Evidence(s)</span>
+                  </div>);
               })}
             </div>
 
