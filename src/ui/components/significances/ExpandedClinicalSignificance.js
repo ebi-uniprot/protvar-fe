@@ -8,7 +8,8 @@ const ExpandedClinicalSignificance = props => {
   return (
     <tr>
       <td colSpan="11">
-        <h4>Clinical Significances</h4>
+        <span className="expanded-section-title">Clinical Significances</span>
+        {props.detailsLink}
 
         <div className="significances-groups">
           <div className="column">
@@ -25,7 +26,7 @@ const ExpandedClinicalSignificance = props => {
               <b>
                 {(0 < data.categories.length)
                   ? data.categories
-                    // .map(c => removeSnakeAndKebabCases(c))
+                    .map(c => removeSnakeAndKebabCases(c))
                     .join(', ')
                   : null}
               </b>

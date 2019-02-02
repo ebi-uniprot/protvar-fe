@@ -110,5 +110,23 @@
       margin-bottom: 1rem;
     }
   }
+
+  .details-page-link {
+    float: right;
+    margin: 1rem;
+  }
+
+  .expanded-section-title {
+    float: left;
+    font-size: 1.5rem;
+    margin: 1rem;
+  }
+
+  .column-list {
+    column-count: 6;
+    width: 100%;
+    float: left;
+    padding-left: 1rem;
+  }
   
 }

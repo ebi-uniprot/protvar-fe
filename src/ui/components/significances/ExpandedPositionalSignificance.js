@@ -6,7 +6,8 @@ const ExpandedPositionalSignificance = props => {
   return (
     <tr>
       <td colSpan="11">
-        <h4>Protein Positions Affected</h4>
+        <span className="expanded-section-title">Protein Positions Affected</span>
+        {props.detailsLink}
 
         <div className="significances-groups">
           <div className="column">

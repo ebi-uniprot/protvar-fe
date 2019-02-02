@@ -8,7 +8,8 @@ const ExpandedTranscriptSignificance = props => {
   return (
     <tr>
       <td colSpan="11">
-        <h4>Transcript Significances</h4>
+        <span className="expanded-section-title">Transcript Significances</span>
+        {props.detailsLink}
 
         { data.map(ts => {
           return (

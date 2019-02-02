@@ -92,6 +92,17 @@ class ImpactSearchResults extends Component {
                       const geneLocation = `${gene.chromosome}:${gene.start}-${gene.end}`;
                       const rowKey = `${group.key}-${i}`;
 
+                      let detailsPageLink = null;
+
+                      if (protein.start && protein.variant) {
+                        const varSTRes = protein.variant
+                          .split('/')
+                          .join(protein.start.toString());
+
+                        const detailsPageURL = `https://www.ebi.ac.uk/thornton-srv/databases/cgi-bin/DisaStr/GetPage.pl?uniprot_acc=${protein.accession.toUpperCase()}&template=resreport.html&res=${varSTRes}`;
+                        detailsPageLink = <a className="details-page-link" href={detailsPageURL} target="_blank">View Details</a>;
+                      }
+                      
                       significances.transcript
                         .forEach(t => {
                           t.hgvsg = gene.hgvsg;
@@ -137,19 +148,19 @@ class ImpactSearchResults extends Component {
                             </td>
                           </tr>
                           {(`${rowKey}:positional` === expandedRow)
-                            ? <ExpandedPositionalSignificance data={significances.positional} />
+                            ? <ExpandedPositionalSignificance data={significances.positional} detailsLink={detailsPageLink} />
                             : null }
 
                           {(`${rowKey}:clinical` === expandedRow)
-                            ? <ExpandedClinicalSignificance data={significances.clinical} />
+                            ? <ExpandedClinicalSignificance data={significances.clinical} detailsLink={detailsPageLink} />
                             : null }
 
                           {(`${rowKey}:transcript` === expandedRow)
-                            ? <ExpandedTranscriptSignificance data={significances.transcript} />
+                            ? <ExpandedTranscriptSignificance data={significances.transcript} detailsLink={detailsPageLink} />
                             : null }
 
                           {(`${rowKey}:structural` === expandedRow)
-                            ? <ExpandedStructuralSignificance data={significances.structural} />
+                            ? <ExpandedStructuralSignificance data={significances.structural} detailsLink={detailsPageLink} />
                             : null }
                         </Fragment>
                       )
