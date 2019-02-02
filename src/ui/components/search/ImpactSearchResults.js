@@ -109,10 +109,10 @@ class ImpactSearchResults extends Component {
                             <td>{++counter}</td>
                             <td>{gene.symbol}</td>
                             <td>{protein.accession}</td>
-                            <td>{protein.length}</td>
+                            <td>{protein.length || '-'}</td>
                             <td>{proteinPosition || '-'}</td>
                             <td>
-                              <span title={protein.variant}>{protein.threeLetterCodes || '-'}</span>
+                              <span title={protein.variant || '-'}>{protein.threeLetterCodes || '-'}</span>
                             </td>
                             <td>{gene.ensgId}</td>
                             <td>{gene.enstId}</td>

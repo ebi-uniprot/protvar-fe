@@ -7,7 +7,7 @@ const ExpandedStructuralSignificance = props => {
     <tr>
       <td colSpan="11">
         <h4>Structural Significances</h4>
-          <ul>
+          <ul style={{ columnCount: 6}}>
             {data.map(s => {
               return <li>
                   <a href={`https://www.ebi.ac.uk/pdbe/entry/pdb/${s.id}`} target="_blank">{s.id}</a>

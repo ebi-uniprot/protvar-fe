@@ -14,8 +14,13 @@ const ExpandedPositionalSignificance = props => {
 
             { data.features
                 .filter(f => {
-                  return ['CHAIN', 'DOMAIN', 'MUTAGEN']
-                    .includes(f.type);
+                  return [
+                    'CHAIN',
+                    'DOMAIN',
+                    'MUTAGEN',
+                    'SIGNAL',
+                    'PEPTIDE',
+                  ].includes(f.type);
                 })
                 .map(feature => {
               return (
@@ -63,7 +68,6 @@ const ExpandedPositionalSignificance = props => {
                     'BINDING',
                     'LIPID',
                     'NON_STD',
-                    'SIGNAL',
                     'PROPEP',
                   ].includes(f.type);
                 })
