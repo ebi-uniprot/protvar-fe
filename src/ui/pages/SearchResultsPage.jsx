@@ -6,10 +6,11 @@ import ImpactSearchResults from '../components/search/ImpactSearchResults';
 
 const SearchResultsPageContent = props => {
 console.log("results:", props);
-  const { searchResults } = props;
+  const { searchResults, handleDownload } = props;
   return (
     <ImpactSearchResults
       rows={searchResults}
+      handleDownload={handleDownload}
     />
   );
 };

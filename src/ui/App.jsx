@@ -41,12 +41,36 @@ console.log(">>> search response:", response.data);
       });
   }
 
+  handleDownload() {
+    const { searchTerm } = this.state;
+
+    const apiURI = `${API_URL}/download`;
+    const data = defaultParser(searchTerm);
+console.log("handle download clicked");
+    axios
+      .post(apiURI, {
+        input: data,
+        responseType: 'blob'
+      })
+      .then(response => {
+console.log(">>> download response:", response.data);
+        
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'pepvep-data.csv'); //or any other extension
+        document.body.appendChild(link);
+        link.click();
+      });
+  }
+
   render() {
     const { searchTerm } = this.state;
 
     const appProps = {
       ...this.state,
       handleSearch: this.handleSearch.bind(this),
+      handleDownload: this.handleDownload.bind(this),
     };
 
     return (

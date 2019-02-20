@@ -25,7 +25,7 @@ class ImpactSearchResults extends Component {
 
   render() {
     const { expandedRow } = this.state;
-    const { rows } = this.props;
+    const { rows, handleDownload } = this.props;
     let counter = 0;
 
     const totalCounts = Object.values(rows)
@@ -39,7 +39,7 @@ class ImpactSearchResults extends Component {
           <span className="results-counter">
             {totalCounts} Results Found
           </span>
-          <Button>Download</Button>
+          <Button onClick={handleDownload}>Download</Button>
         </div>
         <div className="legends">
           <div className="legends-item">
