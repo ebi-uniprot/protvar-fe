@@ -1,9 +1,9 @@
-
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { removeSnakeAndKebabCases } from '../../other/helpers';
 
-const ExpandedClinicalSignificance = props => {
+const ExpandedClinicalSignificance = (props) => {
   const { data } = props;
   return (
     <tr>
@@ -16,7 +16,7 @@ const ExpandedClinicalSignificance = props => {
             <b>Disease Summary</b>
 
             <div>
-              {(0 < data.association.length)
+              {(data.association.length > 0)
                 ? <span className="publications-label">Associated to disease</span>
                 : <span>No disease association</span>}
             </div>
@@ -24,7 +24,7 @@ const ExpandedClinicalSignificance = props => {
             <br />
             <div className="capital-text">
               <b>
-                {(0 < data.categories.length)
+                {(data.categories.length > 0)
                   ? data.categories
                     .map(c => removeSnakeAndKebabCases(c))
                     .join(', ')
@@ -35,29 +35,37 @@ const ExpandedClinicalSignificance = props => {
             <div className="associated-disease-list">
               {data.association.map((a, i) => {
                 const links = a.evidences.map(({ source }) => {
-                  if ('pubmed' === source.name) {
+                  if (source.name === 'pubmed') {
                     return <a href={`${source.url}`} target="_blank">{source.name}</a>;
                   }
 
-                  if ('ClinVar' === source.name) {
-                    return <a href={`https://www.ncbi.nlm.nih.gov/clinvar/${source.id}/`} target="_target">{source.name}</a>;
+                  if (source.name === 'ClinVar') {
+                    return (
+                      <a
+                        href={`https://www.ncbi.nlm.nih.gov/clinvar/${source.id}/`}
+                        target="_target"
+                      >
+                        {source.name}
+                      </a>
+                    );
                   }
+
+                  return null;
                 });
 
-                {/* return <div className="associated-disease">{`Disease #${i + 1}`}: {a.name}.<br />{links}</div>; */}
-                return (<div className="associated-disease">
+                return (
+                  <div className="associated-disease">
                     {`Disease #${i + 1}`}: {a.name}.<br />
                     <span className="publications-label">{links.length} Evidence(s)</span>
-                  </div>);
+                  </div>
+                );
               })}
             </div>
 
           </div>
           <div className="column">
             <b>Drugs & Therapies</b>
-            <div className="significance-data-block">
-
-            </div>
+            <div className="significance-data-block" />
           </div>
           <div className="column">
             <b>Tissue and Subcellular Specificity</b>
@@ -66,6 +74,13 @@ const ExpandedClinicalSignificance = props => {
       </td>
     </tr>
   );
-}
+};
+
+ExpandedClinicalSignificance.propTypes = {
+  data: PropTypes.shape({
+
+  }).isRequired,
+  detailsLink: PropTypes.element.isRequired,
+};
 
 export default ExpandedClinicalSignificance;
