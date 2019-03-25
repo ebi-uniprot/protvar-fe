@@ -59,11 +59,6 @@ SearchResultsPageContent.propTypes = {
             typeDescription: PropTypes.string,
           })),
         }),
-        structural: PropTypes.arrayOf(PropTypes.shape({
-          id: PropTypes.string,
-          method: PropTypes.string,
-          range: PropTypes.arrayOf(PropTypes.number),
-        })),
       }),
     })),
   })).isRequired,
