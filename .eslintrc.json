@@ -19,5 +19,8 @@
       "specialLink": [ "to", "hrefLeft", "hrefRight" ],
       "aspects": [ "noHref", "invalidHref", "preferButton" ]
     }]
+  },
+  "globals": {
+    "BASE_URL": "writable"
   }
 }
