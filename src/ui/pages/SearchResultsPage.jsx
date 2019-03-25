@@ -47,19 +47,7 @@ SearchResultsPageContent.propTypes = {
         threeLetterCodes: PropTypes.string,
         variant: PropTypes.string,
       }).isRequired,
-      significances: PropTypes.shape({
-        positional: PropTypes.shape({
-          features: PropTypes.arrayOf(PropTypes.shape({
-            begin: PropTypes.string,
-            category: PropTypes.string,
-            description: PropTypes.string,
-            end: PropTypes.string,
-            evidences: PropTypes.arrayOf(PropTypes.shape({})),
-            type: PropTypes.string,
-            typeDescription: PropTypes.string,
-          })),
-        }),
-      }),
+      significances: PropTypes.shape({}),
     })),
   })).isRequired,
   handleDownload: PropTypes.func.isRequired,
