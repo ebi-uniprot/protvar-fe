@@ -6,52 +6,48 @@ import Button from '../../elements/form/Button';
 
 class SimpleSearch extends Component {
   state = {
-    // searchTerm: '1 182712 182712 A/C 1'
-    searchTerm: 'X 139561916 139561916 A/G . . .'
-    // searchTerm: '1 230704270 230704270 G/A . . .'
+    searchTerm: 'X 139561916 139561916 A/G . . .',
   }
 
-  handleInputChange(e) {
+  handleInputChange = (e) => {
     this.setState({
-      searchTerm: e.target.value
+      searchTerm: e.target.value,
     });
   }
 
-  handleSubmit(e) {
-
+  handleSubmit = (e) => {
     e.preventDefault();
     e.stopPropagation();
 
-    console.log("SimpleSearch:", this.state.searchTerm);
+    console.log('SimpleSearch:', this.state.searchTerm);
     this.props.onSubmit(this.state.searchTerm);
   }
 
   render() {
-
     const { searchTerm } = this.state;
     const { buttonLabel } = this.props;
 
-    return(
+    return (
       <Fragment>
         <form
           className="input-group simple-search"
-          onSubmit={this.handleSubmit.bind(this)}
-          >
+          onSubmit={this.handleSubmit}
+        >
           <input
             type="search"
             className="input-group-field"
             placeholder="Search..."
             value={searchTerm}
-            onChange={this.handleInputChange.bind(this)}
+            onChange={this.handleInputChange}
           />
           <div className="input-group-button">
-            <Button type="submit" onClick={this.handleSubmit.bind(this)}>
+            <Button type="submit" onClick={this.handleSubmit}>
               {buttonLabel}
             </Button>
           </div>
         </form>
       </Fragment>
-    )
+    );
   }
 }
 
