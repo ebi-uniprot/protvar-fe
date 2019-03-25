@@ -95,28 +95,6 @@ SearchResultsPageContent.propTypes = {
           start: PropTypes.number,
           tsl: PropTypes.number,
         })),
-        clinical: PropTypes.shape({
-          association: PropTypes.arrayOf(PropTypes.shape({
-            description: PropTypes.string,
-            disease: PropTypes.bool,
-            evidences: PropTypes.arrayOf(PropTypes.shape({
-              code: PropTypes.string,
-              source: PropTypes.shape({
-                alternativeUrl: PropTypes.string,
-                id: PropTypes.string,
-                name: PropTypes.string,
-                url: PropTypes.string,
-              }),
-              name: PropTypes.string,
-              xrefs: PropTypes.arrayOf(PropTypes.shape({
-                id: PropTypes.string,
-                name: PropTypes.string,
-                url: PropTypes.string,
-              })),
-            })),
-          })),
-          categories: PropTypes.arrayOf(PropTypes.string),
-        }),
       }),
     })),
   })).isRequired,

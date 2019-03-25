@@ -78,9 +78,32 @@ const ExpandedClinicalSignificance = (props) => {
 
 ExpandedClinicalSignificance.propTypes = {
   data: PropTypes.shape({
-
-  }).isRequired,
+    association: PropTypes.arrayOf(PropTypes.shape({
+      description: PropTypes.string,
+      disease: PropTypes.bool,
+      evidences: PropTypes.arrayOf(PropTypes.shape({
+        code: PropTypes.string,
+        source: PropTypes.shape({
+          alternativeUrl: PropTypes.string,
+          id: PropTypes.string,
+          name: PropTypes.string,
+          url: PropTypes.string,
+        }),
+        name: PropTypes.string,
+        xrefs: PropTypes.arrayOf(PropTypes.shape({
+          id: PropTypes.string,
+          name: PropTypes.string,
+          url: PropTypes.string,
+        })),
+      })),
+    })),
+    categories: PropTypes.arrayOf(PropTypes.string),
+  }),
   detailsLink: PropTypes.element.isRequired,
+};
+
+ExpandedClinicalSignificance.defaultProps = {
+  data: {},
 };
 
 export default ExpandedClinicalSignificance;
