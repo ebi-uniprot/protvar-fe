@@ -1,47 +1,22 @@
 
 import React, { Fragment } from 'react';
+import PropTypes from 'prop-types';
 
 import DefaultPageLayout from '../layout/DefaultPageLayout';
-// import SimpleSearch from '../components/search/SimpleSearch';
 import TextAreaSearch from '../components/search/TextAreaSearch';
 
-// class __HomePageContent extends Component {
+const HomePageContent = (props) => {
+  const { handleSearch } = props;
 
-//   render() {
-
-//     const { searchTerm, searchResults } = this.state;
-//     const rows = (null !== searchResults && searchResults.proteins)
-//       ? searchResults.proteins
-//       : {};
-//     const ebiSearch = document.querySelector('#ebi-standard-search-field');
-//     const ebiSearchField = document.querySelector('#ebi-standard-search-field #query');
-
-//     if (ebiSearchField) {
-//       ebiSearchField.value = searchTerm;
-//     }
-
-//     if (null !== searchResults) {
-//       ebiSearch.style.display = 'block';
-//     }
-
-//     return(
-//       <Fragment>
-//         { null === searchResults
-//           ? <SimpleSearch onSubmit={this.props.handleSearch} />
-//           : <SearchResults rows={rows} />
-//         }
-//       </Fragment>
-//     )
-//   }
-// };
-
-const HomePageContent = props => {
   return (
     <Fragment>
-      {/* <SimpleSearch onSubmit={props.handleSearch} /> */}
-      <TextAreaSearch onSubmit={props.handleSearch} />
+      <TextAreaSearch onSubmit={handleSearch} />
     </Fragment>
   );
+};
+
+HomePageContent.propTypes = {
+  handleSearch: PropTypes.func.isRequired,
 };
 
 const HomePage = props => (
