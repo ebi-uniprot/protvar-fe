@@ -19,7 +19,7 @@ class ImpactSearchResults extends Component {
     this.setState({
       expandedRow: (rowIdAndType !== expandedRow)
         ? rowIdAndType
-        : null
+        : null,
     });
   }
 
@@ -29,9 +29,7 @@ class ImpactSearchResults extends Component {
     let counter = 0;
 
     const totalCounts = Object.values(rows)
-      .reduce((total, current) => {
-        return total + current.rows.length;
-      }, 0);
+      .reduce((total, current) => total + current.rows.length, 0);
 
     return (
       <div className="search-results">
@@ -77,7 +75,7 @@ class ImpactSearchResults extends Component {
             </tr>
 
             {Object.keys(rows)
-              .map(key => {
+              .map((key) => {
                 const group = rows[key];
                 return (
                   <Fragment key={`${group.key}`}>
@@ -102,9 +100,9 @@ class ImpactSearchResults extends Component {
                         const detailsPageURL = `https://www.ebi.ac.uk/thornton-srv/databases/cgi-bin/DisaStr/GetPage.pl?uniprot_acc=${protein.accession.toUpperCase()}&template=resreport.html&res=${varSTRes}`;
                         detailsPageLink = <a className="details-page-link" href={detailsPageURL} target="_blank">View Details</a>;
                       }
-                      
+
                       significances.transcript
-                        .forEach(t => {
+                        .forEach((t) => {
                           t.hgvsg = gene.hgvsg;
                           t.hgvsp = gene.hgvsp;
                           t.canonical = protein.canonical;
@@ -114,10 +112,12 @@ class ImpactSearchResults extends Component {
                           t.end = protein.end;
                         });
 
+                      counter += 1;
+
                       return (
                         <Fragment>
                           <tr key={rowKey}>
-                            <td>{++counter}</td>
+                            <td>{counter}</td>
                             <td>{gene.symbol}</td>
                             <td>{protein.accession}</td>
                             <td>{protein.length || '-'}</td>
@@ -130,50 +130,126 @@ class ImpactSearchResults extends Component {
                             <td>{geneLocation}</td>
                             <td>{gene.allele}</td>
                             <td>
-                              {('undefined' !== typeof significances.positional)
-                                ? <Button onClick={() => this.toggleSignificanceRow(rowKey, 'positional')} className="button--round button--positional">P</Button>
-                                : null }
+                              {(typeof significances.positional !== 'undefined')
+                                ? (
+                                  <Button
+                                    onClick={() => this.toggleSignificanceRow(rowKey, 'positional')}
+                                    className="button--round button--positional"
+                                  >
+                                  P
+                                  </Button>
+                                ) : null }
 
-                              {('undefined' !== typeof significances.clinical)
-                                ? <Button onClick={() => this.toggleSignificanceRow(rowKey, 'clinical')} className="button--round button--clinical">C</Button>
-                                : null }
+                              {(typeof significances.clinical !== 'undefined')
+                                ? (
+                                  <Button
+                                    onClick={() => this.toggleSignificanceRow(rowKey, 'clinical')}
+                                    className="button--round button--clinical"
+                                  >
+                                  C
+                                  </Button>
+                                ) : null }
 
-                              {('undefined' !== typeof significances.transcript)
-                                ? <Button onClick={() => this.toggleSignificanceRow(rowKey, 'transcript')} className="button--round button--transcript">T</Button>
-                                : null }
+                              {(typeof significances.transcript !== 'undefined')
+                                ? (
+                                  <Button
+                                    onClick={() => this.toggleSignificanceRow(rowKey, 'transcript')}
+                                    className="button--round button--transcript"
+                                  >
+                                  T
+                                  </Button>
+                                ) : null }
 
-                              {('undefined' !== typeof significances.structural)
-                                ? <Button onClick={() => this.toggleSignificanceRow(rowKey, 'structural')} className="button--round button--structural">S</Button>
-                                : null }
+                              {(typeof significances.structural !== 'undefined')
+                                ? (
+                                  <Button
+                                    onClick={() => this.toggleSignificanceRow(rowKey, 'structural')}
+                                    className="button--round button--structural"
+                                  >
+                                  S
+                                  </Button>
+                                ) : null }
                             </td>
                           </tr>
                           {(`${rowKey}:positional` === expandedRow)
-                            ? <ExpandedPositionalSignificance data={significances.positional} detailsLink={detailsPageLink} />
-                            : null }
+                            ? (
+                              <ExpandedPositionalSignificance
+                                data={significances.positional}
+                                detailsLink={detailsPageLink}
+                              />
+                            ) : null }
 
                           {(`${rowKey}:clinical` === expandedRow)
-                            ? <ExpandedClinicalSignificance data={significances.clinical} detailsLink={detailsPageLink} />
-                            : null }
+                            ? (
+                              <ExpandedClinicalSignificance
+                                data={significances.clinical}
+                                detailsLink={detailsPageLink}
+                              />
+                            ) : null }
 
                           {(`${rowKey}:transcript` === expandedRow)
-                            ? <ExpandedTranscriptSignificance data={significances.transcript} detailsLink={detailsPageLink} />
-                            : null }
+                            ? (
+                              <ExpandedTranscriptSignificance
+                                data={significances.transcript}
+                                detailsLink={detailsPageLink}
+                              />
+                            ) : null }
 
                           {(`${rowKey}:structural` === expandedRow)
-                            ? <ExpandedStructuralSignificance data={significances.structural} detailsLink={detailsPageLink} />
-                            : null }
+                            ? (
+                              <ExpandedStructuralSignificance
+                                data={significances.structural}
+                                detailsLink={detailsPageLink}
+                              />
+                            ) : null }
                         </Fragment>
-                      )
+                      );
                     })}
                   </Fragment>
                 );
             })}
           </tbody>
         </table>
-        { /* props.results */ }
       </div>
     );
   }
 }
+
+ImpactSearchResults.propTypes = {
+  rows: PropTypes.arrayOf(PropTypes.shape({
+    gene: PropTypes.shape({
+      allele: PropTypes.string,
+      chromosome: PropTypes.string,
+      codons: PropTypes.string,
+      end: PropTypes.number,
+      ensgId: PropTypes.string,
+      enstId: PropTypes.string,
+      hgvsg: PropTypes.string,
+      hgvsp: PropTypes.string,
+      source: PropTypes.string,
+      start: PropTypes.number,
+      symbol: PropTypes.string,
+    }).isRequired,
+    protein: PropTypes.shape({
+      accession: PropTypes.string,
+      canonical: PropTypes.bool,
+      end: PropTypes.number,
+      length: PropTypes.number,
+      name: PropTypes.shape({
+        full: PropTypes.string,
+        short: PropTypes.string,
+      }),
+      start: PropTypes.number,
+      threeLetterCodes: PropTypes.string,
+      variant: PropTypes.string,
+    }).isRequired,
+    significances: PropTypes.shape({}),
+  })),
+  handleDownload: PropTypes.func.isRequired,
+};
+
+ImpactSearchResults.defaultProps = {
+  rows: [],
+};
 
 export default ImpactSearchResults;
