@@ -115,7 +115,7 @@ class ImpactSearchResults extends Component {
                       counter += 1;
 
                       return (
-                        <Fragment>
+                        <Fragment key={`${rowKey}-${counter}`}>
                           <tr key={rowKey}>
                             <td>{counter}</td>
                             <td>{gene.symbol}</td>
