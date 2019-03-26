@@ -216,7 +216,7 @@ class ImpactSearchResults extends Component {
 }
 
 ImpactSearchResults.propTypes = {
-  rows: PropTypes.arrayOf(PropTypes.shape({
+  rows: PropTypes.objectOf(PropTypes.shape({
     gene: PropTypes.shape({
       allele: PropTypes.string,
       chromosome: PropTypes.string,
@@ -229,7 +229,7 @@ ImpactSearchResults.propTypes = {
       source: PropTypes.string,
       start: PropTypes.number,
       symbol: PropTypes.string,
-    }).isRequired,
+    }),
     protein: PropTypes.shape({
       accession: PropTypes.string,
       canonical: PropTypes.bool,
@@ -242,14 +242,14 @@ ImpactSearchResults.propTypes = {
       start: PropTypes.number,
       threeLetterCodes: PropTypes.string,
       variant: PropTypes.string,
-    }).isRequired,
+    }),
     significances: PropTypes.shape({}),
   })),
   handleDownload: PropTypes.func.isRequired,
 };
 
 ImpactSearchResults.defaultProps = {
-  rows: [],
+  rows: {},
 };
 
 export default ImpactSearchResults;
