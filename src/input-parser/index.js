@@ -10,7 +10,6 @@ function defaultParser(input) {
 module.exports.defaultParser = defaultParser;
 
 
-
 /**
  * Parser for VeP's "Ensembl Default" user input format
  * @param {string} input
@@ -26,19 +25,18 @@ function VEPEnsemblDefaultInputParser(input) {
     chrom: terms[0],
     position: {
       start: terms[1],
-      end: terms[2]
+      end: terms[2],
     },
     ref,
     allele,
     strand,
   };
 
-console.log("parser:", parsed);
+  console.log('parser:', parsed);
   return parsed;
 }
 
 module.exports.VEPEnsemblDefaultInputParser = VEPEnsemblDefaultInputParser;
-
 
 
 /**
@@ -48,7 +46,7 @@ module.exports.VEPEnsemblDefaultInputParser = VEPEnsemblDefaultInputParser;
 function VEPVCFTextInputHandler(input) {
   const vcfLines = input
     .split(/\r?\n/);
-console.log("vcf lines:", vcfLines);
+  console.log('vcf lines:', vcfLines);
   return vcfLines;
 }
 
