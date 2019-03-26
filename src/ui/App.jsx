@@ -1,8 +1,7 @@
 
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
-  BrowserRouter as Router,
   Route,
   Switch,
   withRouter,
@@ -24,14 +23,14 @@ class App extends Component {
     };
   }
 
-  handleSearch (input) {
+  handleSearch = (input) => {
     const apiURI = `${API_URL}/parser`;
     const data = defaultParser(input);
 
     axios
       .post(apiURI, { input: data })
-      .then(response => {
-console.log(">>> search response:", response.data);
+      .then((response) => {
+        console.log('>>> search response:', response.data);
         this.setState({
           searchTerm: input,
           searchResults: response.data,
@@ -41,46 +40,50 @@ console.log(">>> search response:", response.data);
       });
   }
 
-  handleDownload() {
+  handleDownload = () => {
     const { searchTerm } = this.state;
 
     const apiURI = `${API_URL}/download`;
     const data = defaultParser(searchTerm);
-console.log("handle download clicked");
+    console.log('handle download clicked');
     axios
       .post(apiURI, {
         input: data,
-        responseType: 'blob'
+        responseType: 'blob',
       })
-      .then(response => {
-console.log(">>> download response:", response.data);
-        
+      .then((response) => {
+        console.log('>>> download response:', response.data);
+
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement('a');
         link.href = url;
-        link.setAttribute('download', 'pepvep-data.csv'); //or any other extension
+        link.setAttribute('download', 'pepvep-data.csv'); // or any other extension
         document.body.appendChild(link);
         link.click();
       });
   }
 
   render() {
-    const { searchTerm } = this.state;
-
     const appProps = {
       ...this.state,
-      handleSearch: this.handleSearch.bind(this),
-      handleDownload: this.handleDownload.bind(this),
+      handleSearch: this.handleSearch,
+      handleDownload: this.handleDownload,
     };
 
     return (
       <Switch>
-        <Route path={`${BASE_URL}/`} exact render={props => <HomePage {...appProps} />} />
-        <Route path={`${BASE_URL}/search`} render={props => <SearchResultsPage {...appProps} />} />
-        <Route component={({ location }) => <h3>404: Can't find {location.pathname}</h3>} />
+        <Route path={`${BASE_URL}/`} exact render={() => <HomePage {...appProps} />} />
+        <Route path={`${BASE_URL}/search`} render={() => <SearchResultsPage {...appProps} />} />
+        <Route component={({ location }) => <h3>404: Can&lsquo;t find {location.pathname}</h3>} />
       </Switch>
     );
   }
+}
+
+App.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
 };
 
 export default withRouter(App);

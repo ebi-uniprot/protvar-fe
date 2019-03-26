@@ -22,6 +22,7 @@
     }]
   },
   "globals": {
-    "BASE_URL": "writable"
+    "BASE_URL": "writable",
+    "API_URL": "writable"
   }
 }
