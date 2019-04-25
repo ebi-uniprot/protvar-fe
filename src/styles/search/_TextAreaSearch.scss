@@ -45,13 +45,19 @@
     border-radius: 5px;
     background-color: #f7f5f1;
 
+    label {
+      width: 50%;
+      display: inline-block;
+      cursor: pointer;
+    }
+
     span {
-      width: 10%;
+      width: 100px;
       display: inline-block;
     }
 
     .variant-example {
-      width: 40%;
+      width: 150px;
       color: #4949c7;
       padding-left: 1rem;
     }
