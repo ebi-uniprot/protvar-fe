@@ -26,6 +26,14 @@ const ExpandedPositionalSignificance = (props) => {
                   <div className="significance-data-block">
                     <span className="positional-feature-type">{feature.typeDescription}:</span> <span>{feature.description}</span>
 
+                    {(feature.featureId) &&
+                      <div>
+                        <span className="positional-feature-id">Feature ID:</span>
+                        &nbsp;
+                        <span>{feature.featureId}</span>
+                      </div>
+                    }
+
                     <div className="positional-feature-position">
                       <span>Start: {feature.begin}</span>
                       {(feature.begin !== feature.end)
