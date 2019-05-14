@@ -64,7 +64,7 @@ class ExpandedStructuralSignificance extends Component {
             <div className="column">
               <b>Ligands ({ligands.length})</b>
               {(ligands.length > 0) && <ul data-columns="2">
-                {ligands.map(s => <li>{s}</li>)}
+                {ligands.map(s => <li>{s.ligand_id}</li>)}
               </ul>}
             </div>
 
@@ -83,7 +83,12 @@ class ExpandedStructuralSignificance extends Component {
 
 ExpandedStructuralSignificance.propTypes = {
   data: PropTypes.shape({
-    allStructures: PropTypes.arrayOf(PropTypes.string),
+    allStructures: PropTypes.objectOf(PropTypes.arrayOf(
+      PropTypes.shape({
+        chain_id: PropTypes.string,
+        residue_range: PropTypes.string,
+      }),
+    )),
     annotations: PropTypes.arrayOf(PropTypes.shape({
       count_data_resource: PropTypes.number,
       data_resource: PropTypes.arrayOf(PropTypes.string),
@@ -98,7 +103,10 @@ ExpandedStructuralSignificance.propTypes = {
     })),
     ligands: PropTypes.arrayOf(PropTypes.shape({
       count_ligands: PropTypes.number,
-      ligands: PropTypes.arrayOf(PropTypes.string),
+      ligands: PropTypes.arrayOf(PropTypes.shape({
+        ligand_id: PropTypes.string,
+        ligand_name: PropTypes.string,
+      })),
       position: PropTypes.number,
       position_code: PropTypes.string,
     })),
