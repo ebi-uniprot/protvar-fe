@@ -6,6 +6,7 @@ import ExpandedPositionalSignificance from '../significances/ExpandedPositionalS
 import ExpandedTranscriptSignificance from '../significances/ExpandedTranscriptSignificance';
 import ExpandedClinicalSignificance from '../significances/ExpandedClinicalSignificance';
 import ExpandedStructuralSignificance from '../significances/ExpandedStructuralSignificance';
+import ProteinReviewStatus from '../other/ProteinReviewStatus';
 
 class ImpactSearchResults extends Component {
   state = {
@@ -119,7 +120,10 @@ class ImpactSearchResults extends Component {
                           <tr key={rowKey}>
                             <td>{counter}</td>
                             <td>{gene.symbol}</td>
-                            <td>{protein.accession}</td>
+                            <td>
+                              <ProteinReviewStatus type={protein.type} />
+                              {protein.accession}
+                            </td>
                             <td>{protein.length || '-'}</td>
                             <td>{proteinPosition || '-'}</td>
                             <td>
