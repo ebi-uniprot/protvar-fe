@@ -47,12 +47,14 @@ class ExpandedStructuralSignificance extends Component {
 
           <div className="significances-groups">
             <div className="column">
+              <i className="icon icon-functional structural-icon" data-icon="4"></i>
               <div><b>2D Image</b></div>
               {(imageUrl) && <img src={imageUrl} />}
             </div>
 
             <div className="column">
-              <b>Best Structures ({bestStructures.length})</b>
+              <i className="icon icon-conceptual summary-icon structural-icon" data-icon="s"></i>
+              <b>Structures ({bestStructures.length})</b>
               {(bestStructures.length > 0) && <select multiple size="5" onChange={e => this.structureChange(e)}>
                 {bestStructures.map((s) => {
                     return <option value={s}>{s}</option>
@@ -62,16 +64,18 @@ class ExpandedStructuralSignificance extends Component {
             </div>
 
             <div className="column">
+              <i className="icon icon-conceptual summary-icon structural-icon" data-icon="b"></i>
               <b>Ligands ({ligands.length})</b>
               {(ligands.length > 0) && <ul data-columns="2">
-                {ligands.map(s => <li>{s.ligand_id}</li>)}
+                {ligands.map(l => <li>{`${l.ligand_name} [${l.ligand_id}]`}</li>)}
               </ul>}
             </div>
 
             <div className="column">
+              <i className="icon icon-conceptual summary-icon structural-icon" data-icon="y"></i>
               <b>Interactions ({interactions.length})</b>
               {(interactions.length > 0) && <ul data-columns="2">
-                {interactions.map(s => <li>{s}</li>)}
+                {interactions.map(i => <li>{i}</li>)}
               </ul>}
             </div>
           </div>
