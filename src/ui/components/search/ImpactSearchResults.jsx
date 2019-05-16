@@ -62,7 +62,7 @@ class ImpactSearchResults extends Component {
               <th rowSpan="2">Gene Name</th>
               <th colSpan="4">Protein</th>
               <th colSpan="4">Genomic</th>
-              <th rowSpan="2">Significance</th>
+              {/* <th rowSpan="2">Significance</th> */}
             </tr>
             <tr>
               <th>Accession</th>
@@ -117,23 +117,12 @@ class ImpactSearchResults extends Component {
 
                       return (
                         <Fragment key={`${rowKey}-${counter}`}>
-                          <tr key={rowKey}>
-                            <td>{counter}</td>
-                            <td>{gene.symbol}</td>
-                            <td>
-                              <ProteinReviewStatus type={protein.type} />
-                              {protein.accession}
+                          <tr key={rowKey} className="no-border">
+                            <td rowSpan="2" className="row-counter">{counter}</td>
+                            <td colSpan="2">
+                              Status:
                             </td>
-                            <td>{protein.length || '-'}</td>
-                            <td>{proteinPosition || '-'}</td>
-                            <td>
-                              <span title={protein.variant || '-'}>{protein.threeLetterCodes || '-'}</span>
-                            </td>
-                            <td>{gene.ensgId}</td>
-                            <td>{gene.enstId}</td>
-                            <td>{geneLocation}</td>
-                            <td>{gene.allele}</td>
-                            <td>
+                            <td colSpan="8">
                               {(typeof significances.positional !== 'undefined')
                                 ? (
                                   <Button
@@ -174,6 +163,63 @@ class ImpactSearchResults extends Component {
                                   </Button>
                                 ) : null }
                             </td>
+                          </tr>
+                          <tr>
+                            <td>{gene.symbol}</td>
+                            <td>
+                              <ProteinReviewStatus type={protein.type} />
+                              {protein.accession}
+                            </td>
+                            <td>{protein.length || '-'}</td>
+                            <td>{proteinPosition || '-'}</td>
+                            <td>
+                              <span title={protein.variant || '-'}>{protein.threeLetterCodes || '-'}</span>
+                            </td>
+                            <td>{gene.ensgId}</td>
+                            <td>{gene.enstId}</td>
+                            <td>{geneLocation}</td>
+                            <td>{gene.allele}</td>
+                            {/* <td>
+                              {(typeof significances.positional !== 'undefined')
+                                ? (
+                                  <Button
+                                    onClick={() => this.toggleSignificanceRow(rowKey, 'positional')}
+                                    className="button--round button--positional"
+                                  >
+                                  P
+                                  </Button>
+                                ) : null }
+
+                              {(typeof significances.clinical !== 'undefined')
+                                ? (
+                                  <Button
+                                    onClick={() => this.toggleSignificanceRow(rowKey, 'clinical')}
+                                    className="button--round button--clinical"
+                                  >
+                                  C
+                                  </Button>
+                                ) : null }
+
+                              {(typeof significances.transcript !== 'undefined')
+                                ? (
+                                  <Button
+                                    onClick={() => this.toggleSignificanceRow(rowKey, 'transcript')}
+                                    className="button--round button--transcript"
+                                  >
+                                  T
+                                  </Button>
+                                ) : null }
+
+                              {(typeof significances.structural !== 'undefined')
+                                ? (
+                                  <Button
+                                    onClick={() => this.toggleSignificanceRow(rowKey, 'structural')}
+                                    className="button--round button--structural"
+                                  >
+                                  S
+                                  </Button>
+                                ) : null }
+                            </td> */}
                           </tr>
                           {(`${rowKey}:positional` === expandedRow)
                             ? (

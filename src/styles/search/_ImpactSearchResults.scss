@@ -7,6 +7,10 @@
   table {
     border: 1px solid #c7c0a9;
 
+    tr.no-border td {
+      border: 0;
+    }
+
     th {
       background-color: #057D9F;
       color: $white-colour;
@@ -16,12 +20,17 @@
     }
 
     td {
+      padding: 0.3rem;
       border-bottom: 1px solid #dcd5c0;
     }
 
     td.query-row {
+      padding: 0.7rem;
       background-color: #ebf6fb;
-      
+    }
+
+    td.row-counter {
+      text-align: center;
     }
   }
 
