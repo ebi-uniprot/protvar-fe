@@ -117,54 +117,9 @@ class ImpactSearchResults extends Component {
 
                       return (
                         <Fragment key={`${rowKey}-${counter}`}>
+                          
                           <tr key={rowKey} className="no-border">
                             <td rowSpan="2" className="row-counter">{counter}</td>
-                            <td colSpan="2">
-                              Status:
-                            </td>
-                            <td colSpan="8">
-                              {(typeof significances.positional !== 'undefined')
-                                ? (
-                                  <Button
-                                    onClick={() => this.toggleSignificanceRow(rowKey, 'positional')}
-                                    className="button--round button--positional"
-                                  >
-                                  P
-                                  </Button>
-                                ) : null }
-
-                              {(typeof significances.clinical !== 'undefined')
-                                ? (
-                                  <Button
-                                    onClick={() => this.toggleSignificanceRow(rowKey, 'clinical')}
-                                    className="button--round button--clinical"
-                                  >
-                                  C
-                                  </Button>
-                                ) : null }
-
-                              {(typeof significances.transcript !== 'undefined')
-                                ? (
-                                  <Button
-                                    onClick={() => this.toggleSignificanceRow(rowKey, 'transcript')}
-                                    className="button--round button--transcript"
-                                  >
-                                  T
-                                  </Button>
-                                ) : null }
-
-                              {(typeof significances.structural !== 'undefined')
-                                ? (
-                                  <Button
-                                    onClick={() => this.toggleSignificanceRow(rowKey, 'structural')}
-                                    className="button--round button--structural"
-                                  >
-                                  S
-                                  </Button>
-                                ) : null }
-                            </td>
-                          </tr>
-                          <tr>
                             <td>{gene.symbol}</td>
                             <td>
                               <ProteinReviewStatus type={protein.type} />
@@ -179,14 +134,21 @@ class ImpactSearchResults extends Component {
                             <td>{gene.enstId}</td>
                             <td>{geneLocation}</td>
                             <td>{gene.allele}</td>
-                            {/* <td>
+                          </tr>
+
+                          <tr>
+                            <td>
+                              {(!protein.length) && <span className="badge">NCD</span>}
+                              <span className="badge">NVL</span>
+                            </td>
+                            <td colSpan="7">
                               {(typeof significances.positional !== 'undefined')
                                 ? (
                                   <Button
                                     onClick={() => this.toggleSignificanceRow(rowKey, 'positional')}
-                                    className="button--round button--positional"
+                                    className="button--tag button--positional"
                                   >
-                                  P
+                                  &#926; Positional
                                   </Button>
                                 ) : null }
 
@@ -194,9 +156,9 @@ class ImpactSearchResults extends Component {
                                 ? (
                                   <Button
                                     onClick={() => this.toggleSignificanceRow(rowKey, 'clinical')}
-                                    className="button--round button--clinical"
+                                    className="button--tag button--clinical"
                                   >
-                                  C
+                                  &#926; Clinical
                                   </Button>
                                 ) : null }
 
@@ -204,9 +166,9 @@ class ImpactSearchResults extends Component {
                                 ? (
                                   <Button
                                     onClick={() => this.toggleSignificanceRow(rowKey, 'transcript')}
-                                    className="button--round button--transcript"
+                                    className="button--tag button--transcript"
                                   >
-                                  T
+                                  &#926; Transcript
                                   </Button>
                                 ) : null }
 
@@ -214,13 +176,17 @@ class ImpactSearchResults extends Component {
                                 ? (
                                   <Button
                                     onClick={() => this.toggleSignificanceRow(rowKey, 'structural')}
-                                    className="button--round button--structural"
+                                    className="button--tag button--structural"
                                   >
-                                  S
+                                  &#926; Structural
                                   </Button>
                                 ) : null }
-                            </td> */}
+                            </td>
+                            <td>
+                            </td>
                           </tr>
+
+
                           {(`${rowKey}:positional` === expandedRow)
                             ? (
                               <ExpandedPositionalSignificance

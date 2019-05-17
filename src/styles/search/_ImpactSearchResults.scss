@@ -32,6 +32,21 @@
     td.row-counter {
       text-align: center;
     }
+
+    .badge {
+      background-color: #FFF;
+      border: 1px solid #333;
+      font-size: 0.8rem;
+      color: #333;
+      font-weight: 700;
+      margin-right: 0.3rem;
+      padding: 0.2rem;
+
+      &:hover {
+        background-color: #333;
+        color: #FFF;
+      }
+    }
   }
 
   .significances-groups {
