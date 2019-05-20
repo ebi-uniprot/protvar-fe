@@ -84,7 +84,13 @@ class ImpactSearchResults extends Component {
                       <td colSpan="11" className="query-row">Query: {group.input}</td>
                     </tr>
                     {group.rows.map((row, i) => {
-                      const { protein, gene, significances } = row;
+                      const {
+                        protein,
+                        gene,
+                        significances,
+                        variation,
+                      } = row;
+
                       const proteinPosition = (protein.start === protein.end)
                         ? protein.start
                         : `${protein.start}-${protein.end}`;
@@ -138,8 +144,8 @@ class ImpactSearchResults extends Component {
 
                           <tr>
                             <td>
-                              {(!protein.length) && <span className="badge">NCD</span>}
-                              <span className="badge">NVL</span>
+                              {(!variation.novel) && <span className="badge novel-variant">NVL</span>}
+                              {(!protein.length) && <span className="badge non-coding-variant">NCD</span>}
                             </td>
                             <td colSpan="7">
                               {(typeof significances.positional !== 'undefined')
@@ -181,8 +187,6 @@ class ImpactSearchResults extends Component {
                                   &#926; Structural
                                   </Button>
                                 ) : null }
-                            </td>
-                            <td>
                             </td>
                           </tr>
 
