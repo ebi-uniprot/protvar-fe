@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import StructuralPosition from '../other/StructuralPosition';
+
 class ExpandedStructuralSignificance extends Component {
 
   state = {
@@ -16,28 +18,43 @@ class ExpandedStructuralSignificance extends Component {
   render() {
     const { structure } = this.state;
     const { data, detailsLink } = this.props;
-    let imageUrl;
+    const {
+      structures,
+      allStructures,
+      annotations,
+      proteinLength,
+      ligands,
+      interactions,
+    } = data;
 
-    const bestStructures = data.structures
+    Object.keys(allStructures)
+      .forEach((pdbeId) => {
+        allStructures[pdbeId]
+          .forEach((structure) => {
+            const [start, end] = structure.residue_range
+              .split('-');
+
+            structure.start = parseInt(start, 10);
+            structure.end = parseInt(end, 10);
+          });
+      });
+
+    const bestStructures = structures
       .reduce((all, current) => {
         return all.concat(current.best_structures);
       },[]);
 
-    const ligands = data.ligands
+    const allLigands = ligands
       .reduce((all, current) => {
         return all.concat(current.ligands);
       },[]);
 
-    const interactions = data.interactions
-      .reduce((all, current) => {
-        return all.concat(current.partners);
-      },[]);
+    const currentStructure = (!structure && bestStructures.length > 0)
+      ? bestStructures[0]
+      : structure;
 
-    if (!structure && bestStructures.length > 0) {
-      imageUrl = `https://www.ebi.ac.uk/pdbe/static/entry/${bestStructures[0]}_single_entity_1_image-200x200.png`;
-    } else if (structure) {
-      imageUrl = `https://www.ebi.ac.uk/pdbe/static/entry/${structure}_single_entity_1_image-200x200.png`;
-    }
+    const currentStructureDetails = allStructures[currentStructure][0];
+    const imageUrl = `https://www.ebi.ac.uk/pdbe/static/entry/${currentStructure}_single_entity_${currentStructureDetails.entity_id}_image-200x200.png`;
 
     return (
       <tr>
@@ -50,6 +67,13 @@ class ExpandedStructuralSignificance extends Component {
               <i className="icon icon-functional structural-icon" data-icon="4"></i>
               <div><b>2D Image</b></div>
               {(imageUrl) && <img src={imageUrl} />}
+
+              <StructuralPosition
+                proteinLength={proteinLength}
+                position={150}
+                structureStart={currentStructureDetails.start}
+                structureEnd={currentStructureDetails.end}
+              />
             </div>
 
             <div className="column">
@@ -65,17 +89,9 @@ class ExpandedStructuralSignificance extends Component {
 
             <div className="column">
               <i className="icon icon-conceptual summary-icon structural-icon" data-icon="b"></i>
-              <b>Ligands ({ligands.length})</b>
-              {(ligands.length > 0) && <ul data-columns="2">
-                {ligands.map(l => <li>{`${l.ligand_name} [${l.ligand_id}]`}</li>)}
-              </ul>}
-            </div>
-
-            <div className="column">
-              <i className="icon icon-conceptual summary-icon structural-icon" data-icon="y"></i>
-              <b>Interactions ({interactions.length})</b>
-              {(interactions.length > 0) && <ul data-columns="2">
-                {interactions.map(i => <li>{i}</li>)}
+              <b>Ligands ({allLigands.length})</b>
+              {(allLigands.length > 0) && <ul data-columns="2">
+                {allLigands.map(l => <li>{`${l.ligand_name} [${l.ligand_id}]`}</li>)}
               </ul>}
             </div>
           </div>
@@ -90,6 +106,7 @@ ExpandedStructuralSignificance.propTypes = {
     allStructures: PropTypes.objectOf(PropTypes.arrayOf(
       PropTypes.shape({
         chain_id: PropTypes.string,
+        entity_id: PropTypes.string,
         residue_range: PropTypes.string,
       }),
     )),

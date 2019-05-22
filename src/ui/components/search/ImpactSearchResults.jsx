@@ -40,7 +40,7 @@ class ImpactSearchResults extends Component {
           </span>
           <Button onClick={handleDownload}>Download</Button>
         </div>
-        <div className="legends">
+        {/* <div className="legends">
           <div className="legends-item">
             <span className="legends-icon button--positional">P</span> Positional Significances
           </div>
@@ -53,7 +53,7 @@ class ImpactSearchResults extends Component {
           <div className="legends-item">
             <span className="legends-icon button--transcript">T</span> Transcript Significances
           </div>
-        </div>
+        </div> */}
 
         <table border="0" className="unstriped" cellPadding="0" cellSpacing="1">
           <tbody>
@@ -143,18 +143,23 @@ class ImpactSearchResults extends Component {
                           </tr>
 
                           <tr>
+                            <td colSpan="4"></td>
                             <td>
-                              {(!variation.novel) && <span className="badge novel-variant">NVL</span>}
-                              {(!protein.length) && <span className="badge non-coding-variant">NCD</span>}
+                              {(!variation.novel)
+                                && <i title="Novel Variant" class="icon icon-common icon-new novel-variant"></i>}
+
+                              {(!protein.length)
+                                && <i title="Non-coding" class="icon icon-common icon-ban non-coding-variant"></i>}
                             </td>
-                            <td colSpan="7">
+                            <td colSpan="5" align="right">
                               {(typeof significances.positional !== 'undefined')
                                 ? (
                                   <Button
                                     onClick={() => this.toggleSignificanceRow(rowKey, 'positional')}
                                     className="button--tag button--positional"
                                   >
-                                  &#926; Positional
+                                  <i class="icon icon-common icon-angle-down"></i>
+                                  &nbsp;Positional
                                   </Button>
                                 ) : null }
 
@@ -164,7 +169,8 @@ class ImpactSearchResults extends Component {
                                     onClick={() => this.toggleSignificanceRow(rowKey, 'clinical')}
                                     className="button--tag button--clinical"
                                   >
-                                  &#926; Clinical
+                                  <i class="icon icon-common icon-angle-down"></i>
+                                  &nbsp;Clinical
                                   </Button>
                                 ) : null }
 
@@ -174,7 +180,8 @@ class ImpactSearchResults extends Component {
                                     onClick={() => this.toggleSignificanceRow(rowKey, 'transcript')}
                                     className="button--tag button--transcript"
                                   >
-                                  &#926; Transcript
+                                  <i class="icon icon-common icon-angle-down"></i>
+                                  &nbsp;Transcript
                                   </Button>
                                 ) : null }
 
@@ -184,7 +191,8 @@ class ImpactSearchResults extends Component {
                                     onClick={() => this.toggleSignificanceRow(rowKey, 'structural')}
                                     className="button--tag button--structural"
                                   >
-                                  &#926; Structural
+                                  <i class="icon icon-common icon-angle-down"></i>
+                                  &nbsp;Structural
                                   </Button>
                                 ) : null }
                             </td>
