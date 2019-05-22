@@ -25,6 +25,7 @@ class ExpandedStructuralSignificance extends Component {
       proteinLength,
       ligands,
       interactions,
+      position,
     } = data;
 
     Object.keys(allStructures)
@@ -70,7 +71,7 @@ class ExpandedStructuralSignificance extends Component {
 
               <StructuralPosition
                 proteinLength={proteinLength}
-                position={150}
+                position={position}
                 structureStart={currentStructureDetails.start}
                 structureEnd={currentStructureDetails.end}
               />

@@ -40,20 +40,6 @@ class ImpactSearchResults extends Component {
           </span>
           <Button onClick={handleDownload}>Download</Button>
         </div>
-        {/* <div className="legends">
-          <div className="legends-item">
-            <span className="legends-icon button--positional">P</span> Positional Significances
-          </div>
-          <div className="legends-item">
-            <span className="legends-icon button--clinical">C</span> Clinical Significances
-          </div>
-          <div className="legends-item">
-            <span className="legends-icon button--structural">S</span> Structural Significances
-          </div>
-          <div className="legends-item">
-            <span className="legends-icon button--transcript">T</span> Transcript Significances
-          </div>
-        </div> */}
 
         <table border="0" className="unstriped" cellPadding="0" cellSpacing="1">
           <tbody>
@@ -118,6 +104,10 @@ class ImpactSearchResults extends Component {
                           t.start = protein.start;
                           t.end = protein.end;
                         });
+
+                      if (typeof significances.structural !== 'undefined') {
+                        significances.structural.position = protein.start;
+                      }
 
                       counter += 1;
 
