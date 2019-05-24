@@ -103,10 +103,21 @@ class ImpactSearchResults extends Component {
                           t.aminoAcids = protein.variant;
                           t.start = protein.start;
                           t.end = protein.end;
+                          t.colocatedVariantsCount = variation.proteinColocatedVariantsCount;
+                          t.diseaseColocatedVariantsCount = variation
+                            .diseasAssociatedProteinColocatedVariantsCount;
                         });
 
                       if (typeof significances.structural !== 'undefined') {
                         significances.structural.position = protein.start;
+                      }
+
+                      if (typeof significances.clinical !== 'undefined') {
+                        significances.clinical.colocatedVariantsCount =
+                          variation.proteinColocatedVariantsCount;
+
+                        significances.clinical.diseaseColocatedVariantsCount =
+                          variation.diseasAssociatedProteinColocatedVariantsCount;
                       }
 
                       counter += 1;
@@ -135,20 +146,27 @@ class ImpactSearchResults extends Component {
                           <tr>
                             <td colSpan="4"></td>
                             <td>
-                              {(!variation.novel)
-                                && <i title="Novel Variant" class="icon icon-common icon-new novel-variant"></i>}
+                              {(variation.novel)
+                                && <i title="Novel Variant" className="icon icon-common icon-new novel-variant"></i>}
 
                               {(!protein.length)
-                                && <i title="Non-coding" class="icon icon-common icon-ban non-coding-variant"></i>}
+                                && <i title="Non-coding" className="icon icon-common icon-ban non-coding-variant"></i>}
                             </td>
-                            <td colSpan="5" align="right">
+                            <td>
+                              {(significances.transcript && significances.transcript[0].caddPhred) &&
+                                <span className="label warning">
+                                  CADD: {significances.transcript[0].caddPhred}
+                                </span>
+                              }
+                            </td>
+                            <td colSpan="4" align="right">
                               {(typeof significances.positional !== 'undefined')
                                 ? (
                                   <Button
                                     onClick={() => this.toggleSignificanceRow(rowKey, 'positional')}
                                     className="button--tag button--positional"
                                   >
-                                  <i class="icon icon-common icon-angle-down"></i>
+                                  <i className="icon icon-common icon-angle-down"></i>
                                   &nbsp;Positional
                                   </Button>
                                 ) : null }
@@ -159,7 +177,7 @@ class ImpactSearchResults extends Component {
                                     onClick={() => this.toggleSignificanceRow(rowKey, 'clinical')}
                                     className="button--tag button--clinical"
                                   >
-                                  <i class="icon icon-common icon-angle-down"></i>
+                                  <i className="icon icon-common icon-angle-down"></i>
                                   &nbsp;Clinical
                                   </Button>
                                 ) : null }
@@ -170,7 +188,7 @@ class ImpactSearchResults extends Component {
                                     onClick={() => this.toggleSignificanceRow(rowKey, 'transcript')}
                                     className="button--tag button--transcript"
                                   >
-                                  <i class="icon icon-common icon-angle-down"></i>
+                                  <i className="icon icon-common icon-angle-down"></i>
                                   &nbsp;Transcript
                                   </Button>
                                 ) : null }
@@ -181,7 +199,7 @@ class ImpactSearchResults extends Component {
                                     onClick={() => this.toggleSignificanceRow(rowKey, 'structural')}
                                     className="button--tag button--structural"
                                   >
-                                  <i class="icon icon-common icon-angle-down"></i>
+                                  <i className="icon icon-common icon-angle-down"></i>
                                   &nbsp;Structural
                                   </Button>
                                 ) : null }

@@ -5,10 +5,19 @@ import { removeSnakeAndKebabCases } from '../../other/helpers';
 
 const ExpandedClinicalSignificance = (props) => {
   const { data } = props;
+console.log("CS DATA:", data);
   return (
     <tr>
       <td colSpan="11">
         <span className="expanded-section-title">Clinical Significances</span>
+        {(data.colocatedVariantsCount > 0) &&
+          <span className="expanded-section-subtitle">
+            {data.colocatedVariantsCount} Co-located Variant(s)
+            {(data.diseaseColocatedVariantsCount > 0) &&
+              <span>&nbsp;({data.diseaseColocatedVariantsCount} disease associated)</span>
+            }
+          </span>
+        }
         {props.detailsLink}
 
         <div className="significances-groups">
@@ -98,6 +107,8 @@ ExpandedClinicalSignificance.propTypes = {
       })),
     })),
     categories: PropTypes.arrayOf(PropTypes.string),
+    colocatedVariantsCount: PropTypes.number,
+    diseaseColocatedVariantsCount: PropTypes.number,
   }),
   detailsLink: PropTypes.element.isRequired,
 };

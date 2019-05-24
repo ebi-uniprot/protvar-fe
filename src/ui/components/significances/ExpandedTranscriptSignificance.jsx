@@ -9,6 +9,14 @@ const ExpandedTranscriptSignificance = (props) => {
     <tr>
       <td colSpan="11">
         <span className="expanded-section-title">Transcript Significances</span>
+        {(data[0].colocatedVariantsCount > 0) &&
+          <span className="expanded-section-subtitle">
+            {data[0].colocatedVariantsCount} Co-located Variant(s)
+            {(data[0].diseaseColocatedVariantsCount > 0) &&
+              <span>&nbsp;({data[0].diseaseColocatedVariantsCount} disease associated)</span>
+            }
+          </span>
+        }
         {props.detailsLink}
 
         { data.map(ts => (
@@ -150,6 +158,8 @@ ExpandedTranscriptSignificance.propTypes = {
     siftScore: PropTypes.number,
     start: PropTypes.number,
     tsl: PropTypes.number,
+    colocatedVariantsCount: PropTypes.number,
+    diseaseColocatedVariantsCount: PropTypes.number,
   })),
   detailsLink: PropTypes.element.isRequired,
 };
