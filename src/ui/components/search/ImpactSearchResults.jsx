@@ -146,8 +146,9 @@ class ImpactSearchResults extends Component {
                           <tr>
                             <td colSpan="4"></td>
                             <td>
-                              {(variation.novel)
-                                && <i title="Novel Variant" className="icon icon-common icon-new novel-variant"></i>}
+                              {/* (variation.novel)
+                                && <i title="Novel Variant" className="icon icon-common icon-new novel-variant"></i>
+                              */}
 
                               {(!protein.length)
                                 && <i title="Non-coding" className="icon icon-common icon-ban non-coding-variant"></i>}
