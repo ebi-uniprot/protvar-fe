@@ -134,7 +134,7 @@ class ImpactSearchResults extends Component {
                             <td>{gene.symbol}</td>
                             <td>
                               <ProteinReviewStatus type={protein.type} />
-                              {protein.accession}
+                              {(protein.isoform) ? protein.isoform : protein.accession}
                             </td>
                             <td>{protein.length || '-'}</td>
                             <td>{proteinPosition || '-'}</td>
@@ -274,6 +274,7 @@ ImpactSearchResults.propTypes = {
     }),
     protein: PropTypes.shape({
       accession: PropTypes.string,
+      isoform: PropTypes.string,
       canonical: PropTypes.bool,
       end: PropTypes.number,
       length: PropTypes.number,
