@@ -53,6 +53,22 @@
       font-size: 1.6rem;
       color: #999;
     }
+
+    .cadd-score {
+      padding: 0.3rem 0.4rem;
+      border-radius: 0.3rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+
+      &--green {
+        background-color: #00FF00;
+      }
+
+      &--red {
+        color: #FFF;
+        background-color: #FF0000;
+      }
+    }
   }
 
   .significances-groups {

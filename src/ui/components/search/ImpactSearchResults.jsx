@@ -120,6 +120,10 @@ class ImpactSearchResults extends Component {
                           variation.diseasAssociatedProteinColocatedVariantsCount;
                       }
 
+                      const caddColour = (significances.transcript[0].caddPhred <= 30)
+                        ? 'green'
+                        : 'red';
+
                       counter += 1;
 
                       return (
@@ -155,7 +159,8 @@ class ImpactSearchResults extends Component {
                             </td>
                             <td>
                               {(significances.transcript && significances.transcript[0].caddPhred) &&
-                                <span className="label warning">
+                                <span
+                                  className={`label warning cadd-score cadd-score--${caddColour}`}>
                                   CADD: {significances.transcript[0].caddPhred}
                                 </span>
                               }
