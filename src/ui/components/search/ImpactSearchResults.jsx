@@ -160,7 +160,9 @@ class ImpactSearchResults extends Component {
                             <td>
                               {(significances.transcript && significances.transcript[0].caddPhred) &&
                                 <span
-                                  className={`label warning cadd-score cadd-score--${caddColour}`}>
+                                  className={`label warning cadd-score cadd-score--${caddColour}`}
+                                  title={`Likely ${(significances.transcript[0].caddPhred < 30) ? 'Benign' : 'Deleterious'}`}
+                                >
                                   CADD: {significances.transcript[0].caddPhred}
                                 </span>
                               }
