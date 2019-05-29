@@ -50,9 +50,21 @@ class ExpandedStructuralSignificance extends Component {
         return all.concat(current.ligands);
       },[]);
 
-    const currentStructure = (!structure && bestStructures.length > 0)
+    let currentStructure = (!structure && bestStructures.length > 0)
       ? bestStructures[0]
       : structure;
+
+    // if (structure === null && bestStructures.length === 0) {
+    //   currentStructure = Object.keys(allStructures)[0];
+    //   // bestStructures = Object.keys(allStructures);
+    // }
+
+// console.log("--- structure:", structure, bestStructures);
+// console.log(">>> current structure:", currentStructure, allStructures);
+
+    if (structure === null && bestStructures.length === 0) {
+      return null;
+    }
 
     const currentStructureDetails = allStructures[currentStructure][0];
     const imageUrl = `https://www.ebi.ac.uk/pdbe/static/entry/${currentStructure}_single_entity_${currentStructureDetails.entity_id}_image-200x200.png`;
