@@ -126,6 +126,14 @@ class ImpactSearchResults extends Component {
 
                       counter += 1;
 
+                      let accession = protein.accession;
+
+                      if (protein.canonical) {
+                        accession = protein.canonicalAccession;
+                      } else if (protein.isoform) {
+                        accession = protein.isoform;
+                      }
+
                       return (
                         <Fragment key={`${rowKey}-${counter}`}>
                           
@@ -134,7 +142,7 @@ class ImpactSearchResults extends Component {
                             <td>{gene.symbol}</td>
                             <td>
                               <ProteinReviewStatus type={protein.type} />
-                              {(protein.isoform) ? protein.isoform : protein.accession}
+                              {accession}
                             </td>
                             <td>{protein.length || '-'}</td>
                             <td>{proteinPosition || '-'}</td>
@@ -278,6 +286,7 @@ ImpactSearchResults.propTypes = {
       accession: PropTypes.string,
       isoform: PropTypes.string,
       canonical: PropTypes.bool,
+      canonicalAccession: PropTypes.string,
       end: PropTypes.number,
       length: PropTypes.number,
       name: PropTypes.shape({
