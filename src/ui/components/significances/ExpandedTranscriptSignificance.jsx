@@ -96,6 +96,22 @@ const ExpandedTranscriptSignificance = (props) => {
               <b>Consequence Predections</b>
 
               <div className="significance-data-block">
+                {(ts.caddPhred)
+                    ? (
+                      <div>
+                        <span>CADD Phred: </span>
+                        <span className="capital-text">{ts.caddPhred}</span>
+                      </div>
+                    ) : null}
+
+                {(ts.caddRaw)
+                    ? (
+                      <div>
+                        <span>CADD Raw: </span>
+                        <span className="capital-text">{ts.caddRaw}</span>
+                      </div>
+                    ) : null}
+
                 {(ts.siftPrediction)
                     ? (
                       <div>
