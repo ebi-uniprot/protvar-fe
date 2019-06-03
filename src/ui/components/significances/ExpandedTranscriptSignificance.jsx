@@ -99,16 +99,8 @@ const ExpandedTranscriptSignificance = (props) => {
                 {(ts.caddPhred)
                     ? (
                       <div>
-                        <span>CADD Phred: </span>
+                        <span>CADD: </span>
                         <span className="capital-text">{ts.caddPhred}</span>
-                      </div>
-                    ) : null}
-
-                {(ts.caddRaw)
-                    ? (
-                      <div>
-                        <span>CADD Raw: </span>
-                        <span className="capital-text">{ts.caddRaw}</span>
                       </div>
                     ) : null}
 
