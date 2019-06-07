@@ -78,7 +78,7 @@ class App extends Component {
         <Route path={`${BASE_URL}/search`} render={() => <SearchResultsPage {...appProps} />} />
         <Route component={({ location }) => (
           <h3>
-404: Can&lsquo;t find
+            404: Can&lsquo;t find
             {location.pathname}
           </h3>
         )}
