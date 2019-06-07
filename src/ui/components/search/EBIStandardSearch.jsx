@@ -21,8 +21,11 @@ class EBIStandardSearch extends Component {
   }
 
   handleSubmit = (e) => {
-    console.log('submitting...');
-    this.props.onSubmit(this.state.searchTerm);
+    const { searchTerm } = this.state;
+    const { onSubmit } = this.props;
+
+    onSubmit(searchTerm);
+
     e.preventDefault();
     e.stopPropagation();
   }

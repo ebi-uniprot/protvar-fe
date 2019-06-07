@@ -19,11 +19,11 @@ const StructuralPosition = (props) => {
     <div className="structural-position">
       <div
         className="protein-sequence-line"
-        style={{ width: `${pixelLength}px`}}
+        style={{ width: `${pixelLength}px` }}
       />
       <div
         className="structure-coverage"
-        style={{ left: `${structureLeft}px`, width: `${structureWidth}px`}}
+        style={{ left: `${structureLeft}px`, width: `${structureWidth}px` }}
       />
       <div
         className="variant-marker"
@@ -34,14 +34,10 @@ const StructuralPosition = (props) => {
 };
 
 StructuralPosition.propTypes = {
-  proteinLength: PropTypes.number,
-  structureStart: PropTypes.number,
-  structureEnd: PropTypes.number,
-  position: PropTypes.number,
-};
-
-StructuralPosition.defaultProps = {
-
+  proteinLength: PropTypes.number.isRequired,
+  structureStart: PropTypes.number.isRequired,
+  structureEnd: PropTypes.number.isRequired,
+  position: PropTypes.number.isRequired,
 };
 
 export default StructuralPosition;

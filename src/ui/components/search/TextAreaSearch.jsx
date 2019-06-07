@@ -65,10 +65,13 @@ class TextAreaSearch extends Component {
   }
 
   handleSubmit = (e) => {
+    const { searchTerm } = this.state;
+    const { onSubmit } = this.props;
+
     e.preventDefault();
     e.stopPropagation();
 
-    this.props.onSubmit(this.state.searchTerm);
+    onSubmit(searchTerm);
   }
 
   render() {

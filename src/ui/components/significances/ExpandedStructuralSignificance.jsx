@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import StructuralPosition from '../other/StructuralPosition';
 
 class ExpandedStructuralSignificance extends Component {
-
   state = {
     structure: null,
   };
@@ -21,18 +20,16 @@ class ExpandedStructuralSignificance extends Component {
     const {
       structures,
       allStructures,
-      annotations,
       proteinLength,
       ligands,
-      interactions,
       position,
     } = data;
 
     Object.keys(allStructures)
       .forEach((pdbeId) => {
         allStructures[pdbeId]
-          .forEach((structure) => {
-            const [start, end] = structure.residue_range
+          .forEach((s) => {
+            const [start, end] = s.residue_range
               .split('-');
 
             structure.start = parseInt(start, 10);
@@ -41,26 +38,14 @@ class ExpandedStructuralSignificance extends Component {
       });
 
     const bestStructures = structures
-      .reduce((all, current) => {
-        return all.concat(current.best_structures);
-      },[]);
+      .reduce((all, current) => all.concat(current.best_structures), []);
 
     const allLigands = ligands
-      .reduce((all, current) => {
-        return all.concat(current.ligands);
-      },[]);
+      .reduce((all, current) => all.concat(current.ligands), []);
 
-    let currentStructure = (!structure && bestStructures.length > 0)
+    const currentStructure = (!structure && bestStructures.length > 0)
       ? bestStructures[0]
       : structure;
-
-    // if (structure === null && bestStructures.length === 0) {
-    //   currentStructure = Object.keys(allStructures)[0];
-    //   // bestStructures = Object.keys(allStructures);
-    // }
-
-// console.log("--- structure:", structure, bestStructures);
-// console.log(">>> current structure:", currentStructure, allStructures);
 
     if (structure === null && bestStructures.length === 0) {
       return null;
@@ -77,9 +62,9 @@ class ExpandedStructuralSignificance extends Component {
 
           <div className="significances-groups">
             <div className="column">
-              <i className="icon icon-functional structural-icon" data-icon="4"></i>
+              <i className="icon icon-functional structural-icon" data-icon="4" />
               <div><b>2D Image</b></div>
-              {(imageUrl) && <img src={imageUrl} />}
+              {(imageUrl) && <img src={imageUrl} alt="" />}
 
               <StructuralPosition
                 proteinLength={proteinLength}
@@ -90,29 +75,40 @@ class ExpandedStructuralSignificance extends Component {
             </div>
 
             <div className="column">
-              <i className="icon icon-conceptual summary-icon structural-icon" data-icon="s"></i>
-              <b>Structures ({bestStructures.length})</b>
-              {(bestStructures.length > 0) && <select multiple size="5" onChange={e => this.structureChange(e)}>
-                {bestStructures.map((s) => {
-                    return <option value={s}>{s}</option>
-                  })
-                };
-              </select>}
+              <i className="icon icon-conceptual summary-icon structural-icon" data-icon="s" />
+              <b>
+                Structures (
+                {bestStructures.length}
+                )
+              </b>
+              {(bestStructures.length > 0) && (
+              <select multiple size="5" onChange={e => this.structureChange(e)}>
+                {bestStructures.map(s => <option value={s}>{s}</option>)
+                }
+                ;
+              </select>
+              )}
             </div>
 
             <div className="column">
-              <i className="icon icon-conceptual summary-icon structural-icon" data-icon="b"></i>
-              <b>Ligands ({allLigands.length})</b>
-              {(allLigands.length > 0) && <ul data-columns="2">
+              <i className="icon icon-conceptual summary-icon structural-icon" data-icon="b" />
+              <b>
+                Ligands (
+                {allLigands.length}
+                )
+              </b>
+              {(allLigands.length > 0) && (
+              <ul data-columns="2">
                 {allLigands.map(l => <li>{`${l.ligand_name} [${l.ligand_id}]`}</li>)}
-              </ul>}
+              </ul>
+              )}
             </div>
           </div>
         </td>
       </tr>
     );
   }
-};
+}
 
 ExpandedStructuralSignificance.propTypes = {
   data: PropTypes.shape({

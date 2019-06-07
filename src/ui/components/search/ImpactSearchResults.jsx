@@ -36,7 +36,9 @@ class ImpactSearchResults extends Component {
       <div className="search-results">
         <div className="results-and-counter">
           <span className="results-counter">
-            {totalCounts} Results Found
+            {totalCounts}
+            {' '}
+Results Found
           </span>
           <Button onClick={handleDownload}>Download</Button>
         </div>
@@ -67,7 +69,10 @@ class ImpactSearchResults extends Component {
                 return (
                   <Fragment key={`${group.key}`}>
                     <tr>
-                      <td colSpan="11" className="query-row">Query: {group.input}</td>
+                      <td colSpan="11" className="query-row">
+Query:
+                        {group.input}
+                      </td>
                     </tr>
                     {group.rows.map((row, i) => {
                       const {
@@ -91,7 +96,16 @@ class ImpactSearchResults extends Component {
                           .join(protein.start.toString());
 
                         const detailsPageURL = `https://www.ebi.ac.uk/thornton-srv/databases/cgi-bin/DisaStr/GetPage.pl?uniprot_acc=${protein.accession.toUpperCase()}&template=resreport.html&res=${varSTRes}`;
-                        detailsPageLink = <a className="details-page-link" href={detailsPageURL} target="_blank">View Details</a>;
+                        detailsPageLink = (
+                          <a
+                            className="details-page-link"
+                            href={detailsPageURL}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            View Details
+                          </a>
+                        );
                       }
 
                       significances.transcript
@@ -113,11 +127,11 @@ class ImpactSearchResults extends Component {
                       }
 
                       if (typeof significances.clinical !== 'undefined') {
-                        significances.clinical.colocatedVariantsCount =
-                          variation.proteinColocatedVariantsCount;
+                        significances.clinical.colocatedVariantsCount = variation
+                          .proteinColocatedVariantsCount;
 
-                        significances.clinical.diseaseColocatedVariantsCount =
-                          variation.diseasAssociatedProteinColocatedVariantsCount;
+                        significances.clinical.diseaseColocatedVariantsCount = variation
+                          .diseasAssociatedProteinColocatedVariantsCount;
                       }
 
                       const caddColour = (significances.transcript[0].caddPhred <= 30)
@@ -126,7 +140,7 @@ class ImpactSearchResults extends Component {
 
                       counter += 1;
 
-                      let accession = protein.accession;
+                      let { accession } = protein;
 
                       if (protein.canonical) {
                         accession = protein.canonicalAccession;
@@ -136,7 +150,7 @@ class ImpactSearchResults extends Component {
 
                       return (
                         <Fragment key={`${rowKey}-${counter}`}>
-                          
+
                           <tr key={rowKey} className="no-border">
                             <td rowSpan="2" className="row-counter">{counter}</td>
                             <td>{gene.symbol}</td>
@@ -156,23 +170,23 @@ class ImpactSearchResults extends Component {
                           </tr>
 
                           <tr>
-                            <td colSpan="4"></td>
+                            <td colSpan="4" />
                             <td>
-                              {/* (variation.novel)
-                                && <i title="Novel Variant" className="icon icon-common icon-new novel-variant"></i>
-                              */}
-
                               {(!protein.length)
-                                && <i title="Non-coding" className="icon icon-common icon-ban non-coding-variant"></i>}
+                                && <i title="Non-coding" className="icon icon-common icon-ban non-coding-variant" />}
                             </td>
                             <td>
-                              {(significances.transcript && significances.transcript[0].caddPhred) &&
+                              {(significances.transcript && significances.transcript[0].caddPhred)
+                                && (
                                 <span
                                   className={`label warning cadd-score cadd-score--${caddColour}`}
                                   title={`Likely ${(significances.transcript[0].caddPhred < 30) ? 'Benign' : 'Deleterious'}`}
                                 >
-                                  CADD: {significances.transcript[0].caddPhred}
+                                  CADD:
+                                  {' '}
+                                  {significances.transcript[0].caddPhred}
                                 </span>
+                                )
                               }
                             </td>
                             <td colSpan="4" align="right">
@@ -182,7 +196,7 @@ class ImpactSearchResults extends Component {
                                     onClick={() => this.toggleSignificanceRow(rowKey, 'positional')}
                                     className="button--tag button--positional"
                                   >
-                                  <i className="icon icon-common icon-angle-down"></i>
+                                    <i className="icon icon-common icon-angle-down" />
                                   &nbsp;Positional
                                   </Button>
                                 ) : null }
@@ -193,7 +207,7 @@ class ImpactSearchResults extends Component {
                                     onClick={() => this.toggleSignificanceRow(rowKey, 'clinical')}
                                     className="button--tag button--clinical"
                                   >
-                                  <i className="icon icon-common icon-angle-down"></i>
+                                    <i className="icon icon-common icon-angle-down" />
                                   &nbsp;Clinical
                                   </Button>
                                 ) : null }
@@ -204,7 +218,7 @@ class ImpactSearchResults extends Component {
                                     onClick={() => this.toggleSignificanceRow(rowKey, 'transcript')}
                                     className="button--tag button--transcript"
                                   >
-                                  <i className="icon icon-common icon-angle-down"></i>
+                                    <i className="icon icon-common icon-angle-down" />
                                   &nbsp;Transcript
                                   </Button>
                                 ) : null }
@@ -215,7 +229,7 @@ class ImpactSearchResults extends Component {
                                     onClick={() => this.toggleSignificanceRow(rowKey, 'structural')}
                                     className="button--tag button--structural"
                                   >
-                                  <i className="icon icon-common icon-angle-down"></i>
+                                    <i className="icon icon-common icon-angle-down" />
                                   &nbsp;Structural
                                   </Button>
                                 ) : null }
@@ -259,7 +273,7 @@ class ImpactSearchResults extends Component {
                     })}
                   </Fragment>
                 );
-            })}
+              })}
           </tbody>
         </table>
       </div>
