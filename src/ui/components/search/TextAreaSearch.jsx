@@ -116,6 +116,7 @@ class TextAreaSearch extends Component {
 
             <textarea
               id="main-textarea-search-field"
+              className="main-textarea-search-field"
               value={searchTerm}
               onChange={this.handleInputChange}
             />
@@ -132,7 +133,7 @@ class TextAreaSearch extends Component {
               Open Ensembl Assembly Remapping
             </a>
 
-            <div id="search-button-group">
+            <div id="search-button-group" className="search-button-group">
               <Button className="button--primary">
                 File Upload
               </Button>

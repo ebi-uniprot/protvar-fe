@@ -39,12 +39,12 @@ const DefaultPageLayout = (props) => {
       </header>
 
       { /* <!-- Suggested layout containers --> */ }
-      <div id="content">
+      <div id="content" className="content">
         <div data-sticky-container>
           <div id="masthead" className="masthead" data-sticky data-sticky-on="large" data-top-anchor="main-content-area:top" data-btm-anchor="main-content-area:bottom">
             <div className="masthead-inner row">
               { /* <!-- local-title --> */ }
-              <div className="columns medium-7" id="local-title">
+              <div className="local-title columns medium-7" id="local-title">
                 <a href={`${BASE_URL}/`} title="Back to PepVEP's homepage">PepVEP</a>
               </div>
               { /* <!-- /local-title --> */ }
@@ -80,7 +80,7 @@ const DefaultPageLayout = (props) => {
           </ul>
         </nav> --> */ }
 
-          <div id="main-content-area" className="row">
+          <div id="main-content-area" className="main-content-area row">
             <div className="small-12 columns">
               <div className="default-page-layout">
                 <DefaultPageContent>

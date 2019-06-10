@@ -1,19 +1,25 @@
+
+$protein-review-status-isoform-reviewed-colour: #c39b00;
+$protein-review-status-reviewed: #c39b00;
+$protein-review-status-ensembl-select: #336;
+$protein-review-status-unreviewed: #93cffa;
+
 .protein-review-status {
   margin-right: 0.3rem;
 }
 
 .protein-review-status--isoform-reviewed {
-  color: #c39b00;
+  color: $protein-review-status-isoform-reviewed-colour;
 }
 
 .protein-review-status--reviewed {
-  color: #c39b00;
+  color: $protein-review-status-reviewed;
 }
 
 .protein-review-status--ensembl-select {
-  color: #336;
+  color: $protein-review-status-ensembl-select;
 }
 
 .protein-review-status--unreviewd {
-  color: #93cffa;
+  color: $protein-review-status-unreviewed;
 }

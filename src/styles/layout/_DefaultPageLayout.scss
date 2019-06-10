@@ -1,24 +1,24 @@
 
-#content {
+.content {
 
   font-size: 1rem;
 
-  #masthead {
+  .masthead {
 
     border-bottom: 1px solid lighten($black-colour, 50%);
     margin-bottom: 2rem;
+  }
 
-    #local-title {
+  .local-title {
 
-      a {
-        color: $black-colour;
-        text-shadow: 1px 1px 0px $white-colour;
-        font-family: $primary-font-family;
-      }
+    a {
+      color: $black-colour;
+      text-shadow: 1px 1px 0 $white-colour;
+      font-family: $primary-font-family;
     }
   }
 
-  #main-content-area {
+  .main-content-area {
     max-width: 90vw;
     margin: 0 auto;
   }

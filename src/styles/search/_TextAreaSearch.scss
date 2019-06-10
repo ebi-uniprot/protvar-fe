@@ -1,9 +1,12 @@
 
+$input-example-border-colour: #ffb100;
+$input-example-background-colour: #f7f5f1;
+$variant-example-colour: #4949c7;
 
 
 // Text-area search field
 // ----------------------
-#main-textarea-search-field {
+.main-textarea-search-field {
   min-height: 30vh;
   border-radius: 5px;
   padding: .7rem 1rem;
@@ -17,7 +20,7 @@
 
 // Search button-group
 // -------------------
-#search-button-group {
+.search-button-group {
   margin: 2rem 0;
   display: flex;
 
@@ -39,11 +42,11 @@
   float: left;
 
   .input-examples {
-    border: 1px solid #ffb100;
-    margin: 1rem 0 2rem 0;
+    border: 1px solid $input-example-border-colour;
+    margin: 1rem 0 2rem;
     padding: .5rem 1rem;
     border-radius: 5px;
-    background-color: #f7f5f1;
+    background-color: $input-example-background-colour;
 
     label {
       width: 50%;
@@ -58,7 +61,7 @@
 
     .variant-example {
       width: 200px;
-      color: #4949c7;
+      color: $variant-example-colour;
     }
   }
 
