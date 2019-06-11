@@ -10,7 +10,6 @@
     "dev-build": "webpack --config webpack.dev.js --mode development",
     "build": "webpack --mode production",
     "jslint": "./node_modules/.bin/eslint -c .eslintrc.json --ext .js,.jsx 'src/**' '__tests__/**' '__mocks__/**' --ignore-pattern 'src/styles/**'",
-    "csslint": "scss-lint ./src/styles/**/*.scss",
     "test": "jest",
     "update-snapshots": "jest --updateSnapshot",
     "remove-obsolete-snapshots": "yarn test -u",

@@ -1,6 +1,4 @@
 
-
-
 // Font Settings
 // -------------
 $base-font-size:            1rem;
@@ -34,3 +32,40 @@ $default-radius:            $base-font-size;
 $default-button-height:     2.5 * $base-font-size;
 $default-button-padding:    0 $default-padding;
 $default-button-radius:     $default-button-height / 2;
+
+
+
+// Protien Review Status Colours
+// -----------------------------
+$protein-review-status-isoform-reviewed-colour:   #c39b00;
+$protein-review-status-reviewed:                  #c39b00;
+$protein-review-status-ensembl-select:            #336;
+$protein-review-status-unreviewed:                #93cffa;
+
+
+
+// Protein Structure Colours
+// -------------------------
+$protein-structure-sequence-line-colour:          #4ba5ff;
+$protein-structure-marker-colour:                 #1fe02b;
+$protein-structure-coverage-colour:               #143468;
+
+
+
+// Other
+// -----
+$search-results-table-border-colour:              #c7c0a9;
+$search-results-table-header-background-colour:   #057d9f;
+$search-results-divider-border-colour:            #dcd5c0;
+$search-results-query-row-background-colour:      #ebf6fb;
+$search-results-badge-border-colour:              #333;
+$search-results-badge-colour:                     #333;
+$novel-variant-colour:                            #f00;
+$non-coding-variant-colour:                       #999;
+$cadd-score-green-background-colour:              #0f0;
+$cadd-score-red-background-colour:                #f00;
+$significance-data-block-border-colour:           #ddd;
+$publications-label-background-colour:            #ffb100;
+$input-example-border-colour:                     #ffb100;
+$input-example-background-colour:                 #f7f5f1;
+$variant-example-colour:                          #4949c7;
