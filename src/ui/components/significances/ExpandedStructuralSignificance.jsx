@@ -9,6 +9,7 @@ class ExpandedStructuralSignificance extends Component {
   };
 
   structureChange = ({ target }) => {
+console.log(">>> structure:", target.value);
     this.setState({
       structure: target.value,
     });
@@ -28,8 +29,8 @@ class ExpandedStructuralSignificance extends Component {
     Object.keys(allStructures)
       .forEach((pdbeId) => {
         allStructures[pdbeId]
-          .forEach((s) => {
-            const [start, end] = s.residue_range
+          .forEach((structure) => {
+            const [start, end] = structure.residue_range
               .split('-');
 
             structure.start = parseInt(start, 10);
