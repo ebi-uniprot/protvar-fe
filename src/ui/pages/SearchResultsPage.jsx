@@ -1,18 +1,27 @@
 
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import DefaultPageLayout from '../layout/DefaultPageLayout';
 import ImpactSearchResults from '../components/search/ImpactSearchResults';
+import Alert from '../components/other/Alert';
 
 const SearchResultsPageContent = (props) => {
-  console.log('results:', props);
-  const { searchResults, handleDownload } = props;
+  const {
+    searchResults,
+    handleDownload,
+    errors,
+  } = props;
+
   return (
-    <ImpactSearchResults
-      rows={searchResults}
-      handleDownload={handleDownload}
-    />
+    <Fragment>
+      {errors && errors.map(e => <Alert {...e} key={window.btoa(e.message)}/>)}
+
+      <ImpactSearchResults
+        rows={searchResults}
+        handleDownload={handleDownload}
+      />
+    </Fragment>
   );
 };
 

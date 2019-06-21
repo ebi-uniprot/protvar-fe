@@ -1,0 +1,15 @@
+
+// Alert
+// -----
+.alert {
+  border: 1px solid $alert-box-border-colour;
+  margin: 1rem 0 2rem;
+  padding: .5rem 1rem;
+  border-radius: 5px;
+  background-color: $alert-box-background-colour;
+
+  &__title {
+    font-size: 1.2rem;
+    font-weight: 700;
+  }
+}

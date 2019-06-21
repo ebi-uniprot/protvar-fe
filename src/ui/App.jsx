@@ -12,6 +12,7 @@ import { defaultParser } from '../input-parser';
 
 import HomePage from './pages/HomePage';
 import SearchResultsPage from './pages/SearchResultsPage';
+import APIErrorPage from './pages/APIErrorPage';
 
 class App extends Component {
   constructor(props, context) {
@@ -32,13 +33,19 @@ class App extends Component {
     axios
       .post(apiURI, { input: data })
       .then((response) => {
+        const { errors, results } = response.data;
         console.log('>>> search response:', response.data);
         this.setState({
           searchTerm: input,
-          searchResults: response.data,
+          searchResults: results,
+          errors,
         });
 
         history.push('search');
+      })
+      .catch((e) => {
+        console.log("Got an axios error:", e);
+        history.push('api-error');
       });
   }
 
@@ -54,14 +61,15 @@ class App extends Component {
         responseType: 'blob',
       })
       .then((response) => {
-        console.log('>>> download response:', response.data);
-
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement('a');
         link.href = url;
         link.setAttribute('download', 'pepvep-data.csv'); // or any other extension
         document.body.appendChild(link);
         link.click();
+      })
+      .catch((e) => {
+        console.log("Got an axios error:", e);
       });
   }
 
@@ -76,6 +84,7 @@ class App extends Component {
       <Switch>
         <Route path={`${BASE_URL}/`} exact render={() => <HomePage {...appProps} />} />
         <Route path={`${BASE_URL}/search`} render={() => <SearchResultsPage {...appProps} />} />
+        <Route path={`${BASE_URL}/api-error`} render={() => <APIErrorPage {...appProps} />} />
         <Route component={({ location }) => (
           <h3>
             404: Can&lsquo;t find
