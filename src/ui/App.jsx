@@ -35,7 +35,7 @@ class App extends Component {
         console.log('>>> search response:', response.data);
         this.setState({
           searchTerm: input,
-          searchResults: response.data,
+          searchResults: response.data.results,
         });
 
         history.push('search');

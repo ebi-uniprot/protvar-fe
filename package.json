@@ -12,10 +12,7 @@
     "jslint": "./node_modules/.bin/eslint -c .eslintrc.json --ext .js,.jsx 'src/**' '__tests__/**' '__mocks__/**' --ignore-pattern 'src/styles/**'",
     "test": "jest",
     "update-snapshots": "jest --updateSnapshot",
-    "remove-obsolete-snapshots": "yarn test -u",
-    "build-css": "node-sass-chokidar src/styles -o src/styles",
-    "watch-css": "npm run build-css && node-sass-chokidar src/styles -o src/styles --watch --recursive",
-    "start-dev": "npm-run-all -p watch-css dev-server"
+    "build-css": "node-sass-chokidar src/styles -o src/styles"
   },
   "jest": {
     "moduleFileExtensions": [
@@ -29,7 +26,11 @@
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
       "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js"
     },
-    "testURL": "http://localhost/"
+    "testURL": "http://localhost/",
+    "globals": {
+      "BASE_URL": "/uniprot/pepvep",
+      "API_URL": "/uniprot/pepvep"
+    }
   },
   "dependencies": {
     "axios": "^0.18.0",
