@@ -83,7 +83,8 @@ class ExpandedStructuralSignificance extends Component {
               </b>
               {(bestStructures.length > 0) && (
               <select multiple size="5" onChange={e => this.structureChange(e)}>
-                {bestStructures.map(s => <option value={s}>{s}</option>)
+                {bestStructures
+                  .map(s => <option key={`best-structure-${s}`} value={s}>{s}</option>)
                 }
                 ;
               </select>

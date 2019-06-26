@@ -12,10 +12,7 @@
     "jslint": "./node_modules/.bin/eslint -c .eslintrc.json --ext .js,.jsx 'src/**' '__tests__/**' '__mocks__/**' --ignore-pattern 'src/styles/**'",
     "test": "jest",
     "update-snapshots": "jest --updateSnapshot",
-    "remove-obsolete-snapshots": "yarn test -u",
-    "build-css": "node-sass-chokidar src/styles -o src/styles",
-    "watch-css": "npm run build-css && node-sass-chokidar src/styles -o src/styles --watch --recursive",
-    "start-dev": "npm-run-all -p watch-css dev-server"
+    "build-css": "node-sass-chokidar src/styles -o src/styles"
   },
   "jest": {
     "moduleFileExtensions": [

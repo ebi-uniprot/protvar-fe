@@ -82,7 +82,7 @@ const ExpandedClinicalSignificance = (props) => {
                 });
 
                 return (
-                  <div className="associated-disease">
+                  <div className="associated-disease" key={`disease-wrapper-${i + 1}`}>
                     {`Disease #${i + 1}`}
                     :
                     {a.name}
