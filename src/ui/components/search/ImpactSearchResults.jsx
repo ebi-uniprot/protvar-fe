@@ -38,7 +38,7 @@ class ImpactSearchResults extends Component {
           <span className="results-counter">
             {totalCounts}
             {' '}
-Results Found
+            Results Found
           </span>
           <Button onClick={handleDownload}>Download</Button>
         </div>
@@ -70,7 +70,7 @@ Results Found
                   <Fragment key={`${group.key}`}>
                     <tr>
                       <td colSpan="11" className="query-row">
-Query:
+                        Query:
                         {group.input}
                       </td>
                     </tr>

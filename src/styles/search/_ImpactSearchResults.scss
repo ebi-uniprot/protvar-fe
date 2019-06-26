@@ -44,12 +44,12 @@
     border: 0;
   }
 
-  query-row {
+  .query-row {
     padding: 0.7rem;
     background-color: $search-results-query-row-background-colour;
   }
 
-  row-counter {
+  .row-counter {
     text-align: center;
     // scss-lint:disable ImportantRule
     border-bottom: 1px solid $search-results-divider-border-colour !important;
