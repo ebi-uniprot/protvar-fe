@@ -28,12 +28,12 @@ class ExpandedStructuralSignificance extends Component {
     Object.keys(allStructures)
       .forEach((pdbeId) => {
         allStructures[pdbeId]
-          .forEach((s) => {
-            const [start, end] = s.residue_range
+          .forEach((currentStructure) => {
+            const [start, end] = currentStructure.residue_range
               .split('-');
 
-            s.start = parseInt(start, 10);
-            s.end = parseInt(end, 10);
+            currentStructure.start = parseInt(start, 10);
+            currentStructure.end = parseInt(end, 10);
           });
       });
 
