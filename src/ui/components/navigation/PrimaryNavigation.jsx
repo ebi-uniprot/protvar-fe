@@ -13,9 +13,11 @@ class PrimaryNavigation extends Component {
   };
 
   render() {
+    const { items } = this.state;
+
     return (
       <div className="primary-navigation">
-        { this.state.items.forEach(item => <Button>{item}</Button>) }
+        { items.forEach(item => <Button>{item}</Button>) }
       </div>
     );
   }

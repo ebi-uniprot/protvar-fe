@@ -1,9 +1,7 @@
 
-
-
 // Text-area search field
 // ----------------------
-#main-textarea-search-field {
+.main-textarea-search-field {
   min-height: 30vh;
   border-radius: 5px;
   padding: .7rem 1rem;
@@ -17,7 +15,7 @@
 
 // Search button-group
 // -------------------
-#search-button-group {
+.search-button-group {
   margin: 2rem 0;
   display: flex;
 
@@ -39,21 +37,26 @@
   float: left;
 
   .input-examples {
-    border: 1px solid #ffb100;
-    margin: 1rem 0 2rem 0;
+    border: 1px solid $input-example-border-colour;
+    margin: 1rem 0 2rem;
     padding: .5rem 1rem;
     border-radius: 5px;
-    background-color: #f7f5f1;
+    background-color: $input-example-background-colour;
+
+    label {
+      width: 50%;
+      display: inline-block;
+      cursor: pointer;
+    }
 
     span {
-      width: 10%;
+      width: 120px;
       display: inline-block;
     }
 
     .variant-example {
-      width: 40%;
-      color: #4949c7;
-      padding-left: 1rem;
+      width: 200px;
+      color: $variant-example-colour;
     }
   }
 

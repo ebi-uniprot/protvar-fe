@@ -19,7 +19,8 @@
       "components": [ "Link" ],
       "specialLink": [ "to", "hrefLeft", "hrefRight" ],
       "aspects": [ "noHref", "invalidHref", "preferButton" ]
-    }]
+    }],
+    "react/button-has-type": false
   },
   "globals": {
     "BASE_URL": "writable",

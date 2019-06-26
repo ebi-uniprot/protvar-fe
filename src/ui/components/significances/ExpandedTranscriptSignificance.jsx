@@ -4,20 +4,44 @@ import PropTypes from 'prop-types';
 import { removeSnakeAndKebabCases } from '../../other/helpers';
 
 const ExpandedTranscriptSignificance = (props) => {
-  const { data } = props;
+  const { data, detailsLink } = props;
   return (
     <tr>
       <td colSpan="11">
         <span className="expanded-section-title">Transcript Significances</span>
-        {props.detailsLink}
+        {(data[0].colocatedVariantsCount > 0)
+          && (
+          <span className="expanded-section-subtitle">
+            {data[0].colocatedVariantsCount}
+            {' '}
+            Co-located Variant(s)
+            {(data[0].diseaseColocatedVariantsCount > 0)
+              && (
+              <span>
+                &nbsp;(
+                {data[0].diseaseColocatedVariantsCount}
+                {' '}
+                disease associated)
+              </span>
+              )
+            }
+          </span>
+          )
+        }
+        {detailsLink}
 
         { data.map(ts => (
-          <div className="significances-groups">
+          <div
+            className="significances-groups"
+            key={`transcript-significances-group-wrapper-${ts.hgvsp}`}
+          >
             <div className="column">
               <b>Genomic Summary</b>
               <div className="significance-data-block">
                 <div>
-                  <span>HGVSg: </span> {ts.hgvsg}
+                  <span>HGVSg: </span>
+                  {' '}
+                  {ts.hgvsg}
                 </div>
                 <div>
                   <span>Most Severe Consequence: </span>
@@ -28,11 +52,6 @@ const ExpandedTranscriptSignificance = (props) => {
 
                 <span className="publications-label">Population Frequency: NA</span>
               </div>
-
-              {/* <div className="significance-data-block">
-                  <b>Population Frequency</b>
-                  <div>Data Not Available</div>
-                </div> */}
             </div>
 
             <div className="column">
@@ -42,22 +61,27 @@ const ExpandedTranscriptSignificance = (props) => {
                   <span>Consequences: </span>
                   <span className="capital-text">
                     {ts.consequenceTerms
-                        .map(ct => removeSnakeAndKebabCases(ct))
-                        .join(', ')}
+                      .map(ct => removeSnakeAndKebabCases(ct))
+                      .join(', ')}
                   </span>
                 </div>
                 <div>
-                  <span>Impact: </span> <span className="capital-text">{removeSnakeAndKebabCases(ts.impact)}</span>
+                  <span>Impact: </span>
+                  {' '}
+                  <span className="capital-text">{removeSnakeAndKebabCases(ts.impact)}</span>
                 </div>
                 <div>
-                  <span>{(ts.canonical) ? 'SELECT' : 'Isoform'} Transcript</span>
+                  <span>
+                    {(ts.canonical) ? 'SELECT' : 'Isoform'}
+                    {' '}
+                    Transcript
+                  </span>
                 </div>
                 <div>
-                  {/* <span>Biotype:</span>  */}
                   <span className="capital-text">{removeSnakeAndKebabCases(ts.biotype)}</span>
                 </div>
                 <div>
-                  {/* <span>Codons:</span>  */}{ts.codons}
+                  {ts.codons}
                 </div>
               </div>
 
@@ -66,54 +90,95 @@ const ExpandedTranscriptSignificance = (props) => {
             <div className="column">
               <b>Translation Evidences</b>
               {(ts.aminoAcids)
-                    ? <div><span>Amino Acid Change: </span> {ts.aminoAcids}</div>
-                    : null}
+                ? (
+                  <div>
+                    <span>Amino Acid Change: </span>
+                    {' '}
+                    {ts.aminoAcids}
+                  </div>
+                )
+                : null}
 
               {(ts.hgvsp)
-                    ? <div><span>HGVSp: </span> {ts.hgvsp}</div>
-                    : null}
+                ? (
+                  <div>
+                    <span>HGVSp: </span>
+                    {' '}
+                    {ts.hgvsp}
+                  </div>
+                )
+                : null}
 
               {(ts.start)
-                    ? (
-                      <div className="positional-feature-position2">
-                        <span>Start: {ts.start}</span>
-                        {(ts.start !== ts.end)
-                            ? <span>End: {ts.end}</span>
-                            : null}
-                      </div>
-                    ) : null}
+                ? (
+                  <div className="positional-feature-position2">
+                    <span>
+                      Start:
+                      {ts.start}
+                    </span>
+                    {(ts.start !== ts.end)
+                      ? (
+                        <span>
+                          End:
+                          {ts.end}
+                        </span>
+                      )
+                      : null}
+                  </div>
+                ) : null}
             </div>
 
             <div className="column">
               <b>Consequence Predections</b>
 
               <div className="significance-data-block">
+                {(ts.caddPhred)
+                  ? (
+                    <div>
+                      <span>CADD: </span>
+                      <span className="capital-text">{ts.caddPhred}</span>
+                    </div>
+                  ) : null}
+
+                {(ts.caddRaw)
+                  ? (
+                    <div>
+                      <span>CADD: </span>
+                      <span className="capital-text">{ts.caddRaw}</span>
+                    </div>
+                  ) : null}
+
                 {(ts.siftPrediction)
-                    ? (
-                      <div>
-                        <span>SIFT: </span>
-                        <span className="capital-text">{removeSnakeAndKebabCases(ts.siftPrediction)}, {ts.siftScore}</span>
-                      </div>
-                    ) : null}
+                  ? (
+                    <div>
+                      <span>SIFT: </span>
+                      <span className="capital-text">
+                        {removeSnakeAndKebabCases(ts.siftPrediction)}
+                        ,
+                        {' '}
+                        {ts.siftScore}
+                      </span>
+                    </div>
+                  ) : null}
 
                 {(ts.polyphenPrediction)
-                    ? (
-                      <div>
-                        <span>Polyphen: </span>
-                        <span className="capital-text">{removeSnakeAndKebabCases(ts.polyphenPrediction)}, {ts.polyphenScore}</span>
-                      </div>
-                    ) : null}
+                  ? (
+                    <div>
+                      <span>Polyphen: </span>
+                      <span className="capital-text">
+                        {removeSnakeAndKebabCases(ts.polyphenPrediction)}
+                        ,
+                        {' '}
+                        {ts.polyphenScore}
+                      </span>
+                    </div>
+                  ) : null}
 
                 <span className="publications-label">Other Predections: NA</span>
               </div>
-
-              {/* <div className="significance-data-block">
-                  <b>Other Predections</b>
-                  <div>Data Not Available</div>
-                </div> */}
             </div>
           </div>
-          ))}
+        ))}
       </td>
     </tr>
   );
@@ -150,6 +215,8 @@ ExpandedTranscriptSignificance.propTypes = {
     siftScore: PropTypes.number,
     start: PropTypes.number,
     tsl: PropTypes.number,
+    colocatedVariantsCount: PropTypes.number,
+    diseaseColocatedVariantsCount: PropTypes.number,
   })),
   detailsLink: PropTypes.element.isRequired,
 };

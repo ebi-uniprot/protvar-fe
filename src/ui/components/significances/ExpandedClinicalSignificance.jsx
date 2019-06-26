@@ -4,12 +4,31 @@ import PropTypes from 'prop-types';
 import { removeSnakeAndKebabCases } from '../../other/helpers';
 
 const ExpandedClinicalSignificance = (props) => {
-  const { data } = props;
+  const { data, detailsLink } = props;
   return (
     <tr>
       <td colSpan="11">
         <span className="expanded-section-title">Clinical Significances</span>
-        {props.detailsLink}
+        {(data.colocatedVariantsCount > 0)
+          && (
+          <span className="expanded-section-subtitle">
+            {data.colocatedVariantsCount}
+            {' '}
+            Co-located Variant(s)
+            {(data.diseaseColocatedVariantsCount > 0)
+              && (
+              <span>
+                &nbsp;(
+                {data.diseaseColocatedVariantsCount}
+                {' '}
+                disease associated)
+              </span>
+              )
+            }
+          </span>
+          )
+        }
+        {detailsLink}
 
         <div className="significances-groups">
           <div className="column">
@@ -36,7 +55,15 @@ const ExpandedClinicalSignificance = (props) => {
               {data.association.map((a, i) => {
                 const links = a.evidences.map(({ source }) => {
                   if (source.name === 'pubmed') {
-                    return <a href={`${source.url}`} target="_blank">{source.name}</a>;
+                    return (
+                      <a
+                        href={`${source.url}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {source.name}
+                      </a>
+                    );
                   }
 
                   if (source.name === 'ClinVar') {
@@ -44,6 +71,7 @@ const ExpandedClinicalSignificance = (props) => {
                       <a
                         href={`https://www.ncbi.nlm.nih.gov/clinvar/${source.id}/`}
                         target="_target"
+                        rel="noopener noreferrer"
                       >
                         {source.name}
                       </a>
@@ -54,9 +82,17 @@ const ExpandedClinicalSignificance = (props) => {
                 });
 
                 return (
-                  <div className="associated-disease">
-                    {`Disease #${i + 1}`}: {a.name}.<br />
-                    <span className="publications-label">{links.length} Evidence(s)</span>
+                  <div className="associated-disease" key={`disease-wrapper-${i + 1}`}>
+                    {`Disease #${i + 1}`}
+                    :
+                    {a.name}
+                    .
+                    <br />
+                    <span className="publications-label">
+                      {links.length}
+                      {' '}
+                      Evidence(s)
+                    </span>
                   </div>
                 );
               })}
@@ -98,6 +134,8 @@ ExpandedClinicalSignificance.propTypes = {
       })),
     })),
     categories: PropTypes.arrayOf(PropTypes.string),
+    colocatedVariantsCount: PropTypes.number,
+    diseaseColocatedVariantsCount: PropTypes.number,
   }),
   detailsLink: PropTypes.element.isRequired,
 };

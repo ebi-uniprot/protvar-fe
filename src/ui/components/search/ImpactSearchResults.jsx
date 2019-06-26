@@ -6,6 +6,7 @@ import ExpandedPositionalSignificance from '../significances/ExpandedPositionalS
 import ExpandedTranscriptSignificance from '../significances/ExpandedTranscriptSignificance';
 import ExpandedClinicalSignificance from '../significances/ExpandedClinicalSignificance';
 import ExpandedStructuralSignificance from '../significances/ExpandedStructuralSignificance';
+import ProteinReviewStatus from '../other/ProteinReviewStatus';
 
 class ImpactSearchResults extends Component {
   state = {
@@ -35,23 +36,11 @@ class ImpactSearchResults extends Component {
       <div className="search-results">
         <div className="results-and-counter">
           <span className="results-counter">
-            {totalCounts} Results Found
+            {totalCounts}
+            {' '}
+Results Found
           </span>
           <Button onClick={handleDownload}>Download</Button>
-        </div>
-        <div className="legends">
-          <div className="legends-item">
-            <span className="legends-icon button--positional">P</span> Positional Significances
-          </div>
-          <div className="legends-item">
-            <span className="legends-icon button--clinical">C</span> Clinical Significances
-          </div>
-          <div className="legends-item">
-            <span className="legends-icon button--structural">S</span> Structural Significances
-          </div>
-          <div className="legends-item">
-            <span className="legends-icon button--transcript">T</span> Transcript Significances
-          </div>
         </div>
 
         <table border="0" className="unstriped" cellPadding="0" cellSpacing="1">
@@ -61,7 +50,7 @@ class ImpactSearchResults extends Component {
               <th rowSpan="2">Gene Name</th>
               <th colSpan="4">Protein</th>
               <th colSpan="4">Genomic</th>
-              <th rowSpan="2">Significance</th>
+              {/* <th rowSpan="2">Significance</th> */}
             </tr>
             <tr>
               <th>Accession</th>
@@ -80,10 +69,19 @@ class ImpactSearchResults extends Component {
                 return (
                   <Fragment key={`${group.key}`}>
                     <tr>
-                      <td colSpan="11" className="query-row">Query: {group.input}</td>
+                      <td colSpan="11" className="query-row">
+Query:
+                        {group.input}
+                      </td>
                     </tr>
                     {group.rows.map((row, i) => {
-                      const { protein, gene, significances } = row;
+                      const {
+                        protein,
+                        gene,
+                        significances,
+                        variation,
+                      } = row;
+
                       const proteinPosition = (protein.start === protein.end)
                         ? protein.start
                         : `${protein.start}-${protein.end}`;
@@ -98,7 +96,16 @@ class ImpactSearchResults extends Component {
                           .join(protein.start.toString());
 
                         const detailsPageURL = `https://www.ebi.ac.uk/thornton-srv/databases/cgi-bin/DisaStr/GetPage.pl?uniprot_acc=${protein.accession.toUpperCase()}&template=resreport.html&res=${varSTRes}`;
-                        detailsPageLink = <a className="details-page-link" href={detailsPageURL} target="_blank">View Details</a>;
+                        detailsPageLink = (
+                          <a
+                            className="details-page-link"
+                            href={detailsPageURL}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            View Details
+                          </a>
+                        );
                       }
 
                       significances.transcript
@@ -110,16 +117,47 @@ class ImpactSearchResults extends Component {
                           t.aminoAcids = protein.variant;
                           t.start = protein.start;
                           t.end = protein.end;
+                          t.colocatedVariantsCount = variation.proteinColocatedVariantsCount;
+                          t.diseaseColocatedVariantsCount = variation
+                            .diseasAssociatedProteinColocatedVariantsCount;
                         });
+
+                      if (typeof significances.structural !== 'undefined') {
+                        significances.structural.position = protein.start;
+                      }
+
+                      if (typeof significances.clinical !== 'undefined') {
+                        significances.clinical.colocatedVariantsCount = variation
+                          .proteinColocatedVariantsCount;
+
+                        significances.clinical.diseaseColocatedVariantsCount = variation
+                          .diseasAssociatedProteinColocatedVariantsCount;
+                      }
+
+                      const caddColour = (significances.transcript[0].caddPhred <= 30)
+                        ? 'green'
+                        : 'red';
 
                       counter += 1;
 
+                      let { accession } = protein;
+
+                      if (protein.canonical) {
+                        accession = protein.canonicalAccession;
+                      } else if (protein.isoform) {
+                        accession = protein.isoform;
+                      }
+
                       return (
                         <Fragment key={`${rowKey}-${counter}`}>
-                          <tr key={rowKey}>
-                            <td>{counter}</td>
+
+                          <tr key={rowKey} className="no-border">
+                            <td rowSpan="2" className="row-counter">{counter}</td>
                             <td>{gene.symbol}</td>
-                            <td>{protein.accession}</td>
+                            <td>
+                              <ProteinReviewStatus type={protein.type} />
+                              {accession}
+                            </td>
                             <td>{protein.length || '-'}</td>
                             <td>{proteinPosition || '-'}</td>
                             <td>
@@ -129,14 +167,37 @@ class ImpactSearchResults extends Component {
                             <td>{gene.enstId}</td>
                             <td>{geneLocation}</td>
                             <td>{gene.allele}</td>
+                          </tr>
+
+                          <tr>
+                            <td colSpan="4" />
                             <td>
+                              {(!protein.length)
+                                && <i title="Non-coding" className="icon icon-common icon-ban non-coding-variant" />}
+                            </td>
+                            <td>
+                              {(significances.transcript && significances.transcript[0].caddPhred)
+                                && (
+                                <span
+                                  className={`label warning cadd-score cadd-score--${caddColour}`}
+                                  title={`Likely ${(significances.transcript[0].caddPhred < 30) ? 'Benign' : 'Deleterious'}`}
+                                >
+                                  CADD:
+                                  {' '}
+                                  {significances.transcript[0].caddPhred}
+                                </span>
+                                )
+                              }
+                            </td>
+                            <td colSpan="4" align="right">
                               {(typeof significances.positional !== 'undefined')
                                 ? (
                                   <Button
                                     onClick={() => this.toggleSignificanceRow(rowKey, 'positional')}
-                                    className="button--round button--positional"
+                                    className="button--tag button--positional"
                                   >
-                                  P
+                                    <i className="icon icon-common icon-angle-down" />
+                                  &nbsp;Positional
                                   </Button>
                                 ) : null }
 
@@ -144,9 +205,10 @@ class ImpactSearchResults extends Component {
                                 ? (
                                   <Button
                                     onClick={() => this.toggleSignificanceRow(rowKey, 'clinical')}
-                                    className="button--round button--clinical"
+                                    className="button--tag button--clinical"
                                   >
-                                  C
+                                    <i className="icon icon-common icon-angle-down" />
+                                  &nbsp;Clinical
                                   </Button>
                                 ) : null }
 
@@ -154,9 +216,10 @@ class ImpactSearchResults extends Component {
                                 ? (
                                   <Button
                                     onClick={() => this.toggleSignificanceRow(rowKey, 'transcript')}
-                                    className="button--round button--transcript"
+                                    className="button--tag button--transcript"
                                   >
-                                  T
+                                    <i className="icon icon-common icon-angle-down" />
+                                  &nbsp;Transcript
                                   </Button>
                                 ) : null }
 
@@ -164,13 +227,16 @@ class ImpactSearchResults extends Component {
                                 ? (
                                   <Button
                                     onClick={() => this.toggleSignificanceRow(rowKey, 'structural')}
-                                    className="button--round button--structural"
+                                    className="button--tag button--structural"
                                   >
-                                  S
+                                    <i className="icon icon-common icon-angle-down" />
+                                  &nbsp;Structural
                                   </Button>
                                 ) : null }
                             </td>
                           </tr>
+
+
                           {(`${rowKey}:positional` === expandedRow)
                             ? (
                               <ExpandedPositionalSignificance
@@ -207,7 +273,7 @@ class ImpactSearchResults extends Component {
                     })}
                   </Fragment>
                 );
-            })}
+              })}
           </tbody>
         </table>
       </div>
@@ -232,7 +298,9 @@ ImpactSearchResults.propTypes = {
     }),
     protein: PropTypes.shape({
       accession: PropTypes.string,
+      isoform: PropTypes.string,
       canonical: PropTypes.bool,
+      canonicalAccession: PropTypes.string,
       end: PropTypes.number,
       length: PropTypes.number,
       name: PropTypes.shape({

@@ -24,6 +24,8 @@ class App extends Component {
   }
 
   handleSearch = (input) => {
+    const { history } = this.props;
+
     const apiURI = `${API_URL}/parser`;
     const data = defaultParser(input);
 
@@ -33,10 +35,10 @@ class App extends Component {
         console.log('>>> search response:', response.data);
         this.setState({
           searchTerm: input,
-          searchResults: response.data,
+          searchResults: response.data.results,
         });
 
-        this.props.history.push('search');
+        history.push('search');
       });
   }
 
@@ -74,7 +76,13 @@ class App extends Component {
       <Switch>
         <Route path={`${BASE_URL}/`} exact render={() => <HomePage {...appProps} />} />
         <Route path={`${BASE_URL}/search`} render={() => <SearchResultsPage {...appProps} />} />
-        <Route component={({ location }) => <h3>404: Can&lsquo;t find {location.pathname}</h3>} />
+        <Route component={({ location }) => (
+          <h3>
+            404: Can&lsquo;t find
+            {location.pathname}
+          </h3>
+        )}
+        />
       </Switch>
     );
   }

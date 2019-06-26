@@ -5,16 +5,20 @@ import { Link } from 'react-router-dom';
 
 import DefaultPageContent from './DefaultPageContent';
 
-const SearchResultsPageLayout = props => (
-  <div className="search-results-page-layout">
-    <b>Search Results: </b>
-    <Link to="/">Go back to Home page</Link>
+const SearchResultsPageLayout = (props) => {
+  const { content } = props;
 
-    <DefaultPageContent>
-      {props.content}
-    </DefaultPageContent>
-  </div>
-);
+  return (
+    <div className="search-results-page-layout">
+      <b>Search Results: </b>
+      <Link to="/">Go back to Home page</Link>
+
+      <DefaultPageContent>
+        {content}
+      </DefaultPageContent>
+    </div>
+  );
+};
 
 SearchResultsPageLayout.propTypes = {
   content: PropTypes.element,

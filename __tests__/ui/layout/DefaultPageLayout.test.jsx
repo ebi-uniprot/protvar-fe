@@ -10,7 +10,8 @@ describe('DefaultPageLayout component', () => {
       <DefaultPageLayout
         title="Works"
         content={<h3>Works</h3>}
-      />);
+      />
+    );
 
     component = renderer
       .create(component)
