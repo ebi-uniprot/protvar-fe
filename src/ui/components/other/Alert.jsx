@@ -11,7 +11,7 @@ const Alert = (props) => {
       <div className="alert__message">{message}</div>
     </div>
   );
-}
+};
 
 Alert.propTypes = {
   title: PropTypes.string,

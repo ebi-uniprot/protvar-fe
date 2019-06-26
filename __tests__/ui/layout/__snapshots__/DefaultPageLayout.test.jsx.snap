@@ -1,20 +1,261 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`DefaultPageLayout component should render 1`] = `
-<div
-  className="default-page-layout"
->
-  You are viewing 
-  <b>
-    Works
-  </b>
-  <br />
+Array [
   <div
-    className="default-page-conent"
+    id="skip-to"
   >
-    <h3>
-      Works
-    </h3>
-  </div>
-</div>
+    <a
+      href="#content"
+    >
+      Skip to main content
+    </a>
+  </div>,
+  <header
+    className="clearfix masthead-black-bar"
+    id="masthead-black-bar"
+  >
+    <nav
+      className="row"
+    >
+      <ul
+        className="menu"
+        id="global-nav"
+      >
+        <li
+          className="home-mobile"
+        >
+          <a
+            href="//www.ebi.ac.uk"
+          >
+            EMBL-EBI
+          </a>
+        </li>
+        <li
+          className="home active"
+        >
+          <a
+            href="//www.ebi.ac.uk"
+          >
+            EMBL-EBI
+          </a>
+        </li>
+        <li
+          className="services"
+        >
+          <a
+            href="//www.ebi.ac.uk/services"
+          >
+            Services
+          </a>
+        </li>
+        <li
+          className="research"
+        >
+          <a
+            href="//www.ebi.ac.uk/research"
+          >
+            Research
+          </a>
+        </li>
+        <li
+          className="training"
+        >
+          <a
+            href="//www.ebi.ac.uk/training"
+          >
+            Training
+          </a>
+        </li>
+        <li
+          className="about"
+        >
+          <a
+            href="//www.ebi.ac.uk/about"
+          >
+            About us
+          </a>
+        </li>
+        <li
+          className="search"
+        >
+          <a
+            data-toggle="search-global-dropdown"
+            href="#/"
+          >
+            <span
+              className="show-for-small-only"
+            >
+              Search
+            </span>
+          </a>
+          <div
+            className="dropdown-pane"
+            data-dropdown={true}
+            data-options="closeOnClick:true;"
+            id="search-global-dropdown"
+          />
+        </li>
+        <li
+          className="float-right show-for-medium embl-selector"
+        >
+          <button
+            className="button float-right"
+            data-toggle="embl-dropdown"
+            type="button"
+          >
+            Hinxton
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </header>,
+  <div
+    className="content"
+    id="content"
+  >
+    <div
+      data-sticky-container={true}
+    >
+      <div
+        className="masthead"
+        data-btm-anchor="main-content-area:bottom"
+        data-sticky={true}
+        data-sticky-on="large"
+        data-top-anchor="main-content-area:top"
+        id="masthead"
+      >
+        <div
+          className="masthead-inner row"
+        >
+          <div
+            className="local-title columns medium-7"
+            id="local-title"
+          >
+            <a
+              href="/uniprot/pepvep/"
+              title="Back to PepVEP's homepage"
+            >
+              PepVEP
+            </a>
+          </div>
+          <div
+            className="column medium-5"
+            id="ebi-standard-search-field"
+          >
+            <form
+              id="ebi_search"
+              onSubmit={[Function]}
+            >
+              <fieldset>
+                <div
+                  className="input-group margin-bottom-none margin-top-large"
+                >
+                  <input
+                    className="input-group-field"
+                    id="query"
+                    maxLength="2048"
+                    name="query"
+                    onChange={[Function]}
+                    placeholder="Search service"
+                    size="35"
+                    tabIndex="0"
+                    title="EB-eye Search"
+                    type="text"
+                    value=""
+                  />
+                  <div
+                    className="input-group-button"
+                  >
+                    <button
+                      className="button icon icon-functional"
+                      onClick={[Function]}
+                      type="submit"
+                    >
+                      Search
+                    </button>
+                  </div>
+                </div>
+              </fieldset>
+              <p
+                className="small"
+                id="example"
+              >
+                <span>
+                  Examples: 
+                </span>
+                <a
+                  href="/ebisearch/search.ebi?db=allebi&requestFrom=ebi_index&query=blast"
+                >
+                  blast
+                </a>
+                ,
+                <a
+                  href="/ebisearch/search.ebi?db=allebi&query=keratin&requestFrom=ebi_index"
+                >
+                  keratin
+                </a>
+                ,
+                <a
+                  href="/ebisearch/search.ebi?db=allebi&query=bfl1&requestFrom=ebi_index"
+                >
+                  bfl1
+                </a>
+                <button
+                  className="float-right"
+                >
+                  <span
+                    className="icon icon-generic"
+                    data-icon="("
+                  />
+                   advanced search
+                </button>
+              </p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <section
+      className="row"
+      role="main"
+    >
+      <div
+        className="main-content-area row"
+        id="main-content-area"
+      >
+        <div
+          className="small-12 columns"
+        >
+          <div
+            className="default-page-layout"
+          >
+            <div
+              className="default-page-conent"
+            >
+              <h3>
+                Works
+              </h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>,
+  <footer>
+    <div
+      className="global-footer"
+      id="global-footer"
+    >
+      <nav
+        className="global-nav-expanded row"
+        id="global-nav-expanded"
+      />
+      <section
+        className="ebi-footer-meta row"
+        id="ebi-footer-meta"
+      />
+    </div>
+  </footer>,
+]
 `;

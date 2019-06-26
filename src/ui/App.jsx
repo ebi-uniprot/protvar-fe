@@ -44,7 +44,7 @@ class App extends Component {
         history.push('search');
       })
       .catch((e) => {
-        console.log("Got an axios error:", e);
+        console.log('Got an axios error:', e);
         history.push('api-error');
       });
   }
@@ -69,7 +69,7 @@ class App extends Component {
         link.click();
       })
       .catch((e) => {
-        console.log("Got an axios error:", e);
+        console.log('Got an axios error:', e);
       });
   }
 
