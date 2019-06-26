@@ -9,11 +9,11 @@ describe('HomePage component', () => {
   test('should render', () => {
     const props = {
       handleSearch: () => null,
-      handleDownload: () => null
+      handleDownload: () => null,
     };
 
     const component = renderer
-      .create(<MemoryRouter><HomePage {...props}/></MemoryRouter>)
+      .create(<MemoryRouter><HomePage {...props} /></MemoryRouter>)
       .toJSON();
 
     expect(component).toMatchSnapshot();
