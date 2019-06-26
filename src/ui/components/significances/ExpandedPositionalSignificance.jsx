@@ -23,7 +23,10 @@ const ExpandedPositionalSignificance = (props) => {
                 'PEPTIDE',
               ].includes(f.type))
               .map(feature => (
-                <div className="significance-data-block">
+                <div
+                  className="significance-data-block"
+                  key={`general-function-wrapper-${feature.featureId}-${feature.description}`}
+                >
                   <span className="positional-feature-type">
                     {feature.typeDescription}
                     :
@@ -95,7 +98,10 @@ const ExpandedPositionalSignificance = (props) => {
                 'PROPEP',
               ].includes(f.type))
               .map(feature => (
-                <div className="significance-data-block">
+                <div
+                  className="significance-data-block"
+                  key={`functional-sites-wrapper-${feature.featureId}-${feature.type}`}
+                >
                   <span className="positional-feature-type">
                     {feature.typeDescription}
                     :
@@ -141,7 +147,10 @@ const ExpandedPositionalSignificance = (props) => {
                 'CROSSLINK',
               ].includes(f.type))
               .map(feature => (
-                <div className="significance-data-block">
+                <div
+                  className="significance-data-block"
+                  key={`PTM-wrapper-${feature.featureId}`}
+                >
                   <span className="positional-feature-type">
                     {feature.typeDescription}
                     :
@@ -183,7 +192,10 @@ const ExpandedPositionalSignificance = (props) => {
               .filter(f => ['HELIX', 'STRAND']
                 .includes(f.type))
               .map(feature => (
-                <div className="significance-data-block">
+                <div
+                  className="significance-data-block"
+                  key={`structural-elements-wrapper-${feature.featureId}`}
+                >
                   <span className="positional-feature-type">
                     {feature.typeDescription}
                     :

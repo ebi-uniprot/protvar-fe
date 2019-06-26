@@ -31,7 +31,10 @@ const ExpandedTranscriptSignificance = (props) => {
         {detailsLink}
 
         { data.map(ts => (
-          <div className="significances-groups">
+          <div
+            className="significances-groups"
+            key={`transcript-significances-group-wrapper-${ts.hgvsp}`}
+          >
             <div className="column">
               <b>Genomic Summary</b>
               <div className="significance-data-block">
@@ -49,11 +52,6 @@ const ExpandedTranscriptSignificance = (props) => {
 
                 <span className="publications-label">Population Frequency: NA</span>
               </div>
-
-              {/* <div className="significance-data-block">
-                  <b>Population Frequency</b>
-                  <div>Data Not Available</div>
-                </div> */}
             </div>
 
             <div className="column">
@@ -80,11 +78,9 @@ const ExpandedTranscriptSignificance = (props) => {
                   </span>
                 </div>
                 <div>
-                  {/* <span>Biotype:</span>  */}
                   <span className="capital-text">{removeSnakeAndKebabCases(ts.biotype)}</span>
                 </div>
                 <div>
-                  {/* <span>Codons:</span>  */}
                   {ts.codons}
                 </div>
               </div>
@@ -180,11 +176,6 @@ const ExpandedTranscriptSignificance = (props) => {
 
                 <span className="publications-label">Other Predections: NA</span>
               </div>
-
-              {/* <div className="significance-data-block">
-                  <b>Other Predections</b>
-                  <div>Data Not Available</div>
-                </div> */}
             </div>
           </div>
         ))}
