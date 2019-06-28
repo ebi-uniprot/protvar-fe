@@ -100,7 +100,7 @@ class ExpandedStructuralSignificance extends Component {
               </b>
               {(allLigands.length > 0) && (
               <ul data-columns="2">
-                {allLigands.map(l => <li>{`${l.ligand_name} [${l.ligand_id}]`}</li>)}
+                {allLigands.map(l => <li key={l.ligand_name}>{`${l.ligand_name} [${l.ligand_id}]`}</li>)}
               </ul>
               )}
             </div>
