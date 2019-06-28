@@ -246,17 +246,7 @@ Array [
                     Examples
                   </b>
                   <br />
-                  <label
-                    htmlFor="genomicPosition"
-                  >
-                    <input
-                      checked={true}
-                      id="genomicPosition"
-                      name="inputFormat"
-                      onChange={[Function]}
-                      type="radio"
-                      value="genomicPosition"
-                    />
+                  <div>
                     <span>
                       Genomic Position:
                     </span>
@@ -265,18 +255,8 @@ Array [
                     >
                       3 165830358 165830358 T/C
                     </span>
-                  </label>
-                  <label
-                    htmlFor="geneSymbol"
-                  >
-                    <input
-                      checked={false}
-                      id="geneSymbol"
-                      name="inputFormat"
-                      onChange={[Function]}
-                      type="radio"
-                      value="geneSymbol"
-                    />
+                  </div>
+                  <div>
                     <span>
                       Gene Symbol:
                     </span>
@@ -285,7 +265,7 @@ Array [
                     >
                       TP53:p.Arg175His
                     </span>
-                  </label>
+                  </div>
                 </div>
                 <form
                   onSubmit={[Function]}
@@ -329,16 +309,16 @@ Array [
                     <button
                       className="button button--primary"
                       onClick={[Function]}
-                      type="button"
+                      type="submit"
                     >
-                      File Upload
+                      Search
                     </button>
                     <button
                       className="button "
                       onClick={[Function]}
-                      type="submit"
+                      type="button"
                     >
-                      Search
+                      Clear Input
                     </button>
                   </div>
                 </form>

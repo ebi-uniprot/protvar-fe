@@ -10,6 +10,7 @@ describe('HomePage component', () => {
     const props = {
       handleSearch: () => null,
       handleDownload: () => null,
+      loading: false,
     };
 
     const component = renderer

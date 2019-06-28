@@ -6,17 +6,18 @@ import DefaultPageLayout from '../layout/DefaultPageLayout';
 import TextAreaSearch from '../components/search/TextAreaSearch';
 
 const HomePageContent = (props) => {
-  const { handleSearch } = props;
+  const { handleSearch, loading } = props;
 
   return (
     <Fragment>
-      <TextAreaSearch onSubmit={handleSearch} />
+      <TextAreaSearch onSubmit={handleSearch} isLoading={loading} />
     </Fragment>
   );
 };
 
 HomePageContent.propTypes = {
   handleSearch: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired,
 };
 
 const HomePage = props => (
