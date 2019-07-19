@@ -2,16 +2,31 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const ExpandedPositionalSignificance = (props) => {
+import ColocatedDomainsAndSitesBlock from './ColocatedDomainsAndSitesBlock';
+import ColocatedVariantsBlock from './ColocatedVariantsBlock';
+import ColocatedPTMsBlock from './ColocatedPTMsBlock';
+import ColocatedMoleculeProcessing from './ColocatedMoleculeProcessing';
+
+const ExpandedFunctionalSignificance = (props) => {
   const { data, detailsLink } = props;
+console.log("functional props:", data);
   return (
     <tr>
-      <td colSpan="11">
-        <span className="expanded-section-title">Protein Positions Affected</span>
+      <td colSpan="16">
+        <span className="expanded-section-title">Functional Protein Level Impact</span>
         {detailsLink}
 
         <div className="significances-groups">
-          <div className="column">
+
+          <ColocatedDomainsAndSitesBlock data={data.features} />
+
+          <ColocatedVariantsBlock data={data} />
+
+          <ColocatedPTMsBlock data={data.features} />
+
+          <ColocatedMoleculeProcessing data={data.features} />
+
+          {/* <div className="column">
             <b>General Function</b>
 
             { data.features
@@ -71,8 +86,9 @@ const ExpandedPositionalSignificance = (props) => {
                 </div>
               ))}
 
-          </div>
-          <div className="column">
+          </div> */ }
+
+          {/* <div className="column">
             <b>Functional Sites</b>
 
             { data.features
@@ -135,8 +151,9 @@ const ExpandedPositionalSignificance = (props) => {
                     : null}
                 </div>
               ))}
-          </div>
-          <div className="column">
+          </div> */}
+
+          {/* <div className="column">
             <b>Post Translational Modifications</b>
 
             { data.features
@@ -184,8 +201,9 @@ const ExpandedPositionalSignificance = (props) => {
                     : null}
                 </div>
               ))}
-          </div>
-          <div className="column">
+          </div> */}
+
+          {/* <div className="column">
             <b>Structural Elements</b>
 
             { data.features
@@ -229,14 +247,14 @@ const ExpandedPositionalSignificance = (props) => {
                     : null}
                 </div>
               ))}
-          </div>
+          </div> */}
         </div>
       </td>
     </tr>
   );
 };
 
-ExpandedPositionalSignificance.propTypes = {
+ExpandedFunctionalSignificance.propTypes = {
   data: PropTypes.shape({
     features: PropTypes.arrayOf(PropTypes.shape({
       begin: PropTypes.string,
@@ -251,8 +269,8 @@ ExpandedPositionalSignificance.propTypes = {
   detailsLink: PropTypes.element.isRequired,
 };
 
-ExpandedPositionalSignificance.defaultProps = {
+ExpandedFunctionalSignificance.defaultProps = {
   data: {},
 };
 
-export default ExpandedPositionalSignificance;
+export default ExpandedFunctionalSignificance;

@@ -1,0 +1,26 @@
+.search-results-legends {
+  float: right;
+
+  ul {
+    list-style: none;
+    display: inline-block;
+  }
+
+  .legend-icon {
+    font-weight: 700;
+    width: 1.7rem;
+    height: 1.7rem;
+    text-align: center;
+    line-height: 1.7rem;
+    display: inline-block;
+    margin-right: 0.8rem;
+  }
+
+  .cadd-score {
+    width: 2rem;
+    text-align: center;
+    display: inline-block;
+    margin-right: 1rem;
+    margin-bottom: 0.3rem;
+  }
+}

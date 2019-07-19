@@ -56,7 +56,7 @@ class ExpandedStructuralSignificance extends Component {
 
     return (
       <tr>
-        <td colSpan="11">
+        <td colSpan="16">
           <span className="expanded-section-title">Structural Significances</span>
           {detailsLink}
 
@@ -76,11 +76,13 @@ class ExpandedStructuralSignificance extends Component {
 
             <div className="column">
               <i className="icon icon-conceptual summary-icon structural-icon" data-icon="s" />
-              <b>
-                Structures (
-                {bestStructures.length}
-                )
-              </b>
+              <div>
+                <b>
+                  Structures (
+                  {bestStructures.length}
+                  )
+                </b>
+              </div>
               {(bestStructures.length > 0) && (
               <select multiple size="5" onChange={e => this.structureChange(e)}>
                 {bestStructures
@@ -93,11 +95,13 @@ class ExpandedStructuralSignificance extends Component {
 
             <div className="column">
               <i className="icon icon-conceptual summary-icon structural-icon" data-icon="b" />
-              <b>
-                Ligands (
-                {allLigands.length}
-                )
-              </b>
+              <div>
+                <b>
+                  Ligands (
+                  {allLigands.length}
+                  )
+                </b>
+              </div>
               {(allLigands.length > 0) && (
               <ul data-columns="2">
                 {allLigands.map(l => <li key={l.ligand_name}>{`${l.ligand_name} [${l.ligand_id}]`}</li>)}
