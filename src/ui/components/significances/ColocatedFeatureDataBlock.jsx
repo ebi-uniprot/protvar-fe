@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { v1 as uuidv1 } from 'uuid';
+
 import SignificanceDataLine from './SignificanceDataLine';
 import PublicationsList from '../other/PublicationsList';
 
@@ -22,7 +24,7 @@ const ColocatedFeatureDataBlock = (props) => {
         publicationsLinks
           .push(
             ( // this extra parans is to satisfy ESLint
-              <li>
+              <li key={uuidv1()}>
                 <a
                   href={`${e.sourceUrl}`}
                   target="_blank"
@@ -71,8 +73,8 @@ const ColocatedFeatureDataBlock = (props) => {
 
 ColocatedFeatureDataBlock.propTypes = {
   data: PropTypes.shape({
-    begin: PropTypes.number,
-    end: PropTypes.number,
+    begin: PropTypes.string,
+    end: PropTypes.string,
     type: PropTypes.string,
     description: PropTypes.string,
     evidences: PropTypes.arrayOf(PropTypes.shape({
