@@ -14,16 +14,6 @@ const TranscriptInfoBlock = (props) => {
     ? 'SELECT'
     : 'Isoform';
 
-  const proteinCoding = () => {
-    if (data.enspId && data.aminoAcids) {
-      return 'Yes';
-    } else if ((data.enspId || data.enstId) && !data.aminoAcids) {
-      return 'Yes (but variant falls outside exons)';
-    } else if (data.ensgId && (!data.enspId || !data.enstId) && !data.aminoAcids) {
-      return 'Yes (but variant in an untranslated region)';
-    }
-  };
-
   return (
     <SignificancesColumn
       header="Transcript Info"
@@ -32,13 +22,6 @@ const TranscriptInfoBlock = (props) => {
         label="Status"
         value={`${status} Transcript`}
       />
-
-      {/* 
-      <SignificanceDataLine
-        label="Protein-coding"
-        value={proteinCoding()}
-      />
-       */}
 
       <SignificanceDataLine
         label="Biotype"
@@ -51,10 +34,20 @@ const TranscriptInfoBlock = (props) => {
       />
     </SignificancesColumn>
   );
-}
+};
 
 TranscriptInfoBlock.propTypes = {
+  data: PropTypes.shape({
+    canonical: PropTypes.bool,
+    enspId: PropTypes.string,
+    enstId: PropTypes.string,
+    ensgId: PropTypes.string,
+    aminoAcids: PropTypes.string,
+  }),
+};
 
+TranscriptInfoBlock.defaultProps = {
+  data: {},
 };
 
 export default TranscriptInfoBlock;

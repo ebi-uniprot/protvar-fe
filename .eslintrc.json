@@ -20,7 +20,10 @@
       "specialLink": [ "to", "hrefLeft", "hrefRight" ],
       "aspects": [ "noHref", "invalidHref", "preferButton" ]
     }],
-    "react/button-has-type": false
+    "react/button-has-type": false,
+    "jsx-a11y/click-events-have-key-events": false,
+    "jsx-a11y/interactive-supports-focus": false,
+    "react/no-find-dom-node": false
   },
   "globals": {
     "BASE_URL": "writable",

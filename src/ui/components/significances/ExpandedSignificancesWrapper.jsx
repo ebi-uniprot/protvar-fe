@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const ExpandedSignificancesWrapper = (component, data) => {
+const ExpandedSignificancesWrapper = (props) => {
+  const { component, data } = props;
   const {
     id,
     group,
@@ -15,10 +16,10 @@ const ExpandedSignificancesWrapper = (component, data) => {
       {component}
     </div>
   );
-}
+};
 
 ExpandedSignificancesWrapper.propTypes = {
-  component: PropTypes.node,
+  component: PropTypes.node.isRequired,
   data: PropTypes.shape({
     id: PropTypes.string,
     group: PropTypes.string,

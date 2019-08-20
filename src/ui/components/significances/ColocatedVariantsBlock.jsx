@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { v1 as uuidv1 } from 'uuid';
+
 import SignificancesColumn from './SignificancesColumn';
 import SignificanceDataLine from './SignificanceDataLine';
 
@@ -9,26 +11,26 @@ const ColocatedVariantsBlock = (props) => {
     data,
   } = props;
 
-  const DataBlock = (props) => {
+  const DataBlock = (dataProps) => {
+    const { colocated, meta } = dataProps;
+
     const {
       wildType,
       alternativeSequence,
       featureId,
-      clinicalSignificances,
       association,
       sourceType,
       xrefs,
-    } = props.colocated;
+    } = colocated;
 
     const {
       begin,
       end,
-      ids,
-    } = props.meta;
+    } = meta;
 
     const variantIDs = {};
 
-    xrefs.map((cr) => {
+    xrefs.forEach((cr) => {
       if (!variantIDs[cr.name]) {
         variantIDs[cr.name] = {
           id: cr.id,
@@ -36,10 +38,6 @@ const ColocatedVariantsBlock = (props) => {
         };
       }
     });
-
-    // if (!variantIDs['UniProt'].url) {
-    //   variantIDs['UniProt'].url = 
-    // }
 
     const idList = [];
 
@@ -60,37 +58,21 @@ const ColocatedVariantsBlock = (props) => {
         let el;
 
         if (id.url) {
-          el = <a href={id.url}>{id.id}</a>;
+          el = <a key={id.url} href={id.url}>{id.id}</a>;
         } else {
-           el = <span>{id.id}</span>;
+          el = <span key={id.url}>{id.id}</span>;
         }
 
+        const comma = <span key={uuidv1()}>, </span>;
+
         return (index > 0)
-          ? [', ', el]
+          ? [comma, el]
           : el;
       });
 
     if (idList.length === 0) {
       idListComponent = undefined;
     }
-
-    // const variantIDs = [];
-
-    // if (ids.rsId) {
-    //   variantIDs.push(ids.rsId);
-    // }
-
-    // if (ids.clinVarId) {
-    //   variantIDs.push(`ClinVar: ${ids.clinVarId}`);
-    // }
-
-    // if (ids.cosmicId) {
-    //   variantIDs.push(`COSMIC: ${ids.cosmicId}`);
-    // }
-
-    // if (featureId) {
-    //   variantIDs.push(`UniProt: ${featureId}`);
-    // }
 
     const diseaseNames = association && association
       .map(a => a.name)
@@ -116,47 +98,72 @@ const ColocatedVariantsBlock = (props) => {
         <SignificanceDataLine
           label="ID"
           value={idListComponent}
-          alternativeLabelStyle={true}
+          alternativeLabelStyle
         />
- 
+
         <SignificanceDataLine
           label="Description"
           value={null}
-          alternativeLabelStyle={true}
+          alternativeLabelStyle
         />
 
         <SignificanceDataLine
           label="Disease"
           value={diseaseNames}
-          alternativeLabelStyle={true}
+          alternativeLabelStyle
         />
-
-        {/* <SignificanceDataLine
-          label="Pathogenicity"
-          value={clinicalSignificances}
-          alternativeLabelStyle={true}
-        /> */}
 
         <SignificanceDataLine
           label="source"
           value={source}
-          alternativeLabelStyle={true}
+          alternativeLabelStyle
         />
       </div>
     );
-  }
+  };
+
+  DataBlock.propTypes = {
+    colocated: PropTypes.shape({}),
+    meta: PropTypes.shape({}),
+  };
+
+  DataBlock.defaultProps = {
+    colocated: {},
+    meta: {},
+  };
 
   return (
     <SignificancesColumn
       header="Colocated Variants"
     >
-      {data.colocatedVariants.map(cv => <DataBlock colocated={cv} meta={data.variationDetails}/>)}
+      {data.colocatedVariants
+        .map((cv) => {
+          const key = [
+            cv.sourceType,
+            cv.featureId,
+            cv.wildType,
+            cv.alternativeSequence,
+            cv.begin,
+            cv.end,
+          ].join('-');
+
+          return (
+            <DataBlock key={key} colocated={cv} meta={data.variationDetails} />
+          );
+        })
+      }
     </SignificancesColumn>
   );
-}
+};
 
 ColocatedVariantsBlock.propTypes = {
+  data: PropTypes.shape({
+    colocatedVariants: PropTypes.arrayOf(PropTypes.shape({})),
+  }),
+};
 
+ColocatedVariantsBlock.defaultProps = {
+  data: {},
 };
 
 export default ColocatedVariantsBlock;

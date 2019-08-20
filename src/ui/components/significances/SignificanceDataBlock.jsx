@@ -9,10 +9,10 @@ const SignificanceDataBlock = (props) => {
       {children}
     </div>
   );
-}
+};
 
 SignificanceDataBlock.propTypes = {
-  children: PropTypes.arrayOf(PropTypes.node),
+  children: PropTypes.arrayOf(PropTypes.node).isRequired,
 };
 
 export default SignificanceDataBlock;

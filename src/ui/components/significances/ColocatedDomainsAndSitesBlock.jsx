@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import SignificancesColumn from './SignificancesColumn';
@@ -10,8 +10,7 @@ const ColocatedDomainsAndSitesBlock = (props) => {
   } = props;
 
   const types = [
-    'DOMAIN',
-    'SITE',
+    'ACT_SITE',
     'MUTAGEN',
     'REGION',
     'TRANSMEM',
@@ -27,10 +26,14 @@ const ColocatedDomainsAndSitesBlock = (props) => {
       }
     </SignificancesColumn>
   );
-}
+};
 
 ColocatedDomainsAndSitesBlock.propTypes = {
+  data: PropTypes.arrayOf(PropTypes.shape({})),
+};
 
+ColocatedDomainsAndSitesBlock.defaultProps = {
+  data: [],
 };
 
 export default ColocatedDomainsAndSitesBlock;

@@ -72,6 +72,12 @@ class ExpandedStructuralSignificance extends Component {
                 structureStart={currentStructureDetails.start}
                 structureEnd={currentStructureDetails.end}
               />
+              <span
+                className="structure-position-help-text"
+              >
+                The blue bar represents the full protein sequence and the green
+                pointer represents variant location.
+              </span>
             </div>
 
             <div className="column">

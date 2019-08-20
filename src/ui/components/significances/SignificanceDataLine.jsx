@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { v1 as uuidv1 } from 'uuid';
+
 const SignificanceDataLine = (props) => {
   const {
     label,
@@ -13,19 +15,44 @@ const SignificanceDataLine = (props) => {
   }
 
   const labelEl = (alternativeLabelStyle)
-    ? <span className="alternative-label-style">{label}: </span>
-    : <b>{label}: </b>;
+    ? (
+      <span key={uuidv1()} className="alternative-label-style">
+        {`${label}: `}
+      </span>
+    )
+    : (
+      <b key={uuidv1()}>
+        {`${label}: `}
+      </b>
+    );
+
+  if (Array.isArray(value)) {
+    value.forEach(i => <span key={uuidv1()}>{i}</span>);
+  }
 
   return (
-    <div>
+    <div key={uuidv1()}>
       {labelEl}
-      <span>{value}</span>
+      <span key={uuidv1()}>{value}</span>
     </div>
   );
-}
+};
 
 SignificanceDataLine.propTypes = {
+  label: PropTypes.string.isRequired,
+  value: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.element,
+    PropTypes.object,
+    PropTypes.arrayOf(PropTypes.object),
+    PropTypes.array,
+  ]),
+  alternativeLabelStyle: PropTypes.bool,
+};
 
+SignificanceDataLine.defaultProps = {
+  alternativeLabelStyle: false,
+  value: null,
 };
 
 export default SignificanceDataLine;

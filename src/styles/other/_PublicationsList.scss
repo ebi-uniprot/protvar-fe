@@ -1,0 +1,33 @@
+.publications-list {
+  display: block;
+  background-color: #ffb100;
+  padding: .3rem .5rem;
+  width: fit-content;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  margin-top: .5rem;
+  font-weight: normal;
+  text-transform: inherit;
+
+  &:hover {
+    background-color: #ffb100;
+    cursor: pointer;
+  }
+
+  &--open {
+    border-radius: 5px 5px 0 0;
+  }
+
+  &__items-wrapper {
+    min-width: 150px;
+    display: none;
+    position: absolute;
+    background-color: #ffb100;
+    border-radius: 0 5px 5px 5px;
+    padding: 0 0.5rem;
+
+    &--visible {
+      display: block;
+    }
+  }
+}

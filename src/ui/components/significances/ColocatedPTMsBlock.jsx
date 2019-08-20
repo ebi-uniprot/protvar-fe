@@ -19,10 +19,14 @@ const ColocatedPTMsBlock = (props) => {
       }
     </SignificancesColumn>
   );
-}
+};
 
 ColocatedPTMsBlock.propTypes = {
+  data: PropTypes.arrayOf(PropTypes.shape({})),
+};
 
+ColocatedPTMsBlock.defaultProps = {
+  data: [],
 };
 
 export default ColocatedPTMsBlock;

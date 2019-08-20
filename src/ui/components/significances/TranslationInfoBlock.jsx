@@ -32,10 +32,19 @@ const TranslationInfoBlock = (props) => {
       />
     </SignificancesColumn>
   );
-}
+};
 
 TranslationInfoBlock.propTypes = {
+  data: PropTypes.shape({
+    start: PropTypes.number,
+    end: PropTypes.number,
+    aminoAcids: PropTypes.string,
+    hgvsp: PropTypes.string,
+  }),
+};
 
+TranslationInfoBlock.defaultProps = {
+  data: {},
 };
 
 export default TranslationInfoBlock;

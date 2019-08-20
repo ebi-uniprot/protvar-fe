@@ -9,6 +9,19 @@ const VariantIDsBlock = (props) => {
     data,
   } = props;
 
+  const clinVarLinks = (data.clinVarIDs) && data.clinVarIDs
+    .map(cv => (
+      <li key={`${cv.id}-${cv.dbSNIPId}`}>
+        <a
+          href={`https://www.ncbi.nlm.nih.gov/clinvar?term=${cv.dbSNIPId}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {cv.id}
+        </a>
+      </li>
+    ));
+
   return (
     <SignificancesColumn
       header="Variant IDs"
@@ -20,7 +33,7 @@ const VariantIDsBlock = (props) => {
 
       <SignificanceDataLine
         label="ClinVar"
-        value={(data.clinVarId) ? data.clinVarId : '-'}
+        value={(clinVarLinks) ? <ul>{clinVarLinks}</ul> : '-'}
       />
 
       <SignificanceDataLine
@@ -29,10 +42,25 @@ const VariantIDsBlock = (props) => {
       />
     </SignificancesColumn>
   );
-}
+};
 
 VariantIDsBlock.propTypes = {
+  data: PropTypes.shape({
+    clinVarIDs: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.string,
+      dbSNIPId: PropTypes.string,
+    })),
+    dbSNIPId: PropTypes.string,
+    cosmicId: PropTypes.string,
+  }),
+};
 
+VariantIDsBlock.defaultProps = {
+  data: {
+    clinVarIDs: [],
+    dbSNIPId: null,
+    cosmicId: null,
+  },
 };
 
 export default VariantIDsBlock;

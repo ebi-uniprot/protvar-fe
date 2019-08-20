@@ -19,10 +19,15 @@ const ColocatedMoleculeProcessing = (props) => {
       }
     </SignificancesColumn>
   );
-}
+};
 
 ColocatedMoleculeProcessing.propTypes = {
-
+  data: PropTypes.arrayOf(PropTypes.shape({})),
 };
+
+ColocatedMoleculeProcessing.defaultProps = {
+  data: [],
+};
+
 
 export default ColocatedMoleculeProcessing;

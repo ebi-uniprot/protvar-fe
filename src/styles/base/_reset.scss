@@ -20,12 +20,14 @@ h6 {
 }
 
 
+
 // Box-sizing
 // ----------
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  white-space: normal;
 }
 
 

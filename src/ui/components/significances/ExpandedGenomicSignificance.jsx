@@ -22,15 +22,24 @@ const ExpandedGenomicSignificance = (props) => {
 
           <ConsequencePredictionBlock data={data.consequencePrediction} />
 
-          <VariantIDsBlock data={data} />
+          <VariantIDsBlock data={data.variationDetails.ids} />
         </div>
       </td>
     </tr>
   );
 };
 
-ExpandedGenomicSignificance.propTypes = {};
+ExpandedGenomicSignificance.propTypes = {
+  detailsLink: PropTypes.element.isRequired,
+  data: PropTypes.shape({
+    populationFrequencies: PropTypes.shape({}),
+    consequencePrediction: PropTypes.shape({}),
+    variationDetails: PropTypes.shape({}),
+  }),
+};
 
-ExpandedGenomicSignificance.defaultProps = {};
+ExpandedGenomicSignificance.defaultProps = {
+  data: {},
+};
 
 export default ExpandedGenomicSignificance;
