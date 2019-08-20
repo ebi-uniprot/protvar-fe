@@ -2,14 +2,21 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { removeSnakeAndKebabCases } from '../../other/helpers';
+import ExpandedSignificancesWrapper from './ExpandedSignificancesWrapper';
+import SignificancesColumn from './SignificancesColumn';
+import TranscriptInfoBlock from './TranscriptInfoBlock';
+import TranslationInfoBlock from './TranslationInfoBlock';
+import PathogenicityBlock from './PathogenicityBlock';
+import VariantIDsBlock from './VariantIDsBlock';
 
 const ExpandedTranscriptSignificance = (props) => {
   const { data, detailsLink } = props;
+
   return (
     <tr>
-      <td colSpan="11">
+      <td colSpan="16">
         <span className="expanded-section-title">Transcript Significances</span>
-        {(data[0].colocatedVariantsCount > 0)
+        {/* (data[0].colocatedVariantsCount > 0)
           && (
           <span className="expanded-section-subtitle">
             {data[0].colocatedVariantsCount}
@@ -27,15 +34,16 @@ const ExpandedTranscriptSignificance = (props) => {
             }
           </span>
           )
-        }
+         */}
         {detailsLink}
-
+ 
         { data.map(ts => (
           <div
             className="significances-groups"
             key={`transcript-significances-group-wrapper-${ts.hgvsp}`}
           >
-            <div className="column">
+
+            {/* <div className="significances-column">
               <b>Genomic Summary</b>
               <div className="significance-data-block">
                 <div>
@@ -52,9 +60,22 @@ const ExpandedTranscriptSignificance = (props) => {
 
                 <span className="publications-label">Population Frequency: NA</span>
               </div>
-            </div>
+            </div> */}
 
-            <div className="column">
+
+
+            <TranscriptInfoBlock data={ts} />
+
+            <TranslationInfoBlock data={ts} />
+
+            <PathogenicityBlock data={ts} />
+
+            <VariantIDsBlock data={ts} />
+
+
+
+
+            {/* <div className="significances-column">
               <b>Transcript Evidences</b>
               <div className="significance-data-block">
                 <div>
@@ -85,9 +106,9 @@ const ExpandedTranscriptSignificance = (props) => {
                 </div>
               </div>
 
-            </div>
+            </div> */}
 
-            <div className="column">
+            {/* <div className="significances-column">
               <b>Translation Evidences</b>
               {(ts.aminoAcids)
                 ? (
@@ -126,9 +147,9 @@ const ExpandedTranscriptSignificance = (props) => {
                       : null}
                   </div>
                 ) : null}
-            </div>
+            </div> */}
 
-            <div className="column">
+            {/* <div className="significances-column">
               <b>Consequence Predections</b>
 
               <div className="significance-data-block">
@@ -176,7 +197,8 @@ const ExpandedTranscriptSignificance = (props) => {
 
                 <span className="publications-label">Other Predections: NA</span>
               </div>
-            </div>
+            </div> */}
+
           </div>
         ))}
       </td>
@@ -217,6 +239,9 @@ ExpandedTranscriptSignificance.propTypes = {
     tsl: PropTypes.number,
     colocatedVariantsCount: PropTypes.number,
     diseaseColocatedVariantsCount: PropTypes.number,
+    enspId: PropTypes.string,
+    ensgId: PropTypes.string,
+    enstId: PropTypes.string,
   })),
   detailsLink: PropTypes.element.isRequired,
 };

@@ -7,9 +7,9 @@ const ExpandedClinicalSignificance = (props) => {
   const { data, detailsLink } = props;
   return (
     <tr>
-      <td colSpan="11">
+      <td colSpan="16">
         <span className="expanded-section-title">Clinical Significances</span>
-        {(data.colocatedVariantsCount > 0)
+        {/* (data.colocatedVariantsCount > 0)
           && (
           <span className="expanded-section-subtitle">
             {data.colocatedVariantsCount}
@@ -27,7 +27,7 @@ const ExpandedClinicalSignificance = (props) => {
             }
           </span>
           )
-        }
+         */}
         {detailsLink}
 
         <div className="significances-groups">

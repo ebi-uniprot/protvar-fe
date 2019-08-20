@@ -35,6 +35,15 @@
     background-color: $secondary-colour;
   }
 
+  &--significances {
+    font-size: 0.8rem;
+    text-transform: none;
+    margin: 0.2rem;
+    padding: 0;
+    width: calc(100% - 0.2rem);
+    height: 1.8rem;
+  }
+
   &--positional {
     color: $white-colour;
     background-color: #EB9F9F;
@@ -83,6 +92,18 @@
     }
     &:hover {
       background-color: darken(#00DFFC, 10%);
+    }
+  }
+
+  &--genomic {
+    color: $white-colour;
+    background-color: #794a4a;
+    &:focus {
+      background-color: #794a4a;
+      border: 2px solid darken(#794a4a, 30%);
+    }
+    &:hover {
+      background-color: darken(#794a4a, 10%);
     }
   }
 }

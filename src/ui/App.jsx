@@ -21,6 +21,8 @@ class App extends Component {
     this.state = {
       searchTerm: null,
       searchResults: null,
+      errors: null,
+      loading: false,
     };
   }
 
@@ -29,6 +31,10 @@ class App extends Component {
 
     const apiURI = `${API_URL}/parser`;
     const data = defaultParser(input);
+
+    this.setState({
+      loading: true,
+    });
 
     axios
       .post(apiURI, { input: data })
@@ -39,6 +45,7 @@ class App extends Component {
           searchTerm: input,
           searchResults: results,
           errors,
+          loading: false,
         });
 
         history.push('search');

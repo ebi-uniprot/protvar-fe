@@ -7,55 +7,11 @@ import AboutSection from '../other/AboutSection';
 
 class TextAreaSearch extends Component {
   state = {
-    inputFormat: '',
     searchTerm: '',
   }
 
   componentWillMount() {
-    this.handleInputFormatChange({
-      target: {
-        value: 'genomicPosition',
-      },
-    });
-  }
-
-  handleInputFormatChange = (e) => {
-    const { value } = e.target;
-    let exampleInputs;
-
-    if (value === 'genomicPosition') {
-      exampleInputs = [
-        // '14 89993420 89993420 A/G . . .',
-        // '20 58909365 58909365 C/A . . .',
-        // '3 165830358 165830358 T/C . . .',
-        // '21 43072000 43072000 T/C . . .',
-        // '21 43060540 43060540 C/T . . .',
-        '21 25891796 25891796 C/T',
-        '21 25891784 25891784 C/T',
-        '21 25891784 25891784 C/G',
-        '21 25891784 25891784 C/A',
-        '14 73173571 73173571 A/G',
-        '14 73173574 73173574 C/T',
-        '14 73173577 73173577 C/T',
-        '14 73173577 73173577 C/G',
-        '14 73173587 73173587 A/T',
-        '14 73173587 73173587 A/C',
-        '14 73173644 73173644 G/C',
-        '14 73173644 73173644 G/A',
-        '14 73173665 73173665 G/T',
-        '14 73173665 73173665 G/C',
-        '14 73173665 73173665 G/A',
-      ].join('\n');
-    } else if (value === 'geneSymbol') {
-      exampleInputs = [
-        'TP53:p.Arg175His',
-      ].join('\n');
-    }
-
-    this.setState({
-      inputFormat: value,
-      searchTerm: exampleInputs,
-    });
+    this.useExampleData();
   }
 
   handleInputChange = (e) => {
@@ -74,9 +30,44 @@ class TextAreaSearch extends Component {
     onSubmit(searchTerm);
   }
 
+  clearForm = () => {
+    this.setState({
+      searchTerm: '',
+    });
+  }
+
+  useExampleData = () => {
+    const searchTerm = [
+      // '14 89993420 89993420 A/G . . .',
+      // '20 58909365 58909365 C/A . . .',
+      // '3 165830358 165830358 T/C . . .',
+      // '21 43072000 43072000 T/C . . .',
+      // '21 43060540 43060540 C/T . . .',
+      '21 25891796 25891796 C/T',
+      '21 25891784 25891784 C/T',
+      '21 25891784 25891784 C/G',
+      '21 25891784 25891784 C/A',
+      '14 73173571 73173571 A/G',
+      '14 73173574 73173574 C/T',
+      '14 73173577 73173577 C/T',
+      '14 73173577 73173577 C/G',
+      '14 73173587 73173587 A/T',
+      '14 73173587 73173587 A/C',
+      '14 73173644 73173644 G/C',
+      '14 73173644 73173644 G/A',
+      '14 73173665 73173665 G/T',
+      '14 73173665 73173665 G/C',
+      '14 73173665 73173665 G/A',
+    ].join('\n');
+
+    this.setState({
+      searchTerm,
+    });
+  }
+
   render() {
-    const { searchTerm, inputFormat } = this.state;
-    const { buttonLabel } = this.props;
+    const { searchTerm } = this.state;
+    const { buttonLabel, isLoading } = this.props;
 
     return (
       <Fragment>
@@ -86,30 +77,14 @@ class TextAreaSearch extends Component {
           <div className="input-examples">
             <b>Examples</b>
             <br />
-            <label htmlFor="genomicPosition">
-              <input
-                id="genomicPosition"
-                type="radio"
-                name="inputFormat"
-                value="genomicPosition"
-                checked={(inputFormat === 'genomicPosition')}
-                onChange={this.handleInputFormatChange}
-              />
+            <div>
               <span>Genomic Position:</span>
               <span className="variant-example">3 165830358 165830358 T/C</span>
-            </label>
-            <label htmlFor="geneSymbol">
-              <input
-                id="geneSymbol"
-                type="radio"
-                name="inputFormat"
-                value="geneSymbol"
-                checked={(inputFormat === 'geneSymbol')}
-                onChange={this.handleInputFormatChange}
-              />
+            </div>
+            <div>
               <span>Gene Symbol:</span>
               <span className="variant-example">TP53:p.Arg175His</span>
-            </label>
+            </div>
           </div>
 
           <form onSubmit={this.handleSubmit}>
@@ -134,13 +109,29 @@ class TextAreaSearch extends Component {
             </a>
 
             <div id="search-button-group" className="search-button-group">
-              <Button className="button--primary">
-                File Upload
-              </Button>
+              {(!isLoading)
+                ? (
+                  <Button type="submit" onClick={this.handleSubmit} className="button--primary">
+                    {buttonLabel}
+                  </Button>
+                ) : (
+                  <Button onClick={() => null} className="button--secondary">
+                    Loading...
+                  </Button>
+                )
+              }
 
-              <Button type="submit" onClick={this.handleSubmit}>
-                {buttonLabel}
-              </Button>
+              {(searchTerm)
+                ? (
+                  <Button onClick={this.clearForm}>
+                    Clear Input
+                  </Button>
+                ) : (
+                  <Button onClick={this.useExampleData}>
+                    Use Example Input
+                  </Button>
+                )
+              }
             </div>
 
           </form>
@@ -155,6 +146,7 @@ class TextAreaSearch extends Component {
 TextAreaSearch.propTypes = {
   buttonLabel: PropTypes.string,
   onSubmit: PropTypes.func,
+  isLoading: PropTypes.bool.isRequired,
 };
 
 TextAreaSearch.defaultProps = {
