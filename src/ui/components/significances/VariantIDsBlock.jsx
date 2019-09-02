@@ -50,6 +50,7 @@ VariantIDsBlock.propTypes = {
       id: PropTypes.string,
       dbSNIPId: PropTypes.string,
     })),
+    // clinVarIDs: PropTypes.arrayOf(PropTypes.string),
     dbSNIPId: PropTypes.string,
     cosmicId: PropTypes.string,
   }),

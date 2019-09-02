@@ -164,7 +164,7 @@ Isoforms
                           t.end = protein.end;
                           t.cosmicId = variation.cosmicId;
                           t.dbSNIPId = variation.dbSNIPId;
-                          t.clinVarId = variation.clinVarId;
+                          t.clinVarIDs = variation.clinVarIDs;
                           t.uniProtVariationId = variation.uniProtVariationId;
                           t.colocatedVariantsCount = variation.proteinColocatedVariantsCount;
                           t.diseaseColocatedVariantsCount = variation

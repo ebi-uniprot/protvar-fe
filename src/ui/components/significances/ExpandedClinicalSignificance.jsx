@@ -29,7 +29,7 @@ const ExpandedClinicalSignificance = (props) => {
                         rel="noopener noreferrer"
                         key={`${source.name}-${source.url}`}
                       >
-                        {source.name}
+                        {`${source.name}: ${source.id}`}
                       </a>
                     );
                   }
@@ -42,7 +42,7 @@ const ExpandedClinicalSignificance = (props) => {
                         rel="noopener noreferrer"
                         key={`${source.name}-${source.id}`}
                       >
-                        {source.name}
+                        {`${source.name}: ${source.id}`}
                       </a>
                     );
                   }

@@ -30,7 +30,7 @@ const ColocatedFeatureDataBlock = (props) => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {e.sourceName}
+                  {`${e.sourceName}: ${e.sourceId}`}
                 </a>
               </li>
             ),
