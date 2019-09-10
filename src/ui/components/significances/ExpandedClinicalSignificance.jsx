@@ -37,7 +37,7 @@ const ExpandedClinicalSignificance = (props) => {
                   if (source.name === 'ClinVar') {
                     return (
                       <a
-                        href={`https://www.ncbi.nlm.nih.gov/clinvar/${source.id}/`}
+                        href={`https://www.ncbi.nlm.nih.gov/clinvar?term=${source.id}`}
                         target="_target"
                         rel="noopener noreferrer"
                         key={`${source.name}-${source.id}`}

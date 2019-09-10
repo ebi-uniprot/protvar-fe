@@ -58,9 +58,16 @@ const ColocatedVariantsBlock = (props) => {
         let el;
 
         if (id.url) {
-          el = <a key={id.url} href={id.url}>{id.id}</a>;
+          el = <a
+            key={id.url}
+            href={id.url}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {id.id}
+          </a>;
         } else {
-          el = <span key={id.url}>{id.id}</span>;
+          el = <span key={id.id}>{id.id}</span>;
         }
 
         const comma = <span key={uuidv1()}>, </span>;

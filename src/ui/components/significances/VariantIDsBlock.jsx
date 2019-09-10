@@ -22,13 +22,25 @@ const VariantIDsBlock = (props) => {
       </li>
     ));
 
+  const dbSNIPIdLink = data.dbSNIPId
+    ? (
+        <a
+          href={`https://www.ncbi.nlm.nih.gov/SNP/snp_ref.cgi?type=rs&rs=${data.dbSNIPId}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {data.dbSNIPId}
+        </a>
+      )
+    : '-';
+
   return (
     <SignificancesColumn
       header="Variant IDs"
     >
       <SignificanceDataLine
         label="RsID"
-        value={(data.dbSNIPId) ? data.dbSNIPId : '-'}
+        value={dbSNIPIdLink}
       />
 
       <SignificanceDataLine
