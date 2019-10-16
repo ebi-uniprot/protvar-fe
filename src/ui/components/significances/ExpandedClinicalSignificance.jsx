@@ -120,6 +120,14 @@ ExpandedClinicalSignificance.propTypes = {
     categories: PropTypes.arrayOf(PropTypes.string),
     colocatedVariantsCount: PropTypes.number,
     diseaseColocatedVariantsCount: PropTypes.number,
+    variationDetails: PropTypes.shape({
+      ids: PropTypes.shape({
+        clinVarIDs: PropTypes.arrayOf(PropTypes.shape({})),
+        cosmicId: PropTypes.string,
+        dbSNIPId: PropTypes.string,
+        rsId: PropTypes.string,
+      }),
+    }),
   }),
   detailsLink: PropTypes.element.isRequired,
 };

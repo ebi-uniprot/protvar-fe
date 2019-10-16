@@ -34,7 +34,14 @@ ExpandedGenomicSignificance.propTypes = {
   data: PropTypes.shape({
     populationFrequencies: PropTypes.shape({}),
     consequencePrediction: PropTypes.shape({}),
-    variationDetails: PropTypes.shape({}),
+    variationDetails: PropTypes.shape({
+      ids: PropTypes.shape({
+        clinVarIDs: PropTypes.arrayOf(PropTypes.shape({})),
+        cosmicId: PropTypes.string,
+        dbSNIPId: PropTypes.string,
+        rsId: PropTypes.string,
+      }),
+    }),
   }),
 };
 

@@ -73,6 +73,7 @@ class ExpandedStructuralSignificance extends Component {
 
     allLigands
       .forEach((ligand) => {
+        // eslint-disable-next-line
         const { ligand_id, structures } = ligand;
 
         if (relatedLigands[ligand_id] || unrelatedLigands[ligand_id]) {
@@ -88,27 +89,28 @@ class ExpandedStructuralSignificance extends Component {
 
     allInteractions
       .forEach((interaction) => {
+        // eslint-disable-next-line
         const { partner_accession, structures } = interaction;
-        const partner_accession_upppercased = partner_accession.toUpperCase();
+        const partnerAccessionUpppercased = partner_accession.toUpperCase();
 
         // 'DNA', 'RNA' and 'Other' are non-unique generic keys
         // so just collect the structure ids and append to the list.
-        if (['DNA', 'RNA', 'OTHER'].includes(partner_accession_upppercased)) {
+        if (['DNA', 'RNA', 'OTHER'].includes(partnerAccessionUpppercased)) {
           if (structures.includes(currentStructure)) {
-            if (!relatedInteractions[partner_accession_upppercased]) {
-              relatedInteractions[partner_accession_upppercased] = interaction;
+            if (!relatedInteractions[partnerAccessionUpppercased]) {
+              relatedInteractions[partnerAccessionUpppercased] = interaction;
               return;
             }
 
-            relatedInteractions[partner_accession_upppercased]
+            relatedInteractions[partnerAccessionUpppercased]
               .structures.concat(interaction.structures);
           } else {
-            if (!unrelatedInteractions[partner_accession_upppercased]) {
-              unrelatedInteractions[partner_accession_upppercased] = interaction;
+            if (!unrelatedInteractions[partnerAccessionUpppercased]) {
+              unrelatedInteractions[partnerAccessionUpppercased] = interaction;
               return;
             }
 
-            unrelatedInteractions[partner_accession_upppercased]
+            unrelatedInteractions[partnerAccessionUpppercased]
               .structures.concat(interaction.structures);
           }
         }
@@ -233,7 +235,7 @@ class ExpandedStructuralSignificance extends Component {
               <ul data-columns="2">
                 {unrelatedInteractionsValues.map(i => <li key={i.partner_name}>{`${i.partner_name} [${i.partner_accession}]`}</li>)}
               </ul>
-              )}            
+              )}
             </div>
           </div>
         </td>
@@ -244,11 +246,15 @@ class ExpandedStructuralSignificance extends Component {
 
 ExpandedStructuralSignificance.propTypes = {
   data: PropTypes.shape({
+    position: PropTypes.number,
+    proteinLength: PropTypes.number,
     allStructures: PropTypes.objectOf(PropTypes.arrayOf(
       PropTypes.shape({
         chain_id: PropTypes.string,
         entity_id: PropTypes.string,
         residue_range: PropTypes.string,
+        start: PropTypes.number,
+        end: PropTypes.number,
       }),
     )),
     annotations: PropTypes.arrayOf(PropTypes.shape({

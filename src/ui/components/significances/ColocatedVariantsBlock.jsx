@@ -58,14 +58,16 @@ const ColocatedVariantsBlock = (props) => {
         let el;
 
         if (id.url) {
-          el = <a
-            key={id.url}
-            href={id.url}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {id.id}
-          </a>;
+          el = (
+            <a
+              key={id.url}
+              href={id.url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {id.id}
+            </a>
+          );
         } else {
           el = <span key={id.id}>{id.id}</span>;
         }
@@ -166,6 +168,7 @@ const ColocatedVariantsBlock = (props) => {
 ColocatedVariantsBlock.propTypes = {
   data: PropTypes.shape({
     colocatedVariants: PropTypes.arrayOf(PropTypes.shape({})),
+    variationDetails: PropTypes.shape({}),
   }),
 };
 

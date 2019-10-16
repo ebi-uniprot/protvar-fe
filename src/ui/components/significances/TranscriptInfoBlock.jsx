@@ -43,6 +43,8 @@ TranscriptInfoBlock.propTypes = {
     enstId: PropTypes.string,
     ensgId: PropTypes.string,
     aminoAcids: PropTypes.string,
+    codons: PropTypes.string,
+    biotype: PropTypes.string,
   }),
 };
 

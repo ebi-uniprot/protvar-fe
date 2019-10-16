@@ -61,7 +61,7 @@ class ImpactSearchResults extends Component {
           <Button onClick={this.toggleAllIsoforms}>
             {(showAllIsoforms) ? 'Hide' : 'Show'}
             {' '}
-Isoforms
+            Isoforms
           </Button>
         </div>
 
@@ -204,7 +204,7 @@ Isoforms
                           onClick={() => this.toggleSignificanceRow(rowKey, 'transcript')}
                           className="button--significances button--transcript"
                         >
-T
+                          T
                         </Button>
                       );
 
@@ -213,7 +213,7 @@ T
                           onClick={() => this.toggleSignificanceRow(rowKey, 'functional')}
                           className="button--significances button--positional"
                         >
-F
+                          F
                         </Button>
                       );
 
@@ -222,7 +222,7 @@ F
                           onClick={() => this.toggleSignificanceRow(rowKey, 'clinical')}
                           className="button--significances button--clinical"
                         >
-C
+                          C
                         </Button>
                       );
 
@@ -231,7 +231,7 @@ C
                           onClick={() => this.toggleSignificanceRow(rowKey, 'structural')}
                           className="button--significances button--structural"
                         >
-S
+                          S
                         </Button>
                       );
 
@@ -240,7 +240,7 @@ S
                           onClick={() => this.toggleSignificanceRow(rowKey, 'genomic')}
                           className="button--significances button--genomic"
                         >
-G
+                          G
                         </Button>
                       );
 
@@ -370,6 +370,11 @@ G
 
 ImpactSearchResults.propTypes = {
   rows: PropTypes.objectOf(PropTypes.shape({
+    key: PropTypes.string,
+    input: PropTypes.string,
+    rows: PropTypes.arrayOf(PropTypes.shape({
+      map: PropTypes.func,
+    })),
     gene: PropTypes.shape({
       allele: PropTypes.string,
       chromosome: PropTypes.string,

@@ -24,14 +24,14 @@ const VariantIDsBlock = (props) => {
 
   const dbSNIPIdLink = data.dbSNIPId
     ? (
-        <a
-          href={`https://www.ncbi.nlm.nih.gov/SNP/snp_ref.cgi?type=rs&rs=${data.dbSNIPId}`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {data.dbSNIPId}
-        </a>
-      )
+      <a
+        href={`https://www.ncbi.nlm.nih.gov/SNP/snp_ref.cgi?type=rs&rs=${data.dbSNIPId}`}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {data.dbSNIPId}
+      </a>
+    )
     : '-';
 
   return (
