@@ -3,10 +3,20 @@ import PropTypes from 'prop-types';
 
 import TranscriptInfoBlock from './TranscriptInfoBlock';
 import TranslationInfoBlock from './TranslationInfoBlock';
-import VariantIDsBlock from './VariantIDsBlock';
+import VariantDetailsBlock from './VariantDetailsBlock';
+import {
+  detailsLinkPropTypes,
+  detailsLinkDefaultProps,
+  variationPropTypes,
+  variationDefaultProps,
+} from '../../other/sharedProps';
 
 const ExpandedTranscriptSignificance = (props) => {
-  const { data, detailsLink } = props;
+  const {
+    data,
+    variation,
+    detailsLink,
+  } = props;
 
   return (
     <tr>
@@ -23,7 +33,10 @@ const ExpandedTranscriptSignificance = (props) => {
 
             <TranslationInfoBlock data={ts} />
 
-            <VariantIDsBlock data={ts} />
+            <VariantDetailsBlock
+              data={ts}
+              variation={variation}
+            />
           </div>
         ))}
       </td>
@@ -68,11 +81,14 @@ ExpandedTranscriptSignificance.propTypes = {
     ensgId: PropTypes.string,
     enstId: PropTypes.string,
   })),
-  detailsLink: PropTypes.element.isRequired,
+  variation: variationPropTypes,
+  detailsLink: detailsLinkPropTypes,
 };
 
 ExpandedTranscriptSignificance.defaultProps = {
   data: {},
+  variation: variationDefaultProps,
+  detailsLink: detailsLinkDefaultProps,
 };
 
 export default ExpandedTranscriptSignificance;

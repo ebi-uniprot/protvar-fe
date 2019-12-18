@@ -150,6 +150,14 @@ class ImpactSearchResults extends Component {
                         );
                       }
 
+                      let { accession } = protein;
+
+                      if (protein.canonical) {
+                        accession = protein.canonicalAccession;
+                      } else if (protein.isoform) {
+                        accession = protein.isoform;
+                      }
+
                       significances.transcript
                         .forEach((t) => {
                           t.hgvsg = gene.hgvsg;
@@ -173,6 +181,7 @@ class ImpactSearchResults extends Component {
 
                       if (typeof significances.structural !== 'undefined') {
                         significances.structural.position = protein.start;
+                        significances.structural.accession = accession;
                       }
 
                       if (typeof significances.clinical !== 'undefined') {
@@ -188,14 +197,6 @@ class ImpactSearchResults extends Component {
                         : 'red';
 
                       counter += 1;
-
-                      let { accession } = protein;
-
-                      if (protein.canonical) {
-                        accession = protein.canonicalAccession;
-                      } else if (protein.isoform) {
-                        accession = protein.isoform;
-                      }
 
                       const noSignificance = <span className="no-significances">-</span>;
 
@@ -320,6 +321,7 @@ class ImpactSearchResults extends Component {
                             ? (
                               <ExpandedFunctionalSignificance
                                 data={significances.functional}
+                                variation={variation}
                                 detailsLink={detailsPageLink}
                               />
                             ) : null }
@@ -328,6 +330,7 @@ class ImpactSearchResults extends Component {
                             ? (
                               <ExpandedClinicalSignificance
                                 data={significances.clinical}
+                                variation={variation}
                                 detailsLink={detailsPageLink}
                               />
                             ) : null }
@@ -336,6 +339,7 @@ class ImpactSearchResults extends Component {
                             ? (
                               <ExpandedTranscriptSignificance
                                 data={significances.transcript}
+                                variation={variation}
                                 detailsLink={detailsPageLink}
                               />
                             ) : null }
@@ -352,6 +356,7 @@ class ImpactSearchResults extends Component {
                             ? (
                               <ExpandedGenomicSignificance
                                 data={significances.genomic}
+                                variation={variation}
                                 detailsLink={detailsPageLink}
                               />
                             ) : null }
@@ -373,6 +378,12 @@ ImpactSearchResults.propTypes = {
     key: PropTypes.string,
     input: PropTypes.string,
     rows: PropTypes.arrayOf(PropTypes.shape({
+      gene: PropTypes.shape({
+        hgvsg: PropTypes.string,
+      }),
+      variation: PropTypes.shape({
+        dbSNIPId: PropTypes.string,
+      }),
       map: PropTypes.func,
     })),
     gene: PropTypes.shape({

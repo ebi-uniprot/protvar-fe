@@ -113,6 +113,14 @@
       min-height: 150px;
     }
 
+    .significances-stacked-columns {
+      flex-direction: column;
+
+      .significances-column {
+        min-height: auto;
+      }
+    }
+
     .structural-icon {
       font-size: 2rem;
     }

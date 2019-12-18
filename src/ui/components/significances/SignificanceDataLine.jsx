@@ -6,9 +6,10 @@ import { v1 as uuidv1 } from 'uuid';
 const SignificanceDataLine = (props) => {
   const {
     label,
-    value,
     alternativeLabelStyle,
   } = props;
+
+  let { value } = props;
 
   if (!value) {
     return null;
@@ -27,7 +28,7 @@ const SignificanceDataLine = (props) => {
     );
 
   if (Array.isArray(value)) {
-    value.forEach(i => <span key={uuidv1()}>{i}</span>);
+    value = value.map(i => <span key={uuidv1()}>{i}</span>);
   }
 
   return (
@@ -46,6 +47,7 @@ SignificanceDataLine.propTypes = {
     PropTypes.object,
     PropTypes.arrayOf(PropTypes.object),
     PropTypes.array,
+    PropTypes.number,
   ]),
   alternativeLabelStyle: PropTypes.bool,
 };

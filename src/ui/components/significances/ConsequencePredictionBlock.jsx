@@ -4,10 +4,17 @@ import PropTypes from 'prop-types';
 import SignificancesColumn from './SignificancesColumn';
 import SignificanceDataLine from './SignificanceDataLine';
 
-const ConsequencePredictionBlock = (props) => {
-  const {
-    data,
-  } = props;
+const ConsequencePredictionBlock = ({ data }) => {
+  let siftValue = '-';
+  let polyphenValue = '-';
+
+  if (data.siftPrediction && data.siftScore) {
+    siftValue = `${data.siftPrediction} (${data.siftScore})`;
+  }
+
+  if (data.polyphenPrediction && data.polyphenScore) {
+    polyphenValue = `${data.polyphenPrediction} (${data.polyphenScore})`;
+  }
 
   return (
     <SignificancesColumn
@@ -15,17 +22,17 @@ const ConsequencePredictionBlock = (props) => {
     >
       <SignificanceDataLine
         label="SIFT"
-        value={`${data.siftPrediction} (${data.siftScore})`}
+        value={siftValue}
       />
 
       <SignificanceDataLine
         label="Polyphen"
-        value={`${data.polyphenPrediction} (${data.polyphenScore})`}
+        value={polyphenValue}
       />
 
       <SignificanceDataLine
         label="CADD"
-        value={`${data.caddPhred}`}
+        value={data.caddPhred || '-'}
       />
     </SignificancesColumn>
   );
