@@ -32,6 +32,11 @@ const TranscriptInfoBlock = (props) => {
         label="Codon"
         value={data.codons}
       />
+
+      <SignificanceDataLine
+        label="ENST"
+        value={data.enstId}
+      />
     </SignificancesColumn>
   );
 };

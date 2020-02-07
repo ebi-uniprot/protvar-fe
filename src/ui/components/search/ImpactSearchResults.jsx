@@ -14,6 +14,7 @@ class ImpactSearchResults extends Component {
   state = {
     expandedRow: null,
     showAllIsoforms: false,
+    openGroup: null,
   }
 
   toggleAllIsoforms = () => {
@@ -21,6 +22,7 @@ class ImpactSearchResults extends Component {
 
     this.setState({
       showAllIsoforms: !showAllIsoforms,
+      openGroup: null,
     });
   }
 
@@ -35,14 +37,46 @@ class ImpactSearchResults extends Component {
     });
   }
 
+  toggleAcessionIsoforms = (group, accession) => {
+    const { openGroup, openAccession } = this.state;
+
+    this.setState({
+      openGroup: (openGroup === group) ? null : group,
+    });
+  }
+
   render() {
     const { rows, handleDownload } = this.props;
     const {
       expandedRow,
       showAllIsoforms,
+      openGroup,
     } = this.state;
 
     let counter = 0;
+
+    Object.keys(rows)
+      .forEach((key) => {
+        let group = rows[key];
+        let primaryAccessions = [];
+
+        group.rows = group.rows
+          .filter((row) => {
+            const { protein } = row;
+
+            if (protein.canonical && (!protein.length || primaryAccessions.includes(protein.accession))) {
+              return false;
+            }
+
+            if (protein.canonical && protein.length && !primaryAccessions.includes(protein.accession)) {
+              primaryAccessions.push(protein.accession);
+            }
+
+            return true;
+          });
+
+        return group;
+      });
 
     const totalCounts = Object.values(rows)
       .reduce((total, current) => total + current.rows.length, 0);
@@ -68,20 +102,18 @@ class ImpactSearchResults extends Component {
         <table border="0" className="unstriped" cellPadding="0" cellSpacing="0">
           <tbody>
             <tr>
-              <th colSpan="3" rowSpan="2">Gene Name</th>
-              <th colSpan="4">Protein</th>
-              <th colSpan="4">Genomic</th>
+              <th colSpan="2" rowSpan="2">Gene Name</th>
+              <th colSpan="3">Protein</th>
+              <th colSpan="3">Genomic</th>
               <th colSpan="5">Impact</th>
             </tr>
             <tr>
               <th>Accession</th>
-              <th>Length</th>
               <th>Position</th>
               <th>Variant</th>
-              <th>ENSG</th>
-              <th>ENST</th>
               <th>Location</th>
               <th>Allele</th>
+              <th>Var ID</th>
               <th>T</th>
               <th>S</th>
               <th>F</th>
@@ -92,20 +124,26 @@ class ImpactSearchResults extends Component {
             {Object.keys(rows)
               .map((key) => {
                 const group = rows[key];
+
                 return (
                   <Fragment key={`${group.key}`}>
                     <tr>
                       <td colSpan="8" className="query-row">
+                        <Button
+                          onClick={() => this.toggleAcessionIsoforms(group.key)}
+                          className="button button--toggle-isoforms"
+                        >
+                          {(!showAllIsoforms && openGroup !== group.key) ? '+' : null}
+                          {(showAllIsoforms || openGroup === group.key) ? '- ' : null}
+                        </Button>
+
                         Query:
                         {group.input}
                       </td>
-                      <td colSpan="4" className="query-row">
+                      <td colSpan="6" className="query-row">
                         HGVSg:
                         {' '}
                         {group.rows[0] && group.rows[0].gene.hgvsg}
-                      </td>
-                      <td colSpan="4" className="query-row">
-                        {group.rows[0] && group.rows[0].variation.dbSNIPId}
                       </td>
                     </tr>
                     {group.rows.map((row, i) => {
@@ -116,7 +154,11 @@ class ImpactSearchResults extends Component {
                         variation,
                       } = row;
 
-                      if (!showAllIsoforms && !protein.canonical) {
+                      if (
+                        !showAllIsoforms
+                        && !protein.canonical
+                        && openGroup !== group.key
+                      ) {
                         return null;
                       }
 
@@ -247,12 +289,7 @@ class ImpactSearchResults extends Component {
 
                       return (
                         <Fragment key={`${rowKey}-${counter}`}>
-
                           <tr key={rowKey}>
-                            <td className="row-counter">
-                              {(protein.canonical && !showAllIsoforms) ? '+' : null}
-                              {(protein.canonical && showAllIsoforms) ? '-' : null}
-                            </td>
                             <td>
                               {(significances.transcript && significances.transcript[0].caddPhred)
                                 ? (
@@ -276,15 +313,13 @@ class ImpactSearchResults extends Component {
                                 ) : '-'
                               }
                             </td>
-                            <td>{protein.length || '-'}</td>
                             <td>{proteinPosition || '-'}</td>
                             <td>
                               <span title={protein.variant || '-'}>{protein.threeLetterCodes || '-'}</span>
                             </td>
-                            <td>{gene.ensgId}</td>
-                            <td>{gene.enstId}</td>
                             <td>{geneLocation}</td>
                             <td>{gene.allele}</td>
+                            <td>{group.rows[0] && group.rows[0].variation.dbSNIPId}</td>
                             <td className="fit">
                               {significances.transcript
                                 ? transcriptSignificancesButton
@@ -358,6 +393,7 @@ class ImpactSearchResults extends Component {
                                 data={significances.genomic}
                                 variation={variation}
                                 detailsLink={detailsPageLink}
+                                gene={gene}
                               />
                             ) : null }
                         </Fragment>

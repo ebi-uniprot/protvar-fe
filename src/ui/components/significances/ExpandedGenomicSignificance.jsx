@@ -17,6 +17,7 @@ const ExpandedGenomicSignificance = (props) => {
     data,
     variation,
     detailsLink,
+    gene,
   } = props;
 
   return (
@@ -36,6 +37,7 @@ const ExpandedGenomicSignificance = (props) => {
           <VariantDetailsBlock
             data={data}
             variation={variation}
+            gene={gene}
           />
         </div>
       </td>

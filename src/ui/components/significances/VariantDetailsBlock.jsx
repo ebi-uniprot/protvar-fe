@@ -14,6 +14,7 @@ import {
 const VariantDetailsBlock = ({
   data,
   variation,
+  gene
 }) => {
   if (!data.variationDetails || !data.variationDetails.ids) {
     return null;
@@ -54,6 +55,11 @@ const VariantDetailsBlock = ({
     <SignificancesColumn
       header="Variant Details"
     >
+      {gene && <SignificanceDataLine
+        label="ENSG"
+        value={gene.ensgId}
+      />}
+
       <SingleColocatedVariantDetails
         colocated={variation.variationDetails}
         meta={data.variationDetails}
