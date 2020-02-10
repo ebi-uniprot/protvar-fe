@@ -54,7 +54,7 @@ const PopulationFrequencyBlock = (props) => {
     >
       <SignificanceDataLine
         label="gnomAD"
-        value={<ul>{gnomAD}</ul>}
+        value={<ul>{gnomAD || 'Not reported'}</ul>}
       />
 
       <SignificanceDataLine

@@ -114,11 +114,11 @@ class ImpactSearchResults extends Component {
               <th>Location</th>
               <th>Allele</th>
               <th>Var ID</th>
-              <th>T</th>
-              <th>S</th>
-              <th>F</th>
               <th>C</th>
               <th>G</th>
+              <th>T</th>
+              <th>F</th>
+              <th>S</th>
             </tr>
 
             {Object.keys(rows)
@@ -128,7 +128,7 @@ class ImpactSearchResults extends Component {
                 return (
                   <Fragment key={`${group.key}`}>
                     <tr>
-                      <td colSpan="8" className="query-row">
+                      <td colSpan="7" className="query-row">
                         <Button
                           onClick={() => this.toggleAcessionIsoforms(group.key)}
                           className="button button--toggle-isoforms"
@@ -139,6 +139,9 @@ class ImpactSearchResults extends Component {
 
                         Query:
                         {group.input}
+                      </td>
+                      <td className="query-row">
+                        {group.rows[0] && group.rows[0].variation && group.rows[0].variation.dbSNIPId}
                       </td>
                       <td colSpan="6" className="query-row">
                         HGVSg:
@@ -321,14 +324,20 @@ class ImpactSearchResults extends Component {
                             <td>{gene.allele}</td>
                             <td>{group.rows[0] && group.rows[0].variation.dbSNIPId}</td>
                             <td className="fit">
-                              {significances.transcript
-                                ? transcriptSignificancesButton
+                              {significances.clinical
+                                ? clinicalSignificancesButton
                                 : noSignificance
                               }
                             </td>
                             <td className="fit">
-                              {significances.structural
-                                ? structuralSignificancesButton
+                              {significances.genomic
+                                ? genomicSignificancesButton
+                                : noSignificance
+                              }
+                            </td>
+                            <td className="fit">
+                              {significances.transcript
+                                ? transcriptSignificancesButton
                                 : noSignificance
                               }
                             </td>
@@ -339,14 +348,8 @@ class ImpactSearchResults extends Component {
                               }
                             </td>
                             <td className="fit">
-                              {significances.clinical
-                                ? clinicalSignificancesButton
-                                : noSignificance
-                              }
-                            </td>
-                            <td className="fit">
-                              {significances.genomic
-                                ? genomicSignificancesButton
+                              {significances.structural
+                                ? structuralSignificancesButton
                                 : noSignificance
                               }
                             </td>
