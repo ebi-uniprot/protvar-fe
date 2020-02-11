@@ -37,6 +37,16 @@ const TranscriptInfoBlock = (props) => {
         label="ENST"
         value={data.enstId}
       />
+
+      <SignificanceDataLine
+        label="Consequence Terms"
+        value={data.consequenceTerms && data.consequenceTerms.join(', ').replace(/_/g, ' ')}
+      />
+
+      {/* <SignificanceDataLine
+        label="Other ENSTs"
+        value={data.otherENSTs && data.otherENSTs.join(', ')}
+      /> */}
     </SignificancesColumn>
   );
 };
@@ -50,6 +60,7 @@ TranscriptInfoBlock.propTypes = {
     aminoAcids: PropTypes.string,
     codons: PropTypes.string,
     biotype: PropTypes.string,
+    otherENSTs: PropTypes.arrayOf(PropTypes.string),
   }),
 };
 

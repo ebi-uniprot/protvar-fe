@@ -5,8 +5,8 @@ import SignificancesColumn from './SignificancesColumn';
 import SignificanceDataLine from './SignificanceDataLine';
 
 const ConsequencePredictionBlock = ({ data }) => {
-  let siftValue = '-';
-  let polyphenValue = '-';
+  let siftValue = 'Not reported';
+  let polyphenValue = 'Not reported';
 
   if (data.siftPrediction && data.siftScore) {
     siftValue = `${data.siftPrediction} (${data.siftScore})`;
@@ -32,7 +32,7 @@ const ConsequencePredictionBlock = ({ data }) => {
 
       <SignificanceDataLine
         label="CADD"
-        value={data.caddPhred || '-'}
+        value={data.caddPhred || 'Not reported'}
       />
     </SignificancesColumn>
   );

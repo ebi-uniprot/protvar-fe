@@ -59,7 +59,7 @@ const PopulationFrequencyBlock = (props) => {
 
       <SignificanceDataLine
         label="1000 Genomes"
-        value={oneK}
+        value={(oneK && oneK.length > 0) ? oneK : 'Not reported'}
       />
     </SignificancesColumn>
   );

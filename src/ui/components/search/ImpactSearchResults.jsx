@@ -59,12 +59,14 @@ class ImpactSearchResults extends Component {
       .forEach((key) => {
         let group = rows[key];
         let primaryAccessions = [];
+        group.removedENSTs = [];
 
-        group.rows = group.rows
+        group.uniqueRows = group.rows
           .filter((row) => {
-            const { protein } = row;
+            const { protein, gene } = row;
 
             if (protein.canonical && (!protein.length || primaryAccessions.includes(protein.accession))) {
+              group.removedENSTs.push(gene.enstId);
               return false;
             }
 
@@ -79,7 +81,7 @@ class ImpactSearchResults extends Component {
       });
 
     const totalCounts = Object.values(rows)
-      .reduce((total, current) => total + current.rows.length, 0);
+      .reduce((total, current) => total + current.uniqueRows.length, 0);
 
     return (
       <div className="search-results">
@@ -93,8 +95,7 @@ class ImpactSearchResults extends Component {
           </span>
           <Button onClick={handleDownload}>Download</Button>
           <Button onClick={this.toggleAllIsoforms}>
-            {(showAllIsoforms) ? 'Hide' : 'Show'}
-            {' '}
+            {(showAllIsoforms) ? 'Hide ' : 'Show '}
             Isoforms
           </Button>
         </div>
@@ -141,15 +142,15 @@ class ImpactSearchResults extends Component {
                         {group.input}
                       </td>
                       <td className="query-row">
-                        {group.rows[0] && group.rows[0].variation && group.rows[0].variation.dbSNIPId}
+                        {group.uniqueRows[0] && group.uniqueRows[0].variation && group.uniqueRows[0].variation.dbSNIPId}
                       </td>
                       <td colSpan="6" className="query-row">
                         HGVSg:
                         {' '}
-                        {group.rows[0] && group.rows[0].gene.hgvsg}
+                        {group.uniqueRows[0] && group.uniqueRows[0].gene.hgvsg}
                       </td>
                     </tr>
-                    {group.rows.map((row, i) => {
+                    {group.uniqueRows.map((row, i) => {
                       const {
                         protein,
                         gene,
@@ -222,6 +223,7 @@ class ImpactSearchResults extends Component {
                           t.colocatedVariantsCount = variation.proteinColocatedVariantsCount;
                           t.diseaseColocatedVariantsCount = variation
                             .diseasAssociatedProteinColocatedVariantsCount;
+                          t.otherENSTs = group.removedENSTs.slice(0);
                         });
 
                       if (typeof significances.structural !== 'undefined') {
@@ -322,7 +324,7 @@ class ImpactSearchResults extends Component {
                             </td>
                             <td>{geneLocation}</td>
                             <td>{gene.allele}</td>
-                            <td>{group.rows[0] && group.rows[0].variation.dbSNIPId}</td>
+                            <td>{group.uniqueRows[0] && group.uniqueRows[0].variation.dbSNIPId}</td>
                             <td className="fit">
                               {significances.clinical
                                 ? clinicalSignificancesButton

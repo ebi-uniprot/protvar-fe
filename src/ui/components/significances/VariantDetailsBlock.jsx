@@ -49,7 +49,7 @@ const VariantDetailsBlock = ({
         {dbSNIPId}
       </a>
     )
-    : '-';
+    : 'Not reported';
 
   return (
     <SignificancesColumn
@@ -73,12 +73,12 @@ const VariantDetailsBlock = ({
 
       <SignificanceDataLine
         label="ClinVar"
-        value={(clinVarLinks) ? <ul>{clinVarLinks}</ul> : '-'}
+        value={(clinVarLinks && clinVarLinks.lenght > 0) ? <ul>{clinVarLinks}</ul> : 'Not reported'}
       />
 
       <SignificanceDataLine
         label="COSMIC"
-        value={cosmicId || '-'}
+        value={cosmicId || 'Not reported'}
       />
     </SignificancesColumn>
   );
