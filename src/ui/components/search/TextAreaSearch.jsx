@@ -88,6 +88,10 @@ class TextAreaSearch extends Component {
               <span>Gene Symbol:</span>
               <span className="variant-example">TP53:p.Arg175His</span>
             </div>
+            <div>
+              <span>RefSeq cDNA:</span>
+              <span className="variant-example">NM_145255.3:c.526C>T</span>
+            </div>
           </div>
 
           <form onSubmit={this.handleSubmit}>
