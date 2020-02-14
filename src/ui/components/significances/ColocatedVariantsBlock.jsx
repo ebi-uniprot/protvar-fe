@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import { v1 as uuidv1 } from 'uuid';
@@ -72,7 +72,7 @@ const ColocatedVariantsBlock = (props) => {
           el = <span key={id.id}>{id.id}</span>;
         }
 
-        const comma = <span key={uuidv1()}>, </span>;
+        const comma = <Fragment key={uuidv1()}>, </Fragment>;
 
         return (index > 0)
           ? [comma, el]
@@ -146,20 +146,7 @@ const ColocatedVariantsBlock = (props) => {
       header="Colocated Variants"
     >
       {data.colocatedVariants
-        .map((cv) => {
-          const key = [
-            cv.sourceType,
-            cv.featureId,
-            cv.wildType,
-            cv.alternativeSequence,
-            cv.begin,
-            cv.end,
-          ].join('-');
-
-          return (
-            <DataBlock key={key} colocated={cv} meta={data.variationDetails} />
-          );
-        })
+        .map(cv => <DataBlock key={uuidv1()} colocated={cv} meta={data.variationDetails} />)
       }
     </SignificancesColumn>
   );

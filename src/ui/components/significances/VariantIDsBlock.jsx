@@ -11,9 +11,9 @@ const VariantIDsBlock = (props) => {
 
   const clinVarLinks = (data.clinVarIDs) && data.clinVarIDs
     .map(cv => (
-      <li key={`${cv.id}-${cv.dbSNIPId}`}>
+      <li key={`${cv.id}-${cv.dbSNPId}`}>
         <a
-          href={`https://www.ncbi.nlm.nih.gov/clinvar?term=${cv.dbSNIPId}`}
+          href={`https://www.ncbi.nlm.nih.gov/clinvar?term=${cv.dbSNPId}`}
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -22,14 +22,14 @@ const VariantIDsBlock = (props) => {
       </li>
     ));
 
-  const dbSNIPIdLink = data.dbSNIPId
+  const dbSNPIdLink = data.dbSNPId
     ? (
       <a
-        href={`https://www.ncbi.nlm.nih.gov/SNP/snp_ref.cgi?type=rs&rs=${data.dbSNIPId}`}
+        href={`https://www.ncbi.nlm.nih.gov/SNP/snp_ref.cgi?type=rs&rs=${data.dbSNPId}`}
         target="_blank"
         rel="noopener noreferrer"
       >
-        {data.dbSNIPId}
+        {data.dbSNPId}
       </a>
     )
     : '-';
@@ -40,7 +40,7 @@ const VariantIDsBlock = (props) => {
     >
       <SignificanceDataLine
         label="RsID"
-        value={dbSNIPIdLink}
+        value={dbSNPIdLink}
       />
 
       <SignificanceDataLine
@@ -59,11 +59,10 @@ const VariantIDsBlock = (props) => {
 VariantIDsBlock.propTypes = {
   data: PropTypes.shape({
     clinVarIDs: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.string,
-      dbSNIPId: PropTypes.string,
+      id: PropTypes.string.isRequired,
+      dbSNPId: PropTypes.string.isRequired,
     })),
-    // clinVarIDs: PropTypes.arrayOf(PropTypes.string),
-    dbSNIPId: PropTypes.string,
+    dbSNPId: PropTypes.string,
     cosmicId: PropTypes.string,
   }),
 };
@@ -71,7 +70,7 @@ VariantIDsBlock.propTypes = {
 VariantIDsBlock.defaultProps = {
   data: {
     clinVarIDs: [],
-    dbSNIPId: null,
+    dbSNPId: null,
     cosmicId: null,
   },
 };

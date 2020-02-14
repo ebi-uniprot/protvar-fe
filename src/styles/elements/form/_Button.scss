@@ -2,6 +2,9 @@
 // Button
 // ------
 .button {
+  &:focus {
+    outline: none;
+  }
 
   margin-right: 0.5rem;
   font-weight: 700;
@@ -49,7 +52,6 @@
     background-color: #EB9F9F;
     &:focus {
       background-color: #EB9F9F;
-      border: 2px solid darken(#EB9F9F, 30%);
     }
     &:hover {
       background-color: darken(#EB9F9F, 10%);
@@ -61,7 +63,6 @@
     background-color: #EB6841;
     &:focus {
       background-color: #EB6841;
-      border: 2px solid darken(#EB6841, 30%);
     }
     &:hover {
       background-color: darken(#EB6841, 10%);
@@ -74,7 +75,6 @@
     color: #333;
     &:focus {
       background-color: #C7F464;
-      border: 2px solid darken(#C7F464, 30%);
       color: #333;
     }
     &:hover {
@@ -88,7 +88,6 @@
     background-color: #00DFFC;
     &:focus {
       background-color: #00DFFC;
-      border: 2px solid darken(#00DFFC, 30%);
     }
     &:hover {
       background-color: darken(#00DFFC, 10%);
@@ -100,7 +99,6 @@
     background-color: #794a4a;
     &:focus {
       background-color: #794a4a;
-      border: 2px solid darken(#794a4a, 30%);
     }
     &:hover {
       background-color: darken(#794a4a, 10%);

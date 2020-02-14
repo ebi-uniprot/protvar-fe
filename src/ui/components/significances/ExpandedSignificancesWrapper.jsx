@@ -2,11 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const ExpandedSignificancesWrapper = (props) => {
-  const { component, data } = props;
-  const {
-    id,
-    group,
-  } = data;
+  const { component, data: {id, group} } = props;
 
   return (
     <div

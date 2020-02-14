@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 class PublicationsList extends Component {
   state = {
     displayList: false,
-    listPositoin: {
+    listPosition: {
       top: 0,
       left: 0,
     },
@@ -23,7 +23,7 @@ class PublicationsList extends Component {
 
       this.setState({
         displayList: !displayList,
-        listPositoin: {
+        listPosition: {
           top: rect.top + rect.height + docTop,
           left: rect.left,
         },
@@ -34,7 +34,7 @@ class PublicationsList extends Component {
   render() {
     const {
       displayList,
-      listPositoin,
+      listPosition,
     } = this.state;
 
     const {
@@ -48,14 +48,14 @@ class PublicationsList extends Component {
 
     return (
       <div
-        className={`publications-list ${(displayList) && 'publications-list--open'}`}
+        className={`publications-list ${(displayList) ? 'publications-list--open' : ''}`}
         onClick={e => this.toggleDisplayList(e)}
         role="button"
       >
         {title || ''}
         <div
           className={`publications-list__items-wrapper ${showItemsClassName}`}
-          style={{ top: `${listPositoin.top}px`, left: `${listPositoin.left}px` }}
+          style={{ top: `${listPosition.top}px`, left: `${listPosition.left}px` }}
         >
           {items || ''}
         </div>

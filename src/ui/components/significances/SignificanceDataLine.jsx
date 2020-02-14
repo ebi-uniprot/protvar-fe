@@ -26,14 +26,14 @@ const SignificanceDataLine = (props) => {
       </b>
     );
 
-  if (Array.isArray(value)) {
-    value.forEach(i => <span key={uuidv1()}>{i}</span>);
-  }
+  const valueElement = (Array.isArray(value))
+    ? value.map(i => <span key={uuidv1()}>{i}</span>)
+    : value;
 
   return (
     <div key={uuidv1()}>
       {labelEl}
-      <span key={uuidv1()}>{value}</span>
+      <span key={uuidv1()}>{valueElement}</span>
     </div>
   );
 };

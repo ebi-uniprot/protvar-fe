@@ -16,7 +16,7 @@ const ExpandedGenomicSignificance = (props) => {
 
         <div
           className="significances-groups"
-          key={`genomic-significances-group-wrapper-${1}`}
+          key={`genomic-significances-group-wrapper`}
         >
           <PopulationFrequencyBlock data={data.populationFrequencies} />
 
@@ -38,7 +38,7 @@ ExpandedGenomicSignificance.propTypes = {
       ids: PropTypes.shape({
         clinVarIDs: PropTypes.arrayOf(PropTypes.shape({})),
         cosmicId: PropTypes.string,
-        dbSNIPId: PropTypes.string,
+        dbSNPId: PropTypes.string,
         rsId: PropTypes.string,
       }),
     }),

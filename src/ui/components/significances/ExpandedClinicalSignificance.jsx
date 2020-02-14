@@ -124,7 +124,7 @@ ExpandedClinicalSignificance.propTypes = {
       ids: PropTypes.shape({
         clinVarIDs: PropTypes.arrayOf(PropTypes.shape({})),
         cosmicId: PropTypes.string,
-        dbSNIPId: PropTypes.string,
+        dbSNPId: PropTypes.string,
         rsId: PropTypes.string,
       }),
     }),

@@ -105,7 +105,7 @@ class ImpactSearchResults extends Component {
                         {group.rows[0] && group.rows[0].gene.hgvsg}
                       </td>
                       <td colSpan="4" className="query-row">
-                        {group.rows[0] && group.rows[0].variation.dbSNIPId}
+                        {group.rows[0] && group.rows[0].variation.dbSNPId}
                       </td>
                     </tr>
                     {group.rows.map((row, i) => {
@@ -163,7 +163,7 @@ class ImpactSearchResults extends Component {
                           t.start = protein.start;
                           t.end = protein.end;
                           t.cosmicId = variation.cosmicId;
-                          t.dbSNIPId = variation.dbSNIPId;
+                          t.dbSNPId = variation.dbSNPId;
                           t.clinVarIDs = variation.clinVarIDs;
                           t.uniProtVariationId = variation.uniProtVariationId;
                           t.colocatedVariantsCount = variation.proteinColocatedVariantsCount;
