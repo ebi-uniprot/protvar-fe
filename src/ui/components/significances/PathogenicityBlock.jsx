@@ -28,10 +28,17 @@ const PathogenicityBlock = (props) => {
       />
     </SignificancesColumn>
   );
-}
+};
 
 PathogenicityBlock.propTypes = {
+  data: PropTypes.shape({
+    pathogenicity: PropTypes.arrayOf(PropTypes.string),
+    cosmicId: PropTypes.string,
+  }),
+};
 
+PathogenicityBlock.defaultProps = {
+  data: {},
 };
 
 export default PathogenicityBlock;

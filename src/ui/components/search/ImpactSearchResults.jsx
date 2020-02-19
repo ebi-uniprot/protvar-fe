@@ -13,8 +13,15 @@ import SearchResultsLegends from '../other/SearchResultsLegends';
 class ImpactSearchResults extends Component {
   state = {
     expandedRow: null,
-    expandedGroup: null,
     showAllIsoforms: false,
+  }
+
+  toggleAllIsoforms = () => {
+    const { showAllIsoforms } = this.state;
+
+    this.setState({
+      showAllIsoforms: !showAllIsoforms,
+    });
   }
 
   toggleSignificanceRow(rowId, significanceType) {
@@ -28,19 +35,10 @@ class ImpactSearchResults extends Component {
     });
   }
 
-  toggleAllIsoforms = () => {
-    const { showAllIsoforms } = this.state;
-
-    this.setState({
-      showAllIsoforms: !showAllIsoforms,
-    });
-  }
-
   render() {
     const { rows, handleDownload } = this.props;
     const {
       expandedRow,
-      expandedGroup,
       showAllIsoforms,
     } = this.state;
 
@@ -61,7 +59,9 @@ class ImpactSearchResults extends Component {
           </span>
           <Button onClick={handleDownload}>Download</Button>
           <Button onClick={this.toggleAllIsoforms}>
-            {(showAllIsoforms) ? 'Hide' : 'Show'} Isoforms
+            {(showAllIsoforms) ? 'Hide' : 'Show'}
+            {' '}
+            Isoforms
           </Button>
         </div>
 
@@ -100,10 +100,12 @@ class ImpactSearchResults extends Component {
                         {group.input}
                       </td>
                       <td colSpan="4" className="query-row">
-                        HGVSg: {group.rows[0] && group.rows[0].gene.hgvsg}
+                        HGVSg:
+                        {' '}
+                        {group.rows[0] && group.rows[0].gene.hgvsg}
                       </td>
                       <td colSpan="4" className="query-row">
-                        {group.rows[0] && group.rows[0].variation.dbSNIPId}
+                        {group.rows[0] && group.rows[0].variation.dbSNPId}
                       </td>
                     </tr>
                     {group.rows.map((row, i) => {
@@ -161,8 +163,8 @@ class ImpactSearchResults extends Component {
                           t.start = protein.start;
                           t.end = protein.end;
                           t.cosmicId = variation.cosmicId;
-                          t.dbSNIPId = variation.dbSNIPId;
-                          t.clinVarId = variation.clinVarId;
+                          t.dbSNPId = variation.dbSNPId;
+                          t.clinVarIDs = variation.clinVarIDs;
                           t.uniProtVariationId = variation.uniProtVariationId;
                           t.colocatedVariantsCount = variation.proteinColocatedVariantsCount;
                           t.diseaseColocatedVariantsCount = variation
@@ -197,30 +199,50 @@ class ImpactSearchResults extends Component {
 
                       const noSignificance = <span className="no-significances">-</span>;
 
-                      const transcriptSignificancesButton = <Button
-                        onClick={() => this.toggleSignificanceRow(rowKey, 'transcript')}
-                        className="button--significances button--transcript"
-                      >T</Button>;
+                      const transcriptSignificancesButton = (
+                        <Button
+                          onClick={() => this.toggleSignificanceRow(rowKey, 'transcript')}
+                          className="button--significances button--transcript"
+                        >
+                          T
+                        </Button>
+                      );
 
-                      const functionalSignificancesButton = <Button
-                        onClick={() => this.toggleSignificanceRow(rowKey, 'functional')}
-                        className="button--significances button--positional"
-                      >F</Button>;
+                      const functionalSignificancesButton = (
+                        <Button
+                          onClick={() => this.toggleSignificanceRow(rowKey, 'functional')}
+                          className="button--significances button--positional"
+                        >
+                          F
+                        </Button>
+                      );
 
-                      const clinicalSignificancesButton = <Button
-                        onClick={() => this.toggleSignificanceRow(rowKey, 'clinical')}
-                        className="button--significances button--clinical"
-                      >C</Button>;
+                      const clinicalSignificancesButton = (
+                        <Button
+                          onClick={() => this.toggleSignificanceRow(rowKey, 'clinical')}
+                          className="button--significances button--clinical"
+                        >
+                          C
+                        </Button>
+                      );
 
-                      const structuralSignificancesButton = <Button
-                        onClick={() => this.toggleSignificanceRow(rowKey, 'structural')}
-                        className="button--significances button--structural"
-                      >S</Button>;
+                      const structuralSignificancesButton = (
+                        <Button
+                          onClick={() => this.toggleSignificanceRow(rowKey, 'structural')}
+                          className="button--significances button--structural"
+                        >
+                          S
+                        </Button>
+                      );
 
-                      const genomicSignificancesButton = <Button
-                        onClick={() => this.toggleSignificanceRow(rowKey, 'genomic')}
-                        className="button--significances button--genomic"
-                      >G</Button>;
+                      const genomicSignificancesButton = (
+                        <Button
+                          onClick={() => this.toggleSignificanceRow(rowKey, 'genomic')}
+                          className="button--significances button--genomic"
+                        >
+                          G
+                        </Button>
+                      );
 
                       return (
                         <Fragment key={`${rowKey}-${counter}`}>
@@ -263,19 +285,34 @@ class ImpactSearchResults extends Component {
                             <td>{geneLocation}</td>
                             <td>{gene.allele}</td>
                             <td className="fit">
-                              {significances.transcript ? transcriptSignificancesButton : noSignificance}
+                              {significances.transcript
+                                ? transcriptSignificancesButton
+                                : noSignificance
+                              }
                             </td>
                             <td className="fit">
-                              {significances.structural ? structuralSignificancesButton : noSignificance}
+                              {significances.structural
+                                ? structuralSignificancesButton
+                                : noSignificance
+                              }
                             </td>
                             <td className="fit">
-                              {significances.functional ? functionalSignificancesButton : noSignificance}
+                              {significances.functional
+                                ? functionalSignificancesButton
+                                : noSignificance
+                              }
                             </td>
                             <td className="fit">
-                              {significances.clinical ? clinicalSignificancesButton : noSignificance}
+                              {significances.clinical
+                                ? clinicalSignificancesButton
+                                : noSignificance
+                              }
                             </td>
                             <td className="fit">
-                              {significances.genomic ? genomicSignificancesButton : noSignificance}
+                              {significances.genomic
+                                ? genomicSignificancesButton
+                                : noSignificance
+                              }
                             </td>
                           </tr>
 
@@ -333,6 +370,11 @@ class ImpactSearchResults extends Component {
 
 ImpactSearchResults.propTypes = {
   rows: PropTypes.objectOf(PropTypes.shape({
+    key: PropTypes.string,
+    input: PropTypes.string,
+    rows: PropTypes.arrayOf(PropTypes.shape({
+      map: PropTypes.func,
+    })),
     gene: PropTypes.shape({
       allele: PropTypes.string,
       chromosome: PropTypes.string,

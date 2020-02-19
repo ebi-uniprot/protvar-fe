@@ -21,9 +21,23 @@ class ExpandedStructuralSignificance extends Component {
       structures,
       allStructures,
       proteinLength,
+      interactions,
       ligands,
       position,
     } = data;
+
+    // Maps to hold key-value information
+    const relatedLigands = {};
+    const unrelatedLigands = {};
+    const relatedInteractions = {};
+    const unrelatedInteractions = {};
+
+    // Array of values, to be extracted from the key-value pairs
+    // for ease of use
+    let unrelatedLigandsValues = [];
+    let relatedLigandsValues = [];
+    let relatedInteractionsValues = [];
+    let unrelatedInteractionsValues = [];
 
     Object.keys(allStructures)
       .forEach((pdbeId) => {
@@ -43,6 +57,9 @@ class ExpandedStructuralSignificance extends Component {
     const allLigands = ligands
       .reduce((all, current) => all.concat(current.ligands), []);
 
+    const allInteractions = interactions
+      .reduce((all, current) => all.concat(current.partners), []);
+
     const currentStructure = (!structure && bestStructures.length > 0)
       ? bestStructures[0]
       : structure;
@@ -53,6 +70,65 @@ class ExpandedStructuralSignificance extends Component {
 
     const currentStructureDetails = allStructures[currentStructure][0];
     const imageUrl = `https://www.ebi.ac.uk/pdbe/static/entry/${currentStructure}_single_entity_${currentStructureDetails.entity_id}_image-200x200.png`;
+
+    allLigands
+      .forEach((ligand) => {
+        // eslint-disable-next-line
+        const { ligand_id, structures } = ligand;
+
+        if (relatedLigands[ligand_id] || unrelatedLigands[ligand_id]) {
+          return;
+        }
+
+        if (structures.includes(currentStructure)) {
+          relatedLigands[ligand_id] = ligand;
+        } else {
+          unrelatedLigands[ligand_id] = ligand;
+        }
+      });
+
+    allInteractions
+      .forEach((interaction) => {
+        // eslint-disable-next-line
+        const { partner_accession, structures } = interaction;
+        const partnerAccessionUpppercased = partner_accession.toUpperCase();
+
+        // 'DNA', 'RNA' and 'Other' are non-unique generic keys
+        // so just collect the structure ids and append to the list.
+        if (['DNA', 'RNA', 'OTHER'].includes(partnerAccessionUpppercased)) {
+          if (structures.includes(currentStructure)) {
+            if (!relatedInteractions[partnerAccessionUpppercased]) {
+              relatedInteractions[partnerAccessionUpppercased] = interaction;
+              return;
+            }
+
+            related.structures.push(...interaction.structures);
+          } else {
+            if (!unrelatedInteractions[partnerAccessionUpppercased]) {
+              unrelatedInteractions[partnerAccessionUpppercased] = interaction;
+              return;
+            }
+
+            unrelatedInteractions[partnerAccessionUpppercased]
+              .structures.push(...interaction.structures);
+          }
+        }
+
+        if (relatedInteractions[partner_accession] || unrelatedInteractions[partner_accession]) {
+          return;
+        }
+
+        if (structures.includes(currentStructure)) {
+          relatedInteractions[partner_accession] = interaction;
+        } else {
+          unrelatedInteractions[partner_accession] = interaction;
+        }
+      });
+
+    relatedLigandsValues = Object.values(relatedLigands);
+    unrelatedLigandsValues = Object.values(unrelatedLigands);
+    relatedInteractionsValues = Object.values(relatedInteractions);
+    unrelatedInteractionsValues = Object.values(unrelatedInteractions);
 
     return (
       <tr>
@@ -72,6 +148,12 @@ class ExpandedStructuralSignificance extends Component {
                 structureStart={currentStructureDetails.start}
                 structureEnd={currentStructureDetails.end}
               />
+              <span
+                className="structure-position-help-text"
+              >
+                The blue bar represents the full protein sequence and the green
+                pointer represents variant location.
+              </span>
             </div>
 
             <div className="column">
@@ -97,14 +179,60 @@ class ExpandedStructuralSignificance extends Component {
               <i className="icon icon-conceptual summary-icon structural-icon" data-icon="b" />
               <div>
                 <b>
-                  Ligands (
-                  {allLigands.length}
-                  )
+                  {(relatedLigandsValues.length > 0)
+                    ? `Related Ligands (${relatedLigandsValues.length})`
+                    : 'No Related Ligands'
+                  }
                 </b>
               </div>
-              {(allLigands.length > 0) && (
+              {(relatedLigandsValues.length > 0) && (
               <ul data-columns="2">
-                {allLigands.map(l => <li key={l.ligand_name}>{`${l.ligand_name} [${l.ligand_id}]`}</li>)}
+                {relatedLigandsValues.map(l => <li key={l.ligand_name}>{`${l.ligand_name} [${l.ligand_id}]`}</li>)}
+              </ul>
+              )}
+
+              <div>
+                <b>
+                  {(unrelatedLigandsValues.length > 0)
+                    ? `Other Ligands (${unrelatedLigandsValues.length})`
+                    : 'No Other Ligands'
+                  }
+                </b>
+              </div>
+              {(unrelatedLigandsValues.length > 0) && (
+              <ul data-columns="2">
+                {unrelatedLigandsValues.map(l => <li key={l.ligand_name}>{`${l.ligand_name} [${l.ligand_id}]`}</li>)}
+              </ul>
+              )}
+            </div>
+
+            <div className="column">
+              <i className="icon icon-conceptual summary-icon structural-icon" data-icon="y" />
+              <div>
+                <b>
+                  {(relatedInteractionsValues.length > 0)
+                    ? `Related Interactions (${relatedInteractionsValues.length})`
+                    : 'No Related Interactions'
+                  }
+                </b>
+              </div>
+              {(relatedInteractionsValues.length > 0) && (
+              <ul data-columns="2">
+                {relatedInteractionsValues.map(i => <li key={i.partner_name}>{`${i.partner_name} [${i.partner_accession}]`}</li>)}
+              </ul>
+              )}
+
+              <div>
+                <b>
+                  {(unrelatedInteractionsValues.length > 0)
+                    ? `Other Interactions (${unrelatedInteractionsValues.length})`
+                    : 'No Other Interactions'
+                  }
+                </b>
+              </div>
+              {(unrelatedInteractionsValues.length > 0) && (
+              <ul data-columns="2">
+                {unrelatedInteractionsValues.map(i => <li key={i.partner_name}>{`${i.partner_name} [${i.partner_accession}]`}</li>)}
               </ul>
               )}
             </div>
@@ -117,11 +245,15 @@ class ExpandedStructuralSignificance extends Component {
 
 ExpandedStructuralSignificance.propTypes = {
   data: PropTypes.shape({
+    position: PropTypes.number,
+    proteinLength: PropTypes.number,
     allStructures: PropTypes.objectOf(PropTypes.arrayOf(
       PropTypes.shape({
         chain_id: PropTypes.string,
         entity_id: PropTypes.string,
         residue_range: PropTypes.string,
+        start: PropTypes.number,
+        end: PropTypes.number,
       }),
     )),
     annotations: PropTypes.arrayOf(PropTypes.shape({
@@ -132,18 +264,25 @@ ExpandedStructuralSignificance.propTypes = {
     })),
     interactions: PropTypes.arrayOf(PropTypes.shape({
       count_partners: PropTypes.number,
-      partners: PropTypes.arrayOf(PropTypes.string),
+      partners: PropTypes.arrayOf(PropTypes.shape({
+        partner_accession: PropTypes.string,
+        partner_name: PropTypes.string,
+        structures: PropTypes.arrayOf(PropTypes.string),
+      })),
       position: PropTypes.number,
       position_code: PropTypes.string,
     })),
     ligands: PropTypes.arrayOf(PropTypes.shape({
       count_ligands: PropTypes.number,
       ligands: PropTypes.arrayOf(PropTypes.shape({
+        InChi: PropTypes.string,
+        formula: PropTypes.string,
         ligand_id: PropTypes.string,
         ligand_name: PropTypes.string,
       })),
       position: PropTypes.number,
       position_code: PropTypes.string,
+      structures: PropTypes.arrayOf(PropTypes.string),
     })),
     structures: PropTypes.arrayOf(PropTypes.shape({
       count_best_structures: PropTypes.number,

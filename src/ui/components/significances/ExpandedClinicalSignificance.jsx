@@ -1,55 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { removeSnakeAndKebabCases } from '../../other/helpers';
+import ColocatedVariantsBlock from './ColocatedVariantsBlock';
+import VariantIDsBlock from './VariantIDsBlock';
+import PublicationsList from '../other/PublicationsList';
 
 const ExpandedClinicalSignificance = (props) => {
   const { data, detailsLink } = props;
+
   return (
     <tr>
       <td colSpan="16">
         <span className="expanded-section-title">Clinical Significances</span>
-        {/* (data.colocatedVariantsCount > 0)
-          && (
-          <span className="expanded-section-subtitle">
-            {data.colocatedVariantsCount}
-            {' '}
-            Co-located Variant(s)
-            {(data.diseaseColocatedVariantsCount > 0)
-              && (
-              <span>
-                &nbsp;(
-                {data.diseaseColocatedVariantsCount}
-                {' '}
-                disease associated)
-              </span>
-              )
-            }
-          </span>
-          )
-         */}
         {detailsLink}
 
         <div className="significances-groups">
           <div className="column">
-            <b>Disease Summary</b>
-
-            <div>
-              {(data.association.length > 0)
-                ? <span className="publications-label">Associated to disease</span>
-                : <span>No disease association</span>}
-            </div>
-
-            <br />
-            <div className="capital-text">
-              <b>
-                {(data.categories.length > 0)
-                  ? data.categories
-                    .map(c => removeSnakeAndKebabCases(c))
-                    .join(', ')
-                  : null}
-              </b>
-            </div>
+            <b>Disease association</b>
 
             <div className="associated-disease-list">
               {data.association.map((a, i) => {
@@ -60,8 +27,9 @@ const ExpandedClinicalSignificance = (props) => {
                         href={`${source.url}`}
                         target="_blank"
                         rel="noopener noreferrer"
+                        key={`${source.name}-${source.url}`}
                       >
-                        {source.name}
+                        {`${source.name}: ${source.id}`}
                       </a>
                     );
                   }
@@ -69,11 +37,12 @@ const ExpandedClinicalSignificance = (props) => {
                   if (source.name === 'ClinVar') {
                     return (
                       <a
-                        href={`https://www.ncbi.nlm.nih.gov/clinvar/${source.id}/`}
+                        href={`https://www.ncbi.nlm.nih.gov/clinvar?term=${source.id}`}
                         target="_target"
                         rel="noopener noreferrer"
+                        key={`${source.name}-${source.id}`}
                       >
-                        {source.name}
+                        {`${source.name}: ${source.id}`}
                       </a>
                     );
                   }
@@ -81,31 +50,46 @@ const ExpandedClinicalSignificance = (props) => {
                   return null;
                 });
 
+                let diseaseName = a.name;
+
+                if (a.xrefs) {
+                  a.xrefs.forEach((xr) => {
+                    if (xr.name === 'MIM') {
+                      diseaseName = (
+                        <a
+                          href={xr.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {a.name}
+                        </a>
+                      );
+                    }
+                  });
+                }
+
+                const linksList = links.map(l => <li key={l.key}>{l}</li>);
+
                 return (
                   <div className="associated-disease" key={`disease-wrapper-${i + 1}`}>
                     {`Disease #${i + 1}`}
                     :
-                    {a.name}
-                    .
+                    {diseaseName}
                     <br />
-                    <span className="publications-label">
-                      {links.length}
-                      {' '}
-                      Evidence(s)
-                    </span>
+
+                    <PublicationsList
+                      title={`${links.length} Evidence(s)`}
+                      items={<ul>{linksList}</ul>}
+                    />
                   </div>
                 );
               })}
             </div>
+          </div>
 
-          </div>
-          <div className="column">
-            <b>Drugs & Therapies</b>
-            <div className="significance-data-block" />
-          </div>
-          <div className="column">
-            <b>Tissue and Subcellular Specificity</b>
-          </div>
+          <ColocatedVariantsBlock data={data} />
+
+          <VariantIDsBlock data={data.variationDetails.ids} />
         </div>
       </td>
     </tr>
@@ -136,6 +120,14 @@ ExpandedClinicalSignificance.propTypes = {
     categories: PropTypes.arrayOf(PropTypes.string),
     colocatedVariantsCount: PropTypes.number,
     diseaseColocatedVariantsCount: PropTypes.number,
+    variationDetails: PropTypes.shape({
+      ids: PropTypes.shape({
+        clinVarIDs: PropTypes.arrayOf(PropTypes.shape({})),
+        cosmicId: PropTypes.string,
+        dbSNPId: PropTypes.string,
+        rsId: PropTypes.string,
+      }),
+    }),
   }),
   detailsLink: PropTypes.element.isRequired,
 };

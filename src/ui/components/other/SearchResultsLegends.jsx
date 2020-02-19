@@ -1,69 +1,60 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
-import Button from '../../elements/form/Button';
-
-const SearchResultsLegends = (props) => {
-  return (
-    <div className="search-results-legends">
-      <ul>
-        <li>
-          <div className="cadd-score cadd-score--green">
+const SearchResultsLegends = () => (
+  <div className="search-results-legends">
+    <ul>
+      <li>
+        <div className="cadd-score cadd-score--green">
             29
-          </div>
-          <span>CADD Score: Likely Benign</span>
-        </li>
+        </div>
+        <span>CADD Score: Likely Benign</span>
+      </li>
 
-        <li>
-          <div className="cadd-score cadd-score--red">
+      <li>
+        <div className="cadd-score cadd-score--red">
             30
-          </div>
-          <span>CADD Score: Likely Deleterious</span>
-        </li>
-      </ul>
+        </div>
+        <span>CADD Score: Likely Deleterious</span>
+      </li>
+    </ul>
 
-      <ul>
-        <li>
-          <div className="legend-icon button--significances button--transcript">
+    <ul>
+      <li>
+        <div className="legend-icon button--significances button--transcript">
             T
-          </div>
-          <span>Transcript Impact</span>
-        </li>
+        </div>
+        <span>Transcript Impact</span>
+      </li>
 
-        <li>
-          <div className="legend-icon button--significances button--structural">
+      <li>
+        <div className="legend-icon button--significances button--structural">
             S
-          </div>
-          <span>Structural Impact</span>
-        </li>
+        </div>
+        <span>Structural Impact</span>
+      </li>
 
-        <li>
-          <div className="legend-icon button--significances button--positional">
+      <li>
+        <div className="legend-icon button--significances button--positional">
             F
-          </div>
-          <span>Functional Impact</span>
-        </li>
+        </div>
+        <span>Functional Impact</span>
+      </li>
 
-        <li>
-          <div className="legend-icon button--significances button--clinical">
+      <li>
+        <div className="legend-icon button--significances button--clinical">
             C
-          </div>
-          <span>Clinical Impact</span>
-        </li>
+        </div>
+        <span>Clinical Impact</span>
+      </li>
 
-        <li>
-          <div className="legend-icon button--significances button--genomic">
+      <li>
+        <div className="legend-icon button--significances button--genomic">
             G
-          </div>
-          <span>Genomic Impact</span>
-        </li>
-      </ul>
-    </div>
-  );
-};
-
-SearchResultsLegends.propTypes = {};
-
-SearchResultsLegends.defaultProps = {};
+        </div>
+        <span>Genomic Impact</span>
+      </li>
+    </ul>
+  </div>
+);
 
 export default SearchResultsLegends;

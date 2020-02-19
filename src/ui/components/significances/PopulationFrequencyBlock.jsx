@@ -19,10 +19,11 @@ const PopulationFrequencyBlock = (props) => {
           all.push(
             <li>
               <span className="frequency-label">
-                {data.gnomAD[key].label}:
+                {data.gnomAD[key].label}
+                :
               </span>
               {data.gnomAD[key].value}
-            </li>
+            </li>,
           );
         }
 
@@ -35,10 +36,11 @@ const PopulationFrequencyBlock = (props) => {
           all.push(
             <li>
               <span className="frequency-label">
-                {data['1kg'][key].label}:
+                {data['1kg'][key].label}
+                :
               </span>
               {data['1kg'][key].value}
-            </li>
+            </li>,
           );
         }
 
@@ -61,10 +63,17 @@ const PopulationFrequencyBlock = (props) => {
       />
     </SignificancesColumn>
   );
-}
+};
 
 PopulationFrequencyBlock.propTypes = {
+  data: PropTypes.shape({
+    gnomAD: PropTypes.shape({}),
+    '1kg': PropTypes.shape({}),
+  }),
+};
 
+PopulationFrequencyBlock.defaultProps = {
+  data: {},
 };
 
 export default PopulationFrequencyBlock;

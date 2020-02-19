@@ -16,13 +16,14 @@ const SignificancesColumn = (props) => {
       </div>
     </div>
   );
-}
+};
 
 SignificancesColumn.propTypes = {
+  header: PropTypes.string.isRequired,
   children: PropTypes.oneOfType([
-      PropTypes.arrayOf(PropTypes.node),
-      PropTypes.node
-  ]),
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node,
+  ]).isRequired,
 };
 
 export default SignificancesColumn;

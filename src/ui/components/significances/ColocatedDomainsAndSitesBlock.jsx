@@ -1,5 +1,7 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
+
+import { v1 as uuidv1 } from 'uuid';
 
 import SignificancesColumn from './SignificancesColumn';
 import ColocatedFeatureDataBlock from './ColocatedFeatureDataBlock';
@@ -10,8 +12,7 @@ const ColocatedDomainsAndSitesBlock = (props) => {
   } = props;
 
   const types = [
-    'DOMAIN',
-    'SITE',
+    'ACT_SITE',
     'MUTAGEN',
     'REGION',
     'TRANSMEM',
@@ -23,14 +24,18 @@ const ColocatedDomainsAndSitesBlock = (props) => {
     >
       {data
         .filter(feature => types.includes(feature.type))
-        .map(f => <ColocatedFeatureDataBlock data={f} />)
+        .map(f => <ColocatedFeatureDataBlock key={uuidv1()} data={f} />)
       }
     </SignificancesColumn>
   );
-}
+};
 
 ColocatedDomainsAndSitesBlock.propTypes = {
+  data: PropTypes.arrayOf(PropTypes.shape({})),
+};
 
+ColocatedDomainsAndSitesBlock.defaultProps = {
+  data: [],
 };
 
 export default ColocatedDomainsAndSitesBlock;

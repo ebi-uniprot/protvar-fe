@@ -29,10 +29,20 @@ const ConsequencePredictionBlock = (props) => {
       />
     </SignificancesColumn>
   );
-}
+};
 
 ConsequencePredictionBlock.propTypes = {
+  data: PropTypes.shape({
+    siftPrediction: PropTypes.string,
+    siftScore: PropTypes.number,
+    polyphenPrediction: PropTypes.string,
+    polyphenScore: PropTypes.number,
+    caddPhred: PropTypes.number,
+  }),
+};
 
+ConsequencePredictionBlock.defaultProps = {
+  data: {},
 };
 
 export default ConsequencePredictionBlock;
