@@ -26,6 +26,14 @@ class ImpactSearchResults extends Component {
     });
   }
 
+  toggleAcessionIsoforms = (group) => {
+    const { openGroup } = this.state;
+
+    this.setState({
+      openGroup: (openGroup === group) ? null : group,
+    });
+  }
+
   toggleSignificanceRow(rowId, significanceType) {
     const { expandedRow } = this.state;
     const rowIdAndType = `${rowId}:${significanceType}`;
@@ -34,14 +42,6 @@ class ImpactSearchResults extends Component {
       expandedRow: (rowIdAndType !== expandedRow)
         ? rowIdAndType
         : null,
-    });
-  }
-
-  toggleAcessionIsoforms = (group, accession) => {
-    const { openGroup, openAccession } = this.state;
-
-    this.setState({
-      openGroup: (openGroup === group) ? null : group,
     });
   }
 
@@ -55,44 +55,11 @@ class ImpactSearchResults extends Component {
 
     let counter = 0;
 
-    Object.keys(rows)
-      .forEach((key) => {
-        let group = rows[key];
-        let primaryAccessions = [];
-        group.removedENSTs = [];
-
-        group.uniqueRows = group.rows
-          .filter((row) => {
-            const { protein, gene } = row;
-
-            if (protein.canonical && (!protein.length || primaryAccessions.includes(protein.accession))) {
-              group.removedENSTs.push(gene.enstId);
-              return false;
-            }
-
-            if (protein.canonical && protein.length && !primaryAccessions.includes(protein.accession)) {
-              primaryAccessions.push(protein.accession);
-            }
-
-            return true;
-          });
-
-        return group;
-      });
-
-    const totalCounts = Object.values(rows)
-      .reduce((total, current) => total + current.uniqueRows.length, 0);
-
     return (
       <div className="search-results">
         <SearchResultsLegends />
 
         <div className="results-and-counter">
-          <span className="results-counter">
-            {totalCounts}
-            {' '}
-            Results Found
-          </span>
           <Button onClick={handleDownload}>Download</Button>
           <Button onClick={this.toggleAllIsoforms}>
             {(showAllIsoforms) ? 'Hide ' : 'Show '}
@@ -142,15 +109,16 @@ class ImpactSearchResults extends Component {
                         {group.input}
                       </td>
                       <td className="query-row">
-                        {group.uniqueRows[0] && group.uniqueRows[0].variation && group.uniqueRows[0].variation.dbSNIPId}
+                        {group.rows[0] && group.rows[0].variation
+                          && group.rows[0].variation.dbSNIPId}
                       </td>
                       <td colSpan="6" className="query-row">
                         HGVSg:
                         {' '}
-                        {group.uniqueRows[0] && group.uniqueRows[0].gene.hgvsg}
+                        {group.rows[0] && group.rows[0].gene.hgvsg}
                       </td>
                     </tr>
-                    {group.uniqueRows.map((row, i) => {
+                    {group.rows.map((row, i) => {
                       const {
                         protein,
                         gene,
@@ -221,9 +189,9 @@ class ImpactSearchResults extends Component {
                           t.clinVarIDs = variation.clinVarIDs;
                           t.uniProtVariationId = variation.uniProtVariationId;
                           t.colocatedVariantsCount = variation.proteinColocatedVariantsCount;
+                          t.redundantENSTs = gene.redundantENSTs;
                           t.diseaseColocatedVariantsCount = variation
                             .diseasAssociatedProteinColocatedVariantsCount;
-                          t.otherENSTs = group.removedENSTs.slice(0);
                         });
 
                       if (typeof significances.structural !== 'undefined') {
@@ -324,7 +292,7 @@ class ImpactSearchResults extends Component {
                             </td>
                             <td>{geneLocation}</td>
                             <td>{gene.allele}</td>
-                            <td>{group.uniqueRows[0] && group.uniqueRows[0].variation.dbSNIPId}</td>
+                            <td>{group.rows[0] && group.rows[0].variation.dbSNIPId}</td>
                             <td className="fit">
                               {significances.clinical
                                 ? clinicalSignificancesButton

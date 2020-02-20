@@ -16,6 +16,16 @@ const ConsequencePredictionBlock = ({ data }) => {
     polyphenValue = `${data.polyphenPrediction} (${data.polyphenScore})`;
   }
 
+  const caddPhredIndicator = (data.caddPhred)
+    ? (
+      <span
+        className={`label warning cadd-score cadd-score--${(data.caddPhred) ? 'green' : 'red'}`}
+        title={`Likely ${(data.caddPhred < 30) ? 'Benign' : 'Deleterious'}`}
+      >
+        {data.caddPhred}
+      </span>
+    ) : 'Not reported';
+
   return (
     <SignificancesColumn
       header="Consequence Prediction"
@@ -32,7 +42,7 @@ const ConsequencePredictionBlock = ({ data }) => {
 
       <SignificanceDataLine
         label="CADD"
-        value={data.caddPhred || 'Not reported'}
+        value={caddPhredIndicator}
       />
     </SignificancesColumn>
   );

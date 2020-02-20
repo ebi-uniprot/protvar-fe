@@ -90,7 +90,7 @@ class TextAreaSearch extends Component {
             </div>
             <div>
               <span>dbSNP HGVS:</span>
-              <span className="variant-example">NM_145255.3:c.526C>T</span>
+              <span className="variant-example">NM_145255.3:c.526C&gt;T</span>
             </div>
           </div>
 

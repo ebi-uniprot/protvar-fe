@@ -53,12 +53,16 @@ ExpandedGenomicSignificance.propTypes = {
     variationDetails: variationIDsPropTypes,
   }),
   variation: variationPropTypes,
+  gene: PropTypes.shape({
+    ensgId: PropTypes.string,
+  }),
 };
 
 ExpandedGenomicSignificance.defaultProps = {
   data: {},
   variation: variationDefaultProps,
   detailsLink: detailsLinkDefaultProps,
+  gene: {},
 };
 
 export default ExpandedGenomicSignificance;

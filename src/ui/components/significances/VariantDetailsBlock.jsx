@@ -14,7 +14,7 @@ import {
 const VariantDetailsBlock = ({
   data,
   variation,
-  gene
+  gene,
 }) => {
   if (!data.variationDetails || !data.variationDetails.ids) {
     return null;
@@ -55,10 +55,12 @@ const VariantDetailsBlock = ({
     <SignificancesColumn
       header="Variant Details"
     >
-      {gene && <SignificanceDataLine
-        label="ENSG"
-        value={gene.ensgId}
-      />}
+      {gene && (
+        <SignificanceDataLine
+          label="ENSG"
+          value={gene.ensgId}
+        />
+      )}
 
       <SingleColocatedVariantDetails
         colocated={variation.variationDetails}
@@ -89,6 +91,9 @@ VariantDetailsBlock.propTypes = {
     variationDetails: variationIDsPropTypes,
   }),
   variation: variationPropTypes,
+  gene: PropTypes.shape({
+    ensgId: PropTypes.string,
+  }),
 };
 
 VariantDetailsBlock.defaultProps = {
@@ -96,6 +101,7 @@ VariantDetailsBlock.defaultProps = {
     variationDetails: variationIDsDefaultProps,
   },
   variation: variationDefaultProps,
+  gene: {},
 };
 
 export default VariantDetailsBlock;

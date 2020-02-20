@@ -41,9 +41,9 @@ class App extends Component {
       .then((response) => {
         const { errors, results } = response.data;
 
-        const sortedSearchResults = Object.values(response.data.results)
+        Object.values(response.data.results)
           .forEach((set) => {
-            const sortedRows = set.rows.slice(0);  // make a copy
+            const sortedRows = set.rows.slice(0); // make a copy
 
             sortedRows.sort((a, b) => {
               let scoreA = 1;
@@ -72,11 +72,9 @@ class App extends Component {
               scoreB = (b.significances.genomic) ? (scoreB + significances) : scoreB;
 
               if (a.protein.length > b.protein.length) {
-                scoreA = scoreA + length;
-              }
-
-              else if (a.protein.length < b.protein.length) {
-                scoreB = scoreB + length;
+                scoreA += length;
+              } else if (a.protein.length < b.protein.length) {
+                scoreB += length;
               }
 
               return scoreB - scoreA;

@@ -9,7 +9,7 @@ const SignificanceDataLine = (props) => {
     alternativeLabelStyle,
   } = props;
 
-  let { value } = props;
+  const { value } = props;
 
   if (!value) {
     return null;
@@ -27,14 +27,13 @@ const SignificanceDataLine = (props) => {
       </b>
     );
 
-  if (Array.isArray(value)) {
-    value = value.map(i => <span key={uuidv1()}>{i}</span>);
-  }
-
   return (
     <div key={uuidv1()}>
       {labelEl}
-      <span key={uuidv1()}>{value}</span>
+      {(Array.isArray(value))
+        ? <ul>{value.map(i => <li key={uuidv1()}>{i}</li>)}</ul>
+        : <span key={uuidv1()}>{value}</span>
+      }
     </div>
   );
 };
