@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import { v1 as uuidv1 } from 'uuid';
@@ -71,7 +71,7 @@ const SingleColocatedVariantDetails = ({
         el = <span key={id.id}>{id.id}</span>;
       }
 
-      const comma = <span key={uuidv1()}>, </span>;
+      const comma = <Fragment key={uuidv1()}>, </Fragment>;
 
       return (index > 0)
         ? [comma, el]

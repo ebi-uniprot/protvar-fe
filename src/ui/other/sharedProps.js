@@ -14,7 +14,7 @@ export const pubMedIDsDefaultProps = [];
 
 export const clinVarIDsPropTypes = PropTypes.arrayOf(PropTypes.shape({
   id: PropTypes.string,
-  dbSNIPId: PropTypes.string,
+  dbSNPId: PropTypes.string,
   pubMedIDs: pubMedIDsPropTypes,
   allele: PropTypes.string,
   date: PropTypes.string,
@@ -31,7 +31,7 @@ export const variationIDsPropTypes = PropTypes.shape({
   ids: PropTypes.shape({
     clinVarIDs: clinVarIDsPropTypes,
     cosmicId: PropTypes.string,
-    dbSNIPId: PropTypes.string,
+    dbSNPId: PropTypes.string,
     rsId: PropTypes.string,
   }),
 });
@@ -40,7 +40,7 @@ export const variationIDsDefaultProps = {
   ids: {
     clinVarIDs: clinVarIDsDefaultProps,
     cosmicId: null,
-    dbSNIPId: null,
+    dbSNPId: null,
     rsId: null,
   },
 };
@@ -90,7 +90,7 @@ export const variationDetailsDefaultProps = {};
 export const variationPropTypes = PropTypes.shape({
   clinVarIDs: clinVarIDsPropTypes,
   cosmicId: PropTypes.string,
-  dbSNIPId: PropTypes.string,
+  dbSNPId: PropTypes.string,
   variationDetails: variationDetailsPropTypes,
   novel: PropTypes.bool,
   wildType: PropTypes.string,

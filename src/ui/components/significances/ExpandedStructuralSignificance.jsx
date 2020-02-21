@@ -115,8 +115,7 @@ class ExpandedStructuralSignificance extends Component {
               return;
             }
 
-            relatedInteractions[partnerAccessionUpppercased]
-              .structures.concat(interaction.structures);
+            relatedInteractions.structures.push(...interaction.structures);
           } else {
             if (!unrelatedInteractions[partnerAccessionUpppercased]) {
               unrelatedInteractions[partnerAccessionUpppercased] = interaction;
@@ -124,7 +123,7 @@ class ExpandedStructuralSignificance extends Component {
             }
 
             unrelatedInteractions[partnerAccessionUpppercased]
-              .structures.concat(interaction.structures);
+              .structures.push(...interaction.structures);
           }
         }
 

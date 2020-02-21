@@ -110,7 +110,7 @@ class ImpactSearchResults extends Component {
                       </td>
                       <td className="query-row">
                         {group.rows[0] && group.rows[0].variation
-                          && group.rows[0].variation.dbSNIPId}
+                          && group.rows[0].variation.dbSNPId}
                       </td>
                       <td colSpan="6" className="query-row">
                         HGVSg:
@@ -185,7 +185,7 @@ class ImpactSearchResults extends Component {
                           t.start = protein.start;
                           t.end = protein.end;
                           t.cosmicId = variation.cosmicId;
-                          t.dbSNIPId = variation.dbSNIPId;
+                          t.dbSNPId = variation.dbSNPId;
                           t.clinVarIDs = variation.clinVarIDs;
                           t.uniProtVariationId = variation.uniProtVariationId;
                           t.colocatedVariantsCount = variation.proteinColocatedVariantsCount;
@@ -292,7 +292,7 @@ class ImpactSearchResults extends Component {
                             </td>
                             <td>{geneLocation}</td>
                             <td>{gene.allele}</td>
-                            <td>{group.rows[0] && group.rows[0].variation.dbSNIPId}</td>
+                            <td>{group.rows[0] && group.rows[0].variation.dbSNPId}</td>
                             <td className="fit">
                               {significances.clinical
                                 ? clinicalSignificancesButton
@@ -391,7 +391,7 @@ ImpactSearchResults.propTypes = {
         hgvsg: PropTypes.string,
       }),
       variation: PropTypes.shape({
-        dbSNIPId: PropTypes.string,
+        dbSNPId: PropTypes.string,
       }),
       map: PropTypes.func,
     })),

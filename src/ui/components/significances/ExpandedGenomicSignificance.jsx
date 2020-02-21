@@ -28,7 +28,7 @@ const ExpandedGenomicSignificance = (props) => {
 
         <div
           className="significances-groups"
-          key={`genomic-significances-group-wrapper-${1}`}
+          key="genomic-significances-group-wrapper"
         >
           <PopulationFrequencyBlock data={data.populationFrequencies} />
 

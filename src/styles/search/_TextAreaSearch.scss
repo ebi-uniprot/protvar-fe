@@ -45,12 +45,12 @@
     background-color: $input-example-background-colour;
 
     span {
-      width: 200px;
+      width: 12rem;
       display: inline-block;
     }
 
     .variant-example {
-      width: 300px;
+      width: auto;
       color: $variant-example-colour;
     }
   }

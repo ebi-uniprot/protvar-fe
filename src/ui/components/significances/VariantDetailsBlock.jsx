@@ -22,15 +22,15 @@ const VariantDetailsBlock = ({
 
   const {
     clinVarIDs,
-    dbSNIPId,
+    dbSNPId,
     cosmicId,
   } = data.variationDetails.ids;
 
   const clinVarLinks = clinVarIDs && clinVarIDs
     .map(cv => (
-      <li key={`${cv.id}-${cv.dbSNIPId}`}>
+      <li key={`${cv.id}-${cv.dbSNPId}`}>
         <a
-          href={`https://www.ncbi.nlm.nih.gov/clinvar?term=${cv.dbSNIPId}`}
+          href={`https://www.ncbi.nlm.nih.gov/clinvar?term=${cv.dbSNPId}`}
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -39,14 +39,14 @@ const VariantDetailsBlock = ({
       </li>
     ));
 
-  const dbSNIPIdLink = dbSNIPId
+  const dbSNPIdLink = dbSNPId
     ? (
       <a
-        href={`https://www.ncbi.nlm.nih.gov/SNP/snp_ref.cgi?type=rs&rs=${dbSNIPId}`}
+        href={`https://www.ncbi.nlm.nih.gov/SNP/snp_ref.cgi?type=rs&rs=${dbSNPId}`}
         target="_blank"
         rel="noopener noreferrer"
       >
-        {dbSNIPId}
+        {dbSNPId}
       </a>
     )
     : 'Not reported';
@@ -70,7 +70,7 @@ const VariantDetailsBlock = ({
 
       <SignificanceDataLine
         label="RsID"
-        value={dbSNIPIdLink}
+        value={dbSNPIdLink}
       />
 
       <SignificanceDataLine

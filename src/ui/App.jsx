@@ -77,6 +77,9 @@ class App extends Component {
                 scoreB += length;
               }
 
+              a.score = scoreA;
+              b.score = scoreB;
+
               return scoreB - scoreA;
             });
 
