@@ -19,7 +19,7 @@ const ConsequencePredictionBlock = ({ data }) => {
   const caddPhredIndicator = (data.caddPhred)
     ? (
       <span
-        className={`label warning cadd-score cadd-score--${(data.caddPhred) ? 'green' : 'red'}`}
+        className={`label warning cadd-score cadd-score--${(data.caddPhred) < 30 ? 'green' : 'red'}`}
         title={`Likely ${(data.caddPhred < 30) ? 'Benign' : 'Deleterious'}`}
       >
         {data.caddPhred}
