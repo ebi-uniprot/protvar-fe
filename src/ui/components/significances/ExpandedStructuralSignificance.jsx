@@ -146,7 +146,7 @@ class ExpandedStructuralSignificance extends Component {
     return (
       <tr>
         <td colSpan="16">
-          <span className="expanded-section-title">Structural Significances</span>
+          <span className="expanded-section-title">Structural Impact</span>
           {detailsLink}
 
           <div className="significances-groups">

@@ -18,7 +18,7 @@ const ExpandedClinicalSignificance = (props) => {
   return (
     <tr>
       <td colSpan="16">
-        <span className="expanded-section-title">Clinical Significances</span>
+        <span className="expanded-section-title">Clinical Impact</span>
         {detailsLink}
 
         <div className="significances-groups">
