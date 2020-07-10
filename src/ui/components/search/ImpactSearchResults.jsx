@@ -171,7 +171,7 @@ class ImpactSearchResults extends Component {
                             .diseasAssociatedProteinColocatedVariantsCount;
                         });
 
-                      if (typeof significances.structural !== 'undefined') {
+                      if (typeof significances.structural !== 'undefined' && significances.structural !== null) {
                         significances.structural.position = protein.start;
                       }
 

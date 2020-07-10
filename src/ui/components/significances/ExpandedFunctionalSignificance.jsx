@@ -35,10 +35,10 @@ const ExpandedFunctionalSignificance = (props) => {
 ExpandedFunctionalSignificance.propTypes = {
   data: PropTypes.shape({
     features: PropTypes.arrayOf(PropTypes.shape({
-      begin: PropTypes.string,
+      begin: PropTypes.number,
       category: PropTypes.string,
       description: PropTypes.string,
-      end: PropTypes.string,
+      end: PropTypes.number,
       evidences: PropTypes.arrayOf(PropTypes.shape({})),
       type: PropTypes.string,
       typeDescription: PropTypes.string,

@@ -29,18 +29,20 @@ class App extends Component {
   handleSearch = (input) => {
     const { history } = this.props;
 
-    const apiURI = `${API_URL}/parser`;
+	console.log('Request:', input.body);
+    //const apiURI = `${API_URL}/parser`;
+	const apiURI = 'http://localhost:8091/pepVepVariants';
     const data = defaultParser(input);
-
     this.setState({
       loading: true,
     });
-
+	
+	
     axios
       .post(apiURI, { input: data })
       .then((response) => {
         const { errors, results } = response.data;
-        console.log('>>> search response:', response.data);
+        console.log('>>> search response:', response.data.data);
         this.setState({
           searchTerm: input,
           searchResults: results,
