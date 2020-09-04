@@ -8,6 +8,9 @@ import {
 } from 'react-router-dom';
 import axios from 'axios';
 
+import gql from 'graphql-tag';
+import { ApolloClient, client, InMemoryCache, ApolloProvider } from '@apollo/client';
+
 import { defaultParser } from '../input-parser';
 
 import HomePage from './pages/HomePage';
@@ -26,107 +29,485 @@ class App extends Component {
     };
   }
 
-  handleSearch = (input) => {
-    const { history } = this.props;
+ handleSearch = (input) => {
+		console.log('calling client');
+		const { history } = this.props;
+		this.setState({
+			loading: true
+		});
+		var inputArr = input.split('\n');
+		console.log(inputArr);
+		const GET_VARIANTS = gql`
+			query pepvepvariant($params: [String!]) {
+				pepvepvariant(pepVepInputs: $params) {
+					input
+					errors {
+						title
+						message
+					}
+					variants {
+						significances {
+							functional {
+								features {
+									type
+									description
+									category
+									begin
+									end
+									evidences {
+										sourceName
+										code
+										sourceId
+										sourceUrl
+										sourceAlternativeUrl
+										label
+										source {
+											id
+											url
+											alternativeUrl
+										}
+									}
+									ftId
+								}
+								variationDetails {
+									begin
+									end
+									ids {
+										rsId
+										dbSNPId
+										clinVarIDs {
+											id
+											pubMedIDs
+											allele
+											date
+											gene
+											clinicalSignificances
+											dbSNPId
+											mim
+											phenotype
+											url
+										}
+										cosmicId
+									}
+								}
+								colocatedVariants {
+									description
+									wildType
+									alternativeSequence
+									clinicalSignificances
+									sourceType
+									polyphenScore
+									siftScore
+									disease
+									nonDisease
+									uniprot
+									largeScaleStudy
+									uncertain
+								}
+							}
+							transcript {
+								biotype
+								impact
+								polyphenPrediction
+								polyphenScore
+								siftPrediction
+								siftScore
+								mostSevereConsequence
+								consequenceTerms
+								mostSevereConsequence
+								mutationTasterScore
+								mutationTasterPrediction
+								lrtPrediction
+								lrtScore
+							}
+							clinical {
+								categories
+								association {
+									name
+									description
+									xrefs {
+										name
+										id
+										url
+									}
+									evidences {
+										code
+										source {
+											name
+											id
+											url
+											alternativeUrl
+										}
+									}
+									disease
+								}
+								colocatedVariants {
+									description
+									wildType
+									alternativeSequence
+									clinicalSignificances
+									sourceType
+									xrefs {
+										name
+										id
+										url
+									}
+									polyphenScore
+									siftScore
+									disease
+									nonDisease
+									uniprot
+									largeScaleStudy
+									uncertain
+								}
+								variationDetails {
+									begin
+									end
+									ids {
+										rsId
+										dbSNPId
+										clinVarIDs {
+											id
+											pubMedIDs
+											allele
+											date
+											gene
+											clinicalSignificances
+											dbSNPId
+											mim
+											phenotype
+											url
+										}
+										cosmicId
+									}
+								}
+								colocatedVariantsCount
+								diseaseColocatedVariantsCount
+							}
+							structural
+							genomic {
+								consequencePrediction {
+									polyphenPrediction
+									polyphenScore
+									siftPrediction
+									siftScore
+									caddPhred
+									caddRaw
+								}
+								variationDetails {
+									begin
+									end
+									ids {
+										rsId
+										dbSNPId
+										clinVarIDs {
+											id
+											pubMedIDs
+											allele
+											date
+											gene
+											clinicalSignificances
+											dbSNPId
+											mim
+											phenotype
+											url
+										}
+										cosmicId
+									}
+								}
+							}
+						}
+						gene {
+							ensgId
+							chromosome
+							symbol
+							source
+							enstId
+							allele
+							start
+							end
+							hgvsg
+							hgvsp
+							codons
+							hasENSP
+							hasENST
+						}
+						protein {
+							variant
+							threeLetterCodes
+							start
+							end
+							canonical
+							accession
+							name {
+								full
+								shortName
+							}
+							length
+							type
+							isoform
+							canonicalAccession
+						}
+						variation {
+							novel
+							cosmicId
+							dbSNPId
+							clinVarIDs {
+								id
+								pubMedIDs
+								allele
+								date
+								gene
+								clinicalSignificances
+								dbSNPId
+								mim
+								phenotype
+								url
+							}
+							wildType
+							alternativeSequence
+							variationDetails {
+								description
+								wildType
+								alternativeSequence
+								clinicalSignificances
+								sourceType
+								association {
+									name
+									description
+									xrefs {
+										name
+										id
+										url
+										alternativeUrl
+									}
+									evidences {
+										code
+										label
+										source {
+											name
+											id
+											url
+											alternativeUrl
+										}
+									}
+									disease
+								}
+								xrefs {
+									name
+									id
+									url
+									alternativeUrl
+								}
+								polyphenScore
+								siftScore
+								disease
+								nonDisease
+								uniprot
+								largeScaleStudy
+								uncertain
+							}
+							proteinColocatedVariants {
+								description
+								wildType
+								alternativeSequence
+								clinicalSignificances
+								sourceType
+								association {
+									name
+									description
+									xrefs {
+										name
+										id
+										url
+										alternativeUrl
+									}
+									evidences {
+										code
+										label
+										source {
+											name
+											id
+											url
+											alternativeUrl
+										}
+									}
+									disease
+								}
+								xrefs {
+									name
+									id
+									url
+									alternativeUrl
+								}
+								polyphenScore
+								siftScore
+								disease
+								nonDisease
+								uniprot
+								largeScaleStudy
+								uncertain
+							}
+							genomicColocatedVariants {
+								id
+								pubMedIDs
+								populationFrequencies {
+									sourceName
+									frequencies {
+										label
+										value
+									}
+								}
+							}
+							proteinColocatedVariantsCount
+							diseaseAssociatedproteinColocatedVariantsCount
+						}
+					}
+				}
+			}
+		`;
 
-    const apiURI = `${API_URL}/parser`;
-    const data = defaultParser(input);
+		const client = new ApolloClient({
+			cache: new InMemoryCache(),
+			uri: 'http://localhost:8091/graphql'
+		});
 
-    this.setState({
-      loading: true,
-    });
+		client
+			.query({
+				query: GET_VARIANTS,
+				variables: { params: inputArr }
+			})
+			.then((results) => {
+				console.log(results);
 
-    axios
-      .post(apiURI, { input: data })
-      .then((response) => {
-        const { errors, results } = response.data;
+				const output = {
+					errors: {},
+					results: {}
+				};
 
-        Object.values(response.data.results)
-          .forEach((set) => {
-            const sortedRows = set.rows.slice(0); // make a copy
+				const searchResultArr = [];
 
-            sortedRows.sort((a, b) => {
-              let scoreA = 1;
-              let scoreB = 1;
+				results.data.pepvepvariant.forEach((element) => {
+					if (output.results[element.input] === undefined) {
+						output.results[element.input] = {
+							key: element.input,
+							input: element.input,
+							rows: element.variants
+						};
+					}
+					console.log('output ' + output.results);
+					// this.props.loading = false;
+				});
 
-              const canonical = 100;
-              const significances = 10;
-              const length = 1;
+				this.setState({
+					searchTerm: input,
+					searchResults: output,
+					apiResults: results,
+					errors: results.data.pepvepvariant[0].errors,
+					loading: false
+				});
 
-              scoreA = (a.protein.canonical) ? (scoreA * canonical) : scoreA;
-              scoreB = (b.protein.canonical) ? (scoreB * canonical) : scoreB;
+				history.push('search');
+			});
+		console.log('calling client complete');
+		this.setState({
+			loading: false
+		});
+	};
 
-              scoreA = (a.significances.functional) ? (scoreA + significances) : scoreA;
-              scoreB = (b.significances.functional) ? (scoreB + significances) : scoreB;
-
-              scoreA = (a.significances.transcript) ? (scoreA + significances) : scoreA;
-              scoreB = (b.significances.transcript) ? (scoreB + significances) : scoreB;
-
-              scoreA = (a.significances.clinical) ? (scoreA + significances) : scoreA;
-              scoreB = (b.significances.clinical) ? (scoreB + significances) : scoreB;
-
-              scoreA = (a.significances.structural) ? (scoreA + significances) : scoreA;
-              scoreB = (b.significances.structural) ? (scoreB + significances) : scoreB;
-
-              scoreA = (a.significances.genomic) ? (scoreA + significances) : scoreA;
-              scoreB = (b.significances.genomic) ? (scoreB + significances) : scoreB;
-
-              if (a.protein.length > b.protein.length) {
-                scoreA += length;
-              } else if (a.protein.length < b.protein.length) {
-                scoreB += length;
-              }
-
-              a.score = scoreA;
-              b.score = scoreB;
-
-              return scoreB - scoreA;
-            });
-
-            set.rows = sortedRows;
-          });
-
-        console.log('>>> search response:', response.data);
-
-        this.setState({
-          searchTerm: input,
-          searchResults: results,
-          errors,
-          loading: false,
-        });
-
-        history.push('search');
-      })
-      .catch((e) => {
-        console.log('Got an axios error:', e);
-        history.push('api-error');
-      });
-  }
-
-  handleDownload = () => {
-    const { searchTerm } = this.state;
-
-    const apiURI = `${API_URL}/download`;
-    const data = defaultParser(searchTerm);
-    console.log('handle download clicked');
-    axios
-      .post(apiURI, {
-        input: data,
-        responseType: 'blob',
-      })
-      .then((response) => {
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', 'pepvep-data.csv'); // or any other extension
-        document.body.appendChild(link);
-        link.click();
-      })
-      .catch((e) => {
-        console.log('Got an axios error:', e);
-      });
-  }
-
+	getCSVRow(input, variant) {
+		var isAssociatedDisease = 'No';
+		var allStructures = '';
+		if (variant.significances.clinical.association.length > 0) {
+			isAssociatedDisease = 'Yes';
+		}
+		if (variant.significances.structural != null) {
+			allStructures = Object.keys(variant.significances.structural.allStructures).join(',');
+		}
+		return (
+			'"' +
+			input +
+			'","' +
+			'consequences' +
+			'","' +
+			'GRCh38' +
+			'","' +
+			variant.gene.chromosome +
+			'","' +
+			variant.gene.start +
+			'","' +
+			variant.gene.end +
+			'","' +
+			variant.gene.allele +
+			'","' +
+			variant.gene.allele.split('/')[1] +
+			'","' +
+			variant.gene.symbol +
+			'","' +
+			variant.gene.source +
+			'","' +
+			'HGNCID' + // HGNC ID
+			'","' +
+			variant.gene.ensgId +
+			'","' +
+			variant.gene.enstId +
+			'","' +
+			'Protein Coding' + // BioType
+			'","' +
+			'Moderate' + // IMPACT
+			'","' +
+			'Missense Variant' + // CONSEQUENCE_TERMS
+			'","' +
+			variant.protein.accession +
+			'","' +
+			variant.protein.accession + // Trembl accession
+			'","' +
+			variant.protein.start +
+			'","' +
+			variant.protein.end +
+			'","' +
+			allStructures +
+			'","' +
+			'' + // LIGANDS
+			'","' +
+			'' + // STRUCTURAL_INTERACTION_PARTNERS
+			'","' +
+			variant.protein.variant +
+			'","' +
+			'","' +
+			'"\n'
+		);
+	}
+	handleDownload = () => {
+		const { searchTerm, apiResults } = this.state;
+		var inputArr = searchTerm.split('\n');
+		console.log('handle download clicked');
+		var outputCsv =
+			'INPUT,MOST_SEVER_CONSEQUENCE,ASSEMBLY,CHROMOSOME,' +
+			'GENOMIC_START,GENOMIC_END,ALLELE_STRING,VARIANT_ALLELE,' +
+			'GENE_SYMBOL,GENE_SYMBOL_SOURCE,HGNC_ID,GENE_ID,TRANSCRIPT_ID,' +
+			'TRANSLATION_ID,BIOTYPE,IMPACT,CONSEQUENCE_TERMS,SWISSPROT_ACCESSIONS,' +
+			'TREMBL_ACCESSIONS,PROTEIN_START,PROTEIN_END,STRUCTURES,LIGANDS,' +
+			'STRUCTURAL_INTERACTION_PARTNERS,AMINO_ACID_CHANGE,ASSOCIATED_TO_DISEASE,' +
+			'DISEASE_CATEGORIES,POLYPHEN_PREDICTION,POLYPHEN_SCORE,MUTATION_TASTER_PREDICTION,' +
+			'MUTATION_TASTER_SCORE,LRT_PREDICTION,LRT_SCORE,FATHMM_PREDICTION,' +
+			'FATHMM_SCORE,PROVEAN_PREDICTION,PROVEAN_SCORE,CADD_RAW,CADD_PHRED,SIFT_PREDICTION,' +
+			'SIFT_SCORE,MUTPRED_SCORE,BLOSUM62,APPRIS,TSL,STRAND,CODONS,CDNA_START,CDNA_END,CDS_START,' +
+			'CDS_END,EXON,UNIPARC_ACCESSIONS,HGVS_C,HGVS_P,HGVS_G,DISEASE_ASSOCIATIONS,PROTEIN_ANNOTATIONS,COLOCATED_VARIANTS\n';
+		apiResults.data.pepvepvariant.forEach((element) => {
+			console.log(element.input);
+			element.variants.forEach((variant) => {
+				outputCsv = outputCsv + this.getCSVRow(element.input, variant);
+			});
+		});
+		const url = window.URL.createObjectURL(new Blob([ outputCsv ]));
+		const link = document.createElement('a');
+		link.href = url;
+		link.setAttribute('download', 'pepvep-data.csv'); // or any other extension
+		document.body.appendChild(link);
+		link.click();
+	};
+	
   render() {
     const appProps = {
       ...this.state,

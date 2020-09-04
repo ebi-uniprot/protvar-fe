@@ -46,7 +46,11 @@ class ImpactSearchResults extends Component {
   }
 
   render() {
-    const { rows, handleDownload } = this.props;
+    // const { rows, handleDownload } = this.props;
+    
+    const rows = this.props.rows.results;
+	const handleDownload = this.props.handleDownload;
+		
     const {
       expandedRow,
       showAllIsoforms,
@@ -171,7 +175,7 @@ class ImpactSearchResults extends Component {
                       } else if (protein.isoform) {
                         accession = protein.isoform;
                       }
-
+					  if (significances.transcript) {
                       significances.transcript
                         .forEach((t) => {
                           t.hgvsg = gene.hgvsg;
@@ -193,23 +197,11 @@ class ImpactSearchResults extends Component {
                           t.diseaseColocatedVariantsCount = variation
                             .diseasAssociatedProteinColocatedVariantsCount;
                         });
+                        }
 
-                      if (typeof significances.structural !== 'undefined') {
-                        significances.structural.position = protein.start;
-                        significances.structural.accession = accession;
-                      }
-
-                      if (typeof significances.clinical !== 'undefined') {
-                        significances.clinical.colocatedVariantsCount = variation
-                          .proteinColocatedVariantsCount;
-
-                        significances.clinical.diseaseColocatedVariantsCount = variation
-                          .diseasAssociatedProteinColocatedVariantsCount;
-                      }
-
-                      const caddColour = (significances.transcript[0].caddPhred <= 30)
-                        ? 'green'
-                        : 'red';
+                      //const caddColour = (significances.transcript[0].caddPhred <= 30)
+                      //  ? 'green'
+                      //  : 'red';
 
                       counter += 1;
 

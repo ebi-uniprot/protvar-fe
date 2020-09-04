@@ -53,18 +53,7 @@ class ExpandedStructuralSignificance extends Component {
     let relatedInteractionsValues = [];
     let unrelatedInteractionsValues = [];
 
-    Object.keys(allStructures)
-      .forEach((pdbeId) => {
-        allStructures[pdbeId]
-          .forEach((currentStructure) => {
-            const [start, end] = currentStructure.residue_range
-              .split('-');
-
-            currentStructure.start = parseInt(start, 10);
-            currentStructure.end = parseInt(end, 10);
-          });
-      });
-
+    
     const bestStructures = structures
       .reduce((all, current) => all.concat(current.best_structures), []);
 

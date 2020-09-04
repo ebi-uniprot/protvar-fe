@@ -41,10 +41,13 @@
     "prop-types": "^15.6.1",
     "protvista-structure": "^2.3.5",
     "react": "^16.3.2",
-    "react-dom": "16.3.2",
+    "react-dom": "^16.3.2",
     "react-router-dom": "^4.2.2",
     "uuid": "^3.3.3",
-    "webpack-merge": "^4.2.1"
+    "webpack-merge": "^4.2.1",
+    "@apollo/client": "^3.0.2",
+    "graphql": "^14.5.8",
+    "react-apollo": "^2.5.8"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
