@@ -8,6 +8,7 @@
   "scripts": {
     "local-server": "webpack --config webpack.local.js --mode development && webpack-dev-server --config webpack.local.js --mode development --open",
     "dev-build": "webpack --config webpack.dev.js --mode development",
+    "test-build": "webpack --config webpack.test.js --mode development",
     "build": "webpack --mode production",
     "jslint": "./node_modules/.bin/eslint -c .eslintrc.json --ext .js,.jsx 'src/**' '__tests__/**' '__mocks__/**' --ignore-pattern 'src/styles/**'",
     "test": "jest",
