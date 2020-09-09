@@ -418,9 +418,9 @@ class App extends Component {
 
 		const client = new ApolloClient({
 			cache: new InMemoryCache(),
-			uri: 'http://localhost:8091/graphql'
+			// uri: 'http://localhost:8091/graphql'
 			// uri: 'http://localhost:8080/pepvep-service/graphql'
-			// uri: 'http://wp-np2-ca:8080/pepvep-service/graphql'
+			uri: 'http://wp-np2-ca:8080/pepvep-service/graphql'
 		});
 
 		client
