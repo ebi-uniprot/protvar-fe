@@ -29,8 +29,8 @@
     },
     "testURL": "http://localhost/",
     "globals": {
-      "BASE_URL": "/uniprot/pepvep",
-      "API_URL": "/uniprot/pepvep"
+      "BASE_URL": "/uniprot/pepvep/test",
+      "API_URL": "/uniprot/pepvep/test"
     }
   },
   "dependencies": {
