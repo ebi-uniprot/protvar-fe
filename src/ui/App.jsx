@@ -30,6 +30,8 @@ class App extends Component {
 		this.setState({
 			loading: true
 		});
+		// this.updater.enqueueForceUpdate(this);
+
 		var inputArr = input.split('\n');
 		console.log(inputArr);
 		const GET_VARIANTS = gql`
@@ -418,9 +420,9 @@ class App extends Component {
 
 		const client = new ApolloClient({
 			cache: new InMemoryCache(),
-			uri: 'http://localhost:8091/graphql'
+			// uri: 'http://localhost:8091/graphql'
 			// uri: 'http://localhost:8080/pepvep-service/graphql'
-			// uri: 'http://wp-np2-ca:8080/pepvep-service/graphql'
+			uri: 'http://wp-np2-ca:8080/pepvep-service/graphql'
 		});
 
 		client
@@ -432,14 +434,19 @@ class App extends Component {
 				console.log(results);
 
 				const output = {
-					errors: {},
+					errors: [],
 					results: {}
 				};
 
-				const searchResultArr = [];
-
 				results.data.pepvepvariant.forEach((element) => {
-					if (output.results[element.input] === undefined) {
+					if (element.errors.length > 0) {
+						output.errors.push(element.errors);
+					}
+					if (output.results[element.input] === undefined && element.variants.length > 0) {
+						if (element.variants.errors !== undefined && element.variants.errors.length > 0) {
+							output.errors.push(element.variants.errors);
+							element.variants.errors = null;
+						}
 						output.results[element.input] = {
 							key: element.input,
 							input: element.input,
@@ -452,18 +459,14 @@ class App extends Component {
 
 				this.setState({
 					searchTerm: input,
-					searchResults: output,
-					apiResults: results,
-					errors: results.data.pepvepvariant[0].errors,
+					searchResults: output.results,
+					errors: output.errors,
 					loading: false
 				});
 
 				history.push('search');
 			});
 		console.log('calling client complete');
-		this.setState({
-			loading: false
-		});
 	};
 
 	getCSVRow(input, variant) {
@@ -655,7 +658,7 @@ class App extends Component {
 		);
 	}
 	handleDownload = () => {
-		const { searchTerm, apiResults, searchResults } = this.state;
+		const { searchTerm, searchResults } = this.state;
 		console.log(searchResults);
 		var inputArr = searchTerm.split('\n');
 		console.log('handle download clicked');

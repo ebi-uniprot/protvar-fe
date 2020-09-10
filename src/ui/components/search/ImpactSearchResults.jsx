@@ -46,7 +46,7 @@ class ImpactSearchResults extends Component {
 	render() {
 		// const { rows, handleDownload } = this.props;
 
-		const rows = this.props.rows.results;
+		const rows = this.props.rows;
 		const handleDownload = this.props.handleDownload;
 
 		const { expandedRow, showAllIsoforms, openGroup } = this.state;
