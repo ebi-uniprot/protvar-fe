@@ -24,6 +24,109 @@ class App extends Component {
 		};
 	}
 
+	createFunctionaSignificance(variant) {
+		var functionalSignificance = {};
+		functionalSignificance.features = variant.protein.features;
+		functionalSignificance.variationDetails = variant.variation.variationDetails;
+		functionalSignificance.colocatedVariants = variant.variation.proteinColocatedVariants;
+		return functionalSignificance;
+	}
+
+	createClinicalSignificance(variant) {
+		var clinicalSignificance = {};
+		if (variant.variation.clinicalSignificances !== undefined) {
+			clinicalSignificance.categories = variant.variation.clinicalSignificances.split(',');
+		}
+		// var associations = [];
+		// variant.variation.features.forEach((feature) => {
+		// 	associations.push(feature.association);
+		// });
+		clinicalSignificance.association = variant.variation.association;
+		clinicalSignificance.colocatedVariants = variant.variation.proteinColocatedVariants;
+		clinicalSignificance.variationDetails = variant.variation.variationDetails;
+		clinicalSignificance.colocatedVariantsCount = variant.variation.proteinColocatedVariantsCount;
+		clinicalSignificance.diseaseColocatedVariantsCount =
+			variant.variation.diseaseAssociatedproteinColocatedVariantsCount;
+
+		return clinicalSignificance;
+	}
+
+	createTranscriptSignificance(variant) {
+		var transcriptSignificances = [];
+		var transcriptSignificance = {};
+		var consequenceTerms = [];
+		if (variant.variation.consequence !== undefined) {
+			consequenceTerms.push(variant.variation.consequence);
+		}
+		transcriptSignificance.biotype = 'Protein Coding';
+		transcriptSignificance.polyphenPrediction = variant.variation.variationDetails.polyphenPrediction;
+		transcriptSignificance.polyphenScore = variant.variation.variationDetails.polyphenScore;
+		transcriptSignificance.siftPrediction = variant.variation.variationDetails.siftPrediction;
+		transcriptSignificance.siftScore = variant.variation.variationDetails.siftScore;
+		transcriptSignificance.mostSevereConsequence = variant.variation.consequence;
+		transcriptSignificance.consequenceTerms = consequenceTerms;
+		transcriptSignificance.colocatedVariants = variant.variation.proteinColocatedVariants;
+		if (variant.variation.clinicalSignificances !== undefined) {
+			transcriptSignificance.pathogenicity = variant.variation.clinicalSignificances.split(',');
+		}
+		transcriptSignificance.variationDetails = variant.variation.variationDetails;
+		transcriptSignificance.hgvsg = variant.gene.hgvsg;
+		transcriptSignificance.hgvsp = variant.gene.hgvsp;
+		transcriptSignificance.canonical = variant.protein.canonical;
+		transcriptSignificance.codons = variant.variation.codons;
+		transcriptSignificance.aminoAcids = variant.protein.variant;
+		transcriptSignificance.enstId = variant.gene.enstId;
+		transcriptSignificance.ensgId = variant.gene.ensgId;
+		transcriptSignificance.start = variant.protein.start;
+		transcriptSignificance.end = variant.protein.end;
+		transcriptSignificance.cosmicId = variant.variation.cosmicId;
+		transcriptSignificance.dbSNPId = variant.variation.dbSNPId;
+		transcriptSignificance.clinVarIds = variant.variation.clinVarIDs;
+		transcriptSignificance.colocatedVariantsCount = variant.variation.proteinColocatedVariantsCount;
+		transcriptSignificance.diseaseColocatedVariantsCount =
+			variant.variation.diseaseAssociatedproteinColocatedVariantsCount;
+		transcriptSignificance.redundantENSTs = variant.gene.redundantENSTs;
+		transcriptSignificance.mutationTasterScore = '';
+		transcriptSignificance.mutationTasterPrediction = '';
+		transcriptSignificance.lrtPrediction = '';
+		transcriptSignificance.lrtScore = 0.0;
+		transcriptSignificances.push(transcriptSignificance);
+		return transcriptSignificances;
+	}
+
+	createGenomicSignificance(variant) {
+		var genomic = {};
+		var consequencePrediction = {};
+		consequencePrediction.polyphenPrediction = variant.variation.variationDetails.polyphenPrediction;
+		consequencePrediction.polyphenScore = variant.variation.variationDetails.polyphenScore;
+		consequencePrediction.siftPrediction = variant.variation.variationDetails.siftPrediction;
+		consequencePrediction.siftScore = variant.variation.variationDetails.siftScore;
+		consequencePrediction.caddPhred = 0.0;
+		consequencePrediction.caddRaw = 0.0;
+
+		genomic.consequencePrediction = consequencePrediction;
+		genomic.variationDetails = variant.variation.variationDetails;
+		return genomic;
+	}
+	createSignificances(variants) {
+		var updateVariants = [];
+		variants.forEach((variant) => {
+			var significances = {};
+			var updateVariant = {};
+			significances.functional = this.createFunctionaSignificance(variant);
+			significances.structural = variant.structure;
+			significances.genomic = this.createGenomicSignificance(variant);
+			significances.clinical = this.createClinicalSignificance(variant);
+			significances.transcript = this.createTranscriptSignificance(variant);
+			updateVariant.significances = significances;
+			updateVariant.protein = variant.protein;
+			updateVariant.gene = variant.gene;
+			updateVariant.variation = variant.variation;
+			updateVariants.push(updateVariant);
+		});
+		return updateVariants;
+	}
+
 	handleSearch = (input) => {
 		console.log('calling client');
 		const { history } = this.props;
@@ -43,230 +146,14 @@ class App extends Component {
 						message
 					}
 					variants {
-						significances {
-							functional {
-								features {
-									type
-									description
-									category
-									begin
-									end
-									evidences {
-										sourceName
-										code
-										sourceId
-										sourceUrl
-										sourceAlternativeUrl
-										label
-										source {
-											id
-											url
-											alternativeUrl
-										}
-									}
-									ftId
-								}
-								variationDetails {
-									begin
-									end
-									ids {
-										rsId
-										dbSNPId
-										clinVarIDs {
-											id
-											pubMedIDs
-											allele
-											date
-											gene
-											clinicalSignificances
-											dbSNPId
-											mim
-											phenotype
-											url
-										}
-										cosmicId
-									}
-								}
-								colocatedVariants {
-									description
-									wildType
-									alternativeSequence
-									clinicalSignificances
-									sourceType
-									polyphenScore
-									siftScore
-									disease
-									nonDisease
-									uniprot
-									largeScaleStudy
-									uncertain
-								}
-							}
-							transcript {
-								biotype
-								impact
-								polyphenPrediction
-								polyphenScore
-								siftPrediction
-								siftScore
-								mostSevereConsequence
-								consequenceTerms
-								pathogenicity
-								variationDetails {
-									begin
-									end
-									ids {
-										rsId
-										dbSNPId
-										clinVarIDs {
-											id
-											pubMedIDs
-											allele
-											date
-											gene
-											clinicalSignificances
-											dbSNPId
-											mim
-											phenotype
-											url
-										}
-										cosmicId
-									}
-								}
-								hgvsg
-								hgvsp
-								canonical
-								codons
-								aminoAcids
-								enstId
-								ensgId
-								start
-								end
-								cosmicId
-								dbSNPId
-								clinVarIds {
-									id
-									pubMedIDs
-									allele
-									date
-									gene
-									clinicalSignificances
-									dbSNPId
-									mim
-									phenotype
-									url
-								}
-								colocatedVariantsCount
-								redundantENSTs
-								diseaseColocatedVariantsCount
-								mutationTasterScore
-								mutationTasterPrediction
-								lrtPrediction
-								lrtScore
-							}
-							clinical {
-								categories
-								association {
-									name
-									description
-									dbReferences {
-										name
-										id
-										url
-									}
-									evidences {
-										code
-										source {
-											name
-											id
-											url
-											alternativeUrl
-										}
-									}
-									disease
-								}
-								colocatedVariants {
-									description
-									wildType
-									alternativeSequence
-									clinicalSignificances
-									sourceType
-									xrefs {
-										name
-										id
-										url
-									}
-									polyphenScore
-									siftScore
-									disease
-									nonDisease
-									uniprot
-									largeScaleStudy
-									uncertain
-								}
-								variationDetails {
-									begin
-									end
-									ids {
-										rsId
-										dbSNPId
-										clinVarIDs {
-											id
-											pubMedIDs
-											allele
-											date
-											gene
-											clinicalSignificances
-											dbSNPId
-											mim
-											phenotype
-											url
-										}
-										cosmicId
-									}
-								}
-								colocatedVariantsCount
-								diseaseColocatedVariantsCount
-							}
-							structural
-							genomic {
-								consequencePrediction {
-									polyphenPrediction
-									polyphenScore
-									siftPrediction
-									siftScore
-									caddPhred
-									caddRaw
-								}
-								variationDetails {
-									begin
-									end
-									ids {
-										rsId
-										dbSNPId
-										clinVarIDs {
-											id
-											pubMedIDs
-											allele
-											date
-											gene
-											clinicalSignificances
-											dbSNPId
-											mim
-											phenotype
-											url
-										}
-										cosmicId
-									}
-								}
-							}
-						}
+						structure
 						gene {
 							ensgId
 							chromosome
 							symbol
 							source
 							enstId
+							ensgId
 							allele
 							start
 							end
@@ -294,11 +181,30 @@ class App extends Component {
 							type
 							isoform
 							canonicalAccession
+							features {
+								type
+								typeDescription
+								category
+								begin
+								end
+								evidences {
+									code
+									label
+									source {
+										name
+										id
+										url
+										alternativeUrl
+									}
+								}
+								ftId
+							}
 						}
 						variation {
 							novel
 							cosmicId
 							dbSNPId
+							codons
 							clinVarIDs {
 								id
 								pubMedIDs
@@ -310,6 +216,29 @@ class App extends Component {
 								mim
 								phenotype
 								url
+							}
+							association {
+								name
+								description
+								dbReferences {
+									name
+									id
+									url
+									alternativeUrl
+								}
+								evidences {
+									code
+									sourceUrl
+									sourceAlternativeUrl
+									label
+									source {
+										name
+										id
+										url
+										alternativeUrl
+									}
+								}
+								disease
 							}
 							wildType
 							alternativeSequence
@@ -420,9 +349,9 @@ class App extends Component {
 
 		const client = new ApolloClient({
 			cache: new InMemoryCache(),
-			// uri: 'http://localhost:8091/graphql'
+			uri: 'http://localhost:8091/graphql'
 			// uri: 'http://localhost:8080/pepvep-service/graphql'
-			uri: 'http://wp-np2-ca:8080/pepvep-service/graphql'
+			// uri: 'http://wp-np2-ca:8080/pepvep-service/graphql'
 		});
 
 		client
@@ -447,14 +376,14 @@ class App extends Component {
 							output.errors.push(element.variants.errors);
 							element.variants.errors = null;
 						}
+						var updatedVariants = this.createSignificances(element.variants);
 						output.results[element.input] = {
 							key: element.input,
 							input: element.input,
-							rows: element.variants
+							rows: updatedVariants
 						};
 					}
 					console.log('output ' + output.results);
-					// this.props.loading = false;
 				});
 
 				this.setState({

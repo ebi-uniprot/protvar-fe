@@ -73,8 +73,8 @@ const ColocatedFeatureDataBlock = (props) => {
 
 ColocatedFeatureDataBlock.propTypes = {
   data: PropTypes.shape({
-    begin: PropTypes.string,
-    end: PropTypes.string,
+    begin: PropTypes.number,
+    end: PropTypes.number,
     type: PropTypes.string,
     description: PropTypes.string,
     evidences: PropTypes.arrayOf(PropTypes.shape({
