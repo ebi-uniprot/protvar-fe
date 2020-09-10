@@ -680,8 +680,8 @@ class App extends Component {
 			'SIFT_PREDICTION,SIFT_SCORE,' +
 			// 'MUTPRED_SCORE,BLOSUM62,APPRIS,TSL,STRAND,CODONS,CDNA_START,CDNA_END,CDS_START,CDS_END,EXON,UNIPARC_ACCESSIONS,' +
 			'STRAND,EXON,HGVS_C,HGVS_P,HGVS_G,DISEASE_ASSOCIATIONS,PROTEIN_ANNOTATIONS,COLOCATED_VARIANTS\n';
-		Object.keys(searchResults.results).forEach((inputStr) => {
-			searchResults.results[inputStr].rows.forEach((variant) => {
+		Object.keys(searchResults).forEach((inputStr) => {
+			searchResults[inputStr].rows.forEach((variant) => {
 				outputCsv = outputCsv + this.getCSVRow(inputStr, variant);
 			});
 		});
