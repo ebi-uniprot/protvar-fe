@@ -71,7 +71,7 @@ const SingleColocatedVariantDetails = ({
         el = <span key={id.id}>{id.id}</span>;
       }
 
-      const comma = <Fragment key={uuidv1()}>, </Fragment>;
+      const comma = <Fragment key={uuidv1()}></Fragment>;
 
       return (index > 0)
         ? [comma, el]

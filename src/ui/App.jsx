@@ -24,7 +24,7 @@ class App extends Component {
 		};
 	}
 
-	createFunctionaSignificance(variant) {
+	createFunctionalSignificance(variant) {
 		var functionalSignificance = {};
 		functionalSignificance.features = variant.protein.features;
 		functionalSignificance.variationDetails = variant.variation.variationDetails;
@@ -108,13 +108,42 @@ class App extends Component {
 		genomic.variationDetails = variant.variation.variationDetails;
 		return genomic;
 	}
+
+	createStructuralSignificance(variant) {
+		if (variant.structure === null) {
+			return null;
+		}
+		var structuralSignificance = {};
+		var accession = Object.keys(variant.structure);
+		structuralSignificance.position = variant.protein.start;
+		structuralSignificance.proteinLength = variant.structure[accession].length;
+		structuralSignificance.allStructures = JSON.parse(JSON.stringify(variant.structure[accession].all_structures)); //{ ...variant.structure[accession].all_structures };
+		structuralSignificance.annotations = [ variant.structure[accession].annotations ];
+		structuralSignificance.ligands = variant.structure[accession].ligands.positions;
+		structuralSignificance.interactions = variant.structure[accession].interactions.positions;
+		structuralSignificance.structures = variant.structure[accession].structures.positions;
+		structuralSignificance.accession = accession[0];
+
+		if (Object.keys(structuralSignificance.allStructures).length > 0) {
+			Object.keys(structuralSignificance.allStructures).forEach((key) => {
+				var allStructure = structuralSignificance.allStructures[key];
+				allStructure.forEach((structure) => {
+					var residue = structure['residue_range'].split('-');
+					structure['start'] = parseInt(residue[0], 10);
+					structure['end'] = parseInt(residue[1], 10);
+				});
+			});
+		}
+		return structuralSignificance;
+	}
+
 	createSignificances(variants) {
 		var updateVariants = [];
 		variants.forEach((variant) => {
 			var significances = {};
 			var updateVariant = {};
-			significances.functional = this.createFunctionaSignificance(variant);
-			significances.structural = variant.structure;
+			significances.functional = this.createFunctionalSignificance(variant);
+			significances.structural = this.createStructuralSignificance(variant);
 			significances.genomic = this.createGenomicSignificance(variant);
 			significances.clinical = this.createClinicalSignificance(variant);
 			significances.transcript = this.createTranscriptSignificance(variant);
@@ -369,11 +398,11 @@ class App extends Component {
 
 				results.data.pepvepvariant.forEach((element) => {
 					if (element.errors.length > 0) {
-						output.errors.push(element.errors);
+						output.errors = output.errors.concat(element.errors);
 					}
 					if (output.results[element.input] === undefined && element.variants.length > 0) {
 						if (element.variants.errors !== undefined && element.variants.errors.length > 0) {
-							output.errors.push(element.variants.errors);
+							output.errors = output.errors.concat(element.variants.errors);
 							element.variants.errors = null;
 						}
 						var updatedVariants = this.createSignificances(element.variants);

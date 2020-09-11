@@ -10,8 +10,7 @@ const SearchResultsPageContent = (props) => {
 
 	return (
 		<Fragment>
-			{/* {errors && errors.map((e) => <Alert {...e} key={window.btoa(e.message)} />)} */}
-			{/* {errors && errors.array.forEach((element) => <Alert {...element} key={window.btoa(element.message)} />)} */}
+			{errors && errors.map((e) => <Alert {...e} key={window.btoa(e.message)} />)}
 
 			<ImpactSearchResults rows={searchResults} handleDownload={handleDownload} />
 		</Fragment>
@@ -26,13 +25,13 @@ SearchResultsPageContent.propTypes = {
 			rows: PropTypes.arrayOf(PropTypes.shape({}))
 		})
 	).isRequired,
-	handleDownload: PropTypes.func.isRequired
-	// errors: PropTypes.arrayOf(
-	// 	PropTypes.shape({
-	// 		title: PropTypes.string,
-	// 		message: PropTypes.string.isRequired
-	// 	})
-	// ).isRequired
+	handleDownload: PropTypes.func.isRequired,
+	errors: PropTypes.arrayOf(
+		PropTypes.shape({
+			title: PropTypes.string,
+			message: PropTypes.string.isRequired
+		})
+	).isRequired
 };
 
 const SearchResultsPage = (props) => (
