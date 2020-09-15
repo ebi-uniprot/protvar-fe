@@ -106,15 +106,44 @@ class App extends Component {
 
 		genomic.consequencePrediction = consequencePrediction;
 		genomic.variationDetails = variant.variation.variationDetails;
+
+		var frequencies = {};
+		if (variant.variation.populationFrequencies == null) {
+			return genomic;
+		}
+		variant.variation.populationFrequencies.forEach((popFreq) => {
+			if (
+				frequencies[popFreq.sourceName] === undefined &&
+				popFreq !== undefined &&
+				popFreq.frequencies.length > 0
+			) {
+				var freqUI = {};
+				popFreq.frequencies.forEach((freq) => {
+					var value = {};
+					value.label = freq.label;
+					value.value = freq.value;
+					freqUI[freq.label] = value;
+				});
+				frequencies[popFreq.sourceName] = freqUI;
+			}
+		});
+		genomic.populationFrequencies = frequencies;
 		return genomic;
 	}
 
 	createStructuralSignificance(variant) {
+		let proteinStart = 10;
+		let proteinEnd = 20;
+		let range = new Array(proteinEnd - proteinStart).fill(0).map((_, i) => proteinStart + i);
+		console.log('Range -> ', range);
 		if (variant.structure === null) {
 			return null;
 		}
-		var structuralSignificance = {};
 		var accession = Object.keys(variant.structure);
+		if (variant.structure[accession].all_structures.length === 0) {
+			return null;
+		}
+		var structuralSignificance = {};
 		structuralSignificance.position = variant.protein.start;
 		structuralSignificance.proteinLength = variant.structure[accession].length;
 		structuralSignificance.allStructures = JSON.parse(JSON.stringify(variant.structure[accession].all_structures)); //{ ...variant.structure[accession].all_structures };
@@ -138,20 +167,28 @@ class App extends Component {
 	}
 
 	createSignificances(variants) {
-		var updateVariants = [];
+		var updateVariants = {
+			errors: [],
+			results: []
+		};
 		variants.forEach((variant) => {
-			var significances = {};
-			var updateVariant = {};
-			significances.functional = this.createFunctionalSignificance(variant);
-			significances.structural = this.createStructuralSignificance(variant);
-			significances.genomic = this.createGenomicSignificance(variant);
-			significances.clinical = this.createClinicalSignificance(variant);
-			significances.transcript = this.createTranscriptSignificance(variant);
-			updateVariant.significances = significances;
-			updateVariant.protein = variant.protein;
-			updateVariant.gene = variant.gene;
-			updateVariant.variation = variant.variation;
-			updateVariants.push(updateVariant);
+			if (variant.errors.length > 0) {
+				updateVariants.errors = variant.errors;
+			}
+			if (variant.variation != null) {
+				var significances = {};
+				var updateVariant = {};
+				significances.functional = this.createFunctionalSignificance(variant);
+				significances.structural = this.createStructuralSignificance(variant);
+				significances.genomic = this.createGenomicSignificance(variant);
+				significances.clinical = this.createClinicalSignificance(variant);
+				significances.transcript = this.createTranscriptSignificance(variant);
+				updateVariant.significances = significances;
+				updateVariant.protein = variant.protein;
+				updateVariant.gene = variant.gene;
+				updateVariant.variation = variant.variation;
+				updateVariants.results.push(updateVariant);
+			}
 		});
 		return updateVariants;
 	}
@@ -175,6 +212,10 @@ class App extends Component {
 						message
 					}
 					variants {
+						errors {
+							title
+							message
+						}
 						structure
 						gene {
 							ensgId
@@ -360,12 +401,12 @@ class App extends Component {
 							genomicColocatedVariants {
 								id
 								pubMedIDs
-								populationFrequencies {
-									sourceName
-									frequencies {
-										label
-										value
-									}
+							}
+							populationFrequencies {
+								sourceName
+								frequencies {
+									label
+									value
 								}
 							}
 							proteinColocatedVariantsCount
@@ -397,19 +438,20 @@ class App extends Component {
 				};
 
 				results.data.pepvepvariant.forEach((element) => {
-					if (element.errors.length > 0) {
-						output.errors = output.errors.concat(element.errors);
-					}
+					// if (element.errors.length > 0) {
+					// 	output.errors = output.errors.concat(element.errors);
+					// }
 					if (output.results[element.input] === undefined && element.variants.length > 0) {
-						if (element.variants.errors !== undefined && element.variants.errors.length > 0) {
-							output.errors = output.errors.concat(element.variants.errors);
-							element.variants.errors = null;
-						}
+						// if (element.variants.errors !== undefined && element.variants.errors.length > 0) {
+						// 	output.errors = output.errors.concat(element.variants.errors);
+						// 	element.variants.errors = null;
+						// }
 						var updatedVariants = this.createSignificances(element.variants);
+						output.errors = output.errors.concat(updatedVariants.errors);
 						output.results[element.input] = {
 							key: element.input,
 							input: element.input,
-							rows: updatedVariants
+							rows: updatedVariants.results
 						};
 					}
 					console.log('output ' + output.results);
@@ -474,45 +516,53 @@ class App extends Component {
 		}
 
 		var ligands = '';
-		if (variant.significances.structural != null && variant.significances.structural.ligands.length > 0) {
-			variant.significances.structural.ligands.forEach((ligandObject) => {
-				let result = [];
-
-				// if (variation.threeLetterAminoAcidBase.toUpperCase() !== ligandObject.position_code) {
-				// 	return output;
-				// }
-
-				ligandObject.ligands.forEach((ligand) => {
-					const ligandSerilised = [
-						`id:${ligand.ligand_id}`,
-						`formula:${ligand.formula}`,
-						`InChi:${ligand.InChi}`,
-						`ligand_name:${ligand.ligand_name}`
-					].join(',');
-
-					result.push(ligandSerilised);
-				});
-
-				ligands += result.join('|') + ';';
-			}, '');
-		}
-
 		var interactions = '';
-		if (variant.significances.structural != null && variant.significances.structural.interactions.length > 0) {
-			variant.significances.structural.interactions.forEach((interaction) => {
-				// if (variation.threeLetterAminoAcidBase.toUpperCase() !== interaction.position_code) {
-				// 	return output;
-				// }
-				var partner_name = '';
-				interaction.partners.forEach((partner) => {
-					partner_name += partner.name + ',';
-				});
-				interactions += partner_name + '|';
-			}, '');
-		}
-
 		if (variant.significances.structural != null) {
-			allStructures = Object.keys(variant.significances.structural.allStructures).join(',');
+			if (
+				variant.significances.structural.ligands != undefined &&
+				Object.keys(variant.significances.structural.ligands).length > 0
+			) {
+				variant.significances.structural.ligands.forEach((ligandObject) => {
+					let result = [];
+
+					// if (variation.threeLetterAminoAcidBase.toUpperCase() !== ligandObject.position_code) {
+					// 	return output;
+					// }
+
+					ligandObject.ligands.forEach((ligand) => {
+						const ligandSerilised = [
+							`id:${ligand.ligand_id}`,
+							`formula:${ligand.formula}`,
+							`InChi:${ligand.InChi}`,
+							`ligand_name:${ligand.ligand_name}`
+						].join(',');
+
+						result.push(ligandSerilised);
+					});
+
+					ligands += result.join('|') + ';';
+				}, '');
+			}
+
+			if (
+				variant.significances.structural.interactions != undefined &&
+				variant.significances.structural.interactions.length > 0
+			) {
+				variant.significances.structural.interactions.forEach((interaction) => {
+					// if (variation.threeLetterAminoAcidBase.toUpperCase() !== interaction.position_code) {
+					// 	return output;
+					// }
+					var partner_name = '';
+					interaction.partners.forEach((partner) => {
+						partner_name += partner.name + ',';
+					});
+					interactions += partner_name + '|';
+				}, '');
+			}
+
+			if (variant.significances.structural.allStructures != null) {
+				allStructures = Object.keys(variant.significances.structural.allStructures).join(',');
+			}
 		}
 		if (
 			variant.variation.proteinColocatedVariants != 'undefined' &&
@@ -640,7 +690,9 @@ class App extends Component {
 			'STRAND,EXON,HGVS_C,HGVS_P,HGVS_G,DISEASE_ASSOCIATIONS,PROTEIN_ANNOTATIONS,COLOCATED_VARIANTS\n';
 		Object.keys(searchResults).forEach((inputStr) => {
 			searchResults[inputStr].rows.forEach((variant) => {
-				outputCsv = outputCsv + this.getCSVRow(inputStr, variant);
+				if (variant.variation != null) {
+					outputCsv = outputCsv + this.getCSVRow(inputStr, variant);
+				}
 			});
 		});
 		// apiResults.data.pepvepvariant.forEach((element) => {
