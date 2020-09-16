@@ -106,36 +106,32 @@ class App extends Component {
 
 		genomic.consequencePrediction = consequencePrediction;
 		genomic.variationDetails = variant.variation.variationDetails;
-
-		var frequencies = {};
-		if (variant.variation.populationFrequencies == null) {
-			return genomic;
-		}
-		variant.variation.populationFrequencies.forEach((popFreq) => {
-			if (
-				frequencies[popFreq.sourceName] === undefined &&
-				popFreq !== undefined &&
-				popFreq.frequencies.length > 0
-			) {
-				var freqUI = {};
-				popFreq.frequencies.forEach((freq) => {
-					var value = {};
-					value.label = freq.label;
-					value.value = freq.value;
-					freqUI[freq.label] = value;
-				});
-				frequencies[popFreq.sourceName] = freqUI;
-			}
-		});
-		genomic.populationFrequencies = frequencies;
+		genomic.populationFrequencies = variant.variation.populationFrequencies;
+		// var frequencies = {};
+		// if (variant.variation.populationFrequencies == null) {
+		// 	return genomic;
+		// }
+		// variant.variation.populationFrequencies.forEach((popFreq) => {
+		// 	if (
+		// 		frequencies[popFreq.sourceName] === undefined &&
+		// 		popFreq !== undefined &&
+		// 		popFreq.frequencies.length > 0
+		// 	) {
+		// 		var freqUI = {};
+		// 		popFreq.frequencies.forEach((freq) => {
+		// 			var value = {};
+		// 			value.label = freq.label;
+		// 			value.value = freq.value;
+		// 			freqUI[freq.label] = value;
+		// 		});
+		// 		frequencies[popFreq.sourceName] = freqUI;
+		// 	}
+		// });
+		// genomic.populationFrequencies = frequencies;
 		return genomic;
 	}
 
 	createStructuralSignificance(variant) {
-		let proteinStart = 10;
-		let proteinEnd = 20;
-		let range = new Array(proteinEnd - proteinStart).fill(0).map((_, i) => proteinStart + i);
-		console.log('Range -> ', range);
 		if (variant.structure === null) {
 			return null;
 		}
@@ -320,6 +316,15 @@ class App extends Component {
 								alternativeSequence
 								clinicalSignificances
 								sourceType
+								ids {
+									rsId
+									dbSNPId
+									cosmicId
+									clinVarIDs {
+										id
+										dbSNPId
+									}
+								}
 								association {
 									name
 									description
@@ -419,9 +424,9 @@ class App extends Component {
 
 		const client = new ApolloClient({
 			cache: new InMemoryCache(),
-			uri: 'http://localhost:8091/graphql'
+			// uri: 'http://localhost:8091/graphql'
 			// uri: 'http://localhost:8080/pepvep-service/graphql'
-			// uri: 'http://wp-np2-ca:8080/pepvep-service/graphql'
+			uri: 'http://wp-np2-ca:8080/pepvep-service/graphql'
 		});
 
 		client
