@@ -106,9 +106,24 @@ class TextAreaSearch extends Component {
 		var reader = new FileReader();
 		reader.onload = async (e) => {
 			text = e.target.result;
-			console.log(text);
+			var inputText = '';
+			var lines = text.split('\n');
+			lines.forEach((line) => {
+				if (!line.startsWith('#')) {
+					var cols = line.split('\t');
+					var pos = cols[1].split('_');
+					var start = pos[0];
+					var end = pos[0];
+					if (pos.length > 1) {
+						end = pos[1];
+					}
+					inputText +=
+						cols[0] + ' ' + start + ' ' + end + ' ' + cols[3] + '/' + cols[4] + ' ' + '. . .' + '\n';
+				}
+			});
+			console.log(inputText);
 			this.setState({
-				searchTerm: text
+				searchTerm: inputText
 			});
 		};
 		reader.readAsText(event.target.files[0]);
