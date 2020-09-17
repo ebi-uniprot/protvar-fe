@@ -33,8 +33,13 @@
     box-shadow: 0 0.125rem 0.25rem 0.125rem rgba(22,29,57,0.2);
     background-color: #fbfeff;
     border-radius: 0.2rem;
-    margin: 1rem .125rem;
+    // margin: 1rem .125rem;
     width: 100%;
+    height: 100%;
+  }
+  
+  .card__content-upper {
+    height:220px;
   }
 
   .card__actions {
@@ -62,12 +67,13 @@
   .card-table{
     padding-left:2px;
     font-size: 14px;
+    height: 100%;
   }
 
   .card-header{
     padding-top:0.4rem;
   }
-  
+
  .glyphicon {
     position: relative;
     top: 1px;

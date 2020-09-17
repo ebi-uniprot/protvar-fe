@@ -12,7 +12,16 @@
   white-space: pre-wrap;
 }
 
-
+.wrapper{
+  display:grid;
+  grid-template-columns: 50% 50%;
+  /*
+  grid-column-gap:1em;
+  grid-row-gap:1em;
+  */
+  grid-auto-rows: minmax(100px, auto);
+  grid-gap:1em;
+}
 
 // Search button-group
 // -------------------

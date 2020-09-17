@@ -9,7 +9,7 @@ const AboutSection = () => (
 				</p>
 			</span>
 		</section>
-		<section className="card--has-hover" role="button">
+		<section role="button">
 			<div className="card__content">
 				<section className="uniprot-card">
 					<section className="uniprot-card__left">

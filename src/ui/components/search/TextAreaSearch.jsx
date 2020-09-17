@@ -121,193 +121,155 @@ class TextAreaSearch extends Component {
 		const { buttonLabel, isLoading } = this.props;
 		return (
 			<Fragment>
-				<table>
-					<tbody>
-						<tr>
-							<td className="card-table" width="50%">
-								<table>
-									<tbody>
-										<tr>
-											<td className="card-table">
-												<ExampleSection />
-											</td>
-											<td className="card-table" width="50%">
-												<AboutSection />
-											</td>
-										</tr>
-									</tbody>
-								</table>
-								<table>
-									<tbody>
-										<tr>
-											<td className="card-table" width="50%">
-												<div className="card">
-													<section className="card__actions">
-														<span className="card-header">
-															<p>
-																<b>Interactive Search</b>
-															</p>
-														</span>
-													</section>
-													<section className="card--has-hover" role="button">
-														<div className="card__content">
-															<section className="uniprot-card">
-																<section className="uniprot-card__left">
-																	{/* <div className="text-area-search"> */}
-																	<form onSubmit={this.handleSubmit}>
-																		<textarea
-																			id="main-textarea-search-field"
-																			className="main-textarea-search-field"
-																			value={searchTerm}
-																			onChange={this.handleInputChange}
-																		/>
+				<div className="wrapper">
+					<div className="card-table">
+						<ExampleSection />
+					</div>
+					<div className="card-table">
+						<AboutSection />
+					</div>
+					<div className="card-table">
+						<div className="card">
+							<section className="card__actions">
+								<span className="card-header">
+									<p>
+										<b>Interactive Search</b>
+									</p>
+								</span>
+							</section>
+							<section className="card--has-hover" role="button">
+								<div className="card__content">
+									<section className="uniprot-card">
+										<section className="uniprot-card__left">
+											{/* <div className="text-area-search"> */}
+											<form onSubmit={this.handleSubmit}>
+												<textarea
+													id="main-textarea-search-field"
+													className="main-textarea-search-field"
+													value={searchTerm}
+													onChange={this.handleInputChange}
+												/>
 
-																		<div
-																			id="search-button-group"
-																			className="search-button-group"
-																		>
-																			{!isLoading ? (
-																				<Button
-																					type="submit"
-																					onClick={this.handleSubmit}
-																					className="button-primary"
-																				>
-																					{buttonLabel}
-																				</Button>
-																			) : (
-																				<Button
-																					onClick={() => null}
-																					className="button-primary"
-																				>
-																					Loading...
-																				</Button>
-																			)}
+												<div id="search-button-group" className="search-button-group">
+													{!isLoading ? (
+														<Button
+															type="submit"
+															onClick={this.handleSubmit}
+															className="button-primary"
+														>
+															{buttonLabel}
+														</Button>
+													) : (
+														<Button onClick={() => null} className="button-primary">
+															Loading...
+														</Button>
+													)}
 
-																			{searchTerm ? (
-																				<Button
-																					onClick={this.clearForm}
-																					className="button-primary"
-																				>
-																					Clear Input
-																				</Button>
-																			) : (
-																				<Button
-																					onClick={this.useExampleData}
-																					className="button-primary"
-																				>
-																					Use Example Input
-																				</Button>
-																			)}
-																		</div>
-																	</form>
-																	{/* </div> */}
-																</section>
-															</section>
-														</div>
-													</section>
+													{searchTerm ? (
+														<Button onClick={this.clearForm} className="button-primary">
+															Clear Input
+														</Button>
+													) : (
+														<Button
+															onClick={this.useExampleData}
+															className="button-primary"
+														>
+															Use Example Input
+														</Button>
+													)}
 												</div>
-											</td>
+											</form>
+											{/* </div> */}
+										</section>
+									</section>
+								</div>
+							</section>
+						</div>
+					</div>
 
-											<td className="card-table" width="50%">
-												<div className="card">
-													<section className="card__actions">
-														<span className="card-header">
-															<p>
-																<b>Download</b>
-															</p>
-														</span>
-													</section>
-													<section className="card--has-hover" role="button">
-														<div className="card__content">
-															<section className="uniprot-card">
-																<section className="uniprot-card__left">
-																	<form onSubmit={this.handleSubmit}>
-																		<p>
-																			Only vcf file containing below input format
-																			is accepted<br /> 14 89993420 89993420 A/G .
-																			. .<br />
-																			10 87933147 87933147 C/T . . .<br />
-																		</p>
+					<div className="card-table">
+						<div className="card">
+							<section className="card__actions">
+								<span className="card-header">
+									<p>
+										<b>Download</b>
+									</p>
+								</span>
+							</section>
+							<section className="card--has-hover" role="button">
+								<div className="card__content">
+									<section className="uniprot-card">
+										<section className="uniprot-card__left">
+											<form onSubmit={this.handleSubmit}>
+												<p>
+													Only vcf file containing below input format is accepted<br /> 14
+													89993420 89993420 A/G . . .<br />
+													10 87933147 87933147 C/T . . .<br />
+												</p>
 
-																		<p className="file-selected">
-																			<b>{fileName}</b>
-																		</p>
-																		<div
-																			id="search-button-group"
-																			className="search-button-group"
-																		>
-																			<input
-																				id="myInput"
-																				type="file"
-																				style={{ display: 'none' }}
-																				ref={(ref) => (this.upload = ref)}
-																				onChange={this.onChangeFile.bind(this)}
-																			/>
-																			<Button
-																				onClick={() => {
-																					this.upload.click();
-																				}}
-																				className="button-primary"
-																			>
-																				Select File
-																			</Button>
-																			{isFileSelected ? (
-																				<Button
-																					type="submit"
-																					onClick={this.handleSubmit}
-																					className="button-primary"
-																				>
-																					{viewResultLabel}
-																				</Button>
-																			) : (
-																				<Button
-																					onClick={() => null}
-																					className="button-disabled"
-																				>
-																					{viewResultLabel}
-																				</Button>
-																			)}
-																			{isFileSelected ? (
-																				<Button
-																					onClick={() => null}
-																					className="button-primary"
-																				>
-																					Download Result
-																				</Button>
-																			) : (
-																				<Button
-																					onClick={() => null}
-																					className="button-disabled"
-																				>
-																					Download Result
-																				</Button>
-																			)}
-																		</div>
-																	</form>
-																</section>
-															</section>
-														</div>
-													</section>
+												<p className="file-selected">
+													<b>{fileName}</b>
+												</p>
+												<div id="search-button-group" className="search-button-group">
+													<input
+														id="myInput"
+														type="file"
+														style={{ display: 'none' }}
+														ref={(ref) => (this.upload = ref)}
+														onChange={this.onChangeFile.bind(this)}
+													/>
+													<Button
+														onClick={() => {
+															this.upload.click();
+														}}
+														className="button-primary"
+													>
+														Select File
+													</Button>
+													{isFileSelected ? (
+														<Button
+															type="submit"
+															onClick={this.handleSubmit}
+															className="button-primary"
+														>
+															{viewResultLabel}
+														</Button>
+													) : (
+														<Button onClick={() => null} className="button-disabled">
+															{viewResultLabel}
+														</Button>
+													)}
+													{isFileSelected ? (
+														<Button onClick={() => null} className="button-primary">
+															Download Result
+														</Button>
+													) : (
+														<Button onClick={() => null} className="button-disabled">
+															Download Result
+														</Button>
+													)}
 												</div>
-											</td>
-										</tr>
-									</tbody>
-								</table>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-				<span className="assemly-ref-note">
-					<b>Reference Genome Assembly: GRCh38 (hg38) </b>
-				</span>
+											</form>
+										</section>
+									</section>
+								</div>
+							</section>
+						</div>
+					</div>
+					<div>
+						<span className="assemly-ref-note">
+							<b>Reference Genome Assembly: GRCh38 (hg38) </b>
+						</span>
 
-				<a
-					href="http://www.ensembl.org/Homo_sapiens/Tools/AssemblyConverter?db=core"
-					target="_blank"
-					rel="noopener noreferrer"
-				>
-					Open Ensembl Assembly Remapping
-				</a>
+						<a
+							href="http://www.ensembl.org/Homo_sapiens/Tools/AssemblyConverter?db=core"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							Open Ensembl Assembly Remapping
+						</a>
+					</div>
+				</div>
 			</Fragment>
 		);
 	}

@@ -9,7 +9,7 @@ const ExampleSection = () => (
 				</p>
 			</span>
 		</section>
-		<section className="card--has-hover" role="button">
+		<section role="button">
 			<div className="card__content">
 				<section className="uniprot-card">
 					<section className="uniprot-card__left">
@@ -26,10 +26,6 @@ const ExampleSection = () => (
 							<div>
 								<span>dbSNP HGVS:</span>
 								<span className="variant-example">NM_145255.3:c.526C&gt;T</span>
-							</div>
-							<div>
-								<span>Genomic Position:</span>
-								<span className="variant-example">21 43072000 43072000 T/C . . </span>
 							</div>
 						</div>
 					</section>
