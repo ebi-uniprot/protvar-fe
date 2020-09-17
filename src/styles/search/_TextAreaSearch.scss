@@ -2,12 +2,12 @@
 // Text-area search field
 // ----------------------
 .main-textarea-search-field {
-  min-height: 30vh;
+  min-height: 15vh;
   border-radius: 5px;
   padding: .7rem 1rem;
   line-height: 1.7rem;
-  font-family: "Courier New", monospace;
-  font-size: 1rem;
+  font-family: Lato, sans-serif;
+  font-size: 12px;
   resize: none;
   white-space: pre-wrap;
 }
@@ -29,7 +29,32 @@
   }
 }
 
+.button-primary {
+  color: #fefefe;
+  background-color: #1779ba; 
+  border-radius:6px;}
 
+.button-primary:hover {
+    background-color: #d2dce3; 
+    }
+  
+    .button-primary:focus {
+      background-color: #1779ba; 
+      }
+.button-disabled {
+  pointer-events: none; 
+  border-radius:6px;
+  background-color: #cccccc;
+}
+
+.button-disabled:hover {
+  color: #fefefe;
+  background-color: #879299; 
+  }
+
+  .button-disabled:focus {
+    background-color: #879299; 
+    }
 
 // Search Area
 // -----------
@@ -60,3 +85,27 @@
     margin-right: 2rem;
   }
 }
+
+.variant-example {
+  width: auto;
+  color: #4949c7; }
+
+  .input-examples span {
+    width: 12rem;
+    display: inline-block;
+  }
+
+  .file-selected {
+    color: #4949c7;
+    padding-top:0.3rem;
+  }
+  .download-list {
+    display: block;
+    list-style-type: none;
+    margin-block-start: 1em;
+    margin-block-end: 5em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-inline-start: 40px;
+    width : 80%
+  }
