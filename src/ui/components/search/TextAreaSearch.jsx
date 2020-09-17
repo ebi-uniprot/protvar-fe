@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import Button from '../../elements/form/Button';
 import AboutSection from '../other/AboutSection';
 import ExampleSection from '../other/ExampleSection';
-import ReactFileReader from 'react-file-reader';
 
 class TextAreaSearch extends Component {
 	state = {
