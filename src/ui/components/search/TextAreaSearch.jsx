@@ -108,6 +108,7 @@ class TextAreaSearch extends Component {
 			text = e.target.result;
 			var inputText = '';
 			var lines = text.split('\n');
+			var firstLine = true;
 			lines.forEach((line) => {
 				if (!line.startsWith('#')) {
 					var cols = line.split('\t');
@@ -117,8 +118,13 @@ class TextAreaSearch extends Component {
 					if (pos.length > 1) {
 						end = pos[1];
 					}
-					inputText +=
-						cols[0] + ' ' + start + ' ' + end + ' ' + cols[3] + '/' + cols[4] + ' ' + '. . .' + '\n';
+					if (firstLine) {
+						inputText += cols[0] + ' ' + start + ' ' + end + ' ' + cols[3] + '/' + cols[4] + ' ' + '. . .';
+						firstLine = false;
+					} else {
+						inputText +=
+							'\n' + cols[0] + ' ' + start + ' ' + end + ' ' + cols[3] + '/' + cols[4] + ' ' + '. . .';
+					}
 				}
 			});
 			console.log(inputText);
@@ -137,13 +143,13 @@ class TextAreaSearch extends Component {
 		return (
 			<Fragment>
 				<div className="wrapper">
-					<div className="card-table">
+					<div id="example" className="card-table">
 						<ExampleSection />
 					</div>
-					<div className="card-table">
+					<div id="about" className="card-table">
 						<AboutSection />
 					</div>
-					<div className="card-table">
+					<div id="search" className="card-table">
 						<div className="card">
 							<section className="card__actions">
 								<span className="card-header">
@@ -202,7 +208,7 @@ class TextAreaSearch extends Component {
 						</div>
 					</div>
 
-					<div className="card-table">
+					<div id="download" className="card-table">
 						<div className="card">
 							<section className="card__actions">
 								<span className="card-header">
