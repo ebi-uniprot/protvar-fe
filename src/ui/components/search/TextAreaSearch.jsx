@@ -11,7 +11,8 @@ class TextAreaSearch extends Component {
 		isFileSelected: false,
 		fileName: 'No file selected',
 		viewResultLabel: 'View Result',
-		downloadLabel: 'Download Result'
+		downloadLabel: 'Download Result',
+		file: {}
 	};
 
 	componentWillMount() {
@@ -25,7 +26,7 @@ class TextAreaSearch extends Component {
 	};
 
 	handleSubmit = (e) => {
-		const { searchTerm } = this.state;
+		const { searchTerm, file, page } = this.state;
 		const { onSubmit } = this.props;
 		this.setState({
 			viewResultLabel: 'Loading..'
@@ -33,7 +34,7 @@ class TextAreaSearch extends Component {
 		e.preventDefault();
 		e.stopPropagation();
 
-		onSubmit(searchTerm);
+		onSubmit(searchTerm, file, page);
 	};
 
 	clearForm = () => {
@@ -99,9 +100,16 @@ class TextAreaSearch extends Component {
 		var file = event.target.files[0];
 		console.log(file);
 		var text = '';
+		var page = {
+			currentPage: 1,
+			nextPage: true,
+			previousPage: false
+		};
 		this.setState({
 			isFileSelected: true,
-			fileName: file.name
+			fileName: file.name,
+			file: file,
+			page: page
 		});
 		var reader = new FileReader();
 		reader.onload = async (e) => {
@@ -109,8 +117,17 @@ class TextAreaSearch extends Component {
 			var inputText = '';
 			var lines = text.split('\n');
 			var firstLine = true;
+			var count = 0;
 			lines.forEach((line) => {
+				if (count >= 3) {
+					console.log(inputText);
+					this.setState({
+						searchTerm: inputText
+					});
+					return;
+				}
 				if (!line.startsWith('#')) {
+					count++;
 					var cols = line.split('\t');
 					var pos = cols[1].split('_');
 					var start = pos[0];

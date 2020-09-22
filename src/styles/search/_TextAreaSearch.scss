@@ -14,13 +14,25 @@
 
 .wrapper{
   display:grid;
-  grid-template-columns: 50% 50%;
+  grid-template-columns: 1fr 1fr;
   /*
   grid-column-gap:1em;
   grid-row-gap:1em;
   */
   grid-auto-rows: minmax(100px, auto);
   grid-gap:1em;
+}
+
+@media only screen and (max-width:700) {
+  .wrapper{
+    display:grid;
+    grid-template-columns: 1fr;
+    grid-template-areas: 
+    "example"
+    "about"
+    "search"
+    "download";
+  }
 }
 
 // Search button-group
@@ -37,11 +49,15 @@
     }
   }
 }
-
+.button-page {
+  color: #fefefe;
+  background-color: #1779ba; 
+  border-radius:4px;
+}
 .button-primary {
   color: #fefefe;
   background-color: #1779ba; 
-  border-radius:6px;}
+  border-radius:4px;}
 
 .button-primary:hover {
     background-color: #d2dce3; 

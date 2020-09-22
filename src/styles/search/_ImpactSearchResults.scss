@@ -6,7 +6,36 @@
   table {
     // border: 1px solid $search-results-table-border-colour;
     // width: min-content;
-
+    a {
+      text-decoration: none;
+      display: inline-block;
+      padding: 8px 16px;
+    }
+    
+    a:hover {
+      background-color: #ddd;
+      color: white;
+    }
+    
+    .previous {
+      background-color: #1779ba;
+      color: black;
+    }
+    
+    .next {
+      background-color: #1779ba;
+      color: white;
+    }
+    
+    .pagination{
+      background-color: #fefefe;
+      color: #fefefe!important;
+      border-style: none;
+    }
+    .pagination a, .pagination button {
+      color: #fefefe!important;
+      padding:0.6rem;
+    }
     tr:nth-child(odd) {
       background-color: $search-results-table-zebra-background-colour;
     }

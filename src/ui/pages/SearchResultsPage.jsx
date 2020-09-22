@@ -6,13 +6,19 @@ import ImpactSearchResults from '../components/search/ImpactSearchResults';
 import Alert from '../components/other/Alert';
 
 const SearchResultsPageContent = (props) => {
-	const { searchResults, handleDownload, errors } = props;
+	const { searchResults, handleDownload, fetchNextPage, file, page, errors } = props;
 
 	return (
 		<Fragment>
 			{errors && errors.map((e) => <Alert {...e} key={window.btoa(e.message)} />)}
 
-			<ImpactSearchResults rows={searchResults} handleDownload={handleDownload} />
+			<ImpactSearchResults
+				rows={searchResults}
+				handleDownload={handleDownload}
+				fetchNextPage={fetchNextPage}
+				file={file}
+				page={page}
+			/>
 		</Fragment>
 	);
 };

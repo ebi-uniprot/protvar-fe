@@ -14,7 +14,8 @@ class ImpactSearchResults extends Component {
 	state = {
 		expandedRow: null,
 		showAllIsoforms: false,
-		openGroup: null
+		openGroup: null,
+		loading: false
 	};
 
 	toggleAllIsoforms = () => {
@@ -43,20 +44,37 @@ class ImpactSearchResults extends Component {
 		});
 	}
 
+	fetchNextPage(next) {
+		this.setState({
+			loading: true
+		});
+		var fetchNextPage = this.props.fetchNextPage;
+		var page = this.props.page;
+		if (next === 1) {
+			page.currentPage = page.currentPage + 1;
+		} else {
+			page.currentPage = page.currentPage - 1;
+		}
+		fetchNextPage(this.props.file, page);
+		this.setState({
+			loading: false
+		});
+	}
+
 	render() {
 		// const { rows, handleDownload } = this.props;
 
 		const rows = this.props.rows;
+		const page = this.props.page;
 		const handleDownload = this.props.handleDownload;
 
-		const { expandedRow, showAllIsoforms, openGroup } = this.state;
+		const { expandedRow, showAllIsoforms, openGroup, loading } = this.state;
 
 		let counter = 0;
 
 		return (
 			<div className="search-results">
 				<SearchResultsLegends />
-
 				<div className="results-and-counter">
 					<Button onClick={handleDownload}>Download</Button>
 					<Button onClick={this.toggleAllIsoforms}>
@@ -67,6 +85,23 @@ class ImpactSearchResults extends Component {
 
 				<table border="0" className="unstriped" cellPadding="0" cellSpacing="0">
 					<tbody>
+						<tr>
+							{page.currentPage === 1 ? (
+								<th className="pagination">
+									<Button onClick={() => null} className="button-disabled">
+										&laquo; Previous
+									</Button>
+								</th>
+							) : (
+								<th className="pagination">
+									<Button onClick={() => this.fetchNextPage(0)}>&laquo; Previous</Button>
+								</th>
+							)}
+							<th className="pagination">
+								<Button onClick={() => this.fetchNextPage(1)}>Next &raquo;</Button>
+							</th>
+						</tr>
+
 						<tr>
 							<th colSpan="2" rowSpan="2">
 								Gene Name

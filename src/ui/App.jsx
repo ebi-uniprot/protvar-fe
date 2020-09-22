@@ -20,7 +20,9 @@ class App extends Component {
 			searchTerm: null,
 			searchResults: null,
 			errors: null,
-			loading: false
+			loading: false,
+			file: {},
+			page: {}
 		};
 	}
 
@@ -189,12 +191,33 @@ class App extends Component {
 		return updateVariants;
 	}
 
-	handleSearch = (input) => {
+	readNextPageInput(uploadedFile, page) {
+		event.stopPropagation();
+		event.preventDefault();
+		var pageNumber = page.currentPage;
+		var skipRecord = (pageNumber - 1) * 3;
+		var reader = new FileReader();
+		var inputText = '';
+		reader.onload = async (e) => {
+			inputText = this.readFile(e, skipRecord, inputText);
+			this.setState({
+				searchTerm: inputText
+			});
+			this.handleSearch(inputText, uploadedFile, page);
+		};
+		reader.readAsText(uploadedFile);
+	}
+
+	fetchNextPage = (uploadedFile, page) => {
+		var input = this.readNextPageInput(uploadedFile, page);
+		// var input = '21 43072000 43072000 T/C . . .';
+		// this.handleSearch(input, uploadedFile, page);
+	};
+
+	handleSearch = (input, uploadedFile, page) => {
 		console.log('calling client');
 		const { history } = this.props;
-		this.setState({
-			loading: true
-		});
+		const { file } = this.setState;
 		// this.updater.enqueueForceUpdate(this);
 
 		var inputArr = input.split('\n');
@@ -466,13 +489,49 @@ class App extends Component {
 					searchTerm: input,
 					searchResults: output.results,
 					errors: output.errors,
-					loading: false
+					loading: false,
+					file: uploadedFile,
+					page: page
 				});
 
 				history.push('search');
 			});
 		console.log('calling client complete');
 	};
+
+	readFile(e, skipRecord, inputText) {
+		var text = e.target.result;
+
+		var lines = text.split('\n');
+		var firstLine = true;
+		var count = 0;
+		var recordsFetched = 0;
+		lines.forEach((line) => {
+			if (recordsFetched >= 3) {
+				return inputText;
+			}
+			if (!line.startsWith('#') && count > skipRecord) {
+				recordsFetched++;
+				var cols = line.split('\t');
+				var pos = cols[1].split('_');
+				var start = pos[0];
+				var end = pos[0];
+				if (pos.length > 1) {
+					end = pos[1];
+				}
+				if (firstLine) {
+					inputText += cols[0] + ' ' + start + ' ' + end + ' ' + cols[3] + '/' + cols[4] + ' ' + '. . .';
+					firstLine = false;
+				} else {
+					inputText +=
+						'\n' + cols[0] + ' ' + start + ' ' + end + ' ' + cols[3] + '/' + cols[4] + ' ' + '. . .';
+				}
+			} else {
+				count++;
+			}
+		});
+		return inputText;
+	}
 
 	getCSVRow(input, variant) {
 		var isAssociatedDisease = 'No';
@@ -718,7 +777,8 @@ class App extends Component {
 		const appProps = {
 			...this.state,
 			handleSearch: this.handleSearch,
-			handleDownload: this.handleDownload
+			handleDownload: this.handleDownload,
+			fetchNextPage: this.fetchNextPage
 		};
 
 		return (
