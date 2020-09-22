@@ -86,7 +86,7 @@ class ImpactSearchResults extends Component {
 				<table border="0" className="unstriped" cellPadding="0" cellSpacing="0">
 					<tbody>
 						<tr>
-							{page.currentPage === 1 ? (
+							{page === undefined || page.currentPage === 1 ? (
 								<th className="pagination">
 									<Button onClick={() => null} className="button-disabled">
 										&laquo; Previous
@@ -97,9 +97,17 @@ class ImpactSearchResults extends Component {
 									<Button onClick={() => this.fetchNextPage(0)}>&laquo; Previous</Button>
 								</th>
 							)}
-							<th className="pagination">
-								<Button onClick={() => this.fetchNextPage(1)}>Next &raquo;</Button>
-							</th>
+							{page === undefined || !page.nextPage ? (
+								<th className="pagination">
+									<Button onClick={() => null} className="button-disabled">
+										Next &raquo;
+									</Button>
+								</th>
+							) : (
+								<th className="pagination">
+									<Button onClick={() => this.fetchNextPage(1)}>Next &raquo;</Button>
+								</th>
+							)}
 						</tr>
 
 						<tr>

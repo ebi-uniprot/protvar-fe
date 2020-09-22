@@ -199,7 +199,7 @@ class App extends Component {
 		var reader = new FileReader();
 		var inputText = '';
 		reader.onload = async (e) => {
-			inputText = this.readFile(e, skipRecord, inputText);
+			inputText = this.readFile(e, skipRecord, inputText, page);
 			this.setState({
 				searchTerm: inputText
 			});
@@ -218,6 +218,9 @@ class App extends Component {
 		console.log('calling client');
 		const { history } = this.props;
 		const { file } = this.setState;
+		this.setState({
+			loading: true
+		});
 		// this.updater.enqueueForceUpdate(this);
 
 		var inputArr = input.split('\n');
@@ -499,7 +502,7 @@ class App extends Component {
 		console.log('calling client complete');
 	};
 
-	readFile(e, skipRecord, inputText) {
+	readFile(e, skipRecord, inputText, page) {
 		var text = e.target.result;
 
 		var lines = text.split('\n');
@@ -508,6 +511,16 @@ class App extends Component {
 		var recordsFetched = 0;
 		lines.forEach((line) => {
 			if (recordsFetched >= 3) {
+				var currPage = page.currentPage;
+				var prevPage = page.previousPage;
+				var newPage = {
+					currentPage: currPage,
+					nextPage: false,
+					previousPage: prevPage
+				};
+				this.setState({
+					page: newPage
+				});
 				return inputText;
 			}
 			if (!line.startsWith('#') && count > skipRecord) {

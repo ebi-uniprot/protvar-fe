@@ -28,8 +28,14 @@ class TextAreaSearch extends Component {
 	handleSubmit = (e) => {
 		const { searchTerm, file, page } = this.state;
 		const { onSubmit } = this.props;
+		var newPage = {
+			currentPage: 1,
+			nextPage: false,
+			previousPage: false
+		};
 		this.setState({
-			viewResultLabel: 'Loading..'
+			viewResultLabel: 'Loading..',
+			page: newPage
 		});
 		e.preventDefault();
 		e.stopPropagation();
