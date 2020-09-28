@@ -20,13 +20,13 @@ class DefaultPageLayout extends Component {
 					<a href="#content">Skip to main content</a>
 				</div>
 
-				{/* <header id="masthead-black-bar" className="clearfix masthead-black-bar">
+				<header id="masthead-black-bar" className="clearfix masthead-black-bar">
 					<nav className="row">
-						<ul id="global-nav" className="menu">
+						<ul id="global-nav" className="menu global-nav text-right">
 							<li className="home-mobile">
 								<a href="//www.ebi.ac.uk">EMBL-EBI</a>
 							</li>
-							<li className="home active">
+							<li className="home">
 								<a href="//www.ebi.ac.uk">EMBL-EBI</a>
 							</li>
 							<li className="services">
@@ -50,17 +50,22 @@ class DefaultPageLayout extends Component {
 									className="dropdown-pane"
 									data-dropdown
 									data-options="closeOnClick:true;"
-								>
-								</div>
+								/>
 							</li>
-							<li className="float-right show-for-medium embl-selector">
-								<button className="button float-right" type="button" data-toggle="embl-dropdown">
-									Hinxton
-								</button>
+							<li className="float-right search">
+								<a href="#" className="inline-block collpased float-left search-toggle">
+									<span className="show-for-small-only">Search</span>
+								</a>
+							</li>
+							<li
+								id="embl-selector"
+								className="float-right show-for-medium embl-selector embl-ebi active"
+							>
+								<button className="button float-right">&nbsp;</button>
 							</li>
 						</ul>
 					</nav>
-				</header> */}
+				</header>
 
 				{/* <!-- Suggested layout containers --> */}
 				<div id="content" className="content">
@@ -82,15 +87,6 @@ class DefaultPageLayout extends Component {
 												<a href={`${BASE_URL}/`} title="Back to PepVEP's homepage">
 													PepVEP
 												</a>
-											</li>
-											<li className="float-right show-for-medium embl-selector float-bottom">
-												<button
-													className="button float-right"
-													type="button"
-													data-toggle="embl-dropdown"
-												>
-													Hinxton
-												</button>
 											</li>
 										</ul>
 									</nav>

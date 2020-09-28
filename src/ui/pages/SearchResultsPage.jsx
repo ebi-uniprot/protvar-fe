@@ -6,7 +6,7 @@ import ImpactSearchResults from '../components/search/ImpactSearchResults';
 import Alert from '../components/other/Alert';
 
 const SearchResultsPageContent = (props) => {
-	const { searchResults, handleDownload, fetchNextPage, file, page, errors } = props;
+	const { searchResults, handleDownload, fetchNextPage, file, page, errors, loading } = props;
 
 	return (
 		<Fragment>
@@ -18,6 +18,7 @@ const SearchResultsPageContent = (props) => {
 				fetchNextPage={fetchNextPage}
 				file={file}
 				page={page}
+				loading={loading}
 			/>
 		</Fragment>
 	);

@@ -12,6 +12,7 @@ import {
 	variationPropTypes,
 	variationDefaultProps
 } from '../../other/sharedProps';
+import { DropdownButton } from 'franklin-sites';
 
 const ExpandedGenomicSignificance = (props) => {
 	const { data, variation, detailsLink, gene } = props;

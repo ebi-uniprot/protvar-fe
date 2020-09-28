@@ -1,11 +1,36 @@
 import React from 'react';
 
 const AboutSection = () => (
+	// <div className="card">
+	// 	<section className="card__actions">
+	// 		<span className="card-header">
+	// 			<p>
+	// 				<b>About PepVEP</b>
+	// 			</p>
+	// 		</span>
+	// 	</section>
+	// 	<section role="button">
+	// 		<div className="card__content">
+	// 			<section className="uniprot-card">
+	// 				<section className="uniprot-card__left">
+	// 					<span>
+	// 						PepVEP is an intuitive web resource for scientists to interpret the effects of genomic
+	// 						variants on protein function or structure per residue altered by a genomic variant. It
+	// 						unites existing genomic and protein EMBL-EBI expertise; providing functional information
+	// 						from the Variant Effect Predictor (VEP), UniProt functional residue annotation (Protein
+	// 						function), and PDBe structural residue annotation in an integrated platform.
+	// 					</span>
+	// 				</section>
+	// 			</section>
+	// 		</div>
+	// 	</section>
+	// </div>
+
 	<div className="card">
 		<section className="card__actions">
 			<span className="card-header">
 				<p>
-					<b>About PepVEP</b>
+					<b>Genome Assembly Remapping</b>
 				</p>
 			</span>
 		</section>
@@ -13,13 +38,17 @@ const AboutSection = () => (
 			<div className="card__content">
 				<section className="uniprot-card">
 					<section className="uniprot-card__left">
-						<span>
-							PepVEP is an intuitive web resource for scientists to interpret the effects of genomic
-							variants on protein function or structure per residue altered by a genomic variant. It
-							unites existing genomic and protein EMBL-EBI expertise; providing functional information
-							from the Variant Effect Predictor (VEP), UniProt functional residue annotation (Protein
-							function), and PDBe structural residue annotation in an integrated platform.
+						<span className="assemly-ref-note">
+							<b>Reference Genome Assembly: GRCh38 (hg38) </b>
 						</span>
+
+						<a
+							href="http://www.ensembl.org/Homo_sapiens/Tools/AssemblyConverter?db=core"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							Open Ensembl Assembly Remapping
+						</a>
 					</section>
 				</section>
 			</div>

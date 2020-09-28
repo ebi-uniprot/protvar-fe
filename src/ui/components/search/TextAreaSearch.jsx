@@ -40,7 +40,7 @@ class TextAreaSearch extends Component {
 		e.preventDefault();
 		e.stopPropagation();
 
-		onSubmit(searchTerm, file, page);
+		onSubmit(searchTerm, null, newPage, false);
 	};
 
 	clearForm = () => {
@@ -91,6 +91,13 @@ class TextAreaSearch extends Component {
 		}
 	};
 
+	viewResult(event) {
+		this.onChangeFile(event);
+		// const { searchTerm, file, page } = this.state;
+		// this.onSubmit(inputText, file, page);
+		// this.handleSubmit(event);
+	}
+
 	getAsText(fileToRead) {
 		var reader = new FileReader();
 		// Read file into memory as UTF-8
@@ -104,6 +111,7 @@ class TextAreaSearch extends Component {
 		event.stopPropagation();
 		event.preventDefault();
 		var file = event.target.files[0];
+		const { onSubmit } = this.props;
 		console.log(file);
 		var text = '';
 		var page = {
@@ -115,7 +123,8 @@ class TextAreaSearch extends Component {
 			isFileSelected: true,
 			fileName: file.name,
 			file: file,
-			page: page
+			page: page,
+			isFileSelected: true
 		});
 		var reader = new FileReader();
 		reader.onload = async (e) => {
@@ -124,12 +133,20 @@ class TextAreaSearch extends Component {
 			var lines = text.split('\n');
 			var firstLine = true;
 			var count = 0;
-			lines.forEach((line) => {
+			var breakLoop = false;
+			for (let line of lines) {
+				// lines.forEach((line) => {
+				if (breakLoop) {
+					break;
+				}
 				if (count >= 3) {
+					breakLoop = true;
 					console.log(inputText);
 					this.setState({
 						searchTerm: inputText
 					});
+					console.log('calling onsubmit');
+					onSubmit(inputText, file, page, false);
 					return;
 				}
 				if (!line.startsWith('#')) {
@@ -149,7 +166,7 @@ class TextAreaSearch extends Component {
 							'\n' + cols[0] + ' ' + start + ' ' + end + ' ' + cols[3] + '/' + cols[4] + ' ' + '. . .';
 					}
 				}
-			});
+			}
 			console.log(inputText);
 			this.setState({
 				searchTerm: inputText
@@ -165,6 +182,19 @@ class TextAreaSearch extends Component {
 		const { buttonLabel, isLoading } = this.props;
 		return (
 			<Fragment>
+				<div>
+					<h3 className="black-color margin-bottom-none vf-section-header__heading">
+						<div className="inline-block">About PEPVEP</div>
+					</h3>
+
+					<p>
+						PepVEP is an intuitive web resource for scientists to interpret the effects of genomic variants
+						on protein function or structure per residue altered by a genomic variant. It unites existing
+						genomic and protein EMBL-EBI expertise; providing functional information from the Variant Effect
+						Predictor (VEP), UniProt functional residue annotation (Protein function), and PDBe structural
+						residue annotation in an integrated platform.
+					</p>
+				</div>
 				<div className="wrapper">
 					<div id="example" className="card-table">
 						<ExampleSection />
@@ -177,7 +207,7 @@ class TextAreaSearch extends Component {
 							<section className="card__actions">
 								<span className="card-header">
 									<p>
-										<b>Interactive Search</b>
+										<b>Search</b>
 									</p>
 								</span>
 							</section>
@@ -209,7 +239,34 @@ class TextAreaSearch extends Component {
 														</Button>
 													)}
 
-													{searchTerm ? (
+													<input
+														id="myInput"
+														type="file"
+														style={{ display: 'none' }}
+														ref={(ref) => (this.upload = ref)}
+														onChange={this.viewResult.bind(this)}
+													/>
+													{!isFileSelected ? (
+														<Button
+															onClick={() => {
+																this.upload.click();
+															}}
+															className="button-primary"
+														>
+															Select File
+														</Button>
+													) : (
+														<Button
+															onClick={() => {
+																this.upload.click();
+															}}
+															className="button-primary"
+														>
+															Loading...
+														</Button>
+													)}
+
+													{/* {searchTerm ? (
 														<Button onClick={this.clearForm} className="button-primary">
 															Clear Input
 														</Button>
@@ -220,7 +277,7 @@ class TextAreaSearch extends Component {
 														>
 															Use Example Input
 														</Button>
-													)}
+													)} */}
 												</div>
 											</form>
 											{/* </div> */}
@@ -236,7 +293,7 @@ class TextAreaSearch extends Component {
 							<section className="card__actions">
 								<span className="card-header">
 									<p>
-										<b>Download</b>
+										<b>PepVEP REST API</b>
 									</p>
 								</span>
 							</section>
@@ -246,12 +303,17 @@ class TextAreaSearch extends Component {
 										<section className="uniprot-card__left">
 											<form onSubmit={this.handleSubmit}>
 												<p>
-													Only vcf file containing below input format is accepted<br /> 14
-													89993420 89993420 A/G . . .<br />
-													10 87933147 87933147 C/T . . .<br />
+													<b>What:</b> Extended REST API with a service providing genomic
+													coordinates of UniProtKB sequences, and other services providing
+													annotations imported and mapped from Large Scale data Sources (LSS),
+													such as 1000Genomes, ExAC, PeptideAtlas, MaxQB and HPA via the
+													variation, proteomics, and antigen services. <br />
+													<b>Why:</b> Access data sets mapped to UniProt and integrated
+													through a single service.<br />
+													<b>Documentation:</b>https://www.ebi.ac.uk/proteins/api/doc/ <br />
 												</p>
 
-												<p className="file-selected">
+												{/* <p className="file-selected">
 													<b>{fileName}</b>
 												</p>
 												<div id="search-button-group" className="search-button-group">
@@ -291,8 +353,8 @@ class TextAreaSearch extends Component {
 														<Button onClick={() => null} className="button-disabled">
 															Download Result
 														</Button>
-													)}
-												</div>
+													)} */}
+												{/* </div> */}
 											</form>
 										</section>
 									</section>
@@ -300,7 +362,7 @@ class TextAreaSearch extends Component {
 							</section>
 						</div>
 					</div>
-					<div>
+					{/* <div>
 						<span className="assemly-ref-note">
 							<b>Reference Genome Assembly: GRCh38 (hg38) </b>
 						</span>
@@ -312,7 +374,7 @@ class TextAreaSearch extends Component {
 						>
 							Open Ensembl Assembly Remapping
 						</a>
-					</div>
+					</div> */}
 				</div>
 			</Fragment>
 		);

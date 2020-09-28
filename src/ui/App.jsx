@@ -22,6 +22,7 @@ class App extends Component {
 			errors: null,
 			loading: false,
 			file: {},
+			isFileSelected: false,
 			page: {}
 		};
 	}
@@ -191,7 +192,7 @@ class App extends Component {
 		return updateVariants;
 	}
 
-	readNextPageInput(uploadedFile, page) {
+	readNextPageInput(uploadedFile, page, loading) {
 		event.stopPropagation();
 		event.preventDefault();
 		var pageNumber = page.currentPage;
@@ -199,27 +200,40 @@ class App extends Component {
 		var reader = new FileReader();
 		var inputText = '';
 		reader.onload = async (e) => {
-			inputText = this.readFile(e, skipRecord, inputText, page);
+			inputText = this.readFile(e, skipRecord, inputText, page, loading);
 			this.setState({
-				searchTerm: inputText
+				searchTerm: inputText,
+				loading: true
 			});
-			this.handleSearch(inputText, uploadedFile, page);
+			this.handleSearch(inputText, uploadedFile, this.state.page, true);
 		};
 		reader.readAsText(uploadedFile);
 	}
 
-	fetchNextPage = (uploadedFile, page) => {
-		var input = this.readNextPageInput(uploadedFile, page);
+	fetchNextPage = (uploadedFile, page, loading) => {
+		var input = this.readNextPageInput(uploadedFile, page, loading);
 		// var input = '21 43072000 43072000 T/C . . .';
 		// this.handleSearch(input, uploadedFile, page);
 	};
 
-	handleSearch = (input, uploadedFile, page) => {
+	handleSearch = (input, uploadedFile, newPage, loading) => {
 		console.log('calling client');
 		const { history } = this.props;
-		const { file } = this.setState;
+
+		var isFileSelected = false;
+		var loadingNew = true;
+		if (uploadedFile && loading) {
+			isFileSelected = true;
+			loadingNew = true;
+		}
+		if (uploadedFile && !loading) {
+			isFileSelected = true;
+			loadingNew = false;
+		}
 		this.setState({
-			loading: true
+			loading: loadingNew,
+			isFileSelected: isFileSelected,
+			page: newPage
 		});
 		// this.updater.enqueueForceUpdate(this);
 
@@ -229,10 +243,6 @@ class App extends Component {
 			query pepvepvariant($params: [String!]) {
 				pepvepvariant(pepVepInputs: $params) {
 					input
-					errors {
-						title
-						message
-					}
 					variants {
 						errors {
 							title
@@ -494,7 +504,7 @@ class App extends Component {
 					errors: output.errors,
 					loading: false,
 					file: uploadedFile,
-					page: page
+					page: newPage
 				});
 
 				history.push('search');
@@ -502,29 +512,38 @@ class App extends Component {
 		console.log('calling client complete');
 	};
 
-	readFile(e, skipRecord, inputText, page) {
+	readFile(e, skipRecord, inputText, page, loading) {
 		var text = e.target.result;
 
 		var lines = text.split('\n');
 		var firstLine = true;
 		var count = 0;
-		var recordsFetched = 0;
-		lines.forEach((line) => {
-			if (recordsFetched >= 3) {
-				var currPage = page.currentPage;
-				var prevPage = page.previousPage;
+		var recordsProcessed = 0;
+
+		var newPage = {
+			currentPage: page.currentPage,
+			previousPage: page.previousPage,
+			nextPage: false
+		};
+		this.setState({
+			page: newPage,
+			loading: true
+		});
+		for (let line of lines) {
+			if (recordsProcessed >= 3) {
 				var newPage = {
-					currentPage: currPage,
-					nextPage: false,
-					previousPage: prevPage
+					currentPage: page.currentPage,
+					previousPage: page.previousPage,
+					nextPage: true
 				};
 				this.setState({
-					page: newPage
+					page: newPage,
+					loading: true
 				});
 				return inputText;
 			}
 			if (!line.startsWith('#') && count > skipRecord) {
-				recordsFetched++;
+				recordsProcessed++;
 				var cols = line.split('\t');
 				var pos = cols[1].split('_');
 				var start = pos[0];
@@ -542,7 +561,7 @@ class App extends Component {
 			} else {
 				count++;
 			}
-		});
+		}
 		return inputText;
 	}
 

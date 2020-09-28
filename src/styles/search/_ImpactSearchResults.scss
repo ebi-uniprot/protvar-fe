@@ -3,6 +3,10 @@
 // ---------------------
 .search-results {
 
+  .button {
+    margin-right:1rem;
+  }
+  
   table {
     // border: 1px solid $search-results-table-border-colour;
     // width: min-content;
@@ -12,6 +16,9 @@
       padding: 8px 16px;
     }
     
+    .loader-border {
+      background-color:white!important;
+    }
     a:hover {
       background-color: #ddd;
       color: white;
@@ -21,7 +28,21 @@
       background-color: #1779ba;
       color: black;
     }
+
+    .button {
+      padding:0em;
+      margin-bottom: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .button-disabled {
+      pointer-events: none; 
+      background-color: #cccccc;
+    }
     
+    .button--toggle-isoforms {
+      margin-right: 1em;
+    }
     .next {
       background-color: #1779ba;
       color: white;
