@@ -253,7 +253,7 @@ class TextAreaSearch extends Component {
 															}}
 															className="button-primary"
 														>
-															Select File
+															Upload File
 														</Button>
 													) : (
 														<Button
