@@ -58,12 +58,19 @@ class ImpactSearchResults extends Component {
 		fetchNextPage(this.props.file, page, loading);
 	};
 
+	bulkDownload = (event) => {
+		var handleBulkDownload = this.props.handleBulkDownload;
+		handleBulkDownload(event, this.props.file);
+	};
+
 	render() {
 		// const { rows, handleDownload } = this.props;
 
 		const rows = this.props.rows;
 		const page = this.props.page;
+		const file = this.props.file;
 		const handleDownload = this.props.handleDownload;
+		const handleBulkDownload = this.props.handleBulkDownload;
 		const loading = this.props.loading;
 		const { expandedRow, showAllIsoforms, openGroup } = this.state;
 
@@ -73,7 +80,11 @@ class ImpactSearchResults extends Component {
 			<div className="search-results">
 				<SearchResultsLegends />
 				<div className="results-and-counter">
-					<Button onClick={handleDownload}>Download</Button>
+					{file == null ? (
+						<Button onClick={handleDownload}>Download</Button>
+					) : (
+						<Button onClick={this.bulkDownload}>Download</Button>
+					)}
 					<Button onClick={this.toggleAllIsoforms}>
 						{showAllIsoforms ? 'Hide ' : 'Show '}
 						Isoforms

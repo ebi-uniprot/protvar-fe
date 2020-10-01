@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Route, Switch, withRouter } from 'react-router-dom';
-import axios from 'axios';
+// import axios from 'axios';
+import axios, { post } from 'axios';
 
 import gql from 'graphql-tag';
 import { ApolloClient, client, InMemoryCache, ApolloProvider } from '@apollo/client';
@@ -27,219 +28,8 @@ class App extends Component {
 		};
 	}
 
-	createFunctionalSignificance(variant) {
-		var functionalSignificance = {};
-		functionalSignificance.features = variant.protein.features;
-		functionalSignificance.variationDetails = variant.variation.variationDetails;
-		functionalSignificance.colocatedVariants = variant.variation.proteinColocatedVariants;
-		return functionalSignificance;
-	}
-
-	createClinicalSignificance(variant) {
-		var clinicalSignificance = {};
-		if (variant.variation.clinicalSignificances !== undefined) {
-			clinicalSignificance.categories = variant.variation.clinicalSignificances.split(',');
-		}
-		// var associations = [];
-		// variant.variation.features.forEach((feature) => {
-		// 	associations.push(feature.association);
-		// });
-		clinicalSignificance.association = variant.variation.association;
-		clinicalSignificance.colocatedVariants = variant.variation.proteinColocatedVariants;
-		clinicalSignificance.variationDetails = variant.variation.variationDetails;
-		clinicalSignificance.colocatedVariantsCount = variant.variation.proteinColocatedVariantsCount;
-		clinicalSignificance.diseaseColocatedVariantsCount =
-			variant.variation.diseaseAssociatedproteinColocatedVariantsCount;
-
-		return clinicalSignificance;
-	}
-
-	createTranscriptSignificance(variant) {
-		var transcriptSignificances = [];
-		var transcriptSignificance = {};
-		var consequenceTerms = [];
-		if (variant.variation.consequence !== undefined) {
-			consequenceTerms.push(variant.variation.consequence);
-		}
-		transcriptSignificance.biotype = 'Protein Coding';
-		transcriptSignificance.polyphenPrediction = variant.variation.variationDetails.polyphenPrediction;
-		transcriptSignificance.polyphenScore = variant.variation.variationDetails.polyphenScore;
-		transcriptSignificance.siftPrediction = variant.variation.variationDetails.siftPrediction;
-		transcriptSignificance.siftScore = variant.variation.variationDetails.siftScore;
-		transcriptSignificance.mostSevereConsequence = variant.variation.consequence;
-		transcriptSignificance.consequenceTerms = consequenceTerms;
-		transcriptSignificance.colocatedVariants = variant.variation.proteinColocatedVariants;
-		if (variant.variation.clinicalSignificances !== undefined) {
-			transcriptSignificance.pathogenicity = variant.variation.clinicalSignificances.split(',');
-		}
-		transcriptSignificance.variationDetails = variant.variation.variationDetails;
-		transcriptSignificance.hgvsg = variant.gene.hgvsg;
-		transcriptSignificance.hgvsp = variant.gene.hgvsp;
-		transcriptSignificance.canonical = variant.protein.canonical;
-		transcriptSignificance.codons = variant.variation.codons;
-		transcriptSignificance.aminoAcids = variant.protein.variant;
-		transcriptSignificance.enstId = variant.gene.enstId;
-		transcriptSignificance.ensgId = variant.gene.ensgId;
-		transcriptSignificance.start = variant.protein.start;
-		transcriptSignificance.end = variant.protein.end;
-		transcriptSignificance.cosmicId = variant.variation.cosmicId;
-		transcriptSignificance.dbSNPId = variant.variation.dbSNPId;
-		transcriptSignificance.clinVarIds = variant.variation.clinVarIDs;
-		transcriptSignificance.colocatedVariantsCount = variant.variation.proteinColocatedVariantsCount;
-		transcriptSignificance.diseaseColocatedVariantsCount =
-			variant.variation.diseaseAssociatedproteinColocatedVariantsCount;
-		transcriptSignificance.redundantENSTs = variant.gene.redundantENSTs;
-		transcriptSignificance.mutationTasterScore = '';
-		transcriptSignificance.mutationTasterPrediction = '';
-		transcriptSignificance.lrtPrediction = '';
-		transcriptSignificance.lrtScore = 0.0;
-		transcriptSignificances.push(transcriptSignificance);
-		return transcriptSignificances;
-	}
-
-	createGenomicSignificance(variant) {
-		var genomic = {};
-		var consequencePrediction = {};
-		consequencePrediction.polyphenPrediction = variant.variation.variationDetails.polyphenPrediction;
-		consequencePrediction.polyphenScore = variant.variation.variationDetails.polyphenScore;
-		consequencePrediction.siftPrediction = variant.variation.variationDetails.siftPrediction;
-		consequencePrediction.siftScore = variant.variation.variationDetails.siftScore;
-		consequencePrediction.caddPhred = 0.0;
-		consequencePrediction.caddRaw = 0.0;
-
-		genomic.consequencePrediction = consequencePrediction;
-		genomic.variationDetails = variant.variation.variationDetails;
-		genomic.populationFrequencies = variant.variation.populationFrequencies;
-		// var frequencies = {};
-		// if (variant.variation.populationFrequencies == null) {
-		// 	return genomic;
-		// }
-		// variant.variation.populationFrequencies.forEach((popFreq) => {
-		// 	if (
-		// 		frequencies[popFreq.sourceName] === undefined &&
-		// 		popFreq !== undefined &&
-		// 		popFreq.frequencies.length > 0
-		// 	) {
-		// 		var freqUI = {};
-		// 		popFreq.frequencies.forEach((freq) => {
-		// 			var value = {};
-		// 			value.label = freq.label;
-		// 			value.value = freq.value;
-		// 			freqUI[freq.label] = value;
-		// 		});
-		// 		frequencies[popFreq.sourceName] = freqUI;
-		// 	}
-		// });
-		// genomic.populationFrequencies = frequencies;
-		return genomic;
-	}
-
-	createStructuralSignificance(variant) {
-		if (variant.structure === null) {
-			return null;
-		}
-		var accession = Object.keys(variant.structure);
-		if (variant.structure[accession].all_structures.length === 0) {
-			return null;
-		}
-		var structuralSignificance = {};
-		structuralSignificance.position = variant.protein.start;
-		structuralSignificance.proteinLength = variant.structure[accession].length;
-		structuralSignificance.allStructures = JSON.parse(JSON.stringify(variant.structure[accession].all_structures)); //{ ...variant.structure[accession].all_structures };
-		structuralSignificance.annotations = [ variant.structure[accession].annotations ];
-		structuralSignificance.ligands = variant.structure[accession].ligands.positions;
-		structuralSignificance.interactions = variant.structure[accession].interactions.positions;
-		structuralSignificance.structures = variant.structure[accession].structures.positions;
-		structuralSignificance.accession = accession[0];
-
-		if (Object.keys(structuralSignificance.allStructures).length > 0) {
-			Object.keys(structuralSignificance.allStructures).forEach((key) => {
-				var allStructure = structuralSignificance.allStructures[key];
-				allStructure.forEach((structure) => {
-					var residue = structure['residue_range'].split('-');
-					structure['start'] = parseInt(residue[0], 10);
-					structure['end'] = parseInt(residue[1], 10);
-				});
-			});
-		}
-		return structuralSignificance;
-	}
-
-	createSignificances(variants) {
-		var updateVariants = {
-			errors: [],
-			results: []
-		};
-		variants.forEach((variant) => {
-			if (variant.errors.length > 0) {
-				updateVariants.errors = variant.errors;
-			}
-			if (variant.variation != null) {
-				var significances = {};
-				var updateVariant = {};
-				significances.functional = this.createFunctionalSignificance(variant);
-				significances.structural = this.createStructuralSignificance(variant);
-				significances.genomic = this.createGenomicSignificance(variant);
-				significances.clinical = this.createClinicalSignificance(variant);
-				significances.transcript = this.createTranscriptSignificance(variant);
-				updateVariant.significances = significances;
-				updateVariant.protein = variant.protein;
-				updateVariant.gene = variant.gene;
-				updateVariant.variation = variant.variation;
-				updateVariants.results.push(updateVariant);
-			}
-		});
-		return updateVariants;
-	}
-
-	readNextPageInput(uploadedFile, page, loading) {
-		event.stopPropagation();
-		event.preventDefault();
-		var pageNumber = page.currentPage;
-		var skipRecord = (pageNumber - 1) * 3;
-		var reader = new FileReader();
-		var inputText = '';
-		reader.onload = async (e) => {
-			inputText = this.readFile(e, skipRecord, inputText, page, loading);
-			this.setState({
-				searchTerm: inputText,
-				loading: true
-			});
-			this.handleSearch(inputText, uploadedFile, this.state.page, true);
-		};
-		reader.readAsText(uploadedFile);
-	}
-
-	fetchNextPage = (uploadedFile, page, loading) => {
-		var input = this.readNextPageInput(uploadedFile, page, loading);
-		// var input = '21 43072000 43072000 T/C . . .';
-		// this.handleSearch(input, uploadedFile, page);
-	};
-
-	handleSearch = (input, uploadedFile, newPage, loading) => {
-		console.log('calling client');
-		const { history } = this.props;
-
-		var isFileSelected = false;
-		var loadingNew = true;
-		if (uploadedFile && loading) {
-			isFileSelected = true;
-			loadingNew = true;
-		}
-		if (uploadedFile && !loading) {
-			isFileSelected = true;
-			loadingNew = false;
-		}
-		this.setState({
-			loading: loadingNew,
-			isFileSelected: isFileSelected,
-			page: newPage
-		});
-		// this.updater.enqueueForceUpdate(this);
-
-		var inputArr = input.split('\n');
-		console.log(inputArr);
-		const GET_VARIANTS = gql`
+	getQuery() {
+		var query = gql`
 			query pepvepvariant($params: [String!]) {
 				pepvepvariant(pepVepInputs: $params) {
 					input
@@ -457,6 +247,221 @@ class App extends Component {
 				}
 			}
 		`;
+		return query;
+	}
+
+	createFunctionalSignificance(variant) {
+		var functionalSignificance = {};
+		functionalSignificance.features = variant.protein.features;
+		functionalSignificance.variationDetails = variant.variation.variationDetails;
+		functionalSignificance.colocatedVariants = variant.variation.proteinColocatedVariants;
+		return functionalSignificance;
+	}
+
+	createClinicalSignificance(variant) {
+		var clinicalSignificance = {};
+		if (variant.variation.clinicalSignificances !== undefined) {
+			clinicalSignificance.categories = variant.variation.clinicalSignificances.split(',');
+		}
+		// var associations = [];
+		// variant.variation.features.forEach((feature) => {
+		// 	associations.push(feature.association);
+		// });
+		clinicalSignificance.association = variant.variation.association;
+		clinicalSignificance.colocatedVariants = variant.variation.proteinColocatedVariants;
+		clinicalSignificance.variationDetails = variant.variation.variationDetails;
+		clinicalSignificance.colocatedVariantsCount = variant.variation.proteinColocatedVariantsCount;
+		clinicalSignificance.diseaseColocatedVariantsCount =
+			variant.variation.diseaseAssociatedproteinColocatedVariantsCount;
+
+		return clinicalSignificance;
+	}
+
+	createTranscriptSignificance(variant) {
+		var transcriptSignificances = [];
+		var transcriptSignificance = {};
+		var consequenceTerms = [];
+		if (variant.variation.consequence !== undefined) {
+			consequenceTerms.push(variant.variation.consequence);
+		}
+		transcriptSignificance.biotype = 'Protein Coding';
+		transcriptSignificance.polyphenPrediction = variant.variation.variationDetails.polyphenPrediction;
+		transcriptSignificance.polyphenScore = variant.variation.variationDetails.polyphenScore;
+		transcriptSignificance.siftPrediction = variant.variation.variationDetails.siftPrediction;
+		transcriptSignificance.siftScore = variant.variation.variationDetails.siftScore;
+		transcriptSignificance.mostSevereConsequence = variant.variation.consequence;
+		transcriptSignificance.consequenceTerms = consequenceTerms;
+		transcriptSignificance.colocatedVariants = variant.variation.proteinColocatedVariants;
+		if (variant.variation.clinicalSignificances !== undefined) {
+			transcriptSignificance.pathogenicity = variant.variation.clinicalSignificances.split(',');
+		}
+		transcriptSignificance.variationDetails = variant.variation.variationDetails;
+		transcriptSignificance.hgvsg = variant.gene.hgvsg;
+		transcriptSignificance.hgvsp = variant.gene.hgvsp;
+		transcriptSignificance.canonical = variant.protein.canonical;
+		transcriptSignificance.codons = variant.variation.codons;
+		transcriptSignificance.aminoAcids = variant.protein.variant;
+		transcriptSignificance.enstId = variant.gene.enstId;
+		transcriptSignificance.ensgId = variant.gene.ensgId;
+		transcriptSignificance.start = variant.protein.start;
+		transcriptSignificance.end = variant.protein.end;
+		transcriptSignificance.cosmicId = variant.variation.cosmicId;
+		transcriptSignificance.dbSNPId = variant.variation.dbSNPId;
+		transcriptSignificance.clinVarIds = variant.variation.clinVarIDs;
+		transcriptSignificance.colocatedVariantsCount = variant.variation.proteinColocatedVariantsCount;
+		transcriptSignificance.diseaseColocatedVariantsCount =
+			variant.variation.diseaseAssociatedproteinColocatedVariantsCount;
+		transcriptSignificance.redundantENSTs = variant.gene.redundantENSTs;
+		transcriptSignificance.mutationTasterScore = '';
+		transcriptSignificance.mutationTasterPrediction = '';
+		transcriptSignificance.lrtPrediction = '';
+		transcriptSignificance.lrtScore = 0.0;
+		transcriptSignificances.push(transcriptSignificance);
+		return transcriptSignificances;
+	}
+
+	createGenomicSignificance(variant) {
+		var genomic = {};
+		var consequencePrediction = {};
+		consequencePrediction.polyphenPrediction = variant.variation.variationDetails.polyphenPrediction;
+		consequencePrediction.polyphenScore = variant.variation.variationDetails.polyphenScore;
+		consequencePrediction.siftPrediction = variant.variation.variationDetails.siftPrediction;
+		consequencePrediction.siftScore = variant.variation.variationDetails.siftScore;
+		consequencePrediction.caddPhred = 0.0;
+		consequencePrediction.caddRaw = 0.0;
+
+		genomic.consequencePrediction = consequencePrediction;
+		genomic.variationDetails = variant.variation.variationDetails;
+		genomic.populationFrequencies = variant.variation.populationFrequencies;
+		// var frequencies = {};
+		// if (variant.variation.populationFrequencies == null) {
+		// 	return genomic;
+		// }
+		// variant.variation.populationFrequencies.forEach((popFreq) => {
+		// 	if (
+		// 		frequencies[popFreq.sourceName] === undefined &&
+		// 		popFreq !== undefined &&
+		// 		popFreq.frequencies.length > 0
+		// 	) {
+		// 		var freqUI = {};
+		// 		popFreq.frequencies.forEach((freq) => {
+		// 			var value = {};
+		// 			value.label = freq.label;
+		// 			value.value = freq.value;
+		// 			freqUI[freq.label] = value;
+		// 		});
+		// 		frequencies[popFreq.sourceName] = freqUI;
+		// 	}
+		// });
+		// genomic.populationFrequencies = frequencies;
+		return genomic;
+	}
+
+	createStructuralSignificance(variant) {
+		if (variant.structure === null) {
+			return null;
+		}
+		var accession = Object.keys(variant.structure);
+		if (variant.structure[accession].all_structures.length === 0) {
+			return null;
+		}
+		var structuralSignificance = {};
+		structuralSignificance.position = variant.protein.start;
+		structuralSignificance.proteinLength = variant.structure[accession].length;
+		structuralSignificance.allStructures = JSON.parse(JSON.stringify(variant.structure[accession].all_structures)); //{ ...variant.structure[accession].all_structures };
+		structuralSignificance.annotations = [ variant.structure[accession].annotations ];
+		structuralSignificance.ligands = variant.structure[accession].ligands.positions;
+		structuralSignificance.interactions = variant.structure[accession].interactions.positions;
+		structuralSignificance.structures = variant.structure[accession].structures.positions;
+		structuralSignificance.accession = accession[0];
+
+		if (Object.keys(structuralSignificance.allStructures).length > 0) {
+			Object.keys(structuralSignificance.allStructures).forEach((key) => {
+				var allStructure = structuralSignificance.allStructures[key];
+				allStructure.forEach((structure) => {
+					var residue = structure['residue_range'].split('-');
+					structure['start'] = parseInt(residue[0], 10);
+					structure['end'] = parseInt(residue[1], 10);
+				});
+			});
+		}
+		return structuralSignificance;
+	}
+
+	createSignificances(variants) {
+		var updateVariants = {
+			errors: [],
+			results: []
+		};
+		variants.forEach((variant) => {
+			if (variant.errors.length > 0) {
+				updateVariants.errors = variant.errors;
+			}
+			if (variant.variation != null) {
+				var significances = {};
+				var updateVariant = {};
+				significances.functional = this.createFunctionalSignificance(variant);
+				significances.structural = this.createStructuralSignificance(variant);
+				significances.genomic = this.createGenomicSignificance(variant);
+				significances.clinical = this.createClinicalSignificance(variant);
+				significances.transcript = this.createTranscriptSignificance(variant);
+				updateVariant.significances = significances;
+				updateVariant.protein = variant.protein;
+				updateVariant.gene = variant.gene;
+				updateVariant.variation = variant.variation;
+				updateVariants.results.push(updateVariant);
+			}
+		});
+		return updateVariants;
+	}
+
+	readNextPageInput(uploadedFile, page, loading) {
+		event.stopPropagation();
+		event.preventDefault();
+		var pageNumber = page.currentPage;
+		var skipRecord = (pageNumber - 1) * 3;
+		var reader = new FileReader();
+		var inputText = '';
+		reader.onload = async (e) => {
+			inputText = this.readFile(e, skipRecord, inputText, page, loading);
+			this.setState({
+				searchTerm: inputText,
+				loading: true
+			});
+			this.handleSearch(inputText, uploadedFile, this.state.page, true);
+		};
+		reader.readAsText(uploadedFile);
+	}
+
+	fetchNextPage = (uploadedFile, page, loading) => {
+		var input = this.readNextPageInput(uploadedFile, page, loading);
+		// var input = '21 43072000 43072000 T/C . . .';
+		// this.handleSearch(input, uploadedFile, page);
+	};
+
+	handleSearch = (input, uploadedFile, newPage, loading) => {
+		console.log('calling client');
+		const { history } = this.props;
+
+		var isFileSelected = false;
+		var loadingNew = true;
+		if (uploadedFile && loading) {
+			isFileSelected = true;
+			loadingNew = true;
+		}
+		if (uploadedFile && !loading) {
+			isFileSelected = true;
+			loadingNew = false;
+		}
+		this.setState({
+			loading: loadingNew,
+			isFileSelected: isFileSelected,
+			page: newPage
+		});
+		// this.updater.enqueueForceUpdate(this);
+		const GET_VARIANTS = this.getQuery();
+		var inputArr = input.split('\n');
+		console.log(inputArr);
 
 		const client = new ApolloClient({
 			cache: new InMemoryCache(),
@@ -791,12 +796,6 @@ class App extends Component {
 				}
 			});
 		});
-		// apiResults.data.pepvepvariant.forEach((element) => {
-		// 	console.log(element.input);
-		// 	element.variants.forEach((variant) => {
-		// 		outputCsv = outputCsv + this.getCSVRow(element.input, variant);
-		// 	});
-		// });
 		const url = window.URL.createObjectURL(new Blob([ outputCsv ]));
 		const link = document.createElement('a');
 		link.href = url;
@@ -805,12 +804,104 @@ class App extends Component {
 		link.click();
 	};
 
+	// handleBulkDownload = (e, uploadedFile) => {
+	// 	e.preventDefault(); // Stop form submit
+
+	// 	const url = 'http://localhost:8091/api/download';
+	// 	const formData = new FormData();
+	// 	formData.append('file', uploadedFile);
+	// 	const config = {
+	// 		headers: {
+	// 			'content-type': 'multipart/form-data',
+	// 			responseType: 'blob'
+	// 		}
+	// 	};
+
+	// this.fileUpload(uploadedFile).then((response) => {
+	// 	//Create a Blob from the PDF Stream
+	// 	const file = new Blob([ response.data ], { type: 'application/zip' });
+	// 	//Build a URL from the file
+	// 	const fileURL = URL.createObjectURL(file);
+	// 	//Open the URL on new Window
+	// 	window.open(fileURL);
+	// });
+	// 	this.getData([ '21 43060540 43060540 C/T . . .' ]).then((response) => {
+	// 		const file = new Blob([ response.data ], { type: 'application/zip' });
+	// 		const fileURL = URL.createObjectURL(file);
+	// 		window.open(fileURL);
+	// 	});
+	// };
+
+	// handleBulkDownload = (e, uploadedFile) => {
+	// 	e.preventDefault(); // Stop form submit
+
+	// 	const url = 'http://localhost:8091/api/download';
+	// 	const formData = new FormData();
+	// 	formData.append('file', uploadedFile);
+	// 	const config = {
+	// 		headers: {
+	// 			'content-type': 'multipart/form-data',
+	// 			responseType: 'blob'
+	// 		}
+	// 	};
+	// 	axios
+	// 		.post(url, formData, {
+	// 			'content-type': 'multipart/form-data',
+	// 			method: 'POST',
+	// 			responseType: 'blob' //Force to receive data in a Blob Format
+	// 		})
+	// 		.then((response) => {
+	// 			//Create a Blob from the PDF Stream
+	// 			const file = new Blob([ response.data ], { type: 'application/zip' });
+	// 			//Build a URL from the file
+	// 			const fileURL = URL.createObjectURL(file);
+	// 			//Open the URL on new Window
+	// 			window.open(fileURL);
+	// 		})
+	// 		.catch((error) => {
+	// 			console.log(error);
+	// 		});
+	// };
+
+	handleBulkDownload = (e, file) => {
+		this.fileUpload(file).then((response) => {
+			console.log('File uploaded successfully ', response);
+			let a = document.createElement('a');
+			a.href = 'http://localhost:8091/api/download/' + response.data + '/';
+			a.download = 'pepvep.zip';
+			a.click();
+		});
+	};
+
+	getData(input) {
+		const url = 'http://localhost:8091/fetch';
+		const config = {
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		};
+		return post(url, input, config);
+	}
+
+	fileUpload(file) {
+		const url = 'http://localhost:8091/api/upload';
+		const formData = new FormData();
+		formData.append('file', file);
+		const config = {
+			headers: {
+				'content-type': 'multipart/form-data'
+			}
+		};
+		return post(url, formData, config);
+	}
+
 	render() {
 		const appProps = {
 			...this.state,
 			handleSearch: this.handleSearch,
 			handleDownload: this.handleDownload,
-			fetchNextPage: this.fetchNextPage
+			fetchNextPage: this.fetchNextPage,
+			handleBulkDownload: this.handleBulkDownload
 		};
 
 		return (

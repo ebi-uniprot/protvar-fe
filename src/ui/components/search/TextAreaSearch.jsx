@@ -188,11 +188,12 @@ class TextAreaSearch extends Component {
 					</h3>
 
 					<p>
-						PepVEP is an intuitive web resource for scientists to interpret the effects of genomic variants
-						on protein function or structure per residue altered by a genomic variant. It unites existing
-						genomic and protein EMBL-EBI expertise; providing functional information from the Variant Effect
-						Predictor (VEP), UniProt functional residue annotation (Protein function), and PDBe structural
-						residue annotation in an integrated platform.
+						PepVEP is an intuitive web resource for scientists to interpret the effects per residue of
+						genomic variants on protein function or structure. It unites existing genomic and protein
+						EMBL-EBI expertise; providing functional information from the Variant Effect Predictor (VEP),
+						UniProt functional residue annotation (Protein function), and PDBe structural residue annotation
+						in an integrated platform. PepVEP can be used as an interactive service or computationally via
+						it's API.
 					</p>
 				</div>
 				<div className="wrapper">
@@ -303,14 +304,14 @@ class TextAreaSearch extends Component {
 										<section className="uniprot-card__left">
 											<form onSubmit={this.handleSubmit}>
 												<p>
-													<b>What:</b> Extended REST API with a service providing genomic
-													coordinates of UniProtKB sequences, and other services providing
-													annotations imported and mapped from Large Scale data Sources (LSS),
-													such as 1000Genomes, ExAC, PeptideAtlas, MaxQB and HPA via the
-													variation, proteomics, and antigen services. <br />
+													<b>What:</b> Extended REST API service that unites data from
+													Genomic, Protein, Variation and PDBe services and provides users
+													with impacts and consequences of variants. <br />
 													<b>Why:</b> Access data sets mapped to UniProt and integrated
 													through a single service.<br />
-													<b>Documentation:</b>https://www.ebi.ac.uk/proteins/api/doc/ <br />
+													<b>
+														Documentation:
+													</b>http://wwwdev.ebi.ac.uk/uniprot/pepvep/api/#docs/ <br />
 												</p>
 
 												{/* <p className="file-selected">

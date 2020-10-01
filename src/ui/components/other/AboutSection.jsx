@@ -41,13 +41,18 @@ const AboutSection = () => (
 						<span className="assemly-ref-note">
 							<b>Reference Genome Assembly: GRCh38 (hg38) </b>
 						</span>
+						<p>
+							PepVEP variant interpretation is based upon the latest human genome assembly GRCh38(hg38).
+							If your variants are referenced to GRCh37(hg19) you will need to remap your variants to the
+							latest assembly. We recommend using:
+						</p>
 
 						<a
 							href="http://www.ensembl.org/Homo_sapiens/Tools/AssemblyConverter?db=core"
 							target="_blank"
 							rel="noopener noreferrer"
 						>
-							Open Ensembl Assembly Remapping
+							Ensembl's Assembly Remapping service
 						</a>
 					</section>
 				</section>
