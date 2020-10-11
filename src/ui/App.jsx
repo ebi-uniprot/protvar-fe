@@ -120,8 +120,6 @@ class App extends Component {
 								}
 								evidences {
 									code
-									sourceUrl
-									sourceAlternativeUrl
 									label
 									source {
 										name
@@ -465,8 +463,8 @@ class App extends Component {
 
 		const client = new ApolloClient({
 			cache: new InMemoryCache(),
+			//uri: 'http://localhost:8091/service/api/graphql'
 			uri: 'http://localhost:8091/graphql'
-			// uri: 'http://localhost:8080/pepvep-service/graphql'
 			// uri: 'http://wp-np2-ca:8080/pepvep-service/graphql'
 		});
 
@@ -605,7 +603,7 @@ class App extends Component {
 				if (feature.evidences != null && feature.evidences.length > 0) {
 					const featureEvidences = [];
 					feature.evidences.forEach((featureEvidence) => {
-						featureEvidences.push(`${featureEvidence.sourceName}:${featureEvidence.sourceId}`);
+						featureEvidences.push(`${featureEvidence.source.name}:${featureEvidence.source.id}`);
 					});
 
 					if (featureEvidences.length > 0) {
