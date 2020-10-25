@@ -92,7 +92,17 @@ class TextAreaSearch extends Component {
 	};
 
 	viewResult(event) {
-		this.onChangeFile(event);
+		var file = event.target.files[0];
+		var fetchNextPage = this.props.fetchNextPage;
+		var page = {
+			currentPage: 1,
+			nextPage: true,
+			previousPage: false
+		};
+		fetchNextPage(file, page, true);
+
+		// this.onChangeFile(event);
+
 		// const { searchTerm, file, page } = this.state;
 		// this.onSubmit(inputText, file, page);
 		// this.handleSubmit(event);

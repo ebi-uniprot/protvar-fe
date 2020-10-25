@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Route, Switch, withRouter } from 'react-router-dom';
 // import axios from 'axios';
 import axios, { post } from 'axios';
+import PapaParse from 'papaparse';
 
 import gql from 'graphql-tag';
 import { ApolloClient, client, InMemoryCache, ApolloProvider } from '@apollo/client';
@@ -53,7 +54,6 @@ class App extends Component {
 							strand
 							hgvsg
 							hgvsp
-							codons
 							hasENSP
 							hasENST
 						}
@@ -89,7 +89,6 @@ class App extends Component {
 										alternativeUrl
 									}
 								}
-								ftId
 							}
 						}
 						variation {
@@ -413,30 +412,6 @@ class App extends Component {
 		return updateVariants;
 	}
 
-	readNextPageInput(uploadedFile, page, loading) {
-		event.stopPropagation();
-		event.preventDefault();
-		var pageNumber = page.currentPage;
-		var skipRecord = (pageNumber - 1) * 3;
-		var reader = new FileReader();
-		var inputText = '';
-		reader.onload = async (e) => {
-			inputText = this.readFile(e, skipRecord, inputText, page, loading);
-			this.setState({
-				searchTerm: inputText,
-				loading: true
-			});
-			this.handleSearch(inputText, uploadedFile, this.state.page, true);
-		};
-		reader.readAsText(uploadedFile);
-	}
-
-	fetchNextPage = (uploadedFile, page, loading) => {
-		var input = this.readNextPageInput(uploadedFile, page, loading);
-		// var input = '21 43072000 43072000 T/C . . .';
-		// this.handleSearch(input, uploadedFile, page);
-	};
-
 	handleSearch = (input, uploadedFile, newPage, loading) => {
 		console.log('calling client');
 		const { history } = this.props;
@@ -515,57 +490,61 @@ class App extends Component {
 		console.log('calling client complete');
 	};
 
-	readFile(e, skipRecord, inputText, page, loading) {
-		var text = e.target.result;
-
-		var lines = text.split('\n');
-		var firstLine = true;
+	fetchNextPage = (uploadedFile, page, loading) => {
+		var pageNumber = page.currentPage;
+		const PAGE_SIZE = 3;
+		var skipRecord = (pageNumber - 1) * PAGE_SIZE;
 		var count = 0;
 		var recordsProcessed = 0;
-
-		var newPage = {
-			currentPage: page.currentPage,
-			previousPage: page.previousPage,
-			nextPage: false
-		};
-		this.setState({
-			page: newPage,
-			loading: true
-		});
-		for (let line of lines) {
-			if (recordsProcessed >= 3) {
-				var newPage = {
-					currentPage: page.currentPage,
-					previousPage: page.previousPage,
-					nextPage: true
-				};
-				this.setState({
-					page: newPage,
-					loading: true
-				});
-				return inputText;
-			}
-			if (!line.startsWith('#') && count > skipRecord) {
-				recordsProcessed++;
-				var cols = line.split('\t');
-				var pos = cols[1].split('_');
-				var start = pos[0];
-				var end = pos[0];
-				if (pos.length > 1) {
-					end = pos[1];
+		var firstLine = true;
+		var inputText = '';
+		// var numberOfLinesToRead = skipRecord + PAGE_SIZE;
+		PapaParse.parse(uploadedFile, {
+			// preview: numberOfLinesToRead,
+			step: (row, parser) => {
+				if (recordsProcessed >= PAGE_SIZE) {
+					var newPage = {
+						currentPage: page.currentPage,
+						previousPage: page.previousPage,
+						nextPage: true
+					};
+					this.setState({
+						page: newPage,
+						searchTerm: inputText,
+						loading: loading
+					});
+					// this.handleSearch(inputText, uploadedFile, this.state.page, true);
+					parser.abort();
 				}
-				if (firstLine) {
-					inputText += cols[0] + ' ' + start + ' ' + end + ' ' + cols[3] + '/' + cols[4] + ' ' + '. . .';
-					firstLine = false;
+				if (!row.data[0].startsWith('#') && count > skipRecord) {
+					recordsProcessed++;
+					if (firstLine) {
+						inputText += this.createCsvString(row.data);
+						firstLine = false;
+					} else {
+						inputText += '\n' + this.createCsvString(row.data);
+					}
+					console.log('Row:', row.data);
 				} else {
-					inputText +=
-						'\n' + cols[0] + ' ' + start + ' ' + end + ' ' + cols[3] + '/' + cols[4] + ' ' + '. . .';
+					count++;
 				}
-			} else {
-				count++;
+			},
+			complete: () => {
+				console.log('All done!');
+				this.handleSearch(inputText, uploadedFile, this.state.page, true);
 			}
+		});
+	};
+
+	createCsvString(rowArr) {
+		// var cols = line.split('\t');
+		var pos = rowArr[1].split('_');
+		var start = pos[0];
+		var end = pos[0];
+		if (pos.length > 1) {
+			end = pos[1];
 		}
-		return inputText;
+		return rowArr[0] + ' ' + start + ' ' + end + ' ' + rowArr[3] + '/' + rowArr[4] + ' ' + '. . .';
 	}
 
 	getCSVRow(input, variant) {
@@ -802,87 +781,18 @@ class App extends Component {
 		link.click();
 	};
 
-	// handleBulkDownload = (e, uploadedFile) => {
-	// 	e.preventDefault(); // Stop form submit
-
-	// 	const url = 'http://localhost:8091/api/download';
-	// 	const formData = new FormData();
-	// 	formData.append('file', uploadedFile);
-	// 	const config = {
-	// 		headers: {
-	// 			'content-type': 'multipart/form-data',
-	// 			responseType: 'blob'
-	// 		}
-	// 	};
-
-	// this.fileUpload(uploadedFile).then((response) => {
-	// 	//Create a Blob from the PDF Stream
-	// 	const file = new Blob([ response.data ], { type: 'application/zip' });
-	// 	//Build a URL from the file
-	// 	const fileURL = URL.createObjectURL(file);
-	// 	//Open the URL on new Window
-	// 	window.open(fileURL);
-	// });
-	// 	this.getData([ '21 43060540 43060540 C/T . . .' ]).then((response) => {
-	// 		const file = new Blob([ response.data ], { type: 'application/zip' });
-	// 		const fileURL = URL.createObjectURL(file);
-	// 		window.open(fileURL);
-	// 	});
-	// };
-
-	// handleBulkDownload = (e, uploadedFile) => {
-	// 	e.preventDefault(); // Stop form submit
-
-	// 	const url = 'http://localhost:8091/api/download';
-	// 	const formData = new FormData();
-	// 	formData.append('file', uploadedFile);
-	// 	const config = {
-	// 		headers: {
-	// 			'content-type': 'multipart/form-data',
-	// 			responseType: 'blob'
-	// 		}
-	// 	};
-	// 	axios
-	// 		.post(url, formData, {
-	// 			'content-type': 'multipart/form-data',
-	// 			method: 'POST',
-	// 			responseType: 'blob' //Force to receive data in a Blob Format
-	// 		})
-	// 		.then((response) => {
-	// 			//Create a Blob from the PDF Stream
-	// 			const file = new Blob([ response.data ], { type: 'application/zip' });
-	// 			//Build a URL from the file
-	// 			const fileURL = URL.createObjectURL(file);
-	// 			//Open the URL on new Window
-	// 			window.open(fileURL);
-	// 		})
-	// 		.catch((error) => {
-	// 			console.log(error);
-	// 		});
-	// };
-
 	handleBulkDownload = (e, file) => {
 		this.fileUpload(file).then((response) => {
 			console.log('File uploaded successfully ', response);
 			let a = document.createElement('a');
-			a.href = 'http://localhost:8091/api/download/' + response.data + '/';
+			a.href = 'http://localhost:8091/variant/download/' + response.data + '/';
 			a.download = 'pepvep.zip';
 			a.click();
 		});
 	};
 
-	getData(input) {
-		const url = 'http://localhost:8091/fetch';
-		const config = {
-			headers: {
-				'Content-Type': 'application/json'
-			}
-		};
-		return post(url, input, config);
-	}
-
 	fileUpload(file) {
-		const url = 'http://localhost:8091/api/upload';
+		const url = 'http://localhost:8091/variant/upload';
 		const formData = new FormData();
 		formData.append('file', file);
 		const config = {

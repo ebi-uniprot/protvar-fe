@@ -5,11 +5,16 @@ import DefaultPageLayout from '../layout/DefaultPageLayout';
 import TextAreaSearch from '../components/search/TextAreaSearch';
 
 const HomePageContent = (props) => {
-	const { handleSearch, loading, isFileSelected } = props;
+	const { handleSearch, loading, isFileSelected, fetchNextPage } = props;
 
 	return (
 		<Fragment>
-			<TextAreaSearch onSubmit={handleSearch} isLoading={loading} isFileSelected={isFileSelected} />
+			<TextAreaSearch
+				onSubmit={handleSearch}
+				isLoading={loading}
+				isFileSelected={isFileSelected}
+				fetchNextPage={fetchNextPage}
+			/>
 		</Fragment>
 	);
 };
