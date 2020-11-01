@@ -40,7 +40,7 @@ class TextAreaSearch extends Component {
 		e.preventDefault();
 		e.stopPropagation();
 
-		onSubmit(searchTerm, null, newPage, false);
+		onSubmit(searchTerm, null, newPage, true);
 	};
 
 	clearForm = () => {
@@ -99,7 +99,10 @@ class TextAreaSearch extends Component {
 			nextPage: true,
 			previousPage: false
 		};
-		fetchNextPage(file, page, true);
+		this.setState({
+			isFileSelected: true
+		});
+		fetchNextPage(file, page, true, false);
 
 		// this.onChangeFile(event);
 
@@ -115,76 +118,6 @@ class TextAreaSearch extends Component {
 		// Handle errors load
 		reader.onload = this.fileReadingFinished;
 		reader.onerror = this.errorHandler;
-	}
-
-	onChangeFile(event) {
-		event.stopPropagation();
-		event.preventDefault();
-		var file = event.target.files[0];
-		const { onSubmit } = this.props;
-		console.log(file);
-		var text = '';
-		var page = {
-			currentPage: 1,
-			nextPage: true,
-			previousPage: false
-		};
-		this.setState({
-			isFileSelected: true,
-			fileName: file.name,
-			file: file,
-			page: page,
-			isFileSelected: true
-		});
-		var reader = new FileReader();
-		reader.onload = async (e) => {
-			text = e.target.result;
-			var inputText = '';
-			var lines = text.split('\n');
-			var firstLine = true;
-			var count = 0;
-			var breakLoop = false;
-			for (let line of lines) {
-				// lines.forEach((line) => {
-				if (breakLoop) {
-					break;
-				}
-				if (count >= 3) {
-					breakLoop = true;
-					console.log(inputText);
-					this.setState({
-						searchTerm: inputText
-					});
-					console.log('calling onsubmit');
-					onSubmit(inputText, file, page, false);
-					return;
-				}
-				if (!line.startsWith('#')) {
-					count++;
-					var cols = line.split('\t');
-					var pos = cols[1].split('_');
-					var start = pos[0];
-					var end = pos[0];
-					if (pos.length > 1) {
-						end = pos[1];
-					}
-					if (firstLine) {
-						inputText += cols[0] + ' ' + start + ' ' + end + ' ' + cols[3] + '/' + cols[4] + ' ' + '. . .';
-						firstLine = false;
-					} else {
-						inputText +=
-							'\n' + cols[0] + ' ' + start + ' ' + end + ' ' + cols[3] + '/' + cols[4] + ' ' + '. . .';
-					}
-				}
-			}
-			console.log(inputText);
-			this.setState({
-				searchTerm: inputText
-			});
-		};
-		reader.readAsText(event.target.files[0]);
-
-		// this.setState({ fileName }); /// if you want to upload latter
 	}
 
 	render() {

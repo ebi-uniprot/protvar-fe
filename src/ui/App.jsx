@@ -412,23 +412,23 @@ class App extends Component {
 		return updateVariants;
 	}
 
-	handleSearch = (input, uploadedFile, newPage, loading) => {
+	handleSearch = (input, uploadedFile, newPage, loadingFlag) => {
 		console.log('calling client');
 		const { history } = this.props;
 
-		var isFileSelected = false;
+		var isFileSelectedNew = false;
 		var loadingNew = true;
-		if (uploadedFile && loading) {
-			isFileSelected = true;
+		if (uploadedFile && loadingFlag) {
+			isFileSelectedNew = true;
 			loadingNew = true;
 		}
-		if (uploadedFile && !loading) {
-			isFileSelected = true;
+		if (uploadedFile && !loadingFlag) {
+			isFileSelectedNew = true;
 			loadingNew = false;
 		}
 		this.setState({
+			isFileSelected: isFileSelectedNew,
 			loading: loadingNew,
-			isFileSelected: isFileSelected,
 			page: newPage
 		});
 		// this.updater.enqueueForceUpdate(this);
@@ -481,6 +481,7 @@ class App extends Component {
 					searchResults: output.results,
 					errors: output.errors,
 					loading: false,
+					isFileSelected: false,
 					file: uploadedFile,
 					page: newPage
 				});
@@ -490,7 +491,7 @@ class App extends Component {
 		console.log('calling client complete');
 	};
 
-	fetchNextPage = (uploadedFile, page, loading) => {
+	fetchNextPage = (uploadedFile, page, isFileSelected, loading) => {
 		var pageNumber = page.currentPage;
 		const PAGE_SIZE = 3;
 		var skipRecord = (pageNumber - 1) * PAGE_SIZE;
@@ -498,31 +499,34 @@ class App extends Component {
 		var recordsProcessed = 0;
 		var firstLine = true;
 		var inputText = '';
+		var newPage = {
+			currentPage: page.currentPage,
+			previousPage: page.previousPage,
+			nextPage: false
+		};
 		// var numberOfLinesToRead = skipRecord + PAGE_SIZE;
 		PapaParse.parse(uploadedFile, {
 			// preview: numberOfLinesToRead,
 			step: (row, parser) => {
 				if (recordsProcessed >= PAGE_SIZE) {
-					var newPage = {
+					newPage = {
 						currentPage: page.currentPage,
 						previousPage: page.previousPage,
 						nextPage: true
 					};
-					this.setState({
-						page: newPage,
-						searchTerm: inputText,
-						loading: loading
-					});
 					// this.handleSearch(inputText, uploadedFile, this.state.page, true);
 					parser.abort();
 				}
 				if (!row.data[0].startsWith('#') && count > skipRecord) {
 					recordsProcessed++;
-					if (firstLine) {
-						inputText += this.createCsvString(row.data);
-						firstLine = false;
-					} else {
-						inputText += '\n' + this.createCsvString(row.data);
+					var newInput = this.createCsvString(row.data);
+					if (newInput != '') {
+						if (firstLine) {
+							inputText += newInput;
+							firstLine = false;
+						} else {
+							inputText += '\n' + newInput;
+						}
 					}
 					console.log('Row:', row.data);
 				} else {
@@ -531,12 +535,21 @@ class App extends Component {
 			},
 			complete: () => {
 				console.log('All done!');
-				this.handleSearch(inputText, uploadedFile, this.state.page, true);
+				this.setState({
+					page: newPage,
+					searchTerm: inputText,
+					isFileSelected: isFileSelected,
+					loading: loading
+				});
+				this.handleSearch(inputText, uploadedFile, this.state.page, loading);
 			}
 		});
 	};
 
 	createCsvString(rowArr) {
+		if (rowArr == '' || rowArr.length < 5) {
+			return '';
+		}
 		// var cols = line.split('\t');
 		var pos = rowArr[1].split('_');
 		var start = pos[0];

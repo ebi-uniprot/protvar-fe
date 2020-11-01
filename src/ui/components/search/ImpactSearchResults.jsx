@@ -55,7 +55,10 @@ class ImpactSearchResults extends Component {
 		} else {
 			page.currentPage = page.currentPage - 1;
 		}
-		fetchNextPage(this.props.file, page, loading);
+		this.setState({
+			loading: true
+		});
+		fetchNextPage(this.props.file, page, false, true);
 	};
 
 	bulkDownload = (event) => {
