@@ -54,6 +54,7 @@ class App extends Component {
 							strand
 							hgvsg
 							hgvsp
+							hgncId
 							hasENSP
 							hasENST
 						}
@@ -93,20 +94,43 @@ class App extends Component {
 						}
 						variation {
 							novel
-							cosmicId
-							dbSNPId
+							consequence
 							codons
-							clinVarIDs {
+							sourceType
+							disease
+							nonDisease
+							uniprot
+							largeScaleStudy
+							uncertain
+							xrefs {
+								name
 								id
-								pubMedIDs
-								allele
-								date
-								gene
-								clinicalSignificances
-								dbSNPId
-								mim
-								phenotype
 								url
+								alternativeUrl
+								reviewed
+							}
+							ids {
+								dbSNPId
+								cosmicId
+								clinVarIds {
+									id
+									pubMedIds
+									allele
+									gene
+									mim
+									phenotype
+									url
+								}
+							}
+							evidences {
+								code
+								label
+								source {
+									name
+									id
+									url
+									alternativeUrl
+								}
 							}
 							association {
 								name
@@ -129,67 +153,37 @@ class App extends Component {
 								}
 								disease
 							}
-							wildType
-							alternativeSequence
-							consequence
-							clinicalSignificances
-							variationDetails {
-								description
-								wildType
-								alternativeSequence
-								clinicalSignificances
-								sourceType
-								ids {
-									rsId
-									dbSNPId
-									cosmicId
-									clinVarIDs {
-										id
-										dbSNPId
-									}
-								}
-								association {
-									name
-									description
-									dbReferences {
-										name
-										id
-										url
-										alternativeUrl
-									}
-									evidences {
-										code
-										label
-										source {
-											name
-											id
-											url
-											alternativeUrl
-										}
-									}
-									disease
-								}
-								xrefs {
-									name
-									id
-									url
-									alternativeUrl
-								}
-								polyphenPrediction
-								polyphenScore
-								siftPrediction
-								siftScore
-								disease
-								nonDisease
-								uniprot
-								largeScaleStudy
-								uncertain
+							clinicalSignificances {
+								type
+								sources
+							}
+							predictions {
+								predictionValType
+								predAlgorithmNameType
+								score
 							}
 							proteinColocatedVariants {
-								description
+								begin
+								end
+								ids {
+									dbSNPId
+									clinVarIds {
+										id
+										pubMedIds
+										allele
+										gene
+										mim
+										phenotype
+										url
+									}
+									cosmicId
+								}
+								clinicalSignificances {
+									type
+									sources
+								}
 								wildType
 								alternativeSequence
-								clinicalSignificances
 								sourceType
 								association {
 									name
@@ -199,7 +193,9 @@ class App extends Component {
 										id
 										url
 										alternativeUrl
+										reviewed
 									}
+									disease
 									evidences {
 										code
 										label
@@ -210,25 +206,11 @@ class App extends Component {
 											alternativeUrl
 										}
 									}
-									disease
 								}
-								xrefs {
-									name
-									id
-									url
-									alternativeUrl
-								}
-								polyphenScore
-								siftScore
-								disease
-								nonDisease
-								uniprot
-								largeScaleStudy
-								uncertain
 							}
 							genomicColocatedVariants {
 								id
-								pubMedIDs
+								pubMedIds
 							}
 							populationFrequencies {
 								sourceName
@@ -238,7 +220,7 @@ class App extends Component {
 								}
 							}
 							proteinColocatedVariantsCount
-							diseaseAssociatedproteinColocatedVariantsCount
+							diseaseAssociatedProtCVCount
 						}
 					}
 				}
@@ -247,34 +229,81 @@ class App extends Component {
 		return query;
 	}
 
-	createFunctionalSignificance(variant) {
+	createVariationDetails(variant) {
+		var variationDetails = {};
+		variationDetails.wildType = variant.protein.variant.split('/')[0];
+		variationDetails.alternativeSequence = variant.protein.variant.split('/')[1];
+		variationDetails.clinicalSignificances = this.getClinicalSignificance(variant.variation.clinicalSignificances);
+		variationDetails.clinicalSignificance = this.getClinicalSignificanceStr(
+			variant.variation.clinicalSignificances
+		);
+		variationDetails.sourceType = variant.variation.sourceType;
+		variationDetails.association = variant.variation.association;
+		variationDetails.xrefs = variant.variation.xrefs;
+		variationDetails.polyphenScore = this.getPredictionScore(variant.variation.predictions, 'PolyPhen');
+		variationDetails.polyphenPrediction = this.getPredictionType(variant.variation.predictions, 'PolyPhen');
+		variationDetails.siftScore = this.getPredictionScore(variant.variation.predictions, 'SIFT');
+		variationDetails.siftPrediction = this.getPredictionType(variant.variation.predictions, 'SIFT');
+		variationDetails.disease = variant.variation.disease;
+		variationDetails.nonDisease = variant.variation.nonDisease;
+		variationDetails.uniprot = variant.variation.uniprot;
+		variationDetails.largeScaleStudy = variant.variation.largeScaleStudy;
+		variationDetails.uncertain = variant.variation.uncertain;
+		return variationDetails;
+	}
+
+	getClinicalSignificance(clinicalSignificances) {
+		var significances = [];
+		clinicalSignificances.forEach((significance) => {
+			significances.push(significance.type);
+		});
+		return significances;
+	}
+
+	getClinicalSignificanceStr(clinicalSignificances) {
+		var significances = '';
+		clinicalSignificances.forEach((significance) => {
+			significances = significances + ',' + significance.type;
+		});
+		return significances;
+	}
+
+	getPredictionScore(predictions, algorithName) {
+		predictions.forEach((prediction) => {
+			if (prediction.predAlgorithmNameType === algorithName) return prediction.score;
+		});
+		return '';
+	}
+
+	getPredictionType(predictions, algorithName) {
+		predictions.forEach((prediction) => {
+			if (prediction.predAlgorithmNameType === algorithName) return prediction.predictionValType;
+		});
+		return '';
+	}
+
+	createFunctionalSignificance(variant, variationDetails) {
 		var functionalSignificance = {};
 		functionalSignificance.features = variant.protein.features;
-		functionalSignificance.variationDetails = variant.variation.variationDetails;
+		functionalSignificance.variationDetails = variationDetails;
 		functionalSignificance.colocatedVariants = variant.variation.proteinColocatedVariants;
 		return functionalSignificance;
 	}
 
-	createClinicalSignificance(variant) {
+	createClinicalSignificance(variant, variationDetails) {
 		var clinicalSignificance = {};
-		if (variant.variation.clinicalSignificances !== undefined) {
-			clinicalSignificance.categories = variant.variation.clinicalSignificances.split(',');
+		if (variationDetails.clinicalSignificances !== undefined) {
+			clinicalSignificance.categories = variationDetails.clinicalSignificances;
 		}
-		// var associations = [];
-		// variant.variation.features.forEach((feature) => {
-		// 	associations.push(feature.association);
-		// });
 		clinicalSignificance.association = variant.variation.association;
 		clinicalSignificance.colocatedVariants = variant.variation.proteinColocatedVariants;
-		clinicalSignificance.variationDetails = variant.variation.variationDetails;
+		clinicalSignificance.variationDetails = variationDetails;
 		clinicalSignificance.colocatedVariantsCount = variant.variation.proteinColocatedVariantsCount;
-		clinicalSignificance.diseaseColocatedVariantsCount =
-			variant.variation.diseaseAssociatedproteinColocatedVariantsCount;
-
+		clinicalSignificance.diseaseColocatedVariantsCount = variant.variation.diseaseAssociatedProtCVCount;
 		return clinicalSignificance;
 	}
 
-	createTranscriptSignificance(variant) {
+	createTranscriptSignificance(variant, variationDetails) {
 		var transcriptSignificances = [];
 		var transcriptSignificance = {};
 		var consequenceTerms = [];
@@ -282,17 +311,17 @@ class App extends Component {
 			consequenceTerms.push(variant.variation.consequence);
 		}
 		transcriptSignificance.biotype = 'Protein Coding';
-		transcriptSignificance.polyphenPrediction = variant.variation.variationDetails.polyphenPrediction;
-		transcriptSignificance.polyphenScore = variant.variation.variationDetails.polyphenScore;
-		transcriptSignificance.siftPrediction = variant.variation.variationDetails.siftPrediction;
-		transcriptSignificance.siftScore = variant.variation.variationDetails.siftScore;
+		transcriptSignificance.polyphenPrediction = variationDetails.polyphenPrediction;
+		transcriptSignificance.polyphenScore = variationDetails.polyphenScore;
+		transcriptSignificance.siftPrediction = variationDetails.siftPrediction;
+		transcriptSignificance.siftScore = variationDetails.siftScore;
 		transcriptSignificance.mostSevereConsequence = variant.variation.consequence;
 		transcriptSignificance.consequenceTerms = consequenceTerms;
 		transcriptSignificance.colocatedVariants = variant.variation.proteinColocatedVariants;
-		if (variant.variation.clinicalSignificances !== undefined) {
-			transcriptSignificance.pathogenicity = variant.variation.clinicalSignificances.split(',');
+		if (variationDetails.clinicalSignificances !== undefined) {
+			transcriptSignificance.pathogenicity = variationDetails;
 		}
-		transcriptSignificance.variationDetails = variant.variation.variationDetails;
+		transcriptSignificance.variationDetails = variationDetails;
 		transcriptSignificance.hgvsg = variant.gene.hgvsg;
 		transcriptSignificance.hgvsp = variant.gene.hgvsp;
 		transcriptSignificance.canonical = variant.protein.canonical;
@@ -317,40 +346,19 @@ class App extends Component {
 		return transcriptSignificances;
 	}
 
-	createGenomicSignificance(variant) {
+	createGenomicSignificance(variant, variationDetails) {
 		var genomic = {};
 		var consequencePrediction = {};
-		consequencePrediction.polyphenPrediction = variant.variation.variationDetails.polyphenPrediction;
-		consequencePrediction.polyphenScore = variant.variation.variationDetails.polyphenScore;
-		consequencePrediction.siftPrediction = variant.variation.variationDetails.siftPrediction;
-		consequencePrediction.siftScore = variant.variation.variationDetails.siftScore;
+		consequencePrediction.polyphenPrediction = variationDetails.polyphenPrediction;
+		consequencePrediction.polyphenScore = variationDetails.polyphenScore;
+		consequencePrediction.siftPrediction = variationDetails.siftPrediction;
+		consequencePrediction.siftScore = variationDetails.siftScore;
 		consequencePrediction.caddPhred = 0.0;
 		consequencePrediction.caddRaw = 0.0;
 
 		genomic.consequencePrediction = consequencePrediction;
-		genomic.variationDetails = variant.variation.variationDetails;
+		genomic.variationDetails = variationDetails;
 		genomic.populationFrequencies = variant.variation.populationFrequencies;
-		// var frequencies = {};
-		// if (variant.variation.populationFrequencies == null) {
-		// 	return genomic;
-		// }
-		// variant.variation.populationFrequencies.forEach((popFreq) => {
-		// 	if (
-		// 		frequencies[popFreq.sourceName] === undefined &&
-		// 		popFreq !== undefined &&
-		// 		popFreq.frequencies.length > 0
-		// 	) {
-		// 		var freqUI = {};
-		// 		popFreq.frequencies.forEach((freq) => {
-		// 			var value = {};
-		// 			value.label = freq.label;
-		// 			value.value = freq.value;
-		// 			freqUI[freq.label] = value;
-		// 		});
-		// 		frequencies[popFreq.sourceName] = freqUI;
-		// 	}
-		// });
-		// genomic.populationFrequencies = frequencies;
 		return genomic;
 	}
 
@@ -397,11 +405,12 @@ class App extends Component {
 			if (variant.variation != null) {
 				var significances = {};
 				var updateVariant = {};
-				significances.functional = this.createFunctionalSignificance(variant);
+				var variationDetails = this.createVariationDetails(variant);
+				significances.functional = this.createFunctionalSignificance(variant, variationDetails);
 				significances.structural = this.createStructuralSignificance(variant);
-				significances.genomic = this.createGenomicSignificance(variant);
-				significances.clinical = this.createClinicalSignificance(variant);
-				significances.transcript = this.createTranscriptSignificance(variant);
+				significances.genomic = this.createGenomicSignificance(variant, variationDetails);
+				significances.clinical = this.createClinicalSignificance(variant, variationDetails);
+				significances.transcript = this.createTranscriptSignificance(variant, variationDetails);
 				updateVariant.significances = significances;
 				updateVariant.protein = variant.protein;
 				updateVariant.gene = variant.gene;
@@ -565,6 +574,7 @@ class App extends Component {
 		var allStructures = '';
 		var diseaseDetails = '';
 		var featureDetails = '';
+		var variationDetails = this.createVariationDetails(variant);
 		if (variant.significances.clinical.association.length > 0) {
 			isAssociatedDisease = 'Yes';
 			variant.significances.clinical.association.forEach((disease) => {
@@ -728,15 +738,15 @@ class App extends Component {
 			'","' +
 			isAssociatedDisease +
 			'","' +
-			variant.variation.variationDetails.clinicalSignificances +
+			variationDetails.clinicalSignificance +
 			'","' +
-			variant.variation.variationDetails.polyphenPrediction +
+			variationDetails.polyphenPrediction +
 			'","' +
-			variant.variation.variationDetails.polyphenScore +
+			variationDetails.polyphenScore +
 			'","' +
-			variant.variation.variationDetails.siftPrediction +
+			variationDetails.siftPrediction +
 			'","' +
-			variant.variation.variationDetails.siftScore +
+			variationDetails.siftScore +
 			'","' +
 			variant.gene.strand +
 			'","' +
