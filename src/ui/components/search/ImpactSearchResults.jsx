@@ -19,6 +19,32 @@ class ImpactSearchResults extends Component {
 		loading: false
 	};
 
+	componentDidMount() {
+		console.log('componentDidMount called');
+		var options = {
+			root: null,
+			rootMargin: '0px',
+			threshold: 1.0
+		};
+		const target = document.querySelector('#scrollTarget');
+		this.observer = new IntersectionObserver(this.handleObserver.bind(this), options);
+		this.observer.observe(target);
+	}
+
+	handleObserver(entities, observer) {
+		console.log('handleObserver called');
+		const page = this.props.page;
+		if (entities[0].isIntersecting === true) {
+			if (page.nextPage) {
+				// alert('Calling next page');
+				this.fetchNextPage(1);
+			} else {
+				// alert('End of result');
+			}
+		}
+		// let target = document.querySelector('#scrollTarget');
+	}
+
 	toggleAllIsoforms = () => {
 		const { showAllIsoforms } = this.state;
 
@@ -72,15 +98,17 @@ class ImpactSearchResults extends Component {
 		const rows = this.props.rows;
 		const page = this.props.page;
 		const file = this.props.file;
+		const nextPage = this.props.page.nextPage;
 		const handleDownload = this.props.handleDownload;
 		const handleBulkDownload = this.props.handleBulkDownload;
 		const loading = this.props.loading;
 		const { expandedRow, showAllIsoforms, openGroup } = this.state;
+		const noLoading = false;
 
 		let counter = 0;
 
 		return (
-			<div className="search-results">
+			<div className="search-results" id="divRoot">
 				<SearchResultsLegends />
 				<div className="results-and-counter">
 					{file == null ? (
@@ -93,7 +121,7 @@ class ImpactSearchResults extends Component {
 						Isoforms
 					</Button>
 				</div>
-				{loading ? (
+				{noLoading ? (
 					<table>
 						<tbody>
 							<tr className="loader-border">
@@ -106,7 +134,7 @@ class ImpactSearchResults extends Component {
 				) : (
 					<table border="0" className="unstriped" cellPadding="0" cellSpacing="0">
 						<tbody>
-							<tr>
+							{/* <tr>
 								{page === undefined || page.currentPage === 1 ? (
 									<th className="pagination">
 										<Button onClick={() => null} className="button-disabled">
@@ -129,7 +157,7 @@ class ImpactSearchResults extends Component {
 										<Button onClick={() => this.fetchNextPage(1)}>Next &raquo;</Button>
 									</th>
 								)}
-							</tr>
+							</tr> */}
 
 							<tr>
 								<th colSpan="2" rowSpan="2">
@@ -426,6 +454,34 @@ class ImpactSearchResults extends Component {
 							})}
 						</tbody>
 					</table>
+				)}
+				<span id="scrollTarget" />
+				{loading ? (
+					<table>
+						<tbody>
+							<tr className="loader-border">
+								<td>
+									<Loader />
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				) : (
+					<span />
+				)}
+
+				{!nextPage ? (
+					<table>
+						<tbody>
+							<tr className="loader-border">
+								<td>
+									<span>No more data to fetch</span>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				) : (
+					<span />
 				)}
 			</div>
 		);

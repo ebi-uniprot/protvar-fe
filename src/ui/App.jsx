@@ -464,16 +464,15 @@ class App extends Component {
 					errors: [],
 					results: {}
 				};
-
+				if (this.state.searchResults != null) {
+					output.results = this.state.searchResults;
+				}
 				results.data.pepvepvariant.forEach((element) => {
 					// if (element.errors.length > 0) {
 					// 	output.errors = output.errors.concat(element.errors);
 					// }
-					if (output.results[element.input] === undefined && element.variants.length > 0) {
-						// if (element.variants.errors !== undefined && element.variants.errors.length > 0) {
-						// 	output.errors = output.errors.concat(element.variants.errors);
-						// 	element.variants.errors = null;
-						// }
+					// if (output.results[element.input] === undefined && element.variants.length > 0) {
+					if (element.variants.length > 0) {
 						var updatedVariants = this.createSignificances(element.variants);
 						output.errors = output.errors.concat(updatedVariants.errors);
 						output.results[element.input] = {
@@ -488,6 +487,7 @@ class App extends Component {
 				this.setState({
 					searchTerm: input,
 					searchResults: output.results,
+					// searchResults: [ ...this.state.searchResults, ...output.results ],
 					errors: output.errors,
 					loading: false,
 					isFileSelected: false,
@@ -502,7 +502,7 @@ class App extends Component {
 
 	fetchNextPage = (uploadedFile, page, isFileSelected, loading) => {
 		var pageNumber = page.currentPage;
-		const PAGE_SIZE = 3;
+		const PAGE_SIZE = 5;
 		var skipRecord = (pageNumber - 1) * PAGE_SIZE;
 		var count = 0;
 		var recordsProcessed = 0;

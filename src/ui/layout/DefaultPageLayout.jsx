@@ -145,7 +145,7 @@ class DefaultPageLayout extends Component {
 				</div>
 				{/* <!-- End suggested layout containers / #content --> */}
 
-				<footer>
+				<footer id="footer-target">
 					<div id="global-footer" className="global-footer">
 						<nav id="global-nav-expanded" className="global-nav-expanded row">
 							{/* <!-- Footer will be automatically inserted by footer.js --> */}
