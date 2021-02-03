@@ -36,6 +36,37 @@
     margin: 0rem;
     width: 100%;
     height: 100%;
+
+    .scrollable {
+      height: 160px; /* or any value */
+      overflow-y: auto;
+      overflow: Scroll;
+    }
+
+    .text {
+      height: 100px;
+      overflow: hidden;
+  }
+  .container {
+      position: relative;
+  }
+  label {
+      position: absolute;
+      top: 100%;
+      font-weight: bold;
+  }
+  input {
+      display: none;
+  }
+  label:after {
+      content: "Show More";
+  }
+  input:checked + label:after {
+      content: "Show Less";
+  }
+  input:checked ~ div {
+      height: 100%;
+  }
   }
   
   .card__content-upper {
@@ -67,7 +98,7 @@
 
   .card-table{
     padding-left:2px;
-    font-size: 14px;
+    font-size: 13px;
     height: 100%;
   }
 

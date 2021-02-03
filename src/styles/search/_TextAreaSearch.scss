@@ -2,7 +2,7 @@
 // Text-area search field
 // ----------------------
 .main-textarea-search-field {
-  min-height: 15vh;
+  min-height: 20vh;
   border-radius: 5px;
   padding: .7rem 1rem;
   line-height: 1.7rem;
@@ -97,6 +97,7 @@
     .variant-example {
       width: auto;
       color: $variant-example-colour;
+      font-family:"Lato",sans-serif;
     }
   }
 
@@ -108,7 +109,9 @@
 
 .variant-example {
   width: auto;
-  color: #4949c7; }
+  color: #4949c7; 
+  font-family:"Lato",sans-serif; 
+  }
 
   .input-examples span {
     width: 20rem;

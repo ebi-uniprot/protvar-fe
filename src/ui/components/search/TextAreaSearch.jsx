@@ -54,8 +54,8 @@ class TextAreaSearch extends Component {
 			'14 89993420 89993420 A/G . . .',
 			'10 87933147 87933147 C/T . . .',
 			'21 43072000 43072000 T/C . . .'
-			//'21 43060540 43060540 C/T . . .',
-			//'22 19479862 19479862 G/C . . .',
+			// '21 43060540 43060540 C/T . . .',
+			// '22 19479862 19479862 G/C . . .'
 			//'22 19494512 19494512 C/G . . .',
 
 			// '20 58909365 58909365 C/A . . .', ---issue
@@ -127,16 +127,22 @@ class TextAreaSearch extends Component {
 			<Fragment>
 				<div>
 					<h3 className="black-color margin-bottom-none vf-section-header__heading">
-						<div className="inline-block">About PEPVEP</div>
+						<div className="inline-block">About PepVEP</div>
 					</h3>
 
 					<p>
-						PepVEP is an intuitive web resource for scientists to interpret the effects per residue of
+						{/* PepVEP is an intuitive web resource for scientists to interpret the effects per residue of
 						genomic variants on protein function or structure. It unites existing genomic and protein
 						EMBL-EBI expertise; providing functional information from the Variant Effect Predictor (VEP),
 						UniProt functional residue annotation (Protein function), and PDBe structural residue annotation
 						in an integrated platform. PepVEP can be used as an interactive service or computationally via
-						it's API.
+						it's API. */}
+						PepVEP is an online service to interpret the effects of variants on protein function and
+						structure. It utilises functional information from the Ensembl Variant Effect Predictor (VEP),
+						the UniProt functional residue annotation (Protein function), and the PDBe structural residue
+						annotation in an integrated platform. PepVEP is maintained up to date with the information in
+						these resources. PepVEP can be used as an interactive online service or computationally via it's
+						API.
 					</p>
 				</div>
 				<div className="wrapper">
@@ -159,7 +165,6 @@ class TextAreaSearch extends Component {
 								<div className="card__content">
 									<section className="uniprot-card">
 										<section className="uniprot-card__left">
-											{/* <div className="text-area-search"> */}
 											<form onSubmit={this.handleSubmit}>
 												<textarea
 													id="main-textarea-search-field"
@@ -209,22 +214,8 @@ class TextAreaSearch extends Component {
 															Loading...
 														</Button>
 													)}
-
-													{/* {searchTerm ? (
-														<Button onClick={this.clearForm} className="button-primary">
-															Clear Input
-														</Button>
-													) : (
-														<Button
-															onClick={this.useExampleData}
-															className="button-primary"
-														>
-															Use Example Input
-														</Button>
-													)} */}
 												</div>
 											</form>
-											{/* </div> */}
 										</section>
 									</section>
 								</div>
@@ -237,7 +228,7 @@ class TextAreaSearch extends Component {
 							<section className="card__actions">
 								<span className="card-header">
 									<p>
-										<b>PepVEP REST API</b>
+										<b>More Information</b>
 									</p>
 								</span>
 							</section>
@@ -245,60 +236,41 @@ class TextAreaSearch extends Component {
 								<div className="card__content">
 									<section className="uniprot-card">
 										<section className="uniprot-card__left">
+											<span className="assemly-ref-note">
+												<b>Reference Genome Assembly: GRCh38 (hg38) </b>
+											</span>
+											<br />
+											PepVEP variant interpretation is based upon the latest human genome assembly
+											GRCh38(hg38). If your variants are referenced to GRCh37(hg19) you will need
+											to remap your variants to the latest assembly. We recommend using:<br />
+											<a
+												href="http://www.ensembl.org/Homo_sapiens/Tools/AssemblyConverter?db=core"
+												target="_blank"
+												rel="noopener noreferrer"
+											>
+												Ensembl's Assembly Remapping service
+											</a>
+											<br />
+											<br />
+											<span className="assemly-ref-note">
+												<b>PepVEP REST API </b>
+											</span>
 											<form onSubmit={this.handleSubmit}>
-												<p>
-													<b>What:</b> Extended REST API service that unites data from
-													Genomic, Protein, Variation and PDBe services and provides users
-													with impacts and consequences of variants. <br />
-													<b>Why:</b> Access data sets mapped to UniProt and integrated
-													through a single service.<br />
-													<b>
-														Documentation:
-													</b>http://wwwdev.ebi.ac.uk/uniprot/pepvep/api/#docs/ <br />
-												</p>
-
-												{/* <p className="file-selected">
-													<b>{fileName}</b>
-												</p>
-												<div id="search-button-group" className="search-button-group">
-													<input
-														id="myInput"
-														type="file"
-														style={{ display: 'none' }}
-														ref={(ref) => (this.upload = ref)}
-														onChange={this.onChangeFile.bind(this)}
-													/>
-													<Button
-														onClick={() => {
-															this.upload.click();
-														}}
-														className="button-primary"
-													>
-														Select File
-													</Button>
-													{isFileSelected ? (
-														<Button
-															type="submit"
-															onClick={this.handleSubmit}
-															className="button-primary"
-														>
-															{viewResultLabel}
-														</Button>
-													) : (
-														<Button onClick={() => null} className="button-disabled">
-															{viewResultLabel}
-														</Button>
-													)}
-													{isFileSelected ? (
-														<Button onClick={() => null} className="button-primary">
-															Download Result
-														</Button>
-													) : (
-														<Button onClick={() => null} className="button-disabled">
-															Download Result
-														</Button>
-													)} */}
-												{/* </div> */}
+												<b>What:</b> Extended REST API service that unites data from Genomic,
+												Protein, Variation and PDBe services and provides users with impacts and
+												consequences of variants. <br />
+												<b>Why:</b> Unlike Web Interface, PepVEP REST API allows users to query
+												data using multiple input formats like DbSNP, HGVS, Accession, Gene
+												Name, Genomic location etc. Detailed documentation can be accessed using
+												the link below.<br />
+												<b>Documentation: </b>
+												<a
+													href="http://wp-np2-be:8099/swagger-ui/#/"
+													target="_blank"
+													rel="noopener noreferrer"
+												>
+													PepVEP REST API
+												</a>
 											</form>
 										</section>
 									</section>
@@ -306,19 +278,6 @@ class TextAreaSearch extends Component {
 							</section>
 						</div>
 					</div>
-					{/* <div>
-						<span className="assemly-ref-note">
-							<b>Reference Genome Assembly: GRCh38 (hg38) </b>
-						</span>
-
-						<a
-							href="http://www.ensembl.org/Homo_sapiens/Tools/AssemblyConverter?db=core"
-							target="_blank"
-							rel="noopener noreferrer"
-						>
-							Open Ensembl Assembly Remapping
-						</a>
-					</div> */}
 				</div>
 			</Fragment>
 		);

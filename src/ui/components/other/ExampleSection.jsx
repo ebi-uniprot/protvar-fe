@@ -5,7 +5,7 @@ const ExampleSection = () => (
 		<section className="card__actions">
 			<span className="card-header">
 				<p>
-					<b>Using PEPVEP</b>
+					<b>How to use</b>
 				</p>
 			</span>
 		</section>
@@ -14,11 +14,11 @@ const ExampleSection = () => (
 				<section className="uniprot-card">
 					<section className="uniprot-card__left">
 						<span>
-							<b>There are two ways to generate variants result :</b>
+							<b>Currently PepVEP supports inputs in below formats :</b>
 						</span>
 						<ul>
 							<li>
-								Entering Genomic positions in text box
+								Entering genomic positions of your variants in the Search box
 								<div className="input-examples">
 									<div>
 										<span className="variant-example">
@@ -27,7 +27,7 @@ const ExampleSection = () => (
 									</div>
 								</div>
 							</li>
-							<li>Uploading vcf file using Select File</li>
+							<li>Uploading vcf file using 'UPLOAD FILE' button</li>
 							<div className="input-examples">
 								<div>
 									<span className="variant-example">

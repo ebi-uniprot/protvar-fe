@@ -1,44 +1,71 @@
 import React from 'react';
+import { ManagedTabs } from 'franklin-sites';
 
 const AboutSection = () => (
-	// <div className="card">
-	// 	<section className="card__actions">
-	// 		<span className="card-header">
-	// 			<p>
-	// 				<b>About PepVEP</b>
-	// 			</p>
-	// 		</span>
-	// 	</section>
-	// 	<section role="button">
-	// 		<div className="card__content">
-	// 			<section className="uniprot-card">
-	// 				<section className="uniprot-card__left">
-	// 					<span>
-	// 						PepVEP is an intuitive web resource for scientists to interpret the effects of genomic
-	// 						variants on protein function or structure per residue altered by a genomic variant. It
-	// 						unites existing genomic and protein EMBL-EBI expertise; providing functional information
-	// 						from the Variant Effect Predictor (VEP), UniProt functional residue annotation (Protein
-	// 						function), and PDBe structural residue annotation in an integrated platform.
-	// 					</span>
-	// 				</section>
-	// 			</section>
-	// 		</div>
-	// 	</section>
-	// </div>
-
 	<div className="card">
 		<section className="card__actions">
 			<span className="card-header">
 				<p>
-					<b>Genome Assembly Remapping</b>
+					<b>What to expect</b>
 				</p>
 			</span>
 		</section>
-		<section role="button">
+		<section role="button" className="scrollable">
 			<div className="card__content">
 				<section className="uniprot-card">
 					<section className="uniprot-card__left">
-						<span className="assemly-ref-note">
+						<span>
+							<b>Below information will be displayed in search result page :</b>
+						</span>
+						<div className="container">
+							<input id="ch" type="checkbox" />
+
+							<label for="ch" />
+							<div class="text">
+								<ul>
+									<li>
+										The genes and transcripts where the variants are located, with Ensembl
+										identifiers.
+									</li>
+									<li>
+										The proteins and protein isoforms affected by the variants, with UniProt
+										identifiers and corresponding amino acid positions and changes.
+									</li>
+									<li>
+										The consequence of your variants on the protein sequence (e.g. stop gained,
+										missense, stop lost, frameshift).
+									</li>
+
+									<li>SIFT, PolyPhen and CADD scores for changes in the protein sequence.</li>
+
+									<li>
+										Known variants in the nucleotide and amino acid position that match your
+										variants, with dbSNPs, ClinVar and UniProt variant identifiers.
+									</li>
+									<li>Population frequency from 1000 Genomes project and gnomAD.</li>
+
+									<li>
+										Functional information per amino acid residue affected by your variants (e.g.
+										functional domains, and sites like active, binding sites and post-translational
+										modifications).
+									</li>
+									<li>
+										Known disease associations in the amino acid position that match your variants
+										as described in UniProt.
+									</li>
+
+									<li>
+										Known mutagenesis experiments in the amino acid position that match your
+										variants as described in UniProt.
+									</li>
+									<li>
+										Known structures and ligand binding sites in the amino acid position that match
+										your variants.
+									</li>
+								</ul>
+							</div>
+						</div>
+						{/* <span className="assemly-ref-note">
 							<b>Reference Genome Assembly: GRCh38 (hg38) </b>
 						</span>
 						<p>
@@ -53,24 +80,12 @@ const AboutSection = () => (
 							rel="noopener noreferrer"
 						>
 							Ensembl's Assembly Remapping service
-						</a>
+						</a> */}
 					</section>
 				</section>
 			</div>
 		</section>
 	</div>
-
-	// <div className="about-section">
-	//   <h3>About PepVEP</h3>
-	//   <p>
-	//     PepVEP is an intuitive web resource for scientists to interpret the effects
-	//      of genomic variants on protein function or structure per residue altered by
-	//      a genomic variant. It unites existing genomic and protein EMBL-EBI expertise;
-	//      providing functional information from the Variant Effect Predictor (VEP),
-	//      UniProt functional residue annotation (Protein function), and PDBe structural
-	//      residue annotation in an integrated platform.
-	//   </p>
-	// </div>
 );
 
 export default AboutSection;

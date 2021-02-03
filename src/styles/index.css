@@ -50,7 +50,10 @@ a:active {
 
 .capital-text {
   text-transform: capitalize; }
+.example-text {
+  font-family: "Lato",sans-serif;
 
+}
 .content {
   font-size: 1rem; }
   .content .masthead {
@@ -266,7 +269,7 @@ a:active {
   font-weight: 700; }
 
 .main-textarea-search-field {
-  min-height: 15vh;
+  min-height: 20vh;
   border-radius: 5px;
   padding: .7rem 1rem;
   line-height: 1.7rem;
