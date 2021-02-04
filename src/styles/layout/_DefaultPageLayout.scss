@@ -40,8 +40,30 @@
     .scrollable {
       height: 160px; /* or any value */
       overflow-y: auto;
-      overflow: Scroll;
+      // border: 1px solid black;
+      // height: 3em;
+      // width: 10em;
+      line-height: 1em;
     }
+
+.scrollable::-webkit-scrollbar {
+    -webkit-appearance: none;
+}
+
+.scrollable::-webkit-scrollbar:vertical {
+    width: 11px;
+}
+
+.scrollable::-webkit-scrollbar:horizontal {
+    height: 11px;
+}
+
+.scrollable::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    border: 2px solid white; /* should match background, can't be transparent */
+    background-color: rgba(0, 0, 0, .5);
+}
+  
 
     .text {
       height: 100px;
