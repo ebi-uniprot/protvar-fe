@@ -269,7 +269,7 @@ a:active {
   font-weight: 700; }
 
 .main-textarea-search-field {
-  min-height: 20vh;
+  min-height: 15vh;
   border-radius: 5px;
   padding: .7rem 1rem;
   line-height: 1.7rem;

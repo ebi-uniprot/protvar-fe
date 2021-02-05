@@ -23,6 +23,8 @@ const ExampleSection = () => (
 									<div>
 										<span className="variant-example">
 											<pre>3 165830358 165830358 T/C . . .</pre>
+											<pre>21 43072000 43072000 T/C . . .</pre>
+											<pre>10 87933147 87933147 C/T . . .</pre>
 										</span>
 									</div>
 								</div>

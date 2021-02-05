@@ -126,9 +126,9 @@ class TextAreaSearch extends Component {
 		return (
 			<Fragment>
 				<div>
-					<h3 className="black-color margin-bottom-none vf-section-header__heading">
+					{/* <h3 className="black-color margin-bottom-none vf-section-header__heading">
 						<div className="inline-block">About PepVEP</div>
-					</h3>
+					</h3> */}
 
 					<p>
 						{/* PepVEP is an intuitive web resource for scientists to interpret the effects per residue of
@@ -146,12 +146,6 @@ class TextAreaSearch extends Component {
 					</p>
 				</div>
 				<div className="wrapper">
-					<div id="example" className="card-table">
-						<ExampleSection />
-					</div>
-					<div id="about" className="card-table">
-						<AboutSection />
-					</div>
 					<div id="search" className="card-table">
 						<div className="card">
 							<section className="card__actions">
@@ -161,7 +155,7 @@ class TextAreaSearch extends Component {
 									</p>
 								</span>
 							</section>
-							<section className="card--has-hover" role="button">
+							<section className="card--has-hover top-row" role="button">
 								<div className="card__content">
 									<section className="uniprot-card">
 										<section className="uniprot-card__left">
@@ -222,7 +216,12 @@ class TextAreaSearch extends Component {
 							</section>
 						</div>
 					</div>
-
+					<div id="example" className="card-table">
+						<ExampleSection />
+					</div>
+					<div id="about" className="card-table">
+						<AboutSection />
+					</div>
 					<div id="download" className="card-table">
 						<div className="card">
 							<section className="card__actions">
@@ -247,6 +246,7 @@ class TextAreaSearch extends Component {
 												href="http://www.ensembl.org/Homo_sapiens/Tools/AssemblyConverter?db=core"
 												target="_blank"
 												rel="noopener noreferrer"
+												className="ref-link"
 											>
 												Ensembl's Assembly Remapping service
 											</a>
@@ -268,6 +268,7 @@ class TextAreaSearch extends Component {
 													href="http://wp-np2-be:8099/swagger-ui/#/"
 													target="_blank"
 													rel="noopener noreferrer"
+													className="ref-link"
 												>
 													PepVEP REST API
 												</a>

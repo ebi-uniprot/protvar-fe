@@ -2,7 +2,7 @@
 // Text-area search field
 // ----------------------
 .main-textarea-search-field {
-  min-height: 20vh;
+  min-height: 15vh;
   border-radius: 5px;
   padding: .7rem 1rem;
   line-height: 1.7rem;
@@ -10,8 +10,16 @@
   font-size: 12px;
   resize: none;
   white-space: pre-wrap;
+  color:grey
 }
 
+.ref-link {
+  color:#0000ff;
+}
+
+.padding-bottom {
+  padding-bottom: 0;
+}
 .wrapper{
   display:grid;
   grid-template-columns: 1fr 1fr;
@@ -22,6 +30,7 @@
   grid-auto-rows: minmax(100px, auto);
   grid-gap:1em;
 }
+
 
 @media only screen and (max-width:700) {
   .wrapper{

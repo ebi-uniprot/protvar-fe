@@ -38,11 +38,8 @@
     height: 100%;
 
     .scrollable {
-      height: 160px; /* or any value */
+      height: 260px; /* or any value */
       overflow-y: auto;
-      // border: 1px solid black;
-      // height: 3em;
-      // width: 10em;
       line-height: 1em;
     }
 
@@ -66,7 +63,7 @@
   
 
     .text {
-      height: 100px;
+      height: 200px;
       overflow: hidden;
   }
   .container {
@@ -76,6 +73,7 @@
       position: absolute;
       top: 100%;
       font-weight: bold;
+      color: blue;
   }
   input {
       display: none;
@@ -94,7 +92,13 @@
   .card__content-upper {
     height:220px;
   }
-
+  .top-row {
+    .card__content {
+      margin-top: 1rem;
+      padding-bottom: 0rem;
+    }
+}
+  
   .card__actions {
     display: flex;
     flex-wrap: nowrap;
