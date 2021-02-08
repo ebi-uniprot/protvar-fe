@@ -279,7 +279,7 @@ a:active {
   white-space: pre-wrap; }
 
 .search-button-group {
-  margin: 2rem 0;
+  margin: 1rem 0;
   display: flex; }
   .search-button-group button {
     width: 49%; }

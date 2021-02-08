@@ -1,4 +1,6 @@
-
+.title-row{
+  font-size: 14px;
+}
 .content {
 
   font-size: 1rem;
@@ -38,7 +40,7 @@
     height: 100%;
 
     .scrollable {
-      height: 260px; /* or any value */
+      height: 200px; /* or any value */
       overflow-y: auto;
       line-height: 1em;
     }
@@ -63,7 +65,7 @@
   
 
     .text {
-      height: 200px;
+      height: 140px;
       overflow: hidden;
   }
   .container {
@@ -94,7 +96,7 @@
   }
   .top-row {
     .card__content {
-      margin-top: 1rem;
+      margin-top: 0rem;
       padding-bottom: 0rem;
     }
 }
