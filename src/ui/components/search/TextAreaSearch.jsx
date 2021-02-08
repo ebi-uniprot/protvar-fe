@@ -165,14 +165,14 @@ class TextAreaSearch extends Component {
 													onChange={this.handleInputChange}
 												/>
 												<span>
-													Reference Genome Assembly:{' '}
+													Reference Genome Assembly GRCh38 (hg38): {'     '}
 													<a
 														href="http://www.ensembl.org/Homo_sapiens/Tools/AssemblyConverter?db=core"
 														target="_blank"
 														rel="noopener noreferrer"
 														className="ref-link"
 													>
-														Ensembl's Assembly Remapping service
+														Ensembl's Assembly Remapping
 													</a>
 												</span>
 												<div id="search-button-group" className="search-button-group">
@@ -248,14 +248,14 @@ class TextAreaSearch extends Component {
 											</span>
 											<br />
 											If your variants are referenced to GRCh37(hg19) you will need to remap your
-											variants to the latest assembly. We recommend using:
+											variants to the latest assembly. We recommend using: {' '}
 											<a
 												href="http://www.ensembl.org/Homo_sapiens/Tools/AssemblyConverter?db=core"
 												target="_blank"
 												rel="noopener noreferrer"
 												className="ref-link"
 											>
-												Ensembl's Assembly Remapping service
+												Ensembl's Assembly Remapping
 											</a>
 											<br />
 											<br />

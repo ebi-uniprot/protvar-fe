@@ -65,7 +65,7 @@
   
 
     .text {
-      height: 140px;
+      height: 120px;
       overflow: hidden;
   }
   .container {
@@ -76,6 +76,7 @@
       top: 100%;
       font-weight: bold;
       color: blue;
+      padding-bottom:1rem
   }
   input {
       display: none;
@@ -92,7 +93,7 @@
   }
   
   .card__content-upper {
-    height:220px;
+    height:240px;
   }
   .top-row {
     .card__content {
