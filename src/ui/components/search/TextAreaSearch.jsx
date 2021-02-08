@@ -164,7 +164,7 @@ class TextAreaSearch extends Component {
 													value={searchTerm}
 													onChange={this.handleInputChange}
 												/>
-												<span>
+												<span className="genome-assembly-text">
 													Reference Genome Assembly GRCh38 (hg38): {'     '}
 													<a
 														href="http://www.ensembl.org/Homo_sapiens/Tools/AssemblyConverter?db=core"
