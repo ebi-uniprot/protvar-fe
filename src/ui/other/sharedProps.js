@@ -95,7 +95,7 @@ export const variationPropTypes = PropTypes.shape({
   novel: PropTypes.bool,
   wildType: PropTypes.string,
   alternativeSequence: PropTypes.string,
-  proteinColocatedVariants: PropTypes.arrayOf(PropTypes.shape({})),
+  //proteinColocatedVariants: PropTypes.arrayOf(PropTypes.shape({})),
   genomicColocatedVariants: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.string,
     pubMedIDs: pubMedIDsPropTypes,

@@ -20,8 +20,8 @@ const AboutSection = () => (
 						<div className="container">
 							<input id="ch" type="checkbox" />
 
-							<label for="ch" />
-							<div class="text">
+							<label htmlFor="ch" />
+							<div className="text">
 								<ul>
 									<li>
 										The genes and transcripts where the variants are located, with Ensembl

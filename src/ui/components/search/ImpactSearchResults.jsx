@@ -10,14 +10,50 @@ import ExpandedGenomicSignificance from '../significances/ExpandedGenomicSignifi
 import ProteinReviewStatus from '../other/ProteinReviewStatus';
 import SearchResultsLegends from '../other/SearchResultsLegends';
 import { Loader } from 'franklin-sites';
+import axios, { post } from 'axios';
 
 class ImpactSearchResults extends Component {
 	state = {
 		expandedRow: null,
 		showAllIsoforms: false,
 		openGroup: null,
-		loading: false
+		loading: false,
+		significanceLoading: false,
+		structureLoaded: false
 	};
+
+	createStructuralSignificance(variant, structures) {
+		var accession = variant.protein.accession;
+		var position = variant.variation.begin;
+		var structure = structures[position];
+		if (structure === null) {
+			return null;
+		}
+		// var accession = Object.keys(structure);
+		if (Object.keys(structure[accession].all_structures).length === 0) {
+			return null;
+		}
+		var structuralSignificance = {};
+		structuralSignificance.position = position;
+		structuralSignificance.proteinLength = structure[accession].length;
+		structuralSignificance.allStructures = JSON.parse(JSON.stringify(structure[accession].all_structures)); //{ ...variant.structure[accession].all_structures };
+		structuralSignificance.annotations = [ structure[accession].annotations ];
+		structuralSignificance.ligands = structure[accession].ligands.positions;
+		structuralSignificance.interactions = structure[accession].interactions.positions;
+		structuralSignificance.structures = structure[accession].structures.positions;
+		structuralSignificance.accession = accession;
+		if (Object.keys(structuralSignificance.allStructures).length > 0) {
+			Object.keys(structuralSignificance.allStructures).forEach((key) => {
+				var allStructure = structuralSignificance.allStructures[key];
+				allStructure.forEach((structure) => {
+					var residue = structure['residue_range'].split('-');
+					structure['start'] = parseInt(residue[0], 10);
+					structure['end'] = parseInt(residue[1], 10);
+				});
+			});
+		}
+		return structuralSignificance;
+	}
 
 	componentDidMount() {
 		console.log('componentDidMount called');
@@ -62,10 +98,34 @@ class ImpactSearchResults extends Component {
 		});
 	};
 
-	toggleSignificanceRow(rowId, significanceType) {
+	toggleSignificanceRow(rowId, significanceType, row) {
 		const { expandedRow } = this.state;
 		const rowIdAndType = `${rowId}:${significanceType}`;
-
+		if (significanceType === 'structural' && Object.keys(row.significances.structural).length === 0) {
+			this.setState({ structureLoaded: false });
+			axios.get('http://localhost:8091' + row.significances.structureEndpoint).then((response) => {
+				console.log(response.data);
+				row.significances.structural = this.createStructuralSignificance(row, response.data);
+				this.setState({ structureLoaded: true });
+			});
+		} else {
+			this.setState({ structureLoaded: true });
+		}
+		if (
+			(significanceType === 'clinical' || significanceType === 'functional') &&
+			Object.keys(row.significances.clinical.colocatedVariants).length === 0
+		) {
+			this.setState({ significanceLoading: false });
+			axios.get('http://localhost:8091' + row.variation.proteinColocatedVariantsEndpoint).then((response) => {
+				console.log(response.data);
+				row.significances.clinical.colocatedVariants = response.data;
+				row.significances.transcript.colocatedVariants = response.data;
+				row.significances.functional.colocatedVariants = response.data;
+				this.setState({ significanceLoading: true });
+			});
+		} else {
+			this.setState({ significanceLoading: true });
+		}
 		this.setState({
 			expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null
 		});
@@ -104,6 +164,7 @@ class ImpactSearchResults extends Component {
 		const loading = this.props.loading;
 		const { expandedRow, showAllIsoforms, openGroup } = this.state;
 		const noLoading = false;
+		const significanceLoading = this.state.significanceLoading;
 
 		let counter = 0;
 
@@ -134,31 +195,6 @@ class ImpactSearchResults extends Component {
 				) : (
 					<table border="0" className="unstriped" cellPadding="0" cellSpacing="0">
 						<tbody>
-							{/* <tr>
-								{page === undefined || page.currentPage === 1 ? (
-									<th className="pagination">
-										<Button onClick={() => null} className="button-disabled">
-											&laquo; Previous
-										</Button>
-									</th>
-								) : (
-									<th className="pagination">
-										<Button onClick={() => this.fetchNextPage(0)}>&laquo; Previous</Button>
-									</th>
-								)}
-								{page === undefined || !page.nextPage ? (
-									<th className="pagination">
-										<Button onClick={() => null} className="button-disabled">
-											Next &raquo;
-										</Button>
-									</th>
-								) : (
-									<th className="pagination">
-										<Button onClick={() => this.fetchNextPage(1)}>Next &raquo;</Button>
-									</th>
-								)}
-							</tr> */}
-
 							<tr>
 								<th colSpan="2" rowSpan="2">
 									Gene Name
@@ -254,33 +290,6 @@ class ImpactSearchResults extends Component {
 											} else if (protein.isoform) {
 												accession = protein.isoform;
 											}
-											// if (significances.transcript) {
-											//           significances.transcript
-											//             .forEach((t) => {
-											//               t.hgvsg = gene.hgvsg;
-											//               t.hgvsp = gene.hgvsp;
-											//               t.canonical = protein.canonical;
-											//               t.codons = gene.codons;
-											//               t.aminoAcids = protein.variant;
-											//               t.enspId = protein.ensp;
-											//               t.enstId = gene.enstId;
-											//               t.ensgId = gene.ensgId;
-											//               t.start = protein.start;
-											//               t.end = protein.end;
-											//               t.cosmicId = variation.cosmicId;
-											//               t.dbSNPId = variation.dbSNPId;
-											//               t.clinVarIDs = variation.clinVarIDs;
-											//               t.uniProtVariationId = variation.uniProtVariationId;
-											//               t.colocatedVariantsCount = variation.proteinColocatedVariantsCount;
-											//               t.redundantENSTs = gene.redundantENSTs;
-											//               t.diseaseColocatedVariantsCount = variation
-											//                 .diseasAssociatedProteinColocatedVariantsCount;
-											//             });
-											//             }
-
-											//const caddColour = (significances.transcript[0].caddPhred <= 30)
-											//  ? 'green'
-											//  : 'red';
 
 											counter += 1;
 
@@ -288,7 +297,8 @@ class ImpactSearchResults extends Component {
 
 											const transcriptSignificancesButton = (
 												<Button
-													onClick={() => this.toggleSignificanceRow(rowKey, 'transcript')}
+													onClick={() =>
+														this.toggleSignificanceRow(rowKey, 'transcript', row)}
 													className="button--significances button--transcript"
 												>
 													T
@@ -297,7 +307,8 @@ class ImpactSearchResults extends Component {
 
 											const functionalSignificancesButton = (
 												<Button
-													onClick={() => this.toggleSignificanceRow(rowKey, 'functional')}
+													onClick={() =>
+														this.toggleSignificanceRow(rowKey, 'functional', row)}
 													className="button--significances button--positional"
 												>
 													F
@@ -306,7 +317,7 @@ class ImpactSearchResults extends Component {
 
 											const clinicalSignificancesButton = (
 												<Button
-													onClick={() => this.toggleSignificanceRow(rowKey, 'clinical')}
+													onClick={() => this.toggleSignificanceRow(rowKey, 'clinical', row)}
 													className="button--significances button--clinical"
 												>
 													C
@@ -315,7 +326,8 @@ class ImpactSearchResults extends Component {
 
 											const structuralSignificancesButton = (
 												<Button
-													onClick={() => this.toggleSignificanceRow(rowKey, 'structural')}
+													onClick={() =>
+														this.toggleSignificanceRow(rowKey, 'structural', row)}
 													className="button--significances button--structural"
 												>
 													S
@@ -324,7 +336,7 @@ class ImpactSearchResults extends Component {
 
 											const genomicSignificancesButton = (
 												<Button
-													onClick={() => this.toggleSignificanceRow(rowKey, 'genomic')}
+													onClick={() => this.toggleSignificanceRow(rowKey, 'genomic', row)}
 													className="button--significances button--genomic"
 												>
 													G
@@ -407,7 +419,8 @@ class ImpactSearchResults extends Component {
 														</td>
 													</tr>
 
-													{`${rowKey}:functional` === expandedRow ? (
+													{`${rowKey}:functional` === expandedRow &&
+													this.state.significanceLoading ? (
 														<ExpandedFunctionalSignificance
 															data={significances.functional}
 															variation={variation}
@@ -415,7 +428,8 @@ class ImpactSearchResults extends Component {
 														/>
 													) : null}
 
-													{`${rowKey}:clinical` === expandedRow ? (
+													{`${rowKey}:clinical` === expandedRow &&
+													this.state.significanceLoading ? (
 														<ExpandedClinicalSignificance
 															data={significances.clinical}
 															variation={variation}
@@ -423,7 +437,8 @@ class ImpactSearchResults extends Component {
 														/>
 													) : null}
 
-													{`${rowKey}:transcript` === expandedRow ? (
+													{`${rowKey}:transcript` === expandedRow &&
+													this.state.significanceLoading ? (
 														<ExpandedTranscriptSignificance
 															data={significances.transcript}
 															variation={variation}
@@ -431,7 +446,8 @@ class ImpactSearchResults extends Component {
 														/>
 													) : null}
 
-													{`${rowKey}:structural` === expandedRow ? (
+													{`${rowKey}:structural` === expandedRow &&
+													this.state.structureLoaded ? (
 														<ExpandedStructuralSignificance
 															data={significances.structural}
 															detailsLink={detailsPageLink}

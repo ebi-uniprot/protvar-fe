@@ -59,10 +59,6 @@ class App extends Component {
 							hasENST
 						}
 						protein {
-							variant
-							threeLetterCodes
-							start
-							end
 							hgncId
 							canonical
 							accession
@@ -95,6 +91,10 @@ class App extends Component {
 						variation {
 							novel
 							consequence
+							variant
+							threeLetterCodes
+							begin
+							end
 							codons
 							sourceType
 							disease
@@ -171,43 +171,11 @@ class App extends Component {
 										id
 										pubMedIds
 										allele
-										gene
-										mim
-										phenotype
-										url
 									}
 									cosmicId
 								}
-								clinicalSignificances {
-									type
-									sources
-								}
-								wildType
-								alternativeSequence
-								sourceType
-								association {
-									name
-									description
-									dbReferences {
-										name
-										id
-										url
-										alternativeUrl
-										reviewed
-									}
-									disease
-									evidences {
-										code
-										label
-										source {
-											name
-											id
-											url
-											alternativeUrl
-										}
-									}
-								}
 							}
+							proteinColocatedVariantsEndpoint
 							genomicColocatedVariants {
 								id
 								pubMedIds
@@ -219,8 +187,6 @@ class App extends Component {
 									value
 								}
 							}
-							proteinColocatedVariantsCount
-							diseaseAssociatedProtCVCount
 						}
 					}
 				}
@@ -231,8 +197,8 @@ class App extends Component {
 
 	createVariationDetails(variant) {
 		var variationDetails = {};
-		variationDetails.wildType = variant.protein.variant.split('/')[0];
-		variationDetails.alternativeSequence = variant.protein.variant.split('/')[1];
+		variationDetails.wildType = variant.variation.variant.split('/')[0];
+		variationDetails.alternativeSequence = variant.variation.variant.split('/')[1];
 		variationDetails.clinicalSignificances = this.getClinicalSignificance(variant.variation.clinicalSignificances);
 		variationDetails.clinicalSignificance = this.getClinicalSignificanceStr(
 			variant.variation.clinicalSignificances
@@ -286,7 +252,8 @@ class App extends Component {
 		var functionalSignificance = {};
 		functionalSignificance.features = variant.protein.features;
 		functionalSignificance.variationDetails = variationDetails;
-		functionalSignificance.colocatedVariants = variant.variation.proteinColocatedVariants;
+		functionalSignificance.colocatedVariants = {};
+		functionalSignificance.colocatedVariantsEndpoint = variant.variation.proteinColocatedVariantsEndpoint;
 		return functionalSignificance;
 	}
 
@@ -296,7 +263,8 @@ class App extends Component {
 			clinicalSignificance.categories = variationDetails.clinicalSignificances;
 		}
 		clinicalSignificance.association = variant.variation.association;
-		clinicalSignificance.colocatedVariants = variant.variation.proteinColocatedVariants;
+		clinicalSignificance.colocatedVariants = {};
+		clinicalSignificance.colocatedVariantsEndpoint = variant.variation.proteinColocatedVariantsEndpoint;
 		clinicalSignificance.variationDetails = variationDetails;
 		clinicalSignificance.colocatedVariantsCount = variant.variation.proteinColocatedVariantsCount;
 		clinicalSignificance.diseaseColocatedVariantsCount = variant.variation.diseaseAssociatedProtCVCount;
@@ -317,7 +285,8 @@ class App extends Component {
 		transcriptSignificance.siftScore = variationDetails.siftScore;
 		transcriptSignificance.mostSevereConsequence = variant.variation.consequence;
 		transcriptSignificance.consequenceTerms = consequenceTerms;
-		transcriptSignificance.colocatedVariants = variant.variation.proteinColocatedVariants;
+		transcriptSignificance.colocatedVariants = {};
+		transcriptSignificance.colocatedVariantsEndpoint = variant.variation.proteinColocatedVariantsEndpoint;
 		if (variationDetails.clinicalSignificances !== undefined) {
 			transcriptSignificance.pathogenicity = variationDetails;
 		}
@@ -329,8 +298,8 @@ class App extends Component {
 		transcriptSignificance.aminoAcids = variant.protein.variant;
 		transcriptSignificance.enstId = variant.gene.enstId;
 		transcriptSignificance.ensgId = variant.gene.ensgId;
-		transcriptSignificance.start = variant.protein.start;
-		transcriptSignificance.end = variant.protein.end;
+		transcriptSignificance.start = variant.variation.begin;
+		transcriptSignificance.end = variant.variation.end;
 		transcriptSignificance.cosmicId = variant.variation.cosmicId;
 		transcriptSignificance.dbSNPId = variant.variation.dbSNPId;
 		transcriptSignificance.clinVarIds = variant.variation.clinVarIDs;
@@ -363,34 +332,33 @@ class App extends Component {
 	}
 
 	createStructuralSignificance(variant) {
-		if (variant.structure === null) {
-			return null;
-		}
-		var accession = Object.keys(variant.structure);
-		if (variant.structure[accession].all_structures.length === 0) {
-			return null;
-		}
-		var structuralSignificance = {};
-		structuralSignificance.position = variant.protein.start;
-		structuralSignificance.proteinLength = variant.structure[accession].length;
-		structuralSignificance.allStructures = JSON.parse(JSON.stringify(variant.structure[accession].all_structures)); //{ ...variant.structure[accession].all_structures };
-		structuralSignificance.annotations = [ variant.structure[accession].annotations ];
-		structuralSignificance.ligands = variant.structure[accession].ligands.positions;
-		structuralSignificance.interactions = variant.structure[accession].interactions.positions;
-		structuralSignificance.structures = variant.structure[accession].structures.positions;
-		structuralSignificance.accession = accession[0];
-
-		if (Object.keys(structuralSignificance.allStructures).length > 0) {
-			Object.keys(structuralSignificance.allStructures).forEach((key) => {
-				var allStructure = structuralSignificance.allStructures[key];
-				allStructure.forEach((structure) => {
-					var residue = structure['residue_range'].split('-');
-					structure['start'] = parseInt(residue[0], 10);
-					structure['end'] = parseInt(residue[1], 10);
-				});
-			});
-		}
-		return structuralSignificance;
+		// if (variant.structure === null) {
+		// 	return null;
+		// }
+		// var accession = Object.keys(variant.structure);
+		// if (variant.structure[accession].all_structures.length === 0) {
+		// 	return null;
+		// }
+		// var structuralSignificance = {};
+		// structuralSignificance.position = variant.protein.start;
+		// structuralSignificance.proteinLength = variant.structure[accession].length;
+		// structuralSignificance.allStructures = JSON.parse(JSON.stringify(variant.structure[accession].all_structures)); //{ ...variant.structure[accession].all_structures };
+		// structuralSignificance.annotations = [ variant.structure[accession].annotations ];
+		// structuralSignificance.ligands = variant.structure[accession].ligands.positions;
+		// structuralSignificance.interactions = variant.structure[accession].interactions.positions;
+		// structuralSignificance.structures = variant.structure[accession].structures.positions;
+		// structuralSignificance.accession = accession[0];
+		// if (Object.keys(structuralSignificance.allStructures).length > 0) {
+		// 	Object.keys(structuralSignificance.allStructures).forEach((key) => {
+		// 		var allStructure = structuralSignificance.allStructures[key];
+		// 		allStructure.forEach((structure) => {
+		// 			var residue = structure['residue_range'].split('-');
+		// 			structure['start'] = parseInt(residue[0], 10);
+		// 			structure['end'] = parseInt(residue[1], 10);
+		// 		});
+		// 	});
+		// }
+		// return structuralSignificance;
 	}
 
 	createSignificances(variants) {
@@ -407,7 +375,8 @@ class App extends Component {
 				var updateVariant = {};
 				var variationDetails = this.createVariationDetails(variant);
 				significances.functional = this.createFunctionalSignificance(variant, variationDetails);
-				significances.structural = this.createStructuralSignificance(variant);
+				significances.structural = {}; //this.createStructuralSignificance(variant);
+				significances.structureEndpoint = variant.structure;
 				significances.genomic = this.createGenomicSignificance(variant, variationDetails);
 				significances.clinical = this.createClinicalSignificance(variant, variationDetails);
 				significances.transcript = this.createTranscriptSignificance(variant, variationDetails);
@@ -665,26 +634,26 @@ class App extends Component {
 				allStructures = Object.keys(variant.significances.structural.allStructures).join(',');
 			}
 		}
-		if (
-			variant.variation.proteinColocatedVariants != 'undefined' &&
-			variant.variation.proteinColocatedVariants.length > 0
-		) {
-			var colocated_variants = '';
-			variant.variation.proteinColocatedVariants.forEach((cv) => {
-				colocated_variants +=
-					[
-						`alternative_sequence:${cv.alternativeSequence}`,
-						`clinical_significances:${cv.clinicalSignificances}`,
-						`disease:${cv.disease ? 1 : 0}`,
-						`large_scale_study:${cv.largeScaleStudy}`,
-						`polyphen_score:${cv.polyphenScore}`,
-						`sift_score:${cv.siftScore}`,
-						`source_type:${cv.sourceType}`,
-						`uniprot:${cv.uniprot}`,
-						`wildType:${cv.wildType}`
-					].join(',') + '|';
-			});
-		}
+		// if (
+		// 	variant.variation.proteinColocatedVariantsEndpoint != 'undefined' &&
+		// 	variant.variation.proteinColocatedVariantsEndpoint.length > 0
+		// ) {
+		// 	var colocated_variants = '';
+		// 	variant.variation.proteinColocatedVariants.forEach((cv) => {
+		// 		colocated_variants +=
+		// 			[
+		// 				`alternative_sequence:${cv.alternativeSequence}`,
+		// 				`clinical_significances:${cv.clinicalSignificances}`,
+		// 				`disease:${cv.disease ? 1 : 0}`,
+		// 				`large_scale_study:${cv.largeScaleStudy}`,
+		// 				`polyphen_score:${cv.polyphenScore}`,
+		// 				`sift_score:${cv.siftScore}`,
+		// 				`source_type:${cv.sourceType}`,
+		// 				`uniprot:${cv.uniprot}`,
+		// 				`wildType:${cv.wildType}`
+		// 			].join(',') + '|';
+		// 	});
+		// }
 
 		return (
 			'"' +
@@ -724,9 +693,9 @@ class App extends Component {
 			'","' +
 			variant.protein.accession +
 			'","' +
-			variant.protein.start +
+			variant.variation.begin +
 			'","' +
-			variant.protein.end +
+			variant.variation.end +
 			'","' +
 			allStructures +
 			'","' +
@@ -734,7 +703,7 @@ class App extends Component {
 			'","' +
 			interactions + // STRUCTURAL_INTERACTION_PARTNERS
 			'","' +
-			variant.protein.variant +
+			variant.variation.variant +
 			'","' +
 			isAssociatedDisease +
 			'","' +

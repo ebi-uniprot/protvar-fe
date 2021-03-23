@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import ColocatedVariantsBlock from './ColocatedVariantsBlock';
 import VariantDetailsBlock from './VariantDetailsBlock';
 import PublicationsList from '../other/PublicationsList';
+import axios, { post } from 'axios';
+
 import {
 	detailsLinkPropTypes,
 	detailsLinkDefaultProps,
@@ -15,7 +17,12 @@ import { DropdownButton } from 'franklin-sites';
 
 const ExpandedClinicalSignificance = (props) => {
 	const { data, variation, detailsLink } = props;
-
+	if (Object.keys(data.colocatedVariants).length === 0) {
+		console.log('Calling colocated variants');
+		// axios.get('http://localhost:8091' + data.colocatedVariantsEndpoint).then((response) => {
+		// 	console.log(response.data);
+		// });
+	}
 	return (
 		<tr>
 			<td colSpan="16">
@@ -70,23 +77,16 @@ const ExpandedClinicalSignificance = (props) => {
 											);
 										}
 									});
+									console.log();
+								}
+								var linksList = [];
+								if (Object.keys(links) !== null) {
+									linksList = links
+										.filter((link) => link != null)
+										.map((l) => <li key={l.key}>{l}</li>);
 								}
 
-								const linksList = links.map((l) => <li key={l.key}>{l}</li>);
-
 								return (
-									// <div>
-									// 	<DropdownButton className="primary" label="Download" onSelect={() => null}>
-									// 		<div className="dropdown-menu__content">
-									// 			<p>Download content from:</p>
-									// 			{/* <ul>{linksList}</ul> */}
-									// 			<ul>
-									// 				<li>option 1</li>
-									// 				<li>option 2</li>
-									// 			</ul>
-									// 		</div>
-									// 	</DropdownButton>
-									// </div>
 									<div className="associated-disease" key={`disease-wrapper-${i + 1}`}>
 										{`Disease #${i + 1}`}
 										:
@@ -103,7 +103,6 @@ const ExpandedClinicalSignificance = (props) => {
 					</div>
 
 					<ColocatedVariantsBlock data={data} />
-
 					<VariantDetailsBlock data={data} variation={variation} />
 				</div>
 			</td>
