@@ -92,6 +92,20 @@ class ImpactSearchResults extends Component {
 		});
 	};
 
+	getStructuralSignificance(structural, detailsPageLink) {
+		if (this.state.structureLoaded) {
+			return <ExpandedStructuralSignificance data={structural} detailsLink={detailsPageLink} />;
+		} else {
+			return (
+				<tr className="loader-border ">
+					<td>
+						<Loader />
+					</td>
+				</tr>
+			);
+		}
+	}
+
 	toggleAcessionIsoforms = (group) => {
 		const { openGroup } = this.state;
 
@@ -156,6 +170,10 @@ class ImpactSearchResults extends Component {
 					expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null
 				});
 			}
+		} else {
+			this.setState({
+				expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null
+			});
 		}
 	}
 
@@ -474,24 +492,17 @@ class ImpactSearchResults extends Component {
 														/>
 													) : null}
 
-													{`${rowKey}:structural` === expandedRow &&
-													this.state.structureLoaded &&
-													!this.state.showLoader ? (
-														<ExpandedStructuralSignificance
-															data={significances.structural}
-															detailsLink={detailsPageLink}
-														/>
-													) : null}
-
-													{`${rowKey}:structural` === expandedRow &&
-													this.state.structureLoaded &&
-													this.state.showLoader ? (
-														<tr className="loader-border">
-															<td>
-																<Loader />
-															</td>
-														</tr>
-													) : null}
+													{`${rowKey}:structural` === expandedRow ? (
+														this.getStructuralSignificance(
+															significances.structural,
+															detailsPageLink
+														)
+													) : //this.state.structureLoaded
+													// <ExpandedStructuralSignificance
+													// 	data={significances.structural}
+													// 	detailsLink={detailsPageLink}
+													// />
+													null}
 
 													{`${rowKey}:genomic` === expandedRow ? (
 														<ExpandedGenomicSignificance
