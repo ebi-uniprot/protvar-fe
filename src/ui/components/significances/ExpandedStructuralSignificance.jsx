@@ -42,6 +42,17 @@ class ExpandedStructuralSignificance extends Component {
 		let relatedInteractionsValues = [];
 		let unrelatedInteractionsValues = [];
 
+		if (structures === undefined) {
+			return (
+				<tr>
+					<td colSpan="16">
+						<span className="expanded-section-title">Structural Impact</span>
+						{detailsLink}
+					</td>
+				</tr>
+			);
+		}
+
 		const bestStructures = structures.reduce((all, current) => all.concat(current.best_structures), []);
 
 		const allLigands = ligands.reduce((all, current) => all.concat(current.ligands), []);

@@ -19,21 +19,23 @@ class ImpactSearchResults extends Component {
 		openGroup: null,
 		loading: false,
 		significanceLoading: false,
-		structureLoaded: false
+		structureLoaded: false,
+		showLoader: false
 	};
 
 	createStructuralSignificance(variant, structures) {
+		if (Object.keys(structures).length === 0) {
+			return structuralSignificance;
+		}
 		var accession = variant.protein.accession;
 		var position = variant.variation.begin;
 		var structure = structures[position];
-		if (structure === null) {
-			return null;
-		}
-		// var accession = Object.keys(structure);
-		if (Object.keys(structure[accession].all_structures).length === 0) {
-			return null;
-		}
 		var structuralSignificance = {};
+
+		if (Object.keys(structure[accession].all_structures).length === 0) {
+			return structuralSignificance;
+		}
+
 		structuralSignificance.position = position;
 		structuralSignificance.proteinLength = structure[accession].length;
 		structuralSignificance.allStructures = JSON.parse(JSON.stringify(structure[accession].all_structures)); //{ ...variant.structure[accession].all_structures };
@@ -99,36 +101,62 @@ class ImpactSearchResults extends Component {
 	};
 
 	toggleSignificanceRow(rowId, significanceType, row) {
+		console.log('Environment: ' + process.env.NODE_ENV);
+		// var BASE_URL = '';
+		// if (process.env.NODE_ENV === 'development') {
+		// 	BASE_URL = process.env.REACT_APP_LOCALHOST_API_URL;
+		// 	console.log('BASE_URL: ' + BASE_URL);
+		// }
 		const { expandedRow } = this.state;
 		const rowIdAndType = `${rowId}:${significanceType}`;
-		if (significanceType === 'structural' && Object.keys(row.significances.structural).length === 0) {
-			this.setState({ structureLoaded: false });
-			axios.get('http://localhost:8091' + row.significances.structureEndpoint).then((response) => {
-				console.log(response.data);
-				row.significances.structural = this.createStructuralSignificance(row, response.data);
-				this.setState({ structureLoaded: true });
-			});
-		} else {
-			this.setState({ structureLoaded: true });
+		const BASE_URL = 'http://localhost:8091/uniprot/api';
+		//const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api';
+		if (significanceType === 'structural') {
+			if (Object.keys(row.significances.structural).length === 0) {
+				this.setState({
+					structureLoaded: false,
+					showLoader: true,
+					expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null
+				});
+				axios.get(BASE_URL + row.significances.structureEndpoint).then((response) => {
+					console.log(response.data);
+					row.significances.structural = this.createStructuralSignificance(row, response.data);
+					this.setState({ structureLoaded: true });
+					this.setState({ showLoader: false });
+				});
+			} else {
+				this.setState({
+					structureLoaded: true,
+					expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null
+				});
+			}
+		} else if (significanceType === 'clinical' || significanceType === 'functional') {
+			if (Object.keys(row.significances.clinical.colocatedVariants).length === 0) {
+				this.setState({
+					significanceLoading: false,
+					expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null
+				});
+				axios.get(BASE_URL + row.variation.proteinColocatedVariantsEndpoint).then((response) => {
+					console.log(response.data);
+					var variants = [];
+					var alternativeSequence = row.variation.variant.split('/')[1];
+					response.data.forEach((variant) => {
+						if (variant.alternativeSequence !== alternativeSequence) {
+							variants.push(variant);
+						}
+					});
+					row.significances.clinical.colocatedVariants = variants;
+					row.significances.transcript.colocatedVariants = variants;
+					row.significances.functional.colocatedVariants = variants;
+					this.setState({ significanceLoading: true });
+				});
+			} else {
+				this.setState({
+					significanceLoading: true,
+					expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null
+				});
+			}
 		}
-		if (
-			(significanceType === 'clinical' || significanceType === 'functional') &&
-			Object.keys(row.significances.clinical.colocatedVariants).length === 0
-		) {
-			this.setState({ significanceLoading: false });
-			axios.get('http://localhost:8091' + row.variation.proteinColocatedVariantsEndpoint).then((response) => {
-				console.log(response.data);
-				row.significances.clinical.colocatedVariants = response.data;
-				row.significances.transcript.colocatedVariants = response.data;
-				row.significances.functional.colocatedVariants = response.data;
-				this.setState({ significanceLoading: true });
-			});
-		} else {
-			this.setState({ significanceLoading: true });
-		}
-		this.setState({
-			expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null
-		});
 	}
 
 	fetchNextPage = (next) => {
@@ -252,9 +280,9 @@ class ImpactSearchResults extends Component {
 											}
 
 											const proteinPosition =
-												protein.start === protein.end
-													? protein.start
-													: `${protein.start}-${protein.end}`;
+												variation.begin === variation.end
+													? variation.begin
+													: `${variation.begin}-${variation.end}`;
 
 											const geneLocation =
 												gene.start === gene.end
@@ -265,10 +293,10 @@ class ImpactSearchResults extends Component {
 
 											let detailsPageLink = null;
 
-											if (protein.start && protein.variant) {
-												const varSTRes = protein.variant
+											if (variation.begin && variation.variant) {
+												const varSTRes = variation.variant
 													.split('/')
-													.join(protein.start.toString());
+													.join(variation.begin.toString());
 
 												const detailsPageURL = `https://www.ebi.ac.uk/thornton-srv/databases/cgi-bin/DisaStr/GetPage.pl?uniprot_acc=${protein.accession.toUpperCase()}&template=resreport.html&res=${varSTRes}`;
 												detailsPageLink = (
@@ -447,11 +475,22 @@ class ImpactSearchResults extends Component {
 													) : null}
 
 													{`${rowKey}:structural` === expandedRow &&
-													this.state.structureLoaded ? (
+													this.state.structureLoaded &&
+													!this.state.showLoader ? (
 														<ExpandedStructuralSignificance
 															data={significances.structural}
 															detailsLink={detailsPageLink}
 														/>
+													) : null}
+
+													{`${rowKey}:structural` === expandedRow &&
+													this.state.structureLoaded &&
+													this.state.showLoader ? (
+														<tr className="loader-border">
+															<td>
+																<Loader />
+															</td>
+														</tr>
 													) : null}
 
 													{`${rowKey}:genomic` === expandedRow ? (

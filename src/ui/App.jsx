@@ -39,7 +39,7 @@ class App extends Component {
 							title
 							message
 						}
-						structure
+						structureEndpoint
 						gene {
 							ensgId
 							chromosome
@@ -331,36 +331,6 @@ class App extends Component {
 		return genomic;
 	}
 
-	createStructuralSignificance(variant) {
-		// if (variant.structure === null) {
-		// 	return null;
-		// }
-		// var accession = Object.keys(variant.structure);
-		// if (variant.structure[accession].all_structures.length === 0) {
-		// 	return null;
-		// }
-		// var structuralSignificance = {};
-		// structuralSignificance.position = variant.protein.start;
-		// structuralSignificance.proteinLength = variant.structure[accession].length;
-		// structuralSignificance.allStructures = JSON.parse(JSON.stringify(variant.structure[accession].all_structures)); //{ ...variant.structure[accession].all_structures };
-		// structuralSignificance.annotations = [ variant.structure[accession].annotations ];
-		// structuralSignificance.ligands = variant.structure[accession].ligands.positions;
-		// structuralSignificance.interactions = variant.structure[accession].interactions.positions;
-		// structuralSignificance.structures = variant.structure[accession].structures.positions;
-		// structuralSignificance.accession = accession[0];
-		// if (Object.keys(structuralSignificance.allStructures).length > 0) {
-		// 	Object.keys(structuralSignificance.allStructures).forEach((key) => {
-		// 		var allStructure = structuralSignificance.allStructures[key];
-		// 		allStructure.forEach((structure) => {
-		// 			var residue = structure['residue_range'].split('-');
-		// 			structure['start'] = parseInt(residue[0], 10);
-		// 			structure['end'] = parseInt(residue[1], 10);
-		// 		});
-		// 	});
-		// }
-		// return structuralSignificance;
-	}
-
 	createSignificances(variants) {
 		var updateVariants = {
 			errors: [],
@@ -375,8 +345,8 @@ class App extends Component {
 				var updateVariant = {};
 				var variationDetails = this.createVariationDetails(variant);
 				significances.functional = this.createFunctionalSignificance(variant, variationDetails);
-				significances.structural = {}; //this.createStructuralSignificance(variant);
-				significances.structureEndpoint = variant.structure;
+				significances.structural = {};
+				significances.structureEndpoint = variant.structureEndpoint;
 				significances.genomic = this.createGenomicSignificance(variant, variationDetails);
 				significances.clinical = this.createClinicalSignificance(variant, variationDetails);
 				significances.transcript = this.createTranscriptSignificance(variant, variationDetails);
@@ -393,6 +363,9 @@ class App extends Component {
 	handleSearch = (input, uploadedFile, newPage, loadingFlag) => {
 		console.log('calling client');
 		const { history } = this.props;
+
+		const BASE_URL = 'http://localhost:8091/uniprot/api';
+		//const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api';
 
 		var isFileSelectedNew = false;
 		var loadingNew = true;
@@ -416,9 +389,7 @@ class App extends Component {
 
 		const client = new ApolloClient({
 			cache: new InMemoryCache(),
-			//uri: 'http://localhost:8091/service/api/graphql'
-			uri: 'http://localhost:8091/graphql'
-			// uri: 'http://wp-np2-ca:8080/pepvep-service/graphql'
+			uri: BASE_URL + '/pepvep/graphql'
 		});
 
 		client
@@ -730,8 +701,8 @@ class App extends Component {
 			diseaseDetails +
 			'","' +
 			featureDetails +
-			'","' +
-			colocated_variants +
+			// '","' +
+			// colocated_variants +
 			'"\n'
 		);
 	}
@@ -741,7 +712,7 @@ class App extends Component {
 		var inputArr = searchTerm.split('\n');
 		console.log('handle download clicked');
 		var outputCsv =
-			'INPUT,MOST_SEVER_CONSEQUENCE,ASSEMBLY,CHROMOSOME,' +
+			'INPUT,MOST_SEVERE_CONSEQUENCE,ASSEMBLY,CHROMOSOME,' +
 			'GENOMIC_START,GENOMIC_END,ALLELE_STRING,VARIANT_ALLELE,' +
 			'GENE_SYMBOL,GENE_SYMBOL_SOURCE,' +
 			'HGNC_ID,' +
@@ -757,7 +728,9 @@ class App extends Component {
 			// 'FATHMM_SCORE,PROVEAN_PREDICTION,PROVEAN_SCORE,CADD_RAW,CADD_PHRED,' +
 			'SIFT_PREDICTION,SIFT_SCORE,' +
 			// 'MUTPRED_SCORE,BLOSUM62,APPRIS,TSL,STRAND,CODONS,CDNA_START,CDNA_END,CDS_START,CDS_END,EXON,UNIPARC_ACCESSIONS,' +
-			'STRAND,EXON,HGVS_C,HGVS_P,HGVS_G,DISEASE_ASSOCIATIONS,PROTEIN_ANNOTATIONS,COLOCATED_VARIANTS\n';
+			'STRAND,EXON,HGVS_C,HGVS_P,HGVS_G,DISEASE_ASSOCIATIONS,PROTEIN_ANNOTATIONS\n';
+		// COLOCATED_VARIANTS
+
 		Object.keys(searchResults).forEach((inputStr) => {
 			searchResults[inputStr].rows.forEach((variant) => {
 				if (variant.variation != null) {
@@ -774,10 +747,12 @@ class App extends Component {
 	};
 
 	handleBulkDownload = (e, file) => {
+		const BASE_URL = 'http://localhost:8091/uniprot/api';
+		//const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api';
 		this.fileUpload(file).then((response) => {
 			console.log('File uploaded successfully ', response);
 			let a = document.createElement('a');
-			a.href = 'http://localhost:8091/variant/download/' + response.data + '/';
+			a.href = BASE_URL + '/pepvep/download/' + response.data + '/';
 			a.download = 'pepvep.zip';
 			a.click();
 		});
