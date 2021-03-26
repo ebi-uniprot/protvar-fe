@@ -337,7 +337,7 @@ class App extends Component {
 			results: []
 		};
 		variants.forEach((variant) => {
-			if (variant.errors.length > 0) {
+			if (variant.errors !== undefined && variant.errors.length > 0) {
 				updateVariants.errors = variant.errors;
 			}
 			if (variant.variation != null) {
@@ -364,8 +364,8 @@ class App extends Component {
 		console.log('calling client');
 		const { history } = this.props;
 
-		const BASE_URL = 'http://localhost:8091/uniprot/api';
-		//const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api';
+		// const BASE_URL = 'http://localhost:8091/uniprot/api';
+		const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api';
 
 		var isFileSelectedNew = false;
 		var loadingNew = true;
@@ -382,63 +382,28 @@ class App extends Component {
 			loading: loadingNew,
 			page: newPage
 		});
-		// this.updater.enqueueForceUpdate(this);
-		const GET_VARIANTS = this.getQuery();
+
 		var inputArr = input.split('\n');
+		let inputType = this.getInputType(inputArr);
 		console.log(inputArr);
-
-		const client = new ApolloClient({
-			cache: new InMemoryCache(),
-			uri: BASE_URL + '/pepvep/graphql'
-		});
-
-		client
-			.query({
-				query: GET_VARIANTS,
-				variables: { params: inputArr }
-			})
-			.then((results) => {
-				console.log(results);
-
-				const output = {
-					errors: [],
-					results: {}
-				};
-				if (this.state.searchResults != null) {
-					output.results = this.state.searchResults;
-				}
-				results.data.pepvepvariant.forEach((element) => {
-					// if (element.errors.length > 0) {
-					// 	output.errors = output.errors.concat(element.errors);
-					// }
-					// if (output.results[element.input] === undefined && element.variants.length > 0) {
-					if (element.variants.length > 0) {
-						var updatedVariants = this.createSignificances(element.variants);
-						output.errors = output.errors.concat(updatedVariants.errors);
-						output.results[element.input] = {
-							key: element.input,
-							input: element.input,
-							rows: updatedVariants.results
-						};
-					}
-					console.log('output ' + output.results);
-				});
-
-				this.setState({
-					searchTerm: input,
-					searchResults: output.results,
-					// searchResults: [ ...this.state.searchResults, ...output.results ],
-					errors: output.errors,
-					loading: false,
-					isFileSelected: false,
-					file: uploadedFile,
-					page: newPage
-				});
-
-				history.push('search');
-			});
+		if (inputType === 'hgvs') {
+			this.fetchByHGVS(BASE_URL, inputArr, input, uploadedFile, newPage, history);
+		} else if (inputType === 'vcf') {
+			this.fetchByVCF(BASE_URL, inputArr, input, uploadedFile, newPage, history);
+		}
 		console.log('calling client complete');
 	};
+
+	getInputType(inputArr) {
+		let firstInput = inputArr[0];
+		if (firstInput.startsWith('NC')) {
+			return 'hgvs';
+		} else if (!isNaN(firstInput.split(' ')[0])) {
+			return 'vcf';
+		} else {
+			return 'unknown input';
+		}
+	}
 
 	fetchNextPage = (uploadedFile, page, isFileSelected, loading) => {
 		var pageNumber = page.currentPage;
@@ -494,6 +459,119 @@ class App extends Component {
 			}
 		});
 	};
+
+	fetchByHGVS(BASE_URL, inputArr, input, uploadedFile, newPage, history) {
+		let body = '["NC_000014.9:g.89993420A>G","NC_000010.11:g.87933147C>G"]';
+
+		const headers = {
+			'Content-Type': 'application/json'
+		};
+
+		const uri = BASE_URL + '/pepvep/hgvs';
+		const output = {
+			errors: [],
+			results: {}
+		};
+		if (this.state.searchResults != null) {
+			output.results = this.state.searchResults;
+		}
+		post(uri, inputArr, {
+			headers: headers
+		}).then((response) => {
+			console.log(response.data);
+
+			var updatedVariants = this.createSignificances(response.data);
+
+			updatedVariants.results.forEach((variant) => {
+				let key = variant.gene.hgvsg;
+				var existingVar = output.results[key];
+				if (existingVar !== undefined) {
+					existingVar.rows.push(variant);
+					output.results[key] = {
+						key: key,
+						input: key,
+						rows: existingVar.rows
+					};
+				} else {
+					let newRows = [];
+					newRows.push(variant);
+					output.results[key] = {
+						key: key,
+						input: key,
+						rows: newRows
+					};
+				}
+			});
+
+			this.setState({
+				searchTerm: input,
+				searchResults: output.results,
+				errors: output.errors,
+				loading: false,
+				isFileSelected: false,
+				file: uploadedFile,
+				page: newPage
+			});
+
+			history.push('search');
+
+			// this.processResponse(results, input, uploadedFile, newPage, history);
+		});
+	}
+
+	fetchByVCF(BASE_URL, inputArr, input, uploadedFile, newPage, history) {
+		const GET_VARIANTS = this.getQuery();
+		const client = new ApolloClient({
+			cache: new InMemoryCache(),
+			uri: BASE_URL + '/pepvep/graphql'
+		});
+
+		client
+			.query({
+				query: GET_VARIANTS,
+				variables: { params: inputArr }
+			})
+			.then((results) => {
+				this.processResponse(results, input, uploadedFile, newPage, history);
+			});
+	}
+
+	processResponse(results, input, uploadedFile, newPage, history) {
+		console.log(results);
+
+		const output = {
+			errors: [],
+			results: {}
+		};
+		if (this.state.searchResults != null) {
+			output.results = this.state.searchResults;
+		}
+		results.data.pepvepvariant.forEach((element) => {
+			if (element.variants.length > 0) {
+				var updatedVariants = this.createSignificances(element.variants);
+				output.errors = output.errors.concat(updatedVariants.errors);
+				output.results[element.input] = {
+					key: element.input,
+					input: element.input,
+					rows: updatedVariants.results
+				};
+			}
+			console.log('output ' + output.results);
+		});
+
+		this.setState({
+			searchTerm: input,
+			searchResults: output.results,
+			// searchResults: [ ...this.state.searchResults, ...output.results ],
+			errors: output.errors,
+			loading: false,
+			isFileSelected: false,
+			file: uploadedFile,
+			page: newPage
+		});
+
+		history.push('search');
+	}
 
 	createCsvString(rowArr) {
 		if (rowArr == '' || rowArr.length < 5) {
@@ -747,8 +825,8 @@ class App extends Component {
 	};
 
 	handleBulkDownload = (e, file) => {
-		const BASE_URL = 'http://localhost:8091/uniprot/api';
-		//const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api';
+		// const BASE_URL = 'http://localhost:8091/uniprot/api';
+		const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api';
 		this.fileUpload(file).then((response) => {
 			console.log('File uploaded successfully ', response);
 			let a = document.createElement('a');
@@ -759,7 +837,8 @@ class App extends Component {
 	};
 
 	fileUpload(file) {
-		const url = 'http://localhost:8091/variant/upload';
+		// const url = 'http://localhost:8091/variant/upload';
+		const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api/pepvep/upload';
 		const formData = new FormData();
 		formData.append('file', file);
 		const config = {

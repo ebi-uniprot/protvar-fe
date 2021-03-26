@@ -18,7 +18,7 @@ class ImpactSearchResults extends Component {
 		showAllIsoforms: false,
 		openGroup: null,
 		loading: false,
-		significanceLoading: false,
+		colocatedVariantLoaded: false,
 		structureLoaded: false,
 		showLoader: false
 	};
@@ -96,13 +96,47 @@ class ImpactSearchResults extends Component {
 		if (this.state.structureLoaded) {
 			return <ExpandedStructuralSignificance data={structural} detailsLink={detailsPageLink} />;
 		} else {
+			return this.getLoader();
+		}
+	}
+
+	getClinicalSignificance(clinical, variation, detailsPageLink) {
+		if (this.state.colocatedVariantLoaded) {
+			return <ExpandedClinicalSignificance data={clinical} variation={variation} detailsLink={detailsPageLink} />;
+		} else {
+			return this.getLoader();
+		}
+	}
+
+	getLoader() {
+		return (
+			<tr className="loader-border ">
+				<td />
+				<td />
+				<td />
+				<td />
+				<td />
+				<td />
+				<td>
+					<Loader />
+				</td>
+				<td />
+				<td />
+				<td />
+				<td />
+				<td />
+				<td />
+			</tr>
+		);
+	}
+
+	getFunctionalSignificance(functional, variation, detailsPageLink) {
+		if (this.state.colocatedVariantLoaded) {
 			return (
-				<tr className="loader-border ">
-					<td>
-						<Loader />
-					</td>
-				</tr>
+				<ExpandedFunctionalSignificance data={functional} variation={variation} detailsLink={detailsPageLink} />
 			);
+		} else {
+			return this.getLoader();
 		}
 	}
 
@@ -123,13 +157,12 @@ class ImpactSearchResults extends Component {
 		// }
 		const { expandedRow } = this.state;
 		const rowIdAndType = `${rowId}:${significanceType}`;
-		const BASE_URL = 'http://localhost:8091/uniprot/api';
-		//const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api';
+		// const BASE_URL = 'http://localhost:8091/uniprot/api';
+		const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api';
 		if (significanceType === 'structural') {
 			if (Object.keys(row.significances.structural).length === 0) {
 				this.setState({
 					structureLoaded: false,
-					showLoader: true,
 					expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null
 				});
 				axios.get(BASE_URL + row.significances.structureEndpoint).then((response) => {
@@ -140,14 +173,13 @@ class ImpactSearchResults extends Component {
 				});
 			} else {
 				this.setState({
-					structureLoaded: true,
 					expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null
 				});
 			}
 		} else if (significanceType === 'clinical' || significanceType === 'functional') {
 			if (Object.keys(row.significances.clinical.colocatedVariants).length === 0) {
 				this.setState({
-					significanceLoading: false,
+					colocatedVariantLoaded: false,
 					expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null
 				});
 				axios.get(BASE_URL + row.variation.proteinColocatedVariantsEndpoint).then((response) => {
@@ -160,13 +192,12 @@ class ImpactSearchResults extends Component {
 						}
 					});
 					row.significances.clinical.colocatedVariants = variants;
-					row.significances.transcript.colocatedVariants = variants;
 					row.significances.functional.colocatedVariants = variants;
-					this.setState({ significanceLoading: true });
+					this.setState({ colocatedVariantLoaded: true });
 				});
 			} else {
 				this.setState({
-					significanceLoading: true,
+					colocatedVariantLoaded: true,
 					expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null
 				});
 			}
@@ -210,7 +241,7 @@ class ImpactSearchResults extends Component {
 		const loading = this.props.loading;
 		const { expandedRow, showAllIsoforms, openGroup } = this.state;
 		const noLoading = false;
-		const significanceLoading = this.state.significanceLoading;
+		const significanceLoading = this.state.colocatedVariantLoaded;
 
 		let counter = 0;
 
@@ -465,26 +496,23 @@ class ImpactSearchResults extends Component {
 														</td>
 													</tr>
 
-													{`${rowKey}:functional` === expandedRow &&
-													this.state.significanceLoading ? (
-														<ExpandedFunctionalSignificance
-															data={significances.functional}
-															variation={variation}
-															detailsLink={detailsPageLink}
-														/>
+													{`${rowKey}:functional` === expandedRow ? (
+														this.getFunctionalSignificance(
+															significances.functional,
+															variation,
+															detailsPageLink
+														)
 													) : null}
 
-													{`${rowKey}:clinical` === expandedRow &&
-													this.state.significanceLoading ? (
-														<ExpandedClinicalSignificance
-															data={significances.clinical}
-															variation={variation}
-															detailsLink={detailsPageLink}
-														/>
+													{`${rowKey}:clinical` === expandedRow ? (
+														this.getClinicalSignificance(
+															significances.clinical,
+															variation,
+															detailsPageLink
+														)
 													) : null}
 
-													{`${rowKey}:transcript` === expandedRow &&
-													this.state.significanceLoading ? (
+													{`${rowKey}:transcript` === expandedRow ? (
 														<ExpandedTranscriptSignificance
 															data={significances.transcript}
 															variation={variation}
@@ -497,12 +525,7 @@ class ImpactSearchResults extends Component {
 															significances.structural,
 															detailsPageLink
 														)
-													) : //this.state.structureLoaded
-													// <ExpandedStructuralSignificance
-													// 	data={significances.structural}
-													// 	detailsLink={detailsPageLink}
-													// />
-													null}
+													) : null}
 
 													{`${rowKey}:genomic` === expandedRow ? (
 														<ExpandedGenomicSignificance

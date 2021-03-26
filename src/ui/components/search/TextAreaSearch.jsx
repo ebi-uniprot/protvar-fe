@@ -126,17 +126,7 @@ class TextAreaSearch extends Component {
 		return (
 			<Fragment>
 				<div>
-					{/* <h3 className="black-color margin-bottom-none vf-section-header__heading">
-						<div className="inline-block">About PepVEP</div>
-					</h3> */}
-
 					<p>
-						{/* PepVEP is an intuitive web resource for scientists to interpret the effects per residue of
-						genomic variants on protein function or structure. It unites existing genomic and protein
-						EMBL-EBI expertise; providing functional information from the Variant Effect Predictor (VEP),
-						UniProt functional residue annotation (Protein function), and PDBe structural residue annotation
-						in an integrated platform. PepVEP can be used as an interactive service or computationally via
-						it's API. */}
 						PepVEP is an online service to interpret the{' '}
 						<b>effects of variants on protein function and structure</b>. It utilises functional information
 						from the Ensembl Variant Effect Predictor (VEP), the UniProt functional residue annotation
