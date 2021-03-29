@@ -55,8 +55,6 @@ class App extends Component {
 							hgvsg
 							hgvsp
 							hgncId
-							hasENSP
-							hasENST
 						}
 						protein {
 							hgncId
@@ -161,19 +159,6 @@ class App extends Component {
 								predictionValType
 								predAlgorithmNameType
 								score
-							}
-							proteinColocatedVariants {
-								begin
-								end
-								ids {
-									dbSNPId
-									clinVarIds {
-										id
-										pubMedIds
-										allele
-									}
-									cosmicId
-								}
 							}
 							proteinColocatedVariantsEndpoint
 							genomicColocatedVariants {
