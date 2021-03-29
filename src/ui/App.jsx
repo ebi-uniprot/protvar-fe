@@ -815,15 +815,15 @@ class App extends Component {
 		this.fileUpload(file).then((response) => {
 			console.log('File uploaded successfully ', response);
 			let a = document.createElement('a');
-			a.href = BASE_URL + '/pepvep/download/' + response.data + '/';
+			a.href = BASE_URL + '/pepvep/variant/download/' + response.data + '/';
 			a.download = 'pepvep.zip';
 			a.click();
 		});
 	};
 
 	fileUpload(file) {
-		// const url = 'http://localhost:8091/variant/upload';
-		const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api/pepvep/upload';
+		// const BASE_URL = 'http://localhost:8091/uniprot/api/pepvep/variant/upload';
+		const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api/pepvep/variant/upload';
 		const formData = new FormData();
 		formData.append('file', file);
 		const config = {
@@ -831,7 +831,7 @@ class App extends Component {
 				'content-type': 'multipart/form-data'
 			}
 		};
-		return post(url, formData, config);
+		return post(BASE_URL, formData, config);
 	}
 
 	render() {
