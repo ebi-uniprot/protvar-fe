@@ -160,7 +160,52 @@ class App extends Component {
 								predAlgorithmNameType
 								score
 							}
-							proteinColocatedVariantsEndpoint
+							proteinColocatedVariants {
+								begin
+								end
+								ids {
+									dbSNPId
+									clinVarIds {
+										id
+										pubMedIds
+										allele
+										gene
+										mim
+										phenotype
+										url
+									}
+									cosmicId
+								}
+								clinicalSignificances {
+									type
+									sources
+								}
+								wildType
+								alternativeSequence
+								sourceType
+								association {
+									name
+									description
+									dbReferences {
+										name
+										id
+										url
+										alternativeUrl
+										reviewed
+									}
+									disease
+									evidences {
+										code
+										label
+										source {
+											name
+											id
+											url
+											alternativeUrl
+										}
+									}
+								}
+							}
 							genomicColocatedVariants {
 								id
 								pubMedIds
@@ -237,8 +282,9 @@ class App extends Component {
 		var functionalSignificance = {};
 		functionalSignificance.features = variant.protein.features;
 		functionalSignificance.variationDetails = variationDetails;
-		functionalSignificance.colocatedVariants = {};
-		functionalSignificance.colocatedVariantsEndpoint = variant.variation.proteinColocatedVariantsEndpoint;
+		// functionalSignificance.colocatedVariants = {};
+		// functionalSignificance.colocatedVariantsEndpoint = variant.variation.proteinColocatedVariantsEndpoint;
+		functionalSignificance.colocatedVariants = variant.variation.proteinColocatedVariants;
 		return functionalSignificance;
 	}
 
@@ -248,8 +294,9 @@ class App extends Component {
 			clinicalSignificance.categories = variationDetails.clinicalSignificances;
 		}
 		clinicalSignificance.association = variant.variation.association;
-		clinicalSignificance.colocatedVariants = {};
-		clinicalSignificance.colocatedVariantsEndpoint = variant.variation.proteinColocatedVariantsEndpoint;
+		// clinicalSignificance.colocatedVariants = {};
+		// clinicalSignificance.colocatedVariantsEndpoint = variant.variation.proteinColocatedVariantsEndpoint;
+		clinicalSignificance.colocatedVariants = variant.variation.proteinColocatedVariants;
 		clinicalSignificance.variationDetails = variationDetails;
 		clinicalSignificance.colocatedVariantsCount = variant.variation.proteinColocatedVariantsCount;
 		clinicalSignificance.diseaseColocatedVariantsCount = variant.variation.diseaseAssociatedProtCVCount;

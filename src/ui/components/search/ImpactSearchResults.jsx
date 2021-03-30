@@ -101,11 +101,11 @@ class ImpactSearchResults extends Component {
 	}
 
 	getClinicalSignificance(clinical, variation, detailsPageLink) {
-		if (this.state.colocatedVariantLoaded) {
-			return <ExpandedClinicalSignificance data={clinical} variation={variation} detailsLink={detailsPageLink} />;
-		} else {
-			return this.getLoader();
-		}
+		// if (this.state.colocatedVariantLoaded) {
+		return <ExpandedClinicalSignificance data={clinical} variation={variation} detailsLink={detailsPageLink} />;
+		// } else {
+		// 	return this.getLoader();
+		// }
 	}
 
 	getLoader() {
@@ -131,13 +131,11 @@ class ImpactSearchResults extends Component {
 	}
 
 	getFunctionalSignificance(functional, variation, detailsPageLink) {
-		if (this.state.colocatedVariantLoaded) {
-			return (
-				<ExpandedFunctionalSignificance data={functional} variation={variation} detailsLink={detailsPageLink} />
-			);
-		} else {
-			return this.getLoader();
-		}
+		// if (this.state.colocatedVariantLoaded) {
+		return <ExpandedFunctionalSignificance data={functional} variation={variation} detailsLink={detailsPageLink} />;
+		// } else {
+		// 	return this.getLoader();
+		// }
 	}
 
 	toggleAcessionIsoforms = (group) => {
@@ -176,7 +174,8 @@ class ImpactSearchResults extends Component {
 					expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null
 				});
 			}
-		} else if (significanceType === 'clinical' || significanceType === 'functional') {
+		} else {
+			/*else if (significanceType === 'clinical' || significanceType === 'functional') {
 			if (Object.keys(row.significances.clinical.colocatedVariants).length === 0) {
 				this.setState({
 					colocatedVariantLoaded: false,
@@ -201,10 +200,11 @@ class ImpactSearchResults extends Component {
 					expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null
 				});
 			}
-		} else {
-			this.setState({
-				expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null
-			});
+		}*/ this.setState(
+				{
+					expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null
+				}
+			);
 		}
 	}
 
@@ -488,7 +488,7 @@ class ImpactSearchResults extends Component {
 															)}
 														</td>
 														<td className="fit">
-															{significances.structural ? (
+															{significances.structureEndpoint !== null ? (
 																structuralSignificancesButton
 															) : (
 																noSignificance
