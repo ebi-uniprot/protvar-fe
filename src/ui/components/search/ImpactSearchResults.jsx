@@ -373,51 +373,51 @@ class ImpactSearchResults extends Component {
 											const noSignificance = <span className="no-significances">-</span>;
 
 											const transcriptSignificancesButton = (
-												<Button
+												<button
 													onClick={() =>
 														this.toggleSignificanceRow(rowKey, 'transcript', row)}
 													className="button--significances button--transcript"
 												>
 													T
-												</Button>
+												</button>
 											);
 
 											const functionalSignificancesButton = (
-												<Button
+												<button
 													onClick={() =>
 														this.toggleSignificanceRow(rowKey, 'functional', row)}
 													className="button--significances button--positional"
 												>
 													F
-												</Button>
+												</button>
 											);
 
 											const clinicalSignificancesButton = (
-												<Button
+												<button
 													onClick={() => this.toggleSignificanceRow(rowKey, 'clinical', row)}
-													className="button--significances button--clinical"
+													className="legend-icon button--significances button--clinical"
 												>
 													C
-												</Button>
+												</button>
 											);
 
 											const structuralSignificancesButton = (
-												<Button
+												<button
 													onClick={() =>
 														this.toggleSignificanceRow(rowKey, 'structural', row)}
 													className="button--significances button--structural"
 												>
 													S
-												</Button>
+												</button>
 											);
 
 											const genomicSignificancesButton = (
-												<Button
+												<button
 													onClick={() => this.toggleSignificanceRow(rowKey, 'genomic', row)}
 													className="button--significances button--genomic"
 												>
 													G
-												</Button>
+												</button>
 											);
 
 											return (
