@@ -9,7 +9,6 @@ import ExpandedStructuralSignificance from '../significances/ExpandedStructuralS
 import ExpandedGenomicSignificance from '../significances/ExpandedGenomicSignificance';
 import ProteinReviewStatus from '../other/ProteinReviewStatus';
 import SearchResultsLegends from '../other/SearchResultsLegends';
-import VariantFeature from '../../pages/VariantFeature';
 import { Loader } from 'franklin-sites';
 import axios, { post } from 'axios';
 
