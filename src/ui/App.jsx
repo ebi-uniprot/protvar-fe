@@ -327,7 +327,7 @@ class App extends Component {
 		transcriptSignificance.hgvsp = variant.gene.hgvsp;
 		transcriptSignificance.canonical = variant.protein.canonical;
 		transcriptSignificance.codons = variant.variation.codons;
-		transcriptSignificance.aminoAcids = variant.protein.variant;
+		transcriptSignificance.aminoAcids = variant.variation.variant;
 		transcriptSignificance.enstId = variant.gene.enstId;
 		transcriptSignificance.ensgId = variant.gene.ensgId;
 		transcriptSignificance.start = variant.variation.begin;
@@ -343,6 +343,7 @@ class App extends Component {
 		transcriptSignificance.mutationTasterPrediction = '';
 		transcriptSignificance.lrtPrediction = '';
 		transcriptSignificance.lrtScore = 0.0;
+		transcriptSignificance.caddPhred = 0.0;
 		transcriptSignificances.push(transcriptSignificance);
 		return transcriptSignificances;
 	}
@@ -354,7 +355,7 @@ class App extends Component {
 		consequencePrediction.polyphenScore = variationDetails.polyphenScore;
 		consequencePrediction.siftPrediction = variationDetails.siftPrediction;
 		consequencePrediction.siftScore = variationDetails.siftScore;
-		consequencePrediction.caddPhred = 0.0;
+		consequencePrediction.caddPhred = variant.variation.caddPred;
 		consequencePrediction.caddRaw = 0.0;
 
 		genomic.consequencePrediction = consequencePrediction;
@@ -493,8 +494,6 @@ class App extends Component {
 	};
 
 	fetchByHGVS(BASE_URL, inputArr, input, uploadedFile, newPage, history) {
-		let body = '["NC_000014.9:g.89993420A>G","NC_000010.11:g.87933147C>G"]';
-
 		const headers = {
 			'Content-Type': 'application/json'
 		};
@@ -510,29 +509,30 @@ class App extends Component {
 		post(uri, inputArr, {
 			headers: headers
 		}).then((response) => {
-			console.log(response.data);
+			console.log(response.data.entities);
+			response.data.entities.forEach((variants) => {
+				var updatedVariants = this.createSignificances(variants);
 
-			var updatedVariants = this.createSignificances(response.data);
-
-			updatedVariants.results.forEach((variant) => {
-				let key = variant.gene.hgvsg;
-				var existingVar = output.results[key];
-				if (existingVar !== undefined) {
-					existingVar.rows.push(variant);
-					output.results[key] = {
-						key: key,
-						input: key,
-						rows: existingVar.rows
-					};
-				} else {
-					let newRows = [];
-					newRows.push(variant);
-					output.results[key] = {
-						key: key,
-						input: key,
-						rows: newRows
-					};
-				}
+				updatedVariants.results.forEach((variant) => {
+					let key = variant.gene.hgvsg;
+					var existingVar = output.results[key];
+					if (existingVar !== undefined) {
+						existingVar.rows.push(variant);
+						output.results[key] = {
+							key: key,
+							input: key,
+							rows: existingVar.rows
+						};
+					} else {
+						let newRows = [];
+						newRows.push(variant);
+						output.results[key] = {
+							key: key,
+							input: key,
+							rows: newRows
+						};
+					}
+				});
 			});
 
 			this.setState({

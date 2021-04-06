@@ -24,7 +24,17 @@ const ExampleSection = () => (
 										<span className="variant-example">
 											<pre>3 165830358 165830358 T/C . . .</pre>
 											<pre>21 43072000 43072000 T/C . . .</pre>
-											<pre>10 87933147 87933147 C/T . . .</pre>
+										</span>
+									</div>
+								</div>
+							</li>
+							<li>
+								Entering hgvs in the Search box
+								<div className="input-examples">
+									<div>
+										<span className="variant-example">
+											<pre>NC_000014.9:g.89993420A>G</pre>
+											<pre>NC_000010.11:g.87933147C>G</pre>
 										</span>
 									</div>
 								</div>

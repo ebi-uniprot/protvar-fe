@@ -9,6 +9,7 @@ import ExpandedStructuralSignificance from '../significances/ExpandedStructuralS
 import ExpandedGenomicSignificance from '../significances/ExpandedGenomicSignificance';
 import ProteinReviewStatus from '../other/ProteinReviewStatus';
 import SearchResultsLegends from '../other/SearchResultsLegends';
+import VariantFeature from '../../pages/VariantFeature';
 import { Loader } from 'franklin-sites';
 import axios, { post } from 'axios';
 
@@ -20,9 +21,25 @@ class ImpactSearchResults extends Component {
 		loading: false,
 		colocatedVariantLoaded: false,
 		structureLoaded: false,
+		caddLoaded: false,
 		showLoader: false
 	};
 
+	getCaddPrediction(transcript) {
+		if (this.state.caddLoaded) {
+			const caddColour = transcript.caddPhred <= 30 ? 'green' : 'red';
+			return (
+				<span
+					className={`label warning cadd-score cadd-score--${caddColour}`}
+					title={`Likely ${transcript.caddPhred < 30 ? 'Benign' : 'Deleterious'}`}
+				>
+					{transcript.caddPhred}
+				</span>
+			);
+		} else {
+			return <span>Loading...</span>;
+		}
+	}
 	createStructuralSignificance(variant, structures) {
 		if (Object.keys(structures).length === 0) {
 			return structuralSignificance;
@@ -57,8 +74,45 @@ class ImpactSearchResults extends Component {
 		return structuralSignificance;
 	}
 
+	updateCADDPrediction() {
+		console.log(Object.keys(this.props.rows));
+		const headers = {
+			'Content-Type': 'application/json'
+		};
+		var inputArr = Object.keys(this.props.rows);
+		// const BASE_URL = 'http://localhost:8091/uniprot/api/pepvep/prediction/';
+		const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api/pepvep/prediction/';
+		axios
+			.post(BASE_URL, inputArr, {
+				headers: headers
+			})
+			.then((response) => {
+				console.log(response.data);
+				Object.keys(this.props.rows).forEach((input) => {
+					var variantRows = this.props.rows[input].rows;
+					var feature = response.data[input];
+					variantRows.forEach((variant) => {
+						var key =
+							variant.variation.begin + '|' + variant.variation.end + '|' + variant.variation.variant;
+
+						if (feature[key] !== undefined) {
+							variant.significances.transcript[0].caddPhred = feature[key];
+						} else {
+							variant.significances.transcript[0].caddPhred = '-';
+						}
+					});
+
+					console.log(variantRows);
+				});
+				this.setState({
+					caddLoaded: true
+				});
+			});
+	}
+
 	componentDidMount() {
 		console.log('componentDidMount called');
+		this.updateCADDPrediction();
 		var options = {
 			root: null,
 			rootMargin: '0px',
@@ -147,12 +201,6 @@ class ImpactSearchResults extends Component {
 	};
 
 	toggleSignificanceRow(rowId, significanceType, row) {
-		console.log('Environment: ' + process.env.NODE_ENV);
-		// var BASE_URL = '';
-		// if (process.env.NODE_ENV === 'development') {
-		// 	BASE_URL = process.env.REACT_APP_LOCALHOST_API_URL;
-		// 	console.log('BASE_URL: ' + BASE_URL);
-		// }
 		const { expandedRow } = this.state;
 		const rowIdAndType = `${rowId}:${significanceType}`;
 		// const BASE_URL = 'http://localhost:8091/uniprot/api';
@@ -359,6 +407,8 @@ class ImpactSearchResults extends Component {
 													</a>
 												);
 											}
+											const caddColour =
+												significances.transcript[0].caddPhred <= 30 ? 'green' : 'red';
 
 											let { accession } = protein;
 
@@ -426,17 +476,15 @@ class ImpactSearchResults extends Component {
 														<td>
 															{significances.transcript &&
 															significances.transcript[0].caddPhred ? (
-																<span
-																	className={`label warning cadd-score cadd-score--${caddColour}`}
-																	title={`Likely ${significances.transcript[0]
-																		.caddPhred < 30
-																		? 'Benign'
-																		: 'Deleterious'}`}
-																>
-																	{significances.transcript[0].caddPhred}
-																</span>
+																this.getCaddPrediction(significances.transcript[0])
 															) : (
-																'-'
+																<div
+																	style={{
+																		background: 'lightblue'
+																	}}
+																>
+																	<span>Loading...</span>
+																</div>
 															)}
 														</td>
 														<td>{gene.symbol}</td>
@@ -452,8 +500,8 @@ class ImpactSearchResults extends Component {
 														</td>
 														<td>{proteinPosition || '-'}</td>
 														<td>
-															<span title={protein.variant || '-'}>
-																{protein.threeLetterCodes || '-'}
+															<span title={variation.variant || '-'}>
+																{variation.threeLetterCodes || '-'}
 															</span>
 														</td>
 														<td>{geneLocation}</td>
