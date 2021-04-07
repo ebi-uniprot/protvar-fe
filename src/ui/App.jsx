@@ -509,8 +509,8 @@ class App extends Component {
 		post(uri, inputArr, {
 			headers: headers
 		}).then((response) => {
-			console.log(response.data.entities);
-			response.data.entities.forEach((variants) => {
+			console.log(response.data.variants);
+			response.data.variants.forEach((variants) => {
 				var updatedVariants = this.createSignificances(variants);
 
 				updatedVariants.results.forEach((variant) => {

@@ -20,7 +20,7 @@ class ImpactSearchResults extends Component {
 		loading: false,
 		colocatedVariantLoaded: false,
 		structureLoaded: false,
-		caddLoaded: false,
+		caddLoadState: true,
 		showLoader: false
 	};
 
@@ -36,7 +36,7 @@ class ImpactSearchResults extends Component {
 				</span>
 			);
 		} else {
-			return <span>Loading...</span>;
+			return <span>'-'</span>;
 		}
 	}
 	createStructuralSignificance(variant, structures) {
@@ -79,33 +79,55 @@ class ImpactSearchResults extends Component {
 			'Content-Type': 'application/json'
 		};
 		var inputArr = Object.keys(this.props.rows);
+		var errorFlag = false;
 		// const BASE_URL = 'http://localhost:8091/uniprot/api/pepvep/prediction/';
 		const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api/pepvep/prediction/';
 		axios
 			.post(BASE_URL, inputArr, {
 				headers: headers
 			})
+			.catch(function(error) {
+				if (error.response) {
+					errorFlag = true;
+				} else {
+					// Something happened in setting up the request that triggered an Error
+					console.log('Error', error.message);
+				}
+				console.log(error.config);
+			})
 			.then((response) => {
-				console.log(response.data);
-				Object.keys(this.props.rows).forEach((input) => {
-					var variantRows = this.props.rows[input].rows;
-					var feature = response.data[input];
-					variantRows.forEach((variant) => {
-						var key =
-							variant.variation.begin + '|' + variant.variation.end + '|' + variant.variation.variant;
-
-						if (feature[key] !== undefined) {
-							variant.significances.transcript[0].caddPhred = feature[key];
-						} else {
-							variant.significances.transcript[0].caddPhred = '-';
-						}
+				if (errorFlag) {
+					Object.keys(this.props.rows).forEach((input) => {
+						var variantRows = this.props.rows[input].rows;
+						variantRows.forEach((variant) => {
+							variant.significances.transcript[0].caddPhred = 'failed';
+						});
 					});
+					this.setState({
+						caddLoaded: true
+					});
+				} else {
+					console.log(response.data);
+					Object.keys(this.props.rows).forEach((input) => {
+						var variantRows = this.props.rows[input].rows;
+						var feature = response.data[input];
+						variantRows.forEach((variant) => {
+							var key =
+								variant.variation.begin + '|' + variant.variation.end + '|' + variant.variation.variant;
 
-					console.log(variantRows);
-				});
-				this.setState({
-					caddLoaded: true
-				});
+							if (feature[key] !== undefined) {
+								variant.significances.transcript[0].caddPhred = feature[key];
+							} else {
+								variant.significances.transcript[0].caddPhred = '-';
+							}
+						});
+
+						console.log(variantRows);
+					});
+					this.setState({
+						caddLoaded: true
+					});
+				}
 			});
 	}
 
@@ -472,18 +494,18 @@ class ImpactSearchResults extends Component {
 											return (
 												<Fragment key={`${rowKey}-${counter}`}>
 													<tr key={rowKey}>
-														<td>
+														<td className="fit">
 															{significances.transcript &&
 															significances.transcript[0].caddPhred ? (
 																this.getCaddPrediction(significances.transcript[0])
 															) : (
-																<div
+																<span
 																	style={{
 																		background: 'lightblue'
 																	}}
 																>
-																	<span>Loading...</span>
-																</div>
+																	Loading...
+																</span>
 															)}
 														</td>
 														<td>{gene.symbol}</td>
