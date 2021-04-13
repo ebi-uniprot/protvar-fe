@@ -258,7 +258,7 @@ class TextAreaSearch extends Component {
 												be accessed using the link below.<br />
 												<b>Documentation: </b>
 												<a
-													href="http://wp-np2-be:8099/swagger-ui/#/"
+													href="http://wwwdev.ebi.ac.uk/uniprot/api/pepvep/swagger-ui/#/"
 													target="_blank"
 													rel="noopener noreferrer"
 													className="ref-link"

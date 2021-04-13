@@ -81,7 +81,7 @@ class ImpactSearchResults extends Component {
 		var inputArr = Object.keys(this.props.rows);
 		var errorFlag = false;
 		// const BASE_URL = 'http://localhost:8091/uniprot/api/pepvep/prediction/';
-		const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api/pepvep/prediction/';
+		const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api/pepvep/variant/prediction/';
 		axios
 			.post(BASE_URL, inputArr, {
 				headers: headers
