@@ -17,8 +17,8 @@ module.exports = merge(common, {
       filename: 'index.html'
     }),
     new webpack.DefinePlugin({
-      BASE_URL: JSON.stringify('/uniprot/pepvep'),
-      API_URL: JSON.stringify('/uniprot/pepvep')
+      BASE_URL: JSON.stringify(''),
+      API_URL: JSON.stringify('http://wwwdev.ebi.ac.uk/uniprot/api/pepvep/')
     }),
   ],
 });

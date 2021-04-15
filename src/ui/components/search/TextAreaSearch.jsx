@@ -51,6 +51,7 @@ class TextAreaSearch extends Component {
 
 	useExampleData = () => {
 		const searchTerm = [
+			'21 25891796 25891796 C/T . . .',
 			'14 89993420 89993420 A/G . . .',
 			'10 87933147 87933147 C/T . . .',
 			'21 43072000 43072000 T/C . . .'

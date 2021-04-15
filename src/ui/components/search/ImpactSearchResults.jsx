@@ -20,7 +20,7 @@ class ImpactSearchResults extends Component {
 		loading: false,
 		colocatedVariantLoaded: false,
 		structureLoaded: false,
-		caddLoadState: true,
+		caddLoaded: false,
 		showLoader: false
 	};
 
@@ -35,9 +35,10 @@ class ImpactSearchResults extends Component {
 					{transcript.caddPhred}
 				</span>
 			);
-		} else {
-			return <span>'-'</span>;
 		}
+		// else {
+		// 	return <span>'-'</span>;
+		// }
 	}
 	createStructuralSignificance(variant, structures) {
 		if (Object.keys(structures).length === 0) {
@@ -73,17 +74,20 @@ class ImpactSearchResults extends Component {
 		return structuralSignificance;
 	}
 
-	updateCADDPrediction() {
-		console.log(Object.keys(this.props.rows));
+	updateCADDPrediction(inputArr) {
+		console.log('CADD Prediction called ' + inputArr);
 		const headers = {
 			'Content-Type': 'application/json'
 		};
-		var inputArr = Object.keys(this.props.rows);
+
 		var errorFlag = false;
-		// const BASE_URL = 'http://localhost:8091/uniprot/api/pepvep/prediction/';
-		const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api/pepvep/variant/prediction/';
+		// const BASE_URL = 'http://localhost:8091/uniprot/api/pepvep/variant/prediction/';
+		// const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api/pepvep/variant/prediction/';
+		const endpoint_url = `${API_URL}/variant/prediction/`;
+		console.log('endpoint_url ' + endpoint_url);
+
 		axios
-			.post(BASE_URL, inputArr, {
+			.post(endpoint_url, inputArr, {
 				headers: headers
 			})
 			.catch(function(error) {
@@ -97,7 +101,7 @@ class ImpactSearchResults extends Component {
 			})
 			.then((response) => {
 				if (errorFlag) {
-					Object.keys(this.props.rows).forEach((input) => {
+					inputArr.forEach((input) => {
 						var variantRows = this.props.rows[input].rows;
 						variantRows.forEach((variant) => {
 							variant.significances.transcript[0].caddPhred = 'failed';
@@ -107,7 +111,6 @@ class ImpactSearchResults extends Component {
 						caddLoaded: true
 					});
 				} else {
-					console.log(response.data);
 					Object.keys(this.props.rows).forEach((input) => {
 						var variantRows = this.props.rows[input].rows;
 						var feature = response.data[input];
@@ -115,14 +118,14 @@ class ImpactSearchResults extends Component {
 							var key =
 								variant.variation.begin + '|' + variant.variation.end + '|' + variant.variation.variant;
 
-							if (feature[key] !== undefined) {
+							if (feature !== undefined && feature[key] !== undefined) {
 								variant.significances.transcript[0].caddPhred = feature[key];
-							} else {
-								variant.significances.transcript[0].caddPhred = '-';
+								variant.significances.genomic.consequencePrediction.caddPhred = feature[key];
 							}
+							// else {
+							// 	variant.significances.transcript[0].caddPhred = '-';
+							// }
 						});
-
-						console.log(variantRows);
 					});
 					this.setState({
 						caddLoaded: true
@@ -130,10 +133,22 @@ class ImpactSearchResults extends Component {
 				}
 			});
 	}
-
+	componentDidUpdate() {
+		var inputArr = [];
+		Object.keys(this.props.rows).forEach((input) => {
+			var variantRows = this.props.rows[input].rows;
+			if (variantRows[0].significances.transcript[0].caddPhred === 0.0) {
+				variantRows[0].significances.transcript[0].caddPhred = 'Loading';
+				inputArr.push(input);
+			}
+		});
+		if (inputArr.length > 0) {
+			this.updateCADDPrediction(inputArr);
+		}
+	}
 	componentDidMount() {
-		console.log('componentDidMount called');
-		this.updateCADDPrediction();
+		var inputArr = Object.keys(this.props.rows);
+		this.updateCADDPrediction(inputArr);
 		var options = {
 			root: null,
 			rootMargin: '0px',
@@ -145,7 +160,6 @@ class ImpactSearchResults extends Component {
 	}
 
 	handleObserver(entities, observer) {
-		console.log('handleObserver called');
 		const page = this.props.page;
 		if (entities[0].isIntersecting === true) {
 			if (page.nextPage) {
@@ -225,7 +239,11 @@ class ImpactSearchResults extends Component {
 		const { expandedRow } = this.state;
 		const rowIdAndType = `${rowId}:${significanceType}`;
 		// const BASE_URL = 'http://localhost:8091/uniprot/api';
-		const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api';
+		// const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api';
+
+		const BASE_URL = `${API_URL}`;
+		console.log('BASE_URL ' + BASE_URL);
+
 		if (significanceType === 'structural') {
 			if (Object.keys(row.significances.structural).length === 0) {
 				this.setState({
@@ -233,7 +251,6 @@ class ImpactSearchResults extends Component {
 					expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null
 				});
 				axios.get(BASE_URL + row.significances.structureEndpoint).then((response) => {
-					console.log(response.data);
 					row.significances.structural = this.createStructuralSignificance(row, response.data);
 					this.setState({ structureLoaded: true });
 					this.setState({ showLoader: false });
@@ -244,36 +261,9 @@ class ImpactSearchResults extends Component {
 				});
 			}
 		} else {
-			/*else if (significanceType === 'clinical' || significanceType === 'functional') {
-			if (Object.keys(row.significances.clinical.colocatedVariants).length === 0) {
-				this.setState({
-					colocatedVariantLoaded: false,
-					expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null
-				});
-				axios.get(BASE_URL + row.variation.proteinColocatedVariantsEndpoint).then((response) => {
-					console.log(response.data);
-					var variants = [];
-					var alternativeSequence = row.variation.variant.split('/')[1];
-					response.data.forEach((variant) => {
-						if (variant.alternativeSequence !== alternativeSequence) {
-							variants.push(variant);
-						}
-					});
-					row.significances.clinical.colocatedVariants = variants;
-					row.significances.functional.colocatedVariants = variants;
-					this.setState({ colocatedVariantLoaded: true });
-				});
-			} else {
-				this.setState({
-					colocatedVariantLoaded: true,
-					expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null
-				});
-			}
-		}*/ this.setState(
-				{
-					expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null
-				}
-			);
+			this.setState({
+				expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null
+			});
 		}
 	}
 

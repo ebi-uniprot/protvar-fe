@@ -19,7 +19,7 @@ const ExpandedGenomicSignificance = (props) => {
 	var frequencyList = [];
 	if (data.populationFrequencies != null) {
 		frequencyList = data.populationFrequencies.map((l) => (
-			<li>
+			<li key="{l.sourceName}">
 				<b>{l.sourceName}</b> - {l.frequencies[0].label}:{l.frequencies[0].value}
 			</li>
 		));

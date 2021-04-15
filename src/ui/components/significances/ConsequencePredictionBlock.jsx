@@ -5,61 +5,51 @@ import SignificancesColumn from './SignificancesColumn';
 import SignificanceDataLine from './SignificanceDataLine';
 
 const ConsequencePredictionBlock = ({ data }) => {
-  let siftValue = 'Not reported';
-  let polyphenValue = 'Not reported';
+	let siftValue = 'Not reported';
+	let polyphenValue = 'Not reported';
 
-  if (data.siftPrediction && data.siftScore) {
-    siftValue = `${data.siftPrediction} (${data.siftScore})`;
-  }
+	if (data.siftPrediction && data.siftScore) {
+		siftValue = `${data.siftPrediction} (${data.siftScore})`;
+	}
 
-  if (data.polyphenPrediction && data.polyphenScore) {
-    polyphenValue = `${data.polyphenPrediction} (${data.polyphenScore})`;
-  }
+	if (data.polyphenPrediction && data.polyphenScore) {
+		polyphenValue = `${data.polyphenPrediction} (${data.polyphenScore})`;
+	}
 
-  const caddPhredIndicator = (data.caddPhred)
-    ? (
-      <span
-        className={`label warning cadd-score cadd-score--${(data.caddPhred) < 30 ? 'green' : 'red'}`}
-        title={`Likely ${(data.caddPhred < 30) ? 'Benign' : 'Deleterious'}`}
-      >
-        {data.caddPhred}
-      </span>
-    ) : 'Not reported';
+	const caddPhredIndicator = data.caddPhred ? (
+		<span
+			className={`label warning cadd-score cadd-score--${data.caddPhred < 30 ? 'green' : 'red'}`}
+			title={`Likely ${data.caddPhred < 30 ? 'Benign' : 'Deleterious'}`}
+		>
+			{data.caddPhred}
+		</span>
+	) : (
+		'Not reported'
+	);
 
-  return (
-    <SignificancesColumn
-      header="Consequence Prediction"
-    >
-      <SignificanceDataLine
-        label="SIFT"
-        value={siftValue}
-      />
+	return (
+		<SignificancesColumn header="Consequence Prediction">
+			<SignificanceDataLine label="SIFT" value={siftValue} />
 
-      <SignificanceDataLine
-        label="Polyphen"
-        value={polyphenValue}
-      />
+			<SignificanceDataLine label="Polyphen" value={polyphenValue} />
 
-      <SignificanceDataLine
-        label="CADD"
-        value={caddPhredIndicator}
-      />
-    </SignificancesColumn>
-  );
+			<SignificanceDataLine label="CADD" value={caddPhredIndicator} />
+		</SignificancesColumn>
+	);
 };
 
 ConsequencePredictionBlock.propTypes = {
-  data: PropTypes.shape({
-    siftPrediction: PropTypes.string,
-    siftScore: PropTypes.number,
-    polyphenPrediction: PropTypes.string,
-    polyphenScore: PropTypes.number,
-    caddPhred: PropTypes.number,
-  }),
+	data: PropTypes.shape({
+		siftPrediction: PropTypes.string,
+		siftScore: PropTypes.string,
+		polyphenPrediction: PropTypes.string,
+		polyphenScore: PropTypes.string,
+		caddPhred: PropTypes.number
+	})
 };
 
 ConsequencePredictionBlock.defaultProps = {
-  data: {},
+	data: {}
 };
 
 export default ConsequencePredictionBlock;

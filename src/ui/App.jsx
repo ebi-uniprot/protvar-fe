@@ -355,7 +355,7 @@ class App extends Component {
 		consequencePrediction.polyphenScore = variationDetails.polyphenScore;
 		consequencePrediction.siftPrediction = variationDetails.siftPrediction;
 		consequencePrediction.siftScore = variationDetails.siftScore;
-		consequencePrediction.caddPhred = variant.variation.caddPred;
+		consequencePrediction.caddPhred = 0.0;
 		consequencePrediction.caddRaw = 0.0;
 
 		genomic.consequencePrediction = consequencePrediction;
@@ -394,11 +394,12 @@ class App extends Component {
 	}
 
 	handleSearch = (input, uploadedFile, newPage, loadingFlag) => {
-		console.log('calling client');
+		console.log('Calling API -> ' + input);
 		const { history } = this.props;
-
+		const BASE_URL = `${API_URL}`;
+		console.log('URL -  ' + BASE_URL);
 		// const BASE_URL = 'http://localhost:8091/uniprot/api';
-		const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api';
+		// const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api';
 
 		var isFileSelectedNew = false;
 		var loadingNew = true;
@@ -418,13 +419,12 @@ class App extends Component {
 
 		var inputArr = input.split('\n');
 		let inputType = this.getInputType(inputArr);
-		console.log(inputArr);
+
 		if (inputType === 'hgvs') {
 			this.fetchByHGVS(BASE_URL, inputArr, input, uploadedFile, newPage, history);
 		} else if (inputType === 'vcf') {
 			this.fetchByVCF(BASE_URL, inputArr, input, uploadedFile, newPage, history);
 		}
-		console.log('calling client complete');
 	};
 
 	getInputType(inputArr) {
@@ -475,13 +475,11 @@ class App extends Component {
 							inputText += '\n' + newInput;
 						}
 					}
-					console.log('Row:', row.data);
 				} else {
 					count++;
 				}
 			},
 			complete: () => {
-				console.log('All done!');
 				this.setState({
 					page: newPage,
 					searchTerm: inputText,
@@ -498,7 +496,7 @@ class App extends Component {
 			'Content-Type': 'application/json'
 		};
 
-		const uri = BASE_URL + '/pepvep/hgvs';
+		const uri = BASE_URL + '/variant/hgvs';
 		const output = {
 			errors: [],
 			results: {}
@@ -509,7 +507,6 @@ class App extends Component {
 		post(uri, inputArr, {
 			headers: headers
 		}).then((response) => {
-			console.log(response.data.variants);
 			response.data.variants.forEach((variants) => {
 				var updatedVariants = this.createSignificances(variants);
 
@@ -555,7 +552,7 @@ class App extends Component {
 		const GET_VARIANTS = this.getQuery();
 		const client = new ApolloClient({
 			cache: new InMemoryCache(),
-			uri: BASE_URL + '/pepvep/graphql'
+			uri: BASE_URL + '/graphql'
 		});
 
 		client
@@ -569,8 +566,6 @@ class App extends Component {
 	}
 
 	processResponse(results, input, uploadedFile, newPage, history) {
-		console.log(results);
-
 		const output = {
 			errors: [],
 			results: {}
@@ -588,7 +583,6 @@ class App extends Component {
 					rows: updatedVariants.results
 				};
 			}
-			console.log('output ' + output.results);
 		});
 
 		this.setState({
@@ -628,7 +622,6 @@ class App extends Component {
 		if (variant.significances.clinical.association.length > 0) {
 			isAssociatedDisease = 'Yes';
 			variant.significances.clinical.association.forEach((disease) => {
-				console.log(disease);
 				diseaseDetails += `disease=${disease.disease}`;
 				diseaseDetails += disease.name ? `,name=${disease.name.replace(/,/gi, '')}` : '';
 				diseaseDetails += disease.description ? `,description=${disease.description.replace(/,/gi, '')}` : '';
@@ -818,9 +811,7 @@ class App extends Component {
 	}
 	handleDownload = () => {
 		const { searchTerm, searchResults } = this.state;
-		console.log(searchResults);
 		var inputArr = searchTerm.split('\n');
-		console.log('handle download clicked');
 		var outputCsv =
 			'INPUT,MOST_SEVERE_CONSEQUENCE,ASSEMBLY,CHROMOSOME,' +
 			'GENOMIC_START,GENOMIC_END,ALLELE_STRING,VARIANT_ALLELE,' +
@@ -858,11 +849,15 @@ class App extends Component {
 
 	handleBulkDownload = (e, file) => {
 		// const BASE_URL = 'http://localhost:8091/uniprot/api';
-		const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api';
+		// const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api';
+
+		const BASE_URL = `${API_URL}`;
+		console.log('BASE_URL ' + BASE_URL);
+
 		this.fileUpload(file).then((response) => {
 			console.log('File uploaded successfully ', response);
 			let a = document.createElement('a');
-			a.href = BASE_URL + '/pepvep/variant/download/' + response.data + '/';
+			a.href = BASE_URL + '/variant/download/' + response.data + '/';
 			a.download = 'pepvep.zip';
 			a.click();
 		});
@@ -870,7 +865,9 @@ class App extends Component {
 
 	fileUpload(file) {
 		// const BASE_URL = 'http://localhost:8091/uniprot/api/pepvep/variant/upload';
-		const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api/pepvep/variant/upload';
+		// const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api/pepvep/variant/upload';
+		const endpoint_url = `${API_URL}/variant/upload`;
+		console.log('endpoint_url ' + endpoint_url);
 		const formData = new FormData();
 		formData.append('file', file);
 		const config = {
@@ -878,7 +875,7 @@ class App extends Component {
 				'content-type': 'multipart/form-data'
 			}
 		};
-		return post(BASE_URL, formData, config);
+		return post(endpoint_url, formData, config);
 	}
 
 	render() {
