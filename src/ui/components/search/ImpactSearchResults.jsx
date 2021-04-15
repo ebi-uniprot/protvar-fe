@@ -82,12 +82,9 @@ class ImpactSearchResults extends Component {
 
 		var errorFlag = false;
 		// const BASE_URL = 'http://localhost:8091/uniprot/api/pepvep/variant/prediction/';
-		// const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api/pepvep/variant/prediction/';
-		const endpoint_url = `${API_URL}/variant/prediction/`;
-		console.log('endpoint_url ' + endpoint_url);
-
+		const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api/pepvep/variant/prediction/';
 		axios
-			.post(endpoint_url, inputArr, {
+			.post(BASE_URL, inputArr, {
 				headers: headers
 			})
 			.catch(function(error) {
@@ -238,12 +235,8 @@ class ImpactSearchResults extends Component {
 	toggleSignificanceRow(rowId, significanceType, row) {
 		const { expandedRow } = this.state;
 		const rowIdAndType = `${rowId}:${significanceType}`;
-		// const BASE_URL = 'http://localhost:8091/uniprot/api';
-		// const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api';
-
-		const BASE_URL = `${API_URL}`;
-		console.log('BASE_URL ' + BASE_URL);
-
+		// const BASE_URL = 'http://localhost:8091/uniprot/api/pepvep';
+		const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api/pepvep';
 		if (significanceType === 'structural') {
 			if (Object.keys(row.significances.structural).length === 0) {
 				this.setState({

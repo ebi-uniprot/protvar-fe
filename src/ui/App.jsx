@@ -396,10 +396,9 @@ class App extends Component {
 	handleSearch = (input, uploadedFile, newPage, loadingFlag) => {
 		console.log('Calling API -> ' + input);
 		const { history } = this.props;
-		const BASE_URL = `${API_URL}`;
-		console.log('URL -  ' + BASE_URL);
+
 		// const BASE_URL = 'http://localhost:8091/uniprot/api';
-		// const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api';
+		const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api';
 
 		var isFileSelectedNew = false;
 		var loadingNew = true;
@@ -496,7 +495,7 @@ class App extends Component {
 			'Content-Type': 'application/json'
 		};
 
-		const uri = BASE_URL + '/variant/hgvs';
+		const uri = BASE_URL + '/pepvep/variant/hgvs';
 		const output = {
 			errors: [],
 			results: {}
@@ -552,7 +551,7 @@ class App extends Component {
 		const GET_VARIANTS = this.getQuery();
 		const client = new ApolloClient({
 			cache: new InMemoryCache(),
-			uri: BASE_URL + '/graphql'
+			uri: BASE_URL + '/pepvep/graphql'
 		});
 
 		client
@@ -849,15 +848,11 @@ class App extends Component {
 
 	handleBulkDownload = (e, file) => {
 		// const BASE_URL = 'http://localhost:8091/uniprot/api';
-		// const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api';
-
-		const BASE_URL = `${API_URL}`;
-		console.log('BASE_URL ' + BASE_URL);
-
+		const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api';
 		this.fileUpload(file).then((response) => {
 			console.log('File uploaded successfully ', response);
 			let a = document.createElement('a');
-			a.href = BASE_URL + '/variant/download/' + response.data + '/';
+			a.href = BASE_URL + '/pepvep/variant/download/' + response.data + '/';
 			a.download = 'pepvep.zip';
 			a.click();
 		});
@@ -865,9 +860,7 @@ class App extends Component {
 
 	fileUpload(file) {
 		// const BASE_URL = 'http://localhost:8091/uniprot/api/pepvep/variant/upload';
-		// const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api/pepvep/variant/upload';
-		const endpoint_url = `${API_URL}/variant/upload`;
-		console.log('endpoint_url ' + endpoint_url);
+		const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api/pepvep/variant/upload';
 		const formData = new FormData();
 		formData.append('file', file);
 		const config = {
@@ -875,7 +868,7 @@ class App extends Component {
 				'content-type': 'multipart/form-data'
 			}
 		};
-		return post(endpoint_url, formData, config);
+		return post(BASE_URL, formData, config);
 	}
 
 	render() {
