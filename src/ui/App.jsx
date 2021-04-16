@@ -553,14 +553,25 @@ class App extends Component {
 			cache: new InMemoryCache(),
 			uri: BASE_URL + '/pepvep/graphql'
 		});
-
+		var errorFlag = false;
 		client
 			.query({
 				query: GET_VARIANTS,
 				variables: { params: inputArr }
 			})
+			.catch((e) => {
+				console.log('Got an axios error:', e);
+				errorFlag = true;
+			})
 			.then((results) => {
-				this.processResponse(results, input, uploadedFile, newPage, history);
+				if (errorFlag) {
+					this.setState({
+						loading: false
+					});
+					history.push('api-error');
+				} else {
+					this.processResponse(results, input, uploadedFile, newPage, history);
+				}
 			});
 	}
 
