@@ -24,17 +24,50 @@ class ImpactSearchResults extends Component {
 		showLoader: false
 	};
 
+	getSignificancesButton(rowKey, row, significanceType, buttonCss, buttonTag) {
+		// const significanceType = 'functional';
+		const rowIdAndType = `${rowKey}:${significanceType}`;
+		const { expandedRow } = this.state;
+		if (rowIdAndType === expandedRow) {
+			var css = `${buttonCss} ${buttonCss}--border`;
+			console.log('css' + css);
+			return (
+				<button
+					onClick={() => this.toggleSignificanceRow(rowKey, significanceType, row)}
+					className={'button--significances ' + css}
+				>
+					<u>
+						<b>{buttonTag}</b>
+					</u>
+				</button>
+			);
+		} else {
+			return (
+				<button
+					onClick={() => this.toggleSignificanceRow(rowKey, significanceType, row)}
+					className={'button--significances ' + buttonCss}
+				>
+					{buttonTag}
+				</button>
+			);
+		}
+	}
+
 	getCaddPrediction(transcript) {
 		if (this.state.caddLoaded) {
 			const caddColour = transcript.caddPhred <= 30 ? 'green' : 'red';
-			return (
-				<span
-					className={`label warning cadd-score cadd-score--${caddColour}`}
-					title={`Likely ${transcript.caddPhred < 30 ? 'Benign' : 'Deleterious'}`}
-				>
-					{transcript.caddPhred}
-				</span>
-			);
+			if (transcript.caddPhred === '-') {
+				return <span />;
+			} else {
+				return (
+					<span
+						className={`label warning cadd-score cadd-score--${caddColour}`}
+						title={`Likely ${transcript.caddPhred < 30 ? 'Benign' : 'Deleterious'}`}
+					>
+						{transcript.caddPhred}
+					</span>
+				);
+			}
 		}
 		// else {
 		// 	return <span>'-'</span>;
@@ -111,18 +144,28 @@ class ImpactSearchResults extends Component {
 					Object.keys(this.props.rows).forEach((input) => {
 						var variantRows = this.props.rows[input].rows;
 						var feature = response.data[input];
+
 						variantRows.forEach((variant) => {
+							variant.significances.transcript[0].caddPhred = '-';
 							var key =
 								variant.variation.begin + '|' + variant.variation.end + '|' + variant.variation.variant;
 
 							if (feature !== undefined && feature[key] !== undefined) {
-								variant.significances.transcript[0].caddPhred = feature[key];
 								variant.significances.genomic.consequencePrediction.caddPhred = feature[key];
 							}
-							// else {
-							// 	variant.significances.transcript[0].caddPhred = '-';
-							// }
 						});
+						var key =
+							variantRows[0].variation.begin +
+							'|' +
+							variantRows[0].variation.end +
+							'|' +
+							variantRows[0].variation.variant;
+						if (feature !== undefined && feature[key] !== undefined) {
+							variantRows[0].significances.transcript[0].caddPhred = feature[key];
+							variantRows[0].significances.genomic.consequencePrediction.caddPhred = feature[key];
+						} else {
+							variant.significances.transcript[0].caddPhred = '-';
+						}
 					});
 					this.setState({
 						caddLoaded: true
@@ -426,53 +469,82 @@ class ImpactSearchResults extends Component {
 
 											const noSignificance = <span className="no-significances">-</span>;
 
-											const transcriptSignificancesButton = (
-												<button
-													onClick={() =>
-														this.toggleSignificanceRow(rowKey, 'transcript', row)}
-													className="button--significances button--transcript"
-												>
-													T
-												</button>
+											const transcriptSignificancesButton = this.getSignificancesButton(
+												rowKey,
+												row,
+												'transcript',
+												'button--transcript',
+												'T'
 											);
 
-											const functionalSignificancesButton = (
-												<button
-													onClick={() =>
-														this.toggleSignificanceRow(rowKey, 'functional', row)}
-													className="button--significances button--positional"
-												>
-													F
-												</button>
+											// const transcriptSignificancesButton = (
+											// 	<button
+											// 		onClick={() =>
+											// 			this.toggleSignificanceRow(rowKey, 'transcript', row)}
+											// 		className="button--significances button--transcript"
+											// 	>
+											// 		T
+											// 	</button>
+											// );
+
+											const functionalSignificancesButton = this.getSignificancesButton(
+												rowKey,
+												row,
+												'functional',
+												'button--positional',
+												'F'
 											);
 
-											const clinicalSignificancesButton = (
-												<button
-													onClick={() => this.toggleSignificanceRow(rowKey, 'clinical', row)}
-													className="legend-icon button--significances button--clinical"
-												>
-													C
-												</button>
+											const clinicalSignificancesButton = this.getSignificancesButton(
+												rowKey,
+												row,
+												'clinical',
+												'button--clinical',
+												'C'
+											);
+											// (
+											// 	<button
+											// 		onClick={() => this.toggleSignificanceRow(rowKey, 'clinical', row)}
+											// 		className="legend-icon button--significances button--clinical"
+											// 	>
+											// 		C
+											// 	</button>
+											// );
+
+											const structuralSignificancesButton = this.getSignificancesButton(
+												rowKey,
+												row,
+												'structural',
+												'button--structural',
+												'S'
 											);
 
-											const structuralSignificancesButton = (
-												<button
-													onClick={() =>
-														this.toggleSignificanceRow(rowKey, 'structural', row)}
-													className="button--significances button--structural"
-												>
-													S
-												</button>
+											// const structuralSignificancesButton = (
+											// 	<button
+											// 		onClick={() =>
+											// 			this.toggleSignificanceRow(rowKey, 'structural', row)}
+											// 		className="button--significances button--structural"
+											// 	>
+											// 		S
+											// 	</button>
+											// );
+
+											const genomicSignificancesButton = this.getSignificancesButton(
+												rowKey,
+												row,
+												'genomic',
+												'button--genomic',
+												'G'
 											);
 
-											const genomicSignificancesButton = (
-												<button
-													onClick={() => this.toggleSignificanceRow(rowKey, 'genomic', row)}
-													className="button--significances button--genomic"
-												>
-													G
-												</button>
-											);
+											// const genomicSignificancesButton = (
+											// 	<button
+											// 		onClick={() => this.toggleSignificanceRow(rowKey, 'genomic', row)}
+											// 		className="button--significances button--genomic"
+											// 	>
+											// 		G
+											// 	</button>
+											// );
 
 											return (
 												<Fragment key={`${rowKey}-${counter}`}>

@@ -58,6 +58,10 @@
     }
   }
   
+  &--positional--border {
+    border: 2px solid;
+    border-color: darken(#EB9F9F, 40%);
+  } 
   &--clinical {
     color: $white-colour;
     background-color: #EB6841;
@@ -67,6 +71,11 @@
     &:hover {
       background-color: darken(#EB6841, 10%);
     }
+  }
+
+  &--clinical--border {
+    border: 2px solid;
+    border-color: darken(#EB6841, 40%);
   }
   
   &--transcript {
@@ -83,6 +92,11 @@
     }
   }
 
+  &--transcript--border {
+    border: 2px solid;
+    border-color: darken(#C7F464, 40%);
+  }
+
   &--structural {
     color: $white-colour;
     background-color: #00DFFC;
@@ -92,6 +106,11 @@
     &:hover {
       background-color: darken(#00DFFC, 10%);
     }
+  }
+
+  &--structural--border {
+    border: 2px solid;
+    border-color: darken(#00DFFC, 40%);
   }
 
   &--genomic {
@@ -105,6 +124,11 @@
     }
   }
 
+  &--genomic--border {
+    border: 2px solid;
+    border-color: darken(#794a4a, 40%);
+  }
+
   &--toggle-isoforms {
     margin: 0 0.5rem 0 0;
     width: 1.5rem;
@@ -112,4 +136,9 @@
     padding: 0;
     border-radius: 0.75rem;
   }
+
+  &--clicked {
+    background-color: grey;
+  }
+
 }

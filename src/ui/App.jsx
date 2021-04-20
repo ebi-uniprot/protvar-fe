@@ -245,6 +245,7 @@ class App extends Component {
 		variationDetails.uniprot = variant.variation.uniprot;
 		variationDetails.largeScaleStudy = variant.variation.largeScaleStudy;
 		variationDetails.uncertain = variant.variation.uncertain;
+		variationDetails.ids = variant.variation.ids;
 		return variationDetails;
 	}
 
@@ -377,6 +378,7 @@ class App extends Component {
 				var significances = {};
 				var updateVariant = {};
 				var variationDetails = this.createVariationDetails(variant);
+
 				significances.functional = this.createFunctionalSignificance(variant, variationDetails);
 				significances.structural = {};
 				significances.structureEndpoint = variant.structureEndpoint;
@@ -386,7 +388,10 @@ class App extends Component {
 				updateVariant.significances = significances;
 				updateVariant.protein = variant.protein;
 				updateVariant.gene = variant.gene;
+				// updateVariant.variation = {};
+				// updateVariant.variation.variationDetails = {};
 				updateVariant.variation = variant.variation;
+				// updateVariant.variation.variationDetails = variationDetails;
 				updateVariants.results.push(updateVariant);
 			}
 		});
@@ -585,7 +590,19 @@ class App extends Component {
 		}
 		results.data.pepvepvariant.forEach((element) => {
 			if (element.variants.length > 0) {
-				var updatedVariants = this.createSignificances(element.variants);
+				var sortedVariants = [];
+				var topRow = element.variants.filter(
+					(variant) => variant.protein.canonicalAccession === variant.protein.accession
+				);
+				var otherRows = element.variants.filter(
+					(variant) => variant.protein.accession !== variant.protein.canonicalAccession
+				);
+				if (otherRows !== undefined || otherRows.length > 0) {
+					sortedVariants = topRow.concat(otherRows);
+				} else {
+					sortedVariants = topRow;
+				}
+				var updatedVariants = this.createSignificances(sortedVariants);
 				output.errors = output.errors.concat(updatedVariants.errors);
 				output.results[element.input] = {
 					key: element.input,
