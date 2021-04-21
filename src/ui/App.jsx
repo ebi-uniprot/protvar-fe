@@ -266,17 +266,23 @@ class App extends Component {
 	}
 
 	getPredictionScore(predictions, algorithName) {
+		var predScore = '';
 		predictions.forEach((prediction) => {
-			if (prediction.predAlgorithmNameType === algorithName) return prediction.score;
+			if (prediction.predAlgorithmNameType === algorithName) {
+				predScore = prediction.score;
+			}
 		});
-		return '';
+		return predScore;
 	}
 
 	getPredictionType(predictions, algorithName) {
+		var predType = '';
 		predictions.forEach((prediction) => {
-			if (prediction.predAlgorithmNameType === algorithName) return prediction.predictionValType;
+			if (prediction.predAlgorithmNameType === algorithName) {
+				predType = prediction.predictionValType;
+			}
 		});
-		return '';
+		return predType;
 	}
 
 	createFunctionalSignificance(variant, variationDetails) {
