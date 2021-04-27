@@ -670,7 +670,11 @@ class App extends Component {
 			});
 		}
 
-		if (variant.significances.functional != null && variant.significances.functional.features.length > 0) {
+		if (
+			variant.significances.functional != null &&
+			variant.significances.functional.features != null &&
+			variant.significances.functional.features.length > 0
+		) {
 			variant.significances.functional.features.forEach((feature) => {
 				featureDetails += `type=${feature.type}`;
 				featureDetails += `,category=${feature.category}`;
