@@ -48,11 +48,7 @@ const VariantDetailsBlock = ({ data, variation, gene }) => {
 		<SignificancesColumn header="Variant Details">
 			{gene && <SignificanceDataLine label="ENSG" value={gene.ensgId} />}
 
-			<SingleColocatedVariantDetails
-				colocated={variation.variationDetails}
-				meta={data.variationDetails}
-				excludeIds
-			/>
+			<SingleColocatedVariantDetails colocated={data.variationDetails} meta={data.variationDetails} excludeIds />
 
 			<SignificanceDataLine label="RsID" value={dbSNPIdLink} />
 

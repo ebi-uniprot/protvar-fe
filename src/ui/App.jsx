@@ -71,6 +71,7 @@ class App extends Component {
 							features {
 								type
 								typeDescription
+								description
 								category
 								begin
 								end
@@ -246,6 +247,8 @@ class App extends Component {
 		variationDetails.largeScaleStudy = variant.variation.largeScaleStudy;
 		variationDetails.uncertain = variant.variation.uncertain;
 		variationDetails.ids = variant.variation.ids;
+		variationDetails.begin = variant.variation.begin;
+		variationDetails.end = variant.variation.end;
 		return variationDetails;
 	}
 
