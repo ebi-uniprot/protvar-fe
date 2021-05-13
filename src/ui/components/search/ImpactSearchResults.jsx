@@ -147,22 +147,15 @@ class ImpactSearchResults extends Component {
 
 						variantRows.forEach((variant) => {
 							variant.significances.transcript[0].caddPhred = '-';
-							var key =
-								variant.variation.begin + '|' + variant.variation.end + '|' + variant.variation.variant;
 
-							if (feature !== undefined && feature[key] !== undefined) {
-								variant.significances.genomic.consequencePrediction.caddPhred = feature[key];
+							if (feature !== undefined) {
+								variant.significances.genomic.consequencePrediction.caddPhred = feature;
 							}
 						});
-						var key =
-							variantRows[0].variation.begin +
-							'|' +
-							variantRows[0].variation.end +
-							'|' +
-							variantRows[0].variation.variant;
-						if (feature !== undefined && feature[key] !== undefined) {
-							variantRows[0].significances.transcript[0].caddPhred = feature[key];
-							variantRows[0].significances.genomic.consequencePrediction.caddPhred = feature[key];
+
+						if (feature !== undefined) {
+							variantRows[0].significances.transcript[0].caddPhred = feature;
+							variantRows[0].significances.genomic.consequencePrediction.caddPhred = feature;
 						} else {
 							variant.significances.transcript[0].caddPhred = '-';
 						}
