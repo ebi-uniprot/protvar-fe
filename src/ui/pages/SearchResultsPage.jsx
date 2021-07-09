@@ -6,7 +6,17 @@ import ImpactSearchResults from '../components/search/ImpactSearchResults';
 import Alert from '../components/other/Alert';
 
 const SearchResultsPageContent = (props) => {
-	const { searchResults, handleDownload, handleBulkDownload, fetchNextPage, file, page, errors, loading } = props;
+	const {
+		searchResults,
+		searchTerm,
+		handleDownload,
+		handleBulkDownload,
+		fetchNextPage,
+		file,
+		page,
+		errors,
+		loading
+	} = props;
 
 	return (
 		<Fragment>
@@ -15,6 +25,7 @@ const SearchResultsPageContent = (props) => {
 			<ImpactSearchResults
 				rows={searchResults}
 				handleDownload={handleDownload}
+				searchTerm={searchTerm}
 				handleBulkDownload={handleBulkDownload}
 				fetchNextPage={fetchNextPage}
 				file={file}
@@ -25,22 +36,22 @@ const SearchResultsPageContent = (props) => {
 	);
 };
 
-SearchResultsPageContent.propTypes = {
-	searchResults: PropTypes.objectOf(
-		PropTypes.shape({
-			input: PropTypes.string,
-			key: PropTypes.string,
-			rows: PropTypes.arrayOf(PropTypes.shape({}))
-		})
-	).isRequired,
-	handleDownload: PropTypes.func.isRequired,
-	errors: PropTypes.arrayOf(
-		PropTypes.shape({
-			title: PropTypes.string,
-			message: PropTypes.string.isRequired
-		})
-	).isRequired
-};
+// SearchResultsPageContent.propTypes = {
+// 	searchResults: PropTypes.objectOf(
+// 		PropTypes.shape({
+// 			input: PropTypes.string,
+// 			key: PropTypes.string,
+// 			rows: PropTypes.arrayOf(PropTypes.shape({}))
+// 		})
+// 	).isRequired,
+// 	handleDownload: PropTypes.func.isRequired,
+// 	errors: PropTypes.arrayOf(
+// 		PropTypes.shape({
+// 			title: PropTypes.string,
+// 			message: PropTypes.string.isRequired
+// 		})
+// 	).isRequired
+// };
 
 const SearchResultsPage = (props) => (
 	<DefaultPageLayout title="Search" content={<SearchResultsPageContent {...props} />} />

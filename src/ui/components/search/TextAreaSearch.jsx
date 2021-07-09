@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Button from '../../elements/form/Button';
 import AboutSection from '../other/AboutSection';
 import ExampleSection from '../other/ExampleSection';
+import { ButtonModal } from 'franklin-sites';
 
 class TextAreaSearch extends Component {
 	state = {
@@ -51,19 +52,18 @@ class TextAreaSearch extends Component {
 
 	useExampleData = () => {
 		const searchTerm = [
-			'21 25891796 25891796 C/T . . .',
-			'14 89993420 89993420 A/G . . .',
-			'10 87933147 87933147 C/T . . .',
-			'21 43072000 43072000 T/C . . .'
+			'21 25891796 rs124582 C/T . . .'
+			// '14 89993420 rs37915333 A/G . . .',
+			// '10 87933147 rs7565837 C/T . . .',
+			// '21 43072000 . T/C . . .',
+			// '1 45340254 rs36765457 T/G . . .',
 			// '21 43060540 43060540 C/T . . .',
-			// '22 19479862 19479862 G/C . . .'
-			//'22 19494512 19494512 C/G . . .',
-
-			// '20 58909365 58909365 C/A . . .', ---issue
-			//'3 165830358 165830358 T/C . . .',
-
-			// '21 25891796 25891796 C/T',
-			// '21 25891784 25891784 C/T',
+			// '22 19479862 19479862 T/C . . .',
+			// '22 19494512 19494512 C/G . . .',
+			// '20 58909365 58909365 C/A . . .',
+			// '3 165830358 165830358 T/C . . .',
+			// '14 73173644 73173644 G/A'
+			// '21 25891784 25891784 C/T'
 			// '21 25891784 25891784 C/G',
 			// '21 25891784 25891784 C/A',
 			// '14 73173571 73173571 A/G',
@@ -72,7 +72,7 @@ class TextAreaSearch extends Component {
 			// '14 73173577 73173577 C/G',
 			// '14 73173587 73173587 A/T',
 			// '14 73173587 73173587 A/C',
-			// '14 73173644 73173644 G/C',
+			// '14 73173644 73173644 G/C'
 			// '14 73173644 73173644 G/A',
 			// '14 73173665 73173665 G/T',
 			// '14 73173665 73173665 G/C',
@@ -90,6 +90,23 @@ class TextAreaSearch extends Component {
 			// FileReader are supported.
 			this.getAsText(files[0]);
 		}
+	};
+
+	populateVCF = () => {
+		let vcfInput =
+			'19 1010539 rs124582 G/C . . .\n14 89993420 rs37915333 A/G . . .\n10 87933147 rs7565837 C/T . . .';
+
+		this.setState({
+			searchTerm: vcfInput
+		});
+	};
+
+	populateHGVS = () => {
+		let hgvsInput = 'NC_000010.11:g.121593810C>G\nNC_000010.11:g.121479868C>G\nNC_000010.11:g.121479900C>A';
+
+		this.setState({
+			searchTerm: hgvsInput
+		});
 	};
 
 	viewResult(event) {
@@ -111,6 +128,11 @@ class TextAreaSearch extends Component {
 		// this.onSubmit(inputText, file, page);
 		// this.handleSubmit(event);
 	}
+
+	openDocumentation = () => {
+		const url = 'http://wwwdev.ebi.ac.uk/uniprot/api/pepvep/swagger-ui/#/';
+		window.open(url, '_blank');
+	};
 
 	getAsText(fileToRead) {
 		var reader = new FileReader();
@@ -155,54 +177,49 @@ class TextAreaSearch extends Component {
 													value={searchTerm}
 													onChange={this.handleInputChange}
 												/>
+
+												<table className="table-input">
+													<tbody>
+														<tr>
+															<td>
+																<b>Examples:</b>
+															</td>
+															<td>
+																<a onClick={this.populateVCF}>VCF</a>
+															</td>
+															<td>
+																<a onClick={this.populateHGVS}>HGVS</a>
+															</td>
+														</tr>
+													</tbody>
+												</table>
 												<span className="genome-assembly-text">
-													Reference Genome Assembly GRCh38 (hg38): {'     '}
-													<a
-														href="http://www.ensembl.org/Homo_sapiens/Tools/AssemblyConverter?db=core"
-														target="_blank"
-														rel="noopener noreferrer"
-														className="ref-link"
-													>
-														Ensembl's Assembly Remapping
-													</a>
+													<p>
+														Reference Genome Assembly GRCh38 (hg38): {'     '}
+														<a
+															href="http://www.ensembl.org/Homo_sapiens/Tools/AssemblyConverter?db=core"
+															target="_blank"
+															rel="noopener noreferrer"
+															className="ref-link"
+														>
+															Ensembl's Assembly Remapping
+														</a>
+													</p>
 												</span>
+
 												<div id="search-button-group" className="search-button-group">
 													{!isLoading ? (
 														<Button
 															type="submit"
 															onClick={this.handleSubmit}
-															className="button-primary"
+															className="button-primary button-bottom"
 														>
 															{buttonLabel}
 														</Button>
 													) : (
-														<Button onClick={() => null} className="button-primary">
-															Loading...
-														</Button>
-													)}
-
-													<input
-														id="myInput"
-														type="file"
-														style={{ display: 'none' }}
-														ref={(ref) => (this.upload = ref)}
-														onChange={this.viewResult.bind(this)}
-													/>
-													{!isFileSelected ? (
 														<Button
-															onClick={() => {
-																this.upload.click();
-															}}
-															className="button-primary"
-														>
-															Upload File
-														</Button>
-													) : (
-														<Button
-															onClick={() => {
-																this.upload.click();
-															}}
-															className="button-primary"
+															onClick={() => null}
+															className="button-primary button-bottom"
 														>
 															Loading...
 														</Button>
@@ -215,18 +232,12 @@ class TextAreaSearch extends Component {
 							</section>
 						</div>
 					</div>
-					<div id="example" className="card-table">
-						<ExampleSection />
-					</div>
-					<div id="about" className="card-table">
-						<AboutSection />
-					</div>
 					<div id="download" className="card-table">
 						<div className="card">
 							<section className="card__actions">
 								<span className="card-header">
 									<p>
-										<b>More Information</b>
+										<b>Upload VCF</b>
 									</p>
 								</span>
 							</section>
@@ -234,45 +245,96 @@ class TextAreaSearch extends Component {
 								<div className="card__content">
 									<section className="uniprot-card">
 										<section className="uniprot-card__left">
-											<span className="assemly-ref-note">
-												<b>PepVEP is based upon the human Reference Genome Assembly GRch38</b>
-											</span>
-											<br />
-											If your variants are referenced to GRCh37(hg19) you will need to remap your
-											variants to the latest assembly. We recommend using: {' '}
-											<a
-												href="http://www.ensembl.org/Homo_sapiens/Tools/AssemblyConverter?db=core"
-												target="_blank"
-												rel="noopener noreferrer"
-												className="ref-link"
-											>
-												Ensembl's Assembly Remapping
-											</a>
-											<br />
-											<br />
-											<span className="assemly-ref-note">
-												<b>PepVEP REST API </b>
-											</span>
-											<form onSubmit={this.handleSubmit}>
-												Programmatic access using multiple input formats like DbSNP, HGVS,
-												Accession, Gene Name, Genomic location etc. Detailed documentation can
-												be accessed using the link below.<br />
-												<b>Documentation: </b>
-												<a
-													href="http://wwwdev.ebi.ac.uk/uniprot/api/pepvep/swagger-ui/#/"
-													target="_blank"
-													rel="noopener noreferrer"
-													className="ref-link"
-												>
-													PepVEP REST API
-												</a>
-											</form>
+											<p>
+												<b>VCF FILE Format</b>
+												<br />
+												<br />
+												#CHROM POS ID REF ALT QUAL FILTER INFO<br />
+												21 25891796 . C T . . . <br />
+												14 73173574 . C T . . . <br />
+												15 19965080 . C G . . . <br />
+											</p>
+
+											<div id="search-button-group" className="search-button-group">
+												<input
+													id="myInput"
+													type="file"
+													style={{ display: 'none' }}
+													ref={(ref) => (this.upload = ref)}
+													onChange={this.viewResult.bind(this)}
+												/>
+												{!isFileSelected ? (
+													<Button
+														onClick={() => {
+															this.upload.click();
+														}}
+														className="button-primary button-bottom"
+													>
+														Upload File
+													</Button>
+												) : (
+													<Button
+														onClick={() => {
+															this.upload.click();
+														}}
+														className="button-primary button-bottom"
+													>
+														Loading...
+													</Button>
+												)}
+											</div>
 										</section>
 									</section>
 								</div>
 							</section>
 						</div>
 					</div>
+					<div id="download" className="card-table">
+						<div className="card">
+							<section className="card__actions">
+								<span className="card-header">
+									<p>
+										<b>PepVEP REST API</b>
+									</p>
+								</span>
+							</section>
+							<section className="card--has-hover" role="button">
+								<div className="card__content">
+									<section className="uniprot-card">
+										<section className="uniprot-card__left">
+											<p>
+												<b>Programmatic access using multiple input formats like</b>
+											</p>
+											<br />
+											<br />
+											<ul>
+												<li>DbSNP</li>
+												<li>HGVS</li>
+												<li>Accession</li>
+												<li>Gene Name</li>
+												<li>Genomic location</li>
+											</ul>
+											<div id="search-button-group" className="search-button-group">
+												<Button
+													onClick={() =>
+														window.open(
+															'http://wwwdev.ebi.ac.uk/uniprot/api/pepvep/swagger-ui/#/',
+															'_blank'
+														)}
+													className="button-bottom"
+												>
+													PepVEP REST API
+												</Button>
+											</div>
+										</section>
+									</section>
+								</div>
+							</section>
+						</div>
+					</div>
+				</div>
+				<div>
+					<br />
 				</div>
 			</Fragment>
 		);

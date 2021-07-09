@@ -9,48 +9,46 @@ import ExpandedStructuralSignificance from '../significances/ExpandedStructuralS
 import ExpandedGenomicSignificance from '../significances/ExpandedGenomicSignificance';
 import ProteinReviewStatus from '../other/ProteinReviewStatus';
 import SearchResultsLegends from '../other/SearchResultsLegends';
-import { Loader } from 'franklin-sites';
+import { Loader, ButtonModal, SearchInput, InPageNav } from 'franklin-sites';
 import axios, { post } from 'axios';
+import FunctionalSignificance from '../categories/FunctionalSignificance';
+import Modal from '../modal/Modal';
 
 class ImpactSearchResults extends Component {
 	state = {
 		expandedRow: null,
-		showAllIsoforms: false,
 		openGroup: null,
-		loading: false,
-		colocatedVariantLoaded: false,
-		structureLoaded: false,
 		caddLoaded: false,
-		showLoader: false
+		showLoader: false,
+		modal: false,
+		name: '',
+		email: '',
+		jobName: '',
+		jobSubmitted: false,
+		structureLoaded: false,
+		functionLoaded: false,
+		function: false,
+		variation: false,
+		buttonText: '',
+		title: ''
 	};
 
-	getSignificancesButton(rowKey, row, significanceType, buttonCss, buttonTag) {
-		// const significanceType = 'functional';
-		const rowIdAndType = `${rowKey}:${significanceType}`;
+	getSignificancesButton(rowKey, buttonTag, accession) {
 		const { expandedRow } = this.state;
-		if (rowIdAndType === expandedRow) {
-			var css = `${buttonCss} ${buttonCss}--border`;
-			console.log('css' + css);
-			return (
-				<button
-					onClick={() => this.toggleSignificanceRow(rowKey, significanceType, row)}
-					className={'button--significances ' + css}
-				>
-					<u>
-						<b>{buttonTag}</b>
-					</u>
-				</button>
-			);
-		} else {
-			return (
-				<button
-					onClick={() => this.toggleSignificanceRow(rowKey, significanceType, row)}
-					className={'button--significances ' + buttonCss}
-				>
-					{buttonTag}
-				</button>
-			);
+		let buttonCss = 'button--significances  button-new';
+		let columnCss = 'fit';
+		if (rowKey === expandedRow) {
+			buttonCss = 'button--significances-clicked  button-new';
+			columnCss = 'fit-clicked';
 		}
+
+		return (
+			<td className={columnCss}>
+				<button onClick={() => this.toggleSignificanceRow(rowKey, buttonTag, accession)} className={buttonCss}>
+					<b>{buttonTag}</b>
+				</button>
+			</td>
+		);
 	}
 
 	getCaddPrediction(transcript) {
@@ -69,42 +67,6 @@ class ImpactSearchResults extends Component {
 				);
 			}
 		}
-		// else {
-		// 	return <span>'-'</span>;
-		// }
-	}
-	createStructuralSignificance(variant, structures) {
-		if (Object.keys(structures).length === 0) {
-			return structuralSignificance;
-		}
-		var accession = variant.protein.accession;
-		var position = variant.variation.begin;
-		var structure = structures[position];
-		var structuralSignificance = {};
-
-		if (Object.keys(structure[accession].all_structures).length === 0) {
-			return structuralSignificance;
-		}
-
-		structuralSignificance.position = position;
-		structuralSignificance.proteinLength = structure[accession].length;
-		structuralSignificance.allStructures = JSON.parse(JSON.stringify(structure[accession].all_structures)); //{ ...variant.structure[accession].all_structures };
-		structuralSignificance.annotations = [ structure[accession].annotations ];
-		structuralSignificance.ligands = structure[accession].ligands.positions;
-		structuralSignificance.interactions = structure[accession].interactions.positions;
-		structuralSignificance.structures = structure[accession].structures.positions;
-		structuralSignificance.accession = accession;
-		if (Object.keys(structuralSignificance.allStructures).length > 0) {
-			Object.keys(structuralSignificance.allStructures).forEach((key) => {
-				var allStructure = structuralSignificance.allStructures[key];
-				allStructure.forEach((structure) => {
-					var residue = structure['residue_range'].split('-');
-					structure['start'] = parseInt(residue[0], 10);
-					structure['end'] = parseInt(residue[1], 10);
-				});
-			});
-		}
-		return structuralSignificance;
 	}
 
 	updateCADDPrediction(inputArr) {
@@ -114,8 +76,8 @@ class ImpactSearchResults extends Component {
 		};
 
 		var errorFlag = false;
-		// const BASE_URL = 'http://localhost:8091/uniprot/api/pepvep/variant/prediction/';
-		const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api/pepvep/variant/prediction/';
+		const BASE_URL = 'http://localhost:8091/uniprot/api/pepvep/variant/prediction';
+		// const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api/pepvep/variant/prediction/';
 		axios
 			.post(BASE_URL, inputArr, {
 				headers: headers
@@ -131,34 +93,27 @@ class ImpactSearchResults extends Component {
 			})
 			.then((response) => {
 				if (errorFlag) {
-					inputArr.forEach((input) => {
-						var variantRows = this.props.rows[input].rows;
-						variantRows.forEach((variant) => {
-							variant.significances.transcript[0].caddPhred = 'failed';
-						});
-					});
 					this.setState({
 						caddLoaded: true
 					});
 				} else {
-					Object.keys(this.props.rows).forEach((input) => {
-						var variantRows = this.props.rows[input].rows;
-						var feature = response.data[input];
-
-						variantRows.forEach((variant) => {
-							variant.significances.transcript[0].caddPhred = '-';
-
-							if (feature !== undefined) {
-								variant.significances.genomic.consequencePrediction.caddPhred = feature;
-							}
+					response.data.forEach((data) => {
+						var variantRows = this.props.rows;
+						variantRows.map((genes, geneId) => {
+							genes.map((accessions, accessionId) => {
+								accessions.map((accession, index) => {
+									if (
+										(accession.canonical || accession.canonicalAccession === null) &&
+										accession.chromosome === data.chromosome &&
+										accession.position === data.position &&
+										accession.altAllele === data.altAllele &&
+										data.score !== 0
+									) {
+										accession.CADD = data.score;
+									}
+								});
+							});
 						});
-
-						if (feature !== undefined) {
-							variantRows[0].significances.transcript[0].caddPhred = feature;
-							variantRows[0].significances.genomic.consequencePrediction.caddPhred = feature;
-						} else {
-							variant.significances.transcript[0].caddPhred = '-';
-						}
 					});
 					this.setState({
 						caddLoaded: true
@@ -167,29 +122,20 @@ class ImpactSearchResults extends Component {
 			});
 	}
 	componentDidUpdate() {
-		var inputArr = [];
-		Object.keys(this.props.rows).forEach((input) => {
-			var variantRows = this.props.rows[input].rows;
-			if (variantRows[0].significances.transcript[0].caddPhred === 0.0) {
-				variantRows[0].significances.transcript[0].caddPhred = 'Loading';
-				inputArr.push(input);
+		if (this.state.caddLoaded !== true) {
+			let inputArr = this.props.searchTerm;
+			if (inputArr.length > 0) {
+				this.updateCADDPrediction(inputArr);
 			}
-		});
-		if (inputArr.length > 0) {
-			this.updateCADDPrediction(inputArr);
 		}
 	}
 	componentDidMount() {
-		var inputArr = Object.keys(this.props.rows);
-		this.updateCADDPrediction(inputArr);
-		var options = {
-			root: null,
-			rootMargin: '0px',
-			threshold: 1.0
-		};
-		const target = document.querySelector('#scrollTarget');
-		this.observer = new IntersectionObserver(this.handleObserver.bind(this), options);
-		this.observer.observe(target);
+		if (this.state.caddLoaded !== true) {
+			let inputArr = this.props.searchTerm;
+			if (inputArr.length > 0) {
+				this.updateCADDPrediction(inputArr);
+			}
+		}
 	}
 
 	handleObserver(entities, observer) {
@@ -230,34 +176,123 @@ class ImpactSearchResults extends Component {
 		// }
 	}
 
+	getFunctionalSignificance(functionalKey, expandedRow, accession) {
+		if (functionalKey === expandedRow) {
+			if (this.state.functionLoaded) {
+				return (
+					<FunctionalSignificance
+						data={accession.functional}
+						ensg={accession.ensg}
+						ensp={accession.ensp}
+						enst={accession.enst}
+					/>
+				);
+			} else {
+				return this.getLoader();
+			}
+		}
+	}
+
 	getLoader() {
 		return (
 			<tr className="loader-border ">
-				<td />
-				<td />
-				<td />
-				<td />
-				<td />
-				<td />
-				<td>
+				<td colSpan="20">
 					<Loader />
 				</td>
-				<td />
-				<td />
-				<td />
-				<td />
-				<td />
-				<td />
 			</tr>
 		);
 	}
 
-	getFunctionalSignificance(functional, variation, detailsPageLink) {
-		// if (this.state.colocatedVariantLoaded) {
-		return <ExpandedFunctionalSignificance data={functional} variation={variation} detailsLink={detailsPageLink} />;
-		// } else {
-		// 	return this.getLoader();
-		// }
+	getExperimentalSignificance(experimentalKey, expandedRow, accession) {
+		if (experimentalKey === expandedRow) {
+			return (
+				<tr>
+					<td colspan="19" className="expanded-row">
+						<div className="significances-groups">
+							<div className="column">
+								<b>Experimental Protein Level Impact</b>
+
+								<section>
+									Colocated Domains/Sites<br />
+									Variant Details<br />
+									Colocated Molecule Processing<br />
+									Domain Sites details here
+								</section>
+							</div>
+						</div>
+					</td>
+				</tr>
+			);
+		}
+	}
+
+	getEvolutionInferenceSignificance(evolutionKey, expandedRow, accession) {
+		if (evolutionKey === expandedRow) {
+			return (
+				<tr>
+					<td colspan="19" className="expanded-row">
+						<div className="significances-groups">
+							<div className="column">
+								<b>Evolution Inference</b>
+
+								<section>
+									Evolution Inference<br />
+									Variant Details<br />
+									Colocated Molecule Processing<br />
+									Domain Sites details here
+								</section>
+							</div>
+						</div>
+					</td>
+				</tr>
+			);
+		}
+	}
+
+	getPopulationObservationSignificance(popObservationKey, expandedRow, accession) {
+		if (popObservationKey === expandedRow) {
+			return (
+				<tr>
+					<td colspan="19" className="expanded-row">
+						<div className="significances-groups">
+							<div className="column">
+								<b>Population Observation</b>
+
+								<section>
+									Population Observation<br />
+									Variant Details<br />
+									Colocated Molecule Processing<br />
+									Domain Sites details here
+								</section>
+							</div>
+						</div>
+					</td>
+				</tr>
+			);
+		}
+	}
+
+	getStructuralSignificance(structuralKey, expandedRow, accession) {
+		if (structuralKey === expandedRow) {
+			return (
+				<tr>
+					<td colspan="19" className="expanded-row">
+						<div className="significances-groups">
+							<div className="column">
+								<b>Structural Significance</b>
+
+								<section>
+									Structural Observation<br />
+									Variant Details<br />
+									Colocated Molecule Processing<br />
+									Domain Sites details here
+								</section>
+							</div>
+						</div>
+					</td>
+				</tr>
+			);
+		}
 	}
 
 	toggleAcessionIsoforms = (group) => {
@@ -270,19 +305,22 @@ class ImpactSearchResults extends Component {
 
 	toggleSignificanceRow(rowId, significanceType, row) {
 		const { expandedRow } = this.state;
-		const rowIdAndType = `${rowId}:${significanceType}`;
-		// const BASE_URL = 'http://localhost:8091/uniprot/api/pepvep';
-		const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api/pepvep';
-		if (significanceType === 'structural') {
-			if (Object.keys(row.significances.structural).length === 0) {
+		const rowIdAndType = rowId;
+
+		if (significanceType === 'FUN') {
+			const APIUrl = `${API_URL}` + row.referenceFunctionUri;
+			if (row.functionLoaded === false) {
 				this.setState({
-					structureLoaded: false,
+					functionLoaded: false,
 					expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null
 				});
-				axios.get(BASE_URL + row.significances.structureEndpoint).then((response) => {
-					row.significances.structural = this.createStructuralSignificance(row, response.data);
-					this.setState({ structureLoaded: true });
-					this.setState({ showLoader: false });
+				axios.get(APIUrl).then((response) => {
+					row.functional = response.data;
+					row.functionLoaded = true;
+					this.setState({
+						functionLoaded: true,
+						showLoader: false
+					});
 				});
 			} else {
 				this.setState({
@@ -317,436 +355,398 @@ class ImpactSearchResults extends Component {
 		handleBulkDownload(event, this.props.file);
 	};
 
+	getRow = (accession, openGroup) => {
+		let caddColour = '';
+		let caddCss = '';
+		let caddTitle = '';
+		let proteinName = accession.proteinName;
+		let proteinType = 'TrEMBL';
+		const { expandedRow } = this.state;
+		if (accession.canonical) proteinType = 'Swiss-Prot';
+		if (accession.isoform === undefined) proteinType = '';
+		if (accession.proteinName !== undefined && accession.proteinName.length > 20) {
+			proteinName = accession.proteinName.substring(0, 25) + '...';
+		}
+		if (accession.CADD === undefined || accession.CADD === '-') {
+			caddCss = '';
+		} else {
+			if (accession.CADD <= 30) {
+				caddColour = 'green';
+				caddTitle = 'Likely Benign';
+			} else {
+				caddColour = 'red';
+				caddTitle = 'Likely Deleterious';
+			}
+			caddCss = `label warning cadd-score cadd-score--${caddColour}`;
+		}
+
+		const chromosomeUrl = 'https://www.ensembl.org/Homo_sapiens/Location/Chromosome?r=' + accession.chromosome;
+		const positionUrl =
+			'https://www.ensembl.org/Homo_sapiens/Location/View?r=' +
+			accession.chromosome +
+			':' +
+			accession.position +
+			'-' +
+			accession.position;
+		const geneUrl = 'https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=' + accession.geneName;
+		const accessionUrl = 'https://www.uniprot.org/uniprot/' + accession.isoform;
+		const caddUrl = 'https://cadd.gs.washington.edu/info';
+		const toggleOpenGroup = accession.canonicalAccession + '-' + accession.position + '-' + accession.altAllele;
+		const expandedGroup = accession.isoform + '-' + accession.position + '-' + accession.altAllele;
+		const functionalKey = 'functional-' + expandedGroup;
+
+		const structuralKey = 'structural-' + expandedGroup;
+		const populationKey = 'population-' + expandedGroup;
+		const evolutionKey = 'evolution-' + expandedGroup;
+
+		const noSignificance = <span className="no-significances">-</span>;
+
+		return (
+			<Fragment>
+				<tr key={`${accession.isoform}-${accession.position}-${accession.altAllele}`}>
+					<td>
+						<a href={chromosomeUrl} target="_blank" rel="noopener noreferrer">
+							{accession.chromosome}
+						</a>
+					</td>
+					<td>
+						<a href={positionUrl} target="_blank" rel="noopener noreferrer">
+							{accession.position}
+						</a>
+					</td>
+					<td>{accession.id}</td>
+					<td>{accession.refAllele}</td>
+					<td>{accession.altAllele}</td>
+					<td>
+						<a href={geneUrl} target="_blank" rel="noopener noreferrer">
+							{accession.geneName}
+						</a>
+					</td>
+					<td>{accession.codon}</td>
+					<td>
+						<span className={caddCss} title={caddTitle}>
+							<a href={caddUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'white' }}>
+								{accession.CADD}
+							</a>
+						</span>
+					</td>
+					{accession.canonical ? (
+						<td>
+							<Button
+								onClick={() => this.toggleAcessionIsoforms(toggleOpenGroup)}
+								className="button button--toggle-isoforms"
+							>
+								{openGroup !== toggleOpenGroup ? '+' : null}
+								{openGroup === toggleOpenGroup ? '- ' : null}
+							</Button>
+						</td>
+					) : (
+						<td />
+					)}
+
+					<td>
+						<ProteinReviewStatus type={proteinType} />
+						<a href={accessionUrl} target="_blank" rel="noopener noreferrer">
+							{accession.isoform}
+						</a>
+					</td>
+					<td>
+						<span title={accession.proteinName}>{proteinName}</span>
+					</td>
+					<td>{accession.aaPos}</td>
+					<td>{accession.aaChange}</td>
+					<td>{accession.consequences}</td>
+					{this.getSignificancesButton(functionalKey, 'FUN', accession)}
+					{this.getSignificancesButton(populationKey, 'POP', accession)}
+					{this.getSignificancesButton(structuralKey, 'STR', accession)}
+					{this.getSignificancesButton(evolutionKey, 'EVI', accession)}
+				</tr>
+
+				{this.getEvolutionInferenceSignificance(evolutionKey, expandedRow, accession)}
+				{this.getPopulationObservationSignificance(populationKey, expandedRow, accession)}
+				{this.getStructuralSignificance(structuralKey, expandedRow, accession)}
+				{this.getFunctionalSignificance(functionalKey, expandedRow, accession)}
+			</Fragment>
+		);
+	};
+
+	getTableRows = (rows) => {
+		const { openGroup } = this.state;
+		let tableRows = [];
+		rows.map((genes, geneId) => {
+			genes.map((accessions, accessionId) => {
+				accessions.map((accession, index) => {
+					let currentGroup =
+						accession.canonicalAccession + '-' + accession.position + '-' + accession.altAllele;
+					if (currentGroup === openGroup) {
+						let row = this.getRow(accession, openGroup);
+						tableRows.push(row);
+					} else if (accession.canonical || accession.canonicalAccession === null) {
+						let row = this.getRow(accession, openGroup);
+						tableRows.push(row);
+					}
+				});
+			});
+		});
+		return tableRows;
+	};
+
+	handleChange = (e) => {
+		console.log('inside handle change');
+		const target = e.target;
+		const name = target.name;
+		const value = target.value;
+
+		this.setState({
+			[name]: value
+		});
+	};
+
+	handleCheckBox = (e) => {
+		console.log('inside handle change');
+		const target = e.target;
+		const name = target.name;
+		const value = target.checked;
+		this.setState({
+			[name]: value
+		});
+	};
+
+	handleSubmit = (e) => {
+		console.log('inside handle submit');
+		const inputArr = this.props.searchTerm;
+		this.setState({ name: this.state.modalInputName });
+		console.log(this.state.email);
+		console.log(this.state.name);
+		console.log(this.state.jobName);
+		console.log(this.state.function);
+		console.log(this.state.variation);
+		const headers = {
+			'Content-Type': 'application/json',
+			Accept: '*'
+		};
+		const APIUrl =
+			`${API_URL}` +
+			'/download?email=' +
+			this.state.email +
+			'&name=' +
+			this.state.name +
+			'&jobName=' +
+			this.state.jobName +
+			'&function=' +
+			this.state.function +
+			'&variation=' +
+			this.state.variation;
+
+		this.modalClose();
+
+		post(APIUrl, inputArr, {
+			headers: headers
+		}).then((response) => {
+			console.log('response -> ' + response.data);
+			response.data.forEach((mapping) => {
+				var genes = this.createGenes(mapping);
+				mappings.push(genes);
+			});
+		});
+	};
+
+	modalOpen = () => {
+		this.setState({ modal: true });
+	};
+
+	handleClick = () => {
+		if (!this.state.modal) {
+			document.addEventListener('click', this.handleOutsideClick, false);
+		} else {
+			document.removeEventListener('click', this.handleOutsideClick, false);
+		}
+
+		this.setState((prevState) => ({
+			modal: !prevState.modal
+		}));
+	};
+
+	modalClose() {
+		this.setState({
+			modal: false
+		});
+	}
+
+	handleOutsideClick = (e) => {
+		if (!this.node.contains(e.target)) this.handleClick();
+	};
+
 	render() {
 		// const { rows, handleDownload } = this.props;
 
 		const rows = this.props.rows;
-		const page = this.props.page;
-		const file = this.props.file;
-		const nextPage = this.props.page.nextPage;
-		const handleDownload = this.props.handleDownload;
-		const handleBulkDownload = this.props.handleBulkDownload;
-		const loading = this.props.loading;
-		const { expandedRow, showAllIsoforms, openGroup } = this.state;
-		const noLoading = false;
-		const significanceLoading = this.state.colocatedVariantLoaded;
-
-		let counter = 0;
+		const tableRows = this.getTableRows(rows);
 
 		return (
-			<div className="search-results" id="divRoot">
-				<SearchResultsLegends />
-				<div className="results-and-counter">
-					{file == null ? (
-						<Button onClick={handleDownload}>Download</Button>
-					) : (
-						<Button onClick={this.bulkDownload}>Download</Button>
-					)}
-					<Button onClick={this.toggleAllIsoforms}>
-						{showAllIsoforms ? 'Hide ' : 'Show '}
-						Isoforms
+			<div
+				className="search-results"
+				id="divRoot"
+				ref={(node) => {
+					this.node = node;
+				}}
+			>
+				<Button onClick={(e) => this.handleClick(e)}>Download</Button>
+				<Modal show={this.state.modal} handleClose={(e) => this.handleClick(e)}>
+					<h5>Enter Details</h5>
+					<div className="form-group">
+						<div>
+							<ul>
+								<li key="function" className="new-select">
+									<input
+										key="function1"
+										type="checkbox"
+										name="function"
+										value={this.state.function}
+										onChange={(e) => this.handleCheckBox(e)}
+										checked={this.state.function}
+									/>
+									<label id="item1">Reference Function</label>
+								</li>
+								<li key="variation" className="new-select">
+									<input
+										key="variation1"
+										type="checkbox"
+										value={this.state.variation}
+										name="variation"
+										onChange={(e) => this.handleCheckBox(e)}
+										checked={this.state.variation}
+									/>
+									<label id="item2">Population Observation</label>
+								</li>
+							</ul>
+
+							<label>
+								Name:
+								<input
+									type="text"
+									value={this.state.name}
+									name="name"
+									onChange={(e) => this.handleChange(e)}
+								/>
+							</label>
+							<label>
+								Email:
+								<input
+									type="text"
+									value={this.state.email}
+									name="email"
+									onChange={(e) => this.handleChange(e)}
+								/>
+							</label>
+							<label>
+								Job Name:
+								<input
+									type="text"
+									value={this.state.jobName}
+									name="jobName"
+									onChange={(e) => this.handleChange(e)}
+								/>
+							</label>
+						</div>
+					</div>
+
+					<Button onClick={(e) => this.handleSubmit(e)} type="button">
+						Save
 					</Button>
-				</div>
-				{noLoading ? (
-					<table>
-						<tbody>
-							<tr className="loader-border">
-								<td>
-									<Loader />
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				) : (
-					<table border="0" className="unstriped" cellPadding="0" cellSpacing="0">
-						<tbody>
-							<tr>
-								<th colSpan="2" rowSpan="2">
-									Gene Name
-								</th>
-								<th colSpan="3">Protein</th>
-								<th colSpan="3">Genomic</th>
-								<th colSpan="5">Impact</th>
-							</tr>
-
-							<tr>
-								<th>Accession</th>
-								<th>Position</th>
-								<th>Variant</th>
-								<th>Location</th>
-								<th>Allele</th>
-								<th>Var ID</th>
-								<th>C</th>
-								<th>G</th>
-								<th>T</th>
-								<th>F</th>
-								<th>S</th>
-							</tr>
-
-							{Object.keys(rows).map((key) => {
-								const group = rows[key];
-
-								return (
-									<Fragment key={`${group.key}`}>
-										<tr>
-											<td colSpan="7" className="query-row">
-												<Button
-													onClick={() => this.toggleAcessionIsoforms(group.key)}
-													className="button button--toggle-isoforms"
-												>
-													{!showAllIsoforms && openGroup !== group.key ? '+' : null}
-													{showAllIsoforms || openGroup === group.key ? '- ' : null}
-												</Button>
-												Query:
-												{group.input}
-											</td>
-											<td className="query-row">
-												{group.rows[0] &&
-													group.rows[0].variation &&
-													group.rows[0].variation.dbSNPId}
-											</td>
-											<td colSpan="6" className="query-row">
-												HGVSg: {group.rows[0] && group.rows[0].gene.hgvsg}
-											</td>
-										</tr>
-										{group.rows.map((row, i) => {
-											const { protein, gene, significances, variation } = row;
-
-											if (!showAllIsoforms && !protein.canonical && openGroup !== group.key) {
-												return null;
-											}
-
-											const proteinPosition =
-												variation.begin === variation.end
-													? variation.begin
-													: `${variation.begin}-${variation.end}`;
-
-											const geneLocation =
-												gene.start === gene.end
-													? `${gene.chromosome}:g.${gene.start}`
-													: `${gene.chromosome}:${gene.start}-${gene.end}`;
-
-											const rowKey = `${group.key}-${i}`;
-
-											let detailsPageLink = null;
-
-											if (variation.begin && variation.variant) {
-												const varSTRes = variation.variant
-													.split('/')
-													.join(variation.begin.toString());
-
-												const detailsPageURL = `https://www.ebi.ac.uk/thornton-srv/databases/cgi-bin/DisaStr/GetPage.pl?uniprot_acc=${protein.accession.toUpperCase()}&template=resreport.html&res=${varSTRes}`;
-												detailsPageLink = (
-													<a
-														className="details-page-link"
-														href={detailsPageURL}
-														target="_blank"
-														rel="noopener noreferrer"
-													>
-														View Details
-													</a>
-												);
-											}
-											const caddColour =
-												significances.transcript[0].caddPhred <= 30 ? 'green' : 'red';
-
-											let { accession } = protein;
-
-											if (protein.canonical) {
-												accession = protein.canonicalAccession;
-											} else if (protein.isoform) {
-												accession = protein.isoform;
-											}
-
-											counter += 1;
-
-											const noSignificance = <span className="no-significances">-</span>;
-
-											const transcriptSignificancesButton = this.getSignificancesButton(
-												rowKey,
-												row,
-												'transcript',
-												'button--transcript',
-												'T'
-											);
-
-											// const transcriptSignificancesButton = (
-											// 	<button
-											// 		onClick={() =>
-											// 			this.toggleSignificanceRow(rowKey, 'transcript', row)}
-											// 		className="button--significances button--transcript"
-											// 	>
-											// 		T
-											// 	</button>
-											// );
-
-											const functionalSignificancesButton = this.getSignificancesButton(
-												rowKey,
-												row,
-												'functional',
-												'button--positional',
-												'F'
-											);
-
-											const clinicalSignificancesButton = this.getSignificancesButton(
-												rowKey,
-												row,
-												'clinical',
-												'button--clinical',
-												'C'
-											);
-											// (
-											// 	<button
-											// 		onClick={() => this.toggleSignificanceRow(rowKey, 'clinical', row)}
-											// 		className="legend-icon button--significances button--clinical"
-											// 	>
-											// 		C
-											// 	</button>
-											// );
-
-											const structuralSignificancesButton = this.getSignificancesButton(
-												rowKey,
-												row,
-												'structural',
-												'button--structural',
-												'S'
-											);
-
-											// const structuralSignificancesButton = (
-											// 	<button
-											// 		onClick={() =>
-											// 			this.toggleSignificanceRow(rowKey, 'structural', row)}
-											// 		className="button--significances button--structural"
-											// 	>
-											// 		S
-											// 	</button>
-											// );
-
-											const genomicSignificancesButton = this.getSignificancesButton(
-												rowKey,
-												row,
-												'genomic',
-												'button--genomic',
-												'G'
-											);
-
-											// const genomicSignificancesButton = (
-											// 	<button
-											// 		onClick={() => this.toggleSignificanceRow(rowKey, 'genomic', row)}
-											// 		className="button--significances button--genomic"
-											// 	>
-											// 		G
-											// 	</button>
-											// );
-
-											return (
-												<Fragment key={`${rowKey}-${counter}`}>
-													<tr key={rowKey}>
-														<td className="fit">
-															{significances.transcript &&
-															significances.transcript[0].caddPhred ? (
-																this.getCaddPrediction(significances.transcript[0])
-															) : (
-																<span
-																	style={{
-																		background: 'lightblue'
-																	}}
-																>
-																	Loading...
-																</span>
-															)}
-														</td>
-														<td>{gene.symbol}</td>
-														<td>
-															{protein.length && proteinPosition ? (
-																<Fragment>
-																	<ProteinReviewStatus type={protein.type} />
-																	{accession}
-																</Fragment>
-															) : (
-																'-'
-															)}
-														</td>
-														<td>{proteinPosition || '-'}</td>
-														<td>
-															<span title={variation.variant || '-'}>
-																{variation.threeLetterCodes || '-'}
-															</span>
-														</td>
-														<td>{geneLocation}</td>
-														<td>{gene.allele}</td>
-														<td>{group.rows[0] && group.rows[0].variation.dbSNPId}</td>
-														<td className="fit">
-															{significances.clinical ? (
-																clinicalSignificancesButton
-															) : (
-																noSignificance
-															)}
-														</td>
-														<td className="fit">
-															{significances.genomic ? (
-																genomicSignificancesButton
-															) : (
-																noSignificance
-															)}
-														</td>
-														<td className="fit">
-															{significances.transcript ? (
-																transcriptSignificancesButton
-															) : (
-																noSignificance
-															)}
-														</td>
-														<td className="fit">
-															{significances.functional ? (
-																functionalSignificancesButton
-															) : (
-																noSignificance
-															)}
-														</td>
-														<td className="fit">
-															{significances.structureEndpoint !== null ? (
-																structuralSignificancesButton
-															) : (
-																noSignificance
-															)}
-														</td>
-													</tr>
-
-													{`${rowKey}:functional` === expandedRow ? (
-														this.getFunctionalSignificance(
-															significances.functional,
-															variation,
-															detailsPageLink
-														)
-													) : null}
-
-													{`${rowKey}:clinical` === expandedRow ? (
-														this.getClinicalSignificance(
-															significances.clinical,
-															variation,
-															detailsPageLink
-														)
-													) : null}
-
-													{`${rowKey}:transcript` === expandedRow ? (
-														<ExpandedTranscriptSignificance
-															data={significances.transcript}
-															variation={variation}
-															detailsLink={detailsPageLink}
-														/>
-													) : null}
-
-													{`${rowKey}:structural` === expandedRow ? (
-														this.getStructuralSignificance(
-															significances.structural,
-															detailsPageLink
-														)
-													) : null}
-
-													{`${rowKey}:genomic` === expandedRow ? (
-														<ExpandedGenomicSignificance
-															data={significances.genomic}
-															variation={variation}
-															detailsLink={detailsPageLink}
-															gene={gene}
-														/>
-													) : null}
-												</Fragment>
-											);
-										})}
-									</Fragment>
-								);
-							})}
-						</tbody>
-					</table>
-				)}
-				<span id="scrollTarget" />
-				{loading ? (
-					<table>
-						<tbody>
-							<tr className="loader-border">
-								<td>
-									<Loader />
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				) : (
-					<span />
-				)}
-
-				{!nextPage ? (
-					<table>
-						<tbody>
-							<tr className="loader-border">
-								<td>
-									<span>No more data to fetch</span>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				) : (
-					<span />
-				)}
+					<Button onClick={(e) => this.handleClick(e)} type="button">
+						close
+					</Button>
+				</Modal>
+				<table border="0" className="unstriped" cellPadding="0" cellSpacing="0">
+					<thead>
+						<tr>
+							<th colSpan="5">Input</th>
+							<th colSpan="3">Genomic</th>
+							<th colSpan="6">Protein</th>
+							<th colSpan="5">Impact</th>
+						</tr>
+						<tr>
+							<th>CHR</th>
+							<th>Coordinate</th>
+							<th>ID</th>
+							<th>Ref</th>
+							<th>Alt</th>
+							<th>Gene</th>
+							<th>Codon</th>
+							<th>CADD</th>
+							<th />
+							<th>Isoform</th>
+							<th>Name</th>
+							<th>AA Pos</th>
+							<th>AA Change</th>
+							<th>Consequences</th>
+							<th>Function</th>
+							<th>Population Observation</th>
+							<th>Structure</th>
+							<th>Evolution Inference</th>
+						</tr>
+					</thead>
+					<tbody>{tableRows}</tbody>
+				</table>
 			</div>
 		);
 	}
 }
 
 ImpactSearchResults.propTypes = {
-	rows: PropTypes.objectOf(
-		PropTypes.shape({
-			key: PropTypes.string,
-			input: PropTypes.string,
-			rows: PropTypes.arrayOf(
-				PropTypes.shape({
-					gene: PropTypes.shape({
-						hgvsg: PropTypes.string
-					}),
-					variation: PropTypes.shape({
-						dbSNPId: PropTypes.string
-					}),
-					map: PropTypes.func
-				})
-			),
-			gene: PropTypes.shape({
-				allele: PropTypes.string,
-				chromosome: PropTypes.string,
-				codons: PropTypes.string,
-				end: PropTypes.number,
-				ensgId: PropTypes.string,
-				enstId: PropTypes.string,
-				hgvsg: PropTypes.string,
-				hgvsp: PropTypes.string,
-				source: PropTypes.string,
-				start: PropTypes.number,
-				symbol: PropTypes.string
-			}),
-			protein: PropTypes.shape({
-				accession: PropTypes.string,
-				isoform: PropTypes.string,
-				canonical: PropTypes.bool,
-				canonicalAccession: PropTypes.string,
-				end: PropTypes.number,
-				length: PropTypes.number,
-				name: PropTypes.shape({
-					full: PropTypes.string,
-					short: PropTypes.string
-				}),
-				start: PropTypes.number,
-				threeLetterCodes: PropTypes.string,
-				variant: PropTypes.string,
-				enspId: PropTypes.string
-			}),
-			significances: PropTypes.shape({})
-		})
-	),
+	// rows: PropTypes.objectOf(
+	// 	PropTypes.shape({
+	// 		key: PropTypes.string,
+	// 		input: PropTypes.string,
+	// rows: PropTypes.arrayOf(
+	// 	PropTypes.shape({
+	// 		gene: PropTypes.shape({
+	// 			hgvsg: PropTypes.string
+	// 		}),
+	// 		variation: PropTypes.shape({
+	// 			dbSNPId: PropTypes.string
+	// 		}),
+	// 		map: PropTypes.func
+	// 	})
+	// ),
+	// gene: PropTypes.shape({
+	// 	allele: PropTypes.string,
+	// 	chromosome: PropTypes.string,
+	// 	codons: PropTypes.string,
+	// 	end: PropTypes.number,
+	// 	ensgId: PropTypes.string,
+	// 	enstId: PropTypes.string,
+	// 	hgvsg: PropTypes.string,
+	// 	hgvsp: PropTypes.string,
+	// 	source: PropTypes.string,
+	// 	start: PropTypes.number,
+	// 	symbol: PropTypes.string
+	// }),
+	// protein: PropTypes.shape({
+	// 	accession: PropTypes.string,
+	// 	isoform: PropTypes.string,
+	// 	canonical: PropTypes.bool,
+	// 	canonicalAccession: PropTypes.string,
+	// 	end: PropTypes.number,
+	// 	length: PropTypes.number,
+	// 	name: PropTypes.shape({
+	// 		full: PropTypes.string,
+	// 		short: PropTypes.string
+	// 	}),
+	// 	start: PropTypes.number,
+	// 	threeLetterCodes: PropTypes.string,
+	// 	variant: PropTypes.string,
+	// 	enspId: PropTypes.string
+	// }),
+	// 		significances: PropTypes.shape({})
+	// 	})
+	// ),
 	handleDownload: PropTypes.func.isRequired
 };
 
-ImpactSearchResults.defaultProps = {
-	rows: {}
-};
+// ImpactSearchResults.defaultProps = {
+// 	rows: {}
+// };
 
 export default ImpactSearchResults;

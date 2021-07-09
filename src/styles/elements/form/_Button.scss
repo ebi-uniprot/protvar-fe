@@ -1,144 +1,181 @@
-
 // Button
 // ------
+.button-new {
+	display: inline-block;
+	padding: 8px 8px;
+	margin: 0 .1em;
+	outline: 0;
+	background-color: #cfe8ef;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+	cursor: pointer;
+	color: #00709b;
+	border-style: dotted;
+	border-width: thin;
+	border-color: #00709b;
+}
 .button {
-  &:focus {
-    outline: none;
-  }
+	border-style: dotted;
+	border-width: thin;
+	border-color: #00709b;
 
-  margin-right: 0.5rem;
-  font-weight: 700;
-  text-transform: uppercase;
+	&:focus {
+		outline: none;
+	}
 
-  &--round {
-    border-radius: 50%;
-    width: 1.5rem;
-    height: 1.5rem;
-    padding: 0.3rem;
-    font-size: 0.8rem;
-    margin: 0 0.5rem 0 0;
-  }
+	margin-right: 0.5rem;
+	font-weight: 700;
+	text-transform: uppercase;
 
-  &--tag {
-    height: 1.5rem;
-    padding: 0.3rem;
-    font-size: 0.8rem;
-    margin: 0 0.5rem 0 0;
-    border-radius: 0.2rem;
-    text-transform: none;
-  }
+	&--round {
+		border-radius: 50%;
+		width: 1.5rem;
+		height: 1.5rem;
+		padding: 0.3rem;
+		font-size: 0.8rem;
+		margin: 0 0.5rem 0 0;
+	}
 
-  &--primary {
-    color: $black-colour;
-    background-color: $primary-colour;
-  }
+	&--tag {
+		height: 1.5rem;
+		padding: 0.3rem;
+		font-size: 0.8rem;
+		margin: 0 0.5rem 0 0;
+		border-radius: 0.2rem;
+		text-transform: none;
+	}
 
-  &--secondary {
-    color: $white-colour;
-    background-color: $secondary-colour;
-  }
+	&--primary {
+		color: $black-colour;
+		background-color: $primary-colour;
+	}
 
-  &--significances {
-    font-size: 0.8rem;
-    text-transform: none;
-    margin: 0.2rem;
-    padding: 0;
-    width: calc(100% - 0.2rem);
-    height: 1.8rem;
-  }
+	&--secondary {
+		color: $white-colour;
+		background-color: $secondary-colour;
+	}
 
-  &--positional {
-    color: $white-colour;
-    background-color: #EB9F9F;
-    &:focus {
-      background-color: #EB9F9F;
-    }
-    &:hover {
-      background-color: darken(#EB9F9F, 10%);
-    }
-  }
-  
-  &--positional--border {
-    border: 2px solid;
-    border-color: darken(#EB9F9F, 40%);
-  } 
-  &--clinical {
-    color: $white-colour;
-    background-color: #EB6841;
-    &:focus {
-      background-color: #EB6841;
-    }
-    &:hover {
-      background-color: darken(#EB6841, 10%);
-    }
-  }
+	&--significances {
+		font-size: 0.8rem;
+		text-transform: none;
+		// margin: 0.2rem;
+		// padding: 0;
+		// width: calc(100% - 0.2rem);
+		background-color: transparent;
+		margin: 0;
+		padding: 20px;
+		border-style: none;
+		height: 100%;
+		width: 100%;
+	}
 
-  &--clinical--border {
-    border: 2px solid;
-    border-color: darken(#EB6841, 40%);
-  }
-  
-  &--transcript {
-    color: $black-colour;
-    background-color: #C7F464;
-    color: #333;
-    &:focus {
-      background-color: #C7F464;
-      color: #333;
-    }
-    &:hover {
-      background-color: darken(#C7F464, 10%);
-      color: #333;
-    }
-  }
+	&--significances-clicked {
+		font-size: 0.8rem;
+		text-transform: none;
+		// margin: 0.2rem;
+		// padding: 0;
+		// width: calc(100% - 0.2rem);
 
-  &--transcript--border {
-    border: 2px solid;
-    border-color: darken(#C7F464, 40%);
-  }
+		margin: 0;
+		padding: 20px;
+		border-style: none;
+		height: 100%;
+		background-color: #cfe8ef;
+		width: 100%;
+	}
 
-  &--structural {
-    color: $white-colour;
-    background-color: #00DFFC;
-    &:focus {
-      background-color: #00DFFC;
-    }
-    &:hover {
-      background-color: darken(#00DFFC, 10%);
-    }
-  }
+	&--positional {
+		color: $white-colour;
+		background-color: #eb9f9f;
+		&:focus {
+			background-color: #eb9f9f;
+		}
+		&:hover {
+			background-color: darken(#eb9f9f, 10%);
+		}
+	}
 
-  &--structural--border {
-    border: 2px solid;
-    border-color: darken(#00DFFC, 40%);
-  }
+	&--positional--border {
+		border: 2px solid;
+		border-color: darken(#eb9f9f, 40%);
+	}
+	&--clinical {
+		color: $white-colour;
+		background-color: #eb6841;
+		&:focus {
+			background-color: #eb6841;
+		}
+		&:hover {
+			background-color: darken(#eb6841, 10%);
+		}
+	}
 
-  &--genomic {
-    color: $white-colour;
-    background-color: #794a4a;
-    &:focus {
-      background-color: #794a4a;
-    }
-    &:hover {
-      background-color: darken(#794a4a, 10%);
-    }
-  }
+	&--clinical--border {
+		border: 2px solid;
+		border-color: darken(#eb6841, 40%);
+	}
 
-  &--genomic--border {
-    border: 2px solid;
-    border-color: darken(#794a4a, 40%);
-  }
+	&--transcript {
+		color: $black-colour;
+		background-color: #c7f464;
+		color: #333;
+		&:focus {
+			background-color: #c7f464;
+			color: #333;
+		}
+		&:hover {
+			background-color: darken(#c7f464, 10%);
+			color: #333;
+		}
+	}
 
-  &--toggle-isoforms {
-    margin: 0 0.5rem 0 0;
-    width: 1.5rem;
-    height: 1.5rem;
-    padding: 0;
-    border-radius: 0.75rem;
-  }
+	&--transcript--border {
+		border: 2px solid;
+		border-color: darken(#c7f464, 40%);
+	}
 
-  &--clicked {
-    background-color: grey;
-  }
+	&--structural {
+		color: $white-colour;
+		background-color: #00dffc;
+		&:focus {
+			background-color: #00dffc;
+		}
+		&:hover {
+			background-color: darken(#00dffc, 10%);
+		}
+	}
 
+	&--structural--border {
+		border: 2px solid;
+		border-color: darken(#00dffc, 40%);
+	}
+
+	&--genomic {
+		color: $white-colour;
+		background-color: #794a4a;
+		&:focus {
+			background-color: #794a4a;
+		}
+		&:hover {
+			background-color: darken(#794a4a, 10%);
+		}
+	}
+
+	&--genomic--border {
+		border: 2px solid;
+		border-color: darken(#794a4a, 40%);
+	}
+
+	&--toggle-isoforms {
+		margin: 0 0.5rem 0 0;
+		width: 1.5rem;
+		height: 1.5rem;
+		padding: 0;
+		border-radius: 0.75rem;
+	}
+
+	&--clicked {
+		background-color: grey;
+	}
 }

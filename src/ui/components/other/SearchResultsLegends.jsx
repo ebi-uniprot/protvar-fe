@@ -14,7 +14,7 @@ const SearchResultsLegends = () => (
 			</li>
 		</ul>
 
-		<ul>
+		{/* <ul>
 			<li>
 				<div className="legend-icon button--significances button--clinical">C</div>
 				<span>Clinical Impact</span>
@@ -36,7 +36,7 @@ const SearchResultsLegends = () => (
 				<div className="legend-icon button--significances button--structural">S</div>
 				<span>Structural Impact</span>
 			</li>
-		</ul>
+		</ul> */}
 	</div>
 );
 

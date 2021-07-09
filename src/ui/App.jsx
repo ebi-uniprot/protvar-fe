@@ -408,11 +408,11 @@ class App extends Component {
 	}
 
 	handleSearch = (input, uploadedFile, newPage, loadingFlag) => {
-		console.log('Calling API -> ' + input);
+		// console.log('Calling API -> ' + input);
 		const { history } = this.props;
 
-		// const BASE_URL = 'http://localhost:8091/uniprot/api';
-		const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api';
+		const BASE_URL = 'http://localhost:8091/uniprot/api';
+		// const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api';
 
 		var isFileSelectedNew = false;
 		var loadingNew = true;
@@ -440,6 +440,83 @@ class App extends Component {
 		}
 	};
 
+	createGenes(mapping) {
+		var genes = [];
+		var chr = mapping.chromosome;
+		var start = mapping.geneCoordinateStart;
+		var variant = mapping.variantAllele;
+		var id = mapping.id;
+
+		mapping.genes.forEach((gene) => {
+			var rows = [];
+			let ensg = gene.ensg;
+			gene.isoforms.forEach((isoform) => {
+				var record = {};
+				if (isoform.canonical || isoform.canonicalAccession === null) {
+					record.chromosome = chr;
+					// record.position = start;
+					record.id = id;
+					record.refAllele = gene.refAllele;
+					// record.altAllele = variant;
+					record.geneName = gene.geneName;
+					record.codon = isoform.refCodon + '/' + isoform.variantCodon;
+					record.CADD = '-';
+				}
+				record.position = start;
+				record.altAllele = variant;
+				record.proteinName = isoform.proteinName;
+				record.isoform = isoform.accession;
+				record.aaPos = isoform.isoformPosition;
+				record.aaChange = isoform.refAA + '/' + isoform.variantAA;
+				record.consequences = isoform.consequences;
+				record.cdsPosition = isoform.cdsPosition;
+				record.canonical = isoform.canonical;
+				record.canonicalAccession = isoform.canonicalAccession;
+				record.referenceFunctionUri = isoform.referenceFunctionUri;
+				record.ensp = [];
+				record.enst = [];
+				if (isoform.translatedSequences !== undefined && isoform.translatedSequences.length > 0) {
+					var ensps = [];
+					var ensts = [];
+					isoform.translatedSequences.map((translatedSeq) => {
+						ensps.push(translatedSeq.ensp);
+						translatedSeq.transcripts.map((transcript) => {
+							ensts.push(transcript.enst);
+						});
+					});
+					record.ensp = ensps;
+					record.enst = ensts;
+					// isoform.translatedSequences.map;
+					// if (
+					// 	isoform.translatedSequences[0].transcripts !== undefined &&
+					// 	isoform.translatedSequences[0].transcripts.length > 0
+					// ) {
+					// 	record.enst = isoform.translatedSequences[0].transcripts[0].enst;
+					// }
+				}
+				record.ensg = ensg;
+				record.functionLoaded = false;
+				record.structureLoaded = false;
+				record.variationLoaded = false;
+				rows.push(record);
+			});
+			genes.push(rows);
+		});
+		if (genes.length === 0) {
+			var rows = [];
+			var record = {};
+			record.chromosome = chr;
+			record.position = start;
+			record.id = id;
+			record.refAllele = mapping.userAllele;
+			record.altAllele = mapping.variantAllele;
+			record.canonicalAccession = null;
+			rows.push(record);
+			genes.push(rows);
+		}
+		return genes;
+	}
+
 	getInputType(inputArr) {
 		let firstInput = inputArr[0];
 		if (firstInput.startsWith('NC')) {
@@ -453,7 +530,7 @@ class App extends Component {
 
 	fetchNextPage = (uploadedFile, page, isFileSelected, loading) => {
 		var pageNumber = page.currentPage;
-		const PAGE_SIZE = 5;
+		const PAGE_SIZE = 200;
 		var skipRecord = (pageNumber - 1) * PAGE_SIZE;
 		var count = 0;
 		var recordsProcessed = 0;
@@ -503,6 +580,46 @@ class App extends Component {
 			}
 		});
 	};
+
+	fetchByVCF(BASE_URL, inputArr, input, uploadedFile, newPage, history) {
+		const headers = {
+			'Content-Type': 'application/json',
+			Accept: '*'
+		};
+
+		const uri = BASE_URL + '/pepvep/variant/mapping';
+		const output = {
+			errors: [],
+			results: {}
+		};
+		if (this.state.searchResults != null) {
+			output.results = this.state.searchResults;
+		}
+		var mappings = [];
+		post(uri, inputArr, {
+			headers: headers
+		}).then((response) => {
+			console.log('response -> ' + response.data);
+			response.data.forEach((mapping) => {
+				var genes = this.createGenes(mapping);
+				mappings.push(genes);
+			});
+
+			this.setState({
+				searchTerm: inputArr,
+				searchResults: mappings,
+				errors: output.errors,
+				loading: false,
+				isFileSelected: false,
+				file: uploadedFile,
+				page: newPage
+			});
+
+			history.push('search');
+
+			// this.processResponse(results, input, uploadedFile, newPage, history);
+		});
+	}
 
 	fetchByHGVS(BASE_URL, inputArr, input, uploadedFile, newPage, history) {
 		const headers = {
@@ -561,7 +678,7 @@ class App extends Component {
 		});
 	}
 
-	fetchByVCF(BASE_URL, inputArr, input, uploadedFile, newPage, history) {
+	fetchByVCF1(BASE_URL, inputArr, input, uploadedFile, newPage, history) {
 		const GET_VARIANTS = this.getQuery();
 		const client = new ApolloClient({
 			cache: new InMemoryCache(),

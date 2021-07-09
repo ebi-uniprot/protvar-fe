@@ -1,161 +1,279 @@
-.title-row{
-  font-size: 14px;
+.title-row {
+	font-size: 14px;
 }
+
+.navbar {
+	width: 100%;
+	background-color: linear-gradient(45deg, #014371, rgba(1, 67, 113, 0.7), #014371, #014371);
+	overflow: auto;
+}
+
+/* Navbar links */
+.navbar a {
+	float: left;
+	text-align: center;
+	padding: 12px;
+	color: white;
+	text-decoration: none;
+
+	// font-size: 17px;
+}
+
+/* Navbar links on mouse-over */
+.navbar a:hover {
+	// background-color: #000;
+	border-bottom: none;
+}
+a {
+	border-bottom-style: none;
+}
+/* Current/active navbar link */
+// .active {
+// 	background-color: #04aa6d;
+// }
+
+.topnav-right {
+	float: right;
+	padding-top: 30px;
+
+	table {
+		margin-bottom: 0rem;
+		tbody {
+			border: 0;
+			background-color: transparent;
+		}
+	}
+
+	button {
+		background-color: Transparent;
+		padding-top: 1em;
+		padding-right: 1em;
+		padding-bottom: 1em;
+		padding-left: 1em;
+	}
+	.window__header {
+		width: 100%;
+		height: 2rem;
+		background-color: #5caecd;
+		color: #fff;
+		font-weight: 700;
+		padding: 0 .5rem;
+		display: flex;
+		line-height: 2rem;
+		justify-content: center;
+		align-items: center;
+	}
+
+	p {
+		color: black;
+	}
+
+	.window__content {
+		color: black;
+	}
+
+	/* Style inputs with type="text", select elements and textareas */
+	input[type=text],
+	select,
+	textarea {
+		width: 100%; /* Full width */
+		padding: 12px; /* Some padding */
+		border: 1px solid #ccc; /* Gray border */
+		border-radius: 4px; /* Rounded borders */
+		box-sizing: border-box; /* Make sure that padding and width stays in place */
+		margin-top: 6px; /* Add a top margin */
+		margin-bottom: 16px; /* Bottom margin */
+		resize: vertical; /* Allow the user to vertically resize the textarea (not horizontally) */
+	}
+
+	/* Style the submit button with a specific background color etc */
+	input[type=submit] {
+		background-color: #5caecd;
+		color: white;
+		padding: 12px 20px;
+		border: none;
+		border-radius: 4px;
+		cursor: pointer;
+	}
+
+	/* When moving the mouse over the submit button, add a darker green color */
+	input[type=submit]:hover {
+		background-color: #5caecd;
+	}
+
+	/* Add a background color and some padding around the form */
+	.container {
+		border-radius: 5px;
+		background-color: #f2f2f2;
+		padding: 20px;
+	}
+}
+
+.local-title {
+	color: $white-colour;
+	text-shadow: 1px 1px 0 $black-colour;
+	font-family: $primary-font-family;
+	font-size: 2.5rem;
+}
+
+/* Add responsiveness - will automatically display the navbar vertically instead of horizontally on screens less than 500 pixels */
+@media screen and (max-width: 500px) {
+	.navbar a {
+		float: none;
+		display: block;
+	}
+}
+
 .content {
+	font-size: 1rem;
 
-  font-size: 1rem;
+	.masthead {
+		border-bottom: 1px solid lighten($black-colour, 50%);
+		margin-bottom: 2rem;
+		background: linear-gradient(45deg, #014371, rgba(1, 67, 113, 0.7), #014371, #014371);
+	}
 
-  .masthead {
+	.masthead-inner {
+		padding-top: 0;
+	}
 
-    border-bottom: 1px solid lighten($black-colour, 50%);
-    margin-bottom: 2rem;
-    background: linear-gradient(45deg, #014371, rgba(1,67,113,0.7), #014371, #014371)
-  }
+	.local-title {
+		a {
+			color: $white-colour;
+			text-shadow: 1px 1px 0 $black-colour;
+			font-family: $primary-font-family;
+			font-size: 2.5rem;
+		}
+	}
 
-  .masthead-inner {
-    padding-top:0;
-  }
+	.main-content-area {
+		max-width: 90vw;
+		margin: 0 auto;
+	}
 
-  .local-title {
-   
-    a {
-      color: $white-colour;
-      text-shadow: 1px 1px 0 $black-colour;
-      font-family: $primary-font-family;
-      font-size: 2.5rem;
-    }
-  }
+	.card {
+		box-shadow: 0 0.125rem 0.25rem 0.125rem rgba(22, 29, 57, 0.2);
+		background-color: #fbfeff;
+		border-radius: 0.2rem;
+		margin: 0rem;
+		width: 100%;
+		height: 100%;
 
-  .main-content-area {
-    max-width: 90vw;
-    margin: 0 auto;
-  }
+		.scrollable {
+			height: 200px; /* or any value */
+			overflow-y: auto;
+			line-height: 1em;
+		}
 
-  .card {
-    box-shadow: 0 0.125rem 0.25rem 0.125rem rgba(22,29,57,0.2);
-    background-color: #fbfeff;
-    border-radius: 0.2rem;
-    margin: 0rem;
-    width: 100%;
-    height: 100%;
+		.scrollable::-webkit-scrollbar {
+			-webkit-appearance: none;
+		}
 
-    .scrollable {
-      height: 200px; /* or any value */
-      overflow-y: auto;
-      line-height: 1em;
-    }
+		.scrollable::-webkit-scrollbar:vertical {
+			width: 11px;
+		}
 
-.scrollable::-webkit-scrollbar {
-    -webkit-appearance: none;
+		.scrollable::-webkit-scrollbar:horizontal {
+			height: 11px;
+		}
+
+		.scrollable::-webkit-scrollbar-thumb {
+			border-radius: 8px;
+			border: 2px solid white; /* should match background, can't be transparent */
+			background-color: rgba(0, 0, 0, .5);
+		}
+
+		.text {
+			height: 120px;
+			overflow: hidden;
+		}
+		.container {
+			position: relative;
+		}
+		label {
+			position: absolute;
+			top: 100%;
+			font-weight: bold;
+			color: blue;
+			padding-bottom: 1rem;
+		}
+		input {
+			display: none;
+		}
+		label:after {
+			content: "Show More";
+		}
+		input:checked + label:after {
+			content: "Show Less";
+		}
+		input:checked ~ div {
+			height: 100%;
+		}
+	}
+
+	.card__content-upper {
+		height: 240px;
+	}
+	.top-row {
+		.card__content {
+			margin-top: 0rem;
+			padding-bottom: 0rem;
+		}
+	}
+
+	.card__actions {
+		display: flex;
+		flex-wrap: nowrap;
+		overflow-x: auto;
+		padding: 0;
+		background-color: #d2dce3;
+	}
+
+	.card-header {
+		padding-left: 1rem;
+		padding-top: 0.1rem;
+		font-family: Lato, sans-serif;
+		font-size: 16px;
+		color: rgb(1, 67, 113);
+		p {
+			margin-bottom: 1rem;
+		}
+	}
+	.uniprot-card {
+		padding-left: 1rem;
+		padding-right: 1rem;
+	}
+
+	.card-table {
+		padding-left: 2px;
+		font-size: 13px;
+		height: 100%;
+	}
+
+	.card-header {
+		padding-top: 0.4rem;
+	}
+
+	.glyphicon {
+		position: relative;
+		top: 1px;
+		display: inline-block;
+		font-family: "Glyphicons Halflings";
+		font-style: normal;
+		font-weight: 400;
+		line-height: 1;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+
+	.glyphicon-info-sign:before {
+		content: "\e086";
+	}
 }
-
-.scrollable::-webkit-scrollbar:vertical {
-    width: 11px;
-}
-
-.scrollable::-webkit-scrollbar:horizontal {
-    height: 11px;
-}
-
-.scrollable::-webkit-scrollbar-thumb {
-    border-radius: 8px;
-    border: 2px solid white; /* should match background, can't be transparent */
-    background-color: rgba(0, 0, 0, .5);
-}
-  
-
-    .text {
-      height: 120px;
-      overflow: hidden;
-  }
-  .container {
-      position: relative;
-  }
-  label {
-      position: absolute;
-      top: 100%;
-      font-weight: bold;
-      color: blue;
-      padding-bottom:1rem
-  }
-  input {
-      display: none;
-  }
-  label:after {
-      content: "Show More";
-  }
-  input:checked + label:after {
-      content: "Show Less";
-  }
-  input:checked ~ div {
-      height: 100%;
-  }
-  }
-  
-  .card__content-upper {
-    height:240px;
-  }
-  .top-row {
-    .card__content {
-      margin-top: 0rem;
-      padding-bottom: 0rem;
-    }
-}
-  
-  .card__actions {
-    display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    padding: 0;
-    background-color: #d2dce3;
-  }
-
-  .card-header {
-    padding-left: 1rem;
-    padding-top:0.1rem;
-    font-family:Lato, sans-serif;
-    font-size:16px;
-    color:rgb(1, 67, 113);
-    p {
-      margin-bottom:1rem;
-    }
-  }
-  .uniprot-card{
-    padding-left:1rem;
-    padding-right:1rem;
-  }
-
-  .card-table{
-    padding-left:2px;
-    font-size: 13px;
-    height: 100%;
-  }
-
-  .card-header{
-    padding-top:0.4rem;
-  }
-
- .glyphicon {
-    position: relative;
-    top: 1px;
-    display: inline-block;
-    font-family: "Glyphicons Halflings";
-    font-style: normal;
-    font-weight: 400;
-    line-height: 1;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-.glyphicon-info-sign:before {
-  content: "\e086";
-}
-  
-}
-div#local-title{
-  margin-bottom:0.5rem;
+div#local-title {
+	margin-bottom: 0.5rem;
 }
 
 .float-bottom {
-  padding-top:1rem;
+	padding-top: 1rem;
 }

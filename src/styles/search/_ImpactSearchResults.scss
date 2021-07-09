@@ -1,279 +1,349 @@
-
 // Impact Search Results
 // ---------------------
 .search-results {
+	.table-header {
+		border: none;
 
-  .button {
-    margin-right:1rem;
-  }
-  
-  table {
-    // border: 1px solid $search-results-table-border-colour;
-    // width: min-content;
-    a {
-      text-decoration: none;
-      display: inline-block;
-      padding: 8px 16px;
-    }
-    
-    .loader-border {
-      background-color:white!important;
-    }
-    a:hover {
-      background-color: #ddd;
-      color: white;
-    }
-    
-    .previous {
-      background-color: #1779ba;
-      color: black;
-    }
+		.button {
+			padding: 0.8em;
+			margin: 0;
+			margin: 0;
+			width: auto;
+		}
+	}
+	.button {
+		margin-right: 1rem;
+		background: #cfe8ef;
+		color: #00709b;
+		border-style: dotted;
+		border-width: thin;
+		border-color: #00709b;
+	}
+	.window__header {
+		background-color: #5caecd;
+		color: #fff;
+	}
+	.modal {
+		background: rgba(0, 0, 0, 0.6);
+	}
 
-    .button {
-      padding:0em;
-      margin-bottom: 0.5rem;
-      margin-top: 0.5rem;
-    }
+	.modal-container {
+		position: fixed;
+		width: 30%;
+		background: #deeff5;
+		// left: 20%;
+		// top: 22%;
+		padding: 20px;
+		border-style: dotted;
+		border-color: #5caecd;
+		border-width: thin;
+		// border-radius: 1px;
+	}
+	.d-block {
+		display: block;
+	}
 
-    .button-disabled {
-      pointer-events: none; 
-      background-color: #cccccc;
-    }
-    
-    .button--toggle-isoforms {
-      margin-right: 1em;
-    }
-    .next {
-      background-color: #1779ba;
-      color: white;
-    }
-    
-    .pagination{
-      background-color: #fefefe;
-      color: #fefefe!important;
-      border-style: none;
-    }
-    .pagination a, .pagination button {
-      color: #fefefe!important;
-      padding:0.6rem;
-    }
-    tr:nth-child(odd) {
-      background-color: $search-results-table-zebra-background-colour;
-    }
+	.d-none {
+		display: none;
+	}
+	.new-select {
+		display: inline-block;
+	}
 
-    th {
-      background-color: $search-results-table-header-background-colour;
-      color: $white-colour;
-      text-transform: uppercase;
-      font-size: 0.8rem;
-      // padding: 0;
-      /* width: fit-content; */
-      /* display: table-cell; */
-      width: 1%;
-      /* white-space: nowrap; */
-      padding: 0.2rem;
-      border-width: 1px 0 0 1px;
-      border-color: $search-results-table-header-border-colour;
-      border-style: solid;
-    }
+	table {
+		// border: 1px solid $search-results-table-border-colour;
+		// width: min-content;
+		a {
+			text-decoration: none;
+			display: inline;
+			// padding: 8px 16px;
+			color: #00709b;
+		}
 
-    td {
-      border-bottom: 1px solid $search-results-divider-border-colour;
-      font-size: 0.9rem;
-      padding: 0;
-      /* width: fit-content; */
-      /* display: table-cell; */
-      width: 0.1%;
-      white-space: nowrap;
-      padding: 0.3rem 0.5rem;
+		.loader-border {
+			background-color: white !important;
+		}
+		a:hover {
+			background-color: #ddd;
+			color: #00709b;
+		}
 
-      &.fit {
-        padding: 0;
-        margin: 0;
-      }
-    }
+		.previous {
+			background-color: #1779ba;
+			color: black;
+		}
 
-    .badge {
-      background-color: $white-colour;
-      border: 1px solid $search-results-badge-border-colour;
-      font-size: 0.8rem;
-      color: $search-results-badge-colour;
-      font-weight: 700;
-      margin-right: 0.3rem;
-      padding: 0.2rem;
-    }
+		.button {
+			padding: 0em;
+			margin-bottom: 0.5rem;
+			margin-top: 0.5rem;
+		}
 
-    .novel-variant {
-      color: $novel-variant-colour;
-      font-size: 1.7rem;
-      margin-right: 0.5rem;
-    }
+		.button-disabled {
+			pointer-events: none;
+			background-color: #cccccc;
+		}
 
-    .non-coding-variant {
-      font-size: 1.6rem;
-      color: $non-coding-variant-colour;
-    }
-  }
+		.button--toggle-isoforms {
+			margin-right: 1em;
+		}
+		.next {
+			background-color: #1779ba;
+			color: white;
+		}
 
-  .no-border td {
-    border: 0;
-  }
+		.pagination {
+			background-color: #fefefe;
+			color: #fefefe !important;
+			border-style: none;
+		}
+		.pagination a,
+		.pagination button {
+			color: #fefefe !important;
+			padding: 0.6rem;
+		}
+		tr {
+			border-top: 1px dotted #ccc;
+			border-bottom: 1px dotted #ccc;
+		}
+		tr:nth-child(even) {
+			background-color: $search-results-table-zebra-background-colour;
+		}
 
-  .query-row {
-    padding: 0.7rem;
-    background-color: $search-results-query-row-background-colour;
-  }
+		th {
+			background-color: $search-results-table-header-background-colour;
+			color: $white-colour;
+			text-transform: uppercase;
+			font-size: 0.8rem;
+			// padding: 0;
+			/* width: fit-content; */
+			/* display: table-cell; */
+			width: 1%;
+			/* white-space: nowrap; */
+			padding: 0.2rem;
+			border-width: 1px 0 0 1px;
+			border-color: $search-results-table-header-border-colour;
+			border-style: solid;
+			text-align: center;
+		}
 
-  .no-significances {
-    width: 100%;
-    text-align: center;
-    display: inline-block;
-  }
+		td {
+			border-bottom: 1px solid $search-results-divider-border-colour;
+			font-size: 0.9rem;
+			padding: 0;
+			/* width: fit-content; */
+			/* display: table-cell; */
+			width: 0.1%;
+			white-space: nowrap;
+			padding: 0.3rem 0.5rem;
+			border-right: 1px dotted #ccc;
+			border-left: 1px dotted #ccc;
+			&.fit {
+				padding: 0;
+				margin: 0;
+			}
 
-  .row-counter {
-    text-align: center;
-    // scss-lint:disable ImportantRule
-    border-bottom: 1px solid $search-results-divider-border-colour !important;
-    // scss-lint:enable ImportantRule
-    vertical-align: top;
-  }
+			// &.fit-clicked {
+			// 	padding: 0;
+			// 	margin: 0;
+			// 	border-bottom: transparent;
+			// }
+		}
 
-  .cadd-score {
-    padding: 0.3rem 0.4rem;
-    border-radius: 0.75rem;
-    font-size: 0.8rem;
-    font-weight: 700;
+		.fit-clicked {
+			padding: 0;
+			margin: 0;
+			border-bottom: transparent;
+		}
 
-    &--green {
-      background-color: $cadd-score-green-background-colour;
-    }
+		.badge {
+			background-color: $white-colour;
+			border: 1px solid $search-results-badge-border-colour;
+			font-size: 0.8rem;
+			color: $search-results-badge-colour;
+			font-weight: 700;
+			margin-right: 0.3rem;
+			padding: 0.2rem;
+		}
 
-    &--red {
-      color: $white-colour;
-      background-color: $cadd-score-red-background-colour;
-    }
-  }
+		.novel-variant {
+			color: $novel-variant-colour;
+			font-size: 1.7rem;
+			margin-right: 0.5rem;
+		}
 
-  .significances-groups {
-    width: 100%;
-    display: flex;
+		.non-coding-variant {
+			font-size: 1.6rem;
+			color: $non-coding-variant-colour;
+		}
+	}
 
-    .significances-column {
-      width: 100%;
-      min-height: 150px;
-    }
+	.no-border td {
+		border: 0;
+	}
 
-    .significances-stacked-columns {
-      flex-direction: column;
+	.query-row {
+		padding: 0.7rem;
+		background-color: $search-results-query-row-background-colour;
+	}
 
-      .significances-column {
-        min-height: auto;
-      }
-    }
+	.no-significances {
+		width: 100%;
+		text-align: center;
+		display: inline-block;
+	}
 
-    .structural-icon {
-      font-size: 2rem;
-    }
-  }
+	.row-counter {
+		text-align: center;
+		// scss-lint:disable ImportantRule
+		border-bottom: 1px solid $search-results-divider-border-colour !important;
+		// scss-lint:enable ImportantRule
+		vertical-align: top;
+	}
 
-  .significance-data-block {
-    border-bottom: 1px solid $significance-data-block-border-colour;
-    padding: 1rem 0;
+	.cadd-score {
+		padding: 0.3rem 0.4rem;
+		border-radius: 0.75rem;
+		font-size: 0.8rem;
+		font-weight: 700;
 
-    &:last-child {
-      border: 0;
-    }
-  }
+		&--green {
+			background-color: $cadd-score-green-background-colour;
+		}
 
-  .positional-feature-type {
-    font-weight: 700;
-  }
+		&--red {
+			color: $white-colour;
+			background-color: $cadd-score-red-background-colour;
+		}
+	}
 
-  .positional-feature-position {
-    width: 100%;
+	.expanded-row {
+		background-color: #cfe8ef;
+	}
 
-    span {
-      width: 50%;
-      display: inline-block;
-    }
-  }
+	.significances-groups {
+		width: 100%;
+		display: flex;
+		background-color: #cfe8ef;
+		.significances-column {
+			width: 100%;
+			min-height: 150px;
+		}
 
-  .positional-feature-id {
-    font-weight: 700;
-  }
+		table {
+			border: none;
+		}
 
-  .publications-label {
-    display: block;
-    background-color: $publications-label-background-colour;
-    padding: .1rem .5rem;
-    width: fit-content;
-    border-radius: 5px;
-    font-size: 1rem;
-    margin-top: .5rem;
-  }
+		.significances-stacked-columns {
+			flex-direction: column;
 
-  .legends {
-    float: right;
-    margin-right: 4rem;
-    margin-bottom: 2rem;
+			.significances-column {
+				min-height: auto;
+			}
+		}
 
-    &-item {
-      margin: .5rem 0;
-    }
+		.structural-icon {
+			font-size: 2rem;
+		}
+	}
 
-    &-icon {
-      width: 30px;
-      height: 30px;
-      text-align: center;
-      line-height: 30px;
-      font-weight: 900;
-      display: inline-block;
-      border-radius: 50%;
-      font-size: 1rem;
-      margin-right: .7rem;
-    }
-  }
+	.significance-data-block {
+		border-bottom: 1px solid $significance-data-block-border-colour;
+		padding: 1rem 0;
 
-  .results-and-counter {
-    float: left;
-  }
+		&:last-child {
+			border: 0;
+		}
+	}
 
-  .associated-disease-list {
+	.positional-feature-type {
+		font-weight: 700;
+	}
 
-    a {
-      margin-right: 10px;
-    }
+	.positional-feature-position {
+		width: 100%;
 
-    .associated-disease {
-      margin-bottom: 1rem;
-    }
-  }
+		span {
+			width: 50%;
+			display: inline-block;
+		}
+	}
 
-  .details-page-link {
-    float: right;
-    margin: 1rem;
-  }
+	.positional-feature-id {
+		font-weight: 700;
+	}
 
-  .expanded-section-title {
-    float: left;
-    font-size: 1.5rem;
-    margin: 1rem;
-  }
+	.publications-label {
+		display: block;
+		background-color: $publications-label-background-colour;
+		padding: .1rem .5rem;
+		width: fit-content;
+		border-radius: 5px;
+		font-size: 1rem;
+		margin-top: .5rem;
+	}
 
-  .expanded-section-subtitle {
-    float: left;
-    margin: 1.2rem;
-  }
+	.legends {
+		float: right;
+		margin-right: 4rem;
+		margin-bottom: 2rem;
 
-  .column-list {
-    column-count: 6;
-    width: 100%;
-    float: left;
-    padding-left: 1rem;
-  }
+		&-item {
+			margin: .5rem 0;
+		}
+
+		&-icon {
+			width: 30px;
+			height: 30px;
+			text-align: center;
+			line-height: 30px;
+			font-weight: 900;
+			display: inline-block;
+			border-radius: 50%;
+			font-size: 1rem;
+			margin-right: .7rem;
+		}
+	}
+
+	.results-and-counter {
+		float: left;
+	}
+
+	.associated-disease-list {
+		a {
+			margin-right: 10px;
+		}
+
+		.associated-disease {
+			margin-bottom: 1rem;
+		}
+	}
+
+	.details-page-link {
+		float: right;
+		margin: 1rem;
+	}
+
+	.expanded-section-title {
+		float: left;
+		font-size: 1.5rem;
+		margin: 1rem;
+	}
+
+	.expanded-section-subtitle {
+		float: left;
+		margin: 1.2rem;
+	}
+
+	.column-list {
+		column-count: 6;
+		width: 100%;
+		float: left;
+		padding-left: 1rem;
+	}
 }
 
 .structure-position-help-text {
-  white-space: normal;
-  font-weight: 700;
+	white-space: normal;
+	font-weight: 700;
 }

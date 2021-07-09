@@ -1,75 +1,62 @@
-
 // Font Settings
 // -------------
-$base-font-size:            1rem;
-$base-font-weight:          400;
-$heavy-font-weight:         700;
-$primary-font-family:       'Days One', sans-serif;
-$secondary-font-family:     'Lato', sans-serif;
-
-
+$base-font-size: 1rem;
+$base-font-weight: 400;
+$heavy-font-weight: 700;
+$primary-font-family: 'Days One', sans-serif;
+$secondary-font-family: 'Lato', sans-serif;
 
 // Colours
 // -------
-$primary-colour:            #ffb300;
-$secondary-colour:          #eae8e8;
-$neutral-colour:            #eae8e8;
-$white-colour:              #fff;
-$black-colour:              #212121;
-
-
+$primary-colour: #ffb300;
+$secondary-colour: #eae8e8;
+$neutral-colour: #eae8e8;
+$white-colour: #fff;
+$black-colour: #212121;
 
 // Spacing: Margins, Paddings, Gutters, etc.
 // -----------------------------------------
-$default-margin:            $base-font-size;
-$default-padding:           $base-font-size;
-$default-radius:            $base-font-size;
-
-
+$default-margin: $base-font-size;
+$default-padding: $base-font-size;
+$default-radius: $base-font-size;
 
 // Buttons
 // -------
-$default-button-height:     2.5 * $base-font-size;
-$default-button-padding:    0 $default-padding;
-$default-button-radius:     $default-button-height / 2;
-
-
+$default-button-height: 2.5 * $base-font-size;
+$default-button-padding: 0 $default-padding;
+$default-button-radius: $default-button-height / 2;
 
 // Protien Review Status Colours
 // -----------------------------
-$protein-review-status-isoform-reviewed-colour:   #c39b00;
-$protein-review-status-reviewed:                  #c39b00;
-$protein-review-status-ensembl-select:            #336;
-$protein-review-status-unreviewed:                #93cffa;
-
-
+$protein-review-status-isoform-reviewed-colour: #c39b00;
+$protein-review-status-reviewed: #c39b00;
+$protein-review-status-ensembl-select: #336;
+$protein-review-status-unreviewed: #93cffa;
 
 // Protein Structure Colours
 // -------------------------
-$protein-structure-sequence-line-colour:          #4ba5ff;
-$protein-structure-marker-colour:                 #1fe02b;
-$protein-structure-coverage-colour:               #143468;
-
-
+$protein-structure-sequence-line-colour: #4ba5ff;
+$protein-structure-marker-colour: #1fe02b;
+$protein-structure-coverage-colour: #143468;
 
 // Other
 // -----
-$search-results-table-border-colour:              #ebf6fb;
-$search-results-table-zebra-background-colour:    #eee;
-$search-results-table-header-background-colour:   #057d9f;
-$search-results-table-header-border-colour:       #ebf6fb;
-$search-results-divider-border-colour:            #c4d9e2;
-$search-results-query-row-background-colour:      #ebf6fb;
-$search-results-badge-border-colour:              #333;
-$search-results-badge-colour:                     #333;
-$novel-variant-colour:                            #f00;
-$non-coding-variant-colour:                       #999;
-$cadd-score-green-background-colour:              #0f0;
-$cadd-score-red-background-colour:                #f00;
-$significance-data-block-border-colour:           #ddd;
-$publications-label-background-colour:            #ffb100;
-$input-example-border-colour:                     #ffb100;
-$input-example-background-colour:                 #f7f5f1;
-$variant-example-colour:                          #4949c7;
-$alert-box-border-colour:                         #ffb100;
-$alert-box-background-colour:                     #f7f5f1;
+$search-results-table-border-colour: #ebf6fb;
+$search-results-table-zebra-background-colour: #deeff5;
+$search-results-table-header-background-colour: #5caecd;
+$search-results-table-header-border-colour: #ebf6fb;
+$search-results-divider-border-colour: #c4d9e2;
+$search-results-query-row-background-colour: #ebf6fb;
+$search-results-badge-border-colour: #333;
+$search-results-badge-colour: #333;
+$novel-variant-colour: #f00;
+$non-coding-variant-colour: #999;
+$cadd-score-green-background-colour: #6dab49;
+$cadd-score-red-background-colour: #da0f21;
+$significance-data-block-border-colour: #ddd;
+$publications-label-background-colour: #ffb100;
+$input-example-border-colour: #ffb100;
+$input-example-background-colour: #f7f5f1;
+$variant-example-colour: #4949c7;
+$alert-box-border-colour: #ffb100;
+$alert-box-background-colour: #f7f5f1;
