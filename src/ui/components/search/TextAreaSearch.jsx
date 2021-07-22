@@ -2,9 +2,12 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import Button from '../../elements/form/Button';
+import PapaParse from 'papaparse';
 import AboutSection from '../other/AboutSection';
 import ExampleSection from '../other/ExampleSection';
 import { ButtonModal } from 'franklin-sites';
+
+const NO_OF_ITEMS_PER_PAGE = 25;
 
 class TextAreaSearch extends Component {
 	state = {
@@ -28,11 +31,16 @@ class TextAreaSearch extends Component {
 
 	handleSubmit = (e) => {
 		const { searchTerm, file, page } = this.state;
-		const { onSubmit } = this.props;
+
+		var fetchResult = this.props.fetchResult;
+		var noOfLines = searchTerm.split('\n').length;
+		var pages = Math.ceil(noOfLines / NO_OF_ITEMS_PER_PAGE);
 		var newPage = {
 			currentPage: 1,
-			nextPage: false,
-			previousPage: false
+			nextPage: true,
+			previousPage: false,
+			totalItems: noOfLines,
+			itemsPerPage: NO_OF_ITEMS_PER_PAGE
 		};
 		this.setState({
 			viewResultLabel: 'Loading..',
@@ -40,9 +48,37 @@ class TextAreaSearch extends Component {
 		});
 		e.preventDefault();
 		e.stopPropagation();
+		var inputArr = searchTerm.split('\n');
+		fetchResult(null, newPage, false, false, inputArr);
 
-		onSubmit(searchTerm, null, newPage, true);
+		// onSubmit(searchTerm, null, newPage, true);
 	};
+
+	viewResult(event) {
+		var file = event.target.files[0];
+		var noOfLines = 0;
+		PapaParse.parse(file, {
+			step: (row, parser) => {
+				noOfLines = noOfLines + 1;
+			},
+			complete: () => {
+				console.log('lines 2=>' + noOfLines);
+				var pages = Math.ceil(noOfLines / NO_OF_ITEMS_PER_PAGE);
+				var fetchResult = this.props.fetchResult;
+				var page = {
+					currentPage: 1,
+					nextPage: true,
+					previousPage: false,
+					totalItems: noOfLines,
+					itemsPerPage: NO_OF_ITEMS_PER_PAGE
+				};
+				this.setState({
+					isFileSelected: true
+				});
+				fetchResult(file, page, true, false, null);
+			}
+		});
+	}
 
 	clearForm = () => {
 		this.setState({
@@ -108,26 +144,6 @@ class TextAreaSearch extends Component {
 			searchTerm: hgvsInput
 		});
 	};
-
-	viewResult(event) {
-		var file = event.target.files[0];
-		var fetchNextPage = this.props.fetchNextPage;
-		var page = {
-			currentPage: 1,
-			nextPage: true,
-			previousPage: false
-		};
-		this.setState({
-			isFileSelected: true
-		});
-		fetchNextPage(file, page, true, false);
-
-		// this.onChangeFile(event);
-
-		// const { searchTerm, file, page } = this.state;
-		// this.onSubmit(inputText, file, page);
-		// this.handleSubmit(event);
-	}
 
 	openDocumentation = () => {
 		const url = 'http://wwwdev.ebi.ac.uk/uniprot/api/pepvep/swagger-ui/#/';
@@ -246,11 +262,13 @@ class TextAreaSearch extends Component {
 									<section className="uniprot-card">
 										<section className="uniprot-card__left">
 											<p>
+												<b>Upload a VCF FILE to view or download result</b>
+												<br />
+												<br />
 												<b>VCF FILE Format</b>
 												<br />
-												<br />
 												#CHROM POS ID REF ALT QUAL FILTER INFO<br />
-												21 25891796 . C T . . . <br />
+												21 25891796 rs124582 C T . . . <br />
 												14 73173574 . C T . . . <br />
 												15 19965080 . C G . . . <br />
 											</p>
@@ -302,11 +320,8 @@ class TextAreaSearch extends Component {
 								<div className="card__content">
 									<section className="uniprot-card">
 										<section className="uniprot-card__left">
-											<p>
-												<b>Programmatic access using multiple input formats like</b>
-											</p>
-											<br />
-											<br />
+											<b>Programmatic access using multiple input formats like</b>
+
 											<ul>
 												<li>DbSNP</li>
 												<li>HGVS</li>

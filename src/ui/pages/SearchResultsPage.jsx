@@ -15,7 +15,8 @@ const SearchResultsPageContent = (props) => {
 		file,
 		page,
 		errors,
-		loading
+		loading,
+		invalidInputs
 	} = props;
 
 	return (
@@ -31,6 +32,7 @@ const SearchResultsPageContent = (props) => {
 				file={file}
 				page={page}
 				loading={loading}
+				invalidInputs={invalidInputs}
 			/>
 		</Fragment>
 	);

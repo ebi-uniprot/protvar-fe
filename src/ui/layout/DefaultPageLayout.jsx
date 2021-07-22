@@ -252,8 +252,8 @@ class DefaultPageLayout extends Component {
 													</td>
 													<td>
 														<ButtonModal
-															buttonText="Contact Us"
-															title="Contact Us"
+															buttonText="Contact"
+															title="Contact"
 															withFooterCloseButton={false}
 															withHeaderCloseButton={true}
 															height="30%"

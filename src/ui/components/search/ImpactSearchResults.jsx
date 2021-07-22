@@ -2,36 +2,44 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import Button from '../../elements/form/Button';
-import ExpandedFunctionalSignificance from '../significances/ExpandedFunctionalSignificance';
-import ExpandedTranscriptSignificance from '../significances/ExpandedTranscriptSignificance';
-import ExpandedClinicalSignificance from '../significances/ExpandedClinicalSignificance';
-import ExpandedStructuralSignificance from '../significances/ExpandedStructuralSignificance';
-import ExpandedGenomicSignificance from '../significances/ExpandedGenomicSignificance';
+
 import ProteinReviewStatus from '../other/ProteinReviewStatus';
-import SearchResultsLegends from '../other/SearchResultsLegends';
+
 import { Loader, ButtonModal, SearchInput, InPageNav } from 'franklin-sites';
 import axios, { post } from 'axios';
 import FunctionalSignificance from '../categories/FunctionalSignificance';
+import PopulationObservation from '../categories/PopulationObservation';
 import Modal from '../modal/Modal';
+import { v1 as uuidv1 } from 'uuid';
+import protvistaStructure from 'protvista-structure';
+import ProteinStructure from '../categories/ProteinStructure';
+import { DropdownButton } from 'franklin-sites';
+import { Dropdown, Selection } from 'react-dropdown-now';
+import 'react-dropdown-now/style.css';
+import DownloadModel from '../categories/DownloadModel';
+// import { Dropdown } from 'react-dropdown-now';
 
 class ImpactSearchResults extends Component {
-	state = {
-		expandedRow: null,
-		openGroup: null,
-		caddLoaded: false,
-		showLoader: false,
-		modal: false,
-		name: '',
-		email: '',
-		jobName: '',
-		jobSubmitted: false,
-		structureLoaded: false,
-		functionLoaded: false,
-		function: false,
-		variation: false,
-		buttonText: '',
-		title: ''
-	};
+	constructor(props, context) {
+		super(props, context);
+
+		if (!window.customElements.get('protvista-structure')) {
+			window.customElements.define('protvista-structure', protvistaStructure);
+		}
+
+		this.state = {
+			expandedRow: null,
+			openGroup: null,
+			caddLoaded: false,
+			showLoader: false,
+			structureLoaded: false,
+			functionLoaded: false,
+			buttonText: '',
+			title: '',
+			pdbId: '',
+			invalidInputFlag: false
+		};
+	}
 
 	getSignificancesButton(rowKey, buttonTag, accession) {
 		const { expandedRow } = this.state;
@@ -51,129 +59,32 @@ class ImpactSearchResults extends Component {
 		);
 	}
 
-	getCaddPrediction(transcript) {
-		if (this.state.caddLoaded) {
-			const caddColour = transcript.caddPhred <= 30 ? 'green' : 'red';
-			if (transcript.caddPhred === '-') {
-				return <span />;
-			} else {
+	getProteinStructure(key, expandedRow, accession) {
+		if (key === expandedRow) {
+			if (this.state.structureLoaded) {
+				let pdbId = this.state.pdbId;
 				return (
-					<span
-						className={`label warning cadd-score cadd-score--${caddColour}`}
-						title={`Likely ${transcript.caddPhred < 30 ? 'Benign' : 'Deleterious'}`}
-					>
-						{transcript.caddPhred}
-					</span>
+					<ProteinStructure
+						structural={accession.structural}
+						isoform={accession.isoform}
+						aaPos={accession.aaPos}
+						pdbId={pdbId}
+					/>
 				);
-			}
-		}
-	}
-
-	updateCADDPrediction(inputArr) {
-		console.log('CADD Prediction called ' + inputArr);
-		const headers = {
-			'Content-Type': 'application/json'
-		};
-
-		var errorFlag = false;
-		const BASE_URL = 'http://localhost:8091/uniprot/api/pepvep/variant/prediction';
-		// const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api/pepvep/variant/prediction/';
-		axios
-			.post(BASE_URL, inputArr, {
-				headers: headers
-			})
-			.catch(function(error) {
-				if (error.response) {
-					errorFlag = true;
-				} else {
-					// Something happened in setting up the request that triggered an Error
-					console.log('Error', error.message);
-				}
-				console.log(error.config);
-			})
-			.then((response) => {
-				if (errorFlag) {
-					this.setState({
-						caddLoaded: true
-					});
-				} else {
-					response.data.forEach((data) => {
-						var variantRows = this.props.rows;
-						variantRows.map((genes, geneId) => {
-							genes.map((accessions, accessionId) => {
-								accessions.map((accession, index) => {
-									if (
-										(accession.canonical || accession.canonicalAccession === null) &&
-										accession.chromosome === data.chromosome &&
-										accession.position === data.position &&
-										accession.altAllele === data.altAllele &&
-										data.score !== 0
-									) {
-										accession.CADD = data.score;
-									}
-								});
-							});
-						});
-					});
-					this.setState({
-						caddLoaded: true
-					});
-				}
-			});
-	}
-	componentDidUpdate() {
-		if (this.state.caddLoaded !== true) {
-			let inputArr = this.props.searchTerm;
-			if (inputArr.length > 0) {
-				this.updateCADDPrediction(inputArr);
-			}
-		}
-	}
-	componentDidMount() {
-		if (this.state.caddLoaded !== true) {
-			let inputArr = this.props.searchTerm;
-			if (inputArr.length > 0) {
-				this.updateCADDPrediction(inputArr);
-			}
-		}
-	}
-
-	handleObserver(entities, observer) {
-		const page = this.props.page;
-		if (entities[0].isIntersecting === true) {
-			if (page.nextPage) {
-				// alert('Calling next page');
-				this.fetchNextPage(1);
 			} else {
-				// alert('End of result');
+				return this.getLoader();
 			}
 		}
-		// let target = document.querySelector('#scrollTarget');
 	}
 
-	toggleAllIsoforms = () => {
-		const { showAllIsoforms } = this.state;
-
-		this.setState({
-			showAllIsoforms: !showAllIsoforms,
-			openGroup: null
-		});
-	};
-
-	getStructuralSignificance(structural, detailsPageLink) {
-		if (this.state.structureLoaded) {
-			return <ExpandedStructuralSignificance data={structural} detailsLink={detailsPageLink} />;
-		} else {
-			return this.getLoader();
+	getPopulationObservation(key, expandedRow, accession) {
+		if (key === expandedRow) {
+			if (this.state.variationLoaded) {
+				return <PopulationObservation data={accession.variation} altAA={accession.variantAA} />;
+			} else {
+				return this.getLoader();
+			}
 		}
-	}
-
-	getClinicalSignificance(clinical, variation, detailsPageLink) {
-		// if (this.state.colocatedVariantLoaded) {
-		return <ExpandedClinicalSignificance data={clinical} variation={variation} detailsLink={detailsPageLink} />;
-		// } else {
-		// 	return this.getLoader();
-		// }
 	}
 
 	getFunctionalSignificance(functionalKey, expandedRow, accession) {
@@ -203,29 +114,6 @@ class ImpactSearchResults extends Component {
 		);
 	}
 
-	getExperimentalSignificance(experimentalKey, expandedRow, accession) {
-		if (experimentalKey === expandedRow) {
-			return (
-				<tr>
-					<td colspan="19" className="expanded-row">
-						<div className="significances-groups">
-							<div className="column">
-								<b>Experimental Protein Level Impact</b>
-
-								<section>
-									Colocated Domains/Sites<br />
-									Variant Details<br />
-									Colocated Molecule Processing<br />
-									Domain Sites details here
-								</section>
-							</div>
-						</div>
-					</td>
-				</tr>
-			);
-		}
-	}
-
 	getEvolutionInferenceSignificance(evolutionKey, expandedRow, accession) {
 		if (evolutionKey === expandedRow) {
 			return (
@@ -237,52 +125,6 @@ class ImpactSearchResults extends Component {
 
 								<section>
 									Evolution Inference<br />
-									Variant Details<br />
-									Colocated Molecule Processing<br />
-									Domain Sites details here
-								</section>
-							</div>
-						</div>
-					</td>
-				</tr>
-			);
-		}
-	}
-
-	getPopulationObservationSignificance(popObservationKey, expandedRow, accession) {
-		if (popObservationKey === expandedRow) {
-			return (
-				<tr>
-					<td colspan="19" className="expanded-row">
-						<div className="significances-groups">
-							<div className="column">
-								<b>Population Observation</b>
-
-								<section>
-									Population Observation<br />
-									Variant Details<br />
-									Colocated Molecule Processing<br />
-									Domain Sites details here
-								</section>
-							</div>
-						</div>
-					</td>
-				</tr>
-			);
-		}
-	}
-
-	getStructuralSignificance(structuralKey, expandedRow, accession) {
-		if (structuralKey === expandedRow) {
-			return (
-				<tr>
-					<td colspan="19" className="expanded-row">
-						<div className="significances-groups">
-							<div className="column">
-								<b>Structural Significance</b>
-
-								<section>
-									Structural Observation<br />
 									Variant Details<br />
 									Colocated Molecule Processing<br />
 									Domain Sites details here
@@ -308,31 +150,75 @@ class ImpactSearchResults extends Component {
 		const rowIdAndType = rowId;
 
 		if (significanceType === 'FUN') {
-			const APIUrl = `${API_URL}` + row.referenceFunctionUri;
-			if (row.functionLoaded === false) {
-				this.setState({
-					functionLoaded: false,
-					expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null
-				});
-				axios.get(APIUrl).then((response) => {
-					row.functional = response.data;
-					row.functionLoaded = true;
-					this.setState({
-						functionLoaded: true,
-						showLoader: false
-					});
-				});
-			} else {
-				this.setState({
-					expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null
-				});
-			}
+			this.fetchFunctionalFeatures(row, rowIdAndType, expandedRow);
+		}
+		if (significanceType === 'STR') {
+			this.fetchStructuralData(row, rowIdAndType, expandedRow);
+		}
+		if (significanceType === 'POP') {
+			this.fetchVariationData(row, rowIdAndType, expandedRow);
 		} else {
 			this.setState({
 				expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null
 			});
 		}
 	}
+
+	fetchVariationData = (row, rowIdAndType, expandedRow) => {
+		const APIUrl = `${API_URL}` + row.populationObservationsUri;
+		if (row.variationLoaded === false) {
+			this.setState({
+				variationLoaded: false,
+				expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null
+			});
+			axios.get(APIUrl).then((response) => {
+				row.variation = response.data;
+				row.variationLoaded = true;
+				this.setState({
+					variationLoaded: true,
+					showLoader: false
+				});
+			});
+		} else {
+			this.setState({
+				expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null
+			});
+		}
+	};
+
+	fetchStructuralData = (row, rowIdAndType, expandedRow) => {
+		var aaPosition = row.aaPos;
+		const APIUrl = 'https://www.ebi.ac.uk/pdbe/graph-api/mappings/best_structures/' + row.isoform;
+		if (row.structureLoaded === false) {
+			this.setState({
+				structureLoaded: false,
+				expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null
+			});
+			axios.get(APIUrl).then((response) => {
+				var filteredData = [];
+				response.data[row.isoform].map((str) => {
+					if (aaPosition >= str.unp_start && aaPosition <= str.unp_end) {
+						filteredData.push(str);
+					}
+				});
+				row.structural = filteredData;
+				row.structureLoaded = true;
+				var pdbId = '';
+				if (filteredData.length > 0) {
+					pdbId = filteredData[0].pdb_id;
+				}
+				this.setState({
+					structureLoaded: true,
+					showLoader: false,
+					pdbId: pdbId
+				});
+			});
+		} else {
+			this.setState({
+				expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null
+			});
+		}
+	};
 
 	fetchNextPage = (next) => {
 		var fetchNextPage = this.props.fetchNextPage;
@@ -345,16 +231,23 @@ class ImpactSearchResults extends Component {
 			page.currentPage = page.currentPage - 1;
 		}
 		this.setState({
-			loading: true
+			loading: true,
+			caddLoaded: false
 		});
-		fetchNextPage(this.props.file, page, false, true);
+		let isFileselected = false;
+		if (this.props.file !== null) isFileselected = true;
+		fetchNextPage(this.props.file, page, isFileselected, true);
 	};
 
 	bulkDownload = (event) => {
 		var handleBulkDownload = this.props.handleBulkDownload;
 		handleBulkDownload(event, this.props.file);
 	};
-
+	getColumnData(data, canonical, canonicalAccession) {
+		if (canonical) return data;
+		if (canonicalAccession === null || canonicalAccession === undefined) return data;
+		return '';
+	}
 	getRow = (accession, openGroup) => {
 		let caddColour = '';
 		let caddCss = '';
@@ -411,12 +304,14 @@ class ImpactSearchResults extends Component {
 					</td>
 					<td>
 						<a href={positionUrl} target="_blank" rel="noopener noreferrer">
-							{accession.position}
+							{this.getColumnData(accession.position, accession.canonical, accession.canonicalAccession)}
 						</a>
 					</td>
 					<td>{accession.id}</td>
 					<td>{accession.refAllele}</td>
-					<td>{accession.altAllele}</td>
+					<td>
+						{this.getColumnData(accession.altAllele, accession.canonical, accession.canonicalAccession)}
+					</td>
 					<td>
 						<a href={geneUrl} target="_blank" rel="noopener noreferrer">
 							{accession.geneName}
@@ -463,8 +358,8 @@ class ImpactSearchResults extends Component {
 				</tr>
 
 				{this.getEvolutionInferenceSignificance(evolutionKey, expandedRow, accession)}
-				{this.getPopulationObservationSignificance(populationKey, expandedRow, accession)}
-				{this.getStructuralSignificance(structuralKey, expandedRow, accession)}
+				{this.getPopulationObservation(populationKey, expandedRow, accession)}
+				{this.getProteinStructure(structuralKey, expandedRow, accession)}
 				{this.getFunctionalSignificance(functionalKey, expandedRow, accession)}
 			</Fragment>
 		);
@@ -491,98 +386,105 @@ class ImpactSearchResults extends Component {
 		return tableRows;
 	};
 
-	handleChange = (e) => {
-		console.log('inside handle change');
-		const target = e.target;
-		const name = target.name;
-		const value = target.value;
-
-		this.setState({
-			[name]: value
-		});
-	};
-
-	handleCheckBox = (e) => {
-		console.log('inside handle change');
-		const target = e.target;
-		const name = target.name;
-		const value = target.checked;
-		this.setState({
-			[name]: value
-		});
-	};
-
-	handleSubmit = (e) => {
-		console.log('inside handle submit');
-		const inputArr = this.props.searchTerm;
-		this.setState({ name: this.state.modalInputName });
-		console.log(this.state.email);
-		console.log(this.state.name);
-		console.log(this.state.jobName);
-		console.log(this.state.function);
-		console.log(this.state.variation);
-		const headers = {
-			'Content-Type': 'application/json',
-			Accept: '*'
-		};
-		const APIUrl =
-			`${API_URL}` +
-			'/download?email=' +
-			this.state.email +
-			'&name=' +
-			this.state.name +
-			'&jobName=' +
-			this.state.jobName +
-			'&function=' +
-			this.state.function +
-			'&variation=' +
-			this.state.variation;
-
-		this.modalClose();
-
-		post(APIUrl, inputArr, {
-			headers: headers
-		}).then((response) => {
-			console.log('response -> ' + response.data);
-			response.data.forEach((mapping) => {
-				var genes = this.createGenes(mapping);
-				mappings.push(genes);
+	fetchFunctionalFeatures(row, rowIdAndType, expandedRow) {
+		const APIUrl = `${API_URL}` + row.referenceFunctionUri;
+		if (row.functionLoaded === false) {
+			this.setState({
+				functionLoaded: false,
+				expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null
 			});
-		});
-	};
-
-	modalOpen = () => {
-		this.setState({ modal: true });
-	};
-
-	handleClick = () => {
-		if (!this.state.modal) {
-			document.addEventListener('click', this.handleOutsideClick, false);
+			axios.get(APIUrl).then((response) => {
+				row.functional = response.data;
+				row.functionLoaded = true;
+				this.setState({
+					functionLoaded: true,
+					showLoader: false
+				});
+			});
 		} else {
-			document.removeEventListener('click', this.handleOutsideClick, false);
+			this.setState({
+				expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null
+			});
 		}
-
-		this.setState((prevState) => ({
-			modal: !prevState.modal
-		}));
-	};
-
-	modalClose() {
-		this.setState({
-			modal: false
-		});
 	}
 
-	handleOutsideClick = (e) => {
-		if (!this.node.contains(e.target)) this.handleClick();
-	};
+	fileUpload(file) {
+		// const BASE_URL = 'http://localhost:8091/uniprot/api/pepvep/download/upload';
+		const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api/pepvep/download/upload';
+		const formData = new FormData();
+		formData.append('file', file);
+		const config = {
+			headers: {
+				'content-type': 'multipart/form-data'
+			}
+		};
+		return post(BASE_URL, formData, config);
+	}
+
+	expandInvalidInputs() {
+		var flag = this.state.invalidInputFlag;
+		if (flag)
+			this.setState({
+				invalidInputFlag: false
+			});
+		else
+			this.setState({
+				invalidInputFlag: true
+			});
+	}
+	getInvalidInputSection(invalidInputs) {
+		if (invalidInputs !== undefined && invalidInputs !== null && invalidInputs.length > 0) {
+			var flag = this.state.invalidInputFlag;
+			const invalidList = invalidInputs.map((input) => {
+				<li>{input}</li>;
+			});
+			return (
+				<Fragment>
+					<a onClick={() => this.expandInvalidInputs()}>
+						<div className="alert alert-danger alert-dismissible fade show">
+							&#9660; Few inputs could not be processed. Expand to view
+						</div>
+					</a>
+					{invalidInputs}
+				</Fragment>
+			);
+		}
+	}
+
+	changePageSize(pageSize) {
+		var fetchNextPage = this.props.fetchNextPage;
+		var page = this.props.page;
+		if (pageSize !== page.itemsPerPage) {
+			page.itemsPerPage = pageSize.value;
+			page.currentPage = 1;
+
+			this.setState({
+				loading: true,
+				caddLoaded: false
+			});
+			let isFileselected = false;
+			if (this.props.file !== null) isFileselected = true;
+			fetchNextPage(this.props.file, page, isFileselected, true);
+		}
+	}
 
 	render() {
 		// const { rows, handleDownload } = this.props;
 
 		const rows = this.props.rows;
 		const tableRows = this.getTableRows(rows);
-
+		const page = this.props.page;
+		const totalPages = Math.ceil(page.totalItems / page.itemsPerPage);
+		const invalidInputs = this.props.invalidInputs;
+		const options = [ 25, 50, 100 ];
+		const file = this.props.file;
+		const searchTerm = this.props.searchTerm;
+		let totalItems = 0;
+		if (file != null) {
+			totalItems = page.totalItems;
+		} else {
+			totalItems = searchTerm.length;
+		}
 		return (
 			<div
 				className="search-results"
@@ -591,73 +493,47 @@ class ImpactSearchResults extends Component {
 					this.node = node;
 				}}
 			>
-				<Button onClick={(e) => this.handleClick(e)}>Download</Button>
-				<Modal show={this.state.modal} handleClose={(e) => this.handleClick(e)}>
-					<h5>Enter Details</h5>
-					<div className="form-group">
-						<div>
-							<ul>
-								<li key="function" className="new-select">
-									<input
-										key="function1"
-										type="checkbox"
-										name="function"
-										value={this.state.function}
-										onChange={(e) => this.handleCheckBox(e)}
-										checked={this.state.function}
-									/>
-									<label id="item1">Reference Function</label>
-								</li>
-								<li key="variation" className="new-select">
-									<input
-										key="variation1"
-										type="checkbox"
-										value={this.state.variation}
-										name="variation"
-										onChange={(e) => this.handleCheckBox(e)}
-										checked={this.state.variation}
-									/>
-									<label id="item2">Population Observation</label>
-								</li>
-							</ul>
+				{this.getInvalidInputSection(invalidInputs)}
 
-							<label>
-								Name:
-								<input
-									type="text"
-									value={this.state.name}
-									name="name"
-									onChange={(e) => this.handleChange(e)}
-								/>
-							</label>
-							<label>
-								Email:
-								<input
-									type="text"
-									value={this.state.email}
-									name="email"
-									onChange={(e) => this.handleChange(e)}
-								/>
-							</label>
-							<label>
-								Job Name:
-								<input
-									type="text"
-									value={this.state.jobName}
-									name="jobName"
-									onChange={(e) => this.handleChange(e)}
-								/>
-							</label>
-						</div>
-					</div>
+				<table className="table-header">
+					<tbody>
+						<tr>
+							<td colSpan="1">
+								<DownloadModel searchTerm={searchTerm} file={file} totalItems={totalItems} />
+							</td>
 
-					<Button onClick={(e) => this.handleSubmit(e)} type="button">
-						Save
-					</Button>
-					<Button onClick={(e) => this.handleClick(e)} type="button">
-						close
-					</Button>
-				</Modal>
+							<td colSpan="1">
+								{page === undefined || page.currentPage === 1 ? (
+									<Button onClick={() => null} className="button-new button-disabled">
+										&laquo; Previous
+									</Button>
+								) : (
+									<Button onClick={() => this.fetchNextPage(0)}>&laquo; Previous</Button>
+								)}
+							</td>
+							<td colSpan="1">
+								{page.currentPage} of {totalPages}
+							</td>
+							<td colSpan="1">
+								{page === undefined || !page.nextPage ? (
+									<Button onClick={() => null} className="button-new button-disabled">
+										Next &raquo;
+									</Button>
+								) : (
+									<Button onClick={() => this.fetchNextPage(1)}>Next &raquo;</Button>
+								)}
+							</td>
+							<td colSpan="1">
+								<Dropdown
+									placeholder="Pages"
+									options={[ 25, 50, 100 ]}
+									value={page.itemsPerPage}
+									onChange={(value) => this.changePageSize(value)}
+								/>
+							</td>
+						</tr>
+					</tbody>
+				</table>
 				<table border="0" className="unstriped" cellPadding="0" cellSpacing="0">
 					<thead>
 						<tr>
@@ -677,7 +553,7 @@ class ImpactSearchResults extends Component {
 							<th>CADD</th>
 							<th />
 							<th>Isoform</th>
-							<th>Name</th>
+							<th>Protein Name</th>
 							<th>AA Pos</th>
 							<th>AA Change</th>
 							<th>Consequences</th>

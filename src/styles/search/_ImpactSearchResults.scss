@@ -1,14 +1,55 @@
 // Impact Search Results
 // ---------------------
 .search-results {
+	.alert-danger {
+		color: #721c24;
+		background-color: #f8d7da;
+		border-color: #f5c6cb;
+	}
+	.tableFixHead {
+		overflow-y: auto;
+		height: 480px;
+	}
+	.tableFixHead thead th {
+		position: sticky;
+		top: 0;
+	}
+	.clickable-row {
+		color: #00709b;
+		font-weight: 600;
+
+		cursor: pointer;
+	}
 	.table-header {
 		border: none;
-
-		.button {
-			padding: 0.8em;
+		width: 35%;
+		border-spacing: 0;
+		border-collapse: collapse;
+		padding: 0;
+		tbody {
+			border: none;
+		}
+		tr {
+			border: none;
+			padding: 0;
 			margin: 0;
+		}
+		td {
+			background-color: transparent;
+			border: none;
+			padding: 0;
+			margin: 0;
+		}
+		.button {
+			// padding: 0.8em;
 			margin: 0;
 			width: auto;
+			background: #cfe8ef;
+			color: #00709b;
+		}
+
+		.rdn-control {
+			padding: 5px 5px 5px 5px;
 		}
 	}
 	.button {
@@ -49,7 +90,18 @@
 	.new-select {
 		display: inline-block;
 	}
+	table-header {
+		width: 20%;
+		tr {
+		}
+		th {
+			background-color: transparent;
+		}
 
+		.button {
+			padding: 7px 6px;
+		}
+	}
 	table {
 		// border: 1px solid $search-results-table-border-colour;
 		// width: min-content;
@@ -92,16 +144,16 @@
 			color: white;
 		}
 
-		.pagination {
-			background-color: #fefefe;
-			color: #fefefe !important;
-			border-style: none;
-		}
-		.pagination a,
-		.pagination button {
-			color: #fefefe !important;
-			padding: 0.6rem;
-		}
+		// .pagination {
+		// 	background-color: #fefefe;
+		// 	color: #fefefe !important;
+		// 	border-style: none;
+		// }
+		// .pagination a,
+		// .pagination button {
+		// 	color: #fefefe !important;
+		// 	padding: 0.6rem;
+		// }
 		tr {
 			border-top: 1px dotted #ccc;
 			border-bottom: 1px dotted #ccc;
@@ -138,6 +190,8 @@
 			padding: 0.3rem 0.5rem;
 			border-right: 1px dotted #ccc;
 			border-left: 1px dotted #ccc;
+			word-wrap: break-word;
+			// white-space: break-spaces;
 			&.fit {
 				padding: 0;
 				margin: 0;
@@ -154,6 +208,7 @@
 			padding: 0;
 			margin: 0;
 			border-bottom: transparent;
+			background-color: #cfe8ef;
 		}
 
 		.badge {
@@ -230,8 +285,61 @@
 			min-height: 150px;
 		}
 
+		.flatList {
+			display: inline;
+			list-style: none;
+			margin-left: 0.25rem;
+
+			li {
+				display: inline;
+			}
+
+			li:after {
+				content: " | ";
+			}
+			li:last-child:after {
+				content: "";
+				display: list-item;
+			}
+		}
+
+		.collapsible {
+			background-color: #eee;
+			color: #444;
+			cursor: pointer;
+			padding: 18px;
+			width: 100%;
+			border: none;
+			text-align: left;
+			outline: none;
+			font-size: 15px;
+		}
+
+		.active,
+		.collapsible:hover {
+			background-color: #ccc;
+		}
+
+		.content {
+			padding: 0 18px;
+			display: none;
+			overflow: hidden;
+			background-color: #f1f1f1;
+		}
+
+		ul {
+			list-style-type: none;
+			margin-bottom: 0;
+		}
+
 		table {
 			border: none;
+			table-layout: fixed;
+		}
+
+		td {
+			word-wrap: break-word;
+			white-space: break-spaces;
 		}
 
 		.significances-stacked-columns {

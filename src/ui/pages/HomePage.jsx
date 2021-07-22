@@ -5,7 +5,7 @@ import DefaultPageLayout from '../layout/DefaultPageLayout';
 import TextAreaSearch from '../components/search/TextAreaSearch';
 
 const HomePageContent = (props) => {
-	const { handleSearch, loading, isFileSelected, fetchNextPage } = props;
+	const { handleSearch, loading, isFileSelected, fetchResult } = props;
 
 	return (
 		<Fragment>
@@ -13,7 +13,7 @@ const HomePageContent = (props) => {
 				onSubmit={handleSearch}
 				isLoading={loading}
 				isFileSelected={isFileSelected}
-				fetchNextPage={fetchNextPage}
+				fetchResult={fetchResult}
 			/>
 		</Fragment>
 	);

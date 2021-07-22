@@ -19,211 +19,17 @@ class App extends Component {
 		super(props, context);
 
 		this.state = {
+			userInput: null,
 			searchTerm: null,
+			completeInput: null,
 			searchResults: null,
 			errors: null,
 			loading: false,
 			file: {},
 			isFileSelected: false,
-			page: {}
+			page: {},
+			invalidInputs: []
 		};
-	}
-
-	getQuery() {
-		var query = gql`
-			query pepvepvariant($params: [String!]) {
-				pepvepvariant(pepVepInputs: $params) {
-					input
-					variants {
-						errors {
-							title
-							message
-						}
-						structureEndpoint
-						gene {
-							ensgId
-							chromosome
-							symbol
-							source
-							enstId
-							ensgId
-							allele
-							start
-							end
-							exon
-							strand
-							hgvsg
-							hgvsp
-							hgncId
-						}
-						protein {
-							hgncId
-							canonical
-							accession
-							name {
-								full
-								shortName
-							}
-							length
-							type
-							isoform
-							canonicalAccession
-							features {
-								type
-								typeDescription
-								description
-								category
-								begin
-								end
-								evidences {
-									code
-									label
-									source {
-										name
-										id
-										url
-										alternativeUrl
-									}
-								}
-							}
-						}
-						variation {
-							novel
-							consequence
-							variant
-							threeLetterCodes
-							begin
-							end
-							codons
-							sourceType
-							disease
-							nonDisease
-							uniprot
-							largeScaleStudy
-							uncertain
-							xrefs {
-								name
-								id
-								url
-								alternativeUrl
-								reviewed
-							}
-							ids {
-								dbSNPId
-								cosmicId
-								clinVarIds {
-									id
-									pubMedIds
-									allele
-									gene
-									mim
-									phenotype
-									url
-								}
-							}
-							evidences {
-								code
-								label
-								source {
-									name
-									id
-									url
-									alternativeUrl
-								}
-							}
-							association {
-								name
-								description
-								dbReferences {
-									name
-									id
-									url
-									alternativeUrl
-								}
-								evidences {
-									code
-									label
-									source {
-										name
-										id
-										url
-										alternativeUrl
-									}
-								}
-								disease
-							}
-							clinicalSignificances {
-								type
-								sources
-							}
-							predictions {
-								predictionValType
-								predAlgorithmNameType
-								score
-							}
-							proteinColocatedVariants {
-								begin
-								end
-								ids {
-									dbSNPId
-									clinVarIds {
-										id
-										pubMedIds
-										allele
-										gene
-										mim
-										phenotype
-										url
-									}
-									cosmicId
-								}
-								clinicalSignificances {
-									type
-									sources
-								}
-								wildType
-								alternativeSequence
-								sourceType
-								association {
-									name
-									description
-									dbReferences {
-										name
-										id
-										url
-										alternativeUrl
-										reviewed
-									}
-									disease
-									evidences {
-										code
-										label
-										source {
-											name
-											id
-											url
-											alternativeUrl
-										}
-									}
-								}
-							}
-							genomicColocatedVariants {
-								id
-								pubMedIds
-							}
-							populationFrequencies {
-								sourceName
-								frequencies {
-									label
-									value
-								}
-							}
-						}
-					}
-				}
-			}
-		`;
-		return query;
 	}
 
 	createVariationDetails(variant) {
@@ -407,12 +213,18 @@ class App extends Component {
 		return updateVariants;
 	}
 
-	handleSearch = (input, uploadedFile, newPage, loadingFlag) => {
-		// console.log('Calling API -> ' + input);
-		const { history } = this.props;
-
-		const BASE_URL = 'http://localhost:8091/uniprot/api';
-		// const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api';
+	handleSearch = (inputArr, uploadedFile, page, loadingFlag) => {
+		var pageNumber = page.currentPage;
+		const PAGE_SIZE = page.itemsPerPage;
+		var skipRecord = (pageNumber - 1) * PAGE_SIZE;
+		var inputSubArray = [];
+		var newPage = {
+			currentPage: page.currentPage,
+			previousPage: page.previousPage,
+			nextPage: false,
+			totalItems: page.totalItems,
+			itemsPerPage: page.itemsPerPage
+		};
 
 		var isFileSelectedNew = false;
 		var loadingNew = true;
@@ -430,13 +242,38 @@ class App extends Component {
 			page: newPage
 		});
 
-		var inputArr = input.split('\n');
+		// var inputArr = input.split('\n');
 		let inputType = this.getInputType(inputArr);
 
-		if (inputType === 'hgvs') {
-			this.fetchByHGVS(BASE_URL, inputArr, input, uploadedFile, newPage, history);
-		} else if (inputType === 'vcf') {
-			this.fetchByVCF(BASE_URL, inputArr, input, uploadedFile, newPage, history);
+		if (inputArr.length > skipRecord) {
+			var isNextPage = false;
+			if (inputArr.length > skipRecord + PAGE_SIZE) isNextPage = true;
+			if (isNextPage) {
+				inputSubArray = inputArr.slice(skipRecord, skipRecord + PAGE_SIZE);
+				newPage = {
+					currentPage: page.currentPage,
+					previousPage: page.previousPage,
+					nextPage: isNextPage,
+					totalItems: page.totalItems,
+					itemsPerPage: page.itemsPerPage
+				};
+			} else {
+				inputSubArray = inputArr.slice(skipRecord);
+			}
+			if (skipRecord == 0) {
+				newPage = {
+					currentPage: page.currentPage,
+					previousPage: page.previousPage,
+					nextPage: isNextPage,
+					totalItems: page.totalItems,
+					itemsPerPage: page.itemsPerPage
+				};
+			}
+			if (inputType === 'hgvs') {
+				this.fetchByHGVS(inputSubArray, inputArr, uploadedFile, newPage);
+			} else if (inputType === 'vcf') {
+				this.fetchByVCF(inputSubArray, inputArr, uploadedFile, newPage);
+			}
 		}
 	};
 
@@ -454,13 +291,12 @@ class App extends Component {
 				var record = {};
 				if (isoform.canonical || isoform.canonicalAccession === null) {
 					record.chromosome = chr;
-					// record.position = start;
 					record.id = id;
 					record.refAllele = gene.refAllele;
-					// record.altAllele = variant;
 					record.geneName = gene.geneName;
 					record.codon = isoform.refCodon + '/' + isoform.variantCodon;
-					record.CADD = '-';
+					if (gene.caddScore === null) record.CADD = '-';
+					else record.CADD = gene.caddScore;
 				}
 				record.position = start;
 				record.altAllele = variant;
@@ -468,11 +304,14 @@ class App extends Component {
 				record.isoform = isoform.accession;
 				record.aaPos = isoform.isoformPosition;
 				record.aaChange = isoform.refAA + '/' + isoform.variantAA;
+				record.refAA = isoform.refAA;
+				record.variantAA = isoform.variantAA;
 				record.consequences = isoform.consequences;
 				record.cdsPosition = isoform.cdsPosition;
 				record.canonical = isoform.canonical;
 				record.canonicalAccession = isoform.canonicalAccession;
 				record.referenceFunctionUri = isoform.referenceFunctionUri;
+				record.populationObservationsUri = isoform.populationObservationsUri;
 				record.ensp = [];
 				record.enst = [];
 				if (isoform.translatedSequences !== undefined && isoform.translatedSequences.length > 0) {
@@ -518,38 +357,70 @@ class App extends Component {
 	}
 
 	getInputType(inputArr) {
-		let firstInput = inputArr[0];
-		if (firstInput.startsWith('NC')) {
-			return 'hgvs';
-		} else if (!isNaN(firstInput.split(' ')[0])) {
-			return 'vcf';
-		} else {
-			return 'unknown input';
-		}
+		return 'vcf';
+		// let firstInput = inputArr[0];
+		// if (firstInput.startsWith('NC')) {
+		// 	return 'hgvs';
+		// } else if (!isNaN(firstInput.split(' ')[0])) {
+		// 	return 'vcf';
+		// } else {
+		// 	return 'unknown input';
+		// }
 	}
 
-	fetchNextPage = (uploadedFile, page, isFileSelected, loading) => {
+	fetchResult = (uploadedFile, page, isFileSelected, loading, inputText) => {
+		this.setState({
+			userInput: inputText
+		});
+		this.fetchNextPage(uploadedFile, page, isFileSelected, loading, inputText);
+	};
+
+	fetchNextPage = (uploadedFile, page, isFileSelected, loading, input) => {
+		var inputText = input;
+		if (inputText === undefined || inputText === null) {
+			var inputText = this.state.userInput;
+		}
 		var pageNumber = page.currentPage;
-		const PAGE_SIZE = 200;
-		var skipRecord = (pageNumber - 1) * PAGE_SIZE;
-		var count = 0;
-		var recordsProcessed = 0;
-		var firstLine = true;
-		var inputText = '';
+		const PAGE_SIZE = page.itemsPerPage;
+		let skipRecord = 1;
+		if (pageNumber !== 1) skipRecord = (pageNumber - 1) * PAGE_SIZE;
 		var newPage = {
 			currentPage: page.currentPage,
 			previousPage: page.previousPage,
-			nextPage: false
+			nextPage: false,
+			totalItems: page.totalItems,
+			itemsPerPage: page.itemsPerPage
+		};
+
+		if (isFileSelected) this.fetchFromFile(skipRecord, page, uploadedFile, PAGE_SIZE, isFileSelected, loading);
+		else {
+			this.handleSearch(inputText, null, newPage, true);
+		}
+	};
+
+	fetchFromFile = (skipRecord, page, uploadedFile, pageSize, isFileSelected, loading) => {
+		var count = 0;
+		var recordsProcessed = 0;
+		var firstLine = true;
+		var inputText = [];
+		var newPage = {
+			currentPage: page.currentPage,
+			previousPage: page.previousPage,
+			nextPage: false,
+			totalItems: page.totalItems,
+			itemsPerPage: page.itemsPerPage
 		};
 		// var numberOfLinesToRead = skipRecord + PAGE_SIZE;
 		PapaParse.parse(uploadedFile, {
 			// preview: numberOfLinesToRead,
 			step: (row, parser) => {
-				if (recordsProcessed >= PAGE_SIZE) {
+				if (recordsProcessed >= pageSize) {
 					newPage = {
 						currentPage: page.currentPage,
 						previousPage: page.previousPage,
-						nextPage: true
+						nextPage: true,
+						totalItems: page.totalItems,
+						itemsPerPage: page.itemsPerPage
 					};
 					// this.handleSearch(inputText, uploadedFile, this.state.page, true);
 					parser.abort();
@@ -559,10 +430,10 @@ class App extends Component {
 					var newInput = this.createCsvString(row.data);
 					if (newInput != '') {
 						if (firstLine) {
-							inputText += newInput;
+							inputText.push(newInput);
 							firstLine = false;
 						} else {
-							inputText += '\n' + newInput;
+							inputText.push(newInput);
 						}
 					}
 				} else {
@@ -576,18 +447,21 @@ class App extends Component {
 					isFileSelected: isFileSelected,
 					loading: loading
 				});
-				this.handleSearch(inputText, uploadedFile, this.state.page, loading);
+				// this.handleSearch(inputText, uploadedFile, this.state.page, loading);
+				this.fetchByVCF(inputText, inputText, uploadedFile, newPage);
 			}
 		});
 	};
 
-	fetchByVCF(BASE_URL, inputArr, input, uploadedFile, newPage, history) {
+	fetchByVCF(inputSubArray, input, uploadedFile, newPage) {
+		const BASE_URL = `${API_URL}`;
+		const { history } = this.props;
 		const headers = {
 			'Content-Type': 'application/json',
 			Accept: '*'
 		};
 
-		const uri = BASE_URL + '/pepvep/variant/mapping';
+		const uri = BASE_URL + '/variant/mapping';
 		const output = {
 			errors: [],
 			results: {}
@@ -596,37 +470,38 @@ class App extends Component {
 			output.results = this.state.searchResults;
 		}
 		var mappings = [];
-		post(uri, inputArr, {
+		post(uri, inputSubArray, {
 			headers: headers
 		}).then((response) => {
-			console.log('response -> ' + response.data);
-			response.data.forEach((mapping) => {
+			response.data.mappings.forEach((mapping) => {
 				var genes = this.createGenes(mapping);
 				mappings.push(genes);
 			});
 
 			this.setState({
-				searchTerm: inputArr,
+				searchTerm: input,
+				pageInput: inputSubArray,
 				searchResults: mappings,
 				errors: output.errors,
 				loading: false,
 				isFileSelected: false,
 				file: uploadedFile,
-				page: newPage
+				page: newPage,
+				invalidInputs: response.data.invalidInputs
 			});
 
 			history.push('search');
-
-			// this.processResponse(results, input, uploadedFile, newPage, history);
 		});
 	}
 
-	fetchByHGVS(BASE_URL, inputArr, input, uploadedFile, newPage, history) {
+	fetchByHGVS(inputArr, input, uploadedFile, newPage) {
+		const BASE_URL = `${API_URL}`;
+		const { history } = this.props;
 		const headers = {
 			'Content-Type': 'application/json'
 		};
 
-		const uri = BASE_URL + '/pepvep/variant/hgvs';
+		const uri = BASE_URL + '/variant/hgvs';
 		const output = {
 			errors: [],
 			results: {}
@@ -678,34 +553,6 @@ class App extends Component {
 		});
 	}
 
-	fetchByVCF1(BASE_URL, inputArr, input, uploadedFile, newPage, history) {
-		const GET_VARIANTS = this.getQuery();
-		const client = new ApolloClient({
-			cache: new InMemoryCache(),
-			uri: BASE_URL + '/pepvep/graphql'
-		});
-		var errorFlag = false;
-		client
-			.query({
-				query: GET_VARIANTS,
-				variables: { params: inputArr }
-			})
-			.catch((e) => {
-				console.log('Got an axios error:', e);
-				errorFlag = true;
-			})
-			.then((results) => {
-				if (errorFlag) {
-					this.setState({
-						loading: false
-					});
-					history.push('api-error');
-				} else {
-					this.processResponse(results, input, uploadedFile, newPage, history);
-				}
-			});
-	}
-
 	processResponse(results, input, uploadedFile, newPage, history) {
 		const output = {
 			errors: [],
@@ -753,272 +600,25 @@ class App extends Component {
 	}
 
 	createCsvString(rowArr) {
-		if (rowArr == '' || rowArr.length < 5) {
-			return '';
-		}
-		// var cols = line.split('\t');
-		var pos = rowArr[1].split('_');
-		var start = pos[0];
-		var end = pos[0];
-		if (pos.length > 1) {
-			end = pos[1];
-		}
-		return rowArr[0] + ' ' + start + ' ' + end + ' ' + rowArr[3] + '/' + rowArr[4] + ' ' + '. . .';
+		return rowArr.join(' ');
 	}
 
-	getCSVRow(input, variant) {
-		var isAssociatedDisease = 'No';
-		var allStructures = '';
-		var diseaseDetails = '';
-		var featureDetails = '';
-		var variationDetails = this.createVariationDetails(variant);
-		if (variant.significances.clinical.association.length > 0) {
-			isAssociatedDisease = 'Yes';
-			variant.significances.clinical.association.forEach((disease) => {
-				diseaseDetails += `disease=${disease.disease}`;
-				diseaseDetails += disease.name ? `,name=${disease.name.replace(/,/gi, '')}` : '';
-				diseaseDetails += disease.description ? `,description=${disease.description.replace(/,/gi, '')}` : '';
-				const diseaseEvidences = [];
-				disease.evidences.forEach((diseaseEvidence) => {
-					diseaseEvidences.push(`${diseaseEvidence.source.name}:${diseaseEvidence.source.id}`);
-				});
-
-				if (diseaseEvidences.length) {
-					diseaseDetails += `,evidences=${diseaseEvidences.join(';')}`;
-				}
-				diseaseDetails += ',';
-			});
-		}
-
-		if (
-			variant.significances.functional != null &&
-			variant.significances.functional.features != null &&
-			variant.significances.functional.features.length > 0
-		) {
-			variant.significances.functional.features.forEach((feature) => {
-				featureDetails += `type=${feature.type}`;
-				featureDetails += `,category=${feature.category}`;
-				featureDetails += feature.description ? `,description=${feature.description.replace(/,/gi, '')}` : '';
-				featureDetails += `,start=${feature.begin}`;
-				featureDetails += `,end=${feature.end}`;
-
-				if (feature.evidences != null && feature.evidences.length > 0) {
-					const featureEvidences = [];
-					feature.evidences.forEach((featureEvidence) => {
-						featureEvidences.push(`${featureEvidence.source.name}:${featureEvidence.source.id}`);
-					});
-
-					if (featureEvidences.length > 0) {
-						featureDetails += `,evidences=${featureEvidences.join(';')}`;
-					}
-				}
-				featureDetails += '|';
-			});
-		}
-
-		var ligands = '';
-		var interactions = '';
-		if (variant.significances.structural != null) {
-			if (
-				variant.significances.structural.ligands != undefined &&
-				Object.keys(variant.significances.structural.ligands).length > 0
-			) {
-				variant.significances.structural.ligands.forEach((ligandObject) => {
-					let result = [];
-
-					// if (variation.threeLetterAminoAcidBase.toUpperCase() !== ligandObject.position_code) {
-					// 	return output;
-					// }
-
-					ligandObject.ligands.forEach((ligand) => {
-						const ligandSerilised = [
-							`id:${ligand.ligand_id}`,
-							`formula:${ligand.formula}`,
-							`InChi:${ligand.InChi}`,
-							`ligand_name:${ligand.ligand_name}`
-						].join(',');
-
-						result.push(ligandSerilised);
-					});
-
-					ligands += result.join('|') + ';';
-				}, '');
-			}
-
-			if (
-				variant.significances.structural.interactions != undefined &&
-				variant.significances.structural.interactions.length > 0
-			) {
-				variant.significances.structural.interactions.forEach((interaction) => {
-					// if (variation.threeLetterAminoAcidBase.toUpperCase() !== interaction.position_code) {
-					// 	return output;
-					// }
-					var partner_name = '';
-					interaction.partners.forEach((partner) => {
-						partner_name += partner.name + ',';
-					});
-					interactions += partner_name + '|';
-				}, '');
-			}
-
-			if (variant.significances.structural.allStructures != null) {
-				allStructures = Object.keys(variant.significances.structural.allStructures).join(',');
-			}
-		}
-		// if (
-		// 	variant.variation.proteinColocatedVariantsEndpoint != 'undefined' &&
-		// 	variant.variation.proteinColocatedVariantsEndpoint.length > 0
-		// ) {
-		// 	var colocated_variants = '';
-		// 	variant.variation.proteinColocatedVariants.forEach((cv) => {
-		// 		colocated_variants +=
-		// 			[
-		// 				`alternative_sequence:${cv.alternativeSequence}`,
-		// 				`clinical_significances:${cv.clinicalSignificances}`,
-		// 				`disease:${cv.disease ? 1 : 0}`,
-		// 				`large_scale_study:${cv.largeScaleStudy}`,
-		// 				`polyphen_score:${cv.polyphenScore}`,
-		// 				`sift_score:${cv.siftScore}`,
-		// 				`source_type:${cv.sourceType}`,
-		// 				`uniprot:${cv.uniprot}`,
-		// 				`wildType:${cv.wildType}`
-		// 			].join(',') + '|';
-		// 	});
-		// }
-
-		return (
-			'"' +
-			input +
-			'","' +
-			variant.variation.consequence +
-			'","' +
-			'GRCh38' +
-			'","' +
-			variant.gene.chromosome +
-			'","' +
-			variant.gene.start +
-			'","' +
-			variant.gene.end +
-			'","' +
-			variant.gene.allele +
-			'","' +
-			variant.gene.allele.split('/')[1] +
-			'","' +
-			variant.gene.symbol +
-			'","' +
-			variant.gene.source +
-			'","' +
-			variant.protein.hgncId + // HGNC ID
-			'","' +
-			variant.gene.ensgId +
-			'","' +
-			variant.gene.enstId +
-			'","' +
-			variant.gene.hgvsp +
-			'","' +
-			'Protein Coding' + // BioType
-			'","' +
-			// 'Moderate' + // IMPACT
-			// '","' +
-			variant.variation.consequence + // CONSEQUENCE_TERMS
-			'","' +
-			variant.protein.accession +
-			'","' +
-			variant.variation.begin +
-			'","' +
-			variant.variation.end +
-			'","' +
-			allStructures +
-			'","' +
-			ligands + // LIGANDS
-			'","' +
-			interactions + // STRUCTURAL_INTERACTION_PARTNERS
-			'","' +
-			variant.variation.variant +
-			'","' +
-			isAssociatedDisease +
-			'","' +
-			variationDetails.clinicalSignificance +
-			'","' +
-			variationDetails.polyphenPrediction +
-			'","' +
-			variationDetails.polyphenScore +
-			'","' +
-			variationDetails.siftPrediction +
-			'","' +
-			variationDetails.siftScore +
-			'","' +
-			variant.gene.strand +
-			'","' +
-			variant.gene.exon +
-			'","' +
-			variant.gene.enstId +
-			'","' +
-			variant.gene.hgvsp +
-			'","' +
-			variant.gene.hgvsg +
-			'","' +
-			diseaseDetails +
-			'","' +
-			featureDetails +
-			// '","' +
-			// colocated_variants +
-			'"\n'
-		);
-	}
-	handleDownload = () => {
-		const { searchTerm, searchResults } = this.state;
-		var inputArr = searchTerm.split('\n');
-		var outputCsv =
-			'INPUT,MOST_SEVERE_CONSEQUENCE,ASSEMBLY,CHROMOSOME,' +
-			'GENOMIC_START,GENOMIC_END,ALLELE_STRING,VARIANT_ALLELE,' +
-			'GENE_SYMBOL,GENE_SYMBOL_SOURCE,' +
-			'HGNC_ID,' +
-			'GENE_ID,TRANSCRIPT_ID,TRANSLATION_ID,' +
-			'BIOTYPE,' +
-			// IMPACT,' +
-			'CONSEQUENCE_TERMS,UNIPROT_ACCESSIONS,' +
-			// 'TREMBL_ACCESSIONS,' +
-			'PROTEIN_START,PROTEIN_END,STRUCTURES,LIGANDS,' +
-			'STRUCTURAL_INTERACTION_PARTNERS,AMINO_ACID_CHANGE,ASSOCIATED_TO_DISEASE,' +
-			'DISEASE_CATEGORIES,POLYPHEN_PREDICTION,POLYPHEN_SCORE,' +
-			// 'MUTATION_TASTER_PREDICTION,MUTATION_TASTER_SCORE,LRT_PREDICTION,LRT_SCORE,FATHMM_PREDICTION,' +
-			// 'FATHMM_SCORE,PROVEAN_PREDICTION,PROVEAN_SCORE,CADD_RAW,CADD_PHRED,' +
-			'SIFT_PREDICTION,SIFT_SCORE,' +
-			// 'MUTPRED_SCORE,BLOSUM62,APPRIS,TSL,STRAND,CODONS,CDNA_START,CDNA_END,CDS_START,CDS_END,EXON,UNIPARC_ACCESSIONS,' +
-			'STRAND,EXON,HGVS_C,HGVS_P,HGVS_G,DISEASE_ASSOCIATIONS,PROTEIN_ANNOTATIONS\n';
-		// COLOCATED_VARIANTS
-
-		Object.keys(searchResults).forEach((inputStr) => {
-			searchResults[inputStr].rows.forEach((variant) => {
-				if (variant.variation != null) {
-					outputCsv = outputCsv + this.getCSVRow(inputStr, variant);
-				}
-			});
-		});
-		const url = window.URL.createObjectURL(new Blob([ outputCsv ]));
-		const link = document.createElement('a');
-		link.href = url;
-		link.setAttribute('download', 'pepvep-data.csv'); // or any other extension
-		document.body.appendChild(link);
-		link.click();
-	};
+	handleDownload = () => {};
 
 	handleBulkDownload = (e, file) => {
-		// const BASE_URL = 'http://localhost:8091/uniprot/api';
-		const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api';
+		const BASE_URL = `${API_URL}`;
 		this.fileUpload(file).then((response) => {
 			console.log('File uploaded successfully ', response);
 			let a = document.createElement('a');
-			a.href = BASE_URL + '/pepvep/variant/download/' + response.data + '/';
+			a.href = BASE_URL + '/variant/download/' + response.data + '/';
 			a.download = 'pepvep.zip';
 			a.click();
 		});
 	};
 
 	fileUpload(file) {
-		// const BASE_URL = 'http://localhost:8091/uniprot/api/pepvep/variant/upload';
-		const BASE_URL = 'http://wwwdev.ebi.ac.uk/uniprot/api/pepvep/variant/upload';
+		const BASE_URL = `${API_URL}`;
+
 		const formData = new FormData();
 		formData.append('file', file);
 		const config = {
@@ -1035,7 +635,8 @@ class App extends Component {
 			handleSearch: this.handleSearch,
 			handleDownload: this.handleDownload,
 			fetchNextPage: this.fetchNextPage,
-			handleBulkDownload: this.handleBulkDownload
+			handleBulkDownload: this.handleBulkDownload,
+			fetchResult: this.fetchResult
 		};
 
 		return (
