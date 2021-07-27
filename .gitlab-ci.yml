@@ -11,6 +11,7 @@ variables:
     - node --version
     - npm --version
     - yarn --version
+    - npm ci
     - npm install
 
 
