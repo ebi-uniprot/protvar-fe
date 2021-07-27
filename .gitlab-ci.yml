@@ -13,6 +13,7 @@ variables:
     - yarn --version
     - npm install -g node-gyp
     - yarn
+    - npm cache clear
     - npm install
 
 
