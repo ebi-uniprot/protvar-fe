@@ -1,0 +1,43 @@
+stages:
+  - build_static_assets
+  - build_docker_image
+
+variables:
+  CONTAINER_IMAGE: ${CI_REGISTRY_IMAGE}:latest
+
+.js:
+  image: node
+  before_script:
+    - node --version
+    - npm --version
+    - yarn --version
+    - yarn
+    - npm install
+
+
+build_static_assets:
+  extends: .js
+  stage: build_static_assets
+  script:
+    - yarn build:dev
+  artifacts:
+    paths:
+      - build/
+
+build_docker_image:
+  stage: build_docker_image
+  image: docker:latest
+  tags:
+    - dind
+  services:
+    - docker:dind
+  before_script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin
+    - docker --version
+    - echo ${CONTAINER_IMAGE}
+  script:
+    - docker build -t ${CONTAINER_IMAGE} --no-cache .
+    - docker image ls
+    - docker push ${CONTAINER_IMAGE}
+    - docker rmi ${CONTAINER_IMAGE}
+    - docker logout "$CI_REGISTRY"
