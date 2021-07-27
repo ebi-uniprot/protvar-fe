@@ -18,7 +18,7 @@ build_static_assets:
   extends: .js
   stage: build_static_assets
   script:
-    - yarn build:dev
+    - npm run dev-build
   artifacts:
     paths:
       - build/
