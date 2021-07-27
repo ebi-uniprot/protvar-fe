@@ -11,9 +11,6 @@ variables:
     - node --version
     - npm --version
     - yarn --version
-    - npm install -g node-sass
-    - npm install -g node-gyp
-    - yarn
     - npm install
 
 
