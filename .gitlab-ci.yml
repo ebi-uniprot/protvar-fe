@@ -11,7 +11,7 @@ variables:
     - node --version
     - npm --version
     - yarn --version
-    - npm cache clear
+    - npm cache self-heals
     - npm install -g node-gyp
     - yarn
     - npm install
