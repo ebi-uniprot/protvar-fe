@@ -376,12 +376,12 @@ class FunctionalSignificance extends Component {
 		if (locationList.length > 0) {
 			return (
 				<Fragment>
-					{/* <div>
+					<div>
 						<label>
 							<b>Locations : </b>
 							<ul>{locationList}</ul>
 						</label>
-					</div> */}
+					</div>
 					{features}
 				</Fragment>
 			);

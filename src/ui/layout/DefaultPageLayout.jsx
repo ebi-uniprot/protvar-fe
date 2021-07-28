@@ -80,135 +80,155 @@ class DefaultPageLayout extends Component {
 						>
 							<div className="masthead-inner row">
 								<div className="navbar">
-									<a className="local-title" href={`${BASE_URL}/`} title="Back to PepVEP's homepage">
+									{/* <a className="local-title" href={`${BASE_URL}/`} title="Back to PepVEP's homepage">
 										<i className="fa fa-fw fa-home" /> PepVEP
-									</a>
-									<div className="topnav-right">
-										<table>
-											<tbody>
-												<tr>
-													<td>
-														<ButtonModal
-															buttonText="About"
-															title="About"
-															withFooterCloseButton={true}
-															withHeaderCloseButton={true}
-															height="60%"
-															width="60%"
-														>
-															<section>
-																<div className="container">
-																	<span>
-																		<b>What is PepVEP</b>
-																		<br />
-																	</span>
-																	<div className="text">
-																		<p>
-																			PepVEP is an online service to interpret the
-																			effects of variants on protein function and
-																			structure. It utilises functional
-																			information from the Ensembl Variant Effect
-																			Predictor (VEP), the UniProt functional
-																			residue annotation (Protein function), and
-																			the PDBe structural residue annotation.
-																		</p>
-																	</div>
-																	<hr />
-																	<span>
-																		<b>Examples:</b>
-																	</span>
-																	<div className="text">
-																		<ul>
-																			<li>
-																				VCF
-																				<br />
-																				3 165830358 165830358 T/C . . .<br />
-																				21 43072000 43072000 T/C . . .<br />
-																			</li>
-																			<li>
-																				HGVS
-																				<br />
-																				NC_000014.9:g.89993420A>G<br />
-																				NC_000010.11:g.87933147C>G<br />
-																			</li>
-																			<li>
-																				VCF FILE
-																				<br />
-																				#CHROM POS ID REF ALT QUAL FILTER INFO<br
-																				/>
-																				21 25891796 . C T . . . <br />
-																				14 73173574 . C T . . .<br />
-																			</li>
-																		</ul>
-																	</div>
-																	<hr />
-																	<span>
-																		<b>Response:</b>
-																	</span>
+									</a> */}
+									{/* <div> */}
+									{/* <div className="topnav-subtitle">
+											Predicting the effect of varying amino acids in proteins
+										</div> */}
 
-																	<div className="text">
-																		<ul>
-																			<li>
-																				The genes and transcripts where the
-																				variants are located, with Ensembl
-																				identifiers.
-																			</li>
-																			<li>
-																				The proteins and protein isoforms
-																				affected by the variants, with UniProt
-																				identifiers and corresponding amino acid
-																				positions and changes.
-																			</li>
-																			<li>
-																				The consequence of your variants on the
-																				protein sequence (e.g. stop gained,
-																				missense, stop lost, frameshift).
-																			</li>
+									{/* <div> */}
+									<table>
+										<tbody>
+											<tr className="navbar">
+												<td>
+													<a
+														className="local-title"
+														href={`${BASE_URL}/`}
+														title="Back to PepVEP's homepage"
+													>
+														<i className="fa fa-fw fa-home" /> PepVEP
+													</a>
+													<a
+														className="local-sub-title"
+														href={`${BASE_URL}/`}
+														title="Back to PepVEP's homepage"
+													>
+														Predicting the effect of varying amino acids in proteins
+													</a>
+												</td>
 
-																			<li>
-																				SIFT, PolyPhen and CADD scores for
-																				changes in the protein sequence.
-																			</li>
-
-																			<li>
-																				Known variants in the nucleotide and
-																				amino acid position that match your
-																				variants, with dbSNPs, ClinVar and
-																				UniProt variant identifiers.
-																			</li>
-																			<li>
-																				Population frequency from 1000 Genomes
-																				project and gnomAD.
-																			</li>
-
-																			<li>
-																				Functional information per amino acid
-																				residue affected by your variants (e.g.
-																				functional domains, and sites like
-																				active, binding sites and
-																				post-translational modifications).
-																			</li>
-																			<li>
-																				Known disease associations in the amino
-																				acid position that match your variants
-																				as described in UniProt.
-																			</li>
-
-																			<li>
-																				Known mutagenesis experiments in the
-																				amino acid position that match your
-																				variants as described in UniProt.
-																			</li>
-																			<li>
-																				Known structures and ligand binding
-																				sites in the amino acid position that
-																				match your variants.
-																			</li>
-																		</ul>
-																	</div>
+												<td className="topnav-right local-sub-title">
+													<ButtonModal
+														buttonText="About"
+														title="About"
+														withFooterCloseButton={true}
+														withHeaderCloseButton={true}
+														height="60%"
+														width="60%"
+													>
+														<section>
+															<div className="container">
+																<span>
+																	<b>What is PepVEP</b>
+																	<br />
+																</span>
+																<div className="text">
+																	<p>
+																		PepVEP is an online service to interpret the
+																		effects of variants on protein function and
+																		structure. It utilises functional information
+																		from the Ensembl Variant Effect Predictor (VEP),
+																		the UniProt functional residue annotation
+																		(Protein function), and the PDBe structural
+																		residue annotation.
+																	</p>
 																</div>
-															</section>
-															{/* <span>
+																<hr />
+																<span>
+																	<b>Examples:</b>
+																</span>
+																<div className="text">
+																	<ul>
+																		<li>
+																			VCF
+																			<br />
+																			3 165830358 165830358 T/C . . .<br />
+																			21 43072000 43072000 T/C . . .<br />
+																		</li>
+																		<li>
+																			HGVS
+																			<br />
+																			NC_000014.9:g.89993420A>G<br />
+																			NC_000010.11:g.87933147C>G<br />
+																		</li>
+																		<li>
+																			VCF FILE
+																			<br />
+																			#CHROM POS ID REF ALT QUAL FILTER INFO<br />
+																			21 25891796 . C T . . . <br />
+																			14 73173574 . C T . . .<br />
+																		</li>
+																	</ul>
+																</div>
+																<hr />
+																<span>
+																	<b>Response:</b>
+																</span>
+
+																<div className="text">
+																	<ul>
+																		<li>
+																			The genes and transcripts where the variants
+																			are located, with Ensembl identifiers.
+																		</li>
+																		<li>
+																			The proteins and protein isoforms affected
+																			by the variants, with UniProt identifiers
+																			and corresponding amino acid positions and
+																			changes.
+																		</li>
+																		<li>
+																			The consequence of your variants on the
+																			protein sequence (e.g. stop gained,
+																			missense, stop lost, frameshift).
+																		</li>
+
+																		<li>
+																			SIFT, PolyPhen and CADD scores for changes
+																			in the protein sequence.
+																		</li>
+
+																		<li>
+																			Known variants in the nucleotide and amino
+																			acid position that match your variants, with
+																			dbSNPs, ClinVar and UniProt variant
+																			identifiers.
+																		</li>
+																		<li>
+																			Population frequency from 1000 Genomes
+																			project and gnomAD.
+																		</li>
+
+																		<li>
+																			Functional information per amino acid
+																			residue affected by your variants (e.g.
+																			functional domains, and sites like active,
+																			binding sites and post-translational
+																			modifications).
+																		</li>
+																		<li>
+																			Known disease associations in the amino acid
+																			position that match your variants as
+																			described in UniProt.
+																		</li>
+
+																		<li>
+																			Known mutagenesis experiments in the amino
+																			acid position that match your variants as
+																			described in UniProt.
+																		</li>
+																		<li>
+																			Known structures and ligand binding sites in
+																			the amino acid position that match your
+																			variants.
+																		</li>
+																	</ul>
+																</div>
+															</div>
+														</section>
+														{/* <span>
 															<b>Currently PepVEP supports inputs in below formats :</b>
 														</span>
 														<ul>
@@ -248,106 +268,62 @@ class DefaultPageLayout extends Component {
 																</div>
 															</div>
 														</ul> */}
-														</ButtonModal>
-													</td>
-													<td>
-														<ButtonModal
-															buttonText="Contact"
-															title="Contact"
-															withFooterCloseButton={false}
-															withHeaderCloseButton={true}
-															height="30%"
-															width="30%"
-														>
-															<div className="container">
-																<form>
-																	<label for="fname">First Name</label>
-																	<input
-																		type="text"
-																		id="fname"
-																		name="firstname"
-																		placeholder="Your name.."
-																	/>
+													</ButtonModal>
+												</td>
+												<td className="topnav-right local-sub-title">
+													<ButtonModal
+														buttonText="Contact"
+														title="Contact"
+														withFooterCloseButton={false}
+														withHeaderCloseButton={true}
+														height="30%"
+														width="30%"
+													>
+														<div className="container">
+															<form>
+																<label for="fname">First Name</label>
+																<input
+																	type="text"
+																	id="fname"
+																	name="firstname"
+																	placeholder="Your name.."
+																/>
 
-																	<label for="lname">Last Name</label>
-																	<input
-																		type="text"
-																		id="lname"
-																		name="lastname"
-																		placeholder="Your last name.."
-																	/>
+																<label for="lname">Last Name</label>
+																<input
+																	type="text"
+																	id="lname"
+																	name="lastname"
+																	placeholder="Your last name.."
+																/>
 
-																	<label htmlfor="country">Country</label>
-																	<select id="country" name="country">
-																		<option value="australia">
-																			United Kingdom
-																		</option>
-																		<option value="canada">Canada</option>
-																		<option value="usa">USA</option>
-																	</select>
+																<label htmlfor="country">Country</label>
+																<select id="country" name="country">
+																	<option value="australia">United Kingdom</option>
+																	<option value="canada">Canada</option>
+																	<option value="usa">USA</option>
+																</select>
 
-																	<label for="subject">Subject</label>
-																	<textarea
-																		id="subject"
-																		name="subject"
-																		placeholder="Write something.."
-																		style={{ height: '200px' }}
-																	/>
+																<label for="subject">Subject</label>
+																<textarea
+																	id="subject"
+																	name="subject"
+																	placeholder="Write something.."
+																	style={{ height: '200px' }}
+																/>
 
-																	<input type="submit" className="button-new" />
-																</form>
-															</div>
-														</ButtonModal>
-													</td>
-												</tr>
-											</tbody>
-										</table>
-									</div>
+																<input type="submit" className="button-new" />
+															</form>
+														</div>
+													</ButtonModal>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+									{/* </div>
+									</div> */}
 								</div>
 							</div>
-							{/* <div className="masthead-inner row">
-								<div className="local-title columns medium-12" id="local-title">
-									<nav className="row">
-										<ul id="global-nav" className="menu columns medium-8">
-											<li>
-												<a href={`${BASE_URL}/`} title="Back to PepVEP's homepage">
-													PepVEP
-												</a>
-											</li>
-										</ul>
-										<ul id="global-nav" className="menu columns medium-4">
-											<li className="pull-right">
-												<ButtonModal
-													buttonText="About"
-													className="button-new"
-													title="Enter details"
-													withFooterCloseButton={false}
-													withHeaderCloseButton={true}
-													height="30%"Kh
-													width="30%"
-												>
-													About
-												</ButtonModal>
-											</li>
-
-											<li className="menu">
-												<ButtonModal
-													buttonText="Contact Us"
-													className="button-new"
-													title="Enter details"
-													withFooterCloseButton={false}
-													withHeaderCloseButton={true}
-													height="30%"
-													width="30%"
-												>
-													Contact Us
-												</ButtonModal>
-											</li>
-										</ul>
-									</nav>
-								</div>
-								<EBIStandardSearch />
-							</div> */}
 						</div>
 					</div>
 

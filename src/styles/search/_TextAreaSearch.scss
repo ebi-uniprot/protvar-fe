@@ -1,7 +1,7 @@
 // Text-area search field
 // ----------------------
 .main-textarea-search-field {
-	min-height: 10vh;
+	min-height: 12vh;
 	border-radius: 5px;
 	padding: .7rem 1rem;
 	line-height: 1.7rem;
@@ -10,6 +10,7 @@
 	resize: none;
 	white-space: pre-wrap;
 	color: grey;
+	margin: 0;
 }
 
 .ref-link {
@@ -18,6 +19,7 @@
 
 .table-input {
 	width: 15%;
+	margin-bottom: 0rem;
 }
 
 .padding-bottom {
@@ -30,7 +32,7 @@
 .wrapper {
 	display: grid;
 	grid-template-columns: 1fr 1fr 1fr;
-	grid-template-rows: 1fr 1fr;
+	grid-template-rows: 1fr;
 	/*
   grid-column-gap:1em;
   grid-row-gap:1em;
@@ -65,6 +67,7 @@
 		bottom: 0;
 		margin: 0;
 		width: 100%;
+		border-style: solid;
 	}
 
 	button {

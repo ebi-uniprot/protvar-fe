@@ -4,15 +4,24 @@
 
 .navbar {
 	width: 100%;
-	background-color: linear-gradient(45deg, #014371, rgba(1, 67, 113, 0.7), #014371, #014371);
+	// background-color: linear-gradient(45deg, #014371, rgba(1, 67, 113, 0.7), #014371, #014371);
 	overflow: auto;
+	table {
+		margin-bottom: 0;
+		tbody {
+			background-color: transparent;
+			td {
+				padding-bottom: 0;
+			}
+		}
+	}
 }
 
 /* Navbar links */
 .navbar a {
 	float: left;
 	text-align: center;
-	padding: 12px;
+	// padding: 6px;
 	color: white;
 	text-decoration: none;
 
@@ -48,11 +57,30 @@ a {
 	}
 
 	button {
-		background-color: Transparent;
+		background-color: transparent;
 		padding-top: 1em;
 		padding-right: 1em;
-		padding-bottom: 1em;
+		padding-bottom: 0em;
 		padding-left: 1em;
+		margin-bottom: 0.2rem;
+		// border-width: thin;
+		// border-color: #00709b;
+		// cursor: pointer;
+		// color: #00709b;
+	}
+
+	.modal__content {
+		button {
+			background-color: transparent;
+			padding-top: 0.5em;
+			padding-right: 1em;
+			padding-bottom: 1em;
+			padding-left: 1em;
+			border-width: thin;
+			border-color: #00709b;
+			cursor: pointer;
+			color: #00709b;
+		}
 	}
 	.window__header {
 		width: 100%;
@@ -117,6 +145,10 @@ a {
 	text-shadow: 1px 1px 0 $black-colour;
 	font-family: $primary-font-family;
 	font-size: 2.5rem;
+}
+
+.local-sub-title {
+	padding-top: 30px;
 }
 
 /* Add responsiveness - will automatically display the navbar vertically instead of horizontally on screens less than 500 pixels */

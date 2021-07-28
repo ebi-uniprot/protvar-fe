@@ -166,10 +166,13 @@ class TextAreaSearch extends Component {
 			<Fragment>
 				<div>
 					<p>
-						PepVEP is an online service to interpret the{' '}
-						<b>effects of variants on protein function and structure</b>. It utilises functional information
-						from the Ensembl Variant Effect Predictor (VEP), the UniProt functional residue annotation
-						(Protein function), and the PDBe structural residue annotation.
+						PepVEP is an online service to interpret the effects of missense variants using protein function
+						and structure. It utilises functional information from the Ensembl Variant Effect Predictor
+						(VEP), the UniProt functional residue annotation (Protein function), and the PDBe structural
+						residue annotation.
+						<br />
+						Variants can be submitted via pasting in the box in VCF or HGVS format, uploading a file in VCF
+						format or using the PepVEP API
 					</p>
 				</div>
 				<div className="wrapper">
@@ -178,7 +181,7 @@ class TextAreaSearch extends Component {
 							<section className="card__actions">
 								<span className="card-header">
 									<p>
-										<b>Search</b>
+										<b>Paste variants (GRCh38)</b>
 									</p>
 								</span>
 							</section>
@@ -186,6 +189,9 @@ class TextAreaSearch extends Component {
 								<div className="card__content">
 									<section className="uniprot-card">
 										<section className="uniprot-card__left">
+											<p>
+												<b>Paste variants in HGVS or VCF format below</b>
+											</p>
 											<form onSubmit={this.handleSubmit}>
 												<textarea
 													id="main-textarea-search-field"
@@ -350,6 +356,13 @@ class TextAreaSearch extends Component {
 				</div>
 				<div>
 					<br />
+					<p>
+						Further help and explanations about the data in PepVEP can be found in the "about" section at
+						the top right hand side of the page.
+						<br />
+						We continually strive to make PepVEP clear and useful to our users, to contact PepVEP with
+						questions or suggestions please use the "contact" link at the top of the page.
+					</p>
 				</div>
 			</Fragment>
 		);
@@ -363,7 +376,7 @@ TextAreaSearch.propTypes = {
 };
 
 TextAreaSearch.defaultProps = {
-	buttonLabel: 'Search',
+	buttonLabel: 'Run',
 	onSubmit: () => undefined
 };
 

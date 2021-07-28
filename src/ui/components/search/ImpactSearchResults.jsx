@@ -188,31 +188,54 @@ class ImpactSearchResults extends Component {
 
 	fetchStructuralData = (row, rowIdAndType, expandedRow) => {
 		var aaPosition = row.aaPos;
-		const APIUrl = 'https://www.ebi.ac.uk/pdbe/graph-api/mappings/best_structures/' + row.isoform;
+		const APIUrl =
+			'https://www.ebi.ac.uk/pdbe/graph-api/mappings/best_structures/' +
+			row.isoform +
+			'/' +
+			aaPosition +
+			'/' +
+			(aaPosition + 1);
 		if (row.structureLoaded === false) {
+			var errorFlag = false;
 			this.setState({
 				structureLoaded: false,
 				expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null
 			});
-			axios.get(APIUrl).then((response) => {
-				var filteredData = [];
-				response.data[row.isoform].map((str) => {
-					if (aaPosition >= str.unp_start && aaPosition <= str.unp_end) {
-						filteredData.push(str);
+			axios
+				.get(APIUrl)
+				.catch((err) => {
+					errorFlag = true;
+
+					this.setState({
+						structureLoaded: true,
+						showLoader: false,
+						pdbId: null
+					});
+					console.log(err);
+				})
+				.then((response) => {
+					if (!errorFlag) {
+						var filteredData = [];
+						response.data[row.isoform].map((str) => {
+							if (aaPosition >= str.unp_start && aaPosition <= str.unp_end) {
+								filteredData.push(str);
+							}
+						});
+						row.structural = filteredData;
+						row.structureLoaded = true;
+						var pdbId = '';
+						if (filteredData.length > 0) {
+							pdbId = filteredData[0].pdb_id;
+						}
+						this.setState({
+							structureLoaded: true,
+							showLoader: false,
+							pdbId: pdbId
+						});
+					} else {
+						console.log('Error while fetching protein structure');
 					}
 				});
-				row.structural = filteredData;
-				row.structureLoaded = true;
-				var pdbId = '';
-				if (filteredData.length > 0) {
-					pdbId = filteredData[0].pdb_id;
-				}
-				this.setState({
-					structureLoaded: true,
-					showLoader: false,
-					pdbId: pdbId
-				});
-			});
 		} else {
 			this.setState({
 				expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null
@@ -354,10 +377,10 @@ class ImpactSearchResults extends Component {
 					{this.getSignificancesButton(functionalKey, 'FUN', accession)}
 					{this.getSignificancesButton(populationKey, 'POP', accession)}
 					{this.getSignificancesButton(structuralKey, 'STR', accession)}
-					{this.getSignificancesButton(evolutionKey, 'EVI', accession)}
+					{/* {this.getSignificancesButton(evolutionKey, 'EVI', accession)} */}
 				</tr>
 
-				{this.getEvolutionInferenceSignificance(evolutionKey, expandedRow, accession)}
+				{/* {this.getEvolutionInferenceSignificance(evolutionKey, expandedRow, accession)} */}
 				{this.getPopulationObservation(populationKey, expandedRow, accession)}
 				{this.getProteinStructure(structuralKey, expandedRow, accession)}
 				{this.getFunctionalSignificance(functionalKey, expandedRow, accession)}
@@ -560,7 +583,7 @@ class ImpactSearchResults extends Component {
 							<th>Function</th>
 							<th>Population Observation</th>
 							<th>Structure</th>
-							<th>Evolution Inference</th>
+							{/* <th>Evolution Inference</th> */}
 						</tr>
 					</thead>
 					<tbody>{tableRows}</tbody>

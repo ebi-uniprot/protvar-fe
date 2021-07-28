@@ -8,8 +8,23 @@ class PopulationObservation extends Component {
 		super(props);
 
 		this.state = {
-			expandedFunctionalRow: null
+			expandedRow: null,
+			expandedColocatedRow: null
 		};
+	}
+
+	toggleexpandedRow(rowId) {
+		const { expandedRow } = this.state;
+		this.setState({
+			expandedRow: rowId !== expandedRow ? rowId : null
+		});
+	}
+
+	toggleColocated(rowId) {
+		const { expandedColocatedRow } = this.state;
+		this.setState({
+			expandedColocatedRow: rowId !== expandedColocatedRow ? rowId : null
+		});
 	}
 	getReference(xref) {
 		return (
@@ -30,23 +45,26 @@ class PopulationObservation extends Component {
 		);
 	}
 
-	getReferences(xrefs) {
-		let xrefList = [];
-		if (xrefs !== undefined && xrefs.length > 0) {
-			let xrefMap = new Map();
-			xrefs.map((xref) => {
-				let source = [];
-				if (xrefMap.get(xref.name) !== undefined) {
-					source = xrefMap.get(xref.name);
+	getReferences(xrefs, key) {
+		let expandedRow = this.state.expandedRow;
+		if (key === expandedRow) {
+			let xrefList = [];
+			if (xrefs !== undefined && xrefs.length > 0) {
+				let xrefMap = new Map();
+				xrefs.map((xref) => {
+					let source = [];
+					if (xrefMap.get(xref.name) !== undefined) {
+						source = xrefMap.get(xref.name);
+					}
+					source.push(this.getReference(xref));
+					xrefMap.set(xref.name, source);
+				});
+				for (let [ key, value ] of xrefMap) {
+					xrefList.push(this.getReferenceForEachSource(key, value));
 				}
-				source.push(this.getReference(xref));
-				xrefMap.set(xref.name, source);
-			});
-			for (let [ key, value ] of xrefMap) {
-				xrefList.push(this.getReferenceForEachSource(key, value));
 			}
+			return <ul>{xrefList}</ul>;
 		}
-		return xrefList;
 	}
 	getAssociation(association) {
 		let name = association.name;
@@ -64,19 +82,31 @@ class PopulationObservation extends Component {
 			</Fragment>
 		);
 	}
-	getAssociations(associations) {
-		if (associations !== undefined && associations.length > 0) {
+
+	getAssociations(associations, key) {
+		let expandedRow = this.state.expandedRow;
+		if (key === expandedRow) {
 			let diseaseAssociations = [];
 			associations.map((association) => {
 				diseaseAssociations.push(this.getAssociation(association));
 			});
 			if (diseaseAssociations.length > 0) {
-				return (
-					<li>
-						<b>Disease Associations:</b> {diseaseAssociations}
-					</li>
-				);
+				return diseaseAssociations;
 			}
+		}
+	}
+	getAssociationsTag(associations, prevKey) {
+		if (associations !== undefined && associations.length > 0) {
+			let key = 'variant-association';
+			if (prevKey !== undefined) if (prevKey) key = key + prevKey;
+			return (
+				<li>
+					<a onClick={(e) => this.toggleexpandedRow(key)}>
+						<b>Disease Associations</b>{' '}
+					</a>
+					{this.getAssociations(associations, key)}
+				</li>
+			);
 		}
 	}
 
@@ -102,8 +132,9 @@ class PopulationObservation extends Component {
 		);
 	}
 
-	getPopulationFrequencies(populationFrequencies) {
-		if (populationFrequencies !== undefined && populationFrequencies.length > 0) {
+	getPopulationFrequencies(populationFrequencies, key) {
+		let expandedRow = this.state.expandedRow;
+		if (key === expandedRow) {
 			let frequencies = [];
 			populationFrequencies.map((popFrequency) => {
 				frequencies.push(this.getPopFrequency(popFrequency));
@@ -117,23 +148,52 @@ class PopulationObservation extends Component {
 			}
 		}
 	}
+
+	getPopulationFrequenciesTag(populationFrequencies, prevKey) {
+		if (populationFrequencies !== undefined && populationFrequencies.length > 0) {
+			let key = 'variant-frequency';
+			if (prevKey !== undefined) if (prevKey) key = key + prevKey;
+			return (
+				<li>
+					<a onClick={(e) => this.toggleexpandedRow(key)}>
+						<b>Population Freuencies:</b>{' '}
+					</a>{' '}
+					{this.getPopulationFrequencies(populationFrequencies, key)}
+				</li>
+			);
+		}
+	}
+
+	getReferenceTag(xrefs, prevKey) {
+		let key = 'variant-reference';
+		if (prevKey !== undefined) if (prevKey) key = key + prevKey;
+		if (xrefs !== undefined && xrefs.length > 0) {
+			return (
+				<li>
+					<a onClick={(e) => this.toggleexpandedRow(key)}>
+						<b>References</b>{' '}
+					</a>
+					{this.getReferences(xrefs, key)}
+				</li>
+			);
+		}
+	}
 	getVariant(variants) {
 		if (variants.length > 0) {
 			let variant = variants[0];
 			let change = variant.wildType + '>' + variant.alternativeSequence;
+
 			return (
 				<ul>
-					{/* <li>{variant.populationFrequencies}</li> */}
-					<li>
-						<b>Change:</b> {change}
-					</li>
 					<li>
 						<b>Genomic Location:</b> {variant.genomicLocation}
 					</li>
 					<li>
-						<b>References:</b> <ul>{this.getReferences(variant.xrefs)}</ul>
+						<b>Change:</b> {change}
 					</li>
-					{this.getAssociations(variant.association)}
+					{this.getReferenceTag(variant.xrefs)}
+
+					{this.getAssociationsTag(variant.association)}
 
 					{this.getPopulationFrequencies(variant.populationFrequencies)}
 
@@ -143,15 +203,31 @@ class PopulationObservation extends Component {
 		}
 		return <label>No Variant to report</label>;
 	}
+	getColocatedVariantDetails(variant, key) {
+		let expandedColocatedRow = this.state.expandedColocatedRow;
+		if (key === expandedColocatedRow) {
+			let change = variant.wildType + '>' + variant.alternativeSequence;
+			return (
+				<ul>
+					<li>Change: {change}</li>
+					{this.getReferenceTag(variant.xrefs, key)}
 
+					{this.getAssociationsTag(variant.association, key)}
+
+					{this.getPopulationFrequencies(variant.populationFrequencies, key)}
+				</ul>
+			);
+		}
+	}
 	getColocatedVariant(variant) {
-		let change = variant.wildType + '>' + variant.alternativeSequence;
+		let key = 'colocated-' + variant.genomicLocation;
 		return (
 			<li>
 				<ul>
-					<li>Change: {change}</li>
-					<li>{variant.genomicLocation}</li>
-					<hr />
+					<li>
+						<a onClick={(e) => this.toggleColocated(key)}>{variant.genomicLocation}</a>
+					</li>
+					<li>{this.getColocatedVariantDetails(variant, key)}</li>
 				</ul>
 			</li>
 		);
