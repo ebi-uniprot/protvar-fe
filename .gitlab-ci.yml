@@ -11,7 +11,8 @@ variables:
     - node --version
     - npm --version
     - yarn --version
-    - rm -rf node_modules && rm package-lock.json && npm install
+    - npm ci
+    - npm install
 
 
 build_static_assets:
