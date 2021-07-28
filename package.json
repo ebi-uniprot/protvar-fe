@@ -91,6 +91,7 @@
     "webpack-cli": "^3.1.2",
     "webpack-dev-server": "^3.1.0",
     "protvista-structure": "3.2.15-beta.0",
-    "protvista-uniprot": "2.6.1"
+    "protvista-uniprot": "2.6.1",
+    "protvista-zoom-tool": "3.2.2"
   }
 }
