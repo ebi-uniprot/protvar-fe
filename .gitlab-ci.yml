@@ -11,7 +11,6 @@ variables:
     - node --version
     - npm --version
     - yarn --version
-    - npm ci
     - rm -rf node_modules && rm package-lock.json && npm install
 
 
