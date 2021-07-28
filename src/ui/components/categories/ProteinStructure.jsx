@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import protvistaStructure from 'protvista-structure';
+// import protvistaUniprotStructure from 'protvista-uniprot';
 import Button from '../../elements/form/Button';
 
 class ProteinStructure extends Component {
@@ -9,6 +10,10 @@ class ProteinStructure extends Component {
 		if (!window.customElements.get('protvista-structure')) {
 			window.customElements.define('protvista-structure', protvistaStructure);
 		}
+
+		// if (!window.customElements.get('protvista-uniprot')) {
+		// 	window.customElements.define('protvista-uniprot', protvistaUniprotStructure);
+		// }
 
 		this.state = {
 			pdbId: null,
@@ -100,14 +105,24 @@ class ProteinStructure extends Component {
 		if (pdb === null || pdb === undefined) {
 			pdb = pdbId;
 		}
+		let position = pos + ':' + pos;
 		return (
-			<td colSpan="13" className="expanded-row">
-				<div className="significances-groups">
-					<div className="column">
-						<protvista-structure accession={accession} pdb-id={pdb} highlight={pos} />
+			<Fragement>
+				<td colSpan="6" className="expanded-row">
+					<div className="significances-groups">
+						<div className="column">
+							<protvista-structure accession={accession} pdb-id={pdb} highlight={pos} />
+						</div>
 					</div>
-				</div>
-			</td>
+				</td>
+				{/* <td colSpan="6" className="expanded-row">
+					<div className="significances-groups">
+						<div className="column">
+							<protvista-uniprot-structure accession={accession} />
+						</div>
+					</div>
+				</td> */}
+			</Fragement>
 		);
 	}
 	getStructuralSignificance(structuralKey, expandedRow, accession, pdbId) {

@@ -11,7 +11,7 @@ const NO_OF_ITEMS_PER_PAGE = 25;
 
 class TextAreaSearch extends Component {
 	state = {
-		searchTerm: '',
+		searchTerm: 'Paste variants in HGVS or VCF format below',
 		isFileSelected: false,
 		fileName: 'No file selected',
 		viewResultLabel: 'View Result',
@@ -88,7 +88,8 @@ class TextAreaSearch extends Component {
 
 	useExampleData = () => {
 		const searchTerm = [
-			'21 25891796 rs124582 C/T . . .'
+			'Paste variants in HGVS or VCF format below'
+			// '21 25891796 rs124582 C/T . . .'
 			// '14 89993420 rs37915333 A/G . . .',
 			// '10 87933147 rs7565837 C/T . . .',
 			// '21 43072000 . T/C . . .',
@@ -171,6 +172,7 @@ class TextAreaSearch extends Component {
 						(VEP), the UniProt functional residue annotation (Protein function), and the PDBe structural
 						residue annotation.
 						<br />
+						<br />
 						Variants can be submitted via pasting in the box in VCF or HGVS format, uploading a file in VCF
 						format or using the PepVEP API
 					</p>
@@ -189,9 +191,9 @@ class TextAreaSearch extends Component {
 								<div className="card__content">
 									<section className="uniprot-card">
 										<section className="uniprot-card__left">
-											<p>
+											{/* <p>
 												<b>Paste variants in HGVS or VCF format below</b>
-											</p>
+											</p> */}
 											<form onSubmit={this.handleSubmit}>
 												<textarea
 													id="main-textarea-search-field"
@@ -359,6 +361,7 @@ class TextAreaSearch extends Component {
 					<p>
 						Further help and explanations about the data in PepVEP can be found in the "about" section at
 						the top right hand side of the page.
+						<br />
 						<br />
 						We continually strive to make PepVEP clear and useful to our users, to contact PepVEP with
 						questions or suggestions please use the "contact" link at the top of the page.

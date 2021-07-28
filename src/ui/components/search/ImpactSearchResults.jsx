@@ -563,7 +563,7 @@ class ImpactSearchResults extends Component {
 							<th colSpan="5">Input</th>
 							<th colSpan="3">Genomic</th>
 							<th colSpan="6">Protein</th>
-							<th colSpan="5">Impact</th>
+							<th colSpan="5">Annotations</th>
 						</tr>
 						<tr>
 							<th>CHR</th>
@@ -574,15 +574,15 @@ class ImpactSearchResults extends Component {
 							<th>Gene</th>
 							<th>Codon</th>
 							<th>CADD</th>
-							<th />
+							<th>show alt. isoforms</th>
 							<th>Isoform</th>
 							<th>Protein Name</th>
 							<th>AA Pos</th>
 							<th>AA Change</th>
 							<th>Consequences</th>
-							<th>Function</th>
-							<th>Population Observation</th>
-							<th>Structure</th>
+							<th>Functional</th>
+							<th>Population</th>
+							<th>Structural</th>
 							{/* <th>Evolution Inference</th> */}
 						</tr>
 					</thead>

@@ -42,6 +42,7 @@
     "franklin-sites": "0.0.145",
     "graphql": "^14.5.8",
     "litemol": "^2.4.2",
+    "protvista-structure": "^2.3.5",
     "node-sass-chokidar": "^1.1.0",
     "npm-run-all": "^4.1.2",
     "path": "^0.12.7",
@@ -90,6 +91,6 @@
     "webpack-cli": "^3.1.2",
     "webpack-dev-server": "^3.1.0",
     "protvista-structure": "3.2.15-beta.0",
-    "protvista-zoom-tool": "3.2.2"
+    "protvista-uniprot": "2.6.1"
   }
 }

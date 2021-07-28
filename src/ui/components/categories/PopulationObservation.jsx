@@ -221,11 +221,12 @@ class PopulationObservation extends Component {
 	}
 	getColocatedVariant(variant) {
 		let key = 'colocated-' + variant.genomicLocation;
+		let change = variant.wildType + '>' + variant.alternativeSequence;
 		return (
 			<li>
 				<ul>
 					<li>
-						<a onClick={(e) => this.toggleColocated(key)}>{variant.genomicLocation}</a>
+						<a onClick={(e) => this.toggleColocated(key)}>{change}</a>
 					</li>
 					<li>{this.getColocatedVariantDetails(variant, key)}</li>
 				</ul>
@@ -239,7 +240,12 @@ class PopulationObservation extends Component {
 			variants.map((variant) => {
 				colocatedVariants.push(this.getColocatedVariant(variant));
 			});
-			return <ul>{colocatedVariants}</ul>;
+			return (
+				<Fragment>
+					The following variants alter the same amino acid (but alter a different nucleotide in the codon)
+					<ul>{colocatedVariants}</ul>
+				</Fragment>
+			);
 		}
 		return <label>No Colocated Variants to report</label>;
 	}
@@ -271,8 +277,8 @@ class PopulationObservation extends Component {
 								<table>
 									<tbody>
 										<tr>
-											<th>Variant</th>
-											<th>Colocated Variants</th>
+											<th>Submitted Variant Details</th>
+											<th>Co-located Variants</th>
 										</tr>
 										<tr>
 											<td>{this.getVariant(variant, 'VARIANT')}</td>
