@@ -2,12 +2,13 @@ import React, { Component, Fragment } from 'react';
 
 import { v1 as uuidv1 } from 'uuid';
 import Button from '../../elements/form/Button';
-import Modal from '../modal/Modal';
-import axios, { post } from 'axios';
+import Modal from './Modal';
 import PapaParse from 'papaparse';
 import FileSaver from 'file-saver';
+import { DownloadIcon } from 'franklin-sites';
+import { post } from 'axios';
 
-class DownloadModel extends Component {
+class DownloadModal extends Component {
 	state = {
 		name: '',
 		email: '',
@@ -101,8 +102,7 @@ class DownloadModel extends Component {
 				`${API_URL}` +
 				'/download/file?email=' +
 				this.state.email +
-				'&name=' +
-				this.state.name +
+				'&name=alok' +
 				'&jobName=' +
 				this.state.jobName +
 				'&function=' +
@@ -190,12 +190,22 @@ class DownloadModel extends Component {
 					this.node = node;
 				}}
 			>
-				<Button onClick={(e) => this.handleClick(e)}>Download</Button>
+				<Button onClick={(e) => this.handleClick(e)}>
+					<DownloadIcon className="downloadicon" />
+					Download
+				</Button>
 				<Modal show={this.state.modal} handleClose={(e) => this.handleClick(e)}>
-					<h5>Enter Details</h5>
+					{/* <h5>Enter Details</h5> */}
+					<div className="window__header">
+						{sendEmail ? (
+							<span className="window__header__title">Enter Details</span>
+						) : (
+							<span className="window__header__title">Select Options</span>
+						)}
+					</div>
 					<div className="form-group">
 						<div>
-							<ul>
+							{/* <ul>
 								<li key={uuidv1()} className="new-select">
 									<input
 										key="function1"
@@ -218,20 +228,92 @@ class DownloadModel extends Component {
 									/>
 									<label id="item2">Population Observation</label>
 								</li>
-							</ul>
+							</ul> */}
+							<table>
+								<tbody>
+									<tr>
+										<td>
+											<ul className="new-select">
+												<li key={uuidv1()}>
+													<input
+														key="function1"
+														type="checkbox"
+														name="function"
+														value={this.state.function}
+														onChange={(e) => this.handleCheckBox(e)}
+														checked={this.state.function}
+													/>
+													<label id="item1">All Annotations</label>
+												</li>
+												<li key={uuidv1()}>
+													<input
+														key="variation1"
+														type="checkbox"
+														value={this.state.variation}
+														name="variation"
+														onChange={(e) => this.handleCheckBox(e)}
+														checked={this.state.variation}
+													/>
+													<label id="item2">Mappings only, no annotations</label>
+												</li>
+											</ul>
+										</td>
+
+										<td>
+											<ul className="new-select">
+												<li key={uuidv1()}>
+													<input
+														key="function1"
+														type="checkbox"
+														name="function"
+														value={this.state.function}
+														onChange={(e) => this.handleCheckBox(e)}
+														checked={this.state.function}
+													/>
+													<label id="item1">Functional</label>
+												</li>
+												<li key={uuidv1()}>
+													<input
+														key="function1"
+														type="checkbox"
+														name="function"
+														value={this.state.function}
+														onChange={(e) => this.handleCheckBox(e)}
+														checked={this.state.function}
+													/>
+													<label id="item1">Population</label>
+												</li>
+												<li key={uuidv1()}>
+													<input
+														key="function1"
+														type="checkbox"
+														name="function"
+														value={this.state.function}
+														onChange={(e) => this.handleCheckBox(e)}
+														checked={this.state.function}
+													/>
+													<label id="item1">Structural</label>
+												</li>
+												<li key={uuidv1()}>
+													<input
+														key="function1"
+														type="checkbox"
+														name="function"
+														value={this.state.function}
+														onChange={(e) => this.handleCheckBox(e)}
+														checked={this.state.function}
+													/>
+													<label id="item1">Impact Predictions</label>
+												</li>
+											</ul>
+										</td>
+									</tr>
+								</tbody>
+							</table>
 
 							{sendEmail ? (
 								<Fragment>
-									<label>
-										Name:
-										<input
-											type="text"
-											value={this.state.name}
-											name="name"
-											onChange={(e) => this.handleChange(e)}
-										/>
-									</label>
-									<label>
+									<label className="download-label">
 										Email:
 										<input
 											type="text"
@@ -240,7 +322,7 @@ class DownloadModel extends Component {
 											onChange={(e) => this.handleChange(e)}
 										/>
 									</label>
-									<label>
+									<label className="download-label">
 										Job Name:
 										<input
 											type="text"
@@ -255,17 +337,26 @@ class DownloadModel extends Component {
 							)}
 						</div>
 					</div>
-
-					<Button onClick={(e) => this.handleSubmit(e)} type="button">
-						Submit
-					</Button>
-					<Button onClick={(e) => this.handleClick(e)} type="button">
-						close
-					</Button>
+					<div className="window__footer">
+						<Button
+							onClick={(e) => this.handleSubmit(e)}
+							type="button"
+							className="window__action-button window__default-close-button button"
+						>
+							Submit
+						</Button>
+						<Button
+							onClick={(e) => this.handleClick(e)}
+							type="button"
+							className="window__action-button window__default-close-button button"
+						>
+							close
+						</Button>
+					</div>
 				</Modal>
 			</div>
 		);
 	}
 }
 
-export default DownloadModel;
+export default DownloadModal;

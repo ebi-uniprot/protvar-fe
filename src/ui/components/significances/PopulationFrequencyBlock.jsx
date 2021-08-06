@@ -67,7 +67,7 @@ const PopulationFrequencyBlock = (props) => {
 
 			<div className="associated-disease-list">
 				{dataNew.forEach((data) => {
-					<li>
+					<li key={uuidv1()}>
 						{data.sourceName} - {data.label}:{data.value}
 					</li>;
 				})}

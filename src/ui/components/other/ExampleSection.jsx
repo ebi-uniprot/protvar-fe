@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { v1 as uuidv1 } from 'uuid';
 const ExampleSection = () => (
 	<div className="card">
 		{/* <section className="card__actions">
@@ -17,7 +17,7 @@ const ExampleSection = () => (
 					<b>Currently PepVEP supports inputs in below formats :</b>
 				</span>
 				<ul>
-					<li>
+					<li key={uuidv1()}>
 						Entering genomic positions of your variants in the Search box
 						<div className="input-examples">
 							<div>
@@ -28,7 +28,7 @@ const ExampleSection = () => (
 							</div>
 						</div>
 					</li>
-					<li>
+					<li key={uuidv1()}>
 						Entering hgvs in the Search box
 						<div className="input-examples">
 							<div>
@@ -39,7 +39,7 @@ const ExampleSection = () => (
 							</div>
 						</div>
 					</li>
-					<li>Uploading vcf file using 'UPLOAD FILE' button</li>
+					<li key={uuidv1()}>Uploading vcf file using 'UPLOAD FILE' button</li>
 					<div className="input-examples">
 						<div>
 							<span className="variant-example">

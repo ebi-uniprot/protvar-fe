@@ -1,6 +1,6 @@
 import React from 'react';
 import { ManagedTabs } from 'franklin-sites';
-
+import { v1 as uuidv1 } from 'uuid';
 const AboutSection = () => (
 	<div className="card">
 		<section className="card__actions">
@@ -23,42 +23,44 @@ const AboutSection = () => (
 							<label htmlFor="ch" />
 							<div className="text">
 								<ul>
-									<li>
+									<li key={uuidv1()}>
 										The genes and transcripts where the variants are located, with Ensembl
 										identifiers.
 									</li>
-									<li>
+									<li key={uuidv1()}>
 										The proteins and protein isoforms affected by the variants, with UniProt
 										identifiers and corresponding amino acid positions and changes.
 									</li>
-									<li>
+									<li key={uuidv1()}>
 										The consequence of your variants on the protein sequence (e.g. stop gained,
 										missense, stop lost, frameshift).
 									</li>
 
-									<li>SIFT, PolyPhen and CADD scores for changes in the protein sequence.</li>
+									<li key={uuidv1()}>
+										SIFT, PolyPhen and CADD scores for changes in the protein sequence.
+									</li>
 
-									<li>
+									<li key={uuidv1()}>
 										Known variants in the nucleotide and amino acid position that match your
 										variants, with dbSNPs, ClinVar and UniProt variant identifiers.
 									</li>
-									<li>Population frequency from 1000 Genomes project and gnomAD.</li>
+									<li key={uuidv1()}>Population frequency from 1000 Genomes project and gnomAD.</li>
 
-									<li>
+									<li key={uuidv1()}>
 										Functional information per amino acid residue affected by your variants (e.g.
 										functional domains, and sites like active, binding sites and post-translational
 										modifications).
 									</li>
-									<li>
+									<li key={uuidv1()}>
 										Known disease associations in the amino acid position that match your variants
 										as described in UniProt.
 									</li>
 
-									<li>
+									<li key={uuidv1()}>
 										Known mutagenesis experiments in the amino acid position that match your
 										variants as described in UniProt.
 									</li>
-									<li>
+									<li key={uuidv1()}>
 										Known structures and ligand binding sites in the amino acid position that match
 										your variants.
 									</li>

@@ -3,10 +3,8 @@ import PropTypes from 'prop-types';
 
 import Button from '../../elements/form/Button';
 import PapaParse from 'papaparse';
-import AboutSection from '../other/AboutSection';
-import ExampleSection from '../other/ExampleSection';
-import { ButtonModal } from 'franklin-sites';
-
+import About from '../categories/About';
+import { v1 as uuidv1 } from 'uuid';
 const NO_OF_ITEMS_PER_PAGE = 25;
 
 class TextAreaSearch extends Component {
@@ -31,7 +29,9 @@ class TextAreaSearch extends Component {
 
 	handleSubmit = (e) => {
 		const { searchTerm, file, page } = this.state;
-
+		if (searchTerm === '') {
+			return;
+		}
 		var fetchResult = this.props.fetchResult;
 		var noOfLines = searchTerm.split('\n').length;
 		var pages = Math.ceil(noOfLines / NO_OF_ITEMS_PER_PAGE);
@@ -88,7 +88,7 @@ class TextAreaSearch extends Component {
 
 	useExampleData = () => {
 		const searchTerm = [
-			'Paste variants in HGVS or VCF format below'
+			// 'Paste variants in HGVS or VCF format below'
 			// '21 25891796 rs124582 C/T . . .'
 			// '14 89993420 rs37915333 A/G . . .',
 			// '10 87933147 rs7565837 C/T . . .',
@@ -172,7 +172,8 @@ class TextAreaSearch extends Component {
 						(VEP), the UniProt functional residue annotation (Protein function), and the PDBe structural
 						residue annotation.
 						<br />
-						<br />
+					</p>
+					<p className="info">
 						Variants can be submitted via pasting in the box in VCF or HGVS format, uploading a file in VCF
 						format or using the PepVEP API
 					</p>
@@ -194,11 +195,13 @@ class TextAreaSearch extends Component {
 											{/* <p>
 												<b>Paste variants in HGVS or VCF format below</b>
 											</p> */}
-											<form onSubmit={this.handleSubmit}>
+											<form>
 												<textarea
 													id="main-textarea-search-field"
 													className="main-textarea-search-field"
 													value={searchTerm}
+													placeholder="Paste variants in HGVS or VCF format"
+													onFocus={(e) => (e.target.placeholder = '')}
 													onChange={this.handleInputChange}
 												/>
 
@@ -261,7 +264,7 @@ class TextAreaSearch extends Component {
 							<section className="card__actions">
 								<span className="card-header">
 									<p>
-										<b>Upload VCF</b>
+										<b>File Upload</b>
 									</p>
 								</span>
 							</section>
@@ -270,15 +273,22 @@ class TextAreaSearch extends Component {
 									<section className="uniprot-card">
 										<section className="uniprot-card__left">
 											<p>
-												<b>Upload a VCF FILE to view or download result</b>
+												<b>PepVEP will interpret only the first five fields of the VCF</b>
+												<br />
+												#CHROM POS ID REF ALT<br />
+												Missing values should be specified with a dot (‘.’){' '}
+												<a
+													target="_blank"
+													href="https://www.ebi.ac.uk/training/online/courses/human-genetic-variation-introduction/variant-identification-and-analysis/understanding-vcf-format/"
+												>
+													more info
+												</a>
 												<br />
 												<br />
-												<b>VCF FILE Format</b>
+												<b>PepVEP also supports hgvs in below format</b>
 												<br />
-												#CHROM POS ID REF ALT QUAL FILTER INFO<br />
-												21 25891796 rs124582 C T . . . <br />
-												14 73173574 . C T . . . <br />
-												15 19965080 . C G . . . <br />
+												NC_000010.11:g.121479868C>G<br />
+												{/* SPDI - NC_000001.11:g.65567A>C<br /> */}
 											</p>
 
 											<div id="search-button-group" className="search-button-group">
@@ -328,15 +338,23 @@ class TextAreaSearch extends Component {
 								<div className="card__content">
 									<section className="uniprot-card">
 										<section className="uniprot-card__left">
-											<b>Programmatic access using multiple input formats like</b>
-
+											<b>
+												PepVEP's REST API is a programmatic way to obtain information from
+												PepVEP via Simple URL-based queries
+											</b>
+											<br />
+											You can query:
 											<ul>
-												<li>DbSNP</li>
-												<li>HGVS</li>
-												<li>Accession</li>
-												<li>Gene Name</li>
-												<li>Genomic location</li>
+												<li key={uuidv1()}>
+													Whole genes/proteins/structures specific residue ranges in proteins
+													or protein structures or{' '}
+												</li>
+												<li key={uuidv1()}>
+													Genomic ranges in genes a list of variants using several different
+													formats
+												</li>
 											</ul>
+											Click below for all PepVEP REST API documentation
 											<div id="search-button-group" className="search-button-group">
 												<Button
 													onClick={() =>
@@ -358,7 +376,7 @@ class TextAreaSearch extends Component {
 				</div>
 				<div>
 					<br />
-					<p>
+					<p className="info">
 						Further help and explanations about the data in PepVEP can be found in the "about" section at
 						the top right hand side of the page.
 						<br />

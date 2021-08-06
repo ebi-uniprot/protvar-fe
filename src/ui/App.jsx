@@ -314,17 +314,19 @@ class App extends Component {
 				record.populationObservationsUri = isoform.populationObservationsUri;
 				record.ensp = [];
 				record.enst = [];
+				record.strand = gene.reverseStrand;
 				if (isoform.translatedSequences !== undefined && isoform.translatedSequences.length > 0) {
 					var ensps = [];
-					var ensts = [];
 					isoform.translatedSequences.map((translatedSeq) => {
-						ensps.push(translatedSeq.ensp);
-						translatedSeq.transcripts.map((transcript) => {
-							ensts.push(transcript.enst);
-						});
+						var translatedSequence = {};
+						var ensts = [];
+						translatedSeq.transcripts.map((transcript) => ensts.push(transcript.enst));
+						translatedSequence.ensp = translatedSeq.ensp;
+						translatedSequence.ensts = ensts.join();
+						ensps.push(translatedSequence);
 					});
 					record.ensp = ensps;
-					record.enst = ensts;
+					// record.enst = ensts;
 					// isoform.translatedSequences.map;
 					// if (
 					// 	isoform.translatedSequences[0].transcripts !== undefined &&
@@ -636,7 +638,8 @@ class App extends Component {
 			handleDownload: this.handleDownload,
 			fetchNextPage: this.fetchNextPage,
 			handleBulkDownload: this.handleBulkDownload,
-			fetchResult: this.fetchResult
+			fetchResult: this.fetchResult,
+			history: this.props.history
 		};
 
 		return (

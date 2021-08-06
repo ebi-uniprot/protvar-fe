@@ -60,7 +60,7 @@ a {
 		background-color: transparent;
 		padding-top: 1em;
 		padding-right: 1em;
-		padding-bottom: 0em;
+		padding-bottom: 1em;
 		padding-left: 1em;
 		margin-bottom: 0.2rem;
 		// border-width: thin;
@@ -68,13 +68,16 @@ a {
 		// cursor: pointer;
 		// color: #00709b;
 	}
-
+	.modal__backdrop {
+		background-color: transparent;
+	}
 	.modal__content {
+		border-color: #00709b;
 		button {
 			background-color: transparent;
 			padding-top: 0.5em;
-			padding-right: 1em;
-			padding-bottom: 1em;
+			// padding-right: 1em;
+			// padding-bottom: 1em;
 			padding-left: 1em;
 			border-width: thin;
 			border-color: #00709b;
@@ -135,8 +138,15 @@ a {
 	/* Add a background color and some padding around the form */
 	.container {
 		border-radius: 5px;
-		background-color: #f2f2f2;
+		background-color: #fbfeff;
+		// border-style: dotted;
+		// border-color: #5caecd;
+		// border-width: thin;
 		padding: 20px;
+	}
+
+	.window__footer {
+		background-color: #deeff5;
 	}
 }
 
@@ -216,6 +226,9 @@ a {
 			border-radius: 8px;
 			border: 2px solid white; /* should match background, can't be transparent */
 			background-color: rgba(0, 0, 0, .5);
+		}
+
+		.link {
 		}
 
 		.text {

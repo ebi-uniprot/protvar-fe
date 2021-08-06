@@ -16,7 +16,8 @@ const SearchResultsPageContent = (props) => {
 		page,
 		errors,
 		loading,
-		invalidInputs
+		invalidInputs,
+		history
 	} = props;
 
 	return (
@@ -33,6 +34,7 @@ const SearchResultsPageContent = (props) => {
 				page={page}
 				loading={loading}
 				invalidInputs={invalidInputs}
+				history={history}
 			/>
 		</Fragment>
 	);

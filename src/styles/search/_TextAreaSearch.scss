@@ -67,7 +67,7 @@
 		bottom: 0;
 		margin: 0;
 		width: 100%;
-		border-style: dotted;
+		border-style: solid;
 	}
 
 	button {
@@ -77,6 +77,10 @@
 		// 	margin-right: 2%;
 		// }
 	}
+}
+
+.info {
+	font-size: 14px;
 }
 .button-page {
 	color: #fefefe;

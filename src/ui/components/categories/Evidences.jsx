@@ -16,10 +16,12 @@ const Evidences = (props) => {
 
 	function getEvidenceForEachSource(sourceName, ids) {
 		return (
-			<li key={uuidv1()}>
+			// <li key={uuidv1()}>
+			<Fragment>
 				<b>{sourceName} :</b>
 				<ul className="flatList">{ids}</ul>
-			</li>
+			</Fragment>
+			// </li>
 		);
 	}
 	function getEvidences(evidences) {

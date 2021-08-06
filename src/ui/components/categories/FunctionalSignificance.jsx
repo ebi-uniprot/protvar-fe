@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import SignificanceDataLine from '../significances/SignificanceDataLine';
 import { v1 as uuidv1 } from 'uuid';
 import Evidences from './Evidences';
+import { ChevronDownIcon } from 'franklin-sites';
 
 const specialFeatureTypes = [ 'MUTAGEN', 'CONFLICT' ];
 export const FEATURES = {
@@ -34,11 +35,36 @@ export const FEATURES = {
 	BINDING: 'Binding Site Residue',
 	SITE: 'Functionally Important Residue',
 	MOD_RES: 'PTM Modified Residue',
-	LIPID: 'PTM bound Lipid'
+	LIPID: 'PTM bound Lipid',
+	PTM: 'PTM',
+	INIT_MET: 'Cleaved Initiator Methionine',
+	MUTAGEN: 'MUTAGEN',
+	SIGNAL: 'Signal Peptide',
+	TRANSIT: 'Cleaved Transit Peptide',
+	PROPEP: 'Propeptide',
+	CHAIN: 'Chain',
+	PEPTIDE: 'Peptide',
+	TOPO_DOM: 'Transmembrane Protein Topological Region',
+	TRANSMEM: 'Helical Transmembrane Peptide',
+	DOMAIN: 'Functional Domain',
+	REPEAT: 'Repeated Sequence',
+	REGION: 'Region',
+	COILED: 'Coiled-coil Region',
+	MOTIF: 'Functional Motif',
+	COMPBIAS: 'AA Composition Bias',
+	CATALYTIC_ACTIVITY: 'CATALYTIC ACTIVITY',
+	ACTIVITY_REGULATION: 'ACTIVITY REGULATION',
+	SUBUNIT: 'SUBUNIT',
+	INTERACTION: 'INTERACTION',
+	SUBCELLULAR_LOCATION: 'SUBCELLULAR LOCATION',
+	DOMAIN: 'DOMAIN',
+	PTM: 'PTM',
+	SIMILARITY: 'Family',
+	WEBRESOURCE: 'Additional Resource',
+	HELIX: 'HELIX'
 };
 
 export const REGIONS = {
-	INIT_MET: 'Cleaved Initiator Methionine',
 	SIGNAL: 'Signal Peptide',
 	TRANSIT: 'Cleaved Transit Peptide',
 	PROPEP: 'Propeptide',
@@ -118,18 +144,34 @@ class FunctionalSignificance extends Component {
 			expandedFunctionalRow: rowId !== expandedFunctionalRow ? rowId : null
 		});
 	}
+
+	getPositionLabel(begin, end) {
+		if (begin === end) {
+			return (
+				<Fragment>
+					<b>Position :</b> {begin}
+				</Fragment>
+			);
+		} else {
+			return (
+				<Fragment>
+					<b>Range : </b> {begin} - {end}
+				</Fragment>
+			);
+		}
+	}
 	getFeatureDetail(rowKey, feature) {
 		let keyVal = uuidv1();
 		const { expandedFunctionalRow } = this.state;
+
 		if (rowKey === expandedFunctionalRow) {
 			return (
 				<Fragment>
 					<ul style={{ listStyleType: 'none', display: 'inline-block' }}>
 						<li key={keyVal}>
-							Position: {feature.begin}-{feature.end}
-							<ul>
-								<Evidences evidences={feature.evidences} />
-							</ul>
+							{this.getPositionLabel(feature.begin, feature.end)}
+							<br />
+							<Evidences evidences={feature.evidences} />
 						</li>
 					</ul>
 				</Fragment>
@@ -137,14 +179,24 @@ class FunctionalSignificance extends Component {
 		}
 	}
 	getFeatureList(feature, key) {
-		let keyVal = uuidv1();
+		let category = '';
+		if (FEATURES[feature.type] !== undefined && FEATURES[feature.type] !== null) {
+			category = FEATURES[feature.type];
+		}
+		if (feature.description !== undefined && feature.description !== null) {
+			category = category + '-' + feature.description;
+		}
+
 		return (
 			<Fragment>
-				<a onClick={(e) => this.toggleFunctionRow(key)}>
-					<li key={keyVal}>
-						{FEATURES[feature.type]} - {feature.description}
-					</li>
-				</a>
+				{/* <a onClick={(e) => this.toggleFunctionRow(key)}>
+					<li key={keyVal}> */}
+				<button type="button" className="collapsible" onClick={(e) => this.toggleFunctionRow(key)}>
+					{category}
+					<ChevronDownIcon className="chevronicon" />
+				</button>
+				{/* </li>
+				</a> */}
 				{this.getFeatureDetail(key, feature)}
 			</Fragment>
 		);
@@ -156,7 +208,9 @@ class FunctionalSignificance extends Component {
 		let counter = 0;
 
 		if (regions.length === 0) {
-			return <label style={{ textAlign: 'center', fontWeight: 'bold' }}>No '{category}' to report</label>;
+			return (
+				<label style={{ textAlign: 'center', fontWeight: 'bold' }}>No functional data for the {category}</label>
+			);
 		}
 		regions.map((region) => {
 			counter = counter + 1;
@@ -167,12 +221,13 @@ class FunctionalSignificance extends Component {
 			regionsList.push(list);
 		});
 
-		return (
-			<Fragment>
-				<ul style={{ listStyleType: 'none', display: 'inline-block' }}>{regionsList}</ul>
-				{/* {featureList} */}
-			</Fragment>
-		);
+		return regionsList;
+		// return (
+		// 	<Fragment>
+		// 		<ul style={{ listStyleType: 'none', display: 'inline-block' }}>{regionsList}</ul>
+		// 		{/* {featureList} */}
+		// 	</Fragment>
+		// );
 	}
 
 	getRHEA(dbReference) {
@@ -213,16 +268,6 @@ class FunctionalSignificance extends Component {
 					<li key={uuidv1()}>{this.getRHEA(dbReference)} </li>
 				</ul>
 
-				{/* {ecNumberFlag ? (
-					<li key={uuidv1()}>
-						<a href={ecNumberUrl} target="_blank">
-							{reaction.ecNumber}
-						</a>
-					</li>
-				) : (
-					<li key={uuidv1()} />
-				)} */}
-
 				{evidencesFlag ? (
 					<ul>
 						<li key={uuidv1()}>
@@ -257,11 +302,11 @@ class FunctionalSignificance extends Component {
 			if (features !== undefined && features.length > 0) return features;
 			else {
 				return (
-					<Fragment>
+					<div>
 						<ul>
 							<li key={uuidv1()}>No '{commentName}' to report</li>
 						</ul>
-					</Fragment>
+					</div>
 				);
 			}
 		}
@@ -277,12 +322,17 @@ class FunctionalSignificance extends Component {
 			return (
 				<Fragment>
 					<label>
-						<a onClick={(e) => this.toggleFunctionRow(key)}>
+						{/* <a onClick={(e) => this.toggleFunctionRow(key)}> */}
+
+						<button type="button" className="collapsible" onClick={(e) => this.toggleFunctionRow(key)}>
 							<b>CATALYTIC ACTIVITY</b>
-						</a>
+							<ChevronDownIcon className="chevronicon" />
+						</button>
+
+						{/* </a> */}
 					</label>
 
-					<div>{this.getFeatures(features, key, 'CATALYTIC ACTIVITY')}</div>
+					{this.getFeatures(features, key, 'CATALYTIC ACTIVITY')}
 				</Fragment>
 			);
 		}
@@ -316,13 +366,19 @@ class FunctionalSignificance extends Component {
 		if (features.length > 0) {
 			return (
 				<Fragment>
-					<label>
+					{/* <label>
 						<a onClick={(e) => this.toggleFunctionRow(key)}>
 							<b>ACTIVITY REGULATION</b>
 						</a>
+					</label> */}
+					<label>
+						<button type="button" className="collapsible" onClick={(e) => this.toggleFunctionRow(key)}>
+							<b>ACTIVITY REGULATION</b>
+							<ChevronDownIcon className="chevronicon" />
+						</button>
 					</label>
 
-					<div>{this.getFeatures(features, key, 'ACTIVITY REGULATION')}</div>
+					{this.getFeatures(features, key, 'ACTIVITY REGULATION')}
 				</Fragment>
 			);
 		}
@@ -337,52 +393,70 @@ class FunctionalSignificance extends Component {
 		if (features.length > 0) {
 			return (
 				<Fragment>
-					<label>
+					{/* <label>
 						<a onClick={(e) => this.toggleFunctionRow(key)}>
-							<b>SUBUNIT</b>
+							<b>COMPLEX</b>
 						</a>
-					</label>
+					</label> */}
 
-					<div>{this.getFeatures(features, key, 'SUBUNIT')}</div>
+					<label>
+						<button type="button" className="collapsible" onClick={(e) => this.toggleFunctionRow(key)}>
+							<b>COMPLEX</b>
+							<ChevronDownIcon className="chevronicon" />
+						</button>
+					</label>
+					{this.getFeatures(features, key, 'SUBUNIT')}
 				</Fragment>
 			);
 		}
 	}
 
-	getLocation(location) {
-		var loc = null;
-		if (location.location !== undefined && location.location !== null) {
-			loc = location.location.value;
-		}
-		if (location.topology !== undefined && location.topology !== null) {
-			loc = loc + ' - ' + location.topology.value;
-		}
-		if (loc !== null) {
-			return <li>{loc}</li>;
-		}
-	}
-
 	getSubcellularLocation(locations) {
 		var locationList = [];
+		var topologyList = [];
 		let features = [];
 		locations.locations.map((location) => {
-			locationList.push(this.getLocation(location));
+			if (location.location !== undefined && location.location !== null)
+				locationList.push(<li key={uuidv1()}>{location.location.value}</li>);
+			if (location.topology !== undefined && location.topology !== null)
+				topologyList.push(<li key={uuidv1()}>{location.topology.value}</li>);
 		});
 
 		if (locations.text !== undefined && locations.text.length > 0) {
 			features.push(this.getActivityRegulation(locations));
-			// locationText = locations.text[0].value;
 		}
+		var loc = null;
+		var topologies = null;
+		var feature = null;
+		if (locationList.length > 0)
+			loc = (
+				<label>
+					<b>Locations : </b>
+					<ul>{locationList}</ul>
+				</label>
+			);
+		if (topologyList.length > 0)
+			topologies = (
+				<label>
+					<b>Topologies : </b>
+					<ul>{topologyList}</ul>
+				</label>
+			);
+		if (features.length > 0)
+			feature = (
+				<label>
+					<b>Features : </b>
+					<ul>{features}</ul>
+				</label>
+			);
 		if (locationList.length > 0) {
 			return (
 				<Fragment>
 					<div>
-						<label>
-							<b>Locations : </b>
-							<ul>{locationList}</ul>
-						</label>
+						{loc}
+						{topologies}
+						{feature}
 					</div>
-					{features}
 				</Fragment>
 			);
 		}
@@ -397,13 +471,19 @@ class FunctionalSignificance extends Component {
 		if (features.length > 0) {
 			return (
 				<Fragment>
-					<label>
+					{/* <label>
 						<a onClick={(e) => this.toggleFunctionRow(key)}>
 							<b>SUBCELLULAR LOCATION</b>
 						</a>
-					</label>
+					</label> */}
 
-					<div>{this.getFeatures(features, key, 'SubSUBCELLULAR LOCATION')}</div>
+					<label>
+						<button type="button" className="collapsible" onClick={(e) => this.toggleFunctionRow(key)}>
+							<b>SUBCELLULAR LOCATION</b>
+							<ChevronDownIcon className="chevronicon" />
+						</button>
+					</label>
+					{this.getFeatures(features, key, 'SubSUBCELLULAR LOCATION')}
 				</Fragment>
 			);
 		}
@@ -418,19 +498,88 @@ class FunctionalSignificance extends Component {
 		if (features.length > 0) {
 			return (
 				<Fragment>
-					<label>
+					{/* <label>
 						<a onClick={(e) => this.toggleFunctionRow(key)}>
-							<b>PTM</b>
+							<b>PTM's</b>
 						</a>
+					</label> */}
+					<label>
+						<button type="button" className="collapsible" onClick={(e) => this.toggleFunctionRow(key)}>
+							<b>PTM's</b>
+							<ChevronDownIcon className="chevronicon" />
+						</button>
 					</label>
-
-					<div>{this.getFeatures(features, key, 'PTM')}</div>
+					{this.getFeatures(features, key, 'PTM')}
 				</Fragment>
 			);
 		}
 	}
 
-	getSimilarity(similarities, accession, position) {
+	getReferences(references, key) {
+		const { expandedFunctionalRow } = this.state;
+		if (key === expandedFunctionalRow) {
+			var pfams = [];
+			var interpro = [];
+			if (references !== undefined && references !== null && references.length > 0) {
+				references.map((reference) => {
+					if (reference.type === 'Pfam') {
+						var pfamUrl = 'https://pfam.xfam.org/family/' + reference.id;
+						pfams.push(
+							<li key={uuidv1()}>
+								<a href={pfamUrl} target="_blank">
+									{reference.id}
+								</a>{' '}
+								: {reference.properties['entry name']}
+							</li>
+						);
+					}
+					if (reference.type === 'InterPro') {
+						var interproUrl = 'https://www.ebi.ac.uk/interpro/entry/InterPro/' + reference.id;
+						interpro.push(
+							<li key={uuidv1()}>
+								<a href={interproUrl} target="_blank">
+									{reference.id}
+								</a>{' '}
+								: {reference.properties['entry name']}
+							</li>
+						);
+					}
+				});
+				var pfamTag = null;
+				if (pfams.length > 0) {
+					pfamTag = (
+						<label>
+							<b>PFAM:</b>
+							<ul>
+								<li key={uuidv1()}>{pfams}</li>
+							</ul>
+						</label>
+					);
+				}
+				var interproTag = null;
+				if (interpro.length > 0) {
+					interproTag = (
+						<label>
+							<b>InterPro:</b>
+							<ul>
+								<li key={uuidv1()}>{interpro}</li>
+							</ul>
+						</label>
+					);
+				}
+				return (
+					<Fragment>
+						<ul>
+							<li key={uuidv1()}>{pfamTag}</li>
+							<li key={uuidv1()}>{interproTag}</li>
+						</ul>
+					</Fragment>
+				);
+			}
+		}
+	}
+
+	getSimilarity(similarities, references, accession, position) {
 		let features = [];
 		similarities.map((similarity) => {
 			features.push(this.getActivityRegulation(similarity));
@@ -439,13 +588,20 @@ class FunctionalSignificance extends Component {
 		if (features.length > 0) {
 			return (
 				<Fragment>
-					<label>
+					{/* <label>
 						<a onClick={(e) => this.toggleFunctionRow(key)}>
 							<b>FAMILY</b>
 						</a>
-					</label>
+					</label> */}
 
-					<div>{this.getFeatures(features, key, 'FAMILY')}</div>
+					<label>
+						<button type="button" className="collapsible" onClick={(e) => this.toggleFunctionRow(key)}>
+							<b>FAMILY</b>
+							<ChevronDownIcon className="chevronicon" />
+						</button>
+					</label>
+					{this.getFeatures(features, key, 'FAMILY')}
+					<div>{this.getReferences(references, key)}</div>
 				</Fragment>
 			);
 		}
@@ -460,13 +616,20 @@ class FunctionalSignificance extends Component {
 		if (features.length > 0) {
 			return (
 				<Fragment>
-					<label>
+					{/* <label>
 						<a onClick={(e) => this.toggleFunctionRow(key)}>
 							<b>DOMAINS</b>
-						</a>
+						</a> */}
+					{/* </label> */}
+
+					<label>
+						<button type="button" className="collapsible" onClick={(e) => this.toggleFunctionRow(key)}>
+							<b>DOMAINS</b>
+							<ChevronDownIcon className="chevronicon" />
+						</button>
 					</label>
 
-					<div>{this.getFeatures(features, key, 'DOMAIN')}</div>
+					{this.getFeatures(features, key, 'DOMAIN')}
 				</Fragment>
 			);
 		}
@@ -491,10 +654,17 @@ class FunctionalSignificance extends Component {
 		if (features.length > 0) {
 			return (
 				<Fragment>
-					<label>
+					{/* <label>
 						<a onClick={(e) => this.toggleFunctionRow(key)}>
 							<b>ADDITIONAL RESOURCES</b>
 						</a>
+					</label> */}
+
+					<label>
+						<button type="button" className="collapsible" onClick={(e) => this.toggleFunctionRow(key)}>
+							<b>ADDITIONAL RESOURCES</b>
+							<ChevronDownIcon className="chevronicon" />
+						</button>
 					</label>
 
 					<ul>{this.getFeatures(features, key, 'ADDITIONAL RESOURCES')}</ul>
@@ -508,10 +678,16 @@ class FunctionalSignificance extends Component {
 		if (key === expandedFunctionalRow) {
 			return (
 				<Fragment>
-					<label>Gene : {gene}</label>
-					<a href={url} target="_blank">
-						{interactor}
-					</a>
+					<label>
+						<b>Gene : </b>
+						{gene}
+					</label>
+					<label>
+						<b>IntAct : </b>
+						<a href={url} target="_blank">
+							{interactor}
+						</a>
+					</label>
 				</Fragment>
 			);
 		}
@@ -529,10 +705,11 @@ class FunctionalSignificance extends Component {
 			interactions[0].interactions.map((interaction) => {
 				if (interaction.accession1 === accession) {
 					interactor = interaction.interactor1;
+					var geneInteractor = interaction.gene + '(' + interactor + ')';
 					if (gene === null) {
-						gene = interaction.gene;
+						gene = geneInteractor;
 					} else {
-						gene = gene + ' | ' + interaction.gene;
+						gene = gene + ' | ' + geneInteractor;
 					}
 				}
 			});
@@ -540,10 +717,17 @@ class FunctionalSignificance extends Component {
 			if (gene !== null) {
 				return (
 					<Fragment>
-						<label>
+						{/* <label>
 							<a onClick={(e) => this.toggleFunctionRow(key)}>
 								<b>INTERACTIONS</b>
 							</a>
+						</label> */}
+
+						<label>
+							<button type="button" className="collapsible" onClick={(e) => this.toggleFunctionRow(key)}>
+								<b>INTERACTIONS</b>
+								<ChevronDownIcon className="chevronicon" />
+							</button>
 						</label>
 
 						<ul>{this.getInteraction(gene, interactor, url, key)}</ul>
@@ -564,6 +748,7 @@ class FunctionalSignificance extends Component {
 		domains,
 		interactions,
 		accession,
+		references,
 		position
 	) {
 		return (
@@ -574,13 +759,13 @@ class FunctionalSignificance extends Component {
 				{this.getSubcellularLocations(subcellularLocations, accession, position)}
 				{this.getDomains(domains, accession, position)}
 				{this.getPTMs(ptms, accession, position)}
-				{this.getSimilarity(similarities, accession, position)}
+				{this.getSimilarity(similarities, references, accession, position)}
 				{this.getWebResources(webresources, accession, position)}
 				{this.getInteractions(interactions, accession, position)}
 			</Fragment>
 		);
 	}
-	getProteinRegions(regions, accession, position) {
+	getProteinRegions(regions, references, accession, position) {
 		var catalyticActivities = [];
 		var activityRegulations = [];
 		var subunits = [];
@@ -633,22 +818,63 @@ class FunctionalSignificance extends Component {
 			domains,
 			interactions,
 			accession,
+			references,
 			position
 		);
 	}
-	getProteins(regions, id, proteinExistence, sequence, accession, position) {
+
+	getValue(label, value) {
+		if (value !== null && value !== undefined) {
+			return (
+				<li key={uuidv1()}>
+					<b>{label}: </b>
+					{value}
+				</li>
+			);
+		}
+	}
+
+	displayGeneName(label, geneNames) {
+		if (geneNames !== null && geneNames !== undefined && geneNames.length > 0) {
+			var genes = [];
+			geneNames.map((geneName) => {
+				genes.push(
+					<li key={uuidv1()}>
+						<b>{label} :</b> {geneName.geneName}
+					</li>
+				);
+				if (geneName.synonyms !== null && geneName.synonyms !== undefined) {
+					genes.push(
+						<li key={uuidv1()}>
+							<b>Synonyms: </b> {geneName.synonyms}
+						</li>
+					);
+				}
+			});
+			return genes;
+		}
+	}
+	getProteins(regions, data) {
 		return (
 			<table>
 				<tbody>
 					<tr>
 						<td>
 							<ul style={{ listStyleType: 'none' }}>
-								<li key={uuidv1()}>{id}</li>
-								<li key={uuidv1()}>Length:{sequence.length}</li>
-								<li key={uuidv1()}>{proteinExistence}</li>
+								{this.getValue('Recommended Name', data.name)}
+								{this.getValue('Alternative Name', data.alternativeNames)}
+								{this.displayGeneName('Gene Name', data.geneNames)}
+								{/* {this.getValue('Synonyms', data.geneNames[0].synonyms)} */}
+								{this.getValue('Id', data.id)}
+								{this.getValue('ProteinExistence', data.proteinExistence)}
+								{this.getValue('Entry last updated', data.lastUpdated)}
+								{this.getValue('Sequence Modified', data.sequence.modified)}
+								{this.getValue('Sequence Length', data.sequence.length)}
 							</ul>
 						</td>
-						<td>{this.getProteinRegions(regions, accession, position)}</td>
+						<td className="protein-table-cell">
+							{this.getProteinRegions(regions, data.dbReferences, data.accession, data.position)}
+						</td>
 					</tr>
 				</tbody>
 			</table>
@@ -656,8 +882,8 @@ class FunctionalSignificance extends Component {
 	}
 
 	render() {
-		const { data, ensg, ensp, enst } = this.props;
-		const ensgUrl = 'https://www.ensembl.org/Homo_sapiens/Gene/Summary?db=core;g=';
+		const { data, ensg, ensp } = this.props;
+		const ensgUrl = 'https://www.ensembl.org/Homo_sapiens/Gene/Summary?db=core;g=' + ensg;
 		const enspUrl = 'https://www.ensembl.org/Homo_sapiens/Gene/Summary?db=core;g=';
 		const enstUrl = 'https://www.ensembl.org/Homo_sapiens/Transcript/Summary?db=core;t=';
 		var regions = [];
@@ -665,18 +891,43 @@ class FunctionalSignificance extends Component {
 		var residues = [];
 		var functions = {};
 		var functionText = '';
+		var functionEvidences = [];
 		if (data.features !== null && data.features != undefined && data.features.length > 0) {
 			data.features.map((feature) => {
-				if (REGIONS[feature.type] !== undefined && feature.evidences !== null) regions.push(feature);
+				// if (REGIONS[feature.type] !== undefined && feature.evidences !== null) regions.push(feature);
 
-				if (RESIDUES[feature.type] !== undefined && feature.evidences !== null) residues.push(feature);
+				// if (RESIDUES[feature.type] !== undefined && feature.evidences !== null) residues.push(feature);
+				if (feature.category !== 'VARIANTS') {
+					if (feature.begin === feature.end) residues.push(feature);
+					else regions.push(feature);
+				}
 			});
 			if (data.comments !== undefined && data.comments !== null) {
 				data.comments.map((comment) => {
-					if (comment.type === 'FUNCTION') functionText = comment.text[0].value;
+					if (comment.type === 'FUNCTION' && comment.text.length > 0) {
+						functionText = comment.text[0].value;
+						if (comment.text[0].evidences !== undefined && comment.text[0].evidences !== null);
+						functionEvidences.push(
+							<Fragment>
+								<br />
+								<Evidences evidences={comment.text[0].evidences} />
+							</Fragment>
+						);
+					}
 					if (PROTEINS[comment.type] !== undefined) proteins.push(comment);
 				});
 			}
+			var translatedSequences = [];
+			ensp.map((ensps) => {
+				var enspsUrl = enspUrl + ensps.ensp;
+				translatedSequences.push(
+					<li key={uuidv1()}>
+						<a href={enspsUrl} target="_blank">
+							{ensps.ensp} - {ensps.ensts}
+						</a>
+					</li>
+				);
+			});
 			return (
 				<tr
 					ref={(node) => {
@@ -694,35 +945,19 @@ class FunctionalSignificance extends Component {
 											<th>Region</th>
 										</tr>
 										<tr>
-											<td>{this.getRegions(residues, 'RESIDUES')}</td>
-											<td>{this.getRegions(regions, 'REGIONS')}</td>
+											<td>{this.getRegions(residues, 'residue')}</td>
+											<td>{this.getRegions(regions, 'region')}</td>
 										</tr>
 									</tbody>
 								</table>
 								<table>
 									<tbody>
-										<th>FUNCTION</th>
+										<th>protein function</th>
 
 										<tr>
-											<td>{functionText}</td>
-										</tr>
-									</tbody>
-								</table>
-								<table>
-									<tbody>
-										<tr>
-											<th>Protein</th>
-										</tr>
-										<tr>
 											<td>
-												{this.getProteins(
-													proteins,
-													data.id,
-													data.proteinExistence,
-													data.sequence,
-													data.accession,
-													data.position
-												)}
+												{functionText}
+												{functionEvidences}
 											</td>
 										</tr>
 									</tbody>
@@ -730,6 +965,16 @@ class FunctionalSignificance extends Component {
 								<table>
 									<tbody>
 										<tr>
+											<th>Further protein information</th>
+										</tr>
+										<tr>
+											<td>{this.getProteins(proteins, data)}</td>
+										</tr>
+									</tbody>
+								</table>
+								<table>
+									<tbody>
+										{/* <tr>
 											<td>
 												<SignificanceDataLine label="GENE" value={ensg} link={ensgUrl} />
 											</td>
@@ -738,6 +983,20 @@ class FunctionalSignificance extends Component {
 											</td>
 											<td>
 												<SignificanceDataLine label="TRANSCRIPT" value={enst} link={enstUrl} />
+											</td>
+										</tr> */}
+										<tr>
+											<th>Gene</th>
+											<th>Translated Sequences</th>
+										</tr>
+										<tr>
+											<td>
+												<a href={ensgUrl} target="_blank">
+													{ensg}
+												</a>
+											</td>
+											<td>
+												<ul>{translatedSequences}</ul>
 											</td>
 										</tr>
 									</tbody>
@@ -757,7 +1016,7 @@ class FunctionalSignificance extends Component {
 					<td colSpan="19" className="expanded-row">
 						{' '}
 						<div className="significances-groups">
-							<div className="column">No functions to report</div>
+							<div className="column">No functional data for this residue</div>
 						</div>
 					</td>
 				</tr>

@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 
 import { v1 as uuidv1 } from 'uuid';
 import Evidences from './Evidences';
+import { ChevronDownIcon } from 'franklin-sites';
 
 class PopulationObservation extends Component {
 	constructor(props) {
@@ -28,7 +29,7 @@ class PopulationObservation extends Component {
 	}
 	getReference(xref) {
 		return (
-			<li>
+			<li key={uuidv1()}>
 				<a href={xref.url} target="_blank">
 					{xref.id}
 				</a>
@@ -47,24 +48,24 @@ class PopulationObservation extends Component {
 
 	getReferences(xrefs, key) {
 		let expandedRow = this.state.expandedRow;
-		if (key === expandedRow) {
-			let xrefList = [];
-			if (xrefs !== undefined && xrefs.length > 0) {
-				let xrefMap = new Map();
-				xrefs.map((xref) => {
-					let source = [];
-					if (xrefMap.get(xref.name) !== undefined) {
-						source = xrefMap.get(xref.name);
-					}
-					source.push(this.getReference(xref));
-					xrefMap.set(xref.name, source);
-				});
-				for (let [ key, value ] of xrefMap) {
-					xrefList.push(this.getReferenceForEachSource(key, value));
+		// if (key === expandedRow) {
+		let xrefList = [];
+		if (xrefs !== undefined && xrefs.length > 0) {
+			let xrefMap = new Map();
+			xrefs.map((xref) => {
+				let source = [];
+				if (xrefMap.get(xref.name) !== undefined) {
+					source = xrefMap.get(xref.name);
 				}
+				source.push(this.getReference(xref));
+				xrefMap.set(xref.name, source);
+			});
+			for (let [ key, value ] of xrefMap) {
+				xrefList.push(this.getReferenceForEachSource(key, value));
 			}
-			return <ul>{xrefList}</ul>;
 		}
+		return <ul>{xrefList}</ul>;
+		// }
 	}
 	getAssociation(association) {
 		let name = association.name;
@@ -73,8 +74,8 @@ class PopulationObservation extends Component {
 		return (
 			<Fragment>
 				<ul>
-					<li>{name}</li>
-					<li>
+					<li key={uuidv1()}>{name}</li>
+					<li key={uuidv1()}>
 						<Evidences evidences={association.evidences} />
 					</li>
 				</ul>
@@ -85,27 +86,27 @@ class PopulationObservation extends Component {
 
 	getAssociations(associations, key) {
 		let expandedRow = this.state.expandedRow;
-		if (key === expandedRow) {
-			let diseaseAssociations = [];
-			associations.map((association) => {
-				diseaseAssociations.push(this.getAssociation(association));
-			});
-			if (diseaseAssociations.length > 0) {
-				return diseaseAssociations;
-			}
+		// if (key === expandedRow) {
+		let diseaseAssociations = [];
+		associations.map((association) => {
+			diseaseAssociations.push(this.getAssociation(association));
+		});
+		if (diseaseAssociations.length > 0) {
+			return diseaseAssociations;
 		}
+		// }
 	}
 	getAssociationsTag(associations, prevKey) {
 		if (associations !== undefined && associations.length > 0) {
 			let key = 'variant-association';
 			if (prevKey !== undefined) if (prevKey) key = key + prevKey;
 			return (
-				<li>
-					<a onClick={(e) => this.toggleexpandedRow(key)}>
-						<b>Disease Associations</b>{' '}
-					</a>
-					{this.getAssociations(associations, key)}
-				</li>
+				<Fragment>
+					<li key={uuidv1()}>
+						<b>Associated Diseases:</b>
+						{this.getAssociations(associations, key)}
+					</li>
+				</Fragment>
 			);
 		}
 	}
@@ -114,7 +115,7 @@ class PopulationObservation extends Component {
 		let name = frequency.sourceName;
 		let frequencies = frequency.frequencies.map((freq) => {
 			return (
-				<li>
+				<li key={uuidv1()}>
 					{freq.label}-{freq.value}
 				</li>
 			);
@@ -122,9 +123,9 @@ class PopulationObservation extends Component {
 		return (
 			<Fragment>
 				<ul>
-					<li>{name}</li>
+					<li key={uuidv1()}>{name}</li>
 					<ul>
-						<li>{frequencies}</li>
+						<li key={uuidv1()}>{frequencies}</li>
 					</ul>
 				</ul>
 				<hr />
@@ -141,7 +142,7 @@ class PopulationObservation extends Component {
 			});
 			if (frequencies.length > 0) {
 				return (
-					<li>
+					<li key={uuidv1()}>
 						<b>Population Freuencies:</b> {frequencies}
 					</li>
 				);
@@ -154,7 +155,7 @@ class PopulationObservation extends Component {
 			let key = 'variant-frequency';
 			if (prevKey !== undefined) if (prevKey) key = key + prevKey;
 			return (
-				<li>
+				<li key={uuidv1()}>
 					<a onClick={(e) => this.toggleexpandedRow(key)}>
 						<b>Population Freuencies:</b>{' '}
 					</a>{' '}
@@ -169,10 +170,9 @@ class PopulationObservation extends Component {
 		if (prevKey !== undefined) if (prevKey) key = key + prevKey;
 		if (xrefs !== undefined && xrefs.length > 0) {
 			return (
-				<li>
-					<a onClick={(e) => this.toggleexpandedRow(key)}>
-						<b>References</b>{' '}
-					</a>
+				<li key={uuidv1()}>
+					<b>Identifiers</b>
+
 					{this.getReferences(xrefs, key)}
 				</li>
 			);
@@ -185,15 +185,15 @@ class PopulationObservation extends Component {
 
 			return (
 				<ul>
-					<li>
+					<li key={uuidv1()}>
 						<b>Genomic Location:</b> {variant.genomicLocation}
 					</li>
-					<li>
+					<li key={uuidv1()}>
 						<b>Change:</b> {change}
 					</li>
 					{this.getReferenceTag(variant.xrefs)}
 
-					{this.getAssociationsTag(variant.association)}
+					{/* {this.getAssociationsTag(variant.association)} */}
 
 					{this.getPopulationFrequencies(variant.populationFrequencies)}
 
@@ -201,15 +201,18 @@ class PopulationObservation extends Component {
 				</ul>
 			);
 		}
-		return <label>No Variant to report</label>;
+		return (
+			<label>
+				<b>The variant has not been reported before</b>
+			</label>
+		);
 	}
 	getColocatedVariantDetails(variant, key) {
 		let expandedColocatedRow = this.state.expandedColocatedRow;
 		if (key === expandedColocatedRow) {
-			let change = variant.wildType + '>' + variant.alternativeSequence;
+			// let change = variant.genomicLocation;
 			return (
 				<ul>
-					<li>Change: {change}</li>
 					{this.getReferenceTag(variant.xrefs, key)}
 
 					{this.getAssociationsTag(variant.association, key)}
@@ -219,35 +222,71 @@ class PopulationObservation extends Component {
 			);
 		}
 	}
-	getColocatedVariant(variant) {
-		let key = 'colocated-' + variant.genomicLocation;
-		let change = variant.wildType + '>' + variant.alternativeSequence;
-		return (
-			<li>
+	getColocatedVariant(variant, key) {
+		let expandedRow = this.state.expandedRow;
+		let colocatedKey = 'colocated-' + variant.genomicLocation;
+		if (key === expandedRow) {
+			return (
 				<ul>
-					<li>
-						<a onClick={(e) => this.toggleColocated(key)}>{change}</a>
+					<li key={uuidv1()}>
+						{/* <a onClick={(e) => this.toggleColocated(colocatedKey)}>{variant.genomicLocation}</a> */}
+						<button
+							type="button"
+							className="collapsible"
+							onClick={(e) => this.toggleColocated(colocatedKey)}
+						>
+							<b>{variant.genomicLocation}</b>
+							<ChevronDownIcon className="chevronicon" />
+						</button>
 					</li>
-					<li>{this.getColocatedVariantDetails(variant, key)}</li>
+
+					{this.getColocatedVariantDetails(variant, colocatedKey)}
 				</ul>
-			</li>
-		);
+			);
+		}
 	}
 
 	getColocatedVariants(variants) {
 		if (variants.length > 0) {
-			var colocatedVariants = [];
+			var colocatedVariantsMap = new Map();
+			var variantDetails = [];
 			variants.map((variant) => {
-				colocatedVariants.push(this.getColocatedVariant(variant));
+				let change = variant.wildType + '>' + variant.alternativeSequence;
+				var colocatedVariants = colocatedVariantsMap.get(change);
+				if (colocatedVariants === null || colocatedVariants === undefined) colocatedVariants = [];
+				let key = 'colocated-' + variant.genomicLocation;
+				colocatedVariants.push(<li key={uuidv1()}>{this.getColocatedVariant(variant, change)}</li>);
+				colocatedVariantsMap.set(change, colocatedVariants);
 			});
+			for (let [ key, value ] of colocatedVariantsMap) {
+				variantDetails.push(
+					<li key={uuidv1()}>
+						{/* <a onClick={(e) => this.toggleexpandedRow(key)}>
+							{key}({value.length})
+						</a> */}
+						<button type="button" className="collapsible" onClick={(e) => this.toggleexpandedRow(key)}>
+							<b>
+								{key}({value.length})
+							</b>
+							<ChevronDownIcon className="chevronicon" />
+						</button>
+						<ul>{value}</ul>
+					</li>
+				);
+			}
 			return (
 				<Fragment>
 					The following variants alter the same amino acid (but alter a different nucleotide in the codon)
-					<ul>{colocatedVariants}</ul>
+					<br />
+					<ul>{variantDetails}</ul>
 				</Fragment>
 			);
 		}
-		return <label>No Colocated Variants to report</label>;
+		return (
+			<label>
+				<b>No Colocated Variants to report</b>
+			</label>
+		);
 	}
 
 	render() {
@@ -263,6 +302,8 @@ class PopulationObservation extends Component {
 					colocatedVariant.push(variation);
 				}
 			});
+			let associatedDiseaseFlag = false;
+			if (variant.length > 0 && variant[0].association !== undefined) associatedDiseaseFlag = true;
 
 			return (
 				<tr
@@ -286,6 +327,19 @@ class PopulationObservation extends Component {
 										</tr>
 									</tbody>
 								</table>
+								{associatedDiseaseFlag ? (
+									<table>
+										<tbody>
+											<tr>
+												<th>Associated Diseases</th>
+											</tr>
+
+											<tr>
+												<td>{this.getAssociations(variant[0].association, 'VARIANT')}</td>
+											</tr>
+										</tbody>
+									</table>
+								) : null}
 							</div>
 						</div>
 					</td>
@@ -301,7 +355,9 @@ class PopulationObservation extends Component {
 					<td colSpan="19" className="expanded-row">
 						{' '}
 						<div className="significances-groups">
-							<div className="column">No Population Observation to report</div>
+							<div className="column">
+								<b>No Population Observation to report</b>
+							</div>
 						</div>
 					</td>
 				</tr>

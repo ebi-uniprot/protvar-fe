@@ -8,17 +8,89 @@
 	}
 	.tableFixHead {
 		overflow-y: auto;
-		height: 480px;
+		height: 200px;
 	}
 	.tableFixHead thead th {
 		position: sticky;
 		top: 0;
 	}
+
+	.tableFixHead table tr td {
+		word-wrap: normal;
+		white-space: nowrap;
+	}
+
+	.search-results-legends {
+		ul {
+			list-style: none;
+			display: inline-block;
+		}
+
+		.legend-icon {
+			font-weight: 700;
+			width: 1.7rem;
+			height: 1.7rem;
+			text-align: center;
+			line-height: 1.7rem;
+			display: inline-block;
+			margin-right: 0.8rem;
+		}
+
+		.button--legends--high {
+			color: #212121;
+			background-color: rgb(0, 83, 214);
+			color: #333;
+		}
+
+		.button--legends--confident {
+			color: #212121;
+			background-color: rgb(101, 203, 243);
+			color: #333;
+		}
+
+		.button--legends--low {
+			color: #212121;
+			background-color: rgb(255, 219, 19);
+			color: #333;
+		}
+
+		.button--legends--verylow {
+			color: #212121;
+			background-color: rgb(255, 125, 69);
+			color: #333;
+		}
+
+		.button--legends {
+			font-size: 0.8rem;
+			text-transform: none;
+
+			margin-right: 0.5em;
+			padding: 10px;
+			border-style: none;
+			height: 100%;
+		}
+
+		.cadd-score {
+			width: 2rem;
+			text-align: center;
+			display: inline-block;
+			margin-right: 1rem;
+			margin-bottom: 0.3rem;
+		}
+	}
+
 	.clickable-row {
 		color: #00709b;
 		font-weight: 600;
-
 		cursor: pointer;
+	}
+
+	.active {
+		background-color: rgba(255, 235, 59, 0.3) !important;
+	}
+
+	.small {
+		font-size: 0.8rem;
 	}
 	.table-header {
 		border: none;
@@ -34,6 +106,7 @@
 			padding: 0;
 			margin: 0;
 		}
+
 		td {
 			background-color: transparent;
 			border: none;
@@ -52,11 +125,12 @@
 			padding: 5px 5px 5px 5px;
 		}
 	}
+
 	.button {
 		margin-right: 1rem;
 		background: #cfe8ef;
 		color: #00709b;
-		border-style: dotted;
+		border-style: solid;
 		border-width: thin;
 		border-color: #00709b;
 	}
@@ -71,14 +145,38 @@
 	.modal-container {
 		position: fixed;
 		width: 30%;
-		background: #deeff5;
+		// background: #deeff5;
+		background-color: #fbfeff;
 		// left: 20%;
 		// top: 22%;
-		padding: 20px;
-		border-style: dotted;
+		// padding: 20px;
+		border-style: solid;
 		border-color: #5caecd;
 		border-width: thin;
 		// border-radius: 1px;
+	}
+
+	.window__footer {
+		background-color: #deeff5;
+	}
+
+	.downloadicon {
+		height: 14px;
+		margin-right: 2px;
+	}
+
+	.window__footer .button {
+		background-color: transparent;
+		padding-top: 0.5em;
+		padding-bottom: 0.5em;
+		padding-right: 1em;
+		padding-left: 1em;
+		border-width: thin;
+		border-color: #00709b;
+		cursor: pointer;
+		color: #00709b;
+		border-style: solid;
+		margin-right: 0.5em;
 	}
 	.d-block {
 		display: block;
@@ -88,7 +186,12 @@
 		display: none;
 	}
 	.new-select {
-		display: inline-block;
+		// display: inline-block;
+		list-style-type: none;
+	}
+
+	.download-label {
+		padding: 1em;
 	}
 	table-header {
 		width: 20%;
@@ -266,6 +369,21 @@
 			background-color: $cadd-score-green-background-colour;
 		}
 
+		&--yellow {
+			color: $white-colour;
+			background-color: yellowgreen;
+		}
+
+		&--orange {
+			color: $white-colour;
+			background-color: orange;
+		}
+
+		&--darkOrange {
+			color: $white-colour;
+			background-color: orangered;
+		}
+
 		&--red {
 			color: $white-colour;
 			background-color: $cadd-score-red-background-colour;
@@ -303,16 +421,34 @@
 			}
 		}
 
+		.protein-table-cell {
+			vertical-align: top;
+
+			// div {
+			// 	border-style: solid;
+			// 	border-width: thin;
+			// 	border-color: #00709b;
+			// }
+		}
+		.chevronicon {
+			height: 8px;
+			margin-left: 2px;
+			float: right;
+		}
+
 		.collapsible {
-			background-color: #eee;
-			color: #444;
+			// background-color: #cfe8ef;
+			color: #00709b;
 			cursor: pointer;
-			padding: 18px;
+			padding: 10px;
 			width: 100%;
-			border: none;
 			text-align: left;
-			outline: none;
-			font-size: 15px;
+
+			margin-bottom: 2px;
+			background-color: transparent;
+			border-style: solid;
+			border-width: thin;
+			border-color: #00709b;
 		}
 
 		.active,

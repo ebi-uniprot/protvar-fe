@@ -1,8 +1,9 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 
-import EBIStandardSearch from '../components/search/EBIStandardSearch';
 import DefaultPageContent from './DefaultPageContent';
+import AboutModal from '../components/modal/AboutModal';
+import About from '../components/categories/About';
 import { ButtonModal } from 'franklin-sites';
 
 class DefaultPageLayout extends Component {
@@ -110,210 +111,23 @@ class DefaultPageLayout extends Component {
 												</td>
 
 												<td className="topnav-right local-sub-title">
-													<ButtonModal
-														buttonText="About"
-														title="About"
-														withFooterCloseButton={true}
-														withHeaderCloseButton={true}
-														height="60%"
-														width="60%"
-													>
-														<section>
-															<div className="container">
-																<span>
-																	<b>What is PepVEP</b>
-																	<br />
-																</span>
-																<div className="text">
-																	<p>
-																		PepVEP is an online service to interpret the
-																		effects of variants on protein function and
-																		structure. It utilises functional information
-																		from the Ensembl Variant Effect Predictor (VEP),
-																		the UniProt functional residue annotation
-																		(Protein function), and the PDBe structural
-																		residue annotation.
-																	</p>
-																</div>
-																<hr />
-																<span>
-																	<b>Examples:</b>
-																</span>
-																<div className="text">
-																	<ul>
-																		<li>
-																			VCF
-																			<br />
-																			3 165830358 165830358 T/C . . .<br />
-																			21 43072000 43072000 T/C . . .<br />
-																		</li>
-																		<li>
-																			HGVS
-																			<br />
-																			NC_000014.9:g.89993420A>G<br />
-																			NC_000010.11:g.87933147C>G<br />
-																		</li>
-																		<li>
-																			VCF FILE
-																			<br />
-																			#CHROM POS ID REF ALT QUAL FILTER INFO<br />
-																			21 25891796 . C T . . . <br />
-																			14 73173574 . C T . . .<br />
-																		</li>
-																	</ul>
-																</div>
-																<hr />
-																<span>
-																	<b>Response:</b>
-																</span>
-
-																<div className="text">
-																	<ul>
-																		<li>
-																			The genes and transcripts where the variants
-																			are located, with Ensembl identifiers.
-																		</li>
-																		<li>
-																			The proteins and protein isoforms affected
-																			by the variants, with UniProt identifiers
-																			and corresponding amino acid positions and
-																			changes.
-																		</li>
-																		<li>
-																			The consequence of your variants on the
-																			protein sequence (e.g. stop gained,
-																			missense, stop lost, frameshift).
-																		</li>
-
-																		<li>
-																			SIFT, PolyPhen and CADD scores for changes
-																			in the protein sequence.
-																		</li>
-
-																		<li>
-																			Known variants in the nucleotide and amino
-																			acid position that match your variants, with
-																			dbSNPs, ClinVar and UniProt variant
-																			identifiers.
-																		</li>
-																		<li>
-																			Population frequency from 1000 Genomes
-																			project and gnomAD.
-																		</li>
-
-																		<li>
-																			Functional information per amino acid
-																			residue affected by your variants (e.g.
-																			functional domains, and sites like active,
-																			binding sites and post-translational
-																			modifications).
-																		</li>
-																		<li>
-																			Known disease associations in the amino acid
-																			position that match your variants as
-																			described in UniProt.
-																		</li>
-
-																		<li>
-																			Known mutagenesis experiments in the amino
-																			acid position that match your variants as
-																			described in UniProt.
-																		</li>
-																		<li>
-																			Known structures and ligand binding sites in
-																			the amino acid position that match your
-																			variants.
-																		</li>
-																	</ul>
-																</div>
-															</div>
-														</section>
-														{/* <span>
-															<b>Currently PepVEP supports inputs in below formats :</b>
-														</span>
-														<ul>
-															<li>
-																Entering genomic positions of your variants in the
-																Search box
-																<div className="input-examples">
-																	<div>
-																		<span className="variant-example">
-																			3 165830358 165830358 T/C . . .<br />
-																			21 43072000 43072000 T/C . . .<br />
-																		</span>
-																	</div>
-																</div>
-															</li>
-															<li>
-																Entering hgvs in the Search box
-																<div className="input-examples">
-																	<div>
-																		<span className="variant-example">
-																			NC_000014.9:g.89993420A>G<br />
-																			NC_000010.11:g.87933147C>G<br />
-																		</span>
-																	</div>
-																</div>
-															</li>
-															<li>Uploading vcf file using 'UPLOAD FILE' button</li>
-															<div className="input-examples">
-																<div>
-																	<span className="variant-example">
-																		<pre>
-																			#CHROM POS ID REF ALT QUAL FILTER INFO<br />
-																			21 25891796 . C T . . . <br />
-																			14 73173574 . C T . . .<br />
-																		</pre>
-																	</span>
-																</div>
-															</div>
-														</ul> */}
-													</ButtonModal>
+													<About />
 												</td>
 												<td className="topnav-right local-sub-title">
 													<ButtonModal
 														buttonText="Contact"
 														title="Contact"
-														withFooterCloseButton={false}
-														withHeaderCloseButton={true}
-														height="30%"
+														withFooterCloseButton={true}
+														withHeaderCloseButton={false}
+														height="20%"
 														width="30%"
 													>
 														<div className="container">
-															<form>
-																<label for="fname">First Name</label>
-																<input
-																	type="text"
-																	id="fname"
-																	name="firstname"
-																	placeholder="Your name.."
-																/>
-
-																<label for="lname">Last Name</label>
-																<input
-																	type="text"
-																	id="lname"
-																	name="lastname"
-																	placeholder="Your last name.."
-																/>
-
-																<label htmlfor="country">Country</label>
-																<select id="country" name="country">
-																	<option value="australia">United Kingdom</option>
-																	<option value="canada">Canada</option>
-																	<option value="usa">USA</option>
-																</select>
-
-																<label for="subject">Subject</label>
-																<textarea
-																	id="subject"
-																	name="subject"
-																	placeholder="Write something.."
-																	style={{ height: '200px' }}
-																/>
-
-																<input type="submit" className="button-new" />
-															</form>
+															<p>
+																For any suggestions, queries or issues please contact us
+																at below email address:
+															</p>
+															<b>help@uniprot.org</b>
 														</div>
 													</ButtonModal>
 												</td>
