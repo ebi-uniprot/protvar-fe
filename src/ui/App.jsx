@@ -471,29 +471,37 @@ class App extends Component {
 		if (this.state.searchResults != null) {
 			output.results = this.state.searchResults;
 		}
+		var errorFlag = false;
 		var mappings = [];
 		post(uri, inputSubArray, {
 			headers: headers
-		}).then((response) => {
-			response.data.mappings.forEach((mapping) => {
-				var genes = this.createGenes(mapping);
-				mappings.push(genes);
-			});
+		})
+			.catch((err) => {
+				errorFlag = true;
+				console.log(err);
+			})
+			.then((response) => {
+				if (!errorFlag) {
+					response.data.mappings.forEach((mapping) => {
+						var genes = this.createGenes(mapping);
+						mappings.push(genes);
+					});
 
-			this.setState({
-				searchTerm: input,
-				pageInput: inputSubArray,
-				searchResults: mappings,
-				errors: output.errors,
-				loading: false,
-				isFileSelected: false,
-				file: uploadedFile,
-				page: newPage,
-				invalidInputs: response.data.invalidInputs
+					this.setState({
+						searchTerm: input,
+						pageInput: inputSubArray,
+						searchResults: mappings,
+						errors: output.errors,
+						loading: false,
+						isFileSelected: false,
+						file: uploadedFile,
+						page: newPage,
+						invalidInputs: response.data.invalidInputs
+					});
+				}
+				if (errorFlag) history.push('api-error');
+				else history.push('search');
 			});
-
-			history.push('search');
-		});
 	}
 
 	fetchByHGVS(inputArr, input, uploadedFile, newPage) {

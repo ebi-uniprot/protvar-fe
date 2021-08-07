@@ -3,8 +3,8 @@ import SignificanceDataLine from '../significances/SignificanceDataLine';
 import { v1 as uuidv1 } from 'uuid';
 import Evidences from './Evidences';
 import { ChevronDownIcon } from 'franklin-sites';
+import AminoAcidModel from './AminoAcidModel';
 
-const specialFeatureTypes = [ 'MUTAGEN', 'CONFLICT' ];
 export const FEATURES = {
 	INIT_MET: 'Cleaved Initiator Methionine',
 	SIGNAL: 'Signal Peptide',
@@ -37,31 +37,15 @@ export const FEATURES = {
 	MOD_RES: 'PTM Modified Residue',
 	LIPID: 'PTM bound Lipid',
 	PTM: 'PTM',
-	INIT_MET: 'Cleaved Initiator Methionine',
-	MUTAGEN: 'MUTAGEN',
-	SIGNAL: 'Signal Peptide',
-	TRANSIT: 'Cleaved Transit Peptide',
-	PROPEP: 'Propeptide',
-	CHAIN: 'Chain',
-	PEPTIDE: 'Peptide',
-	TOPO_DOM: 'Transmembrane Protein Topological Region',
-	TRANSMEM: 'Helical Transmembrane Peptide',
-	DOMAIN: 'Functional Domain',
-	REPEAT: 'Repeated Sequence',
-	REGION: 'Region',
-	COILED: 'Coiled-coil Region',
-	MOTIF: 'Functional Motif',
-	COMPBIAS: 'AA Composition Bias',
-	CATALYTIC_ACTIVITY: 'CATALYTIC ACTIVITY',
+	MUTAGEN: 'Mutagenesis',
+	CATALYTIC_ACTIVITY: 'Catalytic Activity',
 	ACTIVITY_REGULATION: 'ACTIVITY REGULATION',
 	SUBUNIT: 'SUBUNIT',
 	INTERACTION: 'INTERACTION',
 	SUBCELLULAR_LOCATION: 'SUBCELLULAR LOCATION',
-	DOMAIN: 'DOMAIN',
-	PTM: 'PTM',
 	SIMILARITY: 'Family',
 	WEBRESOURCE: 'Additional Resource',
-	HELIX: 'HELIX'
+	HELIX: 'Helix'
 };
 
 export const REGIONS = {
@@ -191,6 +175,7 @@ class FunctionalSignificance extends Component {
 			<Fragment>
 				{/* <a onClick={(e) => this.toggleFunctionRow(key)}>
 					<li key={keyVal}> */}
+
 				<button type="button" className="collapsible" onClick={(e) => this.toggleFunctionRow(key)}>
 					{category}
 					<ChevronDownIcon className="chevronicon" />
@@ -202,15 +187,19 @@ class FunctionalSignificance extends Component {
 		);
 	}
 
-	getRegions(regions, category) {
+	getRegions(regions, category, refAA, variantAA) {
 		let regionsList = [];
 		let featureList = [];
 		let counter = 0;
 
 		if (regions.length === 0) {
-			return (
-				<label style={{ textAlign: 'center', fontWeight: 'bold' }}>No functional data for the {category}</label>
-			);
+			if (category === 'residue') return <AminoAcidModel refAA={refAA} variantAA={variantAA} />;
+			else
+				return (
+					<label style={{ textAlign: 'center', fontWeight: 'bold' }}>
+						No functional data for the {category}
+					</label>
+				);
 		}
 		regions.map((region) => {
 			counter = counter + 1;
@@ -220,8 +209,14 @@ class FunctionalSignificance extends Component {
 			featureList.push(feature);
 			regionsList.push(list);
 		});
-
-		return regionsList;
+		if (category === 'residue') {
+			return (
+				<Fragment>
+					<AminoAcidModel refAA={refAA} variantAA={variantAA} />
+					{regionsList}
+				</Fragment>
+			);
+		} else return regionsList;
 		// return (
 		// 	<Fragment>
 		// 		<ul style={{ listStyleType: 'none', display: 'inline-block' }}>{regionsList}</ul>
@@ -325,7 +320,7 @@ class FunctionalSignificance extends Component {
 						{/* <a onClick={(e) => this.toggleFunctionRow(key)}> */}
 
 						<button type="button" className="collapsible" onClick={(e) => this.toggleFunctionRow(key)}>
-							<b>CATALYTIC ACTIVITY</b>
+							<b>Catalytic Activity</b>
 							<ChevronDownIcon className="chevronicon" />
 						</button>
 
@@ -373,7 +368,7 @@ class FunctionalSignificance extends Component {
 					</label> */}
 					<label>
 						<button type="button" className="collapsible" onClick={(e) => this.toggleFunctionRow(key)}>
-							<b>ACTIVITY REGULATION</b>
+							<b>Activity Regulation</b>
 							<ChevronDownIcon className="chevronicon" />
 						</button>
 					</label>
@@ -401,7 +396,7 @@ class FunctionalSignificance extends Component {
 
 					<label>
 						<button type="button" className="collapsible" onClick={(e) => this.toggleFunctionRow(key)}>
-							<b>COMPLEX</b>
+							<b>Complex</b>
 							<ChevronDownIcon className="chevronicon" />
 						</button>
 					</label>
@@ -479,7 +474,7 @@ class FunctionalSignificance extends Component {
 
 					<label>
 						<button type="button" className="collapsible" onClick={(e) => this.toggleFunctionRow(key)}>
-							<b>SUBCELLULAR LOCATION</b>
+							<b>Subcellular Location</b>
 							<ChevronDownIcon className="chevronicon" />
 						</button>
 					</label>
@@ -549,7 +544,7 @@ class FunctionalSignificance extends Component {
 				if (pfams.length > 0) {
 					pfamTag = (
 						<label>
-							<b>PFAM:</b>
+							<b>Pfam:</b>
 							<ul>
 								<li key={uuidv1()}>{pfams}</li>
 							</ul>
@@ -596,7 +591,7 @@ class FunctionalSignificance extends Component {
 
 					<label>
 						<button type="button" className="collapsible" onClick={(e) => this.toggleFunctionRow(key)}>
-							<b>FAMILY</b>
+							<b>Family</b>
 							<ChevronDownIcon className="chevronicon" />
 						</button>
 					</label>
@@ -624,7 +619,7 @@ class FunctionalSignificance extends Component {
 
 					<label>
 						<button type="button" className="collapsible" onClick={(e) => this.toggleFunctionRow(key)}>
-							<b>DOMAINS</b>
+							<b>Domains</b>
 							<ChevronDownIcon className="chevronicon" />
 						</button>
 					</label>
@@ -662,7 +657,7 @@ class FunctionalSignificance extends Component {
 
 					<label>
 						<button type="button" className="collapsible" onClick={(e) => this.toggleFunctionRow(key)}>
-							<b>ADDITIONAL RESOURCES</b>
+							<b>Additional Resources</b>
 							<ChevronDownIcon className="chevronicon" />
 						</button>
 					</label>
@@ -725,7 +720,7 @@ class FunctionalSignificance extends Component {
 
 						<label>
 							<button type="button" className="collapsible" onClick={(e) => this.toggleFunctionRow(key)}>
-								<b>INTERACTIONS</b>
+								<b>Interactions</b>
 								<ChevronDownIcon className="chevronicon" />
 							</button>
 						</label>
@@ -882,7 +877,7 @@ class FunctionalSignificance extends Component {
 	}
 
 	render() {
-		const { data, ensg, ensp } = this.props;
+		const { refAA, variantAA, data, ensg, ensp } = this.props;
 		const ensgUrl = 'https://www.ensembl.org/Homo_sapiens/Gene/Summary?db=core;g=' + ensg;
 		const enspUrl = 'https://www.ensembl.org/Homo_sapiens/Gene/Summary?db=core;g=';
 		const enstUrl = 'https://www.ensembl.org/Homo_sapiens/Transcript/Summary?db=core;t=';
@@ -945,8 +940,8 @@ class FunctionalSignificance extends Component {
 											<th>Region</th>
 										</tr>
 										<tr>
-											<td>{this.getRegions(residues, 'residue')}</td>
-											<td>{this.getRegions(regions, 'region')}</td>
+											<td>{this.getRegions(residues, 'residue', refAA, variantAA)}</td>
+											<td>{this.getRegions(regions, 'region', refAA, variantAA)}</td>
 										</tr>
 									</tbody>
 								</table>

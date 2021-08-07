@@ -18,6 +18,9 @@ import { Dropdown } from 'react-dropdown-now';
 import 'react-dropdown-now/style.css';
 import DownloadModal from '../modal/DownloadModal';
 import { Redirect } from 'react-router';
+import ProteinIcon from '../../../icons/proteins.svg';
+import StructureIcon from '../../../icons/structures-3d.svg';
+import PopulationIcon from '../../../icons/human.svg';
 
 class ImpactSearchResults extends Component {
 	constructor(props, context) {
@@ -49,7 +52,8 @@ class ImpactSearchResults extends Component {
 		}.bind(this);
 	}
 
-	getSignificancesButton(rowKey, buttonTag, accession) {
+	getSignificancesButton(rowKey, buttonLabel, accession) {
+		if (!accession.canonical) return <td />;
 		const { expandedRow } = this.state;
 		let buttonCss = 'button--significances  button-new';
 		let columnCss = 'fit';
@@ -57,10 +61,15 @@ class ImpactSearchResults extends Component {
 			buttonCss = 'button--significances-clicked  button-new';
 			columnCss = 'fit-clicked';
 		}
-
+		var buttonTag = <img src={ProteinIcon} alt="React Logo" className="button-icon" />; //<ProteinIcon className="button-icon" />;
+		if (buttonLabel === 'POP') buttonTag = <img src={PopulationIcon} className="button-icon" />;
+		else if (buttonLabel === 'STR') buttonTag = <img src={StructureIcon} className="button-icon" />;
 		return (
 			<td className={columnCss}>
-				<button onClick={() => this.toggleSignificanceRow(rowKey, buttonTag, accession)} className={buttonCss}>
+				<button
+					onClick={() => this.toggleSignificanceRow(rowKey, buttonLabel, accession)}
+					className={buttonCss}
+				>
 					<b>{buttonTag}</b>
 				</button>
 			</td>
@@ -101,7 +110,13 @@ class ImpactSearchResults extends Component {
 		if (functionalKey === expandedRow) {
 			if (this.state.functionLoaded) {
 				return (
-					<FunctionalSignificance data={accession.functional} ensg={accession.ensg} ensp={accession.ensp} />
+					<FunctionalSignificance
+						refAA={accession.refAA}
+						variantAA={accession.variantAA}
+						data={accession.functional}
+						ensg={accession.ensg}
+						ensp={accession.ensp}
+					/>
 				);
 			} else {
 				return this.getLoader();
@@ -305,8 +320,11 @@ class ImpactSearchResults extends Component {
 		let caddColour = '';
 		let caddCss = '';
 		let caddTitle = '';
-		let strand = '+';
-		if (accession.strand === true) strand = '-';
+		let strand = '(+)';
+		if (accession.strand === true) strand = '(-)';
+		if (accession.codon === undefined || accession.codon === null) {
+			strand = '';
+		}
 		let proteinName = accession.proteinName;
 		let proteinType = 'TrEMBL';
 		const { expandedRow } = this.state;
@@ -320,23 +338,28 @@ class ImpactSearchResults extends Component {
 		} else {
 			if (accession.CADD < 15) {
 				caddColour = 'green';
-				caddTitle = 'Likely Benign';
+				caddTitle =
+					'likely benign (15 is the median value for all possible canonical splice site changes and non-synonymous variants in CADD v1.0)';
 			}
 			if (accession.CADD >= 15 && accession.CADD < 20) {
 				caddColour = 'yellow';
-				caddTitle = 'potentially deleterious';
+				caddTitle =
+					'potentially deleterious - <5% most deleterious substitutions that you can do to the human genome';
 			}
 			if (accession.CADD >= 20 && accession.CADD < 25) {
 				caddColour = 'orange';
-				caddTitle = 'quite likely deleterious';
+				caddTitle =
+					'quite likely deleterious - <1% most deleterious substitutions that you can do to the human genome';
 			}
 			if (accession.CADD >= 25 && accession.CADD < 30) {
 				caddColour = 'darkOrange';
-				caddTitle = 'probably deleterious';
+				caddTitle =
+					'probably deleterious <0.5% most deleterious substitutions that you can do to the human genome30 highly likely deleterious';
 			}
 			if (accession.CADD >= 30) {
 				caddColour = 'red';
-				caddTitle = 'Likely Deleterious';
+				caddTitle =
+					'highly likely deleterious - <0.1% most deleterious substitutions that you can do to the human genome';
 			}
 			caddCss = `label warning cadd-score cadd-score--${caddColour}`;
 		}
@@ -386,7 +409,7 @@ class ImpactSearchResults extends Component {
 						</a>
 					</td>
 					<td>
-						{accession.codon} ({strand})
+						{accession.codon} {strand}
 					</td>
 					<td>
 						<span className={caddCss} title={caddTitle}>
@@ -633,7 +656,7 @@ class ImpactSearchResults extends Component {
 								<th>AA Change</th>
 								<th>Consequences</th>
 								<th>Functional</th>
-								<th>Population</th>
+								<th>Population Observation</th>
 								<th>Structural</th>
 								{/* <th>Evolution Inference</th> */}
 							</tr>

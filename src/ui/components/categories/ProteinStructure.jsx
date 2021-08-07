@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import protvistaStructure from 'protvista-structure';
 import { v1 as uuidv1 } from 'uuid';
+import { ExternalLink } from 'franklin-sites';
 
 class ProteinStructure extends Component {
 	constructor(props) {
@@ -116,9 +117,10 @@ class ProteinStructure extends Component {
 					{/* <b>Experimental Structure : </b> */}
 					<br />
 					<div className="tableFixHead">
-						<a href={pdbkbUrl} target="_blank">
+						<ExternalLink url={pdbkbUrl}>More information</ExternalLink>
+						{/* <a href={pdbkbUrl} target="_blank">
 							More information
-						</a>
+						</a> */}
 						<table>
 							<thead>
 								<tr>

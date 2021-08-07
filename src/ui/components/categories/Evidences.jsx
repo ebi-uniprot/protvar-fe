@@ -1,8 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { v1 as uuidv1 } from 'uuid';
 
-import PropTypes from 'prop-types';
-
 const Evidences = (props) => {
 	function getEvidence(evidence) {
 		return (
