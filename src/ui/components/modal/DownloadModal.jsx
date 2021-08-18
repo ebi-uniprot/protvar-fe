@@ -10,34 +10,57 @@ import { post } from 'axios';
 
 class DownloadModal extends Component {
 	state = {
-		name: '',
 		email: '',
 		jobName: '',
-		function: false,
-		variation: false,
+		allAnnotations: true,
+		function: true,
+		variation: true,
+		structure: true,
+		downloadOption: 'annotations',
 		jobSubmitted: false,
 		modal: false
 	};
 
 	handleChange = (e) => {
-		console.log('inside handle change');
-		const target = e.target;
-		const name = target.name;
-		const value = target.value;
-
+		const { name, value } = e.target;
+		var annotaionVal = false;
+		if (name === 'downloadOption' && value === 'mappings') {
+			annotaionVal = true;
+		}
 		this.setState({
-			[name]: value
+			[name]: value,
+			allAnnotations: annotaionVal
 		});
+
+		this.setChkBoxStatus('allAnnotations');
 	};
 
-	handleCheckBox = (e) => {
-		console.log('inside handle change');
-		const target = e.target;
-		const name = target.name;
-		const value = target.checked;
-		this.setState({
-			[name]: value
-		});
+	handleChkBoxClick = (e) => {
+		const { name, value } = e.target;
+		this.setChkBoxStatus(name);
+	};
+
+	setChkBoxStatus = (name) => {
+		if (name === 'function')
+			this.setState({
+				function: !this.state.function
+			});
+		else if (name === 'variation')
+			this.setState({
+				variation: !this.state.variation
+			});
+		else if (name === 'structure')
+			this.setState({
+				structure: !this.state.structure
+			});
+		else if (name === 'allAnnotations') {
+			this.setState({
+				allAnnotations: !this.state.allAnnotations,
+				function: !this.state.allAnnotations,
+				variation: !this.state.allAnnotations,
+				structure: !this.state.allAnnotations
+			});
+		}
 	};
 
 	handleSubmit = (e) => {
@@ -72,7 +95,9 @@ class DownloadModal extends Component {
 				'/download/download?function=' +
 				this.state.function +
 				'&variation=' +
-				this.state.variation;
+				this.state.variation +
+				'&structure=' +
+				this.state.structure;
 
 			const headers = {
 				'Content-Type': 'application/json',
@@ -102,13 +127,14 @@ class DownloadModal extends Component {
 				`${API_URL}` +
 				'/download/file?email=' +
 				this.state.email +
-				'&name=alok' +
 				'&jobName=' +
 				this.state.jobName +
 				'&function=' +
 				this.state.function +
 				'&variation=' +
-				this.state.variation;
+				this.state.variation +
+				'&structure=' +
+				this.state.structure;
 
 			const formData = new FormData();
 			formData.append('file', file);
@@ -127,14 +153,14 @@ class DownloadModal extends Component {
 				`${API_URL}` +
 				'/download/search?email=' +
 				this.state.email +
-				'&name=' +
-				this.state.name +
 				'&jobName=' +
 				this.state.jobName +
 				'&function=' +
 				this.state.function +
 				'&variation=' +
-				this.state.variation;
+				this.state.variation +
+				'&structure=' +
+				this.state.structure;
 
 			const headers = {
 				'Content-Type': 'application/json',
@@ -155,13 +181,19 @@ class DownloadModal extends Component {
 		this.setState({ modal: true });
 	};
 
-	handleClick = () => {
+	handleClick = (e) => {
+		console.log('handle click called');
+		console.log(e.target.name);
+		console.log(e.target.value);
+
 		if (!this.state.modal) {
 			document.addEventListener('click', this.handleOutsideClick, false);
 		} else {
 			document.removeEventListener('click', this.handleOutsideClick, false);
 		}
-
+		if (e.target.localName === 'input') {
+			return null;
+		}
 		this.setState((prevState) => ({
 			modal: !prevState.modal
 		}));
@@ -174,7 +206,7 @@ class DownloadModal extends Component {
 	}
 
 	handleOutsideClick = (e) => {
-		if (!this.node.contains(e.target)) this.handleClick();
+		if (!this.node.contains(e.target)) this.handleClick(e);
 	};
 
 	render() {
@@ -182,6 +214,10 @@ class DownloadModal extends Component {
 		let sendEmail = false;
 		if (totalItems > 5) {
 			sendEmail = true;
+		}
+		var checkboxDisabled = false;
+		if (this.state.downloadOption !== 'annotations') {
+			checkboxDisabled = true;
 		}
 		return (
 			<div
@@ -205,56 +241,36 @@ class DownloadModal extends Component {
 					</div>
 					<div className="form-group">
 						<div>
-							{/* <ul>
-								<li key={uuidv1()} className="new-select">
-									<input
-										key="function1"
-										type="checkbox"
-										name="function"
-										value={this.state.function}
-										onChange={(e) => this.handleCheckBox(e)}
-										checked={this.state.function}
-									/>
-									<label id="item1">Reference Function</label>
-								</li>
-								<li key={uuidv1()} className="new-select">
-									<input
-										key="variation1"
-										type="checkbox"
-										value={this.state.variation}
-										name="variation"
-										onChange={(e) => this.handleCheckBox(e)}
-										checked={this.state.variation}
-									/>
-									<label id="item2">Population Observation</label>
-								</li>
-							</ul> */}
 							<table>
 								<tbody>
 									<tr>
 										<td>
 											<ul className="new-select">
 												<li key={uuidv1()}>
-													<input
-														key="function1"
-														type="checkbox"
-														name="function"
-														value={this.state.function}
-														onChange={(e) => this.handleCheckBox(e)}
-														checked={this.state.function}
-													/>
-													<label id="item1">All Annotations</label>
+													<label id="item1">
+														<input
+															// key="annotations"
+															type="radio"
+															value="annotations"
+															name="downloadOption"
+															checked={this.state.downloadOption === 'annotations'}
+															onChange={(e) => this.handleChange(e)}
+														/>
+														Mappings with Annotations
+													</label>
 												</li>
 												<li key={uuidv1()}>
-													<input
-														key="variation1"
-														type="checkbox"
-														value={this.state.variation}
-														name="variation"
-														onChange={(e) => this.handleCheckBox(e)}
-														checked={this.state.variation}
-													/>
-													<label id="item2">Mappings only, no annotations</label>
+													<label id="item2">
+														<input
+															// key="mappings"
+															type="radio"
+															value="mappings"
+															name="downloadOption"
+															checked={this.state.downloadOption === 'mappings'}
+															onChange={(e) => this.handleChange(e)}
+														/>
+														Mappings only, no annotations
+													</label>
 												</li>
 											</ul>
 										</td>
@@ -263,47 +279,51 @@ class DownloadModal extends Component {
 											<ul className="new-select">
 												<li key={uuidv1()}>
 													<input
-														key="function1"
+														// key="allAnnotations"
+														type="checkbox"
+														name="allAnnotations"
+														value={this.state.allAnnotations}
+														onChange={(e) => this.handleChkBoxClick(e)}
+														defaultChecked={this.state.allAnnotations}
+														disabled={checkboxDisabled}
+													/>
+													<label id="item1">All Annotations</label>
+												</li>
+												<li key={uuidv1()}>
+													<input
+														// key="function"
 														type="checkbox"
 														name="function"
 														value={this.state.function}
-														onChange={(e) => this.handleCheckBox(e)}
-														checked={this.state.function}
+														onChange={(e) => this.handleChkBoxClick(e)}
+														defaultChecked={this.state.function}
+														disabled={checkboxDisabled}
 													/>
 													<label id="item1">Functional</label>
 												</li>
 												<li key={uuidv1()}>
 													<input
-														key="function1"
+														// key="variation"
 														type="checkbox"
-														name="function"
-														value={this.state.function}
-														onChange={(e) => this.handleCheckBox(e)}
-														checked={this.state.function}
+														name="variation"
+														value={this.state.variation}
+														defaultChecked={this.state.variation}
+														onChange={(e) => this.handleChkBoxClick(e)}
+														disabled={checkboxDisabled}
 													/>
-													<label id="item1">Population</label>
+													<label id="item1">Population Observation</label>
 												</li>
 												<li key={uuidv1()}>
 													<input
-														key="function1"
+														// key="variation"
 														type="checkbox"
-														name="function"
-														value={this.state.function}
-														onChange={(e) => this.handleCheckBox(e)}
-														checked={this.state.function}
+														name="structure"
+														value={this.state.structure}
+														defaultChecked={this.state.structure}
+														onChange={(e) => this.handleChkBoxClick(e)}
+														disabled={checkboxDisabled}
 													/>
-													<label id="item1">Structural</label>
-												</li>
-												<li key={uuidv1()}>
-													<input
-														key="function1"
-														type="checkbox"
-														name="function"
-														value={this.state.function}
-														onChange={(e) => this.handleCheckBox(e)}
-														checked={this.state.function}
-													/>
-													<label id="item1">Impact Predictions</label>
+													<label id="item1">Structure</label>
 												</li>
 											</ul>
 										</td>

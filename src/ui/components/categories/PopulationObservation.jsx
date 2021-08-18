@@ -28,27 +28,65 @@ class PopulationObservation extends Component {
 		});
 	}
 	getReference(xref) {
-		return (
-			<li key={uuidv1()}>
-				<a href={xref.url} target="_blank">
-					{xref.id}
-				</a>
-			</li>
-		);
+		if (
+			xref.id !== null &&
+			xref.id !== undefined &&
+			(xref.id.startsWith('COS') || xref.id.startsWith('RCV') || xref.id.startsWith('rs'))
+		) {
+			return (
+				<li key={uuidv1()}>
+					<a href={xref.url} target="_blank">
+						{xref.id}
+					</a>
+				</li>
+			);
+		} else {
+			return null;
+		}
 	}
 
-	getReferenceForEachSource(sourceName, ids) {
+	getReferenceForEachSource(sourceName, ids, populationFreq, significance) {
+		// let freq = '';
+		// if (populationFreq != null && populationFreq !== undefined) freq = <li>{populationFreq}</li>;
 		return (
 			<li key={uuidv1()}>
 				<b>{sourceName} :</b>
-				<ul className="flatList">{ids}</ul>
+				<ul className="flatList">
+					{ids}
+					{populationFreq}
+					{significance}
+				</ul>
 			</li>
 		);
 	}
 
-	getReferences(xrefs, key) {
+	getReferences(xrefs, populationFrequencies, clinicalSignificances, key) {
 		let expandedRow = this.state.expandedRow;
 		// if (key === expandedRow) {
+		let popFreqMap = new Map();
+		if (populationFrequencies !== undefined && populationFrequencies.length > 0) {
+			populationFrequencies.map((freq) => {
+				let val = (
+					<li>
+						<b>{freq.frequencies[0].label}</b>-{freq.frequencies[0].value}
+					</li>
+				);
+				popFreqMap.set(freq.sourceName, val);
+			});
+		}
+		let significanceMap = new Map();
+		if (clinicalSignificances !== undefined && clinicalSignificances.length > 0) {
+			clinicalSignificances.map((significance) => {
+				let type = (
+					<li>
+						<b>{significance.type}</b>
+					</li>
+				);
+				significance.sources.map((source) => {
+					significanceMap.set(source, type);
+				});
+			});
+		}
 		let xrefList = [];
 		if (xrefs !== undefined && xrefs.length > 0) {
 			let xrefMap = new Map();
@@ -57,11 +95,16 @@ class PopulationObservation extends Component {
 				if (xrefMap.get(xref.name) !== undefined) {
 					source = xrefMap.get(xref.name);
 				}
-				source.push(this.getReference(xref));
-				xrefMap.set(xref.name, source);
+				let xrefId = this.getReference(xref);
+				if (xrefId !== null) {
+					source.push(xrefId);
+					xrefMap.set(xref.name, source);
+				}
 			});
 			for (let [ key, value ] of xrefMap) {
-				xrefList.push(this.getReferenceForEachSource(key, value));
+				let populationFreq = popFreqMap.get(key);
+				let significance = significanceMap.get(key);
+				xrefList.push(this.getReferenceForEachSource(key, value, populationFreq, significance));
 			}
 		}
 		return <ul>{xrefList}</ul>;
@@ -165,15 +208,15 @@ class PopulationObservation extends Component {
 		}
 	}
 
-	getReferenceTag(xrefs, prevKey) {
+	getReferenceTag(xrefs, populationFrequencies, clinicalSignificances, prevKey) {
 		let key = 'variant-reference';
-		if (prevKey !== undefined) if (prevKey) key = key + prevKey;
+		if (prevKey !== null) if (prevKey) key = key + prevKey;
 		if (xrefs !== undefined && xrefs.length > 0) {
 			return (
 				<li key={uuidv1()}>
 					<b>Identifiers</b>
 
-					{this.getReferences(xrefs, key)}
+					{this.getReferences(xrefs, populationFrequencies, clinicalSignificances, key)}
 				</li>
 			);
 		}
@@ -191,11 +234,16 @@ class PopulationObservation extends Component {
 					<li key={uuidv1()}>
 						<b>Change:</b> {change}
 					</li>
-					{this.getReferenceTag(variant.xrefs)}
+					{this.getReferenceTag(
+						variant.xrefs,
+						variant.populationFrequencies,
+						variant.clinicalSignificances,
+						null
+					)}
 
 					{/* {this.getAssociationsTag(variant.association)} */}
 
-					{this.getPopulationFrequencies(variant.populationFrequencies)}
+					{/* {this.getPopulationFrequenciesTag(variant.populationFrequencies)} */}
 
 					{/* <li>{variant.predictions}</li> */}
 				</ul>
@@ -213,7 +261,12 @@ class PopulationObservation extends Component {
 			// let change = variant.genomicLocation;
 			return (
 				<ul>
-					{this.getReferenceTag(variant.xrefs, key)}
+					{this.getReferenceTag(
+						variant.xrefs,
+						variant.populationFrequencies,
+						variant.clinicalSignificances,
+						key
+					)}
 
 					{this.getAssociationsTag(variant.association, key)}
 

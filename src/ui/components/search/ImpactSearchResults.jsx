@@ -208,13 +208,12 @@ class ImpactSearchResults extends Component {
 
 	fetchStructuralData = (row, rowIdAndType, expandedRow) => {
 		var aaPosition = row.aaPos;
-		const APIUrl =
-			'https://www.ebi.ac.uk/pdbe/graph-api/mappings/best_structures/' +
-			row.isoform +
-			'/' +
-			aaPosition +
-			'/' +
-			(aaPosition + 1);
+		const APIUrl = 'https://www.ebi.ac.uk/pdbe/graph-api/mappings/best_structures/' + row.isoform;
+		// row.isoform +
+		// '/' +
+		// aaPosition +
+		// '/' +
+		// (aaPosition + 1);
 		if (row.structureLoaded === false) {
 			var errorFlag = false;
 			this.setState({

@@ -48,7 +48,9 @@ class ProteinStructure extends Component {
 						</a>
 					</td>
 					<td className="small">{chains.join()}</td>
-					<td className="small">{str.start}</td>
+					<td className="small">
+						{str.start}-{str.end}
+					</td>
 					<td className="small">{str.resolution}</td>
 					<td className="small">{str.experimental_method}</td>
 				</tr>
@@ -78,6 +80,7 @@ class ProteinStructure extends Component {
 					newStr.resolution = str.resolution;
 					newStr.experimental_method = str.experimental_method;
 					newStr.start = str.start;
+					newStr.end = str.end;
 					structureRows.set(pdbId, newStr);
 				}
 			});

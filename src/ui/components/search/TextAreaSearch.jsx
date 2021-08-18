@@ -179,7 +179,7 @@ class TextAreaSearch extends Component {
 					</p>
 				</div>
 				<div className="wrapper">
-					<div id="search" className="card-table">
+					<div id="search" className="card-table search">
 						<div className="card">
 							<section className="card__actions">
 								<span className="card-header">
@@ -195,71 +195,70 @@ class TextAreaSearch extends Component {
 											{/* <p>
 												<b>Paste variants in HGVS or VCF format below</b>
 											</p> */}
-											<form>
-												<textarea
-													id="main-textarea-search-field"
-													className="main-textarea-search-field"
-													value={searchTerm}
-													placeholder="Paste variants in HGVS or VCF format"
-													onFocus={(e) => (e.target.placeholder = '')}
-													onChange={this.handleInputChange}
-												/>
 
-												<table className="table-input">
-													<tbody>
-														<tr>
-															<td>
-																<b>Examples:</b>
-															</td>
-															<td>
-																<a onClick={this.populateVCF}>VCF</a>
-															</td>
-															<td>
-																<a onClick={this.populateHGVS}>HGVS</a>
-															</td>
-														</tr>
-													</tbody>
-												</table>
-												<span className="genome-assembly-text">
-													<p>
-														Reference Genome Assembly GRCh38 (hg38): {'     '}
-														<a
-															href="http://www.ensembl.org/Homo_sapiens/Tools/AssemblyConverter?db=core"
-															target="_blank"
-															rel="noopener noreferrer"
-															className="ref-link"
-														>
-															Ensembl's Assembly Remapping
-														</a>
-													</p>
-												</span>
+											<textarea
+												id="main-textarea-search-field"
+												className="main-textarea-search-field"
+												value={searchTerm}
+												placeholder="Paste variants in HGVS or VCF format"
+												onFocus={(e) => (e.target.placeholder = '')}
+												onChange={this.handleInputChange}
+											/>
 
-												<div id="search-button-group" className="search-button-group">
-													{!isLoading ? (
-														<Button
-															type="submit"
-															onClick={this.handleSubmit}
-															className="button-primary button-bottom"
-														>
-															{buttonLabel}
-														</Button>
-													) : (
-														<Button
-															onClick={() => null}
-															className="button-primary button-bottom"
-														>
-															Loading...
-														</Button>
-													)}
-												</div>
-											</form>
+											<table className="table-input">
+												<tbody>
+													<tr>
+														<td>
+															<b>Examples:</b>
+														</td>
+														<td>
+															<a onClick={this.populateVCF}>VCF</a>
+														</td>
+														<td>
+															<a onClick={this.populateHGVS}>HGVS</a>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+											<span className="genome-assembly-text">
+												<p>
+													Reference Genome Assembly GRCh38 (hg38): {'     '}
+													<a
+														href="http://www.ensembl.org/Homo_sapiens/Tools/AssemblyConverter?db=core"
+														target="_blank"
+														rel="noopener noreferrer"
+														className="ref-link"
+													>
+														Ensembl's Assembly Remapping
+													</a>
+												</p>
+											</span>
+
+											<div id="search-button-group" className="search-button-group">
+												{!isLoading ? (
+													<Button
+														type="submit"
+														onClick={this.handleSubmit}
+														className="button-primary button-bottom"
+													>
+														{buttonLabel}
+													</Button>
+												) : (
+													<Button
+														onClick={() => null}
+														className="button-primary button-bottom"
+													>
+														Loading...
+													</Button>
+												)}
+											</div>
 										</section>
 									</section>
 								</div>
 							</section>
 						</div>
 					</div>
-					<div id="download" className="card-table">
+					<div id="upload" className="card-table upload">
 						<div className="card">
 							<section className="card__actions">
 								<span className="card-header">
@@ -325,7 +324,7 @@ class TextAreaSearch extends Component {
 							</section>
 						</div>
 					</div>
-					<div id="download" className="card-table">
+					<div id="api" className="card-table api">
 						<div className="card">
 							<section className="card__actions">
 								<span className="card-header">

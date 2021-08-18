@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import SignificanceDataLine from '../significances/SignificanceDataLine';
+
 import { v1 as uuidv1 } from 'uuid';
 import Evidences from './Evidences';
 import { ChevronDownIcon } from 'franklin-sites';
@@ -700,7 +700,7 @@ class FunctionalSignificance extends Component {
 			interactions[0].interactions.map((interaction) => {
 				if (interaction.accession1 === accession) {
 					interactor = interaction.interactor1;
-					var geneInteractor = interaction.gene + '(' + interactor + ')';
+					var geneInteractor = interaction.accession2 + '(' + interaction.gene + ')';
 					if (gene === null) {
 						gene = geneInteractor;
 					} else {

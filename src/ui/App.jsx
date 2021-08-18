@@ -1,14 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Route, Switch, withRouter } from 'react-router-dom';
-// import axios from 'axios';
-import axios, { post } from 'axios';
+import { post } from 'axios';
 import PapaParse from 'papaparse';
-
-import gql from 'graphql-tag';
-import { ApolloClient, client, InMemoryCache, ApolloProvider } from '@apollo/client';
-
-import { defaultParser } from '../input-parser';
 
 import HomePage from './pages/HomePage';
 import SearchResultsPage from './pages/SearchResultsPage';

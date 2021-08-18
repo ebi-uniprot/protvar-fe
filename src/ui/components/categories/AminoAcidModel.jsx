@@ -20,6 +20,7 @@ import thr from '../../../images/thr.png';
 import trp from '../../../images/trp.png';
 import tyr from '../../../images/tyr.png';
 import val from '../../../images/val.png';
+import stop from '../../../images/stop.png';
 
 const aminoAcids = {
 	ala,
@@ -41,7 +42,8 @@ const aminoAcids = {
 	thr,
 	trp,
 	tyr,
-	val
+	val,
+	stop
 };
 function getImageByKey(key) {
 	return aminoAcids[key];
@@ -51,6 +53,9 @@ const AminoAcidModel = (props) => {
 	const { refAA, variantAA } = props;
 	var ref = refAA.toLowerCase();
 	var variant = variantAA.toLowerCase();
+	if (variantAA === '*') {
+		variant = 'stop';
+	}
 	return (
 		<div>
 			<table className="img-table">
