@@ -31,7 +31,8 @@
     "globals": {
       "BASE_URL": "/uniprot/pepvep/test",
       "API_URL": "/uniprot/pepvep/test"
-    }
+    },
+    "testPathIgnorePatterns": ["webpack.test.js"]
   },
   "dependencies": {
     "axios": "^0.18.0",
