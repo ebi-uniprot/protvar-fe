@@ -13,6 +13,8 @@ variables:
     - node --version
     - npm --version
     - yarn --version
+    - pwd
+    - ls
     - npm install
 
 test:
