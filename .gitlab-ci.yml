@@ -1,6 +1,8 @@
 stages:
+  - test
   - build_static_assets
   - build_docker_image
+  - deploy
 
 variables:
   CONTAINER_IMAGE: ${CI_REGISTRY_IMAGE}:latest
@@ -14,6 +16,11 @@ variables:
     - npm ci
     - npm install
 
+test:
+  stage: test
+  extends: .js
+  script:
+    - npm run test
 
 build_static_assets:
   extends: .js
