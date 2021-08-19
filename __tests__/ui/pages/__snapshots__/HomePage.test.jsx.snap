@@ -19,7 +19,7 @@ Array [
       className="row"
     >
       <ul
-        className="menu"
+        className="menu global-nav text-right"
         id="global-nav"
       >
         <li
@@ -32,7 +32,7 @@ Array [
           </a>
         </li>
         <li
-          className="home active"
+          className="home"
         >
           <a
             href="//www.ebi.ac.uk"
@@ -77,34 +77,13 @@ Array [
           </a>
         </li>
         <li
-          className="search"
-        >
-          <a
-            data-toggle="search-global-dropdown"
-            href="#/"
-          >
-            <span
-              className="show-for-small-only"
-            >
-              Search
-            </span>
-          </a>
-          <div
-            className="dropdown-pane"
-            data-dropdown={true}
-            data-options="closeOnClick:true;"
-            id="search-global-dropdown"
-          />
-        </li>
-        <li
-          className="float-right show-for-medium embl-selector"
+          className="float-right show-for-medium embl-selector embl-ebi active"
+          id="embl-selector"
         >
           <button
             className="button float-right"
-            data-toggle="embl-dropdown"
-            type="button"
           >
-            Hinxton
+             
           </button>
         </li>
       </ul>
@@ -129,89 +108,61 @@ Array [
           className="masthead-inner row"
         >
           <div
-            className="local-title columns medium-7"
-            id="local-title"
+            className="navbar"
           >
-            <a
-              href="/uniprot/pepvep/"
-              title="Back to PepVEP's homepage"
-            >
-              PepVEP
-            </a>
-          </div>
-          <div
-            className="column medium-5"
-            id="ebi-standard-search-field"
-          >
-            <form
-              id="ebi_search"
-              onSubmit={[Function]}
-            >
-              <fieldset>
-                <div
-                  className="input-group margin-bottom-none margin-top-large"
+            <table>
+              <tbody>
+                <tr
+                  className="navbar"
                 >
-                  <input
-                    className="input-group-field"
-                    id="query"
-                    maxLength="2048"
-                    name="query"
-                    onChange={[Function]}
-                    placeholder="Search service"
-                    size="35"
-                    tabIndex="0"
-                    title="EB-eye Search"
-                    type="text"
-                    value=""
-                  />
-                  <div
-                    className="input-group-button"
-                  >
-                    <button
-                      className="button icon icon-functional"
-                      onClick={[Function]}
-                      type="submit"
+                  <td>
+                    <a
+                      className="local-title"
+                      href="/uniprot/pepvep/test/"
+                      title="Back to PepVEP's homepage"
                     >
-                      Search
-                    </button>
-                  </div>
-                </div>
-              </fieldset>
-              <p
-                className="small"
-                id="example"
-              >
-                <span>
-                  Examples: 
-                </span>
-                <a
-                  href="/ebisearch/search.ebi?db=allebi&requestFrom=ebi_index&query=blast"
-                >
-                  blast
-                </a>
-                ,
-                <a
-                  href="/ebisearch/search.ebi?db=allebi&query=keratin&requestFrom=ebi_index"
-                >
-                  keratin
-                </a>
-                ,
-                <a
-                  href="/ebisearch/search.ebi?db=allebi&query=bfl1&requestFrom=ebi_index"
-                >
-                  bfl1
-                </a>
-                <button
-                  className="float-right"
-                >
-                  <span
-                    className="icon icon-generic"
-                    data-icon="("
-                  />
-                   advanced search
-                </button>
-              </p>
-            </form>
+                      <i
+                        className="fa fa-fw fa-home"
+                      />
+                       PepVEP
+                    </a>
+                    <a
+                      className="local-sub-title"
+                      href="/uniprot/pepvep/test/"
+                      title="Back to PepVEP's homepage"
+                    >
+                      Predicting the effect of varying amino acids in proteins
+                    </a>
+                  </td>
+                  <td
+                    className="topnav-right local-sub-title"
+                  >
+                    <div>
+                      <button
+                        className="button"
+                        onClick={[Function]}
+                        type="button"
+                      >
+                        About
+                      </button>
+                    </div>
+                  </td>
+                  <td
+                    className="topnav-right local-sub-title"
+                  >
+                    <div>
+                      <button
+                        className="button"
+                        onClick={[Function]}
+                        type="button"
+                      >
+                        Contact
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -233,106 +184,286 @@ Array [
             <div
               className="default-page-conent"
             >
-              <div
-                className="text-area-search"
-              >
-                <h3>
-                  Variant Input
-                </h3>
-                <div
-                  className="input-examples"
-                >
-                  <b>
-                    Examples
-                  </b>
+              <div>
+                <p>
+                  PepVEP is an online service to interpret the effects of missense variants using protein function and structure. It utilises functional information from the Ensembl Variant Effect Predictor (VEP), the UniProt functional residue annotation (Protein function), and the PDBe structural residue annotation.
                   <br />
-                  <div>
-                    <span>
-                      Genomic Position:
-                    </span>
-                    <span
-                      className="variant-example"
-                    >
-                      3 165830358 165830358 T/C
-                    </span>
-                  </div>
-                  <div>
-                    <span>
-                      Gene Symbol:
-                    </span>
-                    <span
-                      className="variant-example"
-                    >
-                      TP53:p.Arg175His
-                    </span>
-                  </div>
-                  <div>
-                    <span>
-                      dbSNP HGVS:
-                    </span>
-                    <span
-                      className="variant-example"
-                    >
-                      NM_145255.3:c.526C&gt;T
-                    </span>
-                  </div>
-                </div>
-                <form
-                  onSubmit={[Function]}
+                </p>
+                <p
+                  className="info"
                 >
-                  <textarea
-                    className="main-textarea-search-field"
-                    id="main-textarea-search-field"
-                    onChange={[Function]}
-                    value="14 89993420 89993420 A/G . . .
-20 58909365 58909365 C/A . . .
-3 165830358 165830358 T/C . . .
-21 43072000 43072000 T/C . . .
-21 43060540 43060540 C/T . . .
-22 19479862 19479862 G/C . . .
-22 19494512 19494512 C/G . . ."
-                  />
-                  <span
-                    className="assemly-ref-note"
-                  >
-                    Reference Genome Assembly: GRCh38 (hg38)
-                  </span>
-                  <a
-                    href="http://www.ensembl.org/Homo_sapiens/Tools/AssemblyConverter?db=core"
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    Open Ensembl Assembly Remapping
-                  </a>
-                  <div
-                    className="search-button-group"
-                    id="search-button-group"
-                  >
-                    <button
-                      className="button button--primary"
-                      onClick={[Function]}
-                      type="submit"
-                    >
-                      Search
-                    </button>
-                    <button
-                      className="button "
-                      onClick={[Function]}
-                      type="button"
-                    >
-                      Clear Input
-                    </button>
-                  </div>
-                </form>
+                  Variants can be submitted via pasting in the box in VCF or HGVS format, uploading a file in VCF format or using the PepVEP API
+                </p>
               </div>
               <div
-                className="about-section"
+                className="wrapper"
               >
-                <h3>
-                  About PepVEP
-                </h3>
-                <p>
-                  PepVEP is an intuitive web resource for scientists to interpret the effects of genomic variants on protein function or structure per residue altered by a genomic variant. It unites existing genomic and protein EMBL-EBI expertise; providing functional information from the Variant Effect Predictor (VEP), UniProt functional residue annotation (Protein function), and PDBe structural residue annotation in an integrated platform.
+                <div
+                  className="card-table search"
+                  id="search"
+                >
+                  <div
+                    className="card"
+                  >
+                    <section
+                      className="card__actions"
+                    >
+                      <span
+                        className="card-header"
+                      >
+                        <p>
+                          <b>
+                            Paste variants (GRCh38)
+                          </b>
+                        </p>
+                      </span>
+                    </section>
+                    <section
+                      className="card--has-hover top-row"
+                      role="button"
+                    >
+                      <div
+                        className="card__content"
+                      >
+                        <section
+                          className="uniprot-card"
+                        >
+                          <section
+                            className="uniprot-card__left"
+                          >
+                            <textarea
+                              className="main-textarea-search-field"
+                              id="main-textarea-search-field"
+                              onChange={[Function]}
+                              onFocus={[Function]}
+                              placeholder="Paste variants in HGVS or VCF format"
+                              value=""
+                            />
+                            <table
+                              className="table-input"
+                            >
+                              <tbody>
+                                <tr>
+                                  <td>
+                                    <b>
+                                      Examples:
+                                    </b>
+                                  </td>
+                                  <td>
+                                    <a
+                                      onClick={[Function]}
+                                    >
+                                      VCF
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <a
+                                      onClick={[Function]}
+                                    >
+                                      HGVS
+                                    </a>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                            <span
+                              className="genome-assembly-text"
+                            >
+                              <p>
+                                Reference Genome Assembly GRCh38 (hg38): 
+                                     
+                                <a
+                                  className="ref-link"
+                                  href="http://www.ensembl.org/Homo_sapiens/Tools/AssemblyConverter?db=core"
+                                  rel="noopener noreferrer"
+                                  target="_blank"
+                                >
+                                  Ensembl's Assembly Remapping
+                                </a>
+                              </p>
+                            </span>
+                            <div
+                              className="search-button-group"
+                              id="search-button-group"
+                            >
+                              <button
+                                className="button-new button-primary button-bottom"
+                                data-icon="="
+                                onClick={[Function]}
+                                type="submit"
+                              >
+                                Run
+                              </button>
+                            </div>
+                          </section>
+                        </section>
+                      </div>
+                    </section>
+                  </div>
+                </div>
+                <div
+                  className="card-table upload"
+                  id="upload"
+                >
+                  <div
+                    className="card"
+                  >
+                    <section
+                      className="card__actions"
+                    >
+                      <span
+                        className="card-header"
+                      >
+                        <p>
+                          <b>
+                            File Upload
+                          </b>
+                        </p>
+                      </span>
+                    </section>
+                    <section
+                      className="card--has-hover"
+                      role="button"
+                    >
+                      <div
+                        className="card__content"
+                      >
+                        <section
+                          className="uniprot-card"
+                        >
+                          <section
+                            className="uniprot-card__left"
+                          >
+                            <p>
+                              <b>
+                                PepVEP will interpret only the first five fields of the VCF
+                              </b>
+                              <br />
+                              #CHROM POS ID REF ALT
+                              <br />
+                              Missing values should be specified with a dot (‘.’)
+                               
+                              <a
+                                href="https://www.ebi.ac.uk/training/online/courses/human-genetic-variation-introduction/variant-identification-and-analysis/understanding-vcf-format/"
+                                target="_blank"
+                              >
+                                more info
+                              </a>
+                              <br />
+                              <br />
+                              <b>
+                                PepVEP also supports hgvs in below format
+                              </b>
+                              <br />
+                              NC_000010.11:g.121479868C&gt;G
+                              <br />
+                            </p>
+                            <div
+                              className="search-button-group"
+                              id="search-button-group"
+                            >
+                              <input
+                                id="myInput"
+                                onChange={[Function]}
+                                style={
+                                  Object {
+                                    "display": "none",
+                                  }
+                                }
+                                type="file"
+                              />
+                              <button
+                                className="button-new button-primary button-bottom"
+                                data-icon="="
+                                onClick={[Function]}
+                                type="button"
+                              >
+                                Upload File
+                              </button>
+                            </div>
+                          </section>
+                        </section>
+                      </div>
+                    </section>
+                  </div>
+                </div>
+                <div
+                  className="card-table api"
+                  id="api"
+                >
+                  <div
+                    className="card"
+                  >
+                    <section
+                      className="card__actions"
+                    >
+                      <span
+                        className="card-header"
+                      >
+                        <p>
+                          <b>
+                            PepVEP REST API
+                          </b>
+                        </p>
+                      </span>
+                    </section>
+                    <section
+                      className="card--has-hover"
+                      role="button"
+                    >
+                      <div
+                        className="card__content"
+                      >
+                        <section
+                          className="uniprot-card"
+                        >
+                          <section
+                            className="uniprot-card__left"
+                          >
+                            <b>
+                              PepVEP's REST API is a programmatic way to obtain information from PepVEP via Simple URL-based queries
+                            </b>
+                            <br />
+                            You can query:
+                            <ul>
+                              <li>
+                                Whole genes/proteins/structures specific residue ranges in proteins or protein structures or
+                                 
+                              </li>
+                              <li>
+                                Genomic ranges in genes a list of variants using several different formats
+                              </li>
+                            </ul>
+                            Click below for all PepVEP REST API documentation
+                            <div
+                              className="search-button-group"
+                              id="search-button-group"
+                            >
+                              <button
+                                className="button-new button-bottom"
+                                data-icon="="
+                                onClick={[Function]}
+                                type="button"
+                              >
+                                PepVEP REST API
+                              </button>
+                            </div>
+                          </section>
+                        </section>
+                      </div>
+                    </section>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <br />
+                <p
+                  className="info"
+                >
+                  Further help and explanations about the data in PepVEP can be found in the "about" section at the top right hand side of the page.
+                  <br />
+                  <br />
+                  We continually strive to make PepVEP clear and useful to our users, to contact PepVEP with questions or suggestions please use the "contact" link at the top of the page.
                 </p>
               </div>
             </div>
@@ -341,7 +472,9 @@ Array [
       </div>
     </section>
   </div>,
-  <footer>
+  <footer
+    id="footer-target"
+  >
     <div
       className="global-footer"
       id="global-footer"
