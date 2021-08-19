@@ -49,3 +49,12 @@ build_docker_image:
     - docker push ${CONTAINER_IMAGE}
     - docker rmi ${CONTAINER_IMAGE}
     - docker logout "$CI_REGISTRY"
+
+deploy:
+  extends: .js
+  stage: deploy
+  script:
+    - ls /nfs/public/rw/uniprot/pepvep/www/
+    - ssh uni_ci@noah-login "ls /nfs/public/rw/uniprot/pepvep/www/"
+    - ssh uni_admin@noah-login "rm /nfs/public/rw/uniprot/pepvep/www/*"
+    - scp -r build/* uni_admin@noah-login:/nfs/public/rw/uniprot/pepvep/www/
