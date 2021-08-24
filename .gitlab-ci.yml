@@ -51,7 +51,6 @@ build_docker_image:
     - docker logout "$CI_REGISTRY"
 
 deploy:
-  extends: .js
   stage: deploy
   script:
     - ls /nfs/public/rw/uniprot/pepvep/www/
