@@ -23,12 +23,11 @@ class DownloadModal extends Component {
 
 	handleChange = (e) => {
 		const { name, value } = e.target;
-		var annotaionVal = false;
-		if (name === 'downloadOption' && value === 'mappings') {
-			annotaionVal = true;
+		var annotaionVal = value === 'annotations';
+		if (name === 'downloadOption') {
 			this.setState({
-				[name]: value,
-				allAnnotations: annotaionVal
+				allAnnotations: annotaionVal,
+				downloadOption: value
 			});
 
 			this.setChkBoxStatus('allAnnotations');
