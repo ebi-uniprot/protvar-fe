@@ -565,9 +565,9 @@ class ImpactSearchResults extends Component {
 
 		const rows = this.props.rows;
 		if (rows === null) {
-			// <Redirect to="home" />;
 			const { history } = this.props;
 			history.push('/');
+			return null;
 		} else {
 			const tableRows = this.getTableRows(rows);
 			const page = this.props.page;
