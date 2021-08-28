@@ -21,6 +21,7 @@ import { Redirect } from 'react-router';
 import ProteinIcon from '../../../icons/proteins.svg';
 import StructureIcon from '../../../icons/structures-3d.svg';
 import PopulationIcon from '../../../icons/human.svg';
+import InvalidTableRows from './InvalidTableRows';
 
 class ImpactSearchResults extends Component {
 	constructor(props, context) {
@@ -41,7 +42,6 @@ class ImpactSearchResults extends Component {
 			title: '',
 			pdbId: '',
 			alphaFoldStructureId: '',
-			invalidInputFlag: false
 		};
 	}
 
@@ -385,8 +385,8 @@ class ImpactSearchResults extends Component {
 		const noSignificance = <span className="no-significances">-</span>;
 
 		return (
-			<Fragment>
-				<tr key={`${accession.isoform}-${accession.position}-${accession.altAllele}`}>
+			<Fragment key={`${accession.isoform}-${accession.position}-${accession.altAllele}`}>
+				<tr>
 					<td>
 						<a href={chromosomeUrl} target="_blank" rel="noopener noreferrer">
 							{accession.chromosome}
@@ -513,32 +513,12 @@ class ImpactSearchResults extends Component {
 		return post(BASE_URL, formData, config);
 	}
 
-	expandInvalidInputs() {
-		var flag = this.state.invalidInputFlag;
-		if (flag)
-			this.setState({
-				invalidInputFlag: false
-			});
-		else
-			this.setState({
-				invalidInputFlag: true
-			});
-	}
 	getInvalidInputSection(invalidInputs) {
 		if (invalidInputs !== undefined && invalidInputs !== null && invalidInputs.length > 0) {
-			var flag = this.state.invalidInputFlag;
-			const invalidList = invalidInputs.map((input) => {
-				<li key={uuidv1()}>{input}</li>;
-			});
 			return (
-				<Fragment>
-					<a onClick={() => this.expandInvalidInputs()}>
-						<div className="alert alert-danger alert-dismissible fade show">
-							&#9660; Few inputs could not be processed. Expand to view
-						</div>
-					</a>
-					{invalidInputs}
-				</Fragment>
+					<div className="alert alert-danger alert-dismissible fade show">
+						Few of inputs are not valid
+					</div>
 			);
 		}
 	}
@@ -660,7 +640,10 @@ class ImpactSearchResults extends Component {
 								{/* <th>Evolution Inference</th> */}
 							</tr>
 						</thead>
-						<tbody>{tableRows}</tbody>
+						<tbody>
+							{tableRows}
+							<InvalidTableRows invalidInputs={this.props.invalidInputs}/>
+						</tbody>
 					</table>
 				</div>
 			);
