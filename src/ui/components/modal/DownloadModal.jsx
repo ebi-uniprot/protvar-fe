@@ -7,6 +7,7 @@ import PapaParse from 'papaparse';
 import FileSaver from 'file-saver';
 import { DownloadIcon } from 'franklin-sites';
 import { post } from 'axios';
+import { API_URL } from '../../../constants/const';
 
 class DownloadModal extends Component {
 	state = {
@@ -175,7 +176,7 @@ class DownloadModal extends Component {
 				console.log('response -> ' + response.data);
 				response.data.forEach((mapping) => {
 					var genes = this.createGenes(mapping);
-					mappings.push(genes);
+					// mappings.push(genes);
 				});
 			});
 		}

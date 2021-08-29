@@ -22,6 +22,7 @@ import ProteinIcon from '../../../icons/proteins.svg';
 import StructureIcon from '../../../icons/structures-3d.svg';
 import PopulationIcon from '../../../icons/human.svg';
 import InvalidTableRows from './InvalidTableRows';
+import { API_URL } from '../../../constants/const';
 
 class ImpactSearchResults extends Component {
 	constructor(props, context) {
@@ -257,7 +258,7 @@ class ImpactSearchResults extends Component {
 				});
 
 			let url = 'https://alphafold.ebi.ac.uk/api/prediction/' + row.isoform;
-			let errorFlag = false;
+			errorFlag = false;
 			axios
 				.get(url)
 				.catch((err) => {

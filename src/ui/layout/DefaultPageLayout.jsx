@@ -2,7 +2,6 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import DefaultPageContent from './DefaultPageContent';
-import AboutModal from '../components/modal/AboutModal';
 import About from '../components/categories/About';
 import { ButtonModal } from 'franklin-sites';
 
@@ -81,29 +80,20 @@ class DefaultPageLayout extends Component {
 						>
 							<div className="masthead-inner row">
 								<div className="navbar">
-									{/* <a className="local-title" href={`${BASE_URL}/`} title="Back to PepVEP's homepage">
-										<i className="fa fa-fw fa-home" /> PepVEP
-									</a> */}
-									{/* <div> */}
-									{/* <div className="topnav-subtitle">
-											Predicting the effect of varying amino acids in proteins
-										</div> */}
-
-									{/* <div> */}
 									<table>
 										<tbody>
 											<tr className="navbar">
 												<td>
 													<a
 														className="local-title"
-														href={`${BASE_URL}/`}
+														href="/"
 														title="Back to PepVEP's homepage"
 													>
 														<i className="fa fa-fw fa-home" /> PepVEP
 													</a>
 													<a
 														className="local-sub-title"
-														href={`${BASE_URL}/`}
+														href="/"
 														title="Back to PepVEP's homepage"
 													>
 														Predicting the effect of varying amino acids in proteins

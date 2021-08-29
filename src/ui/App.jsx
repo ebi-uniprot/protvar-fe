@@ -7,6 +7,7 @@ import PapaParse from 'papaparse';
 import HomePage from './pages/HomePage';
 import SearchResultsPage from './pages/SearchResultsPage';
 import APIErrorPage from './pages/APIErrorPage';
+import { API_URL } from '../constants/const';
 
 class App extends Component {
 	constructor(props, context) {
@@ -646,9 +647,9 @@ class App extends Component {
 
 		return (
 			<Switch>
-				<Route path={`${BASE_URL}/`} exact render={() => <HomePage {...appProps} />} />
-				<Route path={`${BASE_URL}/search`} render={() => <SearchResultsPage {...appProps} />} />
-				<Route path={`${BASE_URL}/api-error`} render={() => <APIErrorPage {...appProps} />} />
+				<Route path="/" exact render={() => <HomePage {...appProps} />} />
+				<Route path="/search" render={() => <SearchResultsPage {...appProps} />} />
+				<Route path="/api-error" render={() => <APIErrorPage {...appProps} />} />
 				<Route
 					component={({ location }) => (
 						<h3>
