@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Fragment } from 'react';
 import { v1 as uuidv1 } from 'uuid';
 
 const Evidences = (props) => {
@@ -27,7 +27,7 @@ const Evidences = (props) => {
 		let evidenceMap = new Map();
 		let evidenceListToRet = [];
 		if (evidences !== undefined && evidences !== null && evidences.length > 0) {
-			evidences.map((evidence) => {
+			evidences.forEach((evidence) => {
 				if (evidence.source !== null && evidence.source !== undefined && evidence.source.id !== null) {
 					// let source = evidence.source.name + '-' + evidence.source.id;
 

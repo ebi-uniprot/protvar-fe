@@ -2,8 +2,8 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import Button from '../../elements/form/Button';
+import {Button as FranklinButton} from 'franklin-sites'
 import PapaParse from 'papaparse';
-import About from '../categories/About';
 import { v1 as uuidv1 } from 'uuid';
 const NO_OF_ITEMS_PER_PAGE = 25;
 
@@ -28,13 +28,12 @@ class TextAreaSearch extends Component {
 	};
 
 	handleSubmit = (e) => {
-		const { searchTerm, file, page } = this.state;
+		const { searchTerm } = this.state;
 		if (searchTerm === '') {
 			return;
 		}
 		var fetchResult = this.props.fetchResult;
 		var noOfLines = searchTerm.split('\n').length;
-		var pages = Math.ceil(noOfLines / NO_OF_ITEMS_PER_PAGE);
 		var newPage = {
 			currentPage: 1,
 			nextPage: true,
@@ -63,7 +62,6 @@ class TextAreaSearch extends Component {
 			},
 			complete: () => {
 				console.log('lines 2=>' + noOfLines);
-				var pages = Math.ceil(noOfLines / NO_OF_ITEMS_PER_PAGE);
 				var fetchResult = this.props.fetchResult;
 				var page = {
 					currentPage: 1,
@@ -88,32 +86,6 @@ class TextAreaSearch extends Component {
 
 	useExampleData = () => {
 		const searchTerm = [
-			// 'Paste variants in HGVS or VCF format below'
-			// '21 25891796 rs124582 C/T . . .'
-			// '14 89993420 rs37915333 A/G . . .',
-			// '10 87933147 rs7565837 C/T . . .',
-			// '21 43072000 . T/C . . .',
-			// '1 45340254 rs36765457 T/G . . .',
-			// '21 43060540 43060540 C/T . . .',
-			// '22 19479862 19479862 T/C . . .',
-			// '22 19494512 19494512 C/G . . .',
-			// '20 58909365 58909365 C/A . . .',
-			// '3 165830358 165830358 T/C . . .',
-			// '14 73173644 73173644 G/A'
-			// '21 25891784 25891784 C/T'
-			// '21 25891784 25891784 C/G',
-			// '21 25891784 25891784 C/A',
-			// '14 73173571 73173571 A/G',
-			// '14 73173574 73173574 C/T',
-			// '14 73173577 73173577 C/T',
-			// '14 73173577 73173577 C/G',
-			// '14 73173587 73173587 A/T',
-			// '14 73173587 73173587 A/C',
-			// '14 73173644 73173644 G/C'
-			// '14 73173644 73173644 G/A',
-			// '14 73173665 73173665 G/T',
-			// '14 73173665 73173665 G/C',
-			// '14 73173665 73173665 G/A',
 		].join('\n');
 
 		this.setState({
@@ -161,7 +133,7 @@ class TextAreaSearch extends Component {
 	}
 
 	render() {
-		const { searchTerm, isFileSelected, fileName, viewResultLabel, downloadLabel } = this.state;
+		const { searchTerm, isFileSelected } = this.state;
 		const { buttonLabel, isLoading } = this.props;
 		return (
 			<Fragment>
@@ -212,10 +184,10 @@ class TextAreaSearch extends Component {
 															<b>Examples:</b>
 														</td>
 														<td>
-															<a onClick={this.populateVCF}>VCF</a>
+															<FranklinButton variant="tertiary" onClick={this.populateVCF} style={{margin:0}}>VCF</FranklinButton>
 														</td>
 														<td>
-															<a onClick={this.populateHGVS}>HGVS</a>
+															<FranklinButton variant="tertiary" onClick={this.populateHGVS} style={{margin:0}}>HGVS</FranklinButton>
 														</td>
 													</tr>
 												</tbody>
@@ -277,7 +249,7 @@ class TextAreaSearch extends Component {
 												#CHROM POS ID REF ALT<br />
 												Missing values should be specified with a dot (‘.’){' '}
 												<a
-													target="_blank"
+													target="_blank" rel="noreferrer"
 													href="https://www.ebi.ac.uk/training/online/courses/human-genetic-variation-introduction/variant-identification-and-analysis/understanding-vcf-format/"
 												>
 													more info

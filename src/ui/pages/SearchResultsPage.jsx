@@ -1,6 +1,4 @@
 import React, { Fragment } from 'react';
-import PropTypes from 'prop-types';
-
 import DefaultPageLayout from '../layout/DefaultPageLayout';
 import ImpactSearchResults from '../components/search/ImpactSearchResults';
 import Alert from '../components/other/Alert';

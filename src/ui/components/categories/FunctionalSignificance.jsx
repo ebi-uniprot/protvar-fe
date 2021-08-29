@@ -20,7 +20,6 @@ export const FEATURES = {
 	COILED: 'Coiled-coil Region',
 	MOTIF: 'Functional Motif',
 	COMPBIAS: 'AA Composition Bias',
-	TRANSMEM: 'Helical Transmembrane Peptide',
 	DNA_BIND: 'DNA Binding Residue',
 	NP_BIND: 'Nucleotide Phosphate Binding Residue',
 	ACT_SITE: 'Active Site Residue',
@@ -28,11 +27,6 @@ export const FEATURES = {
 	BINDING: 'Binding Site Residue',
 	CA_BIND: 'Calcium Binding Residue',
 	ZN_FING: 'Zinc Finger Residue',
-	DNA_BIND: 'DNA Binding Residue',
-	NP_BIND: 'Nucleotide Phosphate Binding Residue',
-	ACT_SITE: 'Active Site Residue',
-	METAL: 'Metal Ion Binding Site Residue',
-	BINDING: 'Binding Site Residue',
 	SITE: 'Functionally Important Residue',
 	MOD_RES: 'PTM Modified Residue',
 	LIPID: 'PTM bound Lipid',
@@ -98,19 +92,6 @@ export const RESIDUES = {
 	SITE: 'Functionally Important Residue',
 	MOD_RES: 'PTM Modified Residue',
 	LIPID: 'PTM bound Lipid'
-	// Non-standard residue
-	// Glycosylation
-	// Disulfide bond
-};
-
-const Modal = ({ handleClose, show, children }) => {
-	const showHideClassName = show ? 'modal d-block' : 'modal d-none';
-
-	return (
-		<div className={showHideClassName}>
-			<div className="modal-container">{children}</div>
-		</div>
-	);
 };
 
 class FunctionalSignificance extends Component {
@@ -201,7 +182,7 @@ class FunctionalSignificance extends Component {
 					</label>
 				);
 		}
-		regions.map((region) => {
+		regions.forEach((region) => {
 			counter = counter + 1;
 			let key = category + '-' + counter;
 			var list = this.getFeatureList(region, key);
@@ -228,29 +209,20 @@ class FunctionalSignificance extends Component {
 	getRHEA(dbReference) {
 		if (dbReference.id !== undefined && dbReference.id !== null) {
 			return (
-				<a href={dbReference.url} target="_blank">
+				<a href={dbReference.url} target="_blank" rel="noreferrer">
 					{dbReference.id}
 				</a>
 			);
 		}
 	}
 	catalyticActivityDetails(reaction, key) {
-		const { expandedFunctionalRow } = this.state;
-		var displayDetails = false;
-		if (key === expandedFunctionalRow) displayDetails = true;
 		var dbReference = {};
-
-		var ecNumberFlag = true;
-		if (reaction.ecNumber === undefined) {
-			ecNumberFlag = false;
-		}
 		var evidencesFlag = false;
 		if (reaction.evidences !== undefined && reaction.evidences !== null && reaction.evidences.length > 0) {
 			evidencesFlag = true;
 		}
-		var ecNumberUrl = 'https://www.ebi.ac.uk/enzymeportal/ec/' + reaction.ecNumber;
 		if (reaction.dbReferences !== undefined && reaction.dbReferences !== null) {
-			reaction.dbReferences.map((reference) => {
+			reaction.dbReferences.forEach((reference) => {
 				if (reference.type === 'Rhea' && reference.id.includes('RHEA:')) {
 					dbReference.id = reference.id;
 					dbReference.url = 'https://www.rhea-db.org/rhea/' + reference.id.split(':')[1];
@@ -309,7 +281,7 @@ class FunctionalSignificance extends Component {
 
 	getCatalyticActivities(regions, accession, position) {
 		let features = [];
-		regions.map((region) => {
+		regions.forEach((region) => {
 			features.push(this.getCatalyticActivity(region));
 		});
 		var key = 'catalytic-activity-' + accession + '-' + position;
@@ -354,7 +326,7 @@ class FunctionalSignificance extends Component {
 	}
 	getActivityRegulations(activityRegulations, accession, position) {
 		let features = [];
-		activityRegulations.map((regulation) => {
+		activityRegulations.forEach((regulation) => {
 			features.push(this.getActivityRegulation(regulation));
 		});
 		var key = 'activity-regulation-' + accession + '-' + position;
@@ -381,19 +353,13 @@ class FunctionalSignificance extends Component {
 
 	getSubunits(subunits, accession, position) {
 		let features = [];
-		subunits.map((subunit) => {
+		subunits.forEach((subunit) => {
 			features.push(this.getActivityRegulation(subunit));
 		});
 		var key = 'subunit-' + accession + '-' + position;
 		if (features.length > 0) {
 			return (
 				<Fragment>
-					{/* <label>
-						<a onClick={(e) => this.toggleFunctionRow(key)}>
-							<b>COMPLEX</b>
-						</a>
-					</label> */}
-
 					<label>
 						<button type="button" className="collapsible" onClick={(e) => this.toggleFunctionRow(key)}>
 							<b>Complex</b>
@@ -410,7 +376,7 @@ class FunctionalSignificance extends Component {
 		var locationList = [];
 		var topologyList = [];
 		let features = [];
-		locations.locations.map((location) => {
+		locations.locations.forEach((location) => {
 			if (location.location !== undefined && location.location !== null)
 				locationList.push(<li key={uuidv1()}>{location.location.value}</li>);
 			if (location.topology !== undefined && location.topology !== null)
@@ -459,7 +425,7 @@ class FunctionalSignificance extends Component {
 
 	getSubcellularLocations(subcellularLocations, accession, position) {
 		let features = [];
-		subcellularLocations.map((locations) => {
+		subcellularLocations.forEach((locations) => {
 			features.push(this.getSubcellularLocation(locations));
 		});
 		var key = 'cellular-' + accession + '-' + position;
@@ -486,18 +452,13 @@ class FunctionalSignificance extends Component {
 
 	getPTMs(ptms, accession, position) {
 		let features = [];
-		ptms.map((location) => {
+		ptms.forEach((location) => {
 			features.push(this.getActivityRegulation(location));
 		});
 		var key = 'ptm-' + accession + '-' + position;
 		if (features.length > 0) {
 			return (
 				<Fragment>
-					{/* <label>
-						<a onClick={(e) => this.toggleFunctionRow(key)}>
-							<b>PTM's</b>
-						</a>
-					</label> */}
 					<label>
 						<button type="button" className="collapsible" onClick={(e) => this.toggleFunctionRow(key)}>
 							<b>PTM's</b>
@@ -516,12 +477,12 @@ class FunctionalSignificance extends Component {
 			var pfams = [];
 			var interpro = [];
 			if (references !== undefined && references !== null && references.length > 0) {
-				references.map((reference) => {
+				references.forEach((reference) => {
 					if (reference.type === 'Pfam') {
 						var pfamUrl = 'https://pfam.xfam.org/family/' + reference.id;
 						pfams.push(
 							<li key={uuidv1()}>
-								<a href={pfamUrl} target="_blank">
+								<a href={pfamUrl} target="_blank" rel="noreferrer">
 									{reference.id}
 								</a>{' '}
 								: {reference.properties['entry name']}
@@ -532,7 +493,7 @@ class FunctionalSignificance extends Component {
 						var interproUrl = 'https://www.ebi.ac.uk/interpro/entry/InterPro/' + reference.id;
 						interpro.push(
 							<li key={uuidv1()}>
-								<a href={interproUrl} target="_blank">
+								<a href={interproUrl} target="_blank" rel="noreferrer">
 									{reference.id}
 								</a>{' '}
 								: {reference.properties['entry name']}
@@ -576,7 +537,7 @@ class FunctionalSignificance extends Component {
 
 	getSimilarity(similarities, references, accession, position) {
 		let features = [];
-		similarities.map((similarity) => {
+		similarities.forEach((similarity) => {
 			features.push(this.getActivityRegulation(similarity));
 		});
 		var key = 'similarity-' + accession + '-' + position;
@@ -604,7 +565,7 @@ class FunctionalSignificance extends Component {
 
 	getDomains(domains, accession, position) {
 		let features = [];
-		domains.map((domain) => {
+		domains.forEach((domain) => {
 			features.push(this.getActivityRegulation(domain));
 		});
 		var key = 'domain-' + accession + '-' + position;
@@ -632,7 +593,7 @@ class FunctionalSignificance extends Component {
 
 	getWebResource(webresource) {
 		return (
-			<a href={webresource.url} target="_blank">
+			<a href={webresource.url} target="_blank" rel="noreferrer">
 				<li key={uuidv1()}>{webresource.name}</li>
 			</a>
 		);
@@ -640,7 +601,7 @@ class FunctionalSignificance extends Component {
 
 	getWebResources(webresources, accession, position) {
 		let features = [];
-		webresources.map((webresource) => {
+		webresources.forEach((webresource) => {
 			if (webresource.name !== undefined && webresource.url !== undefined) {
 				features.push(this.getWebResource(webresource));
 			}
@@ -679,7 +640,7 @@ class FunctionalSignificance extends Component {
 					</label>
 					<label>
 						<b>IntAct : </b>
-						<a href={url} target="_blank">
+						<a href={url} target="_blank" rel="noreferrer">
 							{interactor}
 						</a>
 					</label>
@@ -697,7 +658,7 @@ class FunctionalSignificance extends Component {
 			var gene = null;
 			var interactor = '';
 			var key = 'interactions-' + accession + '-' + position;
-			interactions[0].interactions.map((interaction) => {
+			interactions[0].interactions.forEach((interaction) => {
 				if (interaction.accession1 === accession) {
 					interactor = interaction.interactor1;
 					var geneInteractor = interaction.accession2 + '(' + interaction.gene + ')';
@@ -770,7 +731,7 @@ class FunctionalSignificance extends Component {
 		var similarity = [];
 		var webresource = [];
 		var interactions = [];
-		regions.map((region) => {
+		regions.forEach((region) => {
 			switch (region.type) {
 				case 'CATALYTIC_ACTIVITY':
 					catalyticActivities.push(region);
@@ -798,6 +759,7 @@ class FunctionalSignificance extends Component {
 					break;
 				case 'INTERACTION':
 					interactions.push(region);
+					break;
 				default:
 					return '';
 			}
@@ -832,7 +794,7 @@ class FunctionalSignificance extends Component {
 	displayGeneName(label, geneNames) {
 		if (geneNames !== null && geneNames !== undefined && geneNames.length > 0) {
 			var genes = [];
-			geneNames.map((geneName) => {
+			geneNames.forEach((geneName) => {
 				genes.push(
 					<li key={uuidv1()}>
 						<b>{label} :</b> {geneName.geneName}
@@ -880,25 +842,20 @@ class FunctionalSignificance extends Component {
 		const { refAA, variantAA, data, ensg, ensp } = this.props;
 		const ensgUrl = 'https://www.ensembl.org/Homo_sapiens/Gene/Summary?db=core;g=' + ensg;
 		const enspUrl = 'https://www.ensembl.org/Homo_sapiens/Gene/Summary?db=core;g=';
-		const enstUrl = 'https://www.ensembl.org/Homo_sapiens/Transcript/Summary?db=core;t=';
 		var regions = [];
 		var proteins = [];
 		var residues = [];
-		var functions = {};
 		var functionText = '';
 		var functionEvidences = [];
-		if (data.features !== null && data.features != undefined && data.features.length > 0) {
-			data.features.map((feature) => {
-				// if (REGIONS[feature.type] !== undefined && feature.evidences !== null) regions.push(feature);
-
-				// if (RESIDUES[feature.type] !== undefined && feature.evidences !== null) residues.push(feature);
+		if (data.features !== null && data.features !== undefined && data.features.length > 0) {
+			data.features.forEach((feature) => {
 				if (feature.category !== 'VARIANTS') {
 					if (feature.begin === feature.end) residues.push(feature);
 					else regions.push(feature);
 				}
 			});
 			if (data.comments !== undefined && data.comments !== null) {
-				data.comments.map((comment) => {
+				data.comments.forEach((comment) => {
 					if (comment.type === 'FUNCTION' && comment.text.length > 0) {
 						functionText = comment.text[0].value;
 						if (comment.text[0].evidences !== undefined && comment.text[0].evidences !== null);
@@ -913,11 +870,11 @@ class FunctionalSignificance extends Component {
 				});
 			}
 			var translatedSequences = [];
-			ensp.map((ensps) => {
+			ensp.forEach((ensps) => {
 				var enspsUrl = enspUrl + ensps.ensp;
 				translatedSequences.push(
 					<li key={uuidv1()}>
-						<a href={enspsUrl} target="_blank">
+						<a href={enspsUrl} target="_blank" rel="noreferrer">
 							{ensps.ensp} - {ensps.ensts}
 						</a>
 					</li>
@@ -986,7 +943,7 @@ class FunctionalSignificance extends Component {
 										</tr>
 										<tr>
 											<td>
-												<a href={ensgUrl} target="_blank">
+												<a href={ensgUrl} target="_blank" rel="noreferrer">
 													{ensg}
 												</a>
 											</td>

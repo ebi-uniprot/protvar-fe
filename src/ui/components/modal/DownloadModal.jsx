@@ -40,7 +40,7 @@ class DownloadModal extends Component {
 	};
 
 	handleChkBoxClick = (e) => {
-		const { name, value } = e.target;
+		const { name } = e.target;
 		this.setChkBoxStatus(name);
 	};
 
@@ -175,7 +175,7 @@ class DownloadModal extends Component {
 			}).then((response) => {
 				console.log('response -> ' + response.data);
 				response.data.forEach((mapping) => {
-					var genes = this.createGenes(mapping);
+					// var genes = this.createGenes(mapping);
 					// mappings.push(genes);
 				});
 			});

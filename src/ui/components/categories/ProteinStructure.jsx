@@ -43,7 +43,7 @@ class ProteinStructure extends Component {
 			<Fragment>
 				<tr className={rowClass} onClick={(e) => this.changeStructure(str.pdb_id)}>
 					<td className="small">
-						<a href={pdbUrl} target="_blank">
+						<a href={pdbUrl} target="_blank" rel="noreferrer">
 							<u>{str.pdb_id}</u>
 						</a>
 					</td>
@@ -61,9 +61,8 @@ class ProteinStructure extends Component {
 	getStructureDataTable(structural, pdbId) {
 		var structureRows = new Map();
 		var rows = [];
-		var openGroup = this.state.openGroup;
 		if (structural !== undefined) {
-			structural.map((str) => {
+			structural.forEach((str) => {
 				let pdbId = str.pdb_id;
 				if (structureRows.get(pdbId) !== undefined) {
 					let existingRow = structureRows.get(pdbId);
@@ -121,9 +120,6 @@ class ProteinStructure extends Component {
 					<br />
 					<div className="tableFixHead">
 						<ExternalLink url={pdbkbUrl}>More information</ExternalLink>
-						{/* <a href={pdbkbUrl} target="_blank">
-							More information
-						</a> */}
 						<table>
 							<thead>
 								<tr>
@@ -184,7 +180,7 @@ class ProteinStructure extends Component {
 						>
 							<td className="small">AlphaFold</td>
 							<td className="small">
-								<a href={alphaFoldUrl} target="_blank">
+								<a href={alphaFoldUrl} target="_blank" rel="noreferrer">
 									<u>{alphaFoldStructureId}</u>
 								</a>
 							</td>

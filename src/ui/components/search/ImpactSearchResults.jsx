@@ -1,19 +1,13 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-
 import Button from '../../elements/form/Button';
-
 import ProteinReviewStatus from '../other/ProteinReviewStatus';
-
 import { Loader } from 'franklin-sites';
 import axios, { post } from 'axios';
 import FunctionalSignificance from '../categories/FunctionalSignificance';
 import PopulationObservation from '../categories/PopulationObservation';
-
-import { v1 as uuidv1 } from 'uuid';
 import protvistaStructure from 'protvista-structure';
 import ProteinStructure from '../categories/ProteinStructure';
-
 import { Dropdown } from 'react-dropdown-now';
 import 'react-dropdown-now/style.css';
 import DownloadModal from '../modal/DownloadModal';
@@ -62,9 +56,9 @@ class ImpactSearchResults extends Component {
 			buttonCss = 'button--significances-clicked  button-new';
 			columnCss = 'fit-clicked';
 		}
-		var buttonTag = <img src={ProteinIcon} alt="React Logo" className="button-icon" />; //<ProteinIcon className="button-icon" />;
-		if (buttonLabel === 'POP') buttonTag = <img src={PopulationIcon} className="button-icon" />;
-		else if (buttonLabel === 'STR') buttonTag = <img src={StructureIcon} className="button-icon" />;
+		var buttonTag = <img src={ProteinIcon} className="button-icon" alt="protein icon"/>; //<ProteinIcon className="button-icon" />;
+		if (buttonLabel === 'POP') buttonTag = <img src={PopulationIcon} className="button-icon" alt="population icon"/>;
+		else if (buttonLabel === 'STR') buttonTag = <img src={StructureIcon} className="button-icon" alt="structure icon"/>;
 		return (
 			<td className={columnCss}>
 				<button
@@ -236,7 +230,7 @@ class ImpactSearchResults extends Component {
 				.then((response) => {
 					if (!errorFlag) {
 						var filteredData = [];
-						response.data[row.isoform].map((str) => {
+						response.data[row.isoform].forEach((str) => {
 							if (aaPosition >= str.unp_start && aaPosition <= str.unp_end) {
 								filteredData.push(str);
 							}
@@ -290,8 +284,6 @@ class ImpactSearchResults extends Component {
 
 	fetchNextPage = (next) => {
 		var fetchNextPage = this.props.fetchNextPage;
-		var loading = this.props.loading;
-
 		var page = this.props.page;
 		if (next === 1) {
 			page.currentPage = page.currentPage + 1;
@@ -378,12 +370,8 @@ class ImpactSearchResults extends Component {
 		const toggleOpenGroup = accession.canonicalAccession + '-' + accession.position + '-' + accession.altAllele;
 		const expandedGroup = accession.isoform + '-' + accession.position + '-' + accession.altAllele;
 		const functionalKey = 'functional-' + expandedGroup;
-
 		const structuralKey = 'structural-' + expandedGroup;
 		const populationKey = 'population-' + expandedGroup;
-		const evolutionKey = 'evolution-' + expandedGroup;
-
-		const noSignificance = <span className="no-significances">-</span>;
 
 		return (
 			<Fragment key={`${accession.isoform}-${accession.position}-${accession.altAllele}`}>
@@ -461,9 +449,9 @@ class ImpactSearchResults extends Component {
 	getTableRows = (rows) => {
 		const { openGroup } = this.state;
 		let tableRows = [];
-		rows.map((genes, geneId) => {
-			genes.map((accessions, accessionId) => {
-				accessions.map((accession, index) => {
+		rows.forEach((genes) => {
+			genes.forEach((accessions) => {
+				accessions.forEach((accession) => {
 					let currentGroup =
 						accession.canonicalAccession + '-' + accession.position + '-' + accession.altAllele;
 					if (currentGroup === openGroup) {
@@ -554,7 +542,6 @@ class ImpactSearchResults extends Component {
 			const page = this.props.page;
 			const totalPages = Math.ceil(page.totalItems / page.itemsPerPage);
 			const invalidInputs = this.props.invalidInputs;
-			const options = [ 25, 50, 100 ];
 			const file = this.props.file;
 			const searchTerm = this.props.searchTerm;
 			let totalItems = 0;

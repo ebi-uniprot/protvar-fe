@@ -1,5 +1,4 @@
-import React, { Component, Fragment } from 'react';
-import { v1 as uuidv1 } from 'uuid';
+import React from 'react';
 import ala from '../../../images/ala.png';
 import arg from '../../../images/arg.png';
 import asn from '../../../images/asn.png';
@@ -64,13 +63,13 @@ const AminoAcidModel = (props) => {
 						<td>
 							<ul className="flatList-no-separator">
 								<li>
-									<img className="img-size" src={getImageByKey(ref)} />
+									<img className="img-size" src={getImageByKey(ref)} alt={ref}/>
 								</li>
 								<li>
 									<span className="icon-arrow">&#8594;</span>
 								</li>
 								<li>
-									<img className="img-size" src={getImageByKey(variant)} />
+									<img className="img-size" src={getImageByKey(variant)} alt={variant}/>
 								</li>
 							</ul>
 						</td>

@@ -35,7 +35,7 @@ class PopulationObservation extends Component {
 		) {
 			return (
 				<li key={uuidv1()}>
-					<a href={xref.url} target="_blank">
+					<a href={xref.url} target="_blank" rel="noreferrer">
 						{xref.id}
 					</a>
 				</li>
@@ -61,11 +61,9 @@ class PopulationObservation extends Component {
 	}
 
 	getReferences(xrefs, populationFrequencies, clinicalSignificances, key) {
-		let expandedRow = this.state.expandedRow;
-		// if (key === expandedRow) {
 		let popFreqMap = new Map();
 		if (populationFrequencies !== undefined && populationFrequencies.length > 0) {
-			populationFrequencies.map((freq) => {
+			populationFrequencies.forEach((freq) => {
 				let val = (
 					<li>
 						<b>{freq.frequencies[0].label}</b>-{freq.frequencies[0].value}
@@ -76,13 +74,13 @@ class PopulationObservation extends Component {
 		}
 		let significanceMap = new Map();
 		if (clinicalSignificances !== undefined && clinicalSignificances.length > 0) {
-			clinicalSignificances.map((significance) => {
+			clinicalSignificances.forEach((significance) => {
 				let type = (
 					<li>
 						<b>{significance.type}</b>
 					</li>
 				);
-				significance.sources.map((source) => {
+				significance.sources.forEach((source) => {
 					significanceMap.set(source, type);
 				});
 			});
@@ -90,7 +88,7 @@ class PopulationObservation extends Component {
 		let xrefList = [];
 		if (xrefs !== undefined && xrefs.length > 0) {
 			let xrefMap = new Map();
-			xrefs.map((xref) => {
+			xrefs.forEach((xref) => {
 				let source = [];
 				if (xrefMap.get(xref.name) !== undefined) {
 					source = xrefMap.get(xref.name);
@@ -127,11 +125,9 @@ class PopulationObservation extends Component {
 		);
 	}
 
-	getAssociations(associations, key) {
-		let expandedRow = this.state.expandedRow;
-		// if (key === expandedRow) {
+	getAssociations(associations) {
 		let diseaseAssociations = [];
-		associations.map((association) => {
+		associations.forEach((association) => {
 			diseaseAssociations.push(this.getAssociation(association));
 		});
 		if (diseaseAssociations.length > 0) {
@@ -180,7 +176,7 @@ class PopulationObservation extends Component {
 		let expandedRow = this.state.expandedRow;
 		if (key === expandedRow) {
 			let frequencies = [];
-			populationFrequencies.map((popFrequency) => {
+			populationFrequencies.forEach((popFrequency) => {
 				frequencies.push(this.getPopFrequency(popFrequency));
 			});
 			if (frequencies.length > 0) {
@@ -199,9 +195,9 @@ class PopulationObservation extends Component {
 			if (prevKey !== undefined) if (prevKey) key = key + prevKey;
 			return (
 				<li key={uuidv1()}>
-					<a onClick={(e) => this.toggleexpandedRow(key)}>
+					<button onClick={(e) => this.toggleexpandedRow(key)}>
 						<b>Population Freuencies:</b>{' '}
-					</a>{' '}
+					</button>{' '}
 					{this.getPopulationFrequencies(populationFrequencies, key)}
 				</li>
 			);
@@ -303,11 +299,10 @@ class PopulationObservation extends Component {
 		if (variants.length > 0) {
 			var colocatedVariantsMap = new Map();
 			var variantDetails = [];
-			variants.map((variant) => {
+			variants.forEach((variant) => {
 				let change = variant.wildType + '>' + variant.alternativeSequence;
 				var colocatedVariants = colocatedVariantsMap.get(change);
 				if (colocatedVariants === null || colocatedVariants === undefined) colocatedVariants = [];
-				let key = 'colocated-' + variant.genomicLocation;
 				colocatedVariants.push(<li key={uuidv1()}>{this.getColocatedVariant(variant, change)}</li>);
 				colocatedVariantsMap.set(change, colocatedVariants);
 			});
@@ -345,10 +340,10 @@ class PopulationObservation extends Component {
 	render() {
 		const { data, altAA } = this.props;
 
-		if (data.proteinColocatedVariant != undefined && data.proteinColocatedVariant.length > 0) {
+		if (data.proteinColocatedVariant !== undefined && data.proteinColocatedVariant.length > 0) {
 			let variant = [];
 			let colocatedVariant = [];
-			data.proteinColocatedVariant.map((variation) => {
+			data.proteinColocatedVariant.forEach((variation) => {
 				if (variation.alternativeSequence === altAA) {
 					variant.push(variation);
 				} else {

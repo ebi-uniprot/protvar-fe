@@ -255,7 +255,7 @@ class App extends Component {
 			} else {
 				inputSubArray = inputArr.slice(skipRecord);
 			}
-			if (skipRecord == 0) {
+			if (skipRecord === 0) {
 				newPage = {
 					currentPage: page.currentPage,
 					previousPage: page.previousPage,
@@ -312,7 +312,7 @@ class App extends Component {
 				record.strand = gene.reverseStrand;
 				if (isoform.translatedSequences !== undefined && isoform.translatedSequences.length > 0) {
 					var ensps = [];
-					isoform.translatedSequences.map((translatedSeq) => {
+					isoform.translatedSequences.forEach((translatedSeq) => {
 						var translatedSequence = {};
 						var ensts = [];
 						translatedSeq.transcripts.map((transcript) => ensts.push(transcript.enst));
@@ -375,7 +375,7 @@ class App extends Component {
 	fetchNextPage = (uploadedFile, page, isFileSelected, loading, input) => {
 		var inputText = input;
 		if (inputText === undefined || inputText === null) {
-			var inputText = this.state.userInput;
+			inputText = this.state.userInput;
 		}
 		var pageNumber = page.currentPage;
 		const PAGE_SIZE = page.itemsPerPage;
@@ -425,7 +425,7 @@ class App extends Component {
 				if (!row.data[0].startsWith('#') && count > skipRecord) {
 					recordsProcessed++;
 					var newInput = this.createCsvString(row.data);
-					if (newInput != '') {
+					if (newInput !== '') {
 						if (firstLine) {
 							inputText.push(newInput);
 							firstLine = false;
