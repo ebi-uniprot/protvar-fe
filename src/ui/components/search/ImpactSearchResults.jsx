@@ -6,7 +6,6 @@ import { Loader } from 'franklin-sites';
 import axios, { post } from 'axios';
 import FunctionalSignificance from '../categories/FunctionalSignificance';
 import PopulationObservation from '../categories/PopulationObservation';
-import protvistaStructure from 'protvista-structure';
 import ProteinStructure from '../categories/ProteinStructure';
 import { Dropdown } from 'react-dropdown-now';
 import 'react-dropdown-now/style.css';
@@ -21,10 +20,6 @@ import { API_URL } from '../../../constants/const';
 class ImpactSearchResults extends Component {
 	constructor(props, context) {
 		super(props, context);
-
-		if (!window.customElements.get('protvista-structure')) {
-			window.customElements.define('protvista-structure', protvistaStructure);
-		}
 
 		this.state = {
 			expandedRow: null,
