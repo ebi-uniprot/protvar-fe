@@ -1,15 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import './styles/index.scss';
 import reportWebVitals from './reportWebVitals';
 
 import App from './ui/App';
 
 ReactDOM.render(
-	<Router>
+	<BrowserRouter basename={process.env.PUBLIC_URL}>
 		<App />
-	</Router>,
+	</BrowserRouter>,
 	document.getElementById('root')
 );
 
