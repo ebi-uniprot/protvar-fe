@@ -533,109 +533,103 @@ class ImpactSearchResults extends Component {
 		// const { rows, handleDownload } = this.props;
 
 		const rows = this.props.rows;
-		if (rows === null) {
-			const { history } = this.props;
-			history.push('/');
-			return null;
+		const tableRows = this.getTableRows(rows);
+		const page = this.props.page;
+		const totalPages = Math.ceil(page.totalItems / page.itemsPerPage);
+		const invalidInputs = this.props.invalidInputs;
+		const file = this.props.file;
+		const searchTerm = this.props.searchTerm;
+		let totalItems = 0;
+		if (file != null) {
+			totalItems = page.totalItems;
 		} else {
-			const tableRows = this.getTableRows(rows);
-			const page = this.props.page;
-			const totalPages = Math.ceil(page.totalItems / page.itemsPerPage);
-			const invalidInputs = this.props.invalidInputs;
-			const file = this.props.file;
-			const searchTerm = this.props.searchTerm;
-			let totalItems = 0;
-			if (file != null) {
-				totalItems = page.totalItems;
-			} else {
-				totalItems = searchTerm.length;
-			}
-			return (
-				<div
-					className="search-results"
-					id="divRoot"
-					ref={(node) => {
-						this.node = node;
-					}}
-				>
-					{this.getInvalidInputSection(invalidInputs)}
-
-					<table className="table-header">
-						<tbody>
-							<tr>
-								<td colSpan="1">
-									<DownloadModal searchTerm={searchTerm} file={file} totalItems={totalItems} />
-								</td>
-
-								<td colSpan="1">
-									{page === undefined || page.currentPage === 1 ? (
-										<Button onClick={() => null} className="button-new button-disabled">
-											&laquo; Previous
-										</Button>
-									) : (
-										<Button onClick={() => this.fetchNextPage(0)}>&laquo; Previous</Button>
-									)}
-								</td>
-								<td colSpan="1">
-									{page.currentPage} of {totalPages}
-								</td>
-								<td colSpan="1">
-									{page === undefined || !page.nextPage ? (
-										<Button onClick={() => null} className="button-new button-disabled">
-											Next &raquo;
-										</Button>
-									) : (
-										<Button onClick={() => this.fetchNextPage(1)}>Next &raquo;</Button>
-									)}
-								</td>
-								<td colSpan="1">
-									<Dropdown
-										placeholder="Pages"
-										options={[ 25, 50, 100 ]}
-										value={page.itemsPerPage}
-										onChange={(value) => this.changePageSize(value)}
-									/>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-					<table border="0" className="unstriped" cellPadding="0" cellSpacing="0">
-						<thead>
-							<tr>
-								<th colSpan="5">Input</th>
-								<th colSpan="3">Genomic</th>
-								<th colSpan="6">Protein</th>
-								<th colSpan="5">Annotations</th>
-							</tr>
-							<tr>
-								<th>CHR</th>
-								<th>Coordinate</th>
-								<th>ID</th>
-								<th>Ref</th>
-								<th>Alt</th>
-								<th>Gene</th>
-								<th>Codon (Strand)</th>
-								<th>CADD</th>
-								<th>show alt. isoforms</th>
-								<th>Isoform</th>
-								<th>ProteinName</th>
-								<th>AA Pos</th>
-								<th>AA Change</th>
-								<th>Consequences</th>
-								<th>Functional</th>
-								<th>Population Observation</th>
-								<th>Structural</th>
-								{/* <th>Evolution Inference</th> */}
-							</tr>
-						</thead>
-						<tbody>
-							{tableRows}
-							<InvalidTableRows invalidInputs={this.props.invalidInputs}/>
-						</tbody>
-					</table>
-				</div>
-			);
+			totalItems = searchTerm.length;
 		}
+		return (
+			<div
+				className="search-results"
+				id="divRoot"
+				ref={(node) => {
+					this.node = node;
+				}}
+			>
+				{this.getInvalidInputSection(invalidInputs)}
+
+				<table className="table-header">
+					<tbody>
+						<tr>
+							<td colSpan="1">
+								<DownloadModal searchTerm={searchTerm} file={file} totalItems={totalItems} />
+							</td>
+
+							<td colSpan="1">
+								{page === undefined || page.currentPage === 1 ? (
+									<Button onClick={() => null} className="button-new button-disabled">
+										&laquo; Previous
+									</Button>
+								) : (
+									<Button onClick={() => this.fetchNextPage(0)}>&laquo; Previous</Button>
+								)}
+							</td>
+							<td colSpan="1">
+								{page.currentPage} of {totalPages}
+							</td>
+							<td colSpan="1">
+								{page === undefined || !page.nextPage ? (
+									<Button onClick={() => null} className="button-new button-disabled">
+										Next &raquo;
+									</Button>
+								) : (
+									<Button onClick={() => this.fetchNextPage(1)}>Next &raquo;</Button>
+								)}
+							</td>
+							<td colSpan="1">
+								<Dropdown
+									placeholder="Pages"
+									options={[ 25, 50, 100 ]}
+									value={page.itemsPerPage}
+									onChange={(value) => this.changePageSize(value)}
+								/>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<table border="0" className="unstriped" cellPadding="0" cellSpacing="0">
+					<thead>
+						<tr>
+							<th colSpan="5">Input</th>
+							<th colSpan="3">Genomic</th>
+							<th colSpan="6">Protein</th>
+							<th colSpan="5">Annotations</th>
+						</tr>
+						<tr>
+							<th>CHR</th>
+							<th>Coordinate</th>
+							<th>ID</th>
+							<th>Ref</th>
+							<th>Alt</th>
+							<th>Gene</th>
+							<th>Codon (Strand)</th>
+							<th>CADD</th>
+							<th>show alt. isoforms</th>
+							<th>Isoform</th>
+							<th>ProteinName</th>
+							<th>AA Pos</th>
+							<th>AA Change</th>
+							<th>Consequences</th>
+							<th>Functional</th>
+							<th>Population Observation</th>
+							<th>Structural</th>
+							{/* <th>Evolution Inference</th> */}
+						</tr>
+					</thead>
+					<tbody>
+						{tableRows}
+						<InvalidTableRows invalidInputs={this.props.invalidInputs}/>
+					</tbody>
+				</table>
+			</div>
+		);
 	}
 }
 

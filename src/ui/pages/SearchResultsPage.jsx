@@ -2,6 +2,7 @@ import React, { Fragment } from 'react';
 import DefaultPageLayout from '../layout/DefaultPageLayout';
 import ImpactSearchResults from '../components/search/ImpactSearchResults';
 import Alert from '../components/other/Alert';
+import { Redirect } from 'react-router-dom'
 
 const SearchResultsPageContent = (props) => {
 	const {
@@ -17,6 +18,9 @@ const SearchResultsPageContent = (props) => {
 		invalidInputs,
 		history
 	} = props;
+
+	if(searchResults === null)
+		return <Redirect to="/"/>
 
 	return (
 		<Fragment>
