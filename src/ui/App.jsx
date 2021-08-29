@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Route, Switch, withRouter } from 'react-router-dom';
+import { Route, withRouter } from 'react-router-dom';
 import { post } from 'axios';
 import PapaParse from 'papaparse';
 
@@ -646,19 +646,11 @@ class App extends Component {
 		};
 
 		return (
-			<Switch>
+			<>
 				<Route path="/" exact render={() => <HomePage {...appProps} />} />
 				<Route path="/search" render={() => <SearchResultsPage {...appProps} />} />
 				<Route path="/api-error" render={() => <APIErrorPage {...appProps} />} />
-				<Route
-					component={({ location }) => (
-						<h3>
-							404: Can&lsquo;t find
-							{location.pathname}
-						</h3>
-					)}
-				/>
-			</Switch>
+			</>
 		);
 	}
 }
