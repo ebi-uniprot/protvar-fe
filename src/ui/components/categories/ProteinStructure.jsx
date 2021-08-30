@@ -1,15 +1,11 @@
 import React, { Component, Fragment } from 'react';
-import protvistaStructure from 'protvista-structure';
 import { v1 as uuidv1 } from 'uuid';
 import { ExternalLink } from 'franklin-sites';
-
+import useCustomElement from '../../../hooks/useCustomElement'
+import { Loader } from 'franklin-sites';
 class ProteinStructure extends Component {
 	constructor(props) {
 		super(props);
-
-		if (!window.customElements.get('protvista-structure')) {
-			window.customElements.define('protvista-structure', protvistaStructure);
-		}
 
 		this.state = {
 			pdbId: null,
@@ -40,21 +36,19 @@ class ProteinStructure extends Component {
 		}
 		let chains = str.chain_id.sort();
 		return (
-			<Fragment>
-				<tr className={rowClass} onClick={(e) => this.changeStructure(str.pdb_id)}>
-					<td className="small">
-						<a href={pdbUrl} target="_blank" rel="noreferrer">
-							<u>{str.pdb_id}</u>
-						</a>
-					</td>
-					<td className="small">{chains.join()}</td>
-					<td className="small">
-						{str.start}-{str.end}
-					</td>
-					<td className="small">{str.resolution}</td>
-					<td className="small">{str.experimental_method}</td>
-				</tr>
-			</Fragment>
+			<tr className={rowClass} onClick={(e) => this.changeStructure(str.pdb_id)} key={uuidv1()}>
+				<td className="small">
+					<a href={pdbUrl} target="_blank" rel="noreferrer">
+						<u>{str.pdb_id}</u>
+					</a>
+				</td>
+				<td className="small">{chains.join()}</td>
+				<td className="small">
+					{str.start}-{str.end}
+				</td>
+				<td className="small">{str.resolution}</td>
+				<td className="small">{str.experimental_method}</td>
+			</tr>
 		);
 	}
 
@@ -95,16 +89,7 @@ class ProteinStructure extends Component {
 		if (pdb === null || pdb === undefined) {
 			pdb = pdbId;
 		}
-		let position = pos + ':' + pos;
-		return (
-			<td colSpan="13" className="expanded-row">
-				<div className="significances-groups">
-					<div className="column">
-						<protvista-structure accession={accession} structureid={pdb} highlight={position} />
-					</div>
-				</div>
-			</td>
-		);
+		return <ProtVistaStructure {...{accession, pos, pdbId:pdb}} />;
 	}
 
 	protvistaStructure(isoform, structural, pdbId) {
@@ -144,16 +129,11 @@ class ProteinStructure extends Component {
 		}
 	}
 
-	getStructure(isoform, aaPos, pdbId) {
-		return this.getProtVistaStructure(isoform, aaPos, pdbId);
-	}
-
 	toggleAlphaFoldStructure(isoform, aaPos, alphaFoldStructureId) {
 		this.setState({
 			pdbId: alphaFoldStructureId,
 			alphaFoldStructure: true
 		});
-		// return this.getProtVistaStructure(isoform, aaPos, alphaFoldStructure);
 	}
 
 	getAlphaFoldStructure(alphaFoldStructureId, aaPos, isoform, pdbId) {
@@ -231,14 +211,10 @@ class ProteinStructure extends Component {
 
 	render() {
 		const { structural, isoform, aaPos, pdbId, alphaFoldStructureId } = this.props;
-		let structureid = pdbId;
-		if (pdbId === null) {
-			structureid = alphaFoldStructureId;
-			// this.toggleAlphaFoldStructure(isoform, aaPos, alphaFoldStructureId);
-		}
+		let structureid = pdbId ? pdbId : alphaFoldStructureId;
 
 		return (
-			<tr>
+			<tr key={isoform}>
 				{this.getProtVistaStructure(isoform, aaPos, structureid)}
 				<td colSpan="5" className="expanded-row">
 					{this.protvistaStructure(isoform, structural, pdbId)}
@@ -248,6 +224,33 @@ class ProteinStructure extends Component {
 			</tr>
 		);
 	}
+}
+
+const PageSpecificStructure = ({component}) => {
+	return (
+		<td colSpan="13" className="expanded-row">
+			<div className="significances-groups">
+				<div className="column">
+					{component}
+				</div>
+			</div>
+		</td>
+	);
+}
+
+const ProtVistaStructure = ({accession, pos, pdbId}) => {
+	console.log(accession)
+	console.log(pos)
+	console.log(pdbId)
+	const protvistaStructure = useCustomElement(
+		() => import(/* webpackChunkName: "protvista-structure" */ 'protvista-structure'),
+		'protvista-structure'
+	);
+	if(!protvistaStructure)
+		return <PageSpecificStructure component={<Loader />}/>
+	
+		let position = pos + ':' + pos;
+	return <PageSpecificStructure component={<protvista-structure accession={accession} structureid={pdbId} highlight={position} />}/>
 }
 
 export default ProteinStructure;
