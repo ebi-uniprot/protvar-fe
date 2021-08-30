@@ -19,7 +19,7 @@ const SearchResultsPageContent = (props) => {
 		history
 	} = props;
 
-	if(searchResults === null)
+	if(!searchResults)
 		return <Redirect to="/"/>
 
 	return (
