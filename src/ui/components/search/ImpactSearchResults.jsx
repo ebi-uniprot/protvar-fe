@@ -6,7 +6,6 @@ import { Loader } from 'franklin-sites';
 import axios, { post } from 'axios';
 import FunctionalSignificance from '../categories/FunctionalSignificance';
 import PopulationObservation from '../categories/PopulationObservation';
-import ProteinStructure from '../categories/ProteinStructure';
 import { Dropdown } from 'react-dropdown-now';
 import 'react-dropdown-now/style.css';
 import DownloadModal from '../modal/DownloadModal';
@@ -16,6 +15,8 @@ import StructureIcon from '../../../icons/structures-3d.svg';
 import PopulationIcon from '../../../icons/human.svg';
 import InvalidTableRows from './InvalidTableRows';
 import { API_URL } from '../../../constants/const';
+import StructuralDetail from '../structure/StructuralDetail';
+import { getCaddCss, getTitle } from '../mapping/CaddHelper'
 
 class ImpactSearchResults extends Component {
 	constructor(props, context) {
@@ -68,21 +69,7 @@ class ImpactSearchResults extends Component {
 
 	getProteinStructure(key, expandedRow, accession) {
 		if (key === expandedRow) {
-			if (this.state.structureLoaded) {
-				let pdbId = this.state.pdbId;
-				let alphaFoldStructureId = this.state.alphaFoldStructureId;
-				return (
-					<ProteinStructure
-						structural={accession.structural}
-						isoform={accession.isoform}
-						aaPos={accession.aaPos}
-						pdbId={pdbId}
-						alphaFoldStructureId={alphaFoldStructureId}
-					/>
-				);
-			} else {
-				return this.getLoader();
-			}
+			return <StructuralDetail isoFormAccession={accession.isoform} aaPosition={accession.aaPos}/>
 		}
 	}
 
@@ -163,7 +150,7 @@ class ImpactSearchResults extends Component {
 			this.fetchFunctionalFeatures(row, rowIdAndType, expandedRow);
 		}
 		if (significanceType === 'STR') {
-			this.fetchStructuralData(row, rowIdAndType, expandedRow);
+			this.setState({expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null});
 		}
 		if (significanceType === 'POP') {
 			this.fetchVariationData(row, rowIdAndType, expandedRow);
@@ -196,87 +183,6 @@ class ImpactSearchResults extends Component {
 		}
 	};
 
-	fetchStructuralData = (row, rowIdAndType, expandedRow) => {
-		var aaPosition = row.aaPos;
-		const APIUrl = 'https://www.ebi.ac.uk/pdbe/graph-api/mappings/best_structures/' + row.isoform;
-		// row.isoform +
-		// '/' +
-		// aaPosition +
-		// '/' +
-		// (aaPosition + 1);
-		if (row.structureLoaded === false) {
-			var errorFlag = false;
-			this.setState({
-				structureLoaded: false,
-				expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null
-			});
-			axios
-				.get(APIUrl)
-				.catch((err) => {
-					errorFlag = true;
-
-					this.setState({
-						structureLoaded: true,
-						showLoader: false,
-						pdbId: null
-					});
-					console.log(err);
-				})
-				.then((response) => {
-					if (!errorFlag) {
-						var filteredData = [];
-						response.data[row.isoform].forEach((str) => {
-							if (aaPosition >= str.unp_start && aaPosition <= str.unp_end) {
-								filteredData.push(str);
-							}
-						});
-						row.structural = filteredData;
-						row.structureLoaded = true;
-						var pdbId = '';
-						if (filteredData.length > 0) {
-							pdbId = filteredData[0].pdb_id;
-						}
-						this.setState({
-							structureLoaded: true,
-							showLoader: false,
-							pdbId: pdbId
-						});
-					} else {
-						console.log('Error while fetching protein structure');
-					}
-				});
-
-			let url = 'https://alphafold.ebi.ac.uk/api/prediction/' + row.isoform;
-			errorFlag = false;
-			axios
-				.get(url)
-				.catch((err) => {
-					errorFlag = true;
-					console.log(err);
-				})
-				.then((response) => {
-					if (!errorFlag) {
-						if (response.data !== undefined && response.data.length > 0) {
-							row.alphaFoldStructure = response.data[0].entryId;
-
-							this.setState({
-								alphaFoldStructureId: response.data[0].entryId
-							});
-						}
-					}
-				});
-		} else {
-			var pdb_id = null;
-			if (row.structural !== null && row.structural !== undefined && row.structural.length > 0)
-				pdb_id = row.structural[0].pdb_id;
-			this.setState({
-				pdbId: pdb_id,
-				alphaFoldStructureId: row.alphaFoldStructure,
-				expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null
-			});
-		}
-	};
-
 	fetchNextPage = (next) => {
 		var fetchNextPage = this.props.fetchNextPage;
 		var page = this.props.page;
@@ -304,9 +210,8 @@ class ImpactSearchResults extends Component {
 		return '';
 	}
 	getRow = (accession, openGroup) => {
-		let caddColour = '';
-		let caddCss = '';
-		let caddTitle = '';
+		let caddCss = getCaddCss(accession.CADD);
+		let caddTitle = getTitle(accession.CADD);
 		let strand = '(+)';
 		if (accession.strand === true) strand = '(-)';
 		if (accession.codon === undefined || accession.codon === null) {
@@ -319,36 +224,6 @@ class ImpactSearchResults extends Component {
 		if (accession.isoform === undefined) proteinType = '';
 		if (accession.proteinName !== undefined && accession.proteinName.length > 20) {
 			proteinName = accession.proteinName.substring(0, 20) + '..';
-		}
-		if (accession.CADD === undefined || accession.CADD === '-') {
-			caddCss = '';
-		} else {
-			if (accession.CADD < 15) {
-				caddColour = 'green';
-				caddTitle =
-					'likely benign (15 is the median value for all possible canonical splice site changes and non-synonymous variants in CADD v1.0)';
-			}
-			if (accession.CADD >= 15 && accession.CADD < 20) {
-				caddColour = 'yellow';
-				caddTitle =
-					'potentially deleterious - <5% most deleterious substitutions that you can do to the human genome';
-			}
-			if (accession.CADD >= 20 && accession.CADD < 25) {
-				caddColour = 'orange';
-				caddTitle =
-					'quite likely deleterious - <1% most deleterious substitutions that you can do to the human genome';
-			}
-			if (accession.CADD >= 25 && accession.CADD < 30) {
-				caddColour = 'darkOrange';
-				caddTitle =
-					'probably deleterious <0.5% most deleterious substitutions that you can do to the human genome30 highly likely deleterious';
-			}
-			if (accession.CADD >= 30) {
-				caddColour = 'red';
-				caddTitle =
-					'highly likely deleterious - <0.1% most deleterious substitutions that you can do to the human genome';
-			}
-			caddCss = `label warning cadd-score cadd-score--${caddColour}`;
 		}
 
 		const chromosomeUrl = 'https://www.ensembl.org/Homo_sapiens/Location/Chromosome?r=' + accession.chromosome;

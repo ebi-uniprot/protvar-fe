@@ -2,10 +2,8 @@
   "name": "pepvep",
   "version": "0.1.0",
   "private": false,
-  "dependencies": {
-    
-  },
   "devDependencies": {
+    "@types/uuid": "^8.3.1",
     "axios": "^0.18.0",
     "cra-template-typescript": "1.1.2",
     "file-loader": "^6.2.0",
