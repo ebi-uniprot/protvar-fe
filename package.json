@@ -8,7 +8,7 @@
     "cra-template-typescript": "1.1.2",
     "file-loader": "^6.2.0",
     "file-saver": "^2.0.5",
-    "franklin-sites": "0.0.145",
+    "franklin-sites": "0.0.160",
     "node-sass-chokidar": "^1.1.0",
     "prop-types": "^15.6.1",
     "protvista-structure": "3.3.1",
