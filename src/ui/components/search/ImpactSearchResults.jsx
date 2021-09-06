@@ -5,7 +5,6 @@ import ProteinReviewStatus from '../other/ProteinReviewStatus';
 import { Loader } from 'franklin-sites';
 import axios, { post } from 'axios';
 import FunctionalSignificance from '../categories/FunctionalSignificance';
-import PopulationObservation from '../categories/PopulationObservation';
 import { Dropdown } from 'react-dropdown-now';
 import 'react-dropdown-now/style.css';
 import DownloadModal from '../modal/DownloadModal';
@@ -17,6 +16,7 @@ import InvalidTableRows from './InvalidTableRows';
 import { API_URL } from '../../../constants/const';
 import StructuralDetail from '../structure/StructuralDetail';
 import { getCaddCss, getTitle } from '../mapping/CaddHelper'
+import PopulationDetail from '../population/PopulationDetail'
 
 class ImpactSearchResults extends Component {
 	constructor(props, context) {
@@ -75,11 +75,12 @@ class ImpactSearchResults extends Component {
 
 	getPopulationObservation(key, expandedRow, accession) {
 		if (key === expandedRow) {
-			if (this.state.variationLoaded) {
-				return <PopulationObservation data={accession.variation} altAA={accession.variantAA} />;
-			} else {
-				return this.getLoader();
-			}
+			// if (this.state.variationLoaded) {
+				//return <PopulationObservation data={accession.variation} altAA={accession.variantAA} />;
+				return <PopulationDetail populationObservationsUri={accession.populationObservationsUri} variantAA={accession.variantAA} />;
+			// } else {
+				// return this.getLoader();
+			// }
 		}
 	}
 
@@ -153,7 +154,8 @@ class ImpactSearchResults extends Component {
 			this.setState({expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null});
 		}
 		if (significanceType === 'POP') {
-			this.fetchVariationData(row, rowIdAndType, expandedRow);
+			// this.fetchVariationData(row, rowIdAndType, expandedRow);
+			this.setState({expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null});
 		} else {
 			this.setState({
 				expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null

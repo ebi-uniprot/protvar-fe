@@ -1,0 +1,100 @@
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { API_URL } from '../../../constants/const';
+import PopulationDataRow from './PopulationDataRow';
+import NoPopulationDataRow from './NoPopulationDataRow';
+import { TOTAL_COLS } from '../../../constants/SearchResultTable';
+import { Loader } from 'franklin-sites';
+
+export interface PopulationObservationResponse {
+  genomicColocatedVariant: any,
+  proteinColocatedVariant: Array<ProteinColocatedVariant>
+}
+
+export interface ProteinColocatedVariant {
+  cytogeneticBand: string,
+  wildType: string,
+  alternativeSequence: string,
+  genomicLocation: string,
+  populationFrequencies: Array<PopulationFrequency>,
+  predictions: Array<Prediction>,
+  xrefs: Array<Xref>,
+  evidences: Array<Evidence>,
+  association: Array<Association>,
+  clinicalSignificances: Array<ClinicalSignificance>
+}
+
+interface Prediction {
+  predictionValType: string,
+  predAlgorithmNameType: string,
+  score: number
+}
+
+export interface Xref {
+  name: string,
+  id: string,
+  url: string,
+  alternativeUrl: string,
+  reviewed: any
+}
+
+export interface Evidence {
+  code: string,
+  source: EvidenceSource,
+  label: any
+}
+
+interface EvidenceSource {
+  name: string,
+  id: string,
+  url: string,
+  alternativeUrl: string
+}
+
+export interface Association {
+  name: string,
+  description: string,
+  dbReferences: Array<Xref>,
+  evidences: Array<Evidence>,
+  disease: boolean
+}
+
+export interface ClinicalSignificance {
+  type: string,
+  sources: Array<string>
+}
+
+export interface PopulationFrequency {
+  sourceName: string
+  frequencies: Array<Frequency>
+}
+
+interface Frequency {
+  label: string,
+  value: number
+}
+
+interface PopulationDetailProps {
+  populationObservationsUri: string
+  variantAA: string
+}
+
+function PopulationDetail(props: PopulationDetailProps) {
+  const { populationObservationsUri } = props;
+  const [poApiData, setPoApiData] = useState<PopulationObservationResponse>();
+
+  useEffect(() => {
+    axios.get<PopulationObservationResponse>(API_URL + populationObservationsUri)
+      .then(response => {
+        setPoApiData(response.data);
+      })
+      .catch(err => { })
+  }, [populationObservationsUri]);
+  if (!poApiData)
+    return <tr><td colSpan={TOTAL_COLS}><Loader /></td></tr>
+  else if (poApiData.proteinColocatedVariant && poApiData.proteinColocatedVariant.length > 0)
+    return <PopulationDataRow poApiData={poApiData} variantAA={props.variantAA} />
+  else
+    return <NoPopulationDataRow />
+}
+export default PopulationDetail;
