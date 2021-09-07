@@ -5,6 +5,7 @@ import PopulationDataRow from './PopulationDataRow';
 import NoPopulationDataRow from './NoPopulationDataRow';
 import { TOTAL_COLS } from '../../../constants/SearchResultTable';
 import { Loader } from 'franklin-sites';
+import { Evidence } from '../../../types/ApiInterfaces';
 
 export interface PopulationObservationResponse {
   genomicColocatedVariant: any,
@@ -36,19 +37,6 @@ export interface Xref {
   url: string,
   alternativeUrl: string,
   reviewed: any
-}
-
-export interface Evidence {
-  code: string,
-  source: EvidenceSource,
-  label: any
-}
-
-interface EvidenceSource {
-  name: string,
-  id: string,
-  url: string,
-  alternativeUrl: string
 }
 
 export interface Association {

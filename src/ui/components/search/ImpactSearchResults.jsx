@@ -4,7 +4,6 @@ import Button from '../../elements/form/Button';
 import ProteinReviewStatus from '../other/ProteinReviewStatus';
 import { Loader } from 'franklin-sites';
 import axios, { post } from 'axios';
-import FunctionalSignificance from '../categories/FunctionalSignificance';
 import { Dropdown } from 'react-dropdown-now';
 import 'react-dropdown-now/style.css';
 import DownloadModal from '../modal/DownloadModal';
@@ -17,6 +16,7 @@ import { API_URL } from '../../../constants/const';
 import StructuralDetail from '../structure/StructuralDetail';
 import { getCaddCss, getTitle } from '../mapping/CaddHelper'
 import PopulationDetail from '../population/PopulationDetail'
+import FunctionalDetail from '../function/FunctionalDetail'
 
 class ImpactSearchResults extends Component {
 	constructor(props, context) {
@@ -37,7 +37,7 @@ class ImpactSearchResults extends Component {
 	}
 
 	componentDidUnMount() {
-		window.onbeforeunload = function() {
+		window.onbeforeunload = function () {
 			this.onUnload();
 			return <Redirect to="/home" />;
 		}.bind(this);
@@ -52,9 +52,9 @@ class ImpactSearchResults extends Component {
 			buttonCss = 'button--significances-clicked  button-new';
 			columnCss = 'fit-clicked';
 		}
-		var buttonTag = <img src={ProteinIcon} className="button-icon" alt="protein icon"/>; //<ProteinIcon className="button-icon" />;
-		if (buttonLabel === 'POP') buttonTag = <img src={PopulationIcon} className="button-icon" alt="population icon"/>;
-		else if (buttonLabel === 'STR') buttonTag = <img src={StructureIcon} className="button-icon" alt="structure icon"/>;
+		var buttonTag = <img src={ProteinIcon} className="button-icon" alt="protein icon" />; //<ProteinIcon className="button-icon" />;
+		if (buttonLabel === 'POP') buttonTag = <img src={PopulationIcon} className="button-icon" alt="population icon" />;
+		else if (buttonLabel === 'STR') buttonTag = <img src={StructureIcon} className="button-icon" alt="structure icon" />;
 		return (
 			<td className={columnCss}>
 				<button
@@ -69,36 +69,40 @@ class ImpactSearchResults extends Component {
 
 	getProteinStructure(key, expandedRow, accession) {
 		if (key === expandedRow) {
-			return <StructuralDetail isoFormAccession={accession.isoform} aaPosition={accession.aaPos}/>
+			return <StructuralDetail isoFormAccession={accession.isoform} aaPosition={accession.aaPos} />
 		}
 	}
 
 	getPopulationObservation(key, expandedRow, accession) {
 		if (key === expandedRow) {
 			// if (this.state.variationLoaded) {
-				//return <PopulationObservation data={accession.variation} altAA={accession.variantAA} />;
-				return <PopulationDetail populationObservationsUri={accession.populationObservationsUri} variantAA={accession.variantAA} />;
+			//return <PopulationObservation data={accession.variation} altAA={accession.variantAA} />;
+			return <PopulationDetail populationObservationsUri={accession.populationObservationsUri} variantAA={accession.variantAA} />;
 			// } else {
-				// return this.getLoader();
+			// return this.getLoader();
 			// }
 		}
 	}
 
 	getFunctionalSignificance(functionalKey, expandedRow, accession) {
 		if (functionalKey === expandedRow) {
-			if (this.state.functionLoaded) {
-				return (
-					<FunctionalSignificance
-						refAA={accession.refAA}
-						variantAA={accession.variantAA}
-						data={accession.functional}
-						ensg={accession.ensg}
-						ensp={accession.ensp}
-					/>
-				);
-			} else {
-				return this.getLoader();
-			}
+			return (
+				// <FunctionalSignificance
+				// 	refAA={accession.refAA}
+				// 	variantAA={accession.variantAA}
+				// 	data={accession.functional}
+				// 	ensg={accession.ensg}
+				// 	ensp={accession.ensp}
+				// />
+				<FunctionalDetail
+					refAA={accession.refAA}
+					variantAA={accession.variantAA}
+					data={accession.functional}
+					ensg={accession.ensg}
+					ensp={accession.ensp}
+					referenceFunctionUri={accession.referenceFunctionUri}
+				/>
+			);
 		}
 	}
 
@@ -146,21 +150,22 @@ class ImpactSearchResults extends Component {
 	toggleSignificanceRow(rowId, significanceType, row) {
 		const { expandedRow } = this.state;
 		const rowIdAndType = rowId;
+		this.setState({ expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null });
 
-		if (significanceType === 'FUN') {
-			this.fetchFunctionalFeatures(row, rowIdAndType, expandedRow);
-		}
-		if (significanceType === 'STR') {
-			this.setState({expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null});
-		}
-		if (significanceType === 'POP') {
-			// this.fetchVariationData(row, rowIdAndType, expandedRow);
-			this.setState({expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null});
-		} else {
-			this.setState({
-				expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null
-			});
-		}
+		// if (significanceType === 'FUN') {
+		// 	this.fetchFunctionalFeatures(row, rowIdAndType, expandedRow);
+		// }
+		// if (significanceType === 'STR') {
+		// 	this.setState({ expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null });
+		// }
+		// if (significanceType === 'POP') {
+		// 	// this.fetchVariationData(row, rowIdAndType, expandedRow);
+		// 	this.setState({ expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null });
+		// } else {
+		// 	this.setState({
+		// 		expandedRow: rowIdAndType !== expandedRow ? rowIdAndType : null
+		// 	});
+		// }
 	}
 
 	fetchVariationData = (row, rowIdAndType, expandedRow) => {
@@ -377,9 +382,9 @@ class ImpactSearchResults extends Component {
 	getInvalidInputSection(invalidInputs) {
 		if (invalidInputs !== undefined && invalidInputs !== null && invalidInputs.length > 0) {
 			return (
-					<div className="alert alert-danger alert-dismissible fade show">
-						Few of inputs are not valid
-					</div>
+				<div className="alert alert-danger alert-dismissible fade show">
+					Few of inputs are not valid
+				</div>
 			);
 		}
 	}
@@ -458,7 +463,7 @@ class ImpactSearchResults extends Component {
 							<td colSpan="1">
 								<Dropdown
 									placeholder="Pages"
-									options={[ 25, 50, 100 ]}
+									options={[25, 50, 100]}
 									value={page.itemsPerPage}
 									onChange={(value) => this.changePageSize(value)}
 								/>
@@ -497,7 +502,7 @@ class ImpactSearchResults extends Component {
 					</thead>
 					<tbody>
 						{tableRows}
-						<InvalidTableRows invalidInputs={this.props.invalidInputs}/>
+						<InvalidTableRows invalidInputs={this.props.invalidInputs} />
 					</tbody>
 				</table>
 			</div>
