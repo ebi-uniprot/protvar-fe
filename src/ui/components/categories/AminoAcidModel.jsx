@@ -63,25 +63,16 @@ const AminoAcidModel = (props) => {
 						<td>
 							<ul className="flatList-no-separator">
 								<li>
-									<img className="img-size" src={getImageByKey(ref)} alt={ref}/>
+									<img className="img-size" src={getImageByKey(ref)} alt={ref} />
 								</li>
 								<li>
-									<span className="icon-arrow">&#8594;</span>
+									{ref.toUpperCase()}<span className="icon-arrow">&#8594;</span>{variant.toUpperCase()}
 								</li>
 								<li>
-									<img className="img-size" src={getImageByKey(variant)} alt={variant}/>
+									<img className="img-size" src={getImageByKey(variant)} alt={variant} />
 								</li>
 							</ul>
 						</td>
-						{/* <td>
-							The residue at sequence position 34 in this protein is an arginine which has a positively
-							charged side chain, making it hydrophilic (ie preferring the surface of the protein to its
-							interior).
-							<br />
-							<br />The variant residue is a histidine which has a positively charged side chain, making
-							it hydrophilic (ie preferring the surface of the protein to its interior). Number of base
-							changes: 1
-						</td> */}
 					</tr>
 				</tbody>
 			</table>
