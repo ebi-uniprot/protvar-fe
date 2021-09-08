@@ -4,8 +4,7 @@ import axios from 'axios';
 import ProtVista3D from './ProtVista3D';
 import PdbInfoTable from './PdbInfoTable';
 import AlphafoldInfoTable from './AlphafoldInfoTable';
-import { Loader } from 'franklin-sites';
-import { TOTAL_COLS } from '../../../constants/SearchResultTable';
+import LoaderRow from '../search/LoaderRow';
 
 interface PdbResponse {
   [isoFormAccession: string]: Array<PdbResponseElement>;
@@ -96,11 +95,9 @@ function StructuralDetail(props: StructuralDetailProps) {
   }
 
   if (!selected3DId) {
-    return <tr><td colSpan={TOTAL_COLS}><Loader /></td></tr>
+    return <LoaderRow />
   }
 
-  console.log("rizwan ishtiaq")
-  console.log(selected3DId)
   return (
     <tr key={isoFormAccession}>
       <ProtVista3D accession={isoFormAccession} pos={aaPosition} id={selected3DId} />

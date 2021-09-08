@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
 
-import { Loader } from 'franklin-sites';
 import NoFunctionalDataRow from './NoFunctionalDataRow';
 import { Evidence } from '../../../types/ApiInterfaces';
-import { TOTAL_COLS } from '../../../constants/SearchResultTable';
 import FunctionalDataRow from './FunctionalDataRow';
 import axios from 'axios';
 import { API_URL } from '../../../constants/const';
 import { TranslatedSequence } from '../mapping/Convertor';
+import LoaderRow from '../search/LoaderRow';
 
 export interface FunctionalResponse {
   position: number
@@ -115,7 +114,7 @@ function FunctionalDetail(props: FunctionalDetailProps) {
       });
   }, [referenceFunctionUri]);
   if (!apiData)
-    return <tr><td colSpan={TOTAL_COLS}><Loader /></td></tr>
+    return <LoaderRow />
   else if (apiData.id)
     return <FunctionalDataRow apiData={apiData} {...props} />
   else

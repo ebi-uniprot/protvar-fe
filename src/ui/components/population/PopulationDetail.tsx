@@ -3,9 +3,8 @@ import axios from 'axios';
 import { API_URL } from '../../../constants/const';
 import PopulationDataRow from './PopulationDataRow';
 import NoPopulationDataRow from './NoPopulationDataRow';
-import { TOTAL_COLS } from '../../../constants/SearchResultTable';
-import { Loader } from 'franklin-sites';
 import { Evidence } from '../../../types/ApiInterfaces';
+import LoaderRow from '../search/LoaderRow';
 
 export interface PopulationObservationResponse {
   genomicColocatedVariant: any,
@@ -79,7 +78,7 @@ function PopulationDetail(props: PopulationDetailProps) {
       .catch(err => { })
   }, [populationObservationsUri]);
   if (!poApiData)
-    return <tr><td colSpan={TOTAL_COLS}><Loader /></td></tr>
+    return <LoaderRow />
   else if (poApiData.proteinColocatedVariant && poApiData.proteinColocatedVariant.length > 0)
     return <PopulationDataRow poApiData={poApiData} variantAA={props.variantAA} />
   else
