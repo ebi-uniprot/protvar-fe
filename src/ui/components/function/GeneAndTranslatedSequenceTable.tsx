@@ -1,9 +1,10 @@
 import { ENSEMBL_GENE_RUL } from "../../../constants/ExternalUrls";
 import { v1 as uuidv1 } from 'uuid';
+import { TranslatedSequence } from "../mapping/Convertor";
 
 interface GeneAndTranslatedSequenceTableProps {
 ensg: string
-ensp: any
+ensp: Array<TranslatedSequence>
 }
 function GeneAndTranslatedSequenceTable(props: GeneAndTranslatedSequenceTableProps) {
   const {ensg, ensp} = props;

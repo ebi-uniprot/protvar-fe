@@ -42,23 +42,6 @@ const SearchResultsPageContent = (props) => {
 	);
 };
 
-// SearchResultsPageContent.propTypes = {
-// 	searchResults: PropTypes.objectOf(
-// 		PropTypes.shape({
-// 			input: PropTypes.string,
-// 			key: PropTypes.string,
-// 			rows: PropTypes.arrayOf(PropTypes.shape({}))
-// 		})
-// 	).isRequired,
-// 	handleDownload: PropTypes.func.isRequired,
-// 	errors: PropTypes.arrayOf(
-// 		PropTypes.shape({
-// 			title: PropTypes.string,
-// 			message: PropTypes.string.isRequired
-// 		})
-// 	).isRequired
-// };
-
 const SearchResultsPage = (props) => (
 	<DefaultPageLayout title="Search" content={<SearchResultsPageContent {...props} />} />
 );

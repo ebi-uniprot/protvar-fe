@@ -4,13 +4,14 @@ import { FunctionalResponse } from './FunctionalDetail';
 import GeneAndTranslatedSequenceTable from './GeneAndTranslatedSequenceTable';
 import ProteinInformationTable from './ProteinInformationTable';
 import ResidueRegionTable from './ResidueRegionTable';
+import { TranslatedSequence } from '../mapping/Convertor';
 
 interface FunctionalDataRowProps {
   apiData: FunctionalResponse
   refAA: string
   variantAA: string
   ensg: string
-  ensp: string
+  ensp: Array<TranslatedSequence>
 }
 
 function FunctionalDataRow(props: FunctionalDataRowProps) {

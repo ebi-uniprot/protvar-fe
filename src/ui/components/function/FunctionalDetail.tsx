@@ -7,6 +7,7 @@ import { TOTAL_COLS } from '../../../constants/SearchResultTable';
 import FunctionalDataRow from './FunctionalDataRow';
 import axios from 'axios';
 import { API_URL } from '../../../constants/const';
+import { TranslatedSequence } from '../mapping/Convertor';
 
 export interface FunctionalResponse {
   position: number
@@ -101,7 +102,7 @@ interface FunctionalDetailProps {
   refAA: string
   variantAA: string
   ensg: string
-  ensp: string
+  ensp: Array<TranslatedSequence>
 }
 
 function FunctionalDetail(props: FunctionalDetailProps) {

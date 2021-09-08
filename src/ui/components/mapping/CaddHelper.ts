@@ -12,7 +12,8 @@ function getColor(CADD: number) {
   }
 }
 
-export function getTitle(CADD: number) {
+export function getTitle(cadd: string | undefined) {
+  const CADD = parseInt(cadd!)
   if (CADD < 15) {
     return 'likely benign (15 is the median value for all possible canonical splice site changes and non-synonymous variants in CADD v1.0)';;
   } else if (CADD >= 15 && CADD < 20) {

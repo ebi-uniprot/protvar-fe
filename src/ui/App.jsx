@@ -7,6 +7,7 @@ import HomePage from './pages/HomePage';
 import SearchResultsPage from './pages/SearchResultsPage';
 import APIErrorPage from './pages/APIErrorPage';
 import { API_URL } from '../constants/const';
+import {convertApiMappingToTableRecords} from './components/mapping/Convertor'
 
 class App extends Component {
 	constructor(props, context) {
@@ -271,87 +272,6 @@ class App extends Component {
 		}
 	};
 
-	createGenes(mapping) {
-		var genes = [];
-		var chr = mapping.chromosome;
-		var start = mapping.geneCoordinateStart;
-		var variant = mapping.variantAllele;
-		var id = mapping.id;
-
-		mapping.genes.forEach((gene) => {
-			var rows = [];
-			let ensg = gene.ensg;
-			gene.isoforms.forEach((isoform) => {
-				var record = {};
-				if (isoform.canonical || isoform.canonicalAccession === null) {
-					record.chromosome = chr;
-					record.id = id;
-					record.refAllele = gene.refAllele;
-					record.geneName = gene.geneName;
-					record.codon = isoform.refCodon + '/' + isoform.variantCodon;
-					if (gene.caddScore === null) record.CADD = '-';
-					else record.CADD = gene.caddScore;
-				}
-				record.position = start;
-				record.altAllele = variant;
-				record.proteinName = isoform.proteinName;
-				record.isoform = isoform.accession;
-				record.aaPos = isoform.isoformPosition;
-				record.aaChange = isoform.refAA + '/' + isoform.variantAA;
-				record.refAA = isoform.refAA;
-				record.variantAA = isoform.variantAA;
-				record.consequences = isoform.consequences;
-				record.cdsPosition = isoform.cdsPosition;
-				record.canonical = isoform.canonical;
-				record.canonicalAccession = isoform.canonicalAccession;
-				record.referenceFunctionUri = isoform.referenceFunctionUri;
-				record.populationObservationsUri = isoform.populationObservationsUri;
-				record.ensp = [];
-				record.enst = [];
-				record.strand = gene.reverseStrand;
-				if (isoform.translatedSequences !== undefined && isoform.translatedSequences.length > 0) {
-					var ensps = [];
-					isoform.translatedSequences.forEach((translatedSeq) => {
-						var translatedSequence = {};
-						var ensts = [];
-						translatedSeq.transcripts.map((transcript) => ensts.push(transcript.enst));
-						translatedSequence.ensp = translatedSeq.ensp;
-						translatedSequence.ensts = ensts.join();
-						ensps.push(translatedSequence);
-					});
-					record.ensp = ensps;
-					// record.enst = ensts;
-					// isoform.translatedSequences.map;
-					// if (
-					// 	isoform.translatedSequences[0].transcripts !== undefined &&
-					// 	isoform.translatedSequences[0].transcripts.length > 0
-					// ) {
-					// 	record.enst = isoform.translatedSequences[0].transcripts[0].enst;
-					// }
-				}
-				record.ensg = ensg;
-				record.functionLoaded = false;
-				record.structureLoaded = false;
-				record.variationLoaded = false;
-				rows.push(record);
-			});
-			genes.push(rows);
-		});
-		if (genes.length === 0) {
-			var rows = [];
-			var record = {};
-			record.chromosome = chr;
-			record.position = start;
-			record.id = id;
-			record.refAllele = mapping.userAllele;
-			record.altAllele = mapping.variantAllele;
-			record.canonicalAccession = null;
-			rows.push(record);
-			genes.push(rows);
-		}
-		return genes;
-	}
-
 	getInputType(inputArr) {
 		return 'vcf';
 		// let firstInput = inputArr[0];
@@ -477,7 +397,7 @@ class App extends Component {
 			.then((response) => {
 				if (!errorFlag) {
 					response.data.mappings.forEach((mapping) => {
-						var genes = this.createGenes(mapping);
+						var genes = convertApiMappingToTableRecords(mapping);
 						mappings.push(genes);
 					});
 
