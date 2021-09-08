@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import DefaultPageContent from './DefaultPageContent';
@@ -84,20 +85,20 @@ class DefaultPageLayout extends Component {
 										<tbody>
 											<tr className="navbar">
 												<td>
-													<a
+													<Link
 														className="local-title"
-														href="/"
+														to="/"
 														title="Back to PepVEP's homepage"
 													>
 														<i className="fa fa-fw fa-home" /> PepVEP
-													</a>
-													<a
+													</Link>
+													<Link
 														className="local-sub-title"
-														href="/"
+														to="/"
 														title="Back to PepVEP's homepage"
 													>
 														Predicting the effect of varying amino acids in proteins
-													</a>
+													</Link>
 												</td>
 
 												<td className="topnav-right local-sub-title">
