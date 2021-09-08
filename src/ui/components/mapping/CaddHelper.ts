@@ -13,7 +13,7 @@ function getColor(CADD: number) {
 }
 
 export function getTitle(cadd: string | undefined) {
-  const CADD = parseInt(cadd!)
+  const CADD = parseFloat(cadd!)
   if (CADD < 15) {
     return 'likely benign (15 is the median value for all possible canonical splice site changes and non-synonymous variants in CADD v1.0)';;
   } else if (CADD >= 15 && CADD < 20) {
@@ -31,6 +31,6 @@ export function getCaddCss(CADD: string | undefined) {
   if (CADD === undefined || CADD === '-') {
     return '';
   } else {
-    return `label warning cadd-score cadd-score--${getColor(parseInt(CADD))}`
+    return `label warning cadd-score cadd-score--${getColor(parseFloat(CADD))}`
   }
 }

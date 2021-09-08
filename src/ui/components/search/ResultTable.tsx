@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, Fragment } from "react"
 import { CADD_INFO_URL, ENSEMBL_CHRM_URL, ENSEMBL_GENE_URL, ENSEMBL_VIEW_URL, UNIPROT_ACCESSION_URL } from "../../../constants/ExternalUrls";
 import { getCaddCss, getTitle } from "../mapping/CaddHelper";
 import { MappingRecord } from "../mapping/Convertor";
@@ -115,8 +115,8 @@ const getRow = (record: MappingRecord, isoFormGroupExpanded: string, toggleIsoFo
     return '';
   }
 
-  return <>
-    <tr key={`${record.isoform}-${record.position}-${record.altAllele}`}>
+  return <Fragment key={`${record.isoform}-${record.position}-${record.altAllele}`}>
+    <tr >
       <td>
         <a href={ENSEMBL_CHRM_URL + record.chromosome} target="_blank" rel="noopener noreferrer">
           {record.chromosome}
@@ -143,7 +143,7 @@ const getRow = (record: MappingRecord, isoFormGroupExpanded: string, toggleIsoFo
       <td>
         <span className={caddCss} title={caddTitle}>
           <a href={CADD_INFO_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'white' }}>
-            {record.CADD}
+            {parseFloat(record.CADD!).toFixed(1)}
           </a>
         </span>
       </td>
@@ -184,7 +184,7 @@ const getRow = (record: MappingRecord, isoFormGroupExpanded: string, toggleIsoFo
       ensg={record.ensg!} ensp={record.ensp!} referenceFunctionUri={record.referenceFunctionUri!}
     />
     }
-  </>
+  </Fragment>
 };
 
 function getSignificancesButton(rowKey: string, buttonLabel: string, accession: MappingRecord,
