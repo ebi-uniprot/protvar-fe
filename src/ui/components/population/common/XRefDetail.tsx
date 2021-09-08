@@ -27,7 +27,7 @@ function getReferences(xrefs: Array<Xref>, populationFrequencies: Array<any>, cl
   if (populationFrequencies !== undefined && populationFrequencies.length > 0) {
     populationFrequencies.forEach((freq) => {
       let val = (
-        <li>
+        <li key={uuidv1()}>
           <b>{freq.frequencies[0].label}</b>-{freq.frequencies[0].value}
         </li>
       );
@@ -39,7 +39,7 @@ function getReferences(xrefs: Array<Xref>, populationFrequencies: Array<any>, cl
   if (clinicalSignificances !== undefined && clinicalSignificances.length > 0) {
     clinicalSignificances.forEach((significance) => {
       let type = (
-        <li>
+        <li key={uuidv1()}>
           <b>{significance.type}</b>
         </li>
       );
@@ -55,7 +55,7 @@ function getReferences(xrefs: Array<Xref>, populationFrequencies: Array<any>, cl
       if (!xrefMap.get(xref.name)) {
         xrefMap.set(xref.name, [])
       }
-      xrefMap.get(xref.name)!.push(<XReferenceLi id={xref.id} url={xref.url} />);
+      xrefMap.get(xref.name)!.push(<XReferenceLi id={xref.id} url={xref.url} key={uuidv1()}/>);
     });
 
     xrefMap.forEach((xRefIdsLis, xrefName) => {

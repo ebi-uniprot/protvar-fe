@@ -1,5 +1,7 @@
+import { Fragment } from "react"
 import Evidences from "../categories/Evidences";
 import { Comment } from "./FunctionalDetail"
+import { v1 as uuidv1 } from 'uuid';
 
 interface ProteinFunctionTableProps {
   comments: Array<Comment>
@@ -14,19 +16,22 @@ function ProteinFunctionTable(props: ProteinFunctionTableProps) {
         functionText = comment.text[0].value;
         if (comment.text[0].evidences)
           functionEvidences.push(
-            <>
+            <Fragment key={uuidv1()}>
               <br />
               <Evidences evidences={comment.text[0].evidences} />
-            </>
+            </Fragment>
           );
       }
     });
   }
 
   return <table>
+    <thead>
+      <tr>
+        <th>protein function</th>
+      </tr>
+    </thead>
     <tbody>
-      <th>protein function</th>
-
       <tr>
         <td>
           {functionText}

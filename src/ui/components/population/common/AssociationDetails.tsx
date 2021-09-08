@@ -1,3 +1,4 @@
+import { Fragment } from "react"
 import Evidences from "../../categories/Evidences";
 import { Association } from "../PopulationDetail";
 import { v1 as uuidv1 } from 'uuid';
@@ -13,15 +14,15 @@ function getAssociation(association: Association) {
   if (association.description)
     name = name + '-' + association.description;
   return (
-    <>
+    <Fragment key={uuidv1()}>
       <ul>
-        <li key={uuidv1()}>{name}</li>
-        <li key={uuidv1()}>
+        <li>{name}</li>
+        <li>
           <Evidences evidences={association.evidences} />
         </li>
       </ul>
       <hr />
-    </>
+    </Fragment>
   );
 }
 export default AssociationDetails;

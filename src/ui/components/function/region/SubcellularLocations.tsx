@@ -47,7 +47,7 @@ function getSubcellularLocation(comment: Comment) {
     );
   if (locationList.length > 0) {
     return (
-      <div>
+      <div key={uuidv1()}>
         {loc}
         {topologies}
         {feature}

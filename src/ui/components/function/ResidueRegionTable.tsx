@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, Fragment } from "react";
 import { EmptyElement } from "../../../constants/Const";
 import { FEATURES } from "../../../constants/Protein";
 import AminoAcidModel from "../categories/AminoAcidModel";
@@ -95,17 +95,13 @@ function getFeatureList(feature: ProteinFeature, key: string, expendedRowKey: st
     category = category + '-' + feature.description;
   }
 
-  return (
-    <>
-      <button type="button" className="collapsible" onClick={(e) => toggleRow(key)}>
-        {category}
-        <ChevronDownIcon className="chevronicon" />
-      </button>
-      {/* </li>
-      </a> */}
-      {getFeatureDetail(key, feature, expendedRowKey)}
-    </>
-  );
+  return <Fragment key={key}>
+    <button type="button" className="collapsible" onClick={(e) => toggleRow(key)}>
+      {category}
+      <ChevronDownIcon className="chevronicon" />
+    </button>
+    {getFeatureDetail(key, feature, expendedRowKey)}
+  </Fragment>
 }
 
 

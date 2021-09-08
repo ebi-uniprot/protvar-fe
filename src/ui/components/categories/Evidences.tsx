@@ -1,5 +1,6 @@
+import { Fragment } from "react"
 import { v1 as uuidv1 } from 'uuid';
-import { Evidence } from '../population/PopulationDetail';
+import { Evidence } from '../../../types/ApiInterfaces';
 
 interface IdUrl {
   id: string
@@ -45,10 +46,10 @@ const Evidences = (props: EvidencesProps) => {
 
 function getEvidenceForEachSource(sourceName: string, ids: Array<JSX.Element>) {
   return (
-    <>
+    <Fragment key={uuidv1()}>
       <b>{sourceName} :</b>
       <ul className="flatList">{ids}</ul>
-    </>
+    </Fragment>
   );
 }
 

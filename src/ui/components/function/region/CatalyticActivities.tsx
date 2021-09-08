@@ -1,3 +1,5 @@
+import { Fragment } from "react"
+import { v1 as uuidv1 } from 'uuid';
 import RegionProteinProps from "./RegionProteinProps";
 import Evidences from "../../categories/Evidences";
 import { Comment, DBReference, Reaction } from '../FunctionalDetail'
@@ -5,19 +7,19 @@ import { RHEA_URL } from "../../../../constants/ExternalUrls";
 import RegionProteinAccordion from "./RegionProteinAccordion";
 
 function CatalyticActivities(props: RegionProteinProps) {
-  return <RegionProteinAccordion title="Catalytic Activity" detailComponentGenerator={getCatalyticActivity} {...props} />
+  return <RegionProteinAccordion title="Catalytic Activity" detailComponentGenerator={getCatalyticActivity} {...props}/>
 }
 
 function getCatalyticActivity(region: Comment) {
   var reaction = region.reaction;
   return (
-    <>
+    <Fragment key={uuidv1()}>
       <ul>
         <li>{reaction.name}</li>
       </ul>
 
       {catalyticActivityDetails(reaction)}
-    </>
+    </Fragment>
   );
 }
 
@@ -47,10 +49,10 @@ function getRHEA(dbReferences: Array<DBReference>) {
     dbReferences.forEach((reference) => {
       if (reference.type === 'Rhea' && reference.id.includes('RHEA:')) {
         reaIds.push(
-          <>
+          <Fragment key={uuidv1()}>
             <a href={RHEA_URL + reference.id.split(':')[1]} target="_blank" rel="noreferrer" key={reference.id}>{reference.id}</a>
             <br />
-          </>
+          </Fragment>
         )
       }
     });
