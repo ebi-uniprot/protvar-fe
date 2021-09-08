@@ -111,7 +111,7 @@ class TextAreaSearch extends Component {
 	};
 
 	populateHGVS = () => {
-		let hgvsInput = 'NC_000010.11:g.121593810C>G\nNC_000010.11:g.121479868C>G\nNC_000010.11:g.121479900C>A';
+		let hgvsInput = 'NC_000019.10:g.1010539G>C\nNC_000014.9:g.89993420A>G\nNC_000010.11:g.87933147C>T'
 
 		this.setState({
 			searchTerm: hgvsInput
