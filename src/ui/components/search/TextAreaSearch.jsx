@@ -368,7 +368,7 @@ TextAreaSearch.propTypes = {
 };
 
 TextAreaSearch.defaultProps = {
-	buttonLabel: 'Run',
+	buttonLabel: 'Search',
 	onSubmit: () => undefined
 };
 

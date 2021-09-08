@@ -20,14 +20,14 @@ function ProteinInformationTable(props: ProteinInformationTableProps) {
               <tr>
                 <td>
                   <ul style={{ listStyleType: 'none' }}>
-                    <LabelValueLi label="Recommended Name" value={data.name} />
-                    <LabelValueLi label="Alternative Name" value={data.alternativeNames} />
+                    <LabelValueLi label="Recommended name" value={data.name} />
+                    <LabelValueLi label="Alternative name" value={data.alternativeNames} />
                     {displayGeneNameAndSynonym(data.geneNames)}
-                    <LabelValueLi label="Id" value={data.id} />
-                    <LabelValueLi label="Protein Existence" value={data.proteinExistence} />
+                    <LabelValueLi label="UniProtKB entry name" value={data.id} />
+                    <LabelValueLi label="Protein evidence" value={data.proteinExistence} />
                     <LabelValueLi label="Entry last updated" value={data.lastUpdated} />
-                    <LabelValueLi label="Sequence Modified" value={data.sequence.modified} />
-                    <LabelValueLi label="Sequence Length" value={data.sequence.length.toString()} />
+                    <LabelValueLi label="Sequence modified" value={data.sequence.modified} />
+                    <LabelValueLi label="Sequence length" value={data.sequence.length.toString()} />
                   </ul>
                 </td>
                 <td className="protein-table-cell">
