@@ -3,7 +3,7 @@ import React, { Component, Fragment } from 'react';
 import { v1 as uuidv1 } from 'uuid';
 import Evidences from './Evidences';
 import { ChevronDownIcon } from 'franklin-sites';
-import AminoAcidModel from './AminoAcidModel';
+import AminoAcidModel from '../function/AminoAcidModel';
 
 export const FEATURES = {
 	INIT_MET: 'Cleaved Initiator Methionine',

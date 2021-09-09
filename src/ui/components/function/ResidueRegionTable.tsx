@@ -1,12 +1,13 @@
 import { useState, Fragment } from "react";
 import { EmptyElement } from "../../../constants/Const";
 import { FEATURES } from "../../../constants/Protein";
-import AminoAcidModel from "../categories/AminoAcidModel";
+import AminoAcidModel from "./AminoAcidModel";
 import Evidences from "../categories/Evidences";
 import { ProteinFeature } from "./FunctionalDetail";
 import { ReactComponent as ChevronDownIcon } from "franklin-sites/src/svg/chevron-down.svg";
 import { v1 as uuidv1 } from 'uuid';
 import { StringVoidFun } from "../../../constants/CommonTypes";
+import { getKeyValue } from "../../../utills/Util";
 
 interface ResidueRegionTableProps {
   features: Array<ProteinFeature>
@@ -84,8 +85,6 @@ function getRegions(regions: Array<ProteinFeature>, expendedRowKey: string, togg
   return regionsList;
 }
 function getFeatureList(feature: ProteinFeature, key: string, expendedRowKey: string, toggleRow: StringVoidFun) {
-  const getKeyValue = (key: string) => (obj: Record<string, any>) => obj[key];
-
   let category = '';
   if (getKeyValue(feature.type)(FEATURES)) {
     category = getKeyValue(feature.type)(FEATURES);

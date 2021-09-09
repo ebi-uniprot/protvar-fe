@@ -46,3 +46,28 @@ export const FEATURES = {
   WEBRESOURCE: 'Additional Resource',
   HELIX: 'Helix'
 };
+
+export const AMINO_ACID_FULL_NAME: Map<string, string> = new Map(Object.entries({
+  ala: "Alanine",
+  arg: "Arginine",
+  asn: "Asparagine",
+  asp: "Aspartic acid",
+  asx: "Asparagine or aspartic acid",
+  cys: "Cysteine",
+  glu: "Glutamic acid",
+  gln: "Glutamine",
+  glx: "Glutamine or glutamic acid",
+  gly: "Glycine",
+  his: "Histidine",
+  ile: "Isoleucine",
+  leu: "Leucine",
+  lys: "Lysine",
+  met: "Methionine",
+  phe: "Phenylalanine",
+  pro: "Proline",
+  ser: "Serine",
+  thr: "Threonine",
+  trp: "Tryptophan",
+  tyr: "Tyrosine",
+  val: "Valine",
+}));
