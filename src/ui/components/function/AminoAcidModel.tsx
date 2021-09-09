@@ -71,7 +71,8 @@ const AminoAcidModel = (props: AminoAcidModelProps) => {
                 <img className="img-size" src={getImageByKey(variant)} alt={variant} />
               </div>
               <div style={{ textAlign: "center" }}>
-                {AMINO_ACID_FULL_NAME.get(ref)} <span className="icon-arrow">&#8594;</span>{AMINO_ACID_FULL_NAME.get(variant)}
+                <span style={{ width: "50%" }}>{AMINO_ACID_FULL_NAME.get(ref)}</span>
+                <span style={{ width: "50%", float: "right" }}>{variantAA === "*" ? "Stop" : AMINO_ACID_FULL_NAME.get(variant)}</span>
               </div>
             </td>
           </tr>
