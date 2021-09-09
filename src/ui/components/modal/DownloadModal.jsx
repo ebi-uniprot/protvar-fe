@@ -32,7 +32,7 @@ class DownloadModal extends Component {
 			});
 
 			this.setChkBoxStatus('allAnnotations');
-		}else{
+		} else {
 			this.setState({
 				[name]: value
 			});
@@ -86,42 +86,37 @@ class DownloadModal extends Component {
 			let inputArr = [];
 			PapaParse.parse(file, {
 				step: (row, parser) => {
-					inputArr.push(row);
+					inputArr.push(row.data.join(' '));
 				},
 				complete: () => {
-					// call
+					this.downloadAndSaveToFile(inputArr)
 				}
 			});
 		} else {
-			const inputArr = this.props.searchTerm;
-			const APIUrl =
-				`${API_URL}` +
-				'/download/download?function=' +
-				this.state.function +
-				'&variation=' +
-				this.state.variation +
-				'&structure=' +
-				this.state.structure;
-
-			const headers = {
-				'Content-Type': 'application/json',
-
-				Accept: '*'
-			};
-
-			post(APIUrl, inputArr, {
-				headers: headers
-			}).then((response) => {
-				console.log('response -> ' + response.data);
-				// var blob = new Blob(response.data, { type: 'text/csv;charset=utf-8' });
-				let blob = new Blob([ response.data ], {
-					type: 'application/csv'
-				});
-				// var file = new File(response.data, 'pepvep.csv', { type: 'text/csv;charset=utf-8' });
-
-				FileSaver.saveAs(blob, 'pepvep.csv');
-			});
+			this.downloadAndSaveToFile(this.props.searchTerm)
 		}
+	}
+	downloadAndSaveToFile(inputArr) {
+		const APIUrl =
+			`${API_URL}/download/download?function=` +
+			this.state.function +
+			'&variation=' +
+			this.state.variation +
+			'&structure=' +
+			this.state.structure;
+
+		const headers = {
+			'Content-Type': 'application/json',
+			Accept: '*'
+		};
+		post(APIUrl, inputArr, {
+			headers: headers
+		}).then((response) => {
+			let blob = new Blob([response.data], {
+				type: 'application/csv'
+			});
+			FileSaver.saveAs(blob, 'pepvep.csv');
+		});
 	}
 	sendEmail() {
 		const inputArr = this.props.searchTerm;
