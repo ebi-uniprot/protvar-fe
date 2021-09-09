@@ -86,7 +86,9 @@ class DownloadModal extends Component {
 			let inputArr = [];
 			PapaParse.parse(file, {
 				step: (row, parser) => {
-					inputArr.push(row.data.join(' '));
+					const dataRow = row.data.join(' ');
+					if(dataRow.length > 1 && !dataRow.startsWith("#"))
+						inputArr.push(dataRow);
 				},
 				complete: () => {
 					this.downloadAndSaveToFile(inputArr)
