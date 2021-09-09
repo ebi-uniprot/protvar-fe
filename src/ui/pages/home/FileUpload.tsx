@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import Button from '../../elements/form/Button';
 import PapaParse from 'papaparse';
 import { NO_OF_ITEMS_PER_PAGE } from '../../../constants/const';
@@ -10,7 +10,7 @@ interface FileUploadProps {
 }
 
 function FileUpload(props: FileUploadProps) {
-  var uploadInputField: HTMLInputElement | null = null;
+  const uploadInputField = useRef<HTMLInputElement>(null);
   const [isFileSelected, setIsFileSelected] = useState(false)
 
   function viewResult(event: React.ChangeEvent<HTMLInputElement>) {
@@ -66,11 +66,11 @@ function FileUpload(props: FileUploadProps) {
                   id="myInput"
                   type="file"
                   style={{ display: 'none' }}
-                  ref={(ref) => (uploadInputField = ref)}
+                  ref={uploadInputField}
                   onChange={viewResult}
                 />
                 <Button
-                  onClick={isFileSelected ? () => null : () => uploadInputField?.click()}
+                  onClick={isFileSelected ? () => null : () => uploadInputField.current?.click()}
                   className="button-primary button-bottom"
                 >
                   {isFileSelected ? "Loading..." : "Upload File"}
