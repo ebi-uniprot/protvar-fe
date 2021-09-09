@@ -143,7 +143,7 @@ const getRow = (record: MappingRecord, isoFormGroupExpanded: string, toggleIsoFo
       <td>
         <span className={caddCss} title={caddTitle}>
           <a href={CADD_INFO_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'white' }}>
-            {parseFloat(record.CADD!).toFixed(1)}
+            {isNaN(parseFloat(record.CADD!)) ? "" : parseFloat(record.CADD!).toFixed(1)}
           </a>
         </span>
       </td>
