@@ -3,7 +3,7 @@ import { Route, withRouter } from 'react-router-dom';
 import { post } from 'axios';
 import PapaParse from 'papaparse';
 
-import HomePage from './pages/HomePage';
+import HomePage from './pages/home/HomePage';
 import SearchResultsPage from './pages/SearchResultsPage';
 import APIErrorPage from './pages/APIErrorPage';
 import { API_URL } from '../constants/const';
