@@ -298,8 +298,7 @@ class App extends Component {
 		}
 		var pageNumber = page.currentPage;
 		const PAGE_SIZE = page.itemsPerPage;
-		let skipRecord = 1;
-		if (pageNumber !== 1) skipRecord = (pageNumber - 1) * PAGE_SIZE;
+		const skipRecord = (pageNumber - 1) * PAGE_SIZE;
 		var newPage = {
 			currentPage: page.currentPage,
 			previousPage: page.previousPage,
