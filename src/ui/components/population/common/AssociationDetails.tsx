@@ -1,5 +1,5 @@
 import { Fragment } from "react"
-import Evidences from "../../categories/Evidences";
+import Evidences from "../../function/Evidences";
 import { Association } from "../PopulationDetail";
 import { v1 as uuidv1 } from 'uuid';
 

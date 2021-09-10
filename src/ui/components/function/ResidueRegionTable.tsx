@@ -2,7 +2,7 @@ import { useState, Fragment } from "react";
 import { EmptyElement } from "../../../constants/Const";
 import { FEATURES } from "../../../constants/Protein";
 import AminoAcidModel from "./AminoAcidModel";
-import Evidences from "../categories/Evidences";
+import Evidences from "./Evidences";
 import { ProteinFeature } from "./FunctionalDetail";
 import { ReactComponent as ChevronDownIcon } from "franklin-sites/src/svg/chevron-down.svg";
 import { v1 as uuidv1 } from 'uuid';
