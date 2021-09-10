@@ -1,10 +1,8 @@
 
-import React, { Fragment } from 'react';
-
 import DefaultPageLayout from '../layout/DefaultPageLayout';
 
 const APIErrorContent = () => (
-  <Fragment>
+  <>
     <h3>Something went wrong...</h3>
     <p>
       Unfortunately we weren&apos;t able to complete your request. We use various services
@@ -14,7 +12,7 @@ const APIErrorContent = () => (
     <p>
       Please try again in a few minutes and get in touch with us if the issue persists.
     </p>
-  </Fragment>
+  </>
 );
 
 const APIErrorPage = () => (
