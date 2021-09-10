@@ -16,7 +16,6 @@ class App extends Component {
 		this.state = {
 			userInput: null,
 			searchTerm: null,
-			completeInput: null,
 			searchResults: null,
 			errors: null,
 			loading: false,
@@ -27,7 +26,7 @@ class App extends Component {
 		};
 	}
 
-	handleSearch = (inputArr, uploadedFile, page, loadingFlag) => {
+	handleSearch = (inputArr, page) => {
 		var pageNumber = page.currentPage;
 		const PAGE_SIZE = page.itemsPerPage;
 		var skipRecord = (pageNumber - 1) * PAGE_SIZE;
@@ -40,19 +39,9 @@ class App extends Component {
 			itemsPerPage: page.itemsPerPage
 		};
 
-		var isFileSelectedNew = false;
-		var loadingNew = true;
-		if (uploadedFile && loadingFlag) {
-			isFileSelectedNew = true;
-			loadingNew = true;
-		}
-		if (uploadedFile && !loadingFlag) {
-			isFileSelectedNew = true;
-			loadingNew = false;
-		}
 		this.setState({
-			isFileSelected: isFileSelectedNew,
-			loading: loadingNew,
+			isFileSelected: false,
+			loading: true,
 			page: newPage
 		});
 
@@ -80,7 +69,7 @@ class App extends Component {
 					itemsPerPage: page.itemsPerPage
 				};
 			}
-			this.fetchByVCF(inputSubArray, inputArr, uploadedFile, newPage);
+			this.fetchByVCF(inputSubArray, inputArr, null, newPage);
 		}
 	};
 
@@ -107,13 +96,13 @@ class App extends Component {
 			itemsPerPage: page.itemsPerPage
 		};
 
-		if (isFileSelected) this.fetchFromFile(skipRecord, page, uploadedFile, PAGE_SIZE, isFileSelected, loading);
+		if (isFileSelected) this.fetchFromFile(skipRecord, page, uploadedFile, PAGE_SIZE, loading);
 		else {
-			this.handleSearch(inputText, null, newPage, true);
+			this.handleSearch(inputText, newPage);
 		}
 	};
 
-	fetchFromFile = (skipRecord, page, uploadedFile, pageSize, isFileSelected, loading) => {
+	fetchFromFile = (skipRecord, page, uploadedFile, pageSize, loading) => {
 		var count = 0;
 		var recordsProcessed = 0;
 		var firstLine = true;
@@ -137,7 +126,6 @@ class App extends Component {
 						totalItems: page.totalItems,
 						itemsPerPage: page.itemsPerPage
 					};
-					// this.handleSearch(inputText, uploadedFile, this.state.page, true);
 					parser.abort();
 				}
 				if (!row.data[0].startsWith('#') && count > skipRecord) {
@@ -159,10 +147,9 @@ class App extends Component {
 				this.setState({
 					page: newPage,
 					searchTerm: inputText,
-					isFileSelected: isFileSelected,
+					isFileSelected: true,
 					loading: loading
 				});
-				// this.handleSearch(inputText, uploadedFile, this.state.page, loading);
 				this.fetchByVCF(inputText, inputText, uploadedFile, newPage);
 			}
 		});
@@ -222,21 +209,21 @@ class App extends Component {
 	}
 
 	render() {
-		const appProps = {
-			...this.state,
-			handleSearch: this.handleSearch,
-			fetchNextPage: this.fetchNextPage,
-			fetchResult: this.fetchResult,
-			history: this.props.history,
+		const searchProps ={
 			rows: this.state.searchResults,
-			searchTerms: this.state.searchTerm
-		};
+			searchTerms: this.state.searchTerm,
+			file: this.state.file,
+			page: this.state.page,
+			fetchNextPage: this.fetchNextPage,
+			invalidInputs: this.state.invalidInputs,
+			errors: this.state.errors
+		}
 
 		return (
 			<>
-				<Route path="/" exact render={() => <HomePage {...appProps} />} />
-				<Route path="/search" render={() => <SearchResultsPage {...appProps} />} />
-				<Route path="/api-error" render={() => <APIErrorPage {...appProps} />} />
+				<Route path="/" exact render={() => <HomePage loading={this.state.loading} fetchResult={this.fetchResult}/>} />
+				<Route path="/search" render={() => <SearchResultsPage {...searchProps} />} />
+				<Route path="/api-error" render={() => <APIErrorPage />} />
 			</>
 		);
 	}
