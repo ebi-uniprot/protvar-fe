@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import DefaultPageContent from './DefaultPageContent';
-import About from '../components/categories/About';
+import About from '../modal/AboutModal';
 import { ButtonModal } from 'franklin-sites';
 
 class DefaultPageLayout extends Component {

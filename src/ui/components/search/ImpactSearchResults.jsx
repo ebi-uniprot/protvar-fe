@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Button from '../../elements/form/Button';
 import { Dropdown } from 'react-dropdown-now';
 import 'react-dropdown-now/style.css';
-import DownloadModal from '../modal/DownloadModal';
+import DownloadModal from '../../modal/DownloadModal';
 import { Redirect } from 'react-router';
 import ResultTable from './ResultTable'
 

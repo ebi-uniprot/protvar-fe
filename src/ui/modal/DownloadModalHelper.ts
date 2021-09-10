@@ -1,4 +1,4 @@
-import { API_URL } from "../../../constants/const";
+import { API_URL } from "../../constants/const";
 import PapaParse from 'papaparse';
 import FileSaver from 'file-saver';
 import axios from 'axios';

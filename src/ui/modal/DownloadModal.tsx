@@ -1,10 +1,10 @@
 import { useState, useCallback, useRef } from 'react';
-import Button from '../../elements/form/Button';
+import Button from '../elements/form/Button';
 import Modal from './Modal';
 import { ReactComponent as DownloadIcon } from "franklin-sites/src/svg/download.svg";
-import useOnClickOutside from '../../../hooks/useOnClickOutside';
+import useOnClickOutside from '../../hooks/useOnClickOutside';
 import { sendDownloadEmail, download } from './DownloadModalHelper'
-import { MAX_IN_PLACE_DOWNLOAD_WITHOUT_EMAIL } from '../../../constants/const';
+import { MAX_IN_PLACE_DOWNLOAD_WITHOUT_EMAIL } from '../../constants/const';
 
 interface DownloadModalProps {
   file: File | null
