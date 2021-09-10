@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import DefaultPageContent from './DefaultPageContent';
-import About from '../modal/AboutModal';
-import { ButtonModal } from 'franklin-sites';
+import AboutModal from '../modal/AboutModal';
+import ContactModal from '../modal/ContactModal';
 
 class DefaultPageLayout extends Component {
 	componentDidMount() {
@@ -102,25 +102,10 @@ class DefaultPageLayout extends Component {
 												</td>
 
 												<td className="topnav-right local-sub-title">
-													<About />
+													<AboutModal />
 												</td>
 												<td className="topnav-right local-sub-title">
-													<ButtonModal
-														buttonText="Contact"
-														title="Contact"
-														withFooterCloseButton={true}
-														withHeaderCloseButton={false}
-														height="20%"
-														width="30%"
-													>
-														<div className="container">
-															<p>
-																For any suggestions, queries or issues please contact us
-																at below email address:
-															</p>
-															<b>help@uniprot.org</b>
-														</div>
-													</ButtonModal>
+													<ContactModal />
 												</td>
 											</tr>
 										</tbody>
