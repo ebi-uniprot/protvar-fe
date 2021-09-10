@@ -4,14 +4,14 @@ import { post } from 'axios';
 import PapaParse from 'papaparse';
 
 import HomePage from './pages/home/HomePage';
-import SearchResultsPage from './pages/SearchResultsPage';
+import SearchResultsPage from './pages/search/SearchResultPage';
 import APIErrorPage from './pages/APIErrorPage';
 import { API_URL } from '../constants/const';
 import {convertApiMappingToTableRecords} from './components/mapping/Convertor'
 
 class App extends Component {
-	constructor(props, context) {
-		super(props, context);
+	constructor(props) {
+		super(props);
 
 		this.state = {
 			userInput: null,
@@ -25,187 +25,6 @@ class App extends Component {
 			page: {},
 			invalidInputs: []
 		};
-	}
-
-	createVariationDetails(variant) {
-		var variationDetails = {};
-		variationDetails.wildType = variant.variation.variant.split('/')[0];
-		variationDetails.alternativeSequence = variant.variation.variant.split('/')[1];
-		variationDetails.clinicalSignificances = this.getClinicalSignificance(variant.variation.clinicalSignificances);
-		variationDetails.clinicalSignificance = this.getClinicalSignificanceStr(
-			variant.variation.clinicalSignificances
-		);
-		variationDetails.sourceType = variant.variation.sourceType;
-		variationDetails.association = variant.variation.association;
-		variationDetails.xrefs = variant.variation.xrefs;
-		variationDetails.polyphenScore = this.getPredictionScore(variant.variation.predictions, 'PolyPhen');
-		variationDetails.polyphenPrediction = this.getPredictionType(variant.variation.predictions, 'PolyPhen');
-		variationDetails.siftScore = this.getPredictionScore(variant.variation.predictions, 'SIFT');
-		variationDetails.siftPrediction = this.getPredictionType(variant.variation.predictions, 'SIFT');
-		variationDetails.disease = variant.variation.disease;
-		variationDetails.nonDisease = variant.variation.nonDisease;
-		variationDetails.uniprot = variant.variation.uniprot;
-		variationDetails.largeScaleStudy = variant.variation.largeScaleStudy;
-		variationDetails.uncertain = variant.variation.uncertain;
-		variationDetails.ids = variant.variation.ids;
-		variationDetails.begin = variant.variation.begin;
-		variationDetails.end = variant.variation.end;
-		return variationDetails;
-	}
-
-	getClinicalSignificance(clinicalSignificances) {
-		var significances = [];
-		clinicalSignificances.forEach((significance) => {
-			significances.push(significance.type);
-		});
-		return significances;
-	}
-
-	getClinicalSignificanceStr(clinicalSignificances) {
-		var significances = '';
-		clinicalSignificances.forEach((significance) => {
-			significances = significances + ',' + significance.type;
-		});
-		return significances;
-	}
-
-	getPredictionScore(predictions, algorithName) {
-		var predScore = '';
-		predictions.forEach((prediction) => {
-			if (prediction.predAlgorithmNameType === algorithName) {
-				predScore = prediction.score;
-			}
-		});
-		return predScore;
-	}
-
-	getPredictionType(predictions, algorithName) {
-		var predType = '';
-		predictions.forEach((prediction) => {
-			if (prediction.predAlgorithmNameType === algorithName) {
-				predType = prediction.predictionValType;
-			}
-		});
-		return predType;
-	}
-
-	createFunctionalSignificance(variant, variationDetails) {
-		var functionalSignificance = {};
-		functionalSignificance.features = variant.protein.features;
-		functionalSignificance.variationDetails = variationDetails;
-		// functionalSignificance.colocatedVariants = {};
-		// functionalSignificance.colocatedVariantsEndpoint = variant.variation.proteinColocatedVariantsEndpoint;
-		functionalSignificance.colocatedVariants = variant.variation.proteinColocatedVariants;
-		return functionalSignificance;
-	}
-
-	createClinicalSignificance(variant, variationDetails) {
-		var clinicalSignificance = {};
-		if (variationDetails.clinicalSignificances !== undefined) {
-			clinicalSignificance.categories = variationDetails.clinicalSignificances;
-		}
-		clinicalSignificance.association = variant.variation.association;
-		// clinicalSignificance.colocatedVariants = {};
-		// clinicalSignificance.colocatedVariantsEndpoint = variant.variation.proteinColocatedVariantsEndpoint;
-		clinicalSignificance.colocatedVariants = variant.variation.proteinColocatedVariants;
-		clinicalSignificance.variationDetails = variationDetails;
-		clinicalSignificance.colocatedVariantsCount = variant.variation.proteinColocatedVariantsCount;
-		clinicalSignificance.diseaseColocatedVariantsCount = variant.variation.diseaseAssociatedProtCVCount;
-		return clinicalSignificance;
-	}
-
-	createTranscriptSignificance(variant, variationDetails) {
-		var transcriptSignificances = [];
-		var transcriptSignificance = {};
-		var consequenceTerms = [];
-		if (variant.variation.consequence !== undefined) {
-			consequenceTerms.push(variant.variation.consequence);
-		}
-		transcriptSignificance.biotype = 'Protein Coding';
-		transcriptSignificance.polyphenPrediction = variationDetails.polyphenPrediction;
-		transcriptSignificance.polyphenScore = variationDetails.polyphenScore;
-		transcriptSignificance.siftPrediction = variationDetails.siftPrediction;
-		transcriptSignificance.siftScore = variationDetails.siftScore;
-		transcriptSignificance.mostSevereConsequence = variant.variation.consequence;
-		transcriptSignificance.consequenceTerms = consequenceTerms;
-		transcriptSignificance.colocatedVariants = {};
-		transcriptSignificance.colocatedVariantsEndpoint = variant.variation.proteinColocatedVariantsEndpoint;
-		if (variationDetails.clinicalSignificances !== undefined) {
-			transcriptSignificance.pathogenicity = variationDetails;
-		}
-		transcriptSignificance.variationDetails = variationDetails;
-		transcriptSignificance.hgvsg = variant.gene.hgvsg;
-		transcriptSignificance.hgvsp = variant.gene.hgvsp;
-		transcriptSignificance.canonical = variant.protein.canonical;
-		transcriptSignificance.codons = variant.variation.codons;
-		transcriptSignificance.aminoAcids = variant.variation.variant;
-		transcriptSignificance.enstId = variant.gene.enstId;
-		transcriptSignificance.ensgId = variant.gene.ensgId;
-		transcriptSignificance.start = variant.variation.begin;
-		transcriptSignificance.end = variant.variation.end;
-		transcriptSignificance.cosmicId = variant.variation.cosmicId;
-		transcriptSignificance.dbSNPId = variant.variation.dbSNPId;
-		transcriptSignificance.clinVarIds = variant.variation.clinVarIDs;
-		transcriptSignificance.colocatedVariantsCount = variant.variation.proteinColocatedVariantsCount;
-		transcriptSignificance.diseaseColocatedVariantsCount =
-			variant.variation.diseaseAssociatedproteinColocatedVariantsCount;
-		transcriptSignificance.redundantENSTs = variant.gene.redundantENSTs;
-		transcriptSignificance.mutationTasterScore = '';
-		transcriptSignificance.mutationTasterPrediction = '';
-		transcriptSignificance.lrtPrediction = '';
-		transcriptSignificance.lrtScore = 0.0;
-		transcriptSignificance.caddPhred = 0.0;
-		transcriptSignificances.push(transcriptSignificance);
-		return transcriptSignificances;
-	}
-
-	createGenomicSignificance(variant, variationDetails) {
-		var genomic = {};
-		var consequencePrediction = {};
-		consequencePrediction.polyphenPrediction = variationDetails.polyphenPrediction;
-		consequencePrediction.polyphenScore = variationDetails.polyphenScore;
-		consequencePrediction.siftPrediction = variationDetails.siftPrediction;
-		consequencePrediction.siftScore = variationDetails.siftScore;
-		consequencePrediction.caddPhred = 0.0;
-		consequencePrediction.caddRaw = 0.0;
-
-		genomic.consequencePrediction = consequencePrediction;
-		genomic.variationDetails = variationDetails;
-		genomic.populationFrequencies = variant.variation.populationFrequencies;
-		return genomic;
-	}
-
-	createSignificances(variants) {
-		var updateVariants = {
-			errors: [],
-			results: []
-		};
-		variants.forEach((variant) => {
-			if (variant.errors !== undefined && variant.errors.length > 0) {
-				updateVariants.errors = variant.errors;
-			}
-			if (variant.variation != null) {
-				var significances = {};
-				var updateVariant = {};
-				var variationDetails = this.createVariationDetails(variant);
-
-				significances.functional = this.createFunctionalSignificance(variant, variationDetails);
-				significances.structural = {};
-				significances.structureEndpoint = variant.structureEndpoint;
-				significances.genomic = this.createGenomicSignificance(variant, variationDetails);
-				significances.clinical = this.createClinicalSignificance(variant, variationDetails);
-				significances.transcript = this.createTranscriptSignificance(variant, variationDetails);
-				updateVariant.significances = significances;
-				updateVariant.protein = variant.protein;
-				updateVariant.gene = variant.gene;
-				// updateVariant.variation = {};
-				// updateVariant.variation.variationDetails = {};
-				updateVariant.variation = variant.variation;
-				// updateVariant.variation.variationDetails = variationDetails;
-				updateVariants.results.push(updateVariant);
-			}
-		});
-		return updateVariants;
 	}
 
 	handleSearch = (inputArr, uploadedFile, page, loadingFlag) => {
@@ -237,9 +56,6 @@ class App extends Component {
 			page: newPage
 		});
 
-		// var inputArr = input.split('\n');
-		let inputType = this.getInputType(inputArr);
-
 		if (inputArr.length > skipRecord) {
 			var isNextPage = false;
 			if (inputArr.length > skipRecord + PAGE_SIZE) isNextPage = true;
@@ -264,25 +80,9 @@ class App extends Component {
 					itemsPerPage: page.itemsPerPage
 				};
 			}
-			if (inputType === 'hgvs') {
-				this.fetchByHGVS(inputSubArray, inputArr, uploadedFile, newPage);
-			} else if (inputType === 'vcf') {
-				this.fetchByVCF(inputSubArray, inputArr, uploadedFile, newPage);
-			}
+			this.fetchByVCF(inputSubArray, inputArr, uploadedFile, newPage);
 		}
 	};
-
-	getInputType(inputArr) {
-		return 'vcf';
-		// let firstInput = inputArr[0];
-		// if (firstInput.startsWith('NC')) {
-		// 	return 'hgvs';
-		// } else if (!isNaN(firstInput.split(' ')[0])) {
-		// 	return 'vcf';
-		// } else {
-		// 	return 'unknown input';
-		// }
-	}
 
 	fetchResult = (uploadedFile, page, isFileSelected, loading, inputText) => {
 		this.setState({
@@ -417,150 +217,19 @@ class App extends Component {
 			});
 	}
 
-	fetchByHGVS(inputArr, input, uploadedFile, newPage) {
-		const BASE_URL = `${API_URL}`;
-		const { history } = this.props;
-		const headers = {
-			'Content-Type': 'application/json'
-		};
-
-		const uri = BASE_URL + '/variant/hgvs';
-		const output = {
-			errors: [],
-			results: {}
-		};
-		if (this.state.searchResults != null) {
-			output.results = this.state.searchResults;
-		}
-		post(uri, inputArr, {
-			headers: headers
-		}).then((response) => {
-			response.data.variants.forEach((variants) => {
-				var updatedVariants = this.createSignificances(variants);
-
-				updatedVariants.results.forEach((variant) => {
-					let key = variant.gene.hgvsg;
-					var existingVar = output.results[key];
-					if (existingVar !== undefined) {
-						existingVar.rows.push(variant);
-						output.results[key] = {
-							key: key,
-							input: key,
-							rows: existingVar.rows
-						};
-					} else {
-						let newRows = [];
-						newRows.push(variant);
-						output.results[key] = {
-							key: key,
-							input: key,
-							rows: newRows
-						};
-					}
-				});
-			});
-
-			this.setState({
-				searchTerm: input,
-				searchResults: output.results,
-				errors: output.errors,
-				loading: false,
-				isFileSelected: false,
-				file: uploadedFile,
-				page: newPage
-			});
-
-			history.push('search');
-
-			// this.processResponse(results, input, uploadedFile, newPage, history);
-		});
-	}
-
-	processResponse(results, input, uploadedFile, newPage, history) {
-		const output = {
-			errors: [],
-			results: {}
-		};
-		if (this.state.searchResults != null) {
-			output.results = this.state.searchResults;
-		}
-		results.data.pepvepvariant.forEach((element) => {
-			if (element.variants.length > 0) {
-				var sortedVariants = [];
-				var topRow = element.variants.filter(
-					(variant) => variant.protein.canonicalAccession === variant.protein.accession
-				);
-				var otherRows = element.variants.filter(
-					(variant) => variant.protein.accession !== variant.protein.canonicalAccession
-				);
-				if (otherRows !== undefined || otherRows.length > 0) {
-					sortedVariants = topRow.concat(otherRows);
-				} else {
-					sortedVariants = topRow;
-				}
-				var updatedVariants = this.createSignificances(sortedVariants);
-				output.errors = output.errors.concat(updatedVariants.errors);
-				output.results[element.input] = {
-					key: element.input,
-					input: element.input,
-					rows: updatedVariants.results
-				};
-			}
-		});
-
-		this.setState({
-			searchTerm: input,
-			searchResults: output.results,
-			// searchResults: [ ...this.state.searchResults, ...output.results ],
-			errors: output.errors,
-			loading: false,
-			isFileSelected: false,
-			file: uploadedFile,
-			page: newPage
-		});
-
-		history.push('search');
-	}
-
 	createCsvString(rowArr) {
 		return rowArr.join(' ');
-	}
-
-	handleDownload = () => {};
-
-	handleBulkDownload = (e, file) => {
-		const BASE_URL = `${API_URL}`;
-		this.fileUpload(file).then((response) => {
-			console.log('File uploaded successfully ', response);
-			let a = document.createElement('a');
-			a.href = BASE_URL + '/variant/download/' + response.data + '/';
-			a.download = 'pepvep.zip';
-			a.click();
-		});
-	};
-
-	fileUpload(file) {
-		const BASE_URL = `${API_URL}`;
-
-		const formData = new FormData();
-		formData.append('file', file);
-		const config = {
-			headers: {
-				'content-type': 'multipart/form-data'
-			}
-		};
-		return post(BASE_URL, formData, config);
 	}
 
 	render() {
 		const appProps = {
 			...this.state,
 			handleSearch: this.handleSearch,
-			handleDownload: this.handleDownload,
 			fetchNextPage: this.fetchNextPage,
-			handleBulkDownload: this.handleBulkDownload,
 			fetchResult: this.fetchResult,
-			history: this.props.history
+			history: this.props.history,
+			rows: this.state.searchResults,
+			searchTerms: this.state.searchTerm
 		};
 
 		return (
