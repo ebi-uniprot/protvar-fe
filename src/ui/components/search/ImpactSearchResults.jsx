@@ -98,7 +98,7 @@ class ImpactSearchResults extends Component {
 					<tbody>
 						<tr>
 							<td colSpan="1">
-								<DownloadModal searchTerm={searchTerm} file={file} totalItems={totalItems} />
+								<DownloadModal searchTerms={searchTerm} file={file} totalItems={totalItems} />
 							</td>
 
 							<td colSpan="1">
