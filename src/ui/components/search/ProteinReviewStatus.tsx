@@ -1,7 +1,4 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-
-const ProteinReviewStatus = (props) => {
+const ProteinReviewStatus = (props: { type: string }) => {
   switch (props.type) {
     case 'Swiss-Prot isoform':
       return <span className="icon icon-generic protein-review-status protein-review-status--isoform-reviewed" data-icon="q" title="UniProt isoform reviewed" />;
@@ -10,16 +7,8 @@ const ProteinReviewStatus = (props) => {
     case 'TrEMBL':
       return <span className="icon icon-generic protein-review-status protein-review-status--unreviewd" data-icon="Q" title="TrEMBL unreviewed" />;
     default:
-      return null;
+      return <></>;
   }
-};
-
-ProteinReviewStatus.propTypes = {
-  type: PropTypes.string,
-};
-
-ProteinReviewStatus.defaultProps = {
-  type: '',
 };
 
 export default ProteinReviewStatus;
