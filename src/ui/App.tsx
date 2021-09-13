@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Route, RouteComponentProps, withRouter } from 'react-router-dom';
+import { Redirect, Route, RouteComponentProps, withRouter } from 'react-router-dom';
 import axios from 'axios';
 import PapaParse from 'papaparse';
 
@@ -119,6 +119,7 @@ function App(props: AppProps) {
     <Route path="/search" render={() => <SearchResultsPage rows={searchResults} file={file} page={page} pastedInputs={userInputs}
       fetchNextPage={fetchPage} invalidInputs={invalidInputs} />} />
     <Route path="/api-error" render={() => <APIErrorPage />} />
+    <Redirect to="/" />
   </>
 }
 
