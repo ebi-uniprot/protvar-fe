@@ -1,6 +1,6 @@
 import { useState, Fragment } from "react"
 import { CADD_INFO_URL, ENSEMBL_CHRM_URL, ENSEMBL_GENE_URL, ENSEMBL_VIEW_URL, UNIPROT_ACCESSION_URL } from "../../../constants/ExternalUrls";
-import { getCaddCss, getTitle } from "../mapping/CaddHelper";
+import { getCaddCss, getTitle } from "./CaddHelper";
 import ProteinReviewStatus from "./ProteinReviewStatus";
 import InvalidTableRows from "./InvalidTableRows";
 import Button from '../../elements/form/Button';
