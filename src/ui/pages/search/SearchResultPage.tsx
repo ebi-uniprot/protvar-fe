@@ -17,7 +17,7 @@ interface SearchResultPageProps {
 
 function SearchResultsPageContent(props: SearchResultPageProps) {
   const { pastedInputs, file, page, invalidInputs, rows, fetchNextPage } = props;
-  if(!rows)
+  if(!rows || rows.length < 1)
 		return <Redirect to="/"/>
 
   return <>
