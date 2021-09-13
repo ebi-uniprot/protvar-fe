@@ -1,21 +1,19 @@
 import { API_URL } from "../../constants/const";
-import PapaParse from 'papaparse';
 import FileSaver from 'file-saver';
 import axios from 'axios';
 
 export function download(file: File | null, searchTerms: string[], functional: boolean, population: boolean, structure: boolean) {
   if (file !== null) {
     let inputArr: Array<string> = [];
-    PapaParse.parse(file, {
-      step: (row, parser) => {
-        const dataRow = row.data.join(' ');
-        if (dataRow.length > 1 && !dataRow.startsWith("#"))
-          inputArr.push(dataRow);
-      },
-      complete: () => {
+    file.text()
+      .then(text => text.split('\n'))
+      .then(lines => {
+        for (const dataRow of lines) {
+          if (dataRow.length > 1 && !dataRow.startsWith("#"))
+            inputArr.push(dataRow);
+        }
         downloadAndSaveToFile(inputArr, functional, population, structure)
-      }
-    });
+      })
   } else {
     downloadAndSaveToFile(searchTerms, functional, population, structure)
   }

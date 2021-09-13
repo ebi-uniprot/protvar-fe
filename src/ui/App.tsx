@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { Redirect, Route, RouteComponentProps, withRouter } from 'react-router-dom';
 import axios from 'axios';
-import PapaParse from 'papaparse';
-
 import HomePage from './pages/home/HomePage';
 import SearchResultsPage from './pages/search/SearchResultPage';
 import APIErrorPage from './pages/APIErrorPage';
@@ -58,42 +56,33 @@ function App(props: AppProps) {
   function fetchFileResult(file: File) {
     setLoading(true)
     setFile(file)
-    var noOfLines = 0;
-    PapaParse.parse(file, {
-      step: () => {
-        noOfLines = noOfLines + 1;
-      },
-      complete: () => {
-        fetchFromFile(firstPage(noOfLines), file)
-      }
-    });
+    file.text()
+      .then(text => fetchFromFile(firstPage(text.split('\n').length), file))
   }
 
   const fetchFromFile = (page: Page, uploadedFile: File) => {
     const pageSize = page.itemsPerPage;
     const skipRecord = (page.currentPage - 1) * pageSize;
 
-    var count = 0;
-    var recordsProcessed = 0;
-    var inputText: string[] = [];
-    PapaParse.parse(uploadedFile, {
-      step: (row, parser) => {
-        if (recordsProcessed >= pageSize) {
-          parser.abort();
+    uploadedFile.text()
+      .then(text => text.split('\n'))
+      .then(lines => {
+        let count = 0, recordsProcessed = 0;
+        const inputText: string[] = [];
+        for (const newInput of lines) {
+          if (recordsProcessed >= pageSize) {
+            break;
+          }
+          if (count > skipRecord && newInput.length > 0 && !newInput.startsWith('#')) {
+            recordsProcessed++;
+            inputText.push(newInput);
+          } else {
+            count++;
+          }
         }
-        const newInput = row.data.join(' ');
-        if (count > skipRecord && newInput.length > 0 && !newInput.startsWith('#')) {
-          recordsProcessed++;
-          inputText.push(newInput);
-        } else {
-          count++;
-        }
-      },
-      complete: () => {
         setPage({ ...page, nextPage: recordsProcessed >= pageSize })
-        mappingApiCall(inputText);
-      }
-    });
+        return inputText;
+      }).then(inputs => mappingApiCall(inputs))
   };
 
   function mappingApiCall(inputSubArray: string[]) {
