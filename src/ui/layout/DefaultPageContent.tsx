@@ -2,7 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const DefaultPageContent = (props) => {
+const DefaultPageContent = (props: React.ReactPortal) => {
   const { children } = props;
 
   return (
