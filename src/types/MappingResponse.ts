@@ -1,6 +1,6 @@
 interface MappingResponse {
   mappings: Array<GenomeProteinMapping>;
-  invalidInputs: Array<any>;
+  invalidInputs: Array<ParsedInput>;
 }
 export interface GenomeProteinMapping {
   chromosome: string;
@@ -52,5 +52,15 @@ interface Ensp {
 interface Transcript {
   enst: string;
   ense: string;
+}
+
+export interface ParsedInput{
+  chromosome: string
+  start: number
+  id: string
+  ref: string
+  alt: string
+  inputString: string
+  invalidReason: string
 }
 export default MappingResponse;

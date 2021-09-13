@@ -4,6 +4,7 @@ import PaginationRow from "./PaginationRow";
 import { Redirect } from 'react-router-dom'
 import { NextPageFun, Page } from "../../../utills/AppHelper";
 import { MappingRecord } from "../../../utills/Convertor";
+import { ParsedInput } from "../../../types/MappingResponse";
 
 interface SearchResultPageProps {
   pastedInputs: string[]
@@ -11,7 +12,7 @@ interface SearchResultPageProps {
   page: Page
   fetchNextPage: NextPageFun
   rows: MappingRecord[][][]
-  invalidInputs: Array<any>
+  invalidInputs: Array<ParsedInput>
 }
 
 function SearchResultsPageContent(props: SearchResultPageProps) {

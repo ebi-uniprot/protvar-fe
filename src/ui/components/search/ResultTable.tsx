@@ -12,9 +12,10 @@ import StructuralDetail from "../structure/StructuralDetail";
 import PopulationDetail from "../population/PopulationDetail";
 import FunctionalDetail from "../function/FunctionalDetail";
 import { MappingRecord } from "../../../utills/Convertor";
+import { ParsedInput } from "../../../types/MappingResponse";
 
 interface ResultTableProps {
-  invalidInputs: Array<any>
+  invalidInputs: Array<ParsedInput>
   mappings: Array<Array<Array<MappingRecord>>>
 }
 

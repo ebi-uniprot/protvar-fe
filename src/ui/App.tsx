@@ -7,7 +7,7 @@ import HomePage from './pages/home/HomePage';
 import SearchResultsPage from './pages/search/SearchResultPage';
 import APIErrorPage from './pages/APIErrorPage';
 import { API_URL } from '../constants/const';
-import MappingResponse from '../types/MappingResponse';
+import MappingResponse, { ParsedInput } from '../types/MappingResponse';
 import { convertApiMappingToTableRecords, MappingRecord } from '../utills/Convertor';
 import { firstPage, Page } from '../utills/AppHelper';
 
@@ -18,7 +18,7 @@ function App(props: AppProps) {
   const [userInputs, setUserInputs] = useState<string[]>([])
   const [file, setFile] = useState<File | null>(null)
   const [searchResults, setSearchResults] = useState<MappingRecord[][][]>([])
-  const [invalidInputs, setInvalidInputs] = useState<Array<any>>([])
+  const [invalidInputs, setInvalidInputs] = useState<Array<ParsedInput>>([])
   const [page, setPage] = useState<Page>(firstPage(0))
 
   const fetchPage = (page: Page) => {
