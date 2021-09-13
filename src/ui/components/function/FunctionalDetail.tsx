@@ -5,8 +5,8 @@ import { Evidence } from '../../../types/ApiInterfaces';
 import FunctionalDataRow from './FunctionalDataRow';
 import axios from 'axios';
 import { API_URL } from '../../../constants/const';
-import { TranslatedSequence } from '../mapping/Convertor';
 import LoaderRow from '../search/LoaderRow';
+import { TranslatedSequence } from '../../../utills/Convertor';
 
 export interface FunctionalResponse {
   position: number

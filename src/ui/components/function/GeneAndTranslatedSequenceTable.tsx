@@ -1,6 +1,6 @@
 import { ENSEMBL_GENE_RUL } from "../../../constants/ExternalUrls";
 import { v1 as uuidv1 } from 'uuid';
-import { TranslatedSequence } from "../mapping/Convertor";
+import { TranslatedSequence } from "../../../utills/Convertor";
 
 interface GeneAndTranslatedSequenceTableProps {
 ensg: string

@@ -4,7 +4,7 @@ import { FunctionalResponse } from './FunctionalDetail';
 import GeneAndTranslatedSequenceTable from './GeneAndTranslatedSequenceTable';
 import ProteinInformationTable from './ProteinInformationTable';
 import ResidueRegionTable from './ResidueRegionTable';
-import { TranslatedSequence } from '../mapping/Convertor';
+import { TranslatedSequence } from '../../../utills/Convertor';
 
 interface FunctionalDataRowProps {
   apiData: FunctionalResponse
