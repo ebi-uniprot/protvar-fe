@@ -19,7 +19,7 @@ function PasteVariantSearch(props: PasteVariantSearchProps) {
     setSearchTerm('NC_000019.10:g.1010539G>C\nNC_000014.9:g.89993420A>G\nNC_000010.11:g.87933147C>T')
   };
 
-  const handleSubmit = (e: React.ChangeEvent) => {
+  const handleSubmit = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     if (searchTerm === '') {
@@ -83,7 +83,7 @@ function PasteVariantSearch(props: PasteVariantSearchProps) {
               <div id="search-button-group" className="search-button-group">
                 <Button
                   type="submit"
-                  onClick={props.isLoading ? () => null : handleSubmit}
+                  onClick={props.isLoading ? () => {} : handleSubmit}
                   className="button-primary button-bottom"
                 >
                   {props.isLoading ? "Loading..." : "Search"}
