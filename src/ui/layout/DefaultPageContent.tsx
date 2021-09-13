@@ -1,8 +1,5 @@
 
-import React from 'react';
-import PropTypes from 'prop-types';
-
-const DefaultPageContent = (props: React.ReactPortal) => {
+const DefaultPageContent = (props: { children: JSX.Element }) => {
   const { children } = props;
 
   return (
@@ -10,14 +7,6 @@ const DefaultPageContent = (props: React.ReactPortal) => {
       {children}
     </div>
   );
-};
-
-DefaultPageContent.propTypes = {
-  children: PropTypes.node,
-};
-
-DefaultPageContent.defaultProps = {
-  children: 'Default Page Content',
 };
 
 export default DefaultPageContent;

@@ -47,5 +47,5 @@ interface HomePageProps {
   fetchFileResult: FileLoadFun
   fetchPasteResult: StringVoidFun
 }
-const HomePage = (props: HomePageProps) => <DefaultPageLayout title="Home Page" content={<HomePageContent {...props} />} />;
+const HomePage = (props: HomePageProps) => <DefaultPageLayout content={<HomePageContent {...props} />} />;
 export default HomePage;

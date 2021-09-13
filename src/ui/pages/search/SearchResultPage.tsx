@@ -32,6 +32,6 @@ function SearchResultsPageContent(props: SearchResultPageProps) {
 }
 
 function SearchResultPage(props: SearchResultPageProps) {
-  return <DefaultPageLayout title="Search" content={<SearchResultsPageContent {...props} />} />
+  return <DefaultPageLayout content={<SearchResultsPageContent {...props} />} />
 }
 export default SearchResultPage;
