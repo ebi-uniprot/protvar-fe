@@ -1,4 +1,4 @@
-import { useState, Fragment } from "react"
+import { useState, Fragment, lazy, Suspense } from "react"
 import { CADD_INFO_URL, ENSEMBL_CHRM_URL, ENSEMBL_GENE_URL, ENSEMBL_VIEW_URL, UNIPROT_ACCESSION_URL } from "../../../constants/ExternalUrls";
 import { getCaddCss, getTitle } from "./CaddHelper";
 import ProteinReviewStatus from "./ProteinReviewStatus";
@@ -8,11 +8,13 @@ import { StringVoidFun } from "../../../constants/CommonTypes";
 import ProteinIcon from '../../../images/proteins.svg';
 import StructureIcon from '../../../images/structures-3d.svg';
 import PopulationIcon from '../../../images/human.svg';
-import StructuralDetail from "../structure/StructuralDetail";
-import PopulationDetail from "../population/PopulationDetail";
-import FunctionalDetail from "../function/FunctionalDetail";
 import { MappingRecord } from "../../../utills/Convertor";
 import { ParsedInput } from "../../../types/MappingResponse";
+import LoaderRow from "./LoaderRow";
+
+const StructuralDetail = lazy(() => import(/* webpackChunkName: "StructuralDetail" */ "../structure/StructuralDetail"));
+const PopulationDetail = lazy(() => import(/* webpackChunkName: "PopulationDetail" */ "../population/PopulationDetail"));
+const FunctionalDetail = lazy(() => import(/* webpackChunkName: "FunctionalDetail" */ "../function/FunctionalDetail"));
 
 interface ResultTableProps {
   invalidInputs: Array<ParsedInput>
@@ -179,11 +181,21 @@ const getRow = (record: MappingRecord, isoFormGroupExpanded: string, toggleIsoFo
       {getSignificancesButton(structuralKey, 'STR', record, annotationExpanded, toggleAnnotation)}
     </tr>
 
-    {populationKey === annotationExpanded && <PopulationDetail populationObservationsUri={record.populationObservationsUri!} variantAA={record.variantAA!} />}
-    {structuralKey === annotationExpanded && <StructuralDetail isoFormAccession={record.isoform!} aaPosition={record.aaPos!} />}
-    {functionalKey === annotationExpanded && <FunctionalDetail refAA={record.refAA!} variantAA={record.variantAA!}
-      ensg={record.ensg!} ensp={record.ensp!} referenceFunctionUri={record.referenceFunctionUri!}
-    />
+    {populationKey === annotationExpanded &&
+      <Suspense fallback={<LoaderRow />}>
+        <PopulationDetail populationObservationsUri={record.populationObservationsUri!} variantAA={record.variantAA!} />
+      </Suspense>
+    }
+    {structuralKey === annotationExpanded &&
+      <Suspense fallback={<LoaderRow />}>
+        <StructuralDetail isoFormAccession={record.isoform!} aaPosition={record.aaPos!} />
+      </Suspense>
+    }
+    {functionalKey === annotationExpanded &&
+      <Suspense fallback={<LoaderRow />}>
+        <FunctionalDetail refAA={record.refAA!} variantAA={record.variantAA!}
+          ensg={record.ensg!} ensp={record.ensp!} referenceFunctionUri={record.referenceFunctionUri!} />
+      </Suspense>
     }
   </Fragment>
 };
