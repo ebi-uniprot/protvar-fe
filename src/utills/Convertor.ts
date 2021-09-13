@@ -1,4 +1,4 @@
-import { GenomeProteinMapping } from "../../../types/MappingResponse";
+import { GenomeProteinMapping } from "../types/MappingResponse";
 
 export interface MappingRecord {
   chromosome: string

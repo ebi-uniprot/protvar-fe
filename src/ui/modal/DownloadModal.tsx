@@ -4,12 +4,11 @@ import Modal from './Modal';
 import { ReactComponent as DownloadIcon } from "franklin-sites/src/svg/download.svg";
 import useOnClickOutside from '../../hooks/useOnClickOutside';
 import { sendDownloadEmail, download } from './DownloadModalHelper'
-import { MAX_IN_PLACE_DOWNLOAD_WITHOUT_EMAIL } from '../../constants/const';
 
 interface DownloadModalProps {
   file: File | null
-  searchTerms: string[]
-  totalItems: number
+  pastedInputs: string[]
+  sendEmail: boolean
 }
 function DownloadModal(props: DownloadModalProps) {
   const [showModel, setShowModel] = useState(false)
@@ -21,12 +20,11 @@ function DownloadModal(props: DownloadModalProps) {
   const downloadModelDiv = useRef(null)
   useOnClickOutside(downloadModelDiv, useCallback(() => setShowModel(false), []));
 
-  const sendEmail = props.totalItems > MAX_IN_PLACE_DOWNLOAD_WITHOUT_EMAIL;
   const handleSubmit = () => {
     //TODO validation for job name and email address
     setShowModel(false)
-    if (sendEmail) sendDownloadEmail(props.file, props.searchTerms, annotations.fun, annotations.pop, annotations.str, email, jobName);
-    else download(props.file, props.searchTerms, annotations.fun, annotations.pop, annotations.str);
+    if (props.sendEmail) sendDownloadEmail(props.file, props.pastedInputs, annotations.fun, annotations.pop, annotations.str, email, jobName);
+    else download(props.file, props.pastedInputs, annotations.fun, annotations.pop, annotations.str);
   };
   return <div id="divDownload" ref={downloadModelDiv}>
     <Button onClick={() => setShowModel(val => !val)}>
@@ -35,7 +33,7 @@ function DownloadModal(props: DownloadModalProps) {
     </Button>
     <Modal show={showModel} handleClose={() => setShowModel(false)}>
       <div className="window__header">
-        <span className="window__header__title">{sendEmail ? "Enter Details" : "Select Options"}</span>
+        <span className="window__header__title">{props.sendEmail ? "Enter Details" : "Select Options"}</span>
       </div>
       <div className="form-group">
         <div>
@@ -112,7 +110,7 @@ function DownloadModal(props: DownloadModalProps) {
             </tbody>
           </table>
 
-          {sendEmail && <>
+          {props.sendEmail && <>
             <label className="download-label">
               Email:
               <input
@@ -140,7 +138,7 @@ function DownloadModal(props: DownloadModalProps) {
           type="button"
           className="window__action-button window__default-close-button button"
         >
-          {sendEmail ? "Submit" : "Download"}
+          {props.sendEmail ? "Submit" : "Download"}
         </Button>
         <Button
           onClick={() => setShowModel(false)}

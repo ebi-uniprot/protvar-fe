@@ -2,36 +2,38 @@ import DownloadModal from "../../modal/DownloadModal";
 import Button from '../../elements/form/Button';
 import { Dropdown } from 'react-dropdown-now';
 import 'react-dropdown-now/style.css';
+import { NextPageFun, Page } from "../../../utills/AppHelper";
+import { MAX_IN_PLACE_DOWNLOAD_WITHOUT_EMAIL } from "../../../constants/const";
 
 interface PaginationRowProps {
-  searchTerms: any
+  pastedInputs: string[]
   file: File | null
-  page: any
-  fetchNextPage: any
+  page: Page
+  fetchNextPage: NextPageFun
 }
 
 function PaginationRow(props: PaginationRowProps) {
-  const { searchTerms, file, page, fetchNextPage } = props;
+  const { pastedInputs, file, page, fetchNextPage } = props;
   const totalPages = Math.ceil(page.totalItems / page.itemsPerPage);
-  const totalItems = file == null ? searchTerms.length : page.totalItems;
 
-  const isFileSelected = file !== null;
   function changePageSize(pageSize: any) {
     if (pageSize !== page.itemsPerPage) {
-      fetchNextPage(file, { ...page, currentPage: 1, itemsPerPage: pageSize }, isFileSelected, true);
+      page.currentPage = 1
+      page.itemsPerPage = pageSize
+      fetchNextPage(page);
     }
   }
 
   const fetchPage = (direction: number) => {
     page.currentPage = page.currentPage + direction;
-    fetchNextPage(file, page, isFileSelected, true);
+    fetchNextPage(page);
   };
 
   return <table className="table-header">
     <tbody>
       <tr>
         <td colSpan={1}>
-          <DownloadModal searchTerms={searchTerms} file={file} totalItems={totalItems} />
+          <DownloadModal pastedInputs={pastedInputs} file={file} sendEmail={page.totalItems > MAX_IN_PLACE_DOWNLOAD_WITHOUT_EMAIL} />
         </td>
 
         <td colSpan={1}>

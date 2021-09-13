@@ -2,9 +2,11 @@ import DefaultPageLayout from '../../layout/DefaultPageLayout';
 import FileUpload from './FileUpload';
 import RestApiComponent from './RestApiComponent';
 import PasteVariantSearch from './PasteVariantSearch';
+import { FileLoadFun } from '../../../utills/AppHelper';
+import { StringVoidFun } from '../../../constants/CommonTypes';
 
 const HomePageContent = (props: HomePageProps) => {
-  const { loading, fetchResult } = props;
+  const { loading, fetchFileResult, fetchPasteResult } = props;
 
   return <>
     <div>
@@ -21,8 +23,8 @@ const HomePageContent = (props: HomePageProps) => {
       </p>
     </div>
     <div className="wrapper">
-      <PasteVariantSearch isLoading={loading} fetchResult={fetchResult} />
-      <FileUpload isLoading={loading} fetchResult={fetchResult} />
+      <PasteVariantSearch isLoading={loading} fetchPasteResult={fetchPasteResult} />
+      <FileUpload isLoading={loading} fetchFileResult={fetchFileResult} />
       <RestApiComponent />
     </div>
     <div>
@@ -42,7 +44,8 @@ const HomePageContent = (props: HomePageProps) => {
 
 interface HomePageProps {
   loading: boolean
-  fetchResult: any
+  fetchFileResult: FileLoadFun
+  fetchPasteResult: StringVoidFun
 }
 const HomePage = (props: HomePageProps) => <DefaultPageLayout title="Home Page" content={<HomePageContent {...props} />} />;
 export default HomePage;

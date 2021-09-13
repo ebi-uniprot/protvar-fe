@@ -1,7 +1,6 @@
 import { useState, Fragment } from "react"
 import { CADD_INFO_URL, ENSEMBL_CHRM_URL, ENSEMBL_GENE_URL, ENSEMBL_VIEW_URL, UNIPROT_ACCESSION_URL } from "../../../constants/ExternalUrls";
 import { getCaddCss, getTitle } from "../mapping/CaddHelper";
-import { MappingRecord } from "../mapping/Convertor";
 import ProteinReviewStatus from "../other/ProteinReviewStatus";
 import InvalidTableRows from "./InvalidTableRows";
 import Button from '../../elements/form/Button';
@@ -12,6 +11,7 @@ import PopulationIcon from '../../../images/human.svg';
 import StructuralDetail from "../structure/StructuralDetail";
 import PopulationDetail from "../population/PopulationDetail";
 import FunctionalDetail from "../function/FunctionalDetail";
+import { MappingRecord } from "../../../utills/Convertor";
 
 interface ResultTableProps {
   invalidInputs: Array<any>

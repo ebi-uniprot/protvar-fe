@@ -1,17 +1,15 @@
-import React, { useState, useRef } from 'react'
+import React, { useRef } from 'react'
 import Button from '../../elements/form/Button';
-import PapaParse from 'papaparse';
-import { NO_OF_ITEMS_PER_PAGE } from '../../../constants/const';
 import { VCF_FORMAT_INFO_URL } from '../../../constants/ExternalUrls';
+import { FileLoadFun } from '../../../utills/AppHelper';
 
 interface FileUploadProps {
-  fetchResult: any
+  fetchFileResult: FileLoadFun
   isLoading: boolean
 }
 
 function FileUpload(props: FileUploadProps) {
   const uploadInputField = useRef<HTMLInputElement>(null);
-  const [isFileSelected, setIsFileSelected] = useState(false)
 
   function viewResult(event: React.ChangeEvent<HTMLInputElement>) {
     const target = event.target;
@@ -19,24 +17,7 @@ function FileUpload(props: FileUploadProps) {
       return;
     }
     var file = target.files[0];
-    var noOfLines = 0;
-    PapaParse.parse(file, {
-      step: (row, parser) => {
-        noOfLines = noOfLines + 1;
-      },
-      complete: () => {
-        console.log('lines 2=>' + noOfLines);
-        var page = {
-          currentPage: 1,
-          nextPage: true,
-          previousPage: false,
-          totalItems: noOfLines,
-          itemsPerPage: NO_OF_ITEMS_PER_PAGE
-        };
-        setIsFileSelected(true)
-        props.fetchResult(file, page, true, false, null);
-      }
-    });
+    props.fetchFileResult(file);
   }
 
   return <div id="upload" className="card-table upload">
@@ -70,10 +51,10 @@ function FileUpload(props: FileUploadProps) {
                   onChange={viewResult}
                 />
                 <Button
-                  onClick={isFileSelected ? () => null : () => uploadInputField.current?.click()}
+                  onClick={props.isLoading ? () => null : () => uploadInputField.current?.click()}
                   className="button-primary button-bottom"
                 >
-                  {isFileSelected ? "Loading..." : "Upload File"}
+                  {props.isLoading ? "Loading..." : "Upload File"}
                 </Button>
               </div>
             </section>

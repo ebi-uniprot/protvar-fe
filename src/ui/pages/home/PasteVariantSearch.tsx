@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import Button from '../../elements/form/Button'
 import { Button as FranklinButton } from 'franklin-sites'
-import { NO_OF_ITEMS_PER_PAGE } from '../../../constants/const';
 import { ENSEMBL_ASML_URL } from '../../../constants/ExternalUrls';
+import { StringVoidFun } from '../../../constants/CommonTypes';
 
 interface PasteVariantSearchProps {
-  fetchResult: any
   isLoading: boolean
+  fetchPasteResult: StringVoidFun
 }
 
 function PasteVariantSearch(props: PasteVariantSearchProps) {
@@ -25,15 +25,7 @@ function PasteVariantSearch(props: PasteVariantSearchProps) {
     if (searchTerm === '') {
       return;
     }
-    const inputArr = searchTerm.split('\n');
-    const newPage = {
-      currentPage: 1,
-      nextPage: true,
-      previousPage: false,
-      totalItems: inputArr.length,
-      itemsPerPage: NO_OF_ITEMS_PER_PAGE
-    };
-    props.fetchResult(null, newPage, false, false, inputArr);
+    props.fetchPasteResult(searchTerm)
   };
 
 
