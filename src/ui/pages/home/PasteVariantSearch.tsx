@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import Button from '../../elements/form/Button'
-import { Button as FranklinButton } from 'franklin-sites'
 import { ENSEMBL_ASML_URL } from '../../../constants/ExternalUrls';
 import { StringVoidFun } from '../../../constants/CommonTypes';
 
@@ -58,10 +57,10 @@ function PasteVariantSearch(props: PasteVariantSearchProps) {
                       <b>Examples:</b>
                     </td>
                     <td>
-                      <FranklinButton variant="tertiary" onClick={populateVCF} style={{ margin: 0 }}>VCF</FranklinButton>
+                      <button onClick={populateVCF} style={{ margin: 0 }}>VCF</button>
                     </td>
                     <td>
-                      <FranklinButton variant="tertiary" onClick={populateHGVS} style={{ margin: 0 }}>HGVS</FranklinButton>
+                      <button onClick={populateHGVS} style={{ margin: 0 }}>HGVS</button>
                     </td>
                   </tr>
                 </tbody>

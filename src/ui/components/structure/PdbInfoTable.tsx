@@ -1,7 +1,7 @@
-import { ExternalLink } from 'franklin-sites';
 import { StringVoidFun } from '../../../constants/CommonTypes';
 import { PDB_URL_INTERFACE_BY_ID, PDB_URL_INTERFACE_BY_PROTEIN } from '../../../constants/ExternalUrls';
 import { PdbResponseElement } from './StructuralDetail';
+import { ReactComponent as ExternalLinkIcon } from "../../../images/external-link.svg"
 
 interface PdbInfoTableProps {
   isoFormAccession: string,
@@ -14,7 +14,7 @@ function PdbInfoTable(props: PdbInfoTableProps) {
 
   return <>
     <div className="tableFixHead">
-      <ExternalLink url={PDB_URL_INTERFACE_BY_PROTEIN + props.isoFormAccession}>More information</ExternalLink>
+      <a href={PDB_URL_INTERFACE_BY_PROTEIN + props.isoFormAccession}>More information <ExternalLinkIcon width={12.5}/></a>
       <table>
         <thead>
           <tr>

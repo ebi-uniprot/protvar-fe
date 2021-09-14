@@ -4,7 +4,7 @@ import { FEATURES } from "../../../constants/Protein";
 import AminoAcidModel from "./AminoAcidModel";
 import Evidences from "./Evidences";
 import { ProteinFeature } from "./FunctionalDetail";
-import { ReactComponent as ChevronDownIcon } from "franklin-sites/src/svg/chevron-down.svg";
+import { ReactComponent as ChevronDownIcon } from "../../../images/chevron-down.svg"
 import { v1 as uuidv1 } from 'uuid';
 import { StringVoidFun } from "../../../constants/CommonTypes";
 import { getKeyValue } from "../../../utills/Util";

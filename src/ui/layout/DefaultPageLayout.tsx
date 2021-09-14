@@ -2,8 +2,6 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import DefaultPageContent from './DefaultPageContent';
-import AboutModal from '../modal/AboutModal';
-import ContactModal from '../modal/ContactModal';
 
 interface DefaultPageLayoutProps {
   content: JSX.Element
@@ -89,10 +87,10 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                     </td>
 
                     <td className="topnav-right local-sub-title">
-                      <AboutModal />
+                      <Link to="/about" title="About PepVEP's"> ABOUT </Link>
                     </td>
                     <td className="topnav-right local-sub-title">
-                      <ContactModal />
+                      <Link to="/contact" title="About PepVEP's"> CONTACT </Link>
                     </td>
                   </tr>
                 </tbody>

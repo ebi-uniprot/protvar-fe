@@ -1,7 +1,7 @@
 import { useState, useCallback, useRef } from 'react';
 import Button from '../elements/form/Button';
 import Modal from './Modal';
-import { ReactComponent as DownloadIcon } from "franklin-sites/src/svg/download.svg";
+import { ReactComponent as DownloadIcon } from "../../images/download.svg"
 import useOnClickOutside from '../../hooks/useOnClickOutside';
 import { sendDownloadEmail, download } from './DownloadModalHelper'
 

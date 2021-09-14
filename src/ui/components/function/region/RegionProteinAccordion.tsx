@@ -1,5 +1,5 @@
 import { Comment } from '../FunctionalDetail'
-import { ReactComponent as ChevronDownIcon } from "franklin-sites/src/svg/chevron-down.svg";
+import { ReactComponent as ChevronDownIcon } from "../../../../images/chevron-down.svg"
 import RegionProteinProps from "./RegionProteinProps";
 import { EmptyElement } from '../../../../constants/Const';
 

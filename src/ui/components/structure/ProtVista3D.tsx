@@ -1,5 +1,5 @@
 import useCustomElement from '../../../hooks/useCustomElement';
-import { Loader } from 'franklin-sites';
+import Loader from '../../elements/Loader';
 
 interface ProtVista3DProps {
   accession: string,

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ReactComponent as ChevronDownIcon } from "franklin-sites/src/svg/chevron-down.svg";
+import { ReactComponent as ChevronDownIcon } from "../../../../images/chevron-down.svg"
 import { v1 as uuidv1 } from 'uuid';
 import { StringVoidFun } from '../../../../constants/CommonTypes';
 import { ProteinColocatedVariant } from '../PopulationDetail';

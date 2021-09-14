@@ -1,5 +1,5 @@
-import { Loader } from "franklin-sites";
 import { TOTAL_COLS } from "../../../constants/SearchResultTable";
+import Loader from "../../elements/Loader";
 
 function LoaderRow() {
   return (

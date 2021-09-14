@@ -1,7 +1,7 @@
 import RegionProteinProps from "./RegionProteinProps";
 import { EmptyElement } from "../../../../constants/Const";
 import { INTACT_URL } from "../../../../constants/ExternalUrls";
-import { ReactComponent as ChevronDownIcon } from "franklin-sites/src/svg/chevron-down.svg";
+import { ReactComponent as ChevronDownIcon } from "../../../../images/chevron-down.svg"
 
 interface InteractionsProps extends RegionProteinProps {
 	accession: string

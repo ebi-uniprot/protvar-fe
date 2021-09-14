@@ -8,6 +8,8 @@ import { API_URL } from '../constants/const';
 import MappingResponse, { ParsedInput } from '../types/MappingResponse';
 import { convertApiMappingToTableRecords, MappingRecord } from '../utills/Convertor';
 import { firstPage, Page } from '../utills/AppHelper';
+import AboutPage from './pages/AboutPage';
+import ContactPage from './pages/ContactPage';
 
 interface AppProps extends RouteComponentProps { }
 
@@ -108,6 +110,8 @@ function App(props: AppProps) {
     <Route path="/search" render={() => <SearchResultsPage rows={searchResults} file={file} page={page} pastedInputs={userInputs}
       fetchNextPage={fetchPage} invalidInputs={invalidInputs} />} />
     <Route path="/api-error" render={() => <APIErrorPage />} />
+    <Route path="/about" render={() => <AboutPage />} />
+    <Route path="/contact" render={() => <ContactPage />} />
     <Redirect to="/" />
   </>
 }

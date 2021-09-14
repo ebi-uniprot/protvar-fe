@@ -4,7 +4,7 @@ import { Association, ProteinColocatedVariant } from "../PopulationDetail";
 import { v1 as uuidv1 } from 'uuid';
 import PopulationFrequencyDetails from "../common/PopulationFrequencyDetails";
 import { StringVoidFun } from "../../../../constants/CommonTypes";
-import { ReactComponent as ChevronDownIcon } from "franklin-sites/src/svg/chevron-down.svg";
+import { ReactComponent as ChevronDownIcon } from "../../../../images/chevron-down.svg"
 
 interface CoLocatedVariantGenomicLocationAccordionProps {
   coLocatedVariant: ProteinColocatedVariant
