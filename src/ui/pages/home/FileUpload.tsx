@@ -21,7 +21,7 @@ function FileUpload(props: FileUploadProps) {
   }
 
   return <div id="upload" className="card-table upload">
-    <div className="card">
+    <div className="card" >
       <section className="card__actions">
         <span className="card-header">
           <p>
@@ -29,7 +29,7 @@ function FileUpload(props: FileUploadProps) {
           </p>
         </span>
       </section>
-      <section className="card--has-hover" role="button">
+      <section className="card--has-hover top-row" role="button">
         <div className="card__content">
           <section className="uniprot-card">
             <section className="uniprot-card__left">
@@ -41,26 +41,25 @@ function FileUpload(props: FileUploadProps) {
                 <b>PepVEP also supports hgvs in below format</b><br />
                 {"NC_000010.11:g.121479868C>G"}<br />
               </p>
-
-              <div id="search-button-group" className="search-button-group">
-                <input
-                  id="myInput"
-                  type="file"
-                  style={{ display: 'none' }}
-                  ref={uploadInputField}
-                  onChange={viewResult}
-                />
-                <Button
-                  onClick={props.isLoading ? () => null : () => uploadInputField.current?.click()}
-                  className="button-primary button-bottom"
-                >
-                  {props.isLoading ? "Loading..." : "Upload File"}
-                </Button>
-              </div>
             </section>
           </section>
         </div>
       </section>
+      <input
+        id="myInput"
+        type="file"
+        style={{ display: 'none' }}
+        ref={uploadInputField}
+        onChange={viewResult}
+      />
+      <div style={{ position: "absolute", bottom: 0, width: "100%" }}>
+        <Button
+          onClick={props.isLoading ? () => null : () => uploadInputField.current?.click()}
+          className="button-primary button-bottom"
+        >
+          {props.isLoading ? "Loading..." : "Upload File"}
+        </Button>
+      </div>
     </div>
   </div>
 }

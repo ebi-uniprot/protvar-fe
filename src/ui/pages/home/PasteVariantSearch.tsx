@@ -78,20 +78,20 @@ function PasteVariantSearch(props: PasteVariantSearchProps) {
                   </a>
                 </p>
               </span>
-
-              <div id="search-button-group" className="search-button-group">
-                <Button
-                  type="submit"
-                  onClick={props.isLoading ? () => {} : handleSubmit}
-                  className="button-primary button-bottom"
-                >
-                  {props.isLoading ? "Loading..." : "Search"}
-                </Button>
-              </div>
             </section>
+
           </section>
         </div>
       </section>
+      <div style={{ position: "absolute", bottom: 0, width: "100%" }}>
+        <Button
+          type="submit"
+          onClick={props.isLoading ? () => { } : handleSubmit}
+          className="button-primary button-bottom"
+        >
+          {props.isLoading ? "Loading..." : "Search"}
+        </Button>
+      </div>
     </div>
   </div>
 }

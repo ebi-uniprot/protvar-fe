@@ -90,7 +90,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                       <Link to="/about" title="About PepVEP's"> ABOUT </Link>
                     </td>
                     <td className="topnav-right local-sub-title">
-                      <Link to="/contact" title="About PepVEP's"> CONTACT </Link>
+                      <Link to="/contact" title="Contact us"> CONTACT </Link>
                     </td>
                   </tr>
                 </tbody>
