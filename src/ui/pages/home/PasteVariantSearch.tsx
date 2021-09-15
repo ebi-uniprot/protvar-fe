@@ -87,7 +87,7 @@ function PasteVariantSearch(props: PasteVariantSearchProps) {
         <Button
           type="submit"
           onClick={props.isLoading ? () => { } : handleSubmit}
-          className="button-primary button-bottom"
+          className="button-primary width100"
         >
           {props.isLoading ? "Loading..." : "Search"}
         </Button>

@@ -40,7 +40,7 @@ function RestApiComponent() {
       <div style={{ position: "absolute", bottom: 0, width: "100%" }}>
         <Button
           onClick={() => window.open(API_URL + '/swagger-ui/#/', '_blank')}
-          className="button-bottom"
+          className="width100"
         >
           PepVEP REST API
         </Button>

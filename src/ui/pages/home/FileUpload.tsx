@@ -55,7 +55,7 @@ function FileUpload(props: FileUploadProps) {
       <div style={{ position: "absolute", bottom: 0, width: "100%" }}>
         <Button
           onClick={props.isLoading ? () => null : () => uploadInputField.current?.click()}
-          className="button-primary button-bottom"
+          className="button-primary width100"
         >
           {props.isLoading ? "Loading..." : "Upload File"}
         </Button>

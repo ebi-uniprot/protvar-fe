@@ -111,6 +111,7 @@ function DownloadModal(props: DownloadModalProps) {
           </table>
 
           {props.sendEmail && <>
+            <p className="padding-left-1x">We will send you email onces your file is ready to download</p>
             <label className="download-label">
               Email:
               <input
@@ -133,20 +134,20 @@ function DownloadModal(props: DownloadModalProps) {
         </div>
       </div>
       <div className="window__footer">
-        <Button
-          onClick={handleSubmit}
-          type="button"
-          className="window__action-button window__default-close-button button"
-        >
-          {props.sendEmail ? "Submit" : "Download"}
-        </Button>
-        <Button
-          onClick={() => setShowModel(false)}
-          type="button"
-          className="window__action-button window__default-close-button button"
-        >
-          close
-        </Button>
+        <div className="float-right padding-bottom-1x">
+          <Button
+            onClick={handleSubmit}
+            className="window__action-button window__default-close-button button "
+          >
+            {props.sendEmail ? "Submit" : "Download"}
+          </Button>
+          <Button
+            onClick={() => setShowModel(false)}
+            className="window__action-button window__default-close-button button"
+          >
+            close
+          </Button>
+        </div>
       </div>
     </Modal>
   </div>
