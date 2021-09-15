@@ -8,7 +8,7 @@ function Spaces({ hide, count = 1 }: SpaceProps) {
 
   const spaces: JSX.Element[] = []
   for (let index = 0; index < count; index++) {
-    spaces.push(<span className="space" />)
+    spaces.push(<span className="space" key={index}/>)
   }
   return <>{spaces}</>
 }
