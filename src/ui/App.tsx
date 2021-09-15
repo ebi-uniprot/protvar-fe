@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Redirect, Route, RouteComponentProps, withRouter } from 'react-router-dom';
+import { Route, RouteComponentProps, withRouter } from 'react-router-dom';
 import axios from 'axios';
 import HomePage from './pages/home/HomePage';
 import SearchResultsPage from './pages/search/SearchResultPage';
@@ -113,7 +113,6 @@ function App(props: AppProps) {
     <Route path={API_ERROR} render={() => <APIErrorPage />} />
     <Route path={ABOUT} render={() => <AboutPage />} />
     <Route path={CONTACT} render={() => <ContactPage />} />
-    <Redirect to={HOME} />
   </>
 }
 
