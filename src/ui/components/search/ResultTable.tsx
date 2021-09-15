@@ -12,6 +12,7 @@ import { MappingRecord } from "../../../utills/Convertor";
 import { ParsedInput } from "../../../types/MappingResponse";
 import LoaderRow from "./LoaderRow";
 import Spaces from "../../elements/Spaces";
+import AlternateIsoFormRow from "./AlternateIsoFormRow";
 
 const StructuralDetail = lazy(() => import(/* webpackChunkName: "StructuralDetail" */ "../structure/StructuralDetail"));
 const PopulationDetail = lazy(() => import(/* webpackChunkName: "PopulationDetail" */ "../population/PopulationDetail"));
@@ -20,6 +21,24 @@ const FunctionalDetail = lazy(() => import(/* webpackChunkName: "FunctionalDetai
 interface ResultTableProps {
   invalidInputs: Array<ParsedInput>
   mappings: Array<Array<Array<MappingRecord>>>
+}
+
+export function getProteinType(record: MappingRecord) {
+  if (!record.isoform)
+    return '';
+  return record.canonical ? 'Swiss-Prot' : 'TrEMBL'
+}
+
+export function getProteinName(record: MappingRecord) {
+  let proteinName = record.proteinName;
+  if (record.proteinName && record.proteinName.length > 20) {
+    proteinName = record.proteinName.substring(0, 20) + '..';
+  }
+  return proteinName
+}
+
+function isAlternateIsoForm(record: MappingRecord) {
+  return !record.canonical && record.canonicalAccession;
 }
 
 function ResultTable(props: ResultTableProps) {
@@ -78,7 +97,8 @@ const getTableRows = (mappings: MappingRecord[][][], isoFormGroupExpanded: strin
       matchingIsoForms.forEach((isoform) => {
         const currentGroup = inputRecordIndex + '-' + isoform.canonicalAccession + '-' + isoform.position + '-' + isoform.altAllele;
         if (isoform.canonical || isoform.canonicalAccession === null || currentGroup === isoFormGroupExpanded) {
-          const row = getRow(isoform, currentGroup, isoFormGroupExpanded, toggleIsoFormGroup, annotationExpanded, toggleAnnotation);
+          const row = isAlternateIsoForm(isoform) ? <AlternateIsoFormRow record={isoform} toggleOpenGroup={currentGroup} />
+            : getRow(isoform, currentGroup, isoFormGroupExpanded, toggleIsoFormGroup, annotationExpanded, toggleAnnotation);
           tableRows.push(row);
         }
       })
@@ -95,24 +115,12 @@ const getRow = (record: MappingRecord, toggleOpenGroup: string, isoFormGroupExpa
   if (!record.codon) {
     strand = '';
   }
-  let proteinName = record.proteinName;
-  let proteinType = record.canonical ? 'Swiss-Prot' : 'TrEMBL';
-  if (record.isoform === undefined) proteinType = '';
-  if (record.proteinName && record.proteinName.length > 20) {
-    proteinName = record.proteinName.substring(0, 20) + '..';
-  }
 
   const positionUrl = ENSEMBL_VIEW_URL + record.chromosome + ':' + record.position + '-' + record.position;
   const expandedGroup = record.isoform + '-' + record.position + '-' + record.altAllele;
   const functionalKey = 'functional-' + expandedGroup;
   const structuralKey = 'structural-' + expandedGroup;
   const populationKey = 'population-' + expandedGroup;
-
-  function displayVal(data: string | number) {
-    if (record.canonical) return data;
-    if (!record.canonicalAccession) return data;
-    return '';
-  }
 
   return <Fragment key={`${toggleOpenGroup}-${record.isoform}`}>
     <tr >
@@ -123,13 +131,13 @@ const getRow = (record: MappingRecord, toggleOpenGroup: string, isoFormGroupExpa
       </td>
       <td>
         <a href={positionUrl} target="_blank" rel="noopener noreferrer">
-          {displayVal(record.position)}
+          {record.position}
         </a>
       </td>
       <td>{record.id}</td>
       <td>{record.refAllele}</td>
       <td>
-        {displayVal(record.altAllele)}
+        {record.altAllele}
       </td>
       <td>
         <a href={ENSEMBL_GENE_URL + record.geneName} target="_blank" rel="noopener noreferrer">
@@ -160,13 +168,13 @@ const getRow = (record: MappingRecord, toggleOpenGroup: string, isoFormGroupExpa
       )}
 
       <td>
-        <ProteinReviewStatus type={proteinType} />
+        <ProteinReviewStatus type={getProteinType(record)} />
         <a href={UNIPROT_ACCESSION_URL + record.isoform} target="_blank" rel="noopener noreferrer">
           {record.isoform}
         </a>
       </td>
       <td>
-        <span title={record.proteinName}>{proteinName}</span>
+        <span title={record.proteinName}>{getProteinName(record)}</span>
       </td>
       <td>{record.aaPos}</td>
       <td>{record.aaChange}</td>
