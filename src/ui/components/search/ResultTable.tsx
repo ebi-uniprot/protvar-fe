@@ -72,16 +72,13 @@ function ResultTable(props: ResultTableProps) {
 
 const getTableRows = (mappings: MappingRecord[][][], isoFormGroupExpanded: string, toggleIsoFormGroup: StringVoidFun,
   annotationExpanded: string, toggleAnnotation: StringVoidFun) => {
-  let tableRows: Array<JSX.Element> = [];
-  mappings.forEach((mapping) => {
+  const tableRows: Array<JSX.Element> = [];
+  mappings.forEach((mapping, inputRecordIndex) => {
     mapping.forEach((matchingIsoForms) => {
       matchingIsoForms.forEach((isoform) => {
-        let currentGroup = isoform.canonicalAccession + '-' + isoform.position + '-' + isoform.altAllele;
-        if (currentGroup === isoFormGroupExpanded) {
-          let row = getRow(isoform, isoFormGroupExpanded, toggleIsoFormGroup, annotationExpanded, toggleAnnotation);
-          tableRows.push(row);
-        } else if (isoform.canonical || isoform.canonicalAccession === null) {
-          let row = getRow(isoform, isoFormGroupExpanded, toggleIsoFormGroup, annotationExpanded, toggleAnnotation);
+        const currentGroup = inputRecordIndex + '-' + isoform.canonicalAccession + '-' + isoform.position + '-' + isoform.altAllele;
+        if (isoform.canonical || isoform.canonicalAccession === null || currentGroup === isoFormGroupExpanded) {
+          const row = getRow(isoform, currentGroup, isoFormGroupExpanded, toggleIsoFormGroup, annotationExpanded, toggleAnnotation);
           tableRows.push(row);
         }
       })
@@ -90,7 +87,7 @@ const getTableRows = (mappings: MappingRecord[][][], isoFormGroupExpanded: strin
   return tableRows;
 };
 
-const getRow = (record: MappingRecord, isoFormGroupExpanded: string, toggleIsoFormGroup: StringVoidFun,
+const getRow = (record: MappingRecord, toggleOpenGroup: string, isoFormGroupExpanded: string, toggleIsoFormGroup: StringVoidFun,
   annotationExpanded: string, toggleAnnotation: StringVoidFun) => {
   let caddCss = getCaddCss(record.CADD);
   let caddTitle = getTitle(record.CADD);
@@ -106,7 +103,6 @@ const getRow = (record: MappingRecord, isoFormGroupExpanded: string, toggleIsoFo
   }
 
   const positionUrl = ENSEMBL_VIEW_URL + record.chromosome + ':' + record.position + '-' + record.position;
-  const toggleOpenGroup = record.canonicalAccession + '-' + record.position + '-' + record.altAllele;
   const expandedGroup = record.isoform + '-' + record.position + '-' + record.altAllele;
   const functionalKey = 'functional-' + expandedGroup;
   const structuralKey = 'structural-' + expandedGroup;
@@ -118,7 +114,7 @@ const getRow = (record: MappingRecord, isoFormGroupExpanded: string, toggleIsoFo
     return '';
   }
 
-  return <Fragment key={`${record.isoform}-${record.position}-${record.altAllele}`}>
+  return <Fragment key={`${toggleOpenGroup}-${record.isoform}`}>
     <tr >
       <td>
         <a href={ENSEMBL_CHRM_URL + record.chromosome} target="_blank" rel="noopener noreferrer">
