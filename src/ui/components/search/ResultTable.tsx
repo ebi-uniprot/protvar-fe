@@ -94,9 +94,8 @@ const getRow = (record: MappingRecord, isoFormGroupExpanded: string, toggleIsoFo
   annotationExpanded: string, toggleAnnotation: StringVoidFun) => {
   let caddCss = getCaddCss(record.CADD);
   let caddTitle = getTitle(record.CADD);
-  let strand = '(+)';
-  if (record.strand === true) strand = '(-)';
-  if (record.codon === undefined || record.codon === null) {
+  let strand = record.strand ? '(-)' : '(+)';
+  if (!record.codon) {
     strand = '';
   }
   let proteinName = record.proteinName;
@@ -157,8 +156,7 @@ const getRow = (record: MappingRecord, isoFormGroupExpanded: string, toggleIsoFo
             onClick={() => toggleIsoFormGroup(toggleOpenGroup)}
             className="button button--toggle-isoforms"
           >
-            {isoFormGroupExpanded !== toggleOpenGroup ? '+' : null}
-            {isoFormGroupExpanded === toggleOpenGroup ? '- ' : null}
+            {isoFormGroupExpanded !== toggleOpenGroup ? '+' : '- '}
           </Button>
         </td>
       ) : (
