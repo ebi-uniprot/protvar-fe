@@ -32,7 +32,7 @@ function DownloadModal(props: DownloadModalProps) {
     if (props.sendEmail) sendDownloadEmail(props.file, props.pastedInputs, annotations.fun, annotations.pop, annotations.str, email, jobName);
     else download(props.file, props.pastedInputs, annotations.fun, annotations.pop, annotations.str);
   };
-  return <div id="divDownload" ref={downloadModelDiv}>
+  return <div id="divDownload" ref={downloadModelDiv} className="padding-left-1x">
     <Button onClick={() => setShowModel(val => !val)}>
       <DownloadIcon className="downloadicon" />
       Download

@@ -1,19 +1,15 @@
-import DownloadModal from "../../modal/DownloadModal";
 import Button from '../../elements/form/Button';
 import { Dropdown } from 'react-dropdown-now';
 import 'react-dropdown-now/style.css';
 import { NextPageFun, Page } from "../../../utills/AppHelper";
-import { MAX_IN_PLACE_DOWNLOAD_WITHOUT_EMAIL } from "../../../constants/const";
 
 interface PaginationRowProps {
-  pastedInputs: string[]
-  file: File | null
   page: Page
   fetchNextPage: NextPageFun
 }
 
 function PaginationRow(props: PaginationRowProps) {
-  const { pastedInputs, file, page, fetchNextPage } = props;
+  const { page, fetchNextPage } = props;
   const totalPages = Math.ceil(page.totalItems / page.itemsPerPage);
 
   function changePageSize(pageSize: any) {
@@ -32,11 +28,7 @@ function PaginationRow(props: PaginationRowProps) {
   return <table className="table-header">
     <tbody>
       <tr>
-        <td colSpan={1}>
-          <DownloadModal pastedInputs={pastedInputs} file={file} sendEmail={page.totalItems > MAX_IN_PLACE_DOWNLOAD_WITHOUT_EMAIL} />
-        </td>
-
-        <td colSpan={1}>
+        <td>
           {page === undefined || page.currentPage === 1 ? (
             <Button onClick={() => null} className="button-new button-disabled">
               &laquo; Previous
@@ -45,10 +37,10 @@ function PaginationRow(props: PaginationRowProps) {
             <Button onClick={() => fetchPage(-1)}>&laquo; Previous</Button>
           )}
         </td>
-        <td colSpan={1}>
+        <td>
           {page.currentPage} of {totalPages}
         </td>
-        <td colSpan={1}>
+        <td>
           {page === undefined || !page.nextPage ? (
             <Button onClick={() => null} className="button-new button-disabled">
               Next &raquo;
@@ -57,7 +49,7 @@ function PaginationRow(props: PaginationRowProps) {
             <Button onClick={() => fetchPage(1)}>Next &raquo;</Button>
           )}
         </td>
-        <td colSpan={1}>
+        <td>
           <Dropdown
             placeholder="Pages"
             options={[25, 50, 100]}
