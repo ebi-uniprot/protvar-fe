@@ -36,7 +36,7 @@ function FileUpload(props: FileUploadProps) {
               <p>
                 <b>PepVEP will interpret only the first five fields of the VCF</b><br />
                 #CHROM POS ID REF ALT<br />
-                Missing values should be specified with a dot (‘.’){' '}
+                Missing values can be specified with a dot (‘.’){' '}
                 <a target="_blank" rel="noreferrer" href={VCF_FORMAT_INFO_URL} className="ref-link">more info</a><br /><br />
                 <b>PepVEP also supports hgvs in below format</b><br />
                 {"NC_000010.11:g.121479868C>G"}<br />
