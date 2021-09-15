@@ -11,6 +11,7 @@ import PopulationIcon from '../../../images/human.svg';
 import { MappingRecord } from "../../../utills/Convertor";
 import { ParsedInput } from "../../../types/MappingResponse";
 import LoaderRow from "./LoaderRow";
+import Spaces from "../../elements/Spaces";
 
 const StructuralDetail = lazy(() => import(/* webpackChunkName: "StructuralDetail" */ "../structure/StructuralDetail"));
 const PopulationDetail = lazy(() => import(/* webpackChunkName: "PopulationDetail" */ "../population/PopulationDetail"));
@@ -146,7 +147,7 @@ const getRow = (record: MappingRecord, isoFormGroupExpanded: string, toggleIsoFo
       <td>
         <span className={caddCss} title={caddTitle}>
           <a href={CADD_INFO_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'white' }}>
-            {isNaN(parseFloat(record.CADD!)) ? "" : parseFloat(record.CADD!).toFixed(1)}
+            <Spaces count={parseInt(record.CADD!) > 9 ? 0 : 2} />{isNaN(parseFloat(record.CADD!)) ? "" : parseFloat(record.CADD!).toFixed(1)}
           </a>
         </span>
       </td>

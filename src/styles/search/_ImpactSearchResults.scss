@@ -631,3 +631,8 @@
 	white-space: normal;
 	font-weight: 700;
 }
+
+span.space:before {
+    content: "\00a0"; /* this is &nbsp; or space*/
+    white-space: pre;
+}
