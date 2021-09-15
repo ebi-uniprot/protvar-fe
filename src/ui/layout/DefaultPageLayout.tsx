@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { ABOUT, CONTACT, HOME } from '../../constants/BrowserPaths';
 
 import DefaultPageContent from './DefaultPageContent';
 
@@ -72,14 +73,14 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                     <td>
                       <Link
                         className="local-title"
-                        to="/"
+                        to={HOME}
                         title="Back to PepVEP's homepage"
                       >
                         <i className="fa fa-fw fa-home" /> PepVEP
                       </Link>
                       <Link
                         className="local-sub-title"
-                        to="/"
+                        to={HOME}
                         title="Back to PepVEP's homepage"
                       >
                         Predicting the effect of varying amino acids in proteins
@@ -87,10 +88,10 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                     </td>
 
                     <td className="topnav-right local-sub-title">
-                      <Link to="/about" title="About PepVEP's"> ABOUT </Link>
+                      <Link to={ABOUT} title="About PepVEP's"> ABOUT </Link>
                     </td>
                     <td className="topnav-right local-sub-title">
-                      <Link to="/contact" title="Contact us"> CONTACT </Link>
+                      <Link to={CONTACT} title="Contact us"> CONTACT </Link>
                     </td>
                   </tr>
                 </tbody>

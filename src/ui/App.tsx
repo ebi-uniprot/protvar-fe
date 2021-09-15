@@ -10,6 +10,7 @@ import { convertApiMappingToTableRecords, MappingRecord } from '../utills/Conver
 import { firstPage, Page } from '../utills/AppHelper';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
+import { ABOUT, API_ERROR, CONTACT, HOME, SEARCH } from '../constants/BrowserPaths';
 
 interface AppProps extends RouteComponentProps { }
 
@@ -96,23 +97,23 @@ function App(props: AppProps) {
         const records = response.data.mappings.map(convertApiMappingToTableRecords);
         setSearchResults(records)
         setInvalidInputs(response.data.invalidInputs)
-        props.history.push('search');
+        props.history.push(SEARCH);
       })
       .catch((err) => {
-        props.history.push('api-error');
+        props.history.push(API_ERROR);
         console.log(err);
       })
       .finally(() => setLoading(false));
   }
 
   return <>
-    <Route path="/" exact render={() => <HomePage loading={loading} fetchPasteResult={fetchPasteResult} fetchFileResult={fetchFileResult} />} />
-    <Route path="/search" render={() => <SearchResultsPage rows={searchResults} file={file} page={page} pastedInputs={userInputs}
+    <Route path={HOME} exact render={() => <HomePage loading={loading} fetchPasteResult={fetchPasteResult} fetchFileResult={fetchFileResult} />} />
+    <Route path={SEARCH} render={() => <SearchResultsPage rows={searchResults} file={file} page={page} pastedInputs={userInputs}
       fetchNextPage={fetchPage} invalidInputs={invalidInputs} />} />
-    <Route path="/api-error" render={() => <APIErrorPage />} />
-    <Route path="/about" render={() => <AboutPage />} />
-    <Route path="/contact" render={() => <ContactPage />} />
-    <Redirect to="/" />
+    <Route path={API_ERROR} render={() => <APIErrorPage />} />
+    <Route path={ABOUT} render={() => <AboutPage />} />
+    <Route path={CONTACT} render={() => <ContactPage />} />
+    <Redirect to={HOME} />
   </>
 }
 

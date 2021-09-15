@@ -4,6 +4,8 @@ import RestApiComponent from './RestApiComponent';
 import PasteVariantSearch from './PasteVariantSearch';
 import { FileLoadFun } from '../../../utills/AppHelper';
 import { StringVoidFun } from '../../../constants/CommonTypes';
+import { Link } from 'react-router-dom';
+import { ABOUT, CONTACT } from '../../../constants/BrowserPaths';
 
 const HomePageContent = (props: HomePageProps) => {
   const { loading, fetchFileResult, fetchPasteResult } = props;
@@ -30,12 +32,12 @@ const HomePageContent = (props: HomePageProps) => {
     <div>
       <br />
       <p className="info">
-        Further help and explanations about the data in PepVEP can be found in the "about" section at
-        the top right hand side of the page.
+        Further help and explanations about the data in PepVEP can be found in the "<Link to={ABOUT} title="About PepVEP's">about</Link>"
+        section at the top right hand side of the page.
         <br />
         <br />
         We continually strive to make PepVEP clear and useful to our users, to contact PepVEP with
-        questions or suggestions please use the "contact" link at the top of the page.
+        questions or suggestions please use the "<Link to={CONTACT} title="Contact us">contact</Link>" link at the top of the page.
       </p>
     </div>
   </>
