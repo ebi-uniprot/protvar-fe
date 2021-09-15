@@ -4,6 +4,7 @@ import Modal from './Modal';
 import { ReactComponent as DownloadIcon } from "../../images/download.svg"
 import useOnClickOutside from '../../hooks/useOnClickOutside';
 import { sendDownloadEmail, download } from './DownloadModalHelper'
+import { emailValidate } from '../../utills/Validator';
 
 interface DownloadModalProps {
   file: File | null
@@ -14,6 +15,7 @@ function DownloadModal(props: DownloadModalProps) {
   const [showModel, setShowModel] = useState(false)
   const [email, setEmail] = useState("")
   const [jobName, setJobName] = useState("")
+  const [errorMsg, setErrorMsg] = useState("")
   const [downloadAnnotations, setDownloadAnnotations] = useState(true)
   const [annotations, setAnnotations] = useState({ fun: true, pop: true, str: true })
   const setAllAnnotations = (val: boolean) => setAnnotations({ fun: val, pop: val, str: val })
@@ -21,7 +23,11 @@ function DownloadModal(props: DownloadModalProps) {
   useOnClickOutside(downloadModelDiv, useCallback(() => setShowModel(false), []));
 
   const handleSubmit = () => {
-    //TODO validation for job name and email address
+    const err = emailValidate(email)
+    if (props.sendEmail && err) {
+      setErrorMsg(err)
+      return
+    }
     setShowModel(false)
     if (props.sendEmail) sendDownloadEmail(props.file, props.pastedInputs, annotations.fun, annotations.pop, annotations.str, email, jobName);
     else download(props.file, props.pastedInputs, annotations.fun, annotations.pop, annotations.str);
@@ -113,9 +119,9 @@ function DownloadModal(props: DownloadModalProps) {
           {props.sendEmail && <>
             <p className="padding-left-1x">We will send you email onces your file is ready to download</p>
             <label className="download-label">
-              Email:
+              Email: <span className="alert-danger">{errorMsg ? errorMsg : ""}</span>
               <input
-                type="text"
+                type="email"
                 value={email}
                 name="email"
                 onChange={(e) => setEmail(e.target.value)}
