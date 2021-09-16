@@ -34,7 +34,8 @@ const HomePageContent = (props: HomePageProps) => {
         More help and information is available in the <Link to={ABOUT} title="About PepVEP's" className="ref-link">about</Link> section.
         <br />
         <br />
-        We strive to make PepVEP clear and useful to our users. <Link to={CONTACT} title="Contact us">Contact us</Link> with questions or suggestions here.
+        We strive to make PepVEP clear and useful to our users. {' '}
+        <Link to={CONTACT} title="Contact us" className="ref-link">Contact us</Link> with questions or suggestions here.
       </p>
     </div>
   </>
