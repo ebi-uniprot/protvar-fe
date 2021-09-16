@@ -25,7 +25,7 @@ function FileUpload(props: FileUploadProps) {
       <section className="card__actions">
         <span className="card-header">
           <p>
-            <b>File Upload</b>
+            <b>Upload file</b>
           </p>
         </span>
       </section>
@@ -38,7 +38,7 @@ function FileUpload(props: FileUploadProps) {
                 #CHROM POS ID REF ALT<br />
                 Missing values can be specified with a dot (‘.’){' '}
                 <a target="_blank" rel="noreferrer" href={VCF_FORMAT_INFO_URL} className="ref-link">more info</a><br /><br />
-                <b>PepVEP also supports hgvs in below format</b><br />
+                <b>PepVEP also supports HGVS in below format</b><br />
                 {"NC_000010.11:g.121479868C>G"}<br />
               </p>
             </section>
@@ -52,10 +52,10 @@ function FileUpload(props: FileUploadProps) {
         ref={uploadInputField}
         onChange={viewResult}
       />
-      <div style={{ position: "absolute", bottom: 0, width: "100%" }}>
+      <div className="search-button-group">
         <Button
           onClick={props.isLoading ? () => null : () => uploadInputField.current?.click()}
-          className="button-primary width100"
+          className="button-primary"
         >
           {props.isLoading ? "Loading..." : "Upload File"}
         </Button>

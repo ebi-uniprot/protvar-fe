@@ -7,7 +7,7 @@ function RestApiComponent() {
       <section className="card__actions">
         <span className="card-header">
           <p>
-            <b>PepVEP REST API</b>
+            <b>Access PepVEP REST API</b>
           </p>
         </span>
       </section>
@@ -31,16 +31,14 @@ function RestApiComponent() {
                   formats
                 </li>
               </ul>
-              Click below for all PepVEP REST API documentation
-
             </section>
           </section>
         </div>
       </section>
-      <div style={{ position: "absolute", bottom: 0, width: "100%" }}>
+      <div className="search-button-group">
         <Button
           onClick={() => window.open(API_URL + '/swagger-ui/#/', '_blank')}
-          className="width100"
+          className="button-primary"
         >
           PepVEP REST API
         </Button>

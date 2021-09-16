@@ -20,8 +20,7 @@ const HomePageContent = (props: HomePageProps) => {
         <br />
       </p>
       <p className="info">
-        Variants can be submitted via pasting in the box in VCF or HGVS format, uploading a file in VCF
-        format or using the PepVEP API
+        Submit variants (VCF or HGVS format) by pasting them in the search box below, uploading a file or by using the PepVEP API
       </p>
     </div>
     <div className="wrapper">
@@ -32,12 +31,10 @@ const HomePageContent = (props: HomePageProps) => {
     <div>
       <br />
       <p className="info">
-        Further help and explanations about the data in PepVEP can be found in the "<Link to={ABOUT} title="About PepVEP's">about</Link>"
-        section at the top right hand side of the page.
+        More help and information is available in the <Link to={ABOUT} title="About PepVEP's" className="ref-link">about</Link> section.
         <br />
         <br />
-        We continually strive to make PepVEP clear and useful to our users, to contact PepVEP with
-        questions or suggestions please use the "<Link to={CONTACT} title="Contact us">contact</Link>" link at the top of the page.
+        We strive to make PepVEP clear and useful to our users. <Link to={CONTACT} title="Contact us">Contact us</Link> with questions or suggestions here.
       </p>
     </div>
   </>

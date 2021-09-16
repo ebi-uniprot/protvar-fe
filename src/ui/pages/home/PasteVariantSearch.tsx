@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import Button from '../../elements/form/Button'
 import { ENSEMBL_ASML_URL } from '../../../constants/ExternalUrls';
 import { StringVoidFun } from '../../../constants/CommonTypes';
+import Spaces from '../../elements/Spaces';
 
 interface PasteVariantSearchProps {
   isLoading: boolean
@@ -41,53 +42,40 @@ function PasteVariantSearch(props: PasteVariantSearchProps) {
         <div className="card__content">
           <section className="uniprot-card">
             <section className="uniprot-card__left">
+
+              <span className="genome-assembly-text">
+                <p>
+                  Reference Genome Assembly GRCh38 (hg38): {' '}
+                  <a href={ENSEMBL_ASML_URL} target="_blank" rel="noopener noreferrer" className="ref-link">
+                    Ensembl's Assembly Remapping
+                  </a>
+                </p>
+              </span>
+              <div className="flex padding-bottom-1x">
+                <b>Examples:</b>
+                <Spaces count={2} />
+                <button onClick={populateVCF} className="ref-link">VCF</button>
+                <Spaces count={2} />
+                <button onClick={populateHGVS} className="ref-link">HGVS</button>
+              </div>
+
               <textarea
                 id="main-textarea-search-field"
                 className="main-textarea-search-field"
                 value={searchTerm}
                 placeholder="Paste variants in HGVS or VCF format"
-                // onFocus={(e) => (e.target.placeholder = '')}
                 onChange={e => setSearchTerm(e.target.value)}
               />
-
-              <table className="table-input">
-                <tbody>
-                  <tr>
-                    <td>
-                      <b>Examples:</b>
-                    </td>
-                    <td>
-                      <button onClick={populateVCF} style={{ margin: 0 }}>VCF</button>
-                    </td>
-                    <td>
-                      <button onClick={populateHGVS} style={{ margin: 0 }}>HGVS</button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <span className="genome-assembly-text">
-                <p>
-                  Reference Genome Assembly GRCh38 (hg38): {'     '}
-                  <a
-                    href={ENSEMBL_ASML_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="ref-link"
-                  >
-                    Ensembl's Assembly Remapping
-                  </a>
-                </p>
-              </span>
             </section>
 
           </section>
         </div>
       </section>
-      <div style={{ position: "absolute", bottom: 0, width: "100%" }}>
+      <div className="search-button-group">
         <Button
           type="submit"
           onClick={props.isLoading ? () => { } : handleSubmit}
-          className="button-primary width100"
+          className="button-primary"
         >
           {props.isLoading ? "Loading..." : "Search"}
         </Button>

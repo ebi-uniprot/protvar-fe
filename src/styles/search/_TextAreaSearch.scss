@@ -1,16 +1,15 @@
 // Text-area search field
 // ----------------------
 .main-textarea-search-field {
-	min-height: 12vh;
+	min-height: 15vh;
 	border-radius: 5px;
-	padding: .7rem 1rem;
-	line-height: 1.7rem;
+	line-height: 1.2rem;
 	font-family: Lato, sans-serif;
-	font-size: 12px;
+	font-size: 13px;
 	resize: none;
 	white-space: pre-wrap;
-	color: grey;
 	margin: 0;
+	margin-bottom: 0.3rem
 }
 
 .ref-link {
@@ -73,21 +72,13 @@
 
 	.button-new {
 		position: absolute;
-		padding: 15px;
-		display: inline-block;
-		right: 0;
-		bottom: 0;
-		margin: 0;
-		width: 100%;
+		padding: 10px;
+		width: 92%;
 		border-style: solid;
-	}
-
-	button {
-		width: 100%;
-
-		// &:first-child {
-		// 	margin-right: 2%;
-		// }
+		color: #00658c;
+		font-weight: bold;
+		bottom: 0.5rem;
+		margin-left: 1rem
 	}
 }
 

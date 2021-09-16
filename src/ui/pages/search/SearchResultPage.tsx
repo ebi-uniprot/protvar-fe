@@ -7,6 +7,7 @@ import { MappingRecord } from "../../../utills/Convertor";
 import { ParsedInput } from "../../../types/MappingResponse";
 import DownloadModal from "../../modal/DownloadModal";
 import { MAX_IN_PLACE_DOWNLOAD_WITHOUT_EMAIL } from "../../../constants/const";
+import CaddLegendColors from "../../components/search/CaddLegendColors";
 
 interface SearchResultPageProps {
   pastedInputs: string[]
@@ -33,6 +34,7 @@ function SearchResultsPageContent(props: SearchResultPageProps) {
       </div>
       <ResultTable invalidInputs={invalidInputs} mappings={rows} />
       <PaginationRow page={page} fetchNextPage={fetchNextPage} />
+      <CaddLegendColors />
     </div>
   </>
 }

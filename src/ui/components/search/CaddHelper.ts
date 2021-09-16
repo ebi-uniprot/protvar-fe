@@ -1,4 +1,4 @@
-function getColor(CADD: number) {
+export function getColor(CADD: number) {
   if (CADD < 15) {
     return 'green';
   } else if (CADD >= 15 && CADD < 20) {

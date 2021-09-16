@@ -212,9 +212,9 @@ function getSignificancesButton(rowKey: string, buttonLabel: string, accession: 
     buttonCss = 'button--significances-clicked  button-new';
     columnCss = 'fit-clicked';
   }
-  var buttonTag = <img src={ProteinIcon} className="button-icon" alt="protein icon" />;
-  if (buttonLabel === 'POP') buttonTag = <img src={PopulationIcon} className="button-icon" alt="population icon" />;
-  else if (buttonLabel === 'STR') buttonTag = <img src={StructureIcon} className="button-icon" alt="structure icon" />;
+  var buttonTag = <img src={ProteinIcon} className="button-icon" alt="protein icon" title="Functional information"/>;
+  if (buttonLabel === 'POP') buttonTag = <img src={PopulationIcon} className="button-icon" alt="population icon" title="Population observation"/>;
+  else if (buttonLabel === 'STR') buttonTag = <img src={StructureIcon} className="button-icon" alt="structure icon" title="3D structure"/>;
   return (
     <td className={columnCss}>
       <button
