@@ -47,7 +47,7 @@ build_docker_image:
   services:
     - docker:dind
   before_script:
-    - 'wget --no-cache --no-cookies -O nginx.conf "${URL_NGINX_CONF}'"
+    - 'wget --no-cache --no-cookies -O nginx.conf "${URL_NGINX_CONF}"'
     - if [ ! -f nginx.conf ];
         then echo "nginx config file is missing";
       fi
@@ -77,11 +77,11 @@ deploy:
   stage: deploy
   extends: .kubectl
   before_script:
-    - 'wget --no-cache --no-cookies -O deploy.sh "${URL_DEPLOY_SH}'"
+    - 'wget --no-cache --no-cookies -O deploy.sh "${URL_DEPLOY_SH}"'
     - if [ ! -f deploy.sh ];
         then echo "k8s deployment file is missing";
       fi
-    - 'wget --no-cache --no-cookies -O wp-config-template.yml "${URL_WP_CONFIG_TEMPLATE_yml}'"
+    - 'wget --no-cache --no-cookies -O wp-config-template.yml "${URL_WP_CONFIG_TEMPLATE_yml}"'
     - if [ ! -f wp-config-template.yml ];
         then echo "k8s config file is missing";
       fi
