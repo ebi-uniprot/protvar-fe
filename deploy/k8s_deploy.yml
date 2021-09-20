@@ -1,0 +1,49 @@
+apiVersion: v1 # Specifies what version of K8s you want to use
+kind: Service # A service is used to expose your Deployment to the external access
+metadata:
+  name: pepvep-fe
+spec:
+  ports: # Don't set nodePort (external facing) in case it's conflict with another services
+    - port: 80 # Internally exposes the service on this port within the k8s cluster. Other pods within the cluster can communicate with this server on this port
+      protocol: TCP
+      targetPort: 80 # The port on which the service will forward requests to, that your pod will be listening on. NGINX in the container will need to be listening on this port also.
+  selector:
+    app: pepvep-fe # Selects the Deployment to attach the Service to
+  type: NodePort # Tell K8s this wants to expose an external port
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: pepvep-fe
+spec:
+  selector:
+    matchLabels:
+      app: pepvep-fe # Has to match .spec.template.metadata.labels
+  serviceName: pepvep-fe
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: pepvep-fe # Has to match .spec.selector.matchLabels
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: pepvep-fe
+          image: dockerhub.ebi.ac.uk/uniprot/front-end/mirror-pepvep-fe:latest # The image which contains Nginx and the built assets
+          ports:
+            - containerPort: 80 # We are using Nginx's default config which serves on port 80
+          volumeMounts:
+            - name: pepvep-fe-logs
+              mountPath: /var/log/nginx
+      imagePullSecrets:
+        - name: gitlab-registry # Provided by GitLab, this allows K8s to connect to dockerhub.ebi.ac.uk
+  volumeClaimTemplates:
+    - metadata:
+        name: pepvep-fe-logs
+      spec:
+        storageClassName: standard-nfs-production
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 5Gi
