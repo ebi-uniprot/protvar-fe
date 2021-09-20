@@ -1,0 +1,90 @@
+variables:
+  URL_NGINX_CONF: "https://gitlab.ebi.ac.uk/api/v4/projects/${COMMON_PROJECT_ID}/repository/files/nginx.conf/raw?ref=master&private_token=${GITLAB_USER_API_TOKEN}"
+  URL_DEPLOY_SH: "https://gitlab.ebi.ac.uk/api/v4/projects/${COMMON_PROJECT_ID}/repository/files/deploy.sh/raw?ref=master&private_token=${GITLAB_USER_API_TOKEN}"
+  URL_WP_CONFIG_TEMPLATE_yml: "https://gitlab.ebi.ac.uk/api/v4/projects/${COMMON_PROJECT_ID}/repository/files/wp-config-template.yml/raw?ref=master&private_token=${GITLAB_USER_API_TOKEN}"
+stages:
+  - test
+  - build_static_assets
+  - build_docker_image
+  - deploy
+
+.js:
+  image: node:15
+  before_script:
+    - node --version
+    - npm --version
+    - yarn --version
+    - pwd
+    - ls
+    - yarn install
+
+test:
+  stage: test
+  extends: .js
+  script:
+    - yarn test
+
+build_static_assets:
+  only:
+    refs:
+      - master
+  extends: .js
+  stage: build_static_assets
+  script:
+    - yarn build
+  artifacts:
+    paths:
+      - build/
+
+build_docker_image:
+  only:
+    refs:
+      - master
+  stage: build_docker_image
+  image: docker:latest
+  tags:
+    - dind
+  services:
+    - docker:dind
+  before_script:
+    - 'wget --no-cache --no-cookies -O nginx.conf "${URL_NGINX_CONF}'"
+    - if [ ! -f nginx.conf ];
+        then echo "nginx config file is missing";
+      fi
+  script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin
+    - docker --version
+    - CONTAINER_IMAGE=${CI_REGISTRY_IMAGE}:latest
+    - echo ${CONTAINER_IMAGE}
+    - docker build -t ${CONTAINER_IMAGE} --no-cache .
+    - docker image ls
+    - docker push ${CONTAINER_IMAGE}
+    - docker rmi ${CONTAINER_IMAGE}
+    - docker logout "$CI_REGISTRY"
+
+.kubectl:
+  image: alpine
+  before_script:
+    - apk add --no-cache curl git bash
+    - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+    - chmod +x ./kubectl
+    - mv ./kubectl /usr/local/bin/kubectl
+
+deploy:
+  only:
+    refs:
+      - master
+  stage: deploy
+  extends: .kubectl
+  before_script:
+    - 'wget --no-cache --no-cookies -O deploy.sh "${URL_DEPLOY_SH}'"
+    - if [ ! -f deploy.sh ];
+        then echo "k8s deployment file is missing";
+      fi
+    - 'wget --no-cache --no-cookies -O wp-config-template.yml "${URL_WP_CONFIG_TEMPLATE_yml}'"
+    - if [ ! -f wp-config-template.yml ];
+        then echo "k8s config file is missing";
+      fi
+  script:
+    - ./deploy.sh HX pepvep-fe # fallback
+    - ./deploy.sh HH pepvep-fe # prod

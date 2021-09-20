@@ -19,7 +19,7 @@ Array [
       className="row"
     >
       <ul
-        className="menu"
+        className="menu global-nav text-right"
         id="global-nav"
       >
         <li
@@ -32,7 +32,7 @@ Array [
           </a>
         </li>
         <li
-          className="home active"
+          className="home"
         >
           <a
             href="//www.ebi.ac.uk"
@@ -77,34 +77,13 @@ Array [
           </a>
         </li>
         <li
-          className="search"
-        >
-          <a
-            data-toggle="search-global-dropdown"
-            href="#/"
-          >
-            <span
-              className="show-for-small-only"
-            >
-              Search
-            </span>
-          </a>
-          <div
-            className="dropdown-pane"
-            data-dropdown={true}
-            data-options="closeOnClick:true;"
-            id="search-global-dropdown"
-          />
-        </li>
-        <li
-          className="float-right show-for-medium embl-selector"
+          className="float-right show-for-medium embl-selector embl-ebi active"
+          id="embl-selector"
         >
           <button
             className="button float-right"
-            data-toggle="embl-dropdown"
-            type="button"
           >
-            Hinxton
+             
           </button>
         </li>
       </ul>
@@ -129,89 +108,61 @@ Array [
           className="masthead-inner row"
         >
           <div
-            className="local-title columns medium-7"
-            id="local-title"
+            className="navbar"
           >
-            <a
-              href="/uniprot/pepvep/"
-              title="Back to PepVEP's homepage"
-            >
-              PepVEP
-            </a>
-          </div>
-          <div
-            className="column medium-5"
-            id="ebi-standard-search-field"
-          >
-            <form
-              id="ebi_search"
-              onSubmit={[Function]}
-            >
-              <fieldset>
-                <div
-                  className="input-group margin-bottom-none margin-top-large"
+            <table>
+              <tbody>
+                <tr
+                  className="navbar"
                 >
-                  <input
-                    className="input-group-field"
-                    id="query"
-                    maxLength="2048"
-                    name="query"
-                    onChange={[Function]}
-                    placeholder="Search service"
-                    size="35"
-                    tabIndex="0"
-                    title="EB-eye Search"
-                    type="text"
-                    value=""
-                  />
-                  <div
-                    className="input-group-button"
-                  >
-                    <button
-                      className="button icon icon-functional"
-                      onClick={[Function]}
-                      type="submit"
+                  <td>
+                    <a
+                      className="local-title"
+                      href="/uniprot/pepvep/test/"
+                      title="Back to PepVEP's homepage"
                     >
-                      Search
-                    </button>
-                  </div>
-                </div>
-              </fieldset>
-              <p
-                className="small"
-                id="example"
-              >
-                <span>
-                  Examples: 
-                </span>
-                <a
-                  href="/ebisearch/search.ebi?db=allebi&requestFrom=ebi_index&query=blast"
-                >
-                  blast
-                </a>
-                ,
-                <a
-                  href="/ebisearch/search.ebi?db=allebi&query=keratin&requestFrom=ebi_index"
-                >
-                  keratin
-                </a>
-                ,
-                <a
-                  href="/ebisearch/search.ebi?db=allebi&query=bfl1&requestFrom=ebi_index"
-                >
-                  bfl1
-                </a>
-                <button
-                  className="float-right"
-                >
-                  <span
-                    className="icon icon-generic"
-                    data-icon="("
-                  />
-                   advanced search
-                </button>
-              </p>
-            </form>
+                      <i
+                        className="fa fa-fw fa-home"
+                      />
+                       PepVEP
+                    </a>
+                    <a
+                      className="local-sub-title"
+                      href="/uniprot/pepvep/test/"
+                      title="Back to PepVEP's homepage"
+                    >
+                      Predicting the effect of varying amino acids in proteins
+                    </a>
+                  </td>
+                  <td
+                    className="topnav-right local-sub-title"
+                  >
+                    <div>
+                      <button
+                        className="button"
+                        onClick={[Function]}
+                        type="button"
+                      >
+                        About
+                      </button>
+                    </div>
+                  </td>
+                  <td
+                    className="topnav-right local-sub-title"
+                  >
+                    <div>
+                      <button
+                        className="button"
+                        onClick={[Function]}
+                        type="button"
+                      >
+                        Contact
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -242,7 +193,9 @@ Array [
       </div>
     </section>
   </div>,
-  <footer>
+  <footer
+    id="footer-target"
+  >
     <div
       className="global-footer"
       id="global-footer"

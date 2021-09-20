@@ -1,33 +1,54 @@
+.publications-list::after {
+  width: 0;
+  height: 0;
+  border: inset .4em;
+  content: '';
+  border-bottom-width: 0;
+  border-top-style: solid;
+  border-color: #fefefe transparent transparent;
+  position: relative;
+  top: 0.4em;
+  display: inline-block;
+  float: right;
+  margin-left: 0.5em;
+}
+
 .publications-list {
   display: block;
-  background-color: #ffb100;
+  background-color: #1779ba;
   padding: .3rem .5rem;
   width: fit-content;
-  border-radius: 5px;
+  border-radius: 0px;
   font-size: 0.9rem;
   margin-top: .5rem;
   font-weight: normal;
   text-transform: inherit;
+  color: white;
 
   &:hover {
-    background-color: #ffb100;
+    background-color: #1779ba;
     cursor: pointer;
   }
 
   &--open {
-    border-radius: 5px 5px 0 0;
+    border-radius: 0px 0px 0 0;
   }
 
   &__items-wrapper {
     min-width: 150px;
     display: none;
     position: absolute;
-    background-color: #ffb100;
-    border-radius: 0 5px 5px 5px;
+    background-color: white;
+    border-radius: 0 0px 0px 0px;
     padding: 0 0.5rem;
+    box-shadow: 0 0.125rem 0.25rem 0.125rem rgba(22,29,57,0.2);
+    overflow-y: auto;
+    white-space: nowrap;
+    z-index: 9000;
 
     &--visible {
       display: block;
+      color:black;
     }
   }
 }

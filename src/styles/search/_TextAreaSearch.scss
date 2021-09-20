@@ -1,62 +1,171 @@
-
 // Text-area search field
 // ----------------------
 .main-textarea-search-field {
-  min-height: 30vh;
-  border-radius: 5px;
-  padding: .7rem 1rem;
-  line-height: 1.7rem;
-  font-family: "Courier New", monospace;
-  font-size: 1rem;
-  resize: none;
-  white-space: pre-wrap;
+	min-height: 15vh;
+	border-radius: 5px;
+	line-height: 1.2rem;
+	font-family: Lato, sans-serif;
+	font-size: 13px;
+	resize: none;
+	white-space: pre-wrap;
+	margin: 0;
+	margin-bottom: 0.3rem
 }
 
+.ref-link {
+	color: #0000ff;
+}
 
+.table-input {
+	width: 15%;
+	margin-bottom: 0rem;
+}
+
+.padding-bottom {
+	padding-bottom: 0;
+}
+
+.modal {
+	background-color: #cfe8ef;
+}
+.wrapper {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	grid-template-rows: auto;
+	grid-template-areas: "search upload api";
+	/*
+  grid-column-gap:1em;
+  grid-row-gap:1em;
+  */
+	grid-auto-rows: minmax(200px, auto);
+	grid-gap: 1em;
+}
+
+.search {
+	grid-area: search;
+}
+
+.upload {
+	grid-area: upload;
+}
+.api {
+	grid-area: api;
+}
+
+@media only screen and (max-width: 700) {
+	.wrapper {
+		display: grid;
+		grid-template-columns: 1fr;
+		grid-template-areas: "example" "about" "search" "download";
+	}
+}
+
+.genome-assembly-text {
+	font-size: 12px;
+}
 
 // Search button-group
 // -------------------
 .search-button-group {
-  margin: 2rem 0;
-  display: flex;
+	margin: 1rem 0;
+	display: flex;
 
-  button {
-    width: 49%;
-
-    &:first-child {
-      margin-right: 2%;
-    }
-  }
+	.button-new {
+		position: absolute;
+		padding: 10px;
+		width: 92%;
+		border-style: solid;
+		color: #00658c;
+		font-weight: bold;
+		bottom: 0.5rem;
+		margin-left: 1rem
+	}
 }
 
+.info {
+	font-size: 14px;
+}
+.button-page {
+	color: #fefefe;
+	background-color: #5caecd;
+	border-radius: 4px;
+}
+.button-primary {
+	color: #fefefe;
+	background-color: #5caecd;
+	border-radius: 4px;
+}
 
+.button-primary:hover {
+	background-color: #d2dce3;
+}
+
+.button-primary:focus {
+	background-color: #5caecd;
+}
+
+.button-disabled:hover {
+	color: #fefefe;
+	background-color: #879299;
+}
+
+.button-disabled:focus {
+	background-color: #879299;
+}
 
 // Search Area
 // -----------
 .text-area-search {
-  width: 60%;
-  float: left;
+	width: 60%;
+	float: left;
 
-  .input-examples {
-    border: 1px solid $input-example-border-colour;
-    margin: 1rem 0 2rem;
-    padding: .5rem 1rem;
-    border-radius: 5px;
-    background-color: $input-example-background-colour;
+	.input-examples {
+		border: 1px solid $input-example-border-colour;
+		margin: 1rem 0 2rem;
+		padding: .5rem 1rem;
+		border-radius: 5px;
+		background-color: $input-example-background-colour;
 
-    span {
-      width: 12rem;
-      display: inline-block;
-    }
+		span {
+			width: 12rem;
+			display: inline-block;
+		}
 
-    .variant-example {
-      width: auto;
-      color: $variant-example-colour;
-    }
-  }
+		.variant-example {
+			width: auto;
+			color: $variant-example-colour;
+			font-family: "Lato", sans-serif;
+		}
+	}
 
-  .assemly-ref-note {
-    font-weight: 700;
-    margin-right: 2rem;
-  }
+	.assemly-ref-note {
+		font-weight: 700;
+		margin-right: 2rem;
+	}
+}
+
+.variant-example {
+	width: auto;
+	color: #4949c7;
+	font-family: "Lato", sans-serif;
+}
+
+.input-examples span {
+	width: 20rem;
+	display: inline-block;
+}
+
+.file-selected {
+	color: #4949c7;
+	padding-top: 0.3rem;
+}
+.download-list {
+	display: block;
+	list-style-type: none;
+	margin-block-start: 1em;
+	margin-block-end: 5em;
+	margin-inline-start: 0px;
+	margin-inline-end: 0px;
+	padding-inline-start: 40px;
+	width: 80%;
 }
