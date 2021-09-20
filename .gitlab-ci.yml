@@ -77,11 +77,13 @@ deploy:
   stage: deploy
   extends: .kubectl
   before_script:
-    - 'wget --no-cache --no-cookies -O deploy.sh "${URL_DEPLOY_SH}"'
+    - 'wget -O deploy.sh "${URL_DEPLOY_SH}"'
+    - echo "--no-cache --no-cookies was not used by wget"
     - if [ ! -f deploy.sh ];
         then echo "k8s deployment file is missing";
       fi
-    - 'wget --no-cache --no-cookies -O wp-config-template.yml "${URL_WP_CONFIG_TEMPLATE_yml}"'
+    - 'wget -O wp-config-template.yml "${URL_WP_CONFIG_TEMPLATE_yml}"'
+    - echo "--no-cache --no-cookies was not used by wget"
     - if [ ! -f wp-config-template.yml ];
         then echo "k8s config file is missing";
       fi
