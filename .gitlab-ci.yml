@@ -41,15 +41,13 @@ build_docker_image:
       - master
   stage: build_docker_image
   image: docker:latest
-  tags:
-    - dind
   services:
     - docker:dind
   before_script:
     - 'wget -O nginx.conf "${URL_NGINX_CONF}"'
+    - echo "--no-cache --no-cookies was not used by wget"
     - if [ ! -f nginx.conf ];
         then echo "nginx config file is missing";
-        echo "--no-cache --no-cookies was not used by wget"
       fi
   script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin
