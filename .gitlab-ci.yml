@@ -62,21 +62,17 @@ build_docker_image:
     - docker rmi ${CONTAINER_IMAGE}
     - docker logout "$CI_REGISTRY"
 
-.kubectl:
+deploy:
+  only:
+    refs:
+      - master
+  stage: deploy
   image: alpine
   before_script:
     - apk add --no-cache curl git bash
     - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
     - chmod +x ./kubectl
     - mv ./kubectl /usr/local/bin/kubectl
-
-deploy:
-  only:
-    refs:
-      - master
-  stage: deploy
-  extends: .kubectl
-  before_script:
     - 'wget -O deploy.sh "${URL_DEPLOY_SH}"'
     - echo "--no-cache --no-cookies was not used by wget"
     - if [ ! -f deploy.sh ];
@@ -89,5 +85,5 @@ deploy:
       fi
     - chmod +x deploy.sh
   script:
-    - /bin/sh deploy.sh HX pepvep-fe # fallback
-    - /bin/sh deploy.sh HH pepvep-fe # prod
+    - ./deploy.sh HX pepvep-fe # fallback
+    - ./deploy.sh HH pepvep-fe # prod
