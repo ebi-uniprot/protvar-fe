@@ -87,6 +87,7 @@ deploy:
     - if [ ! -f wp-config-template.yml ];
         then echo "k8s config file is missing";
       fi
+    - chmod +x deploy.sh
   script:
     - ./deploy.sh HX pepvep-fe # fallback
     - ./deploy.sh HH pepvep-fe # prod
