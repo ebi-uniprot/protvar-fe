@@ -89,5 +89,5 @@ deploy:
       fi
     - chmod +x deploy.sh
   script:
-    - ./deploy.sh HX pepvep-fe # fallback
-    - ./deploy.sh HH pepvep-fe # prod
+    - /bin/sh deploy.sh HX pepvep-fe # fallback
+    - /bin/sh deploy.sh HH pepvep-fe # prod
