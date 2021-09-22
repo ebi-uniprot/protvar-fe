@@ -1,5 +1,5 @@
 variables:
-  URL_NGINX_CONF: "https://gitlab.ebi.ac.uk/api/v4/projects/${COMMON_PROJECT_ID}/repository/files/nginx.conf/raw?ref=master&private_token=${GITLAB_USER_API_TOKEN}"
+  URL_DOCKER_IGNORE: "https://gitlab.ebi.ac.uk/api/v4/projects/${COMMON_PROJECT_ID}/repository/files/.dockerignore/raw?ref=master&private_token=${GITLAB_USER_API_TOKEN}"
   URL_DEPLOY_SH: "https://gitlab.ebi.ac.uk/api/v4/projects/${COMMON_PROJECT_ID}/repository/files/deploy.sh/raw?ref=master&private_token=${GITLAB_USER_API_TOKEN}"
   URL_WP_CONFIG_TEMPLATE_yml: "https://gitlab.ebi.ac.uk/api/v4/projects/${COMMON_PROJECT_ID}/repository/files/wp-config-template.yml/raw?ref=master&private_token=${GITLAB_USER_API_TOKEN}"
 stages:
@@ -46,11 +46,8 @@ build_docker_image:
   services:
     - docker:dind
   before_script:
-    - 'wget -O nginx.conf "${URL_NGINX_CONF}"'
+    - 'wget -O .dockerignore "${URL_DOCKER_IGNORE}"'
     - echo "--no-cache --no-cookies was not used by wget"
-    - if [ ! -f nginx.conf ];
-        then echo "nginx config file is missing";
-      fi
   script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin
     - docker --version
