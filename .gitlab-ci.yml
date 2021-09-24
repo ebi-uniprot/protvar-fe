@@ -50,14 +50,16 @@ build_docker_image:
   before_script:
     - 'wget -O .dockerignore "${URL_DOCKER_IGNORE}"'
     - 'wget -O nginx.conf "${URL_NGINX_CONF}"'
+    - 'wget -O Dockerfile "${URL_DOCKER_FILE}"'
     - echo "--no-cache --no-cookies was not used by wget"
-    - if [ ! -f nginx.conf ]; then echo "nginx.conf file is missing"; fi
+    - if [ ! -f nginx.conf ]; then echo "nginx.conf file is missing"; exit 1; fi
+    - if [ ! -f Dockerfile ]; then echo "Dockerfile file is missing"; exit 1; fi
   script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin
     - docker --version
     - CONTAINER_IMAGE=${CI_REGISTRY_IMAGE}:latest
     - echo ${CONTAINER_IMAGE}
-    - docker build -t ${CONTAINER_IMAGE} -f ${URL_DOCKER_FILE} --no-cache .
+    - docker build -t ${CONTAINER_IMAGE} --no-cache .
     - docker image ls
     - docker push ${CONTAINER_IMAGE}
     - docker rmi ${CONTAINER_IMAGE}
