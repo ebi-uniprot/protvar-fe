@@ -1,4 +1,6 @@
 
+import { Link } from 'react-router-dom';
+import { CONTACT } from '../../constants/BrowserPaths';
 import DefaultPageLayout from '../layout/DefaultPageLayout';
 
 const APIErrorContent = () => (
@@ -10,7 +12,8 @@ const APIErrorContent = () => (
       services can result in the complete failure of the service.
     </p>
     <p>
-      Please try again in a few minutes and get in touch with us if the issue persists.
+      Please try again in a few minutes and get 
+      in <Link to={CONTACT} title="Contact us" className="ref-link">touch</Link> with us if the issue persists.
     </p>
   </>
 );
