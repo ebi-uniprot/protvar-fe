@@ -11,15 +11,26 @@ spec:
     app: pepvep-fe # Selects the Deployment to attach the Service to
   type: NodePort # Tell K8s this wants to expose an external port
 ---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pepvep-logs
+spec:
+  storageClassName: standard-nfs-production
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: pepvep-fe
 spec:
   selector:
     matchLabels:
       app: pepvep-fe # Has to match .spec.template.metadata.labels
-  serviceName: pepvep-fe
   replicas: 1
   template:
     metadata:
@@ -35,15 +46,9 @@ spec:
           volumeMounts:
             - name: pepvep-fe-logs
               mountPath: /var/log/nginx
+      volumes:
+        - name: pepvep-fe-logs
+          persistentVolumeClaim:
+            claimName: pepvep-logs
       imagePullSecrets:
         - name: gitlab-registry # Provided by GitLab, this allows K8s to connect to dockerhub.ebi.ac.uk
-  volumeClaimTemplates:
-    - metadata:
-        name: pepvep-fe-logs
-      spec:
-        storageClassName: standard-nfs-production
-        accessModes:
-          - ReadWriteOnce
-        resources:
-          requests:
-            storage: 5Gi

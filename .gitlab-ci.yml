@@ -82,5 +82,5 @@ deploy:
       fi
     - chmod +x deploy.sh
   script:
-    - ./deploy.sh HX pepvep-fe # fallback
-    - ./deploy.sh HH pepvep-fe # prod
+    - ./deploy.sh HX pepvep-fe pepvep # fallback app_name namespace
+    - ./deploy.sh HH pepvep-fe pepvep # prod app_name namespace
