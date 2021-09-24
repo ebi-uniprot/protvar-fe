@@ -1,4 +1,6 @@
 variables:
+  URL_NGINX_CONF: "https://gitlab.ebi.ac.uk/api/v4/projects/${COMMON_PROJECT_ID}/repository/files/nginx.conf/raw?ref=master&private_token=${GITLAB_USER_API_TOKEN}"
+  URL_DOCKER_FILE: "https://gitlab.ebi.ac.uk/api/v4/projects/${COMMON_PROJECT_ID}/repository/files/Dockerfile/raw?ref=master&private_token=${GITLAB_USER_API_TOKEN}"
   URL_DOCKER_IGNORE: "https://gitlab.ebi.ac.uk/api/v4/projects/${COMMON_PROJECT_ID}/repository/files/.dockerignore/raw?ref=master&private_token=${GITLAB_USER_API_TOKEN}"
   URL_DEPLOY_SH: "https://gitlab.ebi.ac.uk/api/v4/projects/${COMMON_PROJECT_ID}/repository/files/deploy.sh/raw?ref=master&private_token=${GITLAB_USER_API_TOKEN}"
   URL_WP_CONFIG_TEMPLATE_yml: "https://gitlab.ebi.ac.uk/api/v4/projects/${COMMON_PROJECT_ID}/repository/files/wp-config-template.yml/raw?ref=master&private_token=${GITLAB_USER_API_TOKEN}"
@@ -47,13 +49,15 @@ build_docker_image:
     - docker:dind
   before_script:
     - 'wget -O .dockerignore "${URL_DOCKER_IGNORE}"'
+    - 'wget -O nginx.conf "${URL_NGINX_CONF}"'
     - echo "--no-cache --no-cookies was not used by wget"
+    - if [ ! -f nginx.conf ]; then echo "nginx.conf file is missing"; fi
   script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin
     - docker --version
     - CONTAINER_IMAGE=${CI_REGISTRY_IMAGE}:latest
     - echo ${CONTAINER_IMAGE}
-    - docker build -t ${CONTAINER_IMAGE} --no-cache .
+    - docker build -t ${CONTAINER_IMAGE} -f ${URL_DOCKER_FILE} --no-cache .
     - docker image ls
     - docker push ${CONTAINER_IMAGE}
     - docker rmi ${CONTAINER_IMAGE}
