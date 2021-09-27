@@ -32,6 +32,7 @@ spec:
     matchLabels:
       app: pepvep-fe # Has to match .spec.template.metadata.labels
   replicas: 1
+  revisionHistoryLimit: 0
   template:
     metadata:
       labels:
