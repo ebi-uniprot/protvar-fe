@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Route, RouteComponentProps, withRouter } from 'react-router-dom';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import HomePage from './pages/home/HomePage';
 import SearchResultsPage from './pages/search/SearchResultPage';
 import APIErrorPage from './pages/APIErrorPage';
@@ -92,7 +92,7 @@ function App(props: AppProps) {
     const uri = `${API_URL}/variant/mapping`;
     const headers = { 'Content-Type': 'application/json', Accept: '*' };
 
-    axios.post<MappingResponse>(uri, inputSubArray, { headers: headers })
+    axios.post<string[], AxiosResponse<MappingResponse>>(uri, inputSubArray, { headers: headers })
       .then((response) => {
         const records = response.data.mappings.map(convertApiMappingToTableRecords);
         setSearchResults(records)

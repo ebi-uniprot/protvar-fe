@@ -1,6 +1,6 @@
 import { API_URL } from "../../constants/const";
 import FileSaver from 'file-saver';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 
 export function download(file: File | null, searchTerms: string[], functional: boolean, population: boolean, structure: boolean) {
   if (file !== null) {
@@ -26,7 +26,7 @@ function downloadAndSaveToFile(inputArr: Array<string>, functional: boolean, pop
     'Content-Type': 'application/json',
     Accept: '*'
   };
-  axios.post(APIUrl, inputArr, {
+  axios.post<string[], AxiosResponse>(APIUrl, inputArr, {
     headers: headers
   }).then((response) => {
     let blob = new Blob([response.data], {
@@ -49,9 +49,7 @@ export function sendDownloadEmail(file: File | null, searchTerms: string[], func
         'content-type': 'multipart/form-data'
       }
     };
-    axios.post(APIUrl, formData, {
-      headers: config
-    }).then((response) => {
+    axios.post(APIUrl, formData, config).then((response) => {
       console.log('response -> ' + response.data);
     });
   } else {
