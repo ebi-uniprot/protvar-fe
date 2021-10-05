@@ -319,24 +319,6 @@
 			border-right: 1px dotted #ccc;
 			border-left: 1px dotted #ccc;
 			word-wrap: break-word;
-			// white-space: break-spaces;
-			&.fit {
-				padding: 0;
-				margin: 0;
-			}
-
-			// &.fit-clicked {
-			// 	padding: 0;
-			// 	margin: 0;
-			// 	border-bottom: transparent;
-			// }
-		}
-
-		.fit-clicked {
-			padding: 0;
-			margin: 0;
-			border-bottom: transparent;
-			background-color: #cfe8ef;
 		}
 
 		.badge {
@@ -390,28 +372,28 @@
 		font-size: 0.8rem;
 		font-weight: 700;
 
-		&--YellowGreen {
-			background-color: YellowGreen;
+		&--DarkGreen {
+			background-color: DarkGreen;
 		}
 
-		&--DarkGoldenRod {
+		&--DarkSeaGreen {
 			color: $white-colour;
-			background-color: DarkGoldenRod;
+			background-color: DarkSeaGreen;
 		}
 
-		&--DarkCyan {
+		&--Gold {
 			color: $white-colour;
-			background-color:DarkCyan;
+			background-color:Gold;
 		}
 
-		&--Violet {
+		&--DarkOrange {
 			color: $white-colour;
-			background-color: Violet;
+			background-color: DarkOrange;
 		}
 
-		&--Tomato {
+		&--FireBrick {
 			color: $white-colour;
-			background-color: Tomato;
+			background-color: FireBrick;
 		}
 	}
 
