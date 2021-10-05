@@ -9,7 +9,7 @@ export const ENSEMBL_CHRM_URL = "https://www.ensembl.org/Homo_sapiens/Location/C
 export const ENSEMBL_VIEW_URL = "https://www.ensembl.org/Homo_sapiens/Location/View?r="
 export const ENSEMBL_ASML_URL = "https://www.ensembl.org/Homo_sapiens/Tools/AssemblyConverter?db=core"
 export const RHEA_URL = "https://www.rhea-db.org/rhea/";
-export const INTACT_URL = "https://www.ebi.ac.uk/intact/query/"
+export const INTACT_URL = "https://www.ebi.ac.uk/intact/search?query="
 export const UNIPROT_ACCESSION_URL = "https://www.uniprot.org/uniprot/"
 export const CADD_INFO_URL = "https://cadd.gs.washington.edu/info"
 export const VCF_FORMAT_INFO_URL = "https://github.com/ebi-uniprot/pepvep-be/blob/main/docs/vcf-format.md"
