@@ -1,14 +1,14 @@
 export function getColor(CADD: number) {
   if (CADD < 15) {
-    return 'green';
+    return 'YellowGreen';
   } else if (CADD >= 15 && CADD < 20) {
-    return 'yellow';
+    return 'DarkCyan';
   } else if (CADD >= 20 && CADD < 25) {
-    return 'orange';
+    return 'Violet';
   } else if (CADD >= 25 && CADD < 30) {
-    return 'darkOrange';
+    return 'DarkGoldenRod';
   } else if (CADD >= 30) {
-    return 'red';
+    return 'Tomato';
   }
 }
 

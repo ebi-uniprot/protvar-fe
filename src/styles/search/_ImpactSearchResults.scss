@@ -390,28 +390,28 @@
 		font-size: 0.8rem;
 		font-weight: 700;
 
-		&--green {
-			background-color: $cadd-score-green-background-colour;
+		&--YellowGreen {
+			background-color: YellowGreen;
 		}
 
-		&--yellow {
+		&--DarkGoldenRod {
 			color: $white-colour;
-			background-color: #c39b00;
+			background-color: DarkGoldenRod;
 		}
 
-		&--orange {
+		&--DarkCyan {
 			color: $white-colour;
-			background-color: orange;
+			background-color:DarkCyan;
 		}
 
-		&--darkOrange {
+		&--Violet {
 			color: $white-colour;
-			background-color: orangered;
+			background-color: Violet;
 		}
 
-		&--red {
+		&--Tomato {
 			color: $white-colour;
-			background-color: $cadd-score-red-background-colour;
+			background-color: Tomato;
 		}
 	}
 
