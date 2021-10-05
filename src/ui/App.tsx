@@ -35,6 +35,7 @@ function App(props: AppProps) {
     const userInputs = userInputString.split('\n');
     setUserInputs(userInputs)
     setLoading(true)
+    setFile(null)
     handleSearch(firstPage(userInputs.length), userInputs);
   }
 
@@ -59,6 +60,7 @@ function App(props: AppProps) {
   function fetchFileResult(file: File) {
     setLoading(true)
     setFile(file)
+    setUserInputs([])
     file.text()
       .then(text => fetchFromFile(firstPage(text.split('\n').length), file))
   }
