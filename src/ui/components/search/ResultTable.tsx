@@ -13,6 +13,8 @@ import { ParsedInput } from "../../../types/MappingResponse";
 import LoaderRow from "./LoaderRow";
 import Spaces from "../../elements/Spaces";
 import AlternateIsoFormRow from "./AlternateIsoFormRow";
+import { EmptyElement } from "../../../constants/Const";
+import { GENOMIC_COLS, INPUT_COLS, PROTEIN_COLS } from "../../../constants/SearchResultTable";
 
 const StructuralDetail = lazy(() => import(/* webpackChunkName: "StructuralDetail" */ "../structure/StructuralDetail"));
 const PopulationDetail = lazy(() => import(/* webpackChunkName: "PopulationDetail" */ "../population/PopulationDetail"));
@@ -57,10 +59,10 @@ function ResultTable(props: ResultTableProps) {
   return <table className="unstriped" cellPadding="0" cellSpacing="0">
     <thead>
       <tr>
-        <th colSpan={5}>Input</th>
-        <th colSpan={3}>Genomic</th>
-        <th colSpan={6}>Protein</th>
-        <th colSpan={5}>Annotations</th>
+        <th colSpan={INPUT_COLS}>Input</th>
+        <th colSpan={GENOMIC_COLS}>Genomic</th>
+        <th colSpan={PROTEIN_COLS}>Protein</th>
+        <th>Annotations</th>
       </tr>
       <tr>
         <th>CHR</th>
@@ -77,9 +79,7 @@ function ResultTable(props: ResultTableProps) {
         <th>AA Pos</th>
         <th>AA Change</th>
         <th>Consequences</th>
-        <th>Functional</th>
-        <th>Population Observation</th>
-        <th>Structural</th>
+        <th>Clickable Icon</th>
       </tr>
     </thead>
     <tbody>
@@ -179,9 +179,11 @@ const getRow = (record: MappingRecord, toggleOpenGroup: string, isoFormGroupExpa
       <td>{record.aaPos}</td>
       <td>{record.aaChange}</td>
       <td>{record.consequences}</td>
-      {getSignificancesButton(functionalKey, 'FUN', record, annotationExpanded, toggleAnnotation)}
-      {getSignificancesButton(populationKey, 'POP', record, annotationExpanded, toggleAnnotation)}
-      {getSignificancesButton(structuralKey, 'STR', record, annotationExpanded, toggleAnnotation)}
+      <td>
+        {getSignificancesButton(functionalKey, 'FUN', record, annotationExpanded, toggleAnnotation)}
+        {getSignificancesButton(populationKey, 'POP', record, annotationExpanded, toggleAnnotation)}
+        {getSignificancesButton(structuralKey, 'STR', record, annotationExpanded, toggleAnnotation)}
+      </td>
     </tr>
 
     {populationKey === annotationExpanded &&
@@ -205,25 +207,20 @@ const getRow = (record: MappingRecord, toggleOpenGroup: string, isoFormGroupExpa
 
 function getSignificancesButton(rowKey: string, buttonLabel: string, accession: MappingRecord,
   annotationExpanded: string, toggleAnnotation: StringVoidFun) {
-  if (!accession.canonical) return <td />;
-  let buttonCss = 'button--significances  button-new';
-  let columnCss = 'fit';
-  if (rowKey === annotationExpanded) {
-    buttonCss = 'button--significances-clicked  button-new';
-    columnCss = 'fit-clicked';
-  }
-  var buttonTag = <img src={ProteinIcon} className="button-icon" alt="protein icon" title="Functional information"/>;
-  if (buttonLabel === 'POP') buttonTag = <img src={PopulationIcon} className="button-icon" alt="population icon" title="Population observation"/>;
-  else if (buttonLabel === 'STR') buttonTag = <img src={StructureIcon} className="button-icon" alt="structure icon" title="3D structure"/>;
+  if (!accession.canonical) return EmptyElement;
+
+  let buttonCss = rowKey === annotationExpanded ? 'cursor-pointer background-light-blue' : 'cursor-pointer';
+  
+  var buttonTag = <img src={ProteinIcon} className="click-icon" alt="protein icon" title="Functional information" />;
+  if (buttonLabel === 'POP') buttonTag = <img src={PopulationIcon} className="click-icon" alt="population icon" title="Population observation" />;
+  else if (buttonLabel === 'STR') buttonTag = <img src={StructureIcon} className="click-icon" alt="structure icon" title="3D structure" />;
   return (
-    <td className={columnCss}>
-      <button
-        onClick={() => toggleAnnotation(rowKey)}
-        className={buttonCss}
-      >
-        <b>{buttonTag}</b>
-      </button>
-    </td>
+    <button
+      onClick={() => toggleAnnotation(rowKey)}
+      className={buttonCss}
+    >
+      {buttonTag}
+    </button>
   );
 }
 

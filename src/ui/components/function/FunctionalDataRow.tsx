@@ -5,6 +5,7 @@ import GeneAndTranslatedSequenceTable from './GeneAndTranslatedSequenceTable';
 import ProteinInformationTable from './ProteinInformationTable';
 import ResidueRegionTable from './ResidueRegionTable';
 import { TranslatedSequence } from '../../../utills/Convertor';
+import ProteinIcon from '../../../images/proteins.svg';
 
 interface FunctionalDataRowProps {
   apiData: FunctionalResponse
@@ -22,7 +23,7 @@ function FunctionalDataRow(props: FunctionalDataRowProps) {
       <td colSpan={TOTAL_COLS} className="expanded-row">
         <div className="significances-groups">
           <div className="column">
-            <h5>Reference Function</h5>
+            <h5><img src={ProteinIcon} className="click-icon" alt="protein icon" title="Functional information" /> Reference Function</h5>
             <ResidueRegionTable features={apiData.features} refAA={refAA} variantAA={variantAA} />
             <ProteinFunctionTable comments={apiData.comments} />
             <ProteinInformationTable apiData={apiData} />

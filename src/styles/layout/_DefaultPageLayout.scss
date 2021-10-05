@@ -343,6 +343,26 @@ div#local-title {
 	padding-bottom: 1rem;
 }
 
+.click-icon{
+	width: 32px;
+	height: 32px;
+}
+
+.background-light-blue{
+	background-color: #8bd0e3;
+}
+.cursor-pointer{
+	cursor: pointer
+}
+
 .flex {
     display: flex;
+}
+
+.justify-content-space-between {
+	justify-content: space-between;
+}
+
+.align-items-center {
+	align-items: center;
 }

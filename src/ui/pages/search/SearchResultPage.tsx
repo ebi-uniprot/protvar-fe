@@ -8,6 +8,7 @@ import { ParsedInput } from "../../../types/MappingResponse";
 import DownloadModal from "../../modal/DownloadModal";
 import { MAX_IN_PLACE_DOWNLOAD_WITHOUT_EMAIL } from "../../../constants/const";
 import CaddLegendColors from "../../components/search/CaddLegendColors";
+import ResultTableButtonsLegend from "../../components/search/ResultTableButtonsLegend";
 
 interface SearchResultPageProps {
   pastedInputs: string[]
@@ -28,9 +29,10 @@ function SearchResultsPageContent(props: SearchResultPageProps) {
       {(invalidInputs && invalidInputs.length > 0) &&
         <div className="alert alert-danger alert-dismissible fade show">Few of inputs are not valid</div>
       }
-      <div className="flex">
+      <div className="flex justify-content-space-between">
         <PaginationRow page={page} fetchNextPage={fetchNextPage} />
         <DownloadModal pastedInputs={pastedInputs} file={file} sendEmail={page.totalItems > MAX_IN_PLACE_DOWNLOAD_WITHOUT_EMAIL} />
+        <ResultTableButtonsLegend />
       </div>
       <ResultTable invalidInputs={invalidInputs} mappings={rows} />
       <PaginationRow page={page} fetchNextPage={fetchNextPage} />

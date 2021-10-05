@@ -3,6 +3,7 @@ import CoLocatedVariantDetails from "./coLocated/CoLocatedVariantDetails";
 import AssociationDetails from "./common/AssociationDetails";
 import { PopulationObservationResponse, ProteinColocatedVariant } from "./PopulationDetail";
 import SubmittedVariantDetails from "./SubmittedVariantDetails";
+import PopulationIcon from '../../../images/human.svg';
 
 interface PopulationDataRowProps {
   poApiData: PopulationObservationResponse,
@@ -25,7 +26,7 @@ function PopulationDataRow(props: PopulationDataRowProps) {
     <td colSpan={TOTAL_COLS} className="expanded-row">
       <div className="significances-groups">
         <div className="column">
-          <h5>Population Observation</h5>
+          <h5><img src={PopulationIcon} className="click-icon" alt="population icon" title="Population observation" /> Population Observation</h5>
           <table>
             <tbody>
               <tr>

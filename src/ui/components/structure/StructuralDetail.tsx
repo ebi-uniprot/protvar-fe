@@ -101,7 +101,7 @@ function StructuralDetail(props: StructuralDetailProps) {
   return (
     <tr key={isoFormAccession}>
       <ProtVista3D accession={isoFormAccession} pos={aaPosition} id={selected3DId} />
-      <td colSpan={5} className="expanded-row">
+      <td colSpan={4} className="expanded-row">
         {pdbData.length > 0 && <>
           <br />
           <PdbInfoTable isoFormAccession={isoFormAccession} pdbApiData={pdbData} selectedPdbId={selected3DId} change3dDiagram={change3dDiagram} />

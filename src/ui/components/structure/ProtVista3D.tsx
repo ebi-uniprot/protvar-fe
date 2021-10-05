@@ -1,5 +1,6 @@
 import useCustomElement from '../../../hooks/useCustomElement';
 import Loader from '../../elements/Loader';
+import StructureIcon from '../../../images/structures-3d.svg';
 
 interface ProtVista3DProps {
   accession: string,
@@ -27,9 +28,10 @@ interface PageSpecificStructureProps {
 
 const PageSpecificStructure = (props: PageSpecificStructureProps) => {
   return (
-    <td colSpan={13} className="expanded-row">
+    <td colSpan={11} className="expanded-row">
       <div className="significances-groups">
         <div className="column">
+          <h5><img src={StructureIcon} className="click-icon" alt="structure icon" title="3D structure" /> Structures</h5>
           {props.component}
         </div>
       </div>
