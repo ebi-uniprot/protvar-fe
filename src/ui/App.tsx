@@ -101,7 +101,7 @@ function App(props: AppProps) {
         setSearchResults(records)
         setInvalidInputs(response.data.invalidInputs)
         if (response.data.invalidInputs.length > 0)
-          Notify.err("Few of inputs are not valid")
+          Notify.err("Some input rows are not valid")
         props.history.push(SEARCH);
       })
       .catch((err) => {

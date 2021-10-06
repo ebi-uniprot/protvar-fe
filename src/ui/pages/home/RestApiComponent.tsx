@@ -16,8 +16,7 @@ function RestApiComponent() {
           <section className="uniprot-card">
             <section className="uniprot-card__left">
               <b>
-                PepVEP's REST API is a programmatic way to obtain information from
-                PepVEP via Simple URL-based queries
+                REST API is a programmatic way to obtain information from PepVEP
               </b>
               <br />
               You can query:
