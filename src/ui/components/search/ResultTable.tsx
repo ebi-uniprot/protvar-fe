@@ -59,25 +59,25 @@ function ResultTable(props: ResultTableProps) {
   return <table className="unstriped" cellPadding="0" cellSpacing="0">
     <thead>
       <tr>
-        <th colSpan={INPUT_COLS}>Input</th>
-        <th colSpan={GENOMIC_COLS}>Genomic</th>
-        <th colSpan={PROTEIN_COLS}>Protein</th>
-        <th>Annotations</th>
+        <th colSpan={INPUT_COLS}>INPUT</th>
+        <th colSpan={GENOMIC_COLS}>GENOMIC</th>
+        <th colSpan={PROTEIN_COLS}>PROTEIN</th>
+        <th>ANNOTATIONS</th>
       </tr>
       <tr>
-        <th>CHR</th>
+        <th>Chr</th>
         <th>Coordinate</th>
-        <th>ID</th>
+        <th>Id</th>
         <th>Ref</th>
         <th>Alt</th>
         <th>Gene</th>
         <th>Codon (Strand)</th>
         <th>CADD</th>
-        <th>show alt. iso forms</th>
+        <th>Show alt. iso forms</th>
         <th>Isoform</th>
-        <th>Protein Name</th>
-        <th>AA Pos</th>
-        <th>AA Change</th>
+        <th>Protein name</th>
+        <th>AA pos.</th>
+        <th>AA change</th>
         <th>Consequences</th>
         <th>Click for details</th>
       </tr>
