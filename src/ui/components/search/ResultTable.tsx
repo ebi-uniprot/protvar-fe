@@ -73,13 +73,13 @@ function ResultTable(props: ResultTableProps) {
         <th>Gene</th>
         <th>Codon (Strand)</th>
         <th>CADD</th>
-        <th>show alt. isoforms</th>
+        <th>show alt. iso forms</th>
         <th>Isoform</th>
         <th>Protein Name</th>
         <th>AA Pos</th>
         <th>AA Change</th>
         <th>Consequences</th>
-        <th>Clickable Icon</th>
+        <th>Click for details</th>
       </tr>
     </thead>
     <tbody>
@@ -179,10 +179,12 @@ const getRow = (record: MappingRecord, toggleOpenGroup: string, isoFormGroupExpa
       <td>{record.aaPos}</td>
       <td>{record.aaChange}</td>
       <td>{record.consequences}</td>
-      <td>
-        {getSignificancesButton(functionalKey, 'FUN', record, annotationExpanded, toggleAnnotation)}
-        {getSignificancesButton(populationKey, 'POP', record, annotationExpanded, toggleAnnotation)}
-        {getSignificancesButton(structuralKey, 'STR', record, annotationExpanded, toggleAnnotation)}
+      <td >
+        <div className="flex">
+          {getSignificancesButton(functionalKey, 'FUN', record, annotationExpanded, toggleAnnotation)}
+          {getSignificancesButton(populationKey, 'POP', record, annotationExpanded, toggleAnnotation)}
+          {getSignificancesButton(structuralKey, 'STR', record, annotationExpanded, toggleAnnotation)}
+        </div>
       </td>
     </tr>
 
@@ -209,15 +211,18 @@ function getSignificancesButton(rowKey: string, buttonLabel: string, accession: 
   annotationExpanded: string, toggleAnnotation: StringVoidFun) {
   if (!accession.canonical) return EmptyElement;
 
-  let buttonCss = rowKey === annotationExpanded ? 'cursor-pointer background-light-blue' : 'cursor-pointer';
-  
+  const buttonCss = rowKey === annotationExpanded ? 'button significance' : 'button';
+
   var buttonTag = <img src={ProteinIcon} className="click-icon" alt="protein icon" title="Functional information" />;
-  if (buttonLabel === 'POP') buttonTag = <img src={PopulationIcon} className="click-icon" alt="population icon" title="Population observation" />;
-  else if (buttonLabel === 'STR') buttonTag = <img src={StructureIcon} className="click-icon" alt="structure icon" title="3D structure" />;
+  if (buttonLabel === 'POP')
+    buttonTag = <img src={PopulationIcon} className="click-icon" alt="population icon" title="Population observation" />;
+  else if (buttonLabel === 'STR')
+    buttonTag = <img src={StructureIcon} className="click-icon" alt="structure icon" title="3D structure" />;
   return (
     <button
       onClick={() => toggleAnnotation(rowKey)}
       className={buttonCss}
+      style={{ marginRight: "0.1rem" }}
     >
       {buttonTag}
     </button>
