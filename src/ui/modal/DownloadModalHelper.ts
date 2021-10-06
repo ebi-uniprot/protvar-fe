@@ -1,6 +1,7 @@
 import { API_URL } from "../../constants/const";
 import FileSaver from 'file-saver';
 import axios, { AxiosResponse } from 'axios';
+import Notify from "../elements/Notify";
 
 export function download(file: File | null, searchTerms: string[], functional: boolean, population: boolean, structure: boolean) {
   if (file !== null) {
@@ -22,18 +23,18 @@ export function download(file: File | null, searchTerms: string[], functional: b
 function downloadAndSaveToFile(inputArr: Array<string>, functional: boolean, population: boolean, structure: boolean) {
   const APIUrl = `${API_URL}/download/download?function=${functional}&variation=${population}&structure=${structure}`
 
+  Notify.info("Your file will start to download soon")
   const headers = {
     'Content-Type': 'application/json',
     Accept: '*'
   };
-  axios.post<string[], AxiosResponse>(APIUrl, inputArr, {
-    headers: headers
-  }).then((response) => {
-    let blob = new Blob([response.data], {
-      type: 'application/csv'
-    });
-    FileSaver.saveAs(blob, 'pepvep.csv');
-  });
+  axios.post<string[], AxiosResponse>(APIUrl, inputArr, { headers: headers })
+    .then((response) => {
+      const blob = new Blob([response.data], {type: 'application/csv'});
+      FileSaver.saveAs(blob, 'pepvep-results.csv');
+      Notify.sucs("Your file has been downloaded")
+    })
+    .catch(() => Notify.err("File download failed. Please try again"));
 }
 
 export function sendDownloadEmail(file: File | null, searchTerms: string[], functional: boolean, population: boolean, structure: boolean,
@@ -41,6 +42,7 @@ export function sendDownloadEmail(file: File | null, searchTerms: string[], func
   const type = file === null ? 'search' : 'file';
   const APIUrl = `${API_URL}/download/${type}?email=${email}&jobName=${jobName}&function=${functional}&variation=${population}&structure=${structure}`
 
+  Notify.info("Your job submitted successfully, report will be sent to your email " + email)
   if (file !== null) {
     const formData = new FormData();
     formData.append('file', file);
@@ -49,18 +51,16 @@ export function sendDownloadEmail(file: File | null, searchTerms: string[], func
         'content-type': 'multipart/form-data'
       }
     };
-    axios.post(APIUrl, formData, config).then((response) => {
-      console.log('response -> ' + response.data);
-    });
+    axios.post(APIUrl, formData, config)
+      .then(() => Notify.sucs(`Check your email ${email} for results`))
+      .catch(() => Notify.err(`Job ${jobName} failed. Please try again`));
   } else {
     const headers = {
       'Content-Type': 'application/json',
       Accept: '*'
     };
-    axios.post(APIUrl, searchTerms, {
-      headers: headers
-    }).then((response) => {
-      console.log('response -> ' + response.data);
-    });
+    axios.post(APIUrl, searchTerms, { headers: headers })
+      .then(() => Notify.sucs(`Check your email ${email} for results of job ${jobName}`))
+      .catch(() => Notify.err(`Job ${jobName} failed. Please try again`));
   }
 }

@@ -26,9 +26,6 @@ function SearchResultsPageContent(props: SearchResultPageProps) {
 
   return <>
     <div className="search-results">
-      {(invalidInputs && invalidInputs.length > 0) &&
-        <div className="alert alert-danger alert-dismissible fade show">Few of inputs are not valid</div>
-      }
       <div className="flex justify-content-space-between">
         <PaginationRow page={page} fetchNextPage={fetchNextPage} />
         <DownloadModal pastedInputs={pastedInputs} file={file} sendEmail={page.totalItems > MAX_IN_PLACE_DOWNLOAD_WITHOUT_EMAIL} />

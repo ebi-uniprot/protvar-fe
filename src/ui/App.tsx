@@ -11,6 +11,7 @@ import { firstPage, Page } from '../utills/AppHelper';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import { ABOUT, API_ERROR, CONTACT, HOME, SEARCH } from '../constants/BrowserPaths';
+import Notify from './elements/Notify';
 
 interface AppProps extends RouteComponentProps { }
 
@@ -99,6 +100,8 @@ function App(props: AppProps) {
         const records = response.data.mappings.map(convertApiMappingToTableRecords);
         setSearchResults(records)
         setInvalidInputs(response.data.invalidInputs)
+        if (response.data.invalidInputs.length > 0)
+          Notify.err("Few of inputs are not valid")
         props.history.push(SEARCH);
       })
       .catch((err) => {

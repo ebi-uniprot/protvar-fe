@@ -119,7 +119,7 @@ function DownloadModal(props: DownloadModalProps) {
           {props.sendEmail && <>
             <p className="padding-left-1x">We will send you email onces your file is ready to download</p>
             <label className="download-label">
-              Email: <span className="alert-danger">{errorMsg ? errorMsg : ""}</span>
+              Email: <span style={{color:"red"}}>{errorMsg ? errorMsg : ""}</span>
               <input
                 type="email"
                 value={email}
