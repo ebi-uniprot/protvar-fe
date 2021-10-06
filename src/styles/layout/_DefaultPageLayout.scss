@@ -363,3 +363,8 @@ div#local-title {
 .align-items-center {
 	align-items: center;
 }
+
+span.space:before {
+    content: "\00a0"; /* this is &nbsp; or space*/
+    white-space: pre;
+}

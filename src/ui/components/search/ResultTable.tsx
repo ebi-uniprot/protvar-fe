@@ -65,21 +65,21 @@ function ResultTable(props: ResultTableProps) {
         <th>ANNOTATIONS</th>
       </tr>
       <tr>
-        <th>Chr</th>
-        <th>Coordinate</th>
-        <th>Id</th>
-        <th>Ref</th>
-        <th>Alt</th>
-        <th>Gene</th>
-        <th>Codon (Strand)</th>
-        <th>CADD</th>
-        <th>Show alt. iso forms</th>
-        <th>Isoform</th>
-        <th>Protein name</th>
-        <th>AA pos.</th>
-        <th>AA change</th>
-        <th>Consequences</th>
-        <th>Click for details</th>
+        <th className="sticky">Chr</th>
+        <th className="sticky">Coordinate</th>
+        <th className="sticky">Id</th>
+        <th className="sticky">Ref</th>
+        <th className="sticky">Alt</th>
+        <th className="sticky">Gene</th>
+        <th className="sticky">Codon (Strand)</th>
+        <th className="sticky">CADD</th>
+        <th className="sticky">Show alt. iso forms</th>
+        <th className="sticky">Isoform</th>
+        <th className="sticky">Protein name</th>
+        <th className="sticky">AA pos.</th>
+        <th className="sticky">AA change</th>
+        <th className="sticky">Consequences</th>
+        <th className="sticky">Click for details</th>
       </tr>
     </thead>
     <tbody>

@@ -609,7 +609,7 @@
 	font-weight: 700;
 }
 
-span.space:before {
-    content: "\00a0"; /* this is &nbsp; or space*/
-    white-space: pre;
+.sticky {
+	position: sticky;
+	top: 0; /* Don't forget this, required for the stickiness */
 }
