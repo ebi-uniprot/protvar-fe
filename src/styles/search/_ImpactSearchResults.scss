@@ -256,7 +256,9 @@
 		}
 
 		.button--toggle-isoforms {
-			margin-right: 1em;
+			margin: 0;
+			margin-top: 0.1rem;
+			height: 15px;
 		}
 		.next {
 			background-color: #1779ba;
@@ -608,4 +610,7 @@
 .sticky {
 	position: sticky;
 	top: 0; /* Don't forget this, required for the stickiness */
+}
+.toggle-isoforms{
+	height: 9px;
 }

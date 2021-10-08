@@ -15,6 +15,8 @@ import Spaces from "../../elements/Spaces";
 import AlternateIsoFormRow from "./AlternateIsoFormRow";
 import { EmptyElement } from "../../../constants/Const";
 import { GENOMIC_COLS, INPUT_COLS, PROTEIN_COLS } from "../../../constants/SearchResultTable";
+import { ReactComponent as ChevronDownIcon } from "../../../images/chevron-down.svg"
+import { ReactComponent as ChevronUpIcon } from "../../../images/chevron-up.svg"
 
 const StructuralDetail = lazy(() => import(/* webpackChunkName: "StructuralDetail" */ "../structure/StructuralDetail"));
 const PopulationDetail = lazy(() => import(/* webpackChunkName: "PopulationDetail" */ "../population/PopulationDetail"));
@@ -73,13 +75,12 @@ function ResultTable(props: ResultTableProps) {
         <th className="sticky">Gene</th>
         <th className="sticky">Codon (Strand)</th>
         <th className="sticky">CADD</th>
-        <th className="sticky">Show alt. iso forms</th>
         <th className="sticky">Isoform</th>
         <th className="sticky">Protein name</th>
         <th className="sticky">AA pos.</th>
         <th className="sticky">AA change</th>
         <th className="sticky">Consequences</th>
-        <th className="sticky">Click buttons below for details</th>
+        <th className="sticky">Click for details</th>
       </tr>
     </thead>
     <tbody>
@@ -154,24 +155,24 @@ const getRow = (record: MappingRecord, toggleOpenGroup: string, isoFormGroupExpa
           </a>
         </span>
       </td>
-      {record.canonical ? (
-        <td>
-          <Button
-            onClick={() => toggleIsoFormGroup(toggleOpenGroup)}
-            className="button button--toggle-isoforms"
-          >
-            {isoFormGroupExpanded !== toggleOpenGroup ? '+' : '- '}
-          </Button>
-        </td>
-      ) : (
-        <td />
-      )}
-
       <td>
-        <ProteinReviewStatus type={getProteinType(record)} />
-        <a href={UNIPROT_ACCESSION_URL + record.isoform} target="_blank" rel="noopener noreferrer">
-          {record.isoform}
-        </a>
+        <div className="flex">
+          <ProteinReviewStatus type={getProteinType(record)} />
+          <a href={UNIPROT_ACCESSION_URL + record.isoform} target="_blank" rel="noopener noreferrer">
+            {record.isoform}
+          </a>
+          {record.canonical && <>
+            <Spaces />
+            <button
+              onClick={() => toggleIsoFormGroup(toggleOpenGroup)}
+              className="button button--toggle-isoforms"
+              title="alternative iso forms"
+            >
+              {isoFormGroupExpanded !== toggleOpenGroup ?
+                <ChevronDownIcon className="toggle-isoforms" /> : <ChevronUpIcon className="toggle-isoforms" />}
+            </button>
+          </>}
+        </div>
       </td>
       <td>
         <span title={record.proteinName}>{getProteinName(record)}</span>

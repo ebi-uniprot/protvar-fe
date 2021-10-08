@@ -11,7 +11,7 @@ interface AlternateIsoFormRowProps {
 function AlternateIsoFormRow(props: AlternateIsoFormRowProps) {
   const { record, toggleOpenGroup } = props;
   return <tr key={`${toggleOpenGroup}-${record.isoform}`}>
-    <td colSpan={INPUT_COLS + GENOMIC_COLS + 1} />
+    <td colSpan={INPUT_COLS + GENOMIC_COLS} />
     <td>
       <ProteinReviewStatus type={getProteinType(record)} />
       <a href={UNIPROT_ACCESSION_URL + record.isoform} target="_blank" rel="noopener noreferrer">
