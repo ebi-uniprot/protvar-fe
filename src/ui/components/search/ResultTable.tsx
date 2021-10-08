@@ -3,7 +3,6 @@ import { CADD_INFO_URL, ENSEMBL_CHRM_URL, ENSEMBL_GENE_URL, ENSEMBL_VIEW_URL, UN
 import { getCaddCss, getTitle } from "./CaddHelper";
 import ProteinReviewStatus from "./ProteinReviewStatus";
 import InvalidTableRows from "./InvalidTableRows";
-import Button from '../../elements/form/Button';
 import { StringVoidFun } from "../../../constants/CommonTypes";
 import ProteinIcon from '../../../images/proteins.svg';
 import StructureIcon from '../../../images/structures-3d.svg';
