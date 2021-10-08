@@ -48,9 +48,9 @@ build_docker_image:
   services:
     - docker:dind
   before_script:
-    - 'wget -O .dockerignore "${URL_DOCKER_IGNORE}"'
-    - 'wget -O nginx.conf "${URL_NGINX_CONF}"'
-    - 'wget -O Dockerfile "${URL_DOCKER_FILE}"'
+    - wget -O .dockerignore "${URL_DOCKER_IGNORE}"
+    - wget -O nginx.conf "${URL_NGINX_CONF}"
+    - wget -O Dockerfile "${URL_DOCKER_FILE}"
     - echo "--no-cache --no-cookies was not used by wget"
     - if [ ! -f nginx.conf ]; then echo "nginx.conf file is missing"; exit 1; fi
     - if [ ! -f Dockerfile ]; then echo "Dockerfile file is missing"; exit 1; fi
@@ -65,23 +65,26 @@ build_docker_image:
     - docker rmi ${CONTAINER_IMAGE}
     - docker logout "$CI_REGISTRY"
 
-deploy:
-  only:
-    refs:
-      - master
-  stage: deploy
+.kubectl:
   image: alpine
   before_script:
     - apk add --no-cache curl git bash
     - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
     - chmod +x ./kubectl
     - mv ./kubectl /usr/local/bin/kubectl
-    - 'wget -O deploy.sh "${URL_DEPLOY_SH}"'
-    - 'wget -O wp-config-template.yml "${URL_WP_CONFIG_TEMPLATE_yml}"'
+    - wget -O deploy.sh "${URL_DEPLOY_SH}"
+    - wget -O wp-config-template.yml "${URL_WP_CONFIG_TEMPLATE_yml}"
     - echo "--no-cache --no-cookies was not used by wget"
     - if [ ! -f deploy.sh ]; then echo "k8s deployment file is missing"; exit 1; fi
     - if [ ! -f wp-config-template.yml ]; then echo "k8s config file is missing"; exit 1; fi
     - chmod +x deploy.sh
+
+deploy:
+  only:
+    refs:
+      - master
+  stage: deploy
+  extends: .kubectl
   script:
     - ./deploy.sh HX pepvep-fe pepvep deployment # fallback app_name namespace type-of-deployment
     - ./deploy.sh HH pepvep-fe pepvep deployment # prod app_name namespace type-of-deployment
