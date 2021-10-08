@@ -160,15 +160,11 @@
 	.modal-container {
 		position: fixed;
 		width: 30%;
-		// background: #deeff5;
 		background-color: #fbfeff;
-		// left: 20%;
-		// top: 22%;
-		// padding: 20px;
 		border-style: solid;
 		border-color: #5caecd;
 		border-width: thin;
-		// border-radius: 1px;
+		z-index: 1;
 	}
 
 	.window__footer {
