@@ -79,7 +79,7 @@ function ResultTable(props: ResultTableProps) {
         <th className="sticky">AA pos.</th>
         <th className="sticky">AA change</th>
         <th className="sticky">Consequences</th>
-        <th className="sticky">Click for details</th>
+        <th className="sticky">Click buttons below for details</th>
       </tr>
     </thead>
     <tbody>
