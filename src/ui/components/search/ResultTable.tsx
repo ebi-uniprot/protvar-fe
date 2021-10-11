@@ -16,6 +16,7 @@ import { EmptyElement } from "../../../constants/Const";
 import { GENOMIC_COLS, INPUT_COLS, PROTEIN_COLS } from "../../../constants/SearchResultTable";
 import { ReactComponent as ChevronDownIcon } from "../../../images/chevron-down.svg"
 import { ReactComponent as ChevronUpIcon } from "../../../images/chevron-up.svg"
+import { tip } from "../../../utills/Util";
 
 const StructuralDetail = lazy(() => import(/* webpackChunkName: "StructuralDetail" */ "../structure/StructuralDetail"));
 const PopulationDetail = lazy(() => import(/* webpackChunkName: "PopulationDetail" */ "../population/PopulationDetail"));
@@ -148,7 +149,7 @@ const getRow = (record: MappingRecord, toggleOpenGroup: string, isoFormGroupExpa
         {record.codon} {strand}
       </td>
       <td>
-        <span className={caddCss} title={caddTitle}>
+        <span className={caddCss} {...tip(caddTitle)}>
           <a href={CADD_INFO_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'white' }}>
             <Spaces count={parseInt(record.CADD!) > 9 ? 0 : 2} />{isNaN(parseFloat(record.CADD!)) ? "" : parseFloat(record.CADD!).toFixed(1)}
           </a>
@@ -165,7 +166,7 @@ const getRow = (record: MappingRecord, toggleOpenGroup: string, isoFormGroupExpa
             <button
               onClick={() => toggleIsoFormGroup(toggleOpenGroup)}
               className="button button--toggle-isoforms"
-              title="alternative iso forms"
+              {...tip(isoFormGroupExpanded !== toggleOpenGroup ? "Show alternative iso forms" : "Hide alternative iso forms")}
             >
               {isoFormGroupExpanded !== toggleOpenGroup ?
                 <ChevronDownIcon className="toggle-isoforms" /> : <ChevronUpIcon className="toggle-isoforms" />}
@@ -174,7 +175,7 @@ const getRow = (record: MappingRecord, toggleOpenGroup: string, isoFormGroupExpa
         </div>
       </td>
       <td>
-        <span title={record.proteinName}>{getProteinName(record)}</span>
+        <span {...tip(record.proteinName)}>{getProteinName(record)}</span>
       </td>
       <td>{record.aaPos}</td>
       <td>{record.aaChange}</td>
@@ -210,16 +211,20 @@ const getRow = (record: MappingRecord, toggleOpenGroup: string, isoFormGroupExpa
 function getSignificancesButton(rowKey: string, buttonLabel: string, accession: MappingRecord,
   annotationExpanded: string, toggleAnnotation: StringVoidFun) {
   if (!accession.canonical) return EmptyElement;
-
   const buttonCss = rowKey === annotationExpanded ? 'button significance' : 'button';
-
-  var buttonTag = <img src={ProteinIcon} className="click-icon" alt="protein icon" title="Functional information" />;
-  if (buttonLabel === 'POP')
-    buttonTag = <img src={PopulationIcon} className="click-icon" alt="population icon" title="Population observation" />;
-  else if (buttonLabel === 'STR')
-    buttonTag = <img src={StructureIcon} className="click-icon" alt="structure icon" title="3D structure" />;
+  var toolTip = "Functional information"
+  var buttonTag = <img src={ProteinIcon} className="click-icon" alt="protein icon" />
+  if (buttonLabel === 'POP') {
+    buttonTag = <img src={PopulationIcon} className="click-icon" alt="population icon" />
+    toolTip = "Population observation"
+  }
+  else if (buttonLabel === 'STR') {
+    buttonTag = <img src={StructureIcon} className="click-icon" alt="structure icon" />
+    toolTip = "3D structure"
+  }
   return (
     <button
+      {...tip(toolTip)}
       onClick={() => toggleAnnotation(rowKey)}
       className={buttonCss}
       style={{ marginRight: "0.1rem" }}

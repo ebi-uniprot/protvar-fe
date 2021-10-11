@@ -1,13 +1,22 @@
+import { EmptyElement } from "../../../constants/Const";
+import { tip } from "../../../utills/Util";
+
 const ProteinReviewStatus = (props: { type: string }) => {
   switch (props.type) {
     case 'Swiss-Prot isoform':
-      return <span className="icon icon-generic protein-review-status protein-review-status--isoform-reviewed" data-icon="q" title="UniProt isoform reviewed" />;
+      return <span {...tip("UniProt isoform reviewed")}>
+        <span className="icon icon-generic protein-review-status protein-review-status--isoform-reviewed" data-icon="q" />
+      </span>
     case 'Swiss-Prot':
-      return <span className="icon icon-generic protein-review-status protein-review-status--reviewed" data-icon="q" title="UniProt reviewed" />;
+      return <span {...tip("UniProt reviewed")}>
+        <span className="icon icon-generic protein-review-status protein-review-status--reviewed" data-icon="q" />
+      </span>
     case 'TrEMBL':
-      return <span className="icon icon-generic protein-review-status protein-review-status--unreviewd" data-icon="Q" title="TrEMBL unreviewed" />;
+      return <span {...tip("TrEMBL unreviewed")}>
+        <span className="icon icon-generic protein-review-status protein-review-status--unreviewd" data-icon="Q" />
+      </span>
     default:
-      return <></>;
+      return EmptyElement;
   }
 };
 
