@@ -1,6 +1,7 @@
 import { UNIPROT_ACCESSION_URL } from "../../../constants/ExternalUrls";
 import { ANNOTATION_COLS, GENOMIC_COLS, INPUT_COLS } from "../../../constants/SearchResultTable";
 import { MappingRecord } from "../../../utills/Convertor";
+import { tip } from "../../../utills/Util";
 import ProteinReviewStatus from "./ProteinReviewStatus";
 import { getProteinName, getProteinType } from "./ResultTable";
 
@@ -19,7 +20,7 @@ function AlternateIsoFormRow(props: AlternateIsoFormRowProps) {
       </a>
     </td>
     <td>
-      <span title={record.proteinName}>{getProteinName(record)}</span>
+      <span {...tip(record.proteinName)}>{getProteinName(record)}</span>
     </td>
     <td>{record.aaPos}</td>
     <td>{record.aaChange}</td>

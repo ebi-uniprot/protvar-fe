@@ -166,7 +166,7 @@ const getRow = (record: MappingRecord, toggleOpenGroup: string, isoFormGroupExpa
             <button
               onClick={() => toggleIsoFormGroup(toggleOpenGroup)}
               className="button button--toggle-isoforms"
-              {...tip(isoFormGroupExpanded !== toggleOpenGroup ? "Show alternative iso forms" : "Hide alternative iso forms")}
+              {...tip(isoFormGroupExpanded !== toggleOpenGroup ? "Show alternative isoforms" : "Hide alternative isoforms")}
             >
               {isoFormGroupExpanded !== toggleOpenGroup ?
                 <ChevronDownIcon className="toggle-isoforms" /> : <ChevronUpIcon className="toggle-isoforms" />}
@@ -212,15 +212,15 @@ function getSignificancesButton(rowKey: string, buttonLabel: string, accession: 
   annotationExpanded: string, toggleAnnotation: StringVoidFun) {
   if (!accession.canonical) return EmptyElement;
   const buttonCss = rowKey === annotationExpanded ? 'button significance' : 'button';
-  var toolTip = "Functional information"
+  var toolTip = "Click for functional information"
   var buttonTag = <img src={ProteinIcon} className="click-icon" alt="protein icon" />
   if (buttonLabel === 'POP') {
     buttonTag = <img src={PopulationIcon} className="click-icon" alt="population icon" />
-    toolTip = "Population observation"
+    toolTip = "Click for population observation"
   }
   else if (buttonLabel === 'STR') {
     buttonTag = <img src={StructureIcon} className="click-icon" alt="structure icon" />
-    toolTip = "3D structure"
+    toolTip = "Click for 3D structure"
   }
   return (
     <button
