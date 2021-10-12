@@ -1,0 +1,5 @@
+span[aria-label] {
+    &[data-balloon-pos] {
+      cursor: unset;
+    }
+  }
