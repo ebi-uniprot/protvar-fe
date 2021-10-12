@@ -6,13 +6,16 @@ function ResultTableButtonsLegend() {
   return (
     <div className="flex align-items-center">
       <div className="flex">
-        <img src={ProteinIcon} className="click-icon" alt="protein icon" title="Functional information" /> Functional Information
+        <img src={ProteinIcon} className="click-icon" alt="protein icon"
+          title="Functional information icon - click in below table for more details" /> Functional Information
       </div>
       <div className="flex">
-        <img src={PopulationIcon} className="click-icon" alt="Population icon" title="Population Observation" /> Population Observation
+        <img src={PopulationIcon} className="click-icon" alt="Population icon"
+          title="Population Observation icon - click in below table for more details" /> Population Observation
       </div>
       <div className="flex">
-        <img src={StructureIcon} className="click-icon" alt="Structure icon" title="3D Structures" /> Structures
+        <img src={StructureIcon} className="click-icon" alt="Structure icon"
+          title="3D Structures icon - click in below table for more details" /> Structures
       </div>
     </div>
   );
