@@ -1,0 +1,7 @@
+span, th {
+    &[aria-label] {
+      &[data-balloon-pos] {
+        cursor: unset;
+      }
+    }
+  }

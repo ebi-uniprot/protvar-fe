@@ -19,8 +19,7 @@ import trp from '../../../images/trp.png';
 import tyr from '../../../images/tyr.png';
 import val from '../../../images/val.png';
 import stop from '../../../images/stop.png';
-import { AMINO_ACID_FULL_NAME } from '../../../constants/Protein';
-import { getKeyValue } from '../../../utills/Util';
+import { fullAminoAcidName, getKeyValue } from '../../../utills/Util';
 
 const aminoAcids = {
   ala,
@@ -46,7 +45,9 @@ const aminoAcids = {
   stop
 };
 function getImageByKey(key: string) {
-  return getKeyValue(key)(aminoAcids);
+  if (key === "*")
+    key = "stop"
+  return getKeyValue(key.toLowerCase())(aminoAcids);
 }
 interface AminoAcidModelProps {
   refAA: string
@@ -54,11 +55,6 @@ interface AminoAcidModelProps {
 }
 const AminoAcidModel = (props: AminoAcidModelProps) => {
   const { refAA, variantAA } = props;
-  var ref = refAA.toLowerCase();
-  var variant = variantAA.toLowerCase();
-  if (variantAA === '*') {
-    variant = 'stop';
-  }
   return (
     <div>
       <table className="img-table">
@@ -66,13 +62,13 @@ const AminoAcidModel = (props: AminoAcidModelProps) => {
           <tr>
             <td>
               <div>
-                <img className="img-size" src={getImageByKey(ref)} alt={ref} />
+                <img className="img-size" src={getImageByKey(refAA)} alt={refAA} />
                 <span className="icon-arrow">&#8594;</span>
-                <img className="img-size" src={getImageByKey(variant)} alt={variant} />
+                <img className="img-size" src={getImageByKey(variantAA)} alt={variantAA} />
               </div>
               <div style={{ textAlign: "center" }}>
-                <span style={{ width: "50%" }}>{AMINO_ACID_FULL_NAME.get(ref)}</span>
-                <span style={{ width: "50%", float: "right" }}>{variantAA === "*" ? "Stop" : AMINO_ACID_FULL_NAME.get(variant)}</span>
+                <span style={{ width: "50%" }}>{fullAminoAcidName(refAA)}</span>
+                <span style={{ width: "50%", float: "right" }}>{fullAminoAcidName(variantAA)}</span>
               </div>
             </td>
           </tr>

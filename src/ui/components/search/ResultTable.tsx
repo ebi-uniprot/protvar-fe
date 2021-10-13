@@ -11,12 +11,12 @@ import { MappingRecord } from "../../../utills/Convertor";
 import { ParsedInput } from "../../../types/MappingResponse";
 import LoaderRow from "./LoaderRow";
 import Spaces from "../../elements/Spaces";
-import AlternateIsoFormRow from "./AlternateIsoFormRow";
+import AlternateIsoFormRow, { aaChangeTip } from "./AlternateIsoFormRow";
 import { EmptyElement } from "../../../constants/Const";
-import { GENOMIC_COLS, INPUT_COLS, PROTEIN_COLS } from "../../../constants/SearchResultTable";
+import { ALLELE, CONSEQUENCES, GENOMIC_COLS, INPUT_COLS, PROTEIN_COLS } from "../../../constants/SearchResultTable";
 import { ReactComponent as ChevronDownIcon } from "../../../images/chevron-down.svg"
 import { ReactComponent as ChevronUpIcon } from "../../../images/chevron-up.svg"
-import { tip } from "../../../utills/Util";
+import Tool from "../../elements/Tool";
 
 const StructuralDetail = lazy(() => import(/* webpackChunkName: "StructuralDetail" */ "../structure/StructuralDetail"));
 const PopulationDetail = lazy(() => import(/* webpackChunkName: "PopulationDetail" */ "../population/PopulationDetail"));
@@ -61,25 +61,29 @@ function ResultTable(props: ResultTableProps) {
   return <table className="unstriped" cellPadding="0" cellSpacing="0">
     <thead>
       <tr>
-        <th colSpan={INPUT_COLS}>INPUT</th>
-        <th colSpan={GENOMIC_COLS}>GENOMIC</th>
-        <th colSpan={PROTEIN_COLS}>PROTEIN</th>
-        <th>ANNOTATIONS</th>
+        <Tool el="th" colSpan={INPUT_COLS} tip="User input is interpreted and displayed based on the reference genome" pos="up-left">INPUT</Tool>
+        <Tool el="th" colSpan={GENOMIC_COLS} tip="Gene and nucleotide level annotations">GENOMIC</Tool>
+        <Tool el="th" colSpan={PROTEIN_COLS} tip="Amino acid/protein level annotations">PROTEIN</Tool>
+        <Tool el="th" tip="Three types of annotation describing the position and function of the reference amino acid, 
+        region and protein and known associations" pos="up-right">ANNOTATIONS</Tool>
       </tr>
       <tr>
-        <th className="sticky">Chr</th>
-        <th className="sticky">Coordinate</th>
-        <th className="sticky">Id</th>
-        <th className="sticky">Ref</th>
-        <th className="sticky">Alt</th>
-        <th className="sticky">Gene</th>
-        <th className="sticky">Codon (Strand)</th>
-        <th className="sticky">CADD</th>
-        <th className="sticky">Isoform</th>
-        <th className="sticky">Protein name</th>
-        <th className="sticky">AA pos.</th>
-        <th className="sticky">AA change</th>
-        <th className="sticky">Consequences</th>
+        {/* <th className="sticky"><Tool tip="Chromosome" pos="up-left">Chr</Tool></th> */}
+        <Tool el="th" className="sticky" tip="Chromosome" pos="up-left">Chr</Tool>
+        <Tool el="th" className="sticky" tip="Genomic coordinate">Coordinate</Tool>
+        <Tool el="th" className="sticky" tip="User entered variant identifier">ID</Tool>
+        <Tool el="th" className="sticky" tip="Reference allele">Ref</Tool>
+        <Tool el="th" className="sticky" tip="Alternative allele">Alt</Tool>
+        <Tool el="th" className="sticky" tip="HGNC short gene name">Gene</Tool>
+        <Tool el="th" className="sticky" tip="Change of the codon containing the variant nucleotide the position of which is capitalised">Codon (strand)</Tool>
+        <Tool el="th" className="sticky" tip="CADD (Combined Annotation Dependent Depletion) phred-like score. Colours are defined in the key at the bottom of the page">CADD</Tool>
+        <Tool el="th" className="sticky" tip="The protein isoform the variant is mapped to. 
+        By default this is the UniProt canonical isoform, however other isoforms are shown if necessary. 
+        Alternative isoforms can be shown by expanding the arrow to the right of the isoform" tSize="xlarge">Isoform</Tool>
+        <Tool el="th" className="sticky" tip="Full protein name from UniProt">Protein name</Tool>
+        <Tool el="th" className="sticky" tip="Position of the amino acid containing the variant in the displayed isoform">AA pos.</Tool>
+        <Tool el="th" className="sticky" tip="Three letter amino acid code for the reference and alternative alleles">AA change</Tool>
+        <Tool el="th" className="sticky" tip="A description of the consequence of the variant">Consequences</Tool>
         <th className="sticky">Click for details</th>
       </tr>
     </thead>
@@ -126,60 +130,65 @@ const getRow = (record: MappingRecord, toggleOpenGroup: string, isoFormGroupExpa
   return <Fragment key={`${toggleOpenGroup}-${record.isoform}`}>
     <tr >
       <td>
-        <a href={ENSEMBL_CHRM_URL + record.chromosome} target="_blank" rel="noopener noreferrer">
-          {record.chromosome}
-        </a>
+        <Tool tip="Click to see the a summary for this chromosome from Ensembl" pos="up-left">
+          <a href={ENSEMBL_CHRM_URL + record.chromosome} target="_blank" rel="noopener noreferrer">
+            {record.chromosome}
+          </a>
+        </Tool>
       </td>
       <td>
-        <a href={positionUrl} target="_blank" rel="noopener noreferrer">
-          {record.position}
-        </a>
+        <Tool tip="Click to see the region detail for this genomic coordinate from Ensembl" pos="up-left">
+          <a href={positionUrl} target="_blank" rel="noopener noreferrer">
+            {record.position}
+          </a>
+        </Tool>
       </td>
-      <td>{record.id}</td>
-      <td>{record.refAllele}</td>
+      <td><Tool tip="Variant ID provided by the user">{record.id}</Tool></td>
+      <td><Tool tip={ALLELE.get(record.refAllele)}>{record.refAllele}</Tool></td>
+      <td><Tool tip={ALLELE.get(record.altAllele)}>{record.altAllele}</Tool></td>
       <td>
-        {record.altAllele}
-      </td>
-      <td>
-        <a href={ENSEMBL_GENE_URL + record.geneName} target="_blank" rel="noopener noreferrer">
-          {record.geneName}
-        </a>
-      </td>
-      <td>
-        {record.codon} {strand}
+        <Tool tip="Click here for gene information from Ensembl">
+          <a href={ENSEMBL_GENE_URL + record.geneName} target="_blank" rel="noopener noreferrer">{record.geneName}</a>
+        </Tool>
       </td>
       <td>
-        <span className={caddCss} {...tip(caddTitle)}>
+        <div className="flex">
+          {record.codon}<Spaces /><Tool tip={"Codon change in " + (strand === "(+)" ? " positive" : "negative") + "-sense strand gene"}>{strand}</Tool>
+        </div>
+      </td>
+      <td>
+        <Tool className={caddCss} tip={caddTitle}>
           <a href={CADD_INFO_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'white' }}>
             <Spaces count={parseInt(record.CADD!) > 9 ? 0 : 2} />{isNaN(parseFloat(record.CADD!)) ? "" : parseFloat(record.CADD!).toFixed(1)}
           </a>
-        </span>
+        </Tool>
       </td>
       <td>
         <div className="flex">
           <ProteinReviewStatus type={getProteinType(record)} />
-          <a href={UNIPROT_ACCESSION_URL + record.isoform} target="_blank" rel="noopener noreferrer">
-            {record.isoform}
-          </a>
+          <Tool tip="Click to see the UniProt page for this accession">
+            <a href={UNIPROT_ACCESSION_URL + record.isoform} target="_blank" rel="noopener noreferrer">{record.isoform}</a>
+          </Tool>
           {record.canonical && <>
             <Spaces />
-            <button
+            <Tool
+              el="button"
               onClick={() => toggleIsoFormGroup(toggleOpenGroup)}
               className="button button--toggle-isoforms"
-              {...tip(isoFormGroupExpanded !== toggleOpenGroup ? "Show alternative isoforms" : "Hide alternative isoforms")}
+              tip={isoFormGroupExpanded !== toggleOpenGroup ? "Show alternative isoforms" : "Hide alternative isoforms"}
             >
               {isoFormGroupExpanded !== toggleOpenGroup ?
                 <ChevronDownIcon className="toggle-isoforms" /> : <ChevronUpIcon className="toggle-isoforms" />}
-            </button>
+            </Tool>
           </>}
         </div>
       </td>
       <td>
-        <span {...tip(record.proteinName)}>{getProteinName(record)}</span>
+        <Tool tip={record.proteinName}>{getProteinName(record)}</Tool>
       </td>
-      <td>{record.aaPos}</td>
-      <td>{record.aaChange}</td>
-      <td>{record.consequences}</td>
+      <td><Tool tip="The amino acid position in this isoform">{record.aaPos}</Tool></td>
+      <td><Tool tip={aaChangeTip(record.aaChange)}>{record.aaChange}</Tool></td>
+      <td><Tool tip={CONSEQUENCES.get(record.consequences!)} pos="up-right">{record.consequences}</Tool></td>
       <td >
         <div className="flex">
           {getSignificancesButton(functionalKey, 'FUN', record, annotationExpanded, toggleAnnotation)}
@@ -223,14 +232,13 @@ function getSignificancesButton(rowKey: string, buttonLabel: string, accession: 
     toolTip = "Click for 3D structure"
   }
   return (
-    <button
-      {...tip(toolTip)}
+    <Tool el="button" tip={toolTip} pos="up-right"
       onClick={() => toggleAnnotation(rowKey)}
       className={buttonCss}
       style={{ marginRight: "0.1rem" }}
     >
       {buttonTag}
-    </button>
+    </Tool>
   );
 }
 

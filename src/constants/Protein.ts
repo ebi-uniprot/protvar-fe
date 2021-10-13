@@ -70,4 +70,5 @@ export const AMINO_ACID_FULL_NAME: Map<string, string> = new Map(Object.entries(
   trp: "Tryptophan",
   tyr: "Tyrosine",
   val: "Valine",
+  "*": "Stop"
 }));

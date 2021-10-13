@@ -609,7 +609,7 @@
 }
 
 .sticky {
-	position: sticky;
+	position: sticky !important;
 	top: 0; /* Don't forget this, required for the stickiness */
 }
 .toggle-isoforms{

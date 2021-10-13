@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import './styles/index.scss';
 import reportWebVitals from './reportWebVitals';
-import 'balloon-css';
 
 import App from './ui/App';
 
