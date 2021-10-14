@@ -15,20 +15,12 @@ function PopulationFrequencyDetails(props: PopulationFrequencyDetailsProps) {
   );
 }
 function getPopFrequency(frequency: PopulationFrequency) {
-  let name = frequency.sourceName;
-  let frequencies = frequency.frequencies.map((freq) => {
-    return (
-      <li key={uuidv1()}>
-        {freq.label}-{freq.value}
-      </li>
-    );
-  });
   return (
     <>
       <ul>
-        <li key={uuidv1()}>{name}</li>
+        <li key={uuidv1()}>{frequency.sourceName}</li>
         <ul>
-          <li key={uuidv1()}>{frequencies}</li>
+          <li key={uuidv1()}>{frequency.populationName}-{frequency.frequency}</li>
         </ul>
       </ul>
       <hr />

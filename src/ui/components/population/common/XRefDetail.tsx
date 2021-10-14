@@ -1,10 +1,10 @@
-import { ClinicalSignificance, Xref } from "../PopulationDetail";
+import { ClinicalSignificance, PopulationFrequency, Xref } from "../PopulationDetail";
 import { v1 as uuidv1 } from 'uuid';
 import XReferenceLi from "./XReferenceLi";
 
 interface XRefDetailProps {
   xrefs: Array<Xref>,
-  populationFrequencies: Array<any>,
+  populationFrequencies: Array<PopulationFrequency>,
   clinicalSignificances: Array<ClinicalSignificance>
 }
 function XRefDetail(props: XRefDetailProps) {
@@ -22,13 +22,13 @@ function XRefDetail(props: XRefDetailProps) {
   );
 }
 
-function getReferences(xrefs: Array<Xref>, populationFrequencies: Array<any>, clinicalSignificances: Array<ClinicalSignificance>) {
+function getReferences(xrefs: Array<Xref>, populationFrequencies: Array<PopulationFrequency>, clinicalSignificances: Array<ClinicalSignificance>) {
   const popFreqMap = new Map<string, JSX.Element>();
   if (populationFrequencies !== undefined && populationFrequencies.length > 0) {
     populationFrequencies.forEach((freq) => {
       let val = (
         <li key={uuidv1()}>
-          <b>{freq.frequencies[0].label}</b>-{freq.frequencies[0].value}
+          <b>{freq.populationName}</b>-{freq.frequency}
         </li>
       );
       popFreqMap.set(freq.sourceName, val);

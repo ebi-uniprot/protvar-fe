@@ -53,12 +53,8 @@ export interface ClinicalSignificance {
 
 export interface PopulationFrequency {
   sourceName: string
-  frequencies: Array<Frequency>
-}
-
-interface Frequency {
-  label: string,
-  value: number
+  populationName: string
+  frequency: number
 }
 
 interface PopulationDetailProps {
