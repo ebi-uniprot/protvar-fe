@@ -29,6 +29,7 @@ build_static_assets:
   only:
     refs:
       - master
+      - dev
   extends: .js
   stage: build_static_assets
   script:
@@ -41,6 +42,7 @@ build_docker_image:
   only:
     refs:
       - master
+      - dev
   stage: build_docker_image
   image: docker:latest
   tags:
@@ -67,6 +69,7 @@ build_docker_image:
 
 .kubectl:
   image: alpine
+  stage: deploy
   before_script:
     - apk add --no-cache curl git bash
     - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
@@ -79,12 +82,19 @@ build_docker_image:
     - if [ ! -f wp-config-template.yml ]; then echo "k8s config file is missing"; exit 1; fi
     - chmod +x deploy.sh
 
-deploy:
+dev-deploy:
+  extends: .kubectl
+  only:
+    refs:
+      - dev
+  script:
+    - ./deploy.sh HX pepvep-fe pepvep-dev deployment # data-center app_name namespace type-of-deployment
+
+prod-deploy:
+  extends: .kubectl
   only:
     refs:
       - master
-  stage: deploy
-  extends: .kubectl
   script:
     - ./deploy.sh HX pepvep-fe pepvep deployment # fallback app_name namespace type-of-deployment
     - ./deploy.sh HH pepvep-fe pepvep deployment # prod app_name namespace type-of-deployment
