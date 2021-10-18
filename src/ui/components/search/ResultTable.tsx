@@ -84,14 +84,6 @@ const getTableRows = (mappings: MappingRecord[][][], isoFormGroupExpanded: strin
         else if (currentGroup === isoFormGroupExpanded)
           tableRows.push(<AlternateIsoFormRow record={isoform} toggleOpenGroup={currentGroup} />)
       }
-      // matchingIsoForms.forEach((isoform) => {
-      //   const currentGroup = inputRecordIndex + '-' + isoform.canonicalAccession + '-' + isoform.position + '-' + isoform.altAllele;
-      //   if (isoform.canonical || isoform.canonicalAccession === null || currentGroup === isoFormGroupExpanded) {
-      //     const row = isAlternateIsoForm(isoform) ? <AlternateIsoFormRow record={isoform} toggleOpenGroup={currentGroup} />
-      //       : getPrimaryRow(isoform, currentGroup, isoFormGroupExpanded, toggleIsoFormGroup, annotationExpanded, toggleAnnotation);
-      //     tableRows.push(row);
-      //   }
-      // })
     })
   });
   return tableRows;
