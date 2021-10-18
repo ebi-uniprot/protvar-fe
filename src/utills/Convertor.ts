@@ -25,9 +25,6 @@ export interface MappingRecord {
   enst?: Array<any>
   strand?: boolean
   ensg?: string
-  functionLoaded?: boolean
-  structureLoaded?: boolean
-  variationLoaded?: boolean
 }
 
 export interface TranslatedSequence {
@@ -96,9 +93,6 @@ export function convertApiMappingToTableRecords(mapping: GenomeProteinMapping) {
         record.ensp = ensps;
       }
       record.ensg = ensg;
-      record.functionLoaded = false;
-      record.structureLoaded = false;
-      record.variationLoaded = false;
       rows.push(record);
     });
     genes.push(rows);
