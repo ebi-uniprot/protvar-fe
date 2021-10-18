@@ -22,7 +22,6 @@ export interface MappingRecord {
   referenceFunctionUri?: string
   populationObservationsUri?: string
   ensp?: Array<TranslatedSequence>
-  enst?: Array<any>
   strand?: boolean
   ensg?: string
 }
@@ -81,7 +80,6 @@ export function convertApiMappingToTableRecords(mapping: GenomeProteinMapping) {
       record.referenceFunctionUri = isoform.referenceFunctionUri;
       record.populationObservationsUri = isoform.populationObservationsUri;
       record.ensp = [];
-      record.enst = [];
       record.strand = gene.reverseStrand;
       if (isoform.translatedSequences !== undefined && isoform.translatedSequences.length > 0) {
         var ensps: Array<TranslatedSequence> = [];
