@@ -6,10 +6,11 @@ import { NextPageFun, Page } from "../../../utills/AppHelper";
 interface PaginationRowProps {
   page: Page
   fetchNextPage: NextPageFun
+  loading: boolean
 }
 
 function PaginationRow(props: PaginationRowProps) {
-  const { page, fetchNextPage } = props;
+  const { page, fetchNextPage, loading } = props;
   const totalPages = Math.ceil(page.totalItems / page.itemsPerPage);
 
   function changePageSize(pageSize: any) {
@@ -29,25 +30,13 @@ function PaginationRow(props: PaginationRowProps) {
     <tbody>
       <tr>
         <td>
-          {page === undefined || page.currentPage === 1 ? (
-            <Button onClick={() => null} className="button-new button-disabled">
-              &laquo; Previous
-            </Button>
-          ) : (
-            <Button onClick={() => fetchPage(-1)}>&laquo; Previous</Button>
-          )}
+          <Button onClick={() => fetchPage(-1)} loading={loading} disabled={page === undefined || page.currentPage === 1}>&laquo; Previous</Button>
         </td>
         <td>
           {page.currentPage} of {totalPages}
         </td>
         <td>
-          {page === undefined || !page.nextPage ? (
-            <Button onClick={() => null} className="button-new button-disabled">
-              Next &raquo;
-            </Button>
-          ) : (
-            <Button onClick={() => fetchPage(1)}>Next &raquo;</Button>
-          )}
+          <Button onClick={() => fetchPage(1)} loading={loading} disabled={page === undefined || !page.nextPage}>Next &raquo;</Button>
         </td>
         <td>
           <Dropdown

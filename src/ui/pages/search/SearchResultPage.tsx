@@ -17,22 +17,23 @@ interface SearchResultPageProps {
   fetchNextPage: NextPageFun
   rows: MappingRecord[][][]
   invalidInputs: Array<ParsedInput>
+  loading: boolean
 }
 
 function SearchResultsPageContent(props: SearchResultPageProps) {
-  const { pastedInputs, file, page, invalidInputs, rows, fetchNextPage } = props;
+  const { pastedInputs, file, page, invalidInputs, rows, fetchNextPage, loading } = props;
   if (!rows || rows.length < 1)
     return <Redirect to="/" />
 
   return <>
     <div className="search-results">
       <div className="flex justify-content-space-between">
-        <PaginationRow page={page} fetchNextPage={fetchNextPage} />
+        <PaginationRow page={page} fetchNextPage={fetchNextPage} loading={loading} />
         <DownloadModal pastedInputs={pastedInputs} file={file} sendEmail={page.totalItems > MAX_IN_PLACE_DOWNLOAD_WITHOUT_EMAIL} />
         <ResultTableButtonsLegend />
       </div>
       <ResultTable invalidInputs={invalidInputs} mappings={rows} />
-      <PaginationRow page={page} fetchNextPage={fetchNextPage} />
+      <PaginationRow page={page} fetchNextPage={fetchNextPage} loading={loading} />
       <CaddLegendColors />
     </div>
   </>

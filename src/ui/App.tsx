@@ -114,7 +114,7 @@ function App(props: AppProps) {
   return <>
     <Route path={HOME} exact render={() => <HomePage loading={loading} fetchPasteResult={fetchPasteResult} fetchFileResult={fetchFileResult} />} />
     <Route path={SEARCH} render={() => <SearchResultsPage rows={searchResults} file={file} page={page} pastedInputs={userInputs}
-      fetchNextPage={fetchPage} invalidInputs={invalidInputs} />} />
+      fetchNextPage={fetchPage} invalidInputs={invalidInputs} loading={loading}/>} />
     <Route path={API_ERROR} render={() => <APIErrorPage />} />
     <Route path={ABOUT} render={() => <AboutPage />} />
     <Route path={CONTACT} render={() => <ContactPage />} />
