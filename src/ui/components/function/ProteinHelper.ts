@@ -1,6 +1,6 @@
 import { Comment } from './FunctionalDetail'
 
-export function divideProteinRegions(regions: Array<Comment>) {
+export function divideProteinRegions(regions: Array<Comment> | null | undefined) {
   const catalyticActivities: Array<Comment> = [];
   const activityRegulations: Array<Comment> = [];
   const subunits: Array<Comment> = [];
@@ -10,7 +10,7 @@ export function divideProteinRegions(regions: Array<Comment>) {
   const similarities: Array<Comment> = [];
   const webResources: Array<Comment> = [];
   const interactions: Array<Comment> = [];
-  regions.forEach((region) => {
+  regions?.forEach((region) => {
     switch (region.type) {
       case 'CATALYTIC_ACTIVITY':
         catalyticActivities.push(region);
