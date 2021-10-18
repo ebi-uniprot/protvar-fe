@@ -13,22 +13,12 @@ interface ResultTableProps {
   mappings: Array<Array<Array<MappingRecord>>>
 }
 
-export function getProteinType(record: MappingRecord) {
-  if (!record.isoform)
-    return '';
-  return record.canonical ? 'Swiss-Prot' : 'TrEMBL'
-}
-
 export function getProteinName(record: MappingRecord) {
   let proteinName = record.proteinName;
   if (record.proteinName && record.proteinName.length > 20) {
     proteinName = record.proteinName.substring(0, 20) + '..';
   }
   return proteinName
-}
-
-function isAlternateIsoForm(record: MappingRecord) {
-  return !record.canonical && record.canonicalAccession;
 }
 
 function ResultTable(props: ResultTableProps) {

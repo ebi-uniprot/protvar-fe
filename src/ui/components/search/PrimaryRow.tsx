@@ -1,4 +1,4 @@
-import { Fragment,lazy, Suspense } from "react";
+import { Fragment, lazy, Suspense } from "react";
 import { StringVoidFun } from "../../../constants/CommonTypes";
 import { CADD_INFO_URL, ENSEMBL_CHRM_URL, ENSEMBL_GENE_URL, ENSEMBL_VIEW_URL, UNIPROT_ACCESSION_URL } from "../../../constants/ExternalUrls";
 import { ALLELE, CONSEQUENCES } from "../../../constants/SearchResultTable";
@@ -6,16 +6,16 @@ import { MappingRecord } from "../../../utills/Convertor";
 import Spaces from "../../elements/Spaces";
 import Tool from "../../elements/Tool";
 import { getCaddCss, getTitle } from "./CaddHelper";
-import ProteinReviewStatus from "./ProteinReviewStatus";
-import { getProteinName, getProteinType } from "./ResultTable";
+import { getProteinName } from "./ResultTable";
 import ProteinIcon from '../../../images/proteins.svg';
 import StructureIcon from '../../../images/structures-3d.svg';
 import PopulationIcon from '../../../images/human.svg';
+import { ReactComponent as CanonicalIcon } from '../../../images/book.svg';
 import LoaderRow from "./LoaderRow";
 import { ReactComponent as ChevronDownIcon } from "../../../images/chevron-down.svg"
 import { ReactComponent as ChevronUpIcon } from "../../../images/chevron-up.svg"
 import { EmptyElement } from "../../../constants/Const";
-import { aaChangeTip } from "./AlternateIsoFormRow";
+import { aaChangeTip, NonCanonicalIcon } from "./AlternateIsoFormRow";
 
 const StructuralDetail = lazy(() => import(/* webpackChunkName: "StructuralDetail" */ "../structure/StructuralDetail"));
 const PopulationDetail = lazy(() => import(/* webpackChunkName: "PopulationDetail" */ "../population/PopulationDetail"));
@@ -74,7 +74,9 @@ const getPrimaryRow = (record: MappingRecord, toggleOpenGroup: string, isoFormGr
       </td>
       <td>
         <div className="flex">
-          <ProteinReviewStatus type={getProteinType(record)} />
+          {record.canonical && <Tool tip="Canonical isoform"><CanonicalIcon className="isoform-icon" /></Tool>}
+          {(!record.canonical && record.isoform) && <NonCanonicalIcon />}
+          <Spaces />
           <Tool tip="Click to see the UniProt page for this accession">
             <a href={UNIPROT_ACCESSION_URL + record.isoform} target="_blank" rel="noopener noreferrer">{record.isoform}</a>
           </Tool>
