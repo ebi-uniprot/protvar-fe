@@ -92,7 +92,7 @@ function App(props: AppProps) {
   };
 
   function mappingApiCall(inputSubArray: string[]) {
-    const uri = `${API_URL}/variant/mapping`;
+    const uri = `${API_URL}/mapping`;
     const headers = { 'Content-Type': 'application/json', Accept: '*' };
 
     axios.post<string[], AxiosResponse<MappingResponse>>(uri, inputSubArray, { headers: headers })
