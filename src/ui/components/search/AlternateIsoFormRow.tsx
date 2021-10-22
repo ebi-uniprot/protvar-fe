@@ -4,17 +4,20 @@ import { MappingRecord } from "../../../utills/Convertor";
 import { fullAminoAcidName } from "../../../utills/Util";
 import Tool from "../../elements/Tool";
 import { getProteinName } from "./ResultTable";
-import { ReactComponent as NonCanonical } from '../../../images/book-line.svg';
 import Spaces from "../../elements/Spaces";
+import { EmptyElement } from "../../../constants/Const";
 
 export function aaChangeTip(change: string | undefined) {
   return "Amino acid change " + fullAminoAcidName(change?.split("/")[0]) + " -> " + fullAminoAcidName(change?.split("/")[1]);
 }
 
-export function NonCanonicalIcon() {
-  return <Tool tip="Non canonical isoform">
-    <NonCanonical className="isoform-icon" />
-  </Tool>
+export function CanonicalIcon(props: { isCanonical: boolean | undefined }) {
+  if (props.isCanonical === undefined)
+    return EmptyElement
+  else if (props.isCanonical)
+    return <Tool el="span" tip="Canonical isoform" className="protein-type-icon protein-type-icon--canonical">can</Tool>
+  else
+    return <Tool el="span" tip="Non canonical isoform" className="protein-type-icon protein-type-icon--isoform">iso</Tool>
 }
 interface AlternateIsoFormRowProps {
   record: MappingRecord
@@ -25,7 +28,7 @@ function AlternateIsoFormRow(props: AlternateIsoFormRowProps) {
   return <tr key={`${toggleOpenGroup}-${record.isoform}`}>
     <td colSpan={INPUT_COLS + GENOMIC_COLS} />
     <td>
-      <NonCanonicalIcon />
+      <CanonicalIcon isCanonical={false} />
       <Spaces />
       <Tool tip="Click to see the UniProt page for this accession">
         <a href={UNIPROT_ACCESSION_URL + record.isoform} target="_blank" rel="noopener noreferrer">{record.isoform}</a>

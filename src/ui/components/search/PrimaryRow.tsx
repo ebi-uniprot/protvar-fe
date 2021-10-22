@@ -10,12 +10,11 @@ import { getProteinName } from "./ResultTable";
 import ProteinIcon from '../../../images/proteins.svg';
 import StructureIcon from '../../../images/structures-3d.svg';
 import PopulationIcon from '../../../images/human.svg';
-import { ReactComponent as CanonicalIcon } from '../../../images/book.svg';
 import LoaderRow from "./LoaderRow";
 import { ReactComponent as ChevronDownIcon } from "../../../images/chevron-down.svg"
 import { ReactComponent as ChevronUpIcon } from "../../../images/chevron-up.svg"
 import { EmptyElement } from "../../../constants/Const";
-import { aaChangeTip, NonCanonicalIcon } from "./AlternateIsoFormRow";
+import { aaChangeTip, CanonicalIcon } from "./AlternateIsoFormRow";
 
 const StructuralDetail = lazy(() => import(/* webpackChunkName: "StructuralDetail" */ "../structure/StructuralDetail"));
 const PopulationDetail = lazy(() => import(/* webpackChunkName: "PopulationDetail" */ "../population/PopulationDetail"));
@@ -74,8 +73,7 @@ const getPrimaryRow = (record: MappingRecord, toggleOpenGroup: string, isoFormGr
       </td>
       <td>
         <div className="flex">
-          {record.canonical && <Tool tip="Canonical isoform"><CanonicalIcon className="isoform-icon" /></Tool>}
-          {(!record.canonical && record.isoform) && <NonCanonicalIcon />}
+          <CanonicalIcon isCanonical={record.canonical} />
           <Spaces />
           <Tool tip="Click to see the UniProt page for this accession">
             <a href={UNIPROT_ACCESSION_URL + record.isoform} target="_blank" rel="noopener noreferrer">{record.isoform}</a>

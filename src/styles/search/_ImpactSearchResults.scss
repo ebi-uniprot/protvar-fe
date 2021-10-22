@@ -616,8 +616,25 @@
 	height: 9px;
 }
 
-.isoform-icon{
-	width: 12px;
-	height: 12px;
-	color: #c39b00;
+.protein-type-icon {
+    font-size: .7rem;
+    display: inline-block;
+    border-radius: .2rem;
+    height: 1.2rem;
+    line-height: 1.2rem;
+    text-align: center;
+    padding: 0 .2rem;
+    min-width: 1.5rem;
+}
+
+.protein-type-icon--canonical {
+    //color: #0a0a0a;
+    // background: #ffae00;
+	background:#f5ca6d99;
+}
+
+.protein-type-icon--isoform {
+    // color: #fff;
+    // background-color: #7778c7;
+	background-color: #898adf85;
 }
