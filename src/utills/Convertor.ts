@@ -24,6 +24,7 @@ export interface MappingRecord {
   ensp?: Array<TranslatedSequence>
   strand?: boolean
   ensg?: string
+  note?: string
 }
 
 export interface TranslatedSequence {
@@ -99,6 +100,7 @@ export function convertApiMappingToTableRecords(mapping: GenomeProteinMapping) {
   if (genes.length === 0) {
     var rows: Array<MappingRecord> = [];
     const record: MappingRecord = getBasicMapping(mapping);
+    record.note = "Sorry, no mapping found"
     rows.push(record);
     genes.push(rows);
   }
