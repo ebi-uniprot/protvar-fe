@@ -100,6 +100,7 @@ const getPrimaryRow = (record: MappingRecord, toggleOpenGroup: string, isoFormGr
       <td><Tool tip={CONSEQUENCES.get(record.consequences!)} pos="up-right">{record.consequences}</Tool></td>
       <td >
         <div className="flex">
+          {!record.canonical && <><br /><br /></>}
           {getSignificancesButton(functionalKey, 'FUN', record, annotationExpanded, toggleAnnotation)}
           {getSignificancesButton(populationKey, 'POP', record, annotationExpanded, toggleAnnotation)}
           {getSignificancesButton(structuralKey, 'STR', record, annotationExpanded, toggleAnnotation)}
