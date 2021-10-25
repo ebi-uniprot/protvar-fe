@@ -17,7 +17,8 @@ function invalidRow(invalidInput: ParsedInput) {
     <td>{invalidInput.ref}</td>
     <td>{invalidInput.alt}</td>
     <td colSpan={GENOMIC_COLS}>Input: {invalidInput.inputString}</td>
-    <td colSpan={PROTEIN_COLS + ANNOTATION_COLS}>Message: {invalidInput.invalidReason}</td>
+    <td colSpan={PROTEIN_COLS} style={{ borderRight: 0 }}>Message: {invalidInput.invalidReason}</td>
+    <td colSpan={ANNOTATION_COLS} style={{ borderLeft: 0 }}><br /><br /></td>
   </tr>
 }
 
