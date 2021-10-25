@@ -81,12 +81,12 @@ const getTableRows = (mappings: MappingRecord[][][], isoFormGroupExpanded: strin
         const currentGroup = inputRecordIndex + '-' + isoform.canonicalAccession + '-' + isoform.position + '-' + isoform.altAllele;
         if (index === 0)
           if (isoform.note)
-            tableRows.push(<NoteRow record={isoform} />)
+            tableRows.push(<NoteRow record={isoform} key={isoform.chromosome + isoform.position + isoform.id + isoform.refAllele + isoform.altAllele} />)
           else
             tableRows.push(getPrimaryRow(isoform, currentGroup, isoFormGroupExpanded, toggleIsoFormGroup, annotationExpanded,
               toggleAnnotation, matchingIsoForms.length > 1))
         else if (currentGroup === isoFormGroupExpanded)
-          tableRows.push(<AlternateIsoFormRow record={isoform} toggleOpenGroup={currentGroup} />)
+          tableRows.push(<AlternateIsoFormRow record={isoform} key={isoform.isoform} />)
       }
     })
   });

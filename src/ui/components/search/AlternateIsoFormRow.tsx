@@ -21,11 +21,10 @@ export function CanonicalIcon(props: { isCanonical: boolean | undefined }) {
 }
 interface AlternateIsoFormRowProps {
   record: MappingRecord
-  toggleOpenGroup: string
 }
 function AlternateIsoFormRow(props: AlternateIsoFormRowProps) {
-  const { record, toggleOpenGroup } = props;
-  return <tr key={`${toggleOpenGroup}-${record.isoform}`}>
+  const { record } = props;
+  return <tr>
     <td colSpan={INPUT_COLS + GENOMIC_COLS} />
     <td>
       <CanonicalIcon isCanonical={false} />

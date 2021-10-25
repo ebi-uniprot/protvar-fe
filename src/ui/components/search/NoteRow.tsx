@@ -6,7 +6,7 @@ import Tool from "../../elements/Tool";
 const NoteRow = (props: { record: MappingRecord }) => {
   const { record } = props;
   const positionUrl = ENSEMBL_VIEW_URL + record.chromosome + ':' + record.position + '-' + record.position;
-  return <tr key={record.chromosome + record.position + record.id + record.refAllele + record.altAllele}>
+  return <tr>
     <td>
       <Tool tip="Click to see the a summary for this chromosome from Ensembl" pos="up-left">
         <a href={ENSEMBL_CHRM_URL + record.chromosome} target="_blank" rel="noopener noreferrer">
