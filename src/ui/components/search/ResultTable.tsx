@@ -17,7 +17,7 @@ interface ResultTableProps {
 export function getProteinName(record: MappingRecord) {
   let proteinName = record.proteinName;
   if (record.proteinName && record.proteinName.length > 20) {
-    proteinName = record.proteinName.substring(0, 20) + '..';
+    proteinName = record.proteinName.substring(0, 20) + '...';
   }
   return proteinName
 }
