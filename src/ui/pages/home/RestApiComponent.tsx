@@ -36,7 +36,7 @@ function RestApiComponent() {
       </section>
       <div className="search-button-group">
         <Button
-          onClick={() => window.open(API_URL + '/swagger-ui/#/', '_blank')}
+          onClick={() => window.open(API_URL + '/docs', '_blank')}
           className="button-primary"
         >
           PepVEP REST API
