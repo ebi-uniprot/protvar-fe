@@ -21,7 +21,7 @@ export function download(file: File | null, searchTerms: string[], functional: b
 }
 
 function downloadAndSaveToFile(inputArr: Array<string>, functional: boolean, population: boolean, structure: boolean) {
-  const APIUrl = `${API_URL}/download/download?function=${functional}&variation=${population}&structure=${structure}`
+  const APIUrl = `${API_URL}/download/stream?function=${functional}&variation=${population}&structure=${structure}`
 
   Notify.info("Your file will start to download soon")
   const headers = {
@@ -39,8 +39,8 @@ function downloadAndSaveToFile(inputArr: Array<string>, functional: boolean, pop
 
 export function sendDownloadEmail(file: File | null, searchTerms: string[], functional: boolean, population: boolean, structure: boolean,
   email: string, jobName: string) {
-  const type = file === null ? 'search' : 'file';
-  const APIUrl = `${API_URL}/download/${type}?email=${email}&jobName=${jobName}&function=${functional}&variation=${population}&structure=${structure}`
+  const type = file === null ? 'inputs' : 'file';
+  const APIUrl = `${API_URL}/email/process/${type}?email=${email}&jobName=${jobName}&function=${functional}&variation=${population}&structure=${structure}`
 
   Notify.info("Your job submitted successfully, report will be sent to your email " + email)
   if (file !== null) {
