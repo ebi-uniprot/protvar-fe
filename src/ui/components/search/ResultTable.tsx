@@ -35,7 +35,7 @@ function ResultTable(props: ResultTableProps) {
   }
 
   const tableRows = getTableRows(props.mappings, isoFormGroupExpanded, toggleIsoFormGroup, annotationExpanded, toggleAnnotation);
-  return <table className="unstriped" cellPadding="0" cellSpacing="0">
+  return <table className="unstriped" cellPadding="0" cellSpacing="0" id="resultTable">
     <thead>
       <tr>
         <Tool el="th" colSpan={INPUT_COLS} tip="User input is interpreted and displayed based on the reference genome" pos="up-left">INPUT</Tool>

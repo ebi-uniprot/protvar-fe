@@ -54,9 +54,9 @@ function PasteVariantSearch(props: PasteVariantSearchProps) {
               <div className="flex padding-bottom-1x">
                 <b>Examples:</b>
                 <Spaces count={2} />
-                <button onClick={populateVCF} className="ref-link">VCF</button>
+                <button onClick={populateVCF} className="ref-link" id="vcfExampleButton">VCF</button>
                 <Spaces count={2} />
-                <button onClick={populateHGVS} className="ref-link">HGVS</button>
+                <button onClick={populateHGVS} className="ref-link" id="hgvsExampleButton">HGVS</button>
               </div>
 
               <textarea
@@ -76,6 +76,7 @@ function PasteVariantSearch(props: PasteVariantSearchProps) {
           type="submit"
           onClick={props.isLoading ? () => { } : handleSubmit}
           className="button-primary"
+          id="searchButton"
         >
           {props.isLoading ? "Loading..." : "Search"}
         </Button>
