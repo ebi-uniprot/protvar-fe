@@ -32,3 +32,13 @@ JavaScript packages -- this may take a few minutes to finish.
 # Usage
 
 Run `yarn start` and go to [http://localhost:3000](http://localhost:3000) if it didn't open automatically.
+
+# Test
+For end to end testing this project is using [playwright](https://playwright.dev/)
+
+## Playwright
+1. `yarn create playwright test` (for very 1st time)
+2. `yarn test:e2e` will run test with out browser get opened
+3. `yarn test:e2e --headed` will open browser
+4. `yarn test:e2e --project "Desktop Chrome"` will run tests for only single project
+5. `yarn test:e2e --project "Desktop Chrome" --headed` can combine different options
