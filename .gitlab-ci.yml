@@ -11,7 +11,7 @@ stages:
   - deploy
 
 .js:
-  image: node:15
+  image: node:16.13.0
   before_script:
     - node --version
     - npm --version
