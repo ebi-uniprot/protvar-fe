@@ -108,9 +108,10 @@ function FunctionalDetail(props: FunctionalDetailProps) {
   const { referenceFunctionUri } = props;
   const [apiData, setApiData] = useState<FunctionalResponse>()
   useEffect(() => {
-    axios.get<FunctionalResponse>(API_URL + referenceFunctionUri)
-      .then((response) => {
-        setApiData(response.data)
+    // axios.get<FunctionalResponse>(API_URL + referenceFunctionUri)
+    axios.get<FunctionalResponse>("https://www.ebi.ac.uk/proteins/api/proteins/?accession=Q4ZIN3&format=json")
+      .then((response: any) => {
+        setApiData(response.data[0])
       });
   }, [referenceFunctionUri]);
   if (!apiData)

@@ -38,6 +38,7 @@ function RestApiComponent() {
         <Button
           onClick={() => window.open(API_URL + '/docs', '_blank')}
           className="button-primary"
+          id="restApiButton"
         >
           PepVEP REST API
         </Button>
