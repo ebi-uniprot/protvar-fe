@@ -16,7 +16,7 @@ test('Can goto contact page', async ({ page }) => {
 
 test('Can goto about page', async ({ page }) => {
   await page.click('id=aboutProject');
-  await expect(page.locator('"What is PepVEP"')).toBeVisible();
+  await expect(page.locator('"What is ProtVar"')).toBeVisible();
 });
 
 test('Can search by VCF', async ({ page }) => {

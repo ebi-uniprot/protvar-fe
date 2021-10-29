@@ -9,9 +9,9 @@
 
 You can either download or clone the repository via *Github*. If you have `git` CLI already installed, you just need to navigate to your projects' directory and simply execute the following command in your command-line:
 
-`git clone https://github.com/ebi-uniprot/pepvep-fe.git`
+`git clone https://github.com/ebi-uniprot/protvar-fe.git`
 
-This should create a directory named `pepvep-fe` in the current directory -- you can check the current working directory by typing `pwd` in the command-line and pressing return/enter key. 
+This should create a directory named `protvar-fe` in the current directory -- you can check the current working directory by typing `pwd` in the command-line and pressing return/enter key. 
 
 ### Installing JavaScript Dependencies
 
@@ -20,7 +20,7 @@ Now that you have the source code on your local machine, you would need to follo
 > You would need to have a recent version of *Node.JS*, as well as 
 > a package manager e.g. *Yarn* or *NPM*, installed before you can continue.
 
-To install JavaScript dependencies, first make sure you are in the root directory of your `pepvep-fe` project -- this directory should contain a file named `package.json`, then type `yarn install` in the command-line and press return. This should download and install the required
+To install JavaScript dependencies, first make sure you are in the root directory of your `protvar-fe` project -- this directory should contain a file named `package.json`, then type `yarn install` in the command-line and press return. This should download and install the required
 JavaScript packages -- this may take a few minutes to finish. 
 
 > If the installation was unsuccessful due to any permission/access

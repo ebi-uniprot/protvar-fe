@@ -88,7 +88,7 @@ dev-deploy:
     refs:
       - dev
   script:
-    - ./deploy.sh HX pepvep-fe pepvep-dev deployment # data-center app_name namespace type-of-deployment
+    - ./deploy.sh HX protvar-fe protvar-dev deployment # data-center app_name namespace type-of-deployment
 
 prod-deploy:
   extends: .kubectl
@@ -96,5 +96,5 @@ prod-deploy:
     refs:
       - master
   script:
-    - ./deploy.sh HX pepvep-fe pepvep deployment # fallback app_name namespace type-of-deployment
-    - ./deploy.sh HH pepvep-fe pepvep deployment # prod app_name namespace type-of-deployment
+    - ./deploy.sh HX protvar-fe protvar deployment # fallback app_name namespace type-of-deployment
+    - ./deploy.sh HH protvar-fe protvar deployment # prod app_name namespace type-of-deployment

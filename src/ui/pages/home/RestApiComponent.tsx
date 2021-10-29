@@ -7,7 +7,7 @@ function RestApiComponent() {
       <section className="card__actions">
         <span className="card-header">
           <p>
-            <b>Access PepVEP REST API</b>
+            <b>Access ProtVar REST API</b>
           </p>
         </span>
       </section>
@@ -16,7 +16,7 @@ function RestApiComponent() {
           <section className="uniprot-card">
             <section className="uniprot-card__left">
               <b>
-                REST API is a programmatic way to obtain information from PepVEP
+                REST API is a programmatic way to obtain information from ProtVar
               </b>
               <br />
               You can query:
@@ -40,7 +40,7 @@ function RestApiComponent() {
           className="button-primary"
           id="restApiButton"
         >
-          PepVEP REST API
+          ProtVar REST API
         </Button>
       </div>
     </div>

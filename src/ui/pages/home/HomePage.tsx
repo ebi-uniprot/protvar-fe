@@ -13,14 +13,14 @@ const HomePageContent = (props: HomePageProps) => {
   return <>
     <div>
       <p>
-        PepVEP is an online service to interpret the effects of missense variants using protein function
+        ProtVar is an online service to interpret the effects of missense variants using protein function
         and structure. It utilises functional information from the Ensembl Variant Effect Predictor
         (VEP), the UniProt functional residue annotation (Protein function), and the PDBe structural
         residue annotation.
         <br />
       </p>
       <p className="info">
-        Submit variants (VCF or HGVS format) by pasting them in the search box below, uploading a file or by using the PepVEP API
+        Submit variants (VCF or HGVS format) by pasting them in the search box below, uploading a file or by using the ProtVar API
       </p>
     </div>
     <div className="wrapper">
@@ -31,10 +31,10 @@ const HomePageContent = (props: HomePageProps) => {
     <div>
       <br />
       <p className="info">
-        More help and information is available in the <Link to={ABOUT} title="About PepVEP's" className="ref-link">about</Link> section.
+        More help and information is available in the <Link to={ABOUT} title="About ProtVar's" className="ref-link">about</Link> section.
         <br />
         <br />
-        We strive to make PepVEP clear and useful to our users. {' '}
+        We strive to make ProtVar clear and useful to our users. {' '}
         <Link to={CONTACT} title="Contact us" className="ref-link">Contact us</Link> with questions or suggestions here.
       </p>
     </div>

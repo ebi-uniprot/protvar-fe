@@ -3,12 +3,12 @@ import DefaultPageLayout from "../layout/DefaultPageLayout";
 function AboutPageContent() {
   return <div className="container">
     <span>
-      <b>What is PepVEP</b>
+      <b>What is ProtVar</b>
       <br />
     </span>
     <div className="text">
       <p>
-        PepVEP is an online service to interpret the effects of variants on protein function and
+        ProtVar is an online service to interpret the effects of variants on protein function and
         structure. It utilises functional information from the Ensembl Variant Effect Predictor
         (VEP), the UniProt functional residue annotation (Protein function), and the PDBe structural
         residue annotation.

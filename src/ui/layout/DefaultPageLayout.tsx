@@ -74,21 +74,21 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                       <Link
                         className="local-title"
                         to={HOME}
-                        title="Back to PepVEP's homepage"
+                        title="Back to ProtVar's homepage"
                       >
-                        <i className="fa fa-fw fa-home" /> PepVEP
+                        <i className="fa fa-fw fa-home" /> ProtVar
                       </Link>
                       <Link
                         className="local-sub-title"
                         to={HOME}
-                        title="Back to PepVEP's homepage"
+                        title="Back to ProtVar's homepage"
                       >
                         Predicting the effect of varying amino acids in proteins
                       </Link>
                     </td>
 
                     <td className="topnav-right local-sub-title">
-                      <Link to={ABOUT} title="About PepVEP's" id="aboutProject"> ABOUT </Link>
+                      <Link to={ABOUT} title="About ProtVar's" id="aboutProject"> ABOUT </Link>
                     </td>
                     <td className="topnav-right local-sub-title">
                       <Link to={CONTACT} title="Contact us"> CONTACT </Link>

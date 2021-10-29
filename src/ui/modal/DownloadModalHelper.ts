@@ -31,7 +31,7 @@ function downloadAndSaveToFile(inputArr: Array<string>, functional: boolean, pop
   axios.post<string[], AxiosResponse>(APIUrl, inputArr, { headers: headers })
     .then((response) => {
       const blob = new Blob([response.data], {type: 'application/csv'});
-      FileSaver.saveAs(blob, 'pepvep-results.csv');
+      FileSaver.saveAs(blob, 'ProtVar-results.csv');
       Notify.sucs("Your file has been downloaded")
     })
     .catch(() => Notify.err("File download failed. Please try again"));

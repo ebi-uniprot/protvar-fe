@@ -12,4 +12,4 @@ export const RHEA_URL = "https://www.rhea-db.org/rhea/";
 export const INTACT_URL = "https://www.ebi.ac.uk/intact/search?query="
 export const UNIPROT_ACCESSION_URL = "https://www.uniprot.org/uniprot/"
 export const CADD_INFO_URL = "https://cadd.gs.washington.edu/info"
-export const VCF_FORMAT_INFO_URL = "https://github.com/ebi-uniprot/pepvep-be/blob/main/docs/vcf-format.md"
+export const VCF_FORMAT_INFO_URL = "https://github.com/ebi-uniprot/protvar-be/blob/main/docs/vcf-format.md"
