@@ -109,8 +109,8 @@ function FunctionalDetail(props: FunctionalDetailProps) {
   const [apiData, setApiData] = useState<FunctionalResponse>()
   useEffect(() => {
     axios.get<FunctionalResponse>(API_URL + referenceFunctionUri)
-      .then((response: any) => {
-        setApiData(response.data[0])
+      .then((response) => {
+        setApiData(response.data)
       });
   }, [referenceFunctionUri]);
   if (!apiData)
