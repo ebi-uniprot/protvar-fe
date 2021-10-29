@@ -29,6 +29,10 @@ const config: PlaywrightTestConfig = {
     contextOptions: {
       ignoreHTTPSErrors: true,
     },
+    // Slows down Playwright operations by the specified amount of milliseconds
+    // launchOptions: {
+    //   slowMo: 2000,
+    // },
   },
 
   projects: [
