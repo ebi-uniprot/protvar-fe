@@ -23,7 +23,7 @@ spec:
     requests:
       storage: 5Gi
 ---
-apiVersion: networking.k8s.io/v1
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: protvar-fe
@@ -34,12 +34,9 @@ spec:
   - http:
       paths:
       - path: /ProtVar(/|$)(.*)
-        pathType: Prefix
         backend:
-          service:
-            name: protvar-fe
-            port:
-              number: 80
+          serviceName: protvar-fe
+          servicePort: 80
 ---
 apiVersion: apps/v1
 kind: Deployment
