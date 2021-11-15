@@ -23,21 +23,6 @@ spec:
     requests:
       storage: 5Gi
 ---
-apiVersion: networking.k8s.io/v1beta1
-kind: Ingress
-metadata:
-  name: protvar-fe
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
-spec:
-  rules:
-  - http:
-      paths:
-      - path: /ProtVar(/|$)(.*)
-        backend:
-          serviceName: protvar-fe
-          servicePort: 80
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
