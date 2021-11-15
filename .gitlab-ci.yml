@@ -24,6 +24,13 @@ test:
     - echo "skipping test for now";
 
 build_static_assets:
+  variables:
+    BE_API: "https://wwwdev.ebi.ac.uk/ProtVar/api"
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      variables:
+        BE_API: "https://www.ebi.ac.uk/ProtVar/api"
+    - when: on_success # Run the job in other cases
   only:
     refs:
       - master
@@ -31,6 +38,7 @@ build_static_assets:
   extends: .js
   stage: build_static_assets
   script:
+    - echo "REACT_APP_API_BASE_URL=${BE_API}" > .env.local
     - yarn build
   artifacts:
     paths:
