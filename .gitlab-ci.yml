@@ -2,11 +2,18 @@ variables:
   URL_DOCKER_IGNORE: "https://gitlab.ebi.ac.uk/api/v4/projects/${COMMON_PROJECT_ID}/repository/files/.dockerignore/raw?ref=master&private_token=${GITLAB_USER_API_TOKEN}"
   URL_DEPLOY_SH: "https://gitlab.ebi.ac.uk/api/v4/projects/${COMMON_PROJECT_ID}/repository/files/deploy.sh/raw?ref=master&private_token=${GITLAB_USER_API_TOKEN}"
   URL_WP_CONFIG_TEMPLATE_yml: "https://gitlab.ebi.ac.uk/api/v4/projects/${COMMON_PROJECT_ID}/repository/files/wp-config-template.yml/raw?ref=master&private_token=${GITLAB_USER_API_TOKEN}"
+  BE_API: "https://wwwdev.ebi.ac.uk/ProtVar/api"
 stages:
   - test
   - build_static_assets
   - build_docker_image
   - deploy
+
+workflow:
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      variables:
+        BE_API: "https://www.ebi.ac.uk/ProtVar/api"
 
 .js:
   image: node:16.13.0
@@ -24,13 +31,6 @@ test:
     - echo "skipping test for now";
 
 build_static_assets:
-  variables:
-    BE_API: "https://wwwdev.ebi.ac.uk/ProtVar/api"
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-      variables:
-        BE_API: "https://www.ebi.ac.uk/ProtVar/api"
-    - when: on_success # Run the job in other cases
   only:
     refs:
       - master
