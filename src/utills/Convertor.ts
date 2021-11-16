@@ -21,6 +21,7 @@ export interface MappingRecord {
   canonicalAccession: string | null
   referenceFunctionUri?: string
   populationObservationsUri?: string
+  proteinStructureUri?: string
   ensp?: Array<TranslatedSequence>
   strand?: boolean
   ensg?: string
@@ -80,6 +81,7 @@ export function convertApiMappingToTableRecords(mapping: GenomeProteinMapping) {
       record.canonicalAccession = isoform.canonicalAccession;
       record.referenceFunctionUri = isoform.referenceFunctionUri;
       record.populationObservationsUri = isoform.populationObservationsUri;
+      record.proteinStructureUri = isoform.proteinStructureUri;
       record.ensp = [];
       record.strand = gene.reverseStrand;
       if (isoform.translatedSequences !== undefined && isoform.translatedSequences.length > 0) {

@@ -1,12 +1,12 @@
 import { StringVoidFun } from '../../../constants/CommonTypes';
 import { PDB_URL_INTERFACE_BY_ID, PDB_URL_INTERFACE_BY_PROTEIN } from '../../../constants/ExternalUrls';
-import { PdbResponseElement } from './StructuralDetail';
+import { ProteinStructureElement } from './StructuralDetail';
 import { ReactComponent as ExternalLinkIcon } from "../../../images/external-link.svg"
 
 interface PdbInfoTableProps {
   isoFormAccession: string,
   change3dDiagram: StringVoidFun,
-  pdbApiData: Array<PdbResponseElement>,
+  pdbApiData: Array<ProteinStructureElement>,
   selectedPdbId: string
 }
 
@@ -45,8 +45,8 @@ function getPdbInfoRows(props: PdbInfoTableProps) {
   return rows;
 }
 
-function combineChainsByPdbId(pdbApiData: Array<PdbResponseElement>) {
-  const chainsMap = new Map<string, { chains: Array<string>, pdbEntry: PdbResponseElement }>();
+function combineChainsByPdbId(pdbApiData: Array<ProteinStructureElement>) {
+  const chainsMap = new Map<string, { chains: Array<string>, pdbEntry: ProteinStructureElement }>();
 
   pdbApiData.forEach((pdbEntry) => {
     let pdbId = pdbEntry.pdb_id;
@@ -62,7 +62,7 @@ function combineChainsByPdbId(pdbApiData: Array<PdbResponseElement>) {
   return chainsMap;
 }
 
-function getPdbInfoRow(str: PdbResponseElement, tableRowClicked: StringVoidFun, clickedPdbId: string) {
+function getPdbInfoRow(str: ProteinStructureElement, tableRowClicked: StringVoidFun, clickedPdbId: string) {
   const rowClass = clickedPdbId === str.pdb_id ? 'clickable-row active' : 'clickable-row';
   return (
     <tr className={rowClass} onClick={(e) => tableRowClicked(str.pdb_id)} key={str.pdb_id}>
@@ -73,7 +73,7 @@ function getPdbInfoRow(str: PdbResponseElement, tableRowClicked: StringVoidFun, 
       </td>
       <td className="small">{str.chain_id}</td>
       <td className="small">
-        {str.start}-{str.end}
+        {str.start}
       </td>
       <td className="small">{str.resolution}</td>
       <td className="small">{str.experimental_method}</td>

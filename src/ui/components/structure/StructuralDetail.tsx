@@ -1,28 +1,20 @@
 import { useEffect, useState } from 'react';
-import { ALPHAFOLD_URL, PDB_URL } from '../../../constants/ExternalUrls';
+import { ALPHAFOLD_URL } from '../../../constants/ExternalUrls';
 import axios from 'axios';
 import ProtVista3D from './ProtVista3D';
 import PdbInfoTable from './PdbInfoTable';
 import AlphafoldInfoTable from './AlphafoldInfoTable';
 import LoaderRow from '../search/LoaderRow';
-
-interface PdbResponse {
-  [isoFormAccession: string]: Array<PdbResponseElement>;
+import { API_URL } from '../../../constants/const';
+interface ProteinStructureResponse extends Array<ProteinStructureElement>{
 }
 
-export interface PdbResponseElement {
-  end: number,
-  entity_id: number,
+export interface ProteinStructureElement {
   chain_id: string,
   pdb_id: string,
   start: number,
-  unp_end: number,
-  coverage: number,
-  unp_start: number,
   resolution: number,
   experimental_method: string,
-  tax_id: number,
-  preferred_assembly_id: number
 }
 
 type AlphafoldResponse = Array<AlphafoldResponseElement>
@@ -50,29 +42,29 @@ interface AlphafoldResponseElement {
 
 interface StructuralDetailProps {
   isoFormAccession: string,
-  aaPosition: number
+  aaPosition: number,
+  proteinStructureUri: string
 }
 
 function StructuralDetail(props: StructuralDetailProps) {
-  const { isoFormAccession, aaPosition } = props;
-  const [pdbData, setPdbData] = useState(new Array<PdbResponseElement>());
+  const { isoFormAccession, aaPosition, proteinStructureUri } = props;
+  const [pdbData, setPdbData] = useState(new Array<ProteinStructureElement>());
   const [alphaFoldId, setAlphaFoldId] = useState("");
   const [selected3DId, setSelected3DId] = useState("");
 
   useEffect(() => {
-    const url = PDB_URL + isoFormAccession;
+    const url = API_URL + proteinStructureUri;
     axios
-      .get<PdbResponse>(url)
+      .get<ProteinStructureResponse>(url)
       .then(response => {
-        const filteredData = response.data[isoFormAccession].filter(stand => aaPosition >= stand.unp_start && aaPosition <= stand.unp_end)
-        setPdbData(filteredData);
-        setSelected3DId(filteredData.length > 0 ? filteredData[0].pdb_id : "")
+        setPdbData(response.data);
+        setSelected3DId(response.data.length > 0 ? response.data[0].pdb_id : "")
       })
       .catch((err) => {
         setPdbData([]);
         console.log(err);
       });
-  }, [isoFormAccession, aaPosition]);
+  }, [proteinStructureUri]);
 
   useEffect(() => {
     const url = ALPHAFOLD_URL + isoFormAccession;
