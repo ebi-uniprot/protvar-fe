@@ -44,6 +44,12 @@ spec:
           image: dockerhub.ebi.ac.uk/uniprot/front-end/mirror-protvar-fe:latest # The image which contains Nginx and the built assets
           ports:
             - containerPort: 80 # We are using Nginx's default config which serves on port 80
+          livenessProbe:
+            httpGet:
+              path: /ProtVar/
+              port: 80
+            initialDelaySeconds: 4 # wait 4 seconds before performing the first liveness probe
+            periodSeconds: 5 # perform a liveness probe every 5 seconds
           volumeMounts:
             - name: protvar-fe-logs
               mountPath: /var/log/nginx
