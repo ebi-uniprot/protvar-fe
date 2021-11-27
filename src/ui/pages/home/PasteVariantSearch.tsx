@@ -34,7 +34,7 @@ function PasteVariantSearch(props: PasteVariantSearchProps) {
       <section className="card__actions">
         <span className="card-header">
           <p>
-            <b>Paste variants (GRCh38)</b>
+            <b>Paste Variants (GRCh38)</b>
           </p>
         </span>
       </section>
@@ -63,7 +63,7 @@ function PasteVariantSearch(props: PasteVariantSearchProps) {
                 id="main-textarea-search-field"
                 className="main-textarea-search-field"
                 value={searchTerm}
-                placeholder="Paste variants in HGVS or VCF format"
+                placeholder="Paste variants in VCF or HGVS format"
                 onChange={e => setSearchTerm(e.target.value)}
               />
             </section>

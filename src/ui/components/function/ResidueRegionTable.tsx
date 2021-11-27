@@ -34,8 +34,8 @@ function ResidueRegionTable(props: ResidueRegionTableProps) {
     return <table>
       <tbody>
         <tr>
-          <th>Residue</th>
-          <th>Region</th>
+          <th>Variant Residue Position</th>
+          <th>Region Containing Variant Position</th>
         </tr>
         <tr>
           <td>{getResidues(residues, props.refAA, props.variantAA, expendedRowKey, toggleRow)}</td>

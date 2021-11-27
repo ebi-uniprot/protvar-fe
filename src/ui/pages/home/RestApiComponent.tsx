@@ -21,10 +21,8 @@ function RestApiComponent() {
               <br />
               You can query:
               <ul>
-                <li>
-                  Whole genes/proteins/structures specific residue ranges in proteins
-                  or protein structures or{' '}
-                </li>
+                <li>Whole genes, proteins or structures</li>
+                <li>Specific residues or ranges in genes, proteins or protein structures</li>
                 <li>
                   Genomic ranges in genes a list of variants using several different
                   formats

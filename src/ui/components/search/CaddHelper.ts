@@ -17,13 +17,13 @@ export function getTitle(cadd: string | undefined) {
   if (CADD < 15) {
     return 'Likely benign (15 is the median value for all possible canonical splice site changes and non-synonymous variants in CADD v1.0)';;
   } else if (CADD >= 15 && CADD < 20) {
-    return 'Potentially deleterious - <5% most deleterious substitutions that you can do to the human genome';
+    return 'Potentially deleterious - <5% most deleterious substitutions in the human genome according to CADD score';
   } else if (CADD >= 20 && CADD < 25) {
-    return 'Quite likely deleterious - <1% most deleterious substitutions that you can do to the human genome';
+    return 'Quite likely deleterious - <1% most deleterious substitutions in the human genome according to CADD score';
   } else if (CADD >= 25 && CADD < 30) {
-    return 'Probably deleterious <0.5% most deleterious substitutions that you can do to the human genome30 highly likely deleterious';
+    return 'Probably deleterious <0.5% most deleterious substitutions in the human genome according to CADD score';
   } else if (CADD >= 30) {
-    return 'Highly likely deleterious - <0.1% most deleterious substitutions that you can do to the human genome';
+    return 'Highly likely deleterious - <0.1% most deleterious substitutions in the human genome according to CADD score';
   }
 }
 

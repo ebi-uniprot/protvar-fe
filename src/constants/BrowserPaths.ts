@@ -1,5 +1,5 @@
 export const ABOUT = "/about"
 export const CONTACT = "/contact"
-export const SEARCH = "/search"
+export const SEARCH = "/results"
 export const HOME = "/"
 export const API_ERROR = "/error"

@@ -32,7 +32,11 @@ const PageSpecificStructure = (props: PageSpecificStructureProps) => {
       <div className="significances-groups">
         <div className="column">
           <h5><img src={StructureIcon} className="click-icon" alt="structure icon" title="3D structure" /> Structures</h5>
+          Image zoomed to show variant location in green<br/>
+          Reference amino acid shown
           {props.component}
+          Click variant to see surrounding residues<br/>
+          Click white space to zoom out to whole structure
         </div>
       </div>
     </td>

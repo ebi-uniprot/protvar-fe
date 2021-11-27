@@ -14,8 +14,7 @@ const HomePageContent = (props: HomePageProps) => {
     <div>
       <p>
         ProtVar is an online service to interpret the effects of missense variants using protein function
-        and structure. It utilises functional information from the Ensembl Variant Effect Predictor
-        (VEP), the UniProt functional residue annotation (Protein function), and the PDBe structural
+        and structure. It utilises UniProt functional residue annotation (Protein function) and the PDBe structural
         residue annotation.
         <br />
       </p>
@@ -35,7 +34,7 @@ const HomePageContent = (props: HomePageProps) => {
         <br />
         <br />
         We strive to make ProtVar clear and useful to our users. {' '}
-        <Link to={CONTACT} title="Contact us" className="ref-link">Contact us</Link> with questions or suggestions here.
+        Please <Link to={CONTACT} title="Contact us" className="ref-link">Contact us</Link> with questions or suggestion you may have.
       </p>
     </div>
   </>

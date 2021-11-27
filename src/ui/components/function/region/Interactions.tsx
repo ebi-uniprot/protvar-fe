@@ -49,7 +49,7 @@ function getInteraction(gene: string, interactor: string) {
 	return (
 		<>
 			<label>
-				<b>Gene : </b>
+				<b>Protein(gene) : </b>
 				{gene}
 			</label>
 			<label>

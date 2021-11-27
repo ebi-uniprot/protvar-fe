@@ -15,7 +15,7 @@ export interface ProteinColocatedVariant {
   cytogeneticBand: string,
   wildType: string,
   alternativeSequence: string,
-  genomicLocation: string,
+  genomicLocation: string | null,
   populationFrequencies: Array<PopulationFrequency>,
   predictions: Array<Prediction>,
   xrefs: Array<Xref>,

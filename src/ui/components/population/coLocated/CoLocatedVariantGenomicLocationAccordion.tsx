@@ -11,6 +11,13 @@ interface CoLocatedVariantGenomicLocationAccordionProps {
   expendedGenomicKey: string
   toggleGenomic: StringVoidFun
 }
+
+function genomicLocation(props: CoLocatedVariantGenomicLocationAccordionProps) {
+  if (props.coLocatedVariant.genomicLocation)
+    return props.coLocatedVariant.genomicLocation;
+  return `No genomic location (${props.coLocatedVariant.xrefs[0].id})`
+}
+
 function CoLocatedVariantGenomicLocationAccordion(props: CoLocatedVariantGenomicLocationAccordionProps) {
   return (
     <ul>
@@ -18,13 +25,13 @@ function CoLocatedVariantGenomicLocationAccordion(props: CoLocatedVariantGenomic
         <button
           type="button"
           className="collapsible"
-          onClick={(e) => props.toggleGenomic(props.coLocatedVariant.genomicLocation)}
+          onClick={(e) => props.toggleGenomic(genomicLocation(props))}
         >
-          <b>{props.coLocatedVariant.genomicLocation}</b>
+          <b>{genomicLocation(props)}</b>
           <ChevronDownIcon className="chevronicon" />
         </button>
       </li>
-      {props.expendedGenomicKey === props.coLocatedVariant.genomicLocation &&
+      {props.expendedGenomicKey === genomicLocation(props) &&
         <CoLocatedVariantGenomicLocationAccordionDetail {...props} />
       }
     </ul>

@@ -25,7 +25,7 @@ function FileUpload(props: FileUploadProps) {
       <section className="card__actions">
         <span className="card-header">
           <p>
-            <b>Upload file</b>
+            <b>File Upload</b>
           </p>
         </span>
       </section>
@@ -38,7 +38,7 @@ function FileUpload(props: FileUploadProps) {
                 #CHROM POS ID REF ALT<br />
                 Missing values can be specified with a dot (‘.’){' '}
                 <a target="_blank" rel="noreferrer" href={VCF_FORMAT_INFO_URL} className="ref-link">more info</a><br /><br />
-                <b>ProtVar also supports HGVS in below format</b><br />
+                <b>ProtVar also supports HGVS in the following format:</b><br />
                 {"NC_000010.11:g.121479868C>G"}<br />
               </p>
             </section>

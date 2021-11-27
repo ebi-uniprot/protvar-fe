@@ -23,8 +23,8 @@ function GeneAndTranslatedSequenceTable(props: GeneAndTranslatedSequenceTablePro
   return <table>
     <tbody>
       <tr>
-        <th>Gene</th>
-        <th>Translated Sequences</th>
+        <th>Ensembl Gene ID</th>
+        <th>Translated Sequence and Transcript IDs for the Canonical Isoform</th>
       </tr>
       <tr>
         <td>

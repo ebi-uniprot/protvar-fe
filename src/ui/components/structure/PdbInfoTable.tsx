@@ -14,17 +14,17 @@ function PdbInfoTable(props: PdbInfoTableProps) {
 
   return <>
     <div className="tableFixHead">
-      <a href={PDB_URL_INTERFACE_BY_PROTEIN + props.isoFormAccession}>More information <ExternalLinkIcon width={12.5}/></a>
+      <a href={PDB_URL_INTERFACE_BY_PROTEIN + props.isoFormAccession}>Further information from PDBeKB <ExternalLinkIcon width={12.5}/></a>
       <table>
         <thead>
           <tr>
             <th colSpan={6}>Experimental Structure</th>
           </tr>
           <tr>
-            <th>pdb id</th>
-            <th>chain</th>
-            <th>PDB Pos</th>
-            <th>resolution</th>
+            <th>PDB ID</th>
+            <th>Chain</th>
+            <th>PDB pos.</th>
+            <th>Resolution (Å)</th>
             <th>Method</th>
           </tr>
         </thead>

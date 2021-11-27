@@ -31,7 +31,7 @@ function PopulationDataRow(props: PopulationDataRowProps) {
             <tbody>
               <tr>
                 <th>Submitted Variant Details</th>
-                <th>Co-located Variants</th>
+                <th>Co-located Variants at Residue Level</th>
               </tr>
               <tr>
                 <td><SubmittedVariantDetails variants={variant}/></td>

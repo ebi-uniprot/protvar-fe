@@ -19,7 +19,7 @@ function CoLocatedVariantAccordion(props: CoLocatedVariantAccordionProps) {
 
   const coLocatedVariantsMap = new Map();
   coLocatedVariants.forEach((variant) => {
-    let change = variant.wildType + '>' + variant.alternativeSequence;
+    let change = variant.wildType + ' > ' + variant.alternativeSequence;
     var coLocatedVariants = coLocatedVariantsMap.get(change);
     if (!coLocatedVariants)
       coLocatedVariants = [];
@@ -38,7 +38,7 @@ function CoLocatedVariantAccordion(props: CoLocatedVariantAccordionProps) {
       <li key={uuidv1()}>
         <button type="button" className="collapsible" onClick={(e) => toggleCoLocated(change)}>
           <b>
-            {change}({genomicLocations.length})
+            {change} ({genomicLocations.length})
           </b>
           <ChevronDownIcon className="chevronicon" />
         </button>
