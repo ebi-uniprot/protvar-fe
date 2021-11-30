@@ -356,6 +356,23 @@ div#local-title {
     display: flex;
 }
 
+.flex-column{
+	@extend .flex;
+	flex-direction: column;
+}
+
+.flex1 {
+	flex:1;
+}
+
+.flex2 {
+	flex:2;
+}
+
+.flex6 {
+	flex:6;
+}
+
 .justify-content-space-between {
 	justify-content: space-between;
 }
