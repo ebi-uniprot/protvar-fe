@@ -15,15 +15,15 @@ export function getColor(CADD: number) {
 export function getTitle(cadd: string | undefined) {
   const CADD = parseFloat(cadd!)
   if (CADD < 15) {
-    return 'Likely benign (15 is the median value for all possible canonical splice site changes and non-synonymous variants in CADD v1.0)';;
+    return '< 15.0 - Likely benign (15 is the median value for all possible canonical splice site changes and non-synonymous variants in CADD v1.0)';;
   } else if (CADD >= 15 && CADD < 20) {
-    return 'Potentially deleterious - <5% most deleterious substitutions in the human genome according to CADD score';
+    return '15.0-19.9 - Potentially deleterious - <5% most deleterious substitutions in the human genome according to CADD score';
   } else if (CADD >= 20 && CADD < 25) {
-    return 'Quite likely deleterious - <1% most deleterious substitutions in the human genome according to CADD score';
+    return '20.0-24.9 - Quite likely deleterious - <1% most deleterious substitutions in the human genome according to CADD score';
   } else if (CADD >= 25 && CADD < 30) {
-    return 'Probably deleterious <0.5% most deleterious substitutions in the human genome according to CADD score';
+    return '25.0-29.9 - Probably deleterious <0.5% most deleterious substitutions in the human genome according to CADD score';
   } else if (CADD >= 30) {
-    return 'Highly likely deleterious - <0.1% most deleterious substitutions in the human genome according to CADD score';
+    return '> 29.9 - Highly likely deleterious - <0.1% most deleterious substitutions in the human genome according to CADD score';
   }
 }
 
