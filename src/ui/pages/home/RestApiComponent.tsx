@@ -23,10 +23,7 @@ function RestApiComponent() {
               <ul>
                 <li>Whole genes, proteins or structures</li>
                 <li>Specific residues or ranges in genes, proteins or protein structures</li>
-                <li>
-                  Genomic ranges in genes a list of variants using several different
-                  formats
-                </li>
+                <li>Genomic positions or ranges using several different formats</li>
               </ul>
             </section>
           </section>
