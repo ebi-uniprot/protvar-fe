@@ -19,6 +19,28 @@ function PasteVariantSearch(props: PasteVariantSearchProps) {
     setSearchTerm('NC_000019.10:g.1010539G>C\nNC_000014.9:g.89993420A>G\nNC_000010.11:g.87933147C>T')
   };
 
+  const populateProtAC = () => {
+    setSearchTerm('Q4ZIN3 S558R\nQ9NUW8 H493R\nP60484 R130T\nP60484 N130G')
+  };
+
+  const protACTitle = "Supported format examples:\n" +
+      " ACC X 999 Y\n" +
+      " ACC/X/999/Y\n" +
+      " ACC X/999/Y\n" +
+      " ACC 999 X Y\n" +
+      " ACC 999    X     Y\n" +
+      " ACC p.XXX999YYY\n" +
+      " ACC X999Y\n" +
+      " ACC 999 X/Y\n" +
+      " ACC 999 XXX/YYY\n" +
+      " ACC XXX999YYY\n" +
+      " ACC/999/YYY\n" +
+      " where\n" +
+      " ACC=protein accession,\n" +
+      " X=one letter ref AA, XXX=three letters ref AA (case-insensitive),\n" +
+      " Y=one letter variant AA, YYY=three letters variant AA (case-insensitive),\n" +
+      " 999=protein position."
+
   const handleSubmit = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -57,6 +79,8 @@ function PasteVariantSearch(props: PasteVariantSearchProps) {
                 <button onClick={populateVCF} className="ref-link" id="vcfExampleButton">VCF</button>
                 <Spaces count={2} />
                 <button onClick={populateHGVS} className="ref-link" id="hgvsExampleButton">HGVS</button>
+                <Spaces count={2} />
+                <button onClick={populateProtAC} className="ref-link" id="protACExampleButton" title={protACTitle}>ProtAC</button>
               </div>
 
               <textarea
