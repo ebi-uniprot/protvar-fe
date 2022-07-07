@@ -26,6 +26,7 @@ export interface MappingRecord {
   strand?: boolean
   ensg?: string
   note?: string
+  input: string
 }
 
 export interface TranslatedSequence {
@@ -41,6 +42,7 @@ function getBasicMapping(mapping: GenomeProteinMapping) {
     refAllele: mapping.userAllele,
     altAllele: mapping.variantAllele,
     canonicalAccession: null,
+    input: mapping.input
   };
 }
 function getEmptyMapping(mapping: GenomeProteinMapping) {
