@@ -17,6 +17,19 @@ import DownloadModal from "../../modal/DownloadModal";
 /* TODO: possible future acceptable short URLs
 // /ProtVar/g/<chromo>/<pos>/[<ref>/]<alt>
 // /ProtVar/p/<acc>/<pos>/[<ref>/]<alt>
+
+Examples:
+genomic query
+/ProtVar/g/?chromosome=19&position=1010539&ref=G&alt=C
+/ProtVar/g/?chromosome=14&position=89993420&ref=A&alt=G
+/ProtVar/g/?chromosome=10&position=87933147&ref=C&alt=T
+
+protein query
+/ProtVar/p/?accession=Q4ZIN3&position=558&ref=S&alt=R
+/ProtVar/p/?accession=Q9NUW8&position=493&ref=H&alt=R
+/ProtVar/p/?accession=P60484&position=130&ref=R&alt=T
+/ProtVar/p/?accession=P60484&position=130&ref=N&alt=G
+
 const genomicSearchRegExp = new RegExp("^/g/[a-zA-Z0-9]+/[0-9]+/[a-zA-Z]/[a-zA-Z]$");
 const proteinSearchRegExp = new RegExp("^/p/[a-zA-Z][a-zA-Z0-9]+/[0-9]+/[a-zA-Z]{3}/[a-zA-Z]{3}$");
 
@@ -52,7 +65,7 @@ const InvalidQueryContent = () => (
   </>
 );
 
-function userInputFromQuery(location: any) {
+function getQueryFromUrl(location: any) {
   const params = new URLSearchParams(location.search);
   if (
     location.pathname.startsWith("/g") ||
@@ -88,7 +101,7 @@ const QueryPageContent = () => {
   const [invalidInputs, setInvalidInputs] = useState<Array<ParsedInput>>([]);
 
   useEffect(() => {
-    const query = userInputFromQuery(location);
+    const query = getQueryFromUrl(location);
     if (query) {
       setUserInput(query);
       axios
@@ -105,7 +118,8 @@ const QueryPageContent = () => {
           );
           setSearchResults(records);
           setInvalidInputs(response.data.invalidInputs);
-          console.log("records len", records.length);
+          if (response.data.invalidInputs.length > 0)
+            Notify.err("Some input rows are not valid");
         })
         .catch((err) => {
           console.log(err);
@@ -115,34 +129,28 @@ const QueryPageContent = () => {
     }
   }, [location]);
 
-  if (userInput) {
-    if (invalidInputs.length > 0) Notify.err("Some input rows are not valid");
+  const queryOutput = userInput ? (
+    <>
+      <div className="search-results">
+        <div className="flex justify-content-space-between float-right">
+          <DownloadModal
+            pastedInputs={[userInput]}
+            file={null}
+            sendEmail={false}
+          />
+          <ResultTableButtonsLegend />
+        </div>
+        <ResultTable invalidInputs={invalidInputs} mappings={searchResults} />
+        <CaddLegendColors />
+      </div>
+    </>
+  ) : (
+    <InvalidQueryContent />
+  );
 
-    if (!searchResults || searchResults.length < 1) return <>Nothing!</>;
-    else {
-      return (
-        <>
-          <div className="search-results">
-            <div className="flex justify-content-space-between float-right">
-              <DownloadModal
-                pastedInputs={[userInput]}
-                file={null}
-                sendEmail={false}
-              />
-              <ResultTableButtonsLegend />
-            </div>
-            <ResultTable
-              invalidInputs={invalidInputs}
-              mappings={searchResults}
-            />
-            <CaddLegendColors />
-          </div>
-        </>
-      );
-    }
-  } else {
-    return <InvalidQueryContent />;
-  }
+  //if (!searchResults || searchResults.length < 1) return <>Nothing!</>;
+
+  return <>{queryOutput}</>;
 };
 
 function QueryPage() {
