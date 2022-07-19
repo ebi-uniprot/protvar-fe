@@ -36,12 +36,16 @@ const proteinExamples = [
 
 const gExamples = genomicExamples.map((ex, idx) => (
   <li key={"gEx" + idx}>
-    <a href={ex}>{ex}</a>
+    <pre>
+      <a href={ex}>{ex}</a>
+    </pre>
   </li>
 ));
 const pExamples = proteinExamples.map((ex, idx) => (
   <li key={"pEx" + idx}>
-    <a href={ex}>{ex}</a>
+    <pre>
+      <a href={ex}>{ex}</a>
+    </pre>
   </li>
 ));
 
