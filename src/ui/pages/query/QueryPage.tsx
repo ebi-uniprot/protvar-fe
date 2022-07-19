@@ -14,80 +14,115 @@ import {
 import Notify from "../../elements/Notify";
 import DownloadModal from "../../modal/DownloadModal";
 
-/* TODO: possible future acceptable short URLs
-// /ProtVar/g/<chromo>/<pos>/[<ref>/]<alt>
-// /ProtVar/p/<acc>/<pos>/[<ref>/]<alt>
+// basic tests on query params
+const chromosomeRegExp = new RegExp("[a-zA-Z0-9]+");
+const positionRegExp = new RegExp("[0-9]+");
+const alleleRegExp = new RegExp("[a-zA-Z]");
+const accessionRegExp = new RegExp("[a-zA-Z][a-zA-Z0-9]+");
+const oneletterAARegExp = new RegExp("[a-zA-Z]");
+//const threeletterAARegExp = new RegExp("[a-zA-Z]{3}");
 
-Examples:
-genomic query
-/ProtVar/g/?chromosome=19&position=1010539&ref=G&alt=C
-/ProtVar/g/?chromosome=14&position=89993420&ref=A&alt=G
-/ProtVar/g/?chromosome=10&position=87933147&ref=C&alt=T
+const genomicExamples = [
+  "/ProtVar/q?chromosome=19&genomic_position=1010539&reference_allele=G&alternative_allele=C",
+  "/ProtVar/q?chromosome=14&genomic_position=89993420&reference_allele=A&alternative_allele=G",
+  "/ProtVar/q?chromosome=10&genomic_position=87933147&reference_allele=C&alternative_allele=T",
+];
+const proteinExamples = [
+  "/ProtVar/q?accession=Q4ZIN3&protein_position=558&reference_AA=S&variant_AA=R",
+  "/ProtVar/q?accession=Q9NUW8&protein_position=493&reference_AA=H&variant_AA=R",
+  "/ProtVar/q?accession=P60484&protein_position=130&reference_AA=R&variant_AA=T",
+  "/ProtVar/q?accession=P60484&protein_position=130&reference_AA=N&variant_AA=G",
+];
 
-protein query
-/ProtVar/p/?accession=Q4ZIN3&position=558&ref=S&alt=R
-/ProtVar/p/?accession=Q9NUW8&position=493&ref=H&alt=R
-/ProtVar/p/?accession=P60484&position=130&ref=R&alt=T
-/ProtVar/p/?accession=P60484&position=130&ref=N&alt=G
-
-const genomicSearchRegExp = new RegExp("^/g/[a-zA-Z0-9]+/[0-9]+/[a-zA-Z]/[a-zA-Z]$");
-const proteinSearchRegExp = new RegExp("^/p/[a-zA-Z][a-zA-Z0-9]+/[0-9]+/[a-zA-Z]{3}/[a-zA-Z]{3}$");
-
-function validGenomicQuery(q: string) {
-    return genomicSearchRegExp.test(q);
-}
-
-function validProteinQuery(q: string) {
-    return proteinSearchRegExp.test(q);
-}
-*/
+const gExamples = genomicExamples.map((ex, idx) => (
+  <li key={"gEx" + idx}>
+    <a href={ex}>{ex}</a>
+  </li>
+));
+const pExamples = proteinExamples.map((ex, idx) => (
+  <li key={"pEx" + idx}>
+    <a href={ex}>{ex}</a>
+  </li>
+));
 
 const InvalidQueryContent = () => (
   <>
-    <h3>Invalid query request...</h3>
+    <h3>Invalid Query</h3>
     <p>
       The URL request format is invalid. Examples of valid requests to access
       variant annotations using either genomic coordinates or protein accession
       and position:
     </p>
-    <ul>
-      <li>
-        <code>
-          /ProtVar/g/?chromosome=1&amp;position=999&amp;ref=X&amp;alt=Y
-        </code>
-      </li>
-      <li>
-        <code>
-          /ProtVar/p/?accession=ACC&amp;position=999&amp;ref=XXX&amp;alt=YYY
-        </code>
-      </li>
-    </ul>
+    Using genomic coordinates
+    <ul>{gExamples}</ul>
+    Using protein accession and position
+    <ul>{pExamples}</ul>
   </>
 );
 
+const requiredGenomicParams = [
+  "chromosome",
+  "genomic_position",
+  "reference_allele",
+  "alternative_allele",
+];
+
+const requiredProteinParams = [
+  "accession",
+  "protein_position",
+  "reference_AA",
+  "variant_AA",
+];
+
 function getQueryFromUrl(location: any) {
   const params = new URLSearchParams(location.search);
-  if (
-    location.pathname.startsWith("/g") ||
-    location.pathname.startsWith("/p")
-  ) {
-    let pos, ref, alt;
-    pos = params.get("position");
-    ref = params.get("ref");
-    alt = params.get("alt");
 
-    if (location.pathname.startsWith("/g")) {
-      let chromo = params.get("chromosome");
-      if (chromo && pos && ref && alt) {
-        return `${chromo} ${pos} ${ref} ${alt}`;
-      }
+  const isGenomicQuery = requiredGenomicParams.reduce(function (acc, p) {
+    return acc && params.has(p);
+  }, true);
+
+  if (isGenomicQuery) {
+    let chromo, pos, ref, alt;
+    chromo = params.get("chromosome");
+    pos = params.get("genomic_position");
+    ref = params.get("reference_allele");
+    alt = params.get("alternative_allele");
+
+    if (
+      chromo &&
+      chromosomeRegExp.test(chromo) &&
+      pos &&
+      positionRegExp.test(pos) &&
+      ref &&
+      alleleRegExp.test(ref) &&
+      alt &&
+      alleleRegExp.test(alt)
+    ) {
+      return `${chromo} ${pos} ${ref} ${alt}`;
     }
+  }
 
-    if (location.pathname.startsWith("/p")) {
-      let acc = params.get("accession");
-      if (acc && pos && ref && alt) {
-        return `${acc} ${pos} ${ref} ${alt}`;
-      }
+  const isProteinQuery = requiredProteinParams.reduce(function (acc, p) {
+    return acc && params.has(p);
+  }, true);
+  if (isProteinQuery) {
+    let acc, pos, ref, alt;
+    acc = params.get("accession");
+    pos = params.get("protein_position");
+    ref = params.get("reference_AA");
+    alt = params.get("variant_AA");
+
+    if (
+      acc &&
+      accessionRegExp.test(acc) &&
+      pos &&
+      positionRegExp.test(pos) &&
+      ref &&
+      oneletterAARegExp.test(ref) &&
+      alt &&
+      oneletterAARegExp.test(alt)
+    ) {
+      return `${acc} ${pos} ${ref} ${alt}`;
     }
   }
   return "";
@@ -124,8 +159,6 @@ const QueryPageContent = () => {
         .catch((err) => {
           console.log(err);
         });
-    } else {
-      console.log("Not true");
     }
   }, [location]);
 
