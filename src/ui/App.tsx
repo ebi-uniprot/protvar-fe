@@ -18,6 +18,7 @@ import {
   API_ERROR,
   CONTACT,
   HOME,
+  QUERY,
   SEARCH,
 } from "../constants/BrowserPaths";
 import Notify from "./elements/Notify";
@@ -161,7 +162,7 @@ function App(props: AppProps) {
           />
         )}
       />
-      <Route path="/*" render={() => <QueryPage />} />
+      <Route path={QUERY} render={() => <QueryPage />} />
       <Route path={API_ERROR} render={() => <APIErrorPage />} />
       <Route path={ABOUT} render={() => <AboutPage />} />
       <Route path={CONTACT} render={() => <ContactPage />} />
