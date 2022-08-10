@@ -37,7 +37,7 @@ function AlternateIsoFormRow(props: AlternateIsoFormRowProps) {
     <td><Tool tip="The amino acid position in this isoform">{record.aaPos}</Tool></td>
     <td><Tool tip={aaChangeTip(record.aaChange)}>{record.aaChange}</Tool></td>
     <td><Tool tip={CONSEQUENCES.get(record.consequences!)} pos="up-right">{record.consequences}</Tool></td>
-    <td colSpan={ANNOTATION_COLS}> <br /><br /></td>
+    <td colSpan={ANNOTATION_COLS + 1}> <br /><br /></td>
   </tr>
 }
 export default AlternateIsoFormRow;
