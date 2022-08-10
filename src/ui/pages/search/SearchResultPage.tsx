@@ -9,6 +9,7 @@ import DownloadModal from "../../modal/DownloadModal";
 import { MAX_IN_PLACE_DOWNLOAD_WITHOUT_EMAIL } from "../../../constants/const";
 import CaddLegendColors from "../../components/search/CaddLegendColors";
 import ResultTableButtonsLegend from "../../components/search/ResultTableButtonsLegend";
+import EveScoreColors from "../../components/search/EveScoreColors";
 
 interface SearchResultPageProps {
   pastedInputs: string[]
@@ -35,6 +36,7 @@ function SearchResultsPageContent(props: SearchResultPageProps) {
       <ResultTable invalidInputs={invalidInputs} mappings={rows} />
       <PaginationRow page={page} fetchNextPage={fetchNextPage} loading={loading} />
       <CaddLegendColors />
+      <EveScoreColors />
     </div>
   </>
 }

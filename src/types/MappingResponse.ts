@@ -45,6 +45,8 @@ interface IsoFormMapping {
 //  evolutionalInferenceUri: string;
 //  proteinStructure: Array<any>;
   proteinStructureUri: string;
+  eveScore: number;
+  eveClass: number;
 }
 interface Ensp {
   ensp: string;
