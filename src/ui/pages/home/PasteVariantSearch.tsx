@@ -80,7 +80,7 @@ function PasteVariantSearch(props: PasteVariantSearchProps) {
                 <Spaces count={2} />
                 <button onClick={populateHGVS} className="ref-link" id="hgvsExampleButton">HGVS</button>
                 <Spaces count={2} />
-                <button onClick={populateProtAC} className="ref-link" id="protACExampleButton" title={protACTitle}>ProtAC</button>
+                <button onClick={populateProtAC} className="ref-link" id="protACExampleButton" title={protACTitle}>Protein Position</button>
               </div>
 
               <textarea
