@@ -170,7 +170,6 @@ interface EveIconProps {
 }
 
 function EveIcon(props: EveIconProps) {
-  console.log(props.eveClass)
   switch(props.eveClass) {
     case 1: return <><div className="circle-icon" style={{ background: 'Blue' }}></div></>;
     case 2: return <><div className="circle-icon" style={{ background: 'Red' }}></div></>
