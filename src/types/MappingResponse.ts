@@ -20,30 +20,33 @@ interface Gene {
   isoforms: Array<IsoFormMapping>;
   caddScore: number;
 }
+// TODO clean up unused commented properties below
 interface IsoFormMapping {
   accession: string;
   canonical: boolean;
   canonicalAccession: string;
   isoformPosition: number;
   refCodon: string;
-  userCodon: string;
+//  userCodon: string;
   cdsPosition: number;
   refAA: string;
-  userAA: string;
+//  userAA: string;
   variantAA: string;
   variantCodon: string;
   consequences: string;
   proteinName: string;
   translatedSequences: Array<Ensp>;
-  populationObservations: any;
+//  populationObservations: any;
   populationObservationsUri: string;
-  referenceFunction: any;
+//  referenceFunction: any;
   referenceFunctionUri: string;
-  experimentalEvidence: Array<any>;
-  evolutionalInference: any;
-  evolutionalInferenceUri: string;
-  proteinStructure: Array<any>;
+//  experimentalEvidence: Array<any>;
+//  evolutionalInference: any;
+//  evolutionalInferenceUri: string;
+//  proteinStructure: Array<any>;
   proteinStructureUri: string;
+  eveScore: number;
+  eveClass: number;
 }
 interface Ensp {
   ensp: string;

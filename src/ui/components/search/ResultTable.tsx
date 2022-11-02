@@ -60,6 +60,7 @@ function ResultTable(props: ResultTableProps) {
         <Tool el="th" className="sticky" tip="Position of the amino acid containing the variant in the displayed isoform">AA pos.</Tool>
         <Tool el="th" className="sticky" tip="Three letter amino acid code for the reference and alternative alleles">AA change</Tool>
         <Tool el="th" className="sticky" tip="A description of the consequence of the variant">Consequence(s)</Tool>
+        <Tool el="th" className="sticky" tip="EVE (Evolutionary model of Variant Effects) score.">EVE</Tool>
         <th className="sticky">Click for details</th>
       </tr>
     </thead>

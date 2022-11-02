@@ -26,6 +26,9 @@ export interface MappingRecord {
   strand?: boolean
   ensg?: string
   note?: string
+  input: string
+  eveScore?: string
+  eveClass?: number
 }
 
 export interface TranslatedSequence {
@@ -41,6 +44,7 @@ function getBasicMapping(mapping: GenomeProteinMapping) {
     refAllele: mapping.userAllele,
     altAllele: mapping.variantAllele,
     canonicalAccession: null,
+    input: mapping.input
   };
 }
 function getEmptyMapping(mapping: GenomeProteinMapping) {
@@ -67,6 +71,13 @@ export function convertApiMappingToTableRecords(mapping: GenomeProteinMapping) {
         record.codon = isoform.refCodon + '/' + isoform.variantCodon;
         if (gene.caddScore === null) record.CADD = '-';
         else record.CADD = gene.caddScore.toString();
+        if (isoform.eveScore !== undefined && isoform.eveScore !== null) {
+          record.eveScore = isoform.eveScore.toString();
+          record.eveClass = isoform.eveClass;
+        }
+        else {
+          record.eveScore = '-';
+        }
       }
       record.altAllele = variant;
       record.proteinName = isoform.proteinName;

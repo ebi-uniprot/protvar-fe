@@ -4,7 +4,7 @@ import axios from 'axios';
 import ProtVista3D from './ProtVista3D';
 import PdbInfoTable from './PdbInfoTable';
 import AlphafoldInfoTable from './AlphafoldInfoTable';
-import LoaderRow from '../search/LoaderRow';
+//import LoaderRow from '../search/LoaderRow';
 import { API_URL } from '../../../constants/const';
 interface ProteinStructureResponse extends Array<ProteinStructureElement>{
 }
@@ -86,14 +86,14 @@ function StructuralDetail(props: StructuralDetailProps) {
     setSelected3DId(id);
   }
 
-  if (!selected3DId) {
-    return <LoaderRow />
-  }
+  //if (!selected3DId) {
+  //  return <LoaderRow />
+  //}
 
   return (
     <tr key={isoFormAccession}>
       <ProtVista3D accession={isoFormAccession} pos={aaPosition} id={selected3DId} />
-      <td colSpan={4} className="expanded-row">
+      <td colSpan={5} className="expanded-row">
         {pdbData.length > 0 && <>
           <br />
           <PdbInfoTable isoFormAccession={isoFormAccession} pdbApiData={pdbData} selectedPdbId={selected3DId} change3dDiagram={change3dDiagram} />

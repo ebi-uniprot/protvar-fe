@@ -100,4 +100,4 @@ prod-deploy:
       - master
   script:
     - ./deploy.sh HX protvar-fe protvar deployment # fallback app_name namespace type-of-deployment
-    - ./deploy.sh HH protvar-fe protvar deployment # prod app_name namespace type-of-deployment
+    - ./deploy.sh HL protvar-fe protvar deployment # prod app_name namespace type-of-deployment

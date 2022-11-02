@@ -263,6 +263,13 @@ Array [
                                       HGVS
                                     </a>
                                   </td>
+                                  <td>
+                                    <a
+                                      onClick={[Function]}
+                                    >
+                                      ProtAC
+                                    </a>
+                                  </td>
                                 </tr>
                               </tbody>
                             </table>

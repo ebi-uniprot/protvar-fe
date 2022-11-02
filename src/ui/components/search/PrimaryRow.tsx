@@ -98,6 +98,9 @@ const getPrimaryRow = (record: MappingRecord, toggleOpenGroup: string, isoFormGr
       <td><Tool tip="The amino acid position in this isoform">{record.aaPos}</Tool></td>
       <td><Tool tip={aaChangeTip(record.aaChange)}>{record.aaChange}</Tool></td>
       <td><Tool tip={CONSEQUENCES.get(record.consequences!)} pos="up-right">{record.consequences}</Tool></td>
+      <td><Tool className="eve-score" tip={record.eveScore + '-' + getEveClassText(record.eveClass)}>
+        <EveIcon eveClass={record.eveClass}/>
+      </Tool></td>
       <td >
         <div className="flex">
           {!record.canonical && <><br /><br /></>}
@@ -150,6 +153,29 @@ function getSignificancesButton(rowKey: string, buttonLabel: string, accession: 
       {buttonTag}
     </Tool>
   );
+}
+
+function getEveClassText(eveClass?: number) {
+  switch(eveClass) {
+    case 1: return "Benign";
+    case 2: return "Pathogenic";
+    case 3: return "Uncertain";
+    default: return "N/A";
+  }
+}
+
+interface EveIconProps {
+  eveScore?: string
+  eveClass?: number
+}
+
+function EveIcon(props: EveIconProps) {
+  switch(props.eveClass) {
+    case 1: return <><div className="circle-icon" style={{ background: 'Blue' }}></div></>;
+    case 2: return <><div className="circle-icon" style={{ background: 'Red' }}></div></>
+    case 3: return <><div className="circle-icon" style={{ background: 'LightGrey' }}></div></>;
+    default: return <>N/A</>;
+  }
 }
 
 export default getPrimaryRow;

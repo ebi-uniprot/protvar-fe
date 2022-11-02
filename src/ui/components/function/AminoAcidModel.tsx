@@ -45,7 +45,7 @@ const aminoAcids = {
   stop
 };
 function getImageByKey(key: string) {
-  if (key === "*")
+  if (key === "Ter")
     key = "stop"
   return getKeyValue(key.toLowerCase())(aminoAcids);
 }
