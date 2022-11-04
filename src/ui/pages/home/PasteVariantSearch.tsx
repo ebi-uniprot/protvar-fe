@@ -20,7 +20,7 @@ function PasteVariantSearch(props: PasteVariantSearchProps) {
   };
 
   const populateProtAC = () => {
-    setSearchTerm('Q4ZIN3 S558R\nQ9NUW8 H493R\nP60484 R130T\nP60484 N130G')
+    setSearchTerm('P80404 Gln56Arg\nP49588 Cys152Phe\nQ9NRG9 Gln15Lys')
   };
 
   const protACTitle = "Supported format examples:\n" +
