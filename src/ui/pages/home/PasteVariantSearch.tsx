@@ -20,7 +20,11 @@ function PasteVariantSearch(props: PasteVariantSearchProps) {
   };
 
   const populateProtAC = () => {
-    setSearchTerm('Q4ZIN3 S558R\nQ9NUW8 H493R\nP60484 R130T\nP60484 N130G')
+    setSearchTerm('P80404 Gln56Arg\nP49588 Cys152Phe\nQ9NRG9 Gln15Lys')
+  };
+
+  const populateRs = () => {
+    setSearchTerm('rs56116432\nrs1042779')
   };
 
   const protACTitle = "Supported format examples:\n" +
@@ -40,6 +44,8 @@ function PasteVariantSearch(props: PasteVariantSearchProps) {
       " X=one letter ref AA, XXX=three letters ref AA (case-insensitive),\n" +
       " Y=one letter variant AA, YYY=three letters variant AA (case-insensitive),\n" +
       " 999=protein position."
+
+  const rsTitle = "Search by Variant (rs) IDs."
 
   const handleSubmit = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -81,6 +87,8 @@ function PasteVariantSearch(props: PasteVariantSearchProps) {
                 <button onClick={populateHGVS} className="ref-link" id="hgvsExampleButton">HGVS</button>
                 <Spaces count={2} />
                 <button onClick={populateProtAC} className="ref-link" id="protACExampleButton" title={protACTitle}>Protein Position</button>
+                <Spaces count={2} />
+                <button onClick={populateRs} className="ref-link" id="rsExampleButton" title={rsTitle}>Variant ID</button>
               </div>
 
               <textarea

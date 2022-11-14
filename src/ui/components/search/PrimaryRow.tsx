@@ -1,6 +1,13 @@
 import { Fragment, lazy, Suspense } from "react";
 import { StringVoidFun } from "../../../constants/CommonTypes";
-import { CADD_INFO_URL, ENSEMBL_CHRM_URL, ENSEMBL_GENE_URL, ENSEMBL_VIEW_URL, UNIPROT_ACCESSION_URL } from "../../../constants/ExternalUrls";
+import {
+  CADD_INFO_URL,
+  DBSNP_URL,
+  ENSEMBL_CHRM_URL,
+  ENSEMBL_GENE_URL,
+  ENSEMBL_VIEW_URL,
+  UNIPROT_ACCESSION_URL
+} from "../../../constants/ExternalUrls";
 import { ALLELE, CONSEQUENCES } from "../../../constants/SearchResultTable";
 import { MappingRecord } from "../../../utills/Convertor";
 import Spaces from "../../elements/Spaces";
@@ -51,7 +58,9 @@ const getPrimaryRow = (record: MappingRecord, toggleOpenGroup: string, isoFormGr
           </a>
         </Tool>
       </td>
-      <td><Tool tip="Variant ID provided by the user">{record.id}</Tool></td>
+      <td><Tool tip="Variant ID provided by the user">
+        <a href={DBSNP_URL + record.id} target="_blank" rel="noopener noreferrer">{record.id}</a>
+      </Tool></td>
       <td><Tool tip={ALLELE.get(record.refAllele)}>{record.refAllele}</Tool></td>
       <td><Tool tip={ALLELE.get(record.altAllele)}>{record.altAllele}</Tool></td>
       <td>
