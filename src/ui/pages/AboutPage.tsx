@@ -1,4 +1,6 @@
 import DefaultPageLayout from "../layout/DefaultPageLayout";
+import {ENSEMBL_ASML_URL, HUMSAVAR_URL} from "../../constants/ExternalUrls";
+import React from "react";
 
 function AboutPageContent() {
   return <div className="container">
@@ -86,6 +88,26 @@ function AboutPageContent() {
           variants.
         </li>
       </ul>
+
+      <span>
+      <b>Useful links:</b>
+      </span>
+
+      <div className="text">
+        <ul>
+          <li>
+            <a href={ENSEMBL_ASML_URL} target="_blank" rel="noopener noreferrer" className="ref-link">
+              Ensembl's Assembly Remapping
+            </a>
+          </li>
+          <li>
+            <a href={HUMSAVAR_URL} target="_blank" rel="noopener noreferrer" className="ref-link">
+              Human variants curated from literature reports
+            </a>
+          </li>
+        </ul>
+      </div>
+
     </div>
   </div>
 }
