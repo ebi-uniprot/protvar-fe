@@ -2,6 +2,19 @@
 	font-size: 14px;
 }
 
+.badge {
+	float: left;
+	background-color: #3cb55b;
+	border-radius: 5px;
+	color: #ffffff;
+	display: inline-block;
+	font-family: Arial, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	line-height: 10px;
+	padding: 4px 6px;
+}
+
 .navbar {
 	width: 100%;
 	// background-color: linear-gradient(45deg, #014371, rgba(1, 67, 113, 0.7), #014371, #014371);
@@ -239,24 +252,36 @@ a {
 		.container {
 			position: relative;
 		}
-		label {
-			position: absolute;
-			top: 100%;
-			font-weight: bold;
-			color: blue;
-			padding-bottom: 1rem;
-		}
-		input {
-			display: none;
-		}
-		label:after {
-			content: "Show More";
-		}
-		input:checked + label:after {
-			content: "Show Less";
-		}
-		input:checked ~ div {
-			height: 100%;
+		//label {
+			//position: absolute;
+			//top: 100%;
+			//font-weight: bold;
+			//color: blue;
+			//padding-bottom: 1rem;
+		//}
+		//input {
+		//	display: none;
+		//}
+		//label:after {
+		//	content: "Show More";
+		//}
+		//input:checked + label:after {
+		//	content: "Show Less";
+		//}
+		//input:checked ~ div {
+		//	height: 100%;
+		//}
+		.assembly {
+			font-size: 12px;
+			margin-bottom: 0.5rem;
+			.assembly-radio-check {
+				display: inline-flex;
+				padding-left: 0.5rem;
+				label {
+					font-size: 11px;
+					margin-left: 0.5rem;
+				}
+			}
 		}
 	}
 
