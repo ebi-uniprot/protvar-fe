@@ -1,30 +1,42 @@
-import React, { useState } from 'react'
+import React, {useState} from 'react'
 import Button from '../../elements/form/Button'
-import { ENSEMBL_ASML_URL } from '../../../constants/ExternalUrls';
-import { StringVoidFun } from '../../../constants/CommonTypes';
+import {Assembly, DEFAULT_ASSEMBLY, StringVoidFun} from '../../../constants/CommonTypes';
 import Spaces from '../../elements/Spaces';
 
 interface PasteVariantSearchProps {
   isLoading: boolean
+  assembly: Assembly
+  updateAssembly: (assembly: Assembly) => void
   fetchPasteResult: StringVoidFun
 }
 
 function PasteVariantSearch(props: PasteVariantSearchProps) {
   const [searchTerm, setSearchTerm] = useState('')
+
   const populateVCF = () => {
-    setSearchTerm('19 1010539 rs124582 G/C . . .\n14 89993420 rs37915333 A/G . . .\n10 87933147 rs7565837 C/T . . .')
+    setSearchTerm('X\t149498202\t.\tC\tG\n' +
+        '10\t43118436\t.\tA\tC\n' +
+        '2\t233760498\t.\tG\tA')
+    props.updateAssembly(DEFAULT_ASSEMBLY)
   };
 
   const populateHGVS = () => {
-    setSearchTerm('NC_000019.10:g.1010539G>C\nNC_000014.9:g.89993420A>G\nNC_000010.11:g.87933147C>T')
+    setSearchTerm('NC_000023.11:g.149498202C>G\n' +
+        'NC_000010.11:g.43118436A>C\n' +
+        'NC_000002.12:g.233760498G>A')
+    props.updateAssembly(DEFAULT_ASSEMBLY)
   };
 
   const populateProtAC = () => {
-    setSearchTerm('P80404 Gln56Arg\nP49588 Cys152Phe\nQ9NRG9 Gln15Lys')
+    setSearchTerm('P22304 A205P\n' +
+        'P07949 asn783thr\n' +
+        'P22309 71 Gly Arg')
   };
 
   const populateRs = () => {
-    setSearchTerm('rs56116432\nrs1042779')
+    setSearchTerm('rs864622779\n' +
+        'rs587778656\n' +
+        'rs4148323')
   };
 
   const protACTitle = "Supported format examples:\n" +
@@ -56,13 +68,12 @@ function PasteVariantSearch(props: PasteVariantSearchProps) {
     props.fetchPasteResult(searchTerm)
   };
 
-
   return <div id="search" className="card-table search">
     <div className="card">
       <section className="card__actions">
         <span className="card-header">
           <p>
-            <b>Paste Variants (GRCh38)</b>
+            <b>Search Variants</b>
           </p>
         </span>
       </section>
@@ -71,14 +82,17 @@ function PasteVariantSearch(props: PasteVariantSearchProps) {
           <section className="uniprot-card">
             <section className="uniprot-card__left">
 
-              <span className="genome-assembly-text">
-                <p>
-                  Reference Genome Assembly GRCh38 (hg38): {' '}
-                  <a href={ENSEMBL_ASML_URL} target="_blank" rel="noopener noreferrer" className="ref-link">
-                    Ensembl's Assembly Remapping
-                  </a>
-                </p>
-              </span>
+              <div className="assembly">
+                  Reference Genome Assembly
+                  <div className="assembly-radio-check">
+                    <label>
+                    <input type="radio" name="grch" value="grch38" checked={props.assembly===Assembly.GRCh38} onChange={() => props.updateAssembly(Assembly.GRCh38)}/>
+                    GRCh38</label>
+                    <label>
+                    <input type="radio" name="grch" value="grch37" checked={props.assembly===Assembly.GRCh37} onChange={() => props.updateAssembly(Assembly.GRCh37)}/>
+                    GRCh37</label>
+                  </div>
+              </div>
               <div className="flex padding-bottom-1x">
                 <b>Examples:</b>
                 <Spaces count={2} />

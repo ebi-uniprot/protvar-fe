@@ -1,28 +1,19 @@
-import { useState } from "react";
-import { Route, RouteComponentProps, withRouter } from "react-router-dom";
-import axios, { AxiosResponse } from "axios";
+import {useState} from "react";
+import {Route, RouteComponentProps, withRouter} from "react-router-dom";
+import axios, {AxiosResponse} from "axios";
 import HomePage from "./pages/home/HomePage";
 import SearchResultsPage from "./pages/search/SearchResultPage";
 import APIErrorPage from "./pages/APIErrorPage";
-import { G2P_MAPPING_URI, API_HEADERS } from "../constants/const";
-import MappingResponse, { ParsedInput } from "../types/MappingResponse";
-import {
-  convertApiMappingToTableRecords,
-  MappingRecord,
-} from "../utills/Convertor";
-import { firstPage, Page } from "../utills/AppHelper";
+import {API_HEADERS, G2P_MAPPING_URI} from "../constants/const";
+import MappingResponse, {ParsedInput} from "../types/MappingResponse";
+import {convertApiMappingToTableRecords, MappingRecord,} from "../utills/Convertor";
+import {firstPage, Page} from "../utills/AppHelper";
 import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
-import {
-  ABOUT,
-  API_ERROR,
-  CONTACT,
-  HOME,
-  QUERY,
-  SEARCH,
-} from "../constants/BrowserPaths";
+import {ABOUT, API_ERROR, CONTACT, HOME, QUERY, SEARCH,} from "../constants/BrowserPaths";
 import Notify from "./elements/Notify";
 import QueryPage from "./pages/query/QueryPage";
+import {Assembly, DEFAULT_ASSEMBLY} from "../constants/CommonTypes";
 
 interface AppProps extends RouteComponentProps {}
 
@@ -33,6 +24,7 @@ function App(props: AppProps) {
   const [searchResults, setSearchResults] = useState<MappingRecord[][][]>([]);
   const [invalidInputs, setInvalidInputs] = useState<Array<ParsedInput>>([]);
   const [page, setPage] = useState<Page>(firstPage(0));
+  const [assembly, setAssembly] = useState(DEFAULT_ASSEMBLY)
 
   const fetchPage = (page: Page) => {
     setLoading(true);
@@ -42,6 +34,10 @@ function App(props: AppProps) {
       handleSearch(page, userInputs);
     }
   };
+
+  function updateAssembly(assembly: Assembly) {
+    setAssembly(assembly);
+  }
 
   function fetchPasteResult(userInputString: string) {
     const userInputs = userInputString.split("\n");
@@ -112,7 +108,7 @@ function App(props: AppProps) {
   function mappingApiCall(inputSubArray: string[]) {
     axios
       .post<string[], AxiosResponse<MappingResponse>>(
-        G2P_MAPPING_URI,
+        G2P_MAPPING_URI + "?assembly=" + assembly.toString(),
         inputSubArray,
         {
           headers: API_HEADERS,
@@ -143,6 +139,8 @@ function App(props: AppProps) {
         render={() => (
           <HomePage
             loading={loading}
+            assembly={assembly}
+            updateAssembly={updateAssembly}
             fetchPasteResult={fetchPasteResult}
             fetchFileResult={fetchFileResult}
           />
