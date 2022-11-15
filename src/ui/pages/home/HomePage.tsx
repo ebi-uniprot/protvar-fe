@@ -3,12 +3,12 @@ import FileUpload from './FileUpload';
 import RestApiComponent from './RestApiComponent';
 import PasteVariantSearch from './PasteVariantSearch';
 import { FileLoadFun } from '../../../utills/AppHelper';
-import { StringVoidFun } from '../../../constants/CommonTypes';
+import {Assembly, StringVoidFun} from '../../../constants/CommonTypes';
 import { Link } from 'react-router-dom';
 import { ABOUT, CONTACT } from '../../../constants/BrowserPaths';
 
 const HomePageContent = (props: HomePageProps) => {
-  const { loading, fetchFileResult, fetchPasteResult } = props;
+  const { loading, assembly, updateAssembly, fetchFileResult, fetchPasteResult } = props;
 
   return <>
     <div>
@@ -23,7 +23,7 @@ const HomePageContent = (props: HomePageProps) => {
       </p>
     </div>
     <div className="wrapper">
-      <PasteVariantSearch isLoading={loading} fetchPasteResult={fetchPasteResult} />
+      <PasteVariantSearch isLoading={loading} assembly={assembly} updateAssembly={updateAssembly} fetchPasteResult={fetchPasteResult} />
       <FileUpload isLoading={loading} fetchFileResult={fetchFileResult} />
       <RestApiComponent />
     </div>
@@ -43,6 +43,8 @@ const HomePageContent = (props: HomePageProps) => {
 
 interface HomePageProps {
   loading: boolean
+  assembly: Assembly
+  updateAssembly: (assembly: Assembly) => void
   fetchFileResult: FileLoadFun
   fetchPasteResult: StringVoidFun
 }
