@@ -22,6 +22,9 @@ export interface FunctionalResponse {
   sequence: Sequence
   lastUpdated: string
   dbReferences: Array<DBReference>
+  pockets: Array<Pocket>
+  interfaces: Array<Interface>
+  foldxs: Array<Foldx>
 }
 
 export interface GeneName {
@@ -70,6 +73,30 @@ export interface Reaction {
   name: string;
   dbReferences: Array<DBReference>
   evidences: Array<Evidence>
+}
+
+export interface Pocket {
+  structId: string
+  energy: number
+  energyPerVol: number
+  score: number
+  residList: Array<number>
+}
+
+export interface Interface {
+  protein: string
+  chain: string
+  pair: string
+  residues: Array<number>
+}
+
+export interface Foldx {
+  proteinAcc: string
+  position: number
+  wildType: string
+  mutatedType: string
+  foldxDdq: number
+  plddt: number
 }
 
 interface Interaction {
