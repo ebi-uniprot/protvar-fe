@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ABOUT, CONTACT, HOME } from '../../constants/BrowserPaths';
 
 import DefaultPageContent from './DefaultPageContent';
+import AppVersion from "./AppVersion";
 
 interface DefaultPageLayoutProps {
   content: JSX.Element
@@ -71,6 +72,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                 <tbody>
                   <tr className="navbar">
                     <td>
+                      <AppVersion />
                       <Link
                         className="local-title"
                         to={HOME}
