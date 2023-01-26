@@ -1,12 +1,17 @@
 import { useEffect, useState } from 'react';
 import { ALPHAFOLD_URL } from '../../../constants/ExternalUrls';
 import axios from 'axios';
-import ProtVista3D from './ProtVista3D';
 import PdbInfoTable from './PdbInfoTable';
 import AlphafoldInfoTable from './AlphafoldInfoTable';
-//import LoaderRow from '../search/LoaderRow';
 import { API_URL } from '../../../constants/const';
+import PdbeMolstar from "./PdbeMolstar";
+import InteractionInfoTable from "./InteractionInfoTable";
+import LoaderRow from "../search/LoaderRow";
+import {P2PInteraction} from "../function/FunctionalDetail";
 interface ProteinStructureResponse extends Array<ProteinStructureElement>{
+}
+
+interface P2PInteractionResponse extends Array<P2PInteraction>{
 }
 
 export interface ProteinStructureElement {
@@ -19,7 +24,7 @@ export interface ProteinStructureElement {
 
 type AlphafoldResponse = Array<AlphafoldResponseElement>
 
-interface AlphafoldResponseElement {
+export interface AlphafoldResponseElement {
   entryId: string,
   gene: string,
   uniprotAccession: string,
@@ -46,11 +51,29 @@ interface StructuralDetailProps {
   proteinStructureUri: string
 }
 
+export enum StructType {
+  PDB,
+  AF,
+  CUSTOM
+}
+
 function StructuralDetail(props: StructuralDetailProps) {
   const { isoFormAccession, aaPosition, proteinStructureUri } = props;
   const [pdbData, setPdbData] = useState(new Array<ProteinStructureElement>());
-  const [alphaFoldId, setAlphaFoldId] = useState("");
-  const [selected3DId, setSelected3DId] = useState("");
+  const [alphaFoldData, setAlphaFoldData] = useState(new Array<AlphafoldResponseElement>());
+  const [selected, setSelected] = useState({type: StructType.PDB, id: "", url: "" });
+  const [interactionData, setInteractionData] = useState(Array<P2PInteraction>());
+
+  useEffect(() => {
+    axios.get<P2PInteractionResponse>(API_URL + '/interaction/'+isoFormAccession+'/'+aaPosition)
+        .then((response) => {
+          setInteractionData(response.data)
+        })
+        .catch((err) => {
+          setInteractionData([]);
+          console.log(err);
+        });
+  }, [isoFormAccession, aaPosition]);
 
   useEffect(() => {
     const url = API_URL + proteinStructureUri;
@@ -58,7 +81,9 @@ function StructuralDetail(props: StructuralDetailProps) {
       .get<ProteinStructureResponse>(url)
       .then(response => {
         setPdbData(response.data);
-        setSelected3DId(response.data.length > 0 ? response.data[0].pdb_id : "")
+        if (response.data.length > 0) {
+          setSelected({type: StructType.PDB, id: response.data[0].pdb_id, url: ""});
+        }
       })
       .catch((err) => {
         setPdbData([]);
@@ -71,36 +96,48 @@ function StructuralDetail(props: StructuralDetailProps) {
     axios
       .get<AlphafoldResponse>(url)
       .then((response) => {
+        setAlphaFoldData(response.data);
+        /*
         if (response.data.length > 0) {
-          setAlphaFoldId(response.data[0].entryId)
-          setSelected3DId(id => id ? id : response.data[0].entryId)
-        }
+          setSelected({type: StructType.AF, id: response.data[0].entryId,
+            url: response.data[0].cifUrl})
+          // if id already set (pdb id), use that, otherwise, use alphaFold id
+          // setSelected3DId(id => id ? id : response.data[0].entryId);
+        }*/
       })
       .catch((err) => {
-        setAlphaFoldId("")
-        console.log(err)
+        setAlphaFoldData([]);
+        console.log(err);
       });
   }, [isoFormAccession]);
 
-  const change3dDiagram = (id: string) => {
-    setSelected3DId(id);
-  }
 
-  //if (!selected3DId) {
-  //  return <LoaderRow />
-  //}
+  if (!selected.id) {
+    return <LoaderRow />
+  }
 
   return (
     <tr key={isoFormAccession}>
-      <ProtVista3D accession={isoFormAccession} pos={aaPosition} id={selected3DId} />
+      <PdbeMolstar selected={selected} />
       <td colSpan={5} className="expanded-row">
         {pdbData.length > 0 && <>
           <br />
-          <PdbInfoTable isoFormAccession={isoFormAccession} pdbApiData={pdbData} selectedPdbId={selected3DId} change3dDiagram={change3dDiagram} />
+          <PdbInfoTable isoFormAccession={isoFormAccession} pdbApiData={pdbData}
+                        selectedPdbId={selected.type === StructType.PDB ? selected.id : ""}
+                        setSelected={setSelected} />
         </>}
+        {alphaFoldData.length > 0 && <>
+          <br />
+          <AlphafoldInfoTable isoFormAccession={isoFormAccession} alphaFoldData={alphaFoldData}
+                              selectedAlphaFoldId={selected.type === StructType.AF ? selected.id : ""}
+                              setSelected={setSelected} aaPos={aaPosition} />
+        </>}
+        {interactionData.length > 0 && <>
         <br />
-        <AlphafoldInfoTable isoFormAccession={isoFormAccession} change3dDiagram={change3dDiagram} alphaFoldId={alphaFoldId}
-          selectedAlphaFoldId={selected3DId} aaPos={aaPosition} />
+        <InteractionInfoTable isoFormAccession={isoFormAccession} interactionData={interactionData}
+                            selectedInteraction={selected.type === StructType.CUSTOM ? selected.id : ""}
+                            setSelected={setSelected} />
+      </>}
       </td>
     </tr>
   );
