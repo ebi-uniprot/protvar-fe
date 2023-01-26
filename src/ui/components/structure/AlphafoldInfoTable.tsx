@@ -1,15 +1,18 @@
 import { StringVoidFun } from '../../../constants/CommonTypes';
 import { ALPHAFOLD_URL_INTERFACE_BY_PROTEIN } from '../../../constants/ExternalUrls';
+import {AlphafoldResponseElement, StructType} from "./StructuralDetail";
 
 interface AlphafoldInfoTableProps {
   isoFormAccession: string,
-  change3dDiagram: StringVoidFun,
-  alphaFoldId: string,
+  alphaFoldData: Array<AlphafoldResponseElement>,
   selectedAlphaFoldId: string,
+  setSelected: any,
   aaPos: number
 }
 function AlphafoldInfoTable(props: AlphafoldInfoTableProps) {
-  const isRowSelected = props.selectedAlphaFoldId === props.alphaFoldId;
+  const alphaFoldId = props.alphaFoldData[0].entryId
+  const alphaFoldUrl = props.alphaFoldData[0].cifUrl
+  const isRowSelected = props.selectedAlphaFoldId === alphaFoldId;
   const rowClass = isRowSelected ? 'clickable-row active' : 'clickable-row';
 
   return (
@@ -24,11 +27,11 @@ function AlphafoldInfoTable(props: AlphafoldInfoTableProps) {
             <th>Identifier</th>
             <th>Position</th>
           </tr>
-          <tr className={rowClass} onClick={(e) => props.change3dDiagram(props.alphaFoldId)}>
+          <tr className={rowClass} onClick={(e) => props.setSelected({type:StructType.AF, id:alphaFoldId, url:alphaFoldUrl})}>
             <td className="small">AlphaFold</td>
             <td className="small">
               <a href={ALPHAFOLD_URL_INTERFACE_BY_PROTEIN + props.isoFormAccession} target="_blank" rel="noreferrer">
-                <u>{props.alphaFoldId}</u>
+                <u>{alphaFoldId}</u>
               </a>
             </td>
             <td className="small">{props.aaPos}</td>
