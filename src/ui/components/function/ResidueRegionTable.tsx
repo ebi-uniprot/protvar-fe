@@ -147,6 +147,9 @@ interface FoldxPredProps {
 }
 
 const FoldxPred = (props: FoldxPredProps) => {
+  if (!props.foldxs || props.foldxs.length === 0) {
+    return <></>
+  }
   let key = 'foldxs-0'
   return <Fragment key={key}>
     <button type="button" className="collapsible" onClick={(e) => props.toggleRow(key)}>
@@ -159,16 +162,13 @@ const FoldxPred = (props: FoldxPredProps) => {
 
 function getFoldxDetail(foldxs: Array<Foldx>, rowKey: string, expendedRowKey: string) {
   if (rowKey === expendedRowKey) {
-    if (foldxs && foldxs.length === 1) {
-      return <ul style={{ listStyleType: 'none', display: 'inline-block' }}>
-              <li key={uuidv1()}>
-                <b title="Difference between the predicted ΔG before and after the variant. A value above 2 often indicates a destabilising variant.">ΔΔG<sub>pred</sub> :</b> {foldxs[0].foldxDdq}
-                <br />
-                <b title="AlphaFold per-residue confidence score (pLDDT).">pLDDT :</b> {foldxs[0].plddt}
-              </li>
-            </ul>
-    }
-    return <NoData />
+    return <ul style={{ listStyleType: 'none', display: 'inline-block' }}>
+            <li key={uuidv1()}>
+              <b title="Difference between the predicted ΔG before and after the variant. A value above 2 often indicates a destabilising variant.">ΔΔG<sub>pred</sub> :</b> {foldxs[0].foldxDdq}
+              <br />
+              <b title="AlphaFold per-residue confidence score (pLDDT).">pLDDT :</b> {foldxs[0].plddt}
+            </li>
+          </ul>
   }
 }
 
@@ -193,10 +193,12 @@ const Pockets = (props: PocketsProps) => {
         </li>);
   });
 
+  if (pocketsList.length === 0) return <></>;
+
   let key = 'pockets-0'
   return <Fragment key={key}>
     <button type="button" className="collapsible" onClick={(e) => props.toggleRow(key)}>
-      Pockets
+      Pockets containing variant
       <ChevronDownIcon className="chevronicon" />
     </button>
     {getList(pocketsList, key, props.expendedRowKey)}
@@ -219,27 +221,25 @@ const Interfaces = (props: InterfacesProps) => {
     let key = 'interfaces-'+counter
     let chain = 'A'
     let pair = interaction.a
-    let resids = interaction.aresidues
 
     if (props.accession === interaction.a) {
       chain = 'B';
       pair = interaction.b;
-      resids = interaction.bresidues;
     }
-    let formattedResids = formatRange(resids)
-    let trimmedFormattedResids = formattedResids.substring(0, 12) + '...';;
     interfacesList.push(<li key={key}>
       {/* <b>Chain :</b> {chain}<br/> */}
       {/* <b>Pair :</b> {pair}<br/> */}
       {/* <b>Residues :</b> {formatRange(resids)} */}
-      <b>{pair}</b> <i title={formattedResids}>{trimmedFormattedResids}</i>
+      <b>{pair}</b> (Chain {chain}) (pDockQ: {interaction.pdockq.toFixed(3)})
     </li>);
   });
+
+  if (interfacesList.length === 0) return <></>;
 
   let key = 'interfaces-0'
   return <Fragment key={key}>
     <button type="button" className="collapsible" onClick={(e) => props.toggleRow(key)}>
-      Interfaces
+      Protein-protein interfaces containing variant
       <ChevronDownIcon className="chevronicon" />
     </button>
     {getList(interfacesList, key, props.expendedRowKey)}
@@ -248,7 +248,6 @@ const Interfaces = (props: InterfacesProps) => {
 
 function getList(list: Array<JSX.Element>, rowKey: string, expendedRowKey: string) {
   if (rowKey === expendedRowKey) {
-    if (list.length === 0) return <NoData />;
     return <ul style={{ listStyleType: 'none', display: 'inline-block' }}>
       {list}
     </ul>

@@ -140,6 +140,9 @@ function FunctionalDetail(props: FunctionalDetailProps) {
   useEffect(() => {
     axios.get<FunctionalResponse>(API_URL + referenceFunctionUri)
       .then((response) => {
+        if (response.data.interactions && response.data.interactions.length > 1) {
+          response.data.interactions.sort((a, b) => b.pdockq - a.pdockq);
+        }
         setApiData(response.data)
       });
   }, [referenceFunctionUri]);
