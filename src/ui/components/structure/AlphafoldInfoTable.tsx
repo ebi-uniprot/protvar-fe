@@ -1,4 +1,3 @@
-import { StringVoidFun } from '../../../constants/CommonTypes';
 import { ALPHAFOLD_URL_INTERFACE_BY_PROTEIN } from '../../../constants/ExternalUrls';
 import {AlphafoldResponseElement, StructType} from "./StructuralDetail";
 

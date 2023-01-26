@@ -1,4 +1,3 @@
-import { StringVoidFun } from '../../../constants/CommonTypes';
 import { PDB_URL_INTERFACE_BY_ID, PDB_URL_INTERFACE_BY_PROTEIN } from '../../../constants/ExternalUrls';
 import {ProteinStructureElement, StructType} from './StructuralDetail';
 import { ReactComponent as ExternalLinkIcon } from "../../../images/external-link.svg"
