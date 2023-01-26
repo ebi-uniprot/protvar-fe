@@ -23,8 +23,9 @@ export interface FunctionalResponse {
   lastUpdated: string
   dbReferences: Array<DBReference>
   pockets: Array<Pocket>
-  interfaces: Array<Interface>
   foldxs: Array<Foldx>
+  interactions: Array<P2PInteraction>
+  conservScore: number
 }
 
 export interface GeneName {
@@ -83,13 +84,6 @@ export interface Pocket {
   residList: Array<number>
 }
 
-export interface Interface {
-  protein: string
-  chain: string
-  pair: string
-  residues: Array<number>
-}
-
 export interface Foldx {
   proteinAcc: string
   position: number
@@ -97,6 +91,15 @@ export interface Foldx {
   mutatedType: string
   foldxDdq: number
   plddt: number
+}
+
+export interface P2PInteraction {
+  a: string
+  aresidues: Array<number>
+  b: string
+  bresidues: Array<number>
+  pdockq: number
+  pdbModel: string
 }
 
 interface Interaction {
@@ -137,6 +140,9 @@ function FunctionalDetail(props: FunctionalDetailProps) {
   useEffect(() => {
     axios.get<FunctionalResponse>(API_URL + referenceFunctionUri)
       .then((response) => {
+        if (response.data.interactions && response.data.interactions.length > 1) {
+          response.data.interactions.sort((a, b) => b.pdockq - a.pdockq);
+        }
         setApiData(response.data)
       });
   }, [referenceFunctionUri]);

@@ -1,13 +1,13 @@
 import { StringVoidFun } from '../../../constants/CommonTypes';
 import { PDB_URL_INTERFACE_BY_ID, PDB_URL_INTERFACE_BY_PROTEIN } from '../../../constants/ExternalUrls';
-import { ProteinStructureElement } from './StructuralDetail';
+import {ProteinStructureElement, StructType} from './StructuralDetail';
 import { ReactComponent as ExternalLinkIcon } from "../../../images/external-link.svg"
 
 interface PdbInfoTableProps {
   isoFormAccession: string,
-  change3dDiagram: StringVoidFun,
   pdbApiData: Array<ProteinStructureElement>,
-  selectedPdbId: string
+  selectedPdbId: string,
+  setSelected: any
 }
 
 function PdbInfoTable(props: PdbInfoTableProps) {
@@ -40,7 +40,7 @@ function getPdbInfoRows(props: PdbInfoTableProps) {
   pdbMap.forEach((value) => {
     const copyPdbEntry = {...value.pdbEntry}
     copyPdbEntry.chain_id = value.chains.sort().join()
-    rows.push(getPdbInfoRow(copyPdbEntry, props.change3dDiagram, props.selectedPdbId));
+    rows.push(getPdbInfoRow(copyPdbEntry, props.setSelected, props.selectedPdbId));
   })
   return rows;
 }
@@ -62,10 +62,10 @@ function combineChainsByPdbId(pdbApiData: Array<ProteinStructureElement>) {
   return chainsMap;
 }
 
-function getPdbInfoRow(str: ProteinStructureElement, tableRowClicked: StringVoidFun, clickedPdbId: string) {
+function getPdbInfoRow(str: ProteinStructureElement, tableRowClicked: any, clickedPdbId: string) {
   const rowClass = clickedPdbId === str.pdb_id ? 'clickable-row active' : 'clickable-row';
   return (
-    <tr className={rowClass} onClick={(e) => tableRowClicked(str.pdb_id)} key={str.pdb_id}>
+    <tr className={rowClass} onClick={(e) => tableRowClicked({type:StructType.PDB, id:str.pdb_id, url:""})} key={str.pdb_id}>
       <td className="small">
         <a href={PDB_URL_INTERFACE_BY_ID + str.pdb_id} target="_blank" rel="noreferrer">
           <u>{str.pdb_id}</u>
