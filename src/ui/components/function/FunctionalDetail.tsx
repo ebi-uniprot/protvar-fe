@@ -23,7 +23,7 @@ export interface FunctionalResponse {
   lastUpdated: string
   dbReferences: Array<DBReference>
   pockets: Array<Pocket>
-  interfaces: Array<Interface>
+  interactions: Array<P2PInteraction>
   foldxs: Array<Foldx>
 }
 
@@ -83,13 +83,6 @@ export interface Pocket {
   residList: Array<number>
 }
 
-export interface Interface {
-  protein: string
-  chain: string
-  pair: string
-  residues: Array<number>
-}
-
 export interface Foldx {
   proteinAcc: string
   position: number
@@ -97,6 +90,15 @@ export interface Foldx {
   mutatedType: string
   foldxDdq: number
   plddt: number
+}
+
+export interface P2PInteraction {
+  a: string
+  aresidues: Array<number>
+  b: string
+  bresidues: Array<number>
+  pdockq: number
+  pdbModel: string
 }
 
 interface Interaction {
