@@ -1,4 +1,5 @@
 const CompressionPlugin = require("compression-webpack-plugin");
+const zlib = require("zlib");
 
 module.exports = {
     plugins: [new CompressionPlugin(),
