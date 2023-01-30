@@ -3,7 +3,7 @@ import { EmptyElement } from "../../../constants/Const";
 import { FEATURES } from "../../../constants/Protein";
 import AminoAcidModel from "./AminoAcidModel";
 import Evidences from "./Evidences";
-import {Foldx, Interface, Pocket, ProteinFeature} from "./FunctionalDetail";
+import {Pocket, Foldx, P2PInteraction, ProteinFeature} from "./FunctionalDetail";
 import { ReactComponent as ChevronDownIcon } from "../../../images/chevron-down.svg"
 import { v1 as uuidv1 } from 'uuid';
 import { StringVoidFun } from "../../../constants/CommonTypes";
@@ -13,7 +13,7 @@ interface ResidueRegionTableProps {
   features: Array<ProteinFeature>
   foldxs: Array<Foldx>
   pockets: Array<Pocket>
-  interfaces: Array<Interface>
+  interactions: Array<P2PInteraction>
   refAA: string
   variantAA: string
 }
@@ -42,7 +42,7 @@ function ResidueRegionTable(props: ResidueRegionTableProps) {
         </tr>
         <tr>
           <td>{getResidues(residues, props.foldxs, props.refAA, props.variantAA, expendedRowKey, toggleRow)}</td>
-          <td>{getRegions(regions, props.pockets, props.interfaces, expendedRowKey, toggleRow)}</td>
+          <td>{getRegions(regions, props.pockets, props.interactions, expendedRowKey, toggleRow)}</td>
         </tr>
       </tbody>
     </table>
@@ -73,7 +73,7 @@ function getResidues(regions: Array<ProteinFeature>, foldxs: Array<Foldx>, refAA
   </>
 }
 
-function getRegions(regions: Array<ProteinFeature>, pockets: Array<Pocket>, interfaces: Array<Interface>, expendedRowKey: string, toggleRow: StringVoidFun) {
+function getRegions(regions: Array<ProteinFeature>, pockets: Array<Pocket>, interactions: Array<P2PInteraction>, expendedRowKey: string, toggleRow: StringVoidFun) {
   let regionsList: Array<JSX.Element> = [];
   let counter = 0;
 
@@ -83,7 +83,7 @@ function getRegions(regions: Array<ProteinFeature>, pockets: Array<Pocket>, inte
         No functional data for the region
       </label>
       <Pockets pockets={pockets} expendedRowKey={expendedRowKey} toggleRow={toggleRow} />
-      <Interfaces interfaces={interfaces} expendedRowKey={expendedRowKey} toggleRow={toggleRow} />
+      <Interfaces interactions={interactions} expendedRowKey={expendedRowKey} toggleRow={toggleRow} />
     </>);
   }
   regions.forEach((region) => {
@@ -95,7 +95,7 @@ function getRegions(regions: Array<ProteinFeature>, pockets: Array<Pocket>, inte
   return <>
     {regionsList}
     <Pockets pockets={pockets} expendedRowKey={expendedRowKey} toggleRow={toggleRow} />
-    <Interfaces interfaces={interfaces} expendedRowKey={expendedRowKey} toggleRow={toggleRow} />
+    <Interfaces interactions={interactions} expendedRowKey={expendedRowKey} toggleRow={toggleRow} />
     </>
 }
 
@@ -205,7 +205,7 @@ const Pockets = (props: PocketsProps) => {
 }
 
 interface InterfacesProps {
-  interfaces: Array<Interface>
+  interactions: Array<P2PInteraction>
   expendedRowKey: string
   toggleRow: StringVoidFun
 }
@@ -214,13 +214,13 @@ const Interfaces = (props: InterfacesProps) => {
   let interfacesList: Array<JSX.Element> = [];
   let counter = 0;
 
-  props.interfaces.forEach((interfce) => {
+  props.interactions.forEach((i) => {
     counter = counter + 1;
     let key = 'interfaces-'+counter
     interfacesList.push(<li key={key}>
-      <b>Chain :</b> {interfce.chain}<br/>
-      <b>Pair :</b> {interfce.pair}<br/>
-      <b>Residues :</b> {formatRange(interfce.residues)}
+      <b>A :</b> {i.a} ({formatRange(i.aresidues)})<br/>
+      <b>B :</b> {i.b} ({formatRange(i.bresidues)})<br/>
+      <b>pDockQ :</b> {i.pdockq.toFixed(3)}
     </li>);
   });
 
