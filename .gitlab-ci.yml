@@ -21,6 +21,10 @@ workflow:
   before_script:
     - node --version
     - npm --version
+    - yarn --version
+    - pwd
+    - ls
+    - yarn install
 
 test:
   stage: test
@@ -36,8 +40,7 @@ build_static_assets:
   stage: build_static_assets
   script:
     - echo "REACT_APP_API_BASE_URL=${BE_API}" > .env.local
-    - npm install react-scripts
-    - react-scripts build
+    - yarn build
   artifacts:
     paths:
       - build/
