@@ -36,6 +36,7 @@ build_static_assets:
   stage: build_static_assets
   script:
     - echo "REACT_APP_API_BASE_URL=${BE_API}" > .env.local
+    - npm install
     - npm run build
   artifacts:
     paths:
