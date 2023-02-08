@@ -1,23 +1,31 @@
-import { PDB_URL_INTERFACE_BY_ID, PDB_URL_INTERFACE_BY_PROTEIN } from '../../../constants/ExternalUrls';
-import {ProteinStructureElement, StructType} from './StructuralDetail';
+import { PDB_URL_INTERFACE_BY_PROTEIN } from '../../../constants/ExternalUrls';
+import {baseSettings, ProteinStructureElement, StructType} from './StructuralDetail';
 import { ReactComponent as ExternalLinkIcon } from "../../../images/external-link.svg"
+import PdbeRef from "./PdbeRef";
+
+const pdbSettings = (molId: string) => {
+  return {...baseSettings,
+    ...{
+      moleculeId: molId
+    }}
+}
 
 interface PdbInfoTableProps {
   isoFormAccession: string,
   pdbApiData: Array<ProteinStructureElement>,
   selectedPdbId: string,
-  setSelected: any
+  setSelected: any,
+  pdbeRef: PdbeRef
 }
 
 function PdbInfoTable(props: PdbInfoTableProps) {
-
   return <>
     <div className="tableFixHead">
       <a href={PDB_URL_INTERFACE_BY_PROTEIN + props.isoFormAccession}>Further information from PDBeKB <ExternalLinkIcon width={12.5}/></a>
       <table>
         <thead>
           <tr>
-            <th colSpan={6}>Experimental Structure</th>
+            <th colSpan={5}>Experimental Structure</th>
           </tr>
           <tr>
             <th>PDB ID</th>
@@ -39,7 +47,7 @@ function getPdbInfoRows(props: PdbInfoTableProps) {
   pdbMap.forEach((value) => {
     const copyPdbEntry = {...value.pdbEntry}
     copyPdbEntry.chain_id = value.chains.sort().join()
-    rows.push(getPdbInfoRow(copyPdbEntry, props.setSelected, props.selectedPdbId));
+    rows.push(getPdbInfoRow(copyPdbEntry, props));
   })
   return rows;
 }
@@ -61,19 +69,23 @@ function combineChainsByPdbId(pdbApiData: Array<ProteinStructureElement>) {
   return chainsMap;
 }
 
-function getPdbInfoRow(str: ProteinStructureElement, tableRowClicked: any, clickedPdbId: string) {
-  const rowClass = clickedPdbId === str.pdb_id ? 'clickable-row active' : 'clickable-row';
+
+function getPdbInfoRow(str: ProteinStructureElement, props: PdbInfoTableProps) {
+  const isRowSelected = props.selectedPdbId === str.pdb_id
+  const rowClass = isRowSelected ? 'clickable-row active' : 'clickable-row';
+  const id = isRowSelected ? <u onMouseOver={(_) => props.pdbeRef.clearSelect()}>{str.pdb_id}</u> : <>{str.pdb_id}</>
+  const pos = isRowSelected ? <u onMouseOver={(_) => props.pdbeRef.selectPos(str.start)}>{str.start}</u> : <>{str.start}</>
+
+  const clicked = () => {
+    props.pdbeRef.update(pdbSettings(str.pdb_id));
+    props.setSelected({type:StructType.PDB, id:str.pdb_id, url:""})
+  }
+
   return (
-    <tr className={rowClass} onClick={(e) => tableRowClicked({type:StructType.PDB, id:str.pdb_id, url:""})} key={str.pdb_id}>
-      <td className="small">
-        <a href={PDB_URL_INTERFACE_BY_ID + str.pdb_id} target="_blank" rel="noreferrer">
-          <u>{str.pdb_id}</u>
-        </a>
-      </td>
+    <tr className={rowClass} onClick={clicked} key={str.pdb_id}>
+      <td className="small">{id}</td>
       <td className="small">{str.chain_id}</td>
-      <td className="small">
-        {str.start}
-      </td>
+      <td className="small">{pos}</td>
       <td className="small">{str.resolution}</td>
       <td className="small">{str.experimental_method}</td>
     </tr>
