@@ -46,7 +46,7 @@ function getPdbInfoRows(props: PdbInfoTableProps) {
   const pdbMap = combineChainsByPdbId(props.pdbApiData)
   pdbMap.forEach((value) => {
     const copyPdbEntry = {...value.pdbEntry}
-    copyPdbEntry.chain_id = value.chains.sort().join()
+    copyPdbEntry.chain_id = value.chains.sort().join(',')
     rows.push(getPdbInfoRow(copyPdbEntry, props));
   })
   return rows;
@@ -76,6 +76,11 @@ function getPdbInfoRow(str: ProteinStructureElement, props: PdbInfoTableProps) {
   const id = isRowSelected ? <u onMouseOver={(_) => props.pdbeRef.clearSelect()}>{str.pdb_id}</u> : <>{str.pdb_id}</>
   const pos = isRowSelected ? <u onMouseOver={(_) => props.pdbeRef.selectPos(str.start)}>{str.start}</u> : <>{str.start}</>
 
+  const chain = str.chain_id.split(',').map(c => {
+    const k = id+'chain-'+c
+    return isRowSelected ? <u key={k} onMouseOut={(_) => props.pdbeRef.clearSelect()} onMouseOver={(_) => props.pdbeRef.selectChain(c)}>{c}</u> : <span key={k}>{c}</span>
+  })
+
   const clicked = () => {
     props.pdbeRef.update(pdbSettings(str.pdb_id));
     props.setSelected({type:StructType.PDB, id:str.pdb_id, url:""})
@@ -84,7 +89,7 @@ function getPdbInfoRow(str: ProteinStructureElement, props: PdbInfoTableProps) {
   return (
     <tr className={rowClass} onClick={clicked} key={str.pdb_id}>
       <td className="small">{id}</td>
-      <td className="small">{str.chain_id}</td>
+      <td className="small">{chain}</td>
       <td className="small">{pos}</td>
       <td className="small">{str.resolution}</td>
       <td className="small">{str.experimental_method}</td>
