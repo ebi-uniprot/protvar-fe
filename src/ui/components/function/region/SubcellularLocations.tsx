@@ -1,5 +1,5 @@
 import RegionProteinProps from "./RegionProteinProps";
-import { Comment } from '../FunctionalDetail'
+import {Comment} from "../../../../types/FunctionalResponse";
 import RegionProteinAccordion from "./RegionProteinAccordion";
 import { getActivityRegulation } from "./ActivityRegulations";
 import { v1 as uuidv1 } from 'uuid';

@@ -1,6 +1,6 @@
 import { Fragment } from "react"
 import { v1 as uuidv1 } from 'uuid';
-import { Evidence } from '../../../types/ApiInterfaces';
+import {Evidence} from "../../../types/Common";
 
 interface IdUrl {
   id: string

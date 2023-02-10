@@ -1,9 +1,9 @@
 import { TOTAL_COLS } from "../../../constants/SearchResultTable";
 import CoLocatedVariantDetails from "./coLocated/CoLocatedVariantDetails";
 import AssociationDetails from "./common/AssociationDetails";
-import { PopulationObservationResponse, ProteinColocatedVariant } from "./PopulationDetail";
 import SubmittedVariantDetails from "./SubmittedVariantDetails";
 import PopulationIcon from '../../../images/human.svg';
+import {PopulationObservationResponse, ProteinColocatedVariant} from "../../../types/PopulationObservationResponse";
 
 interface PopulationDataRowProps {
   poApiData: PopulationObservationResponse,

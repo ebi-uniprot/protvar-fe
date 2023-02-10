@@ -1,6 +1,6 @@
 import { Fragment } from "react"
 import Evidences from "./Evidences";
-import { Comment } from "./FunctionalDetail"
+import {Comment} from "../../../types/FunctionalResponse";
 import { v1 as uuidv1 } from 'uuid';
 
 interface ProteinFunctionTableProps {

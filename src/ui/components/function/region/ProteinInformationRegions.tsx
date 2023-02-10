@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Comment } from '../FunctionalDetail'
+import {Comment} from "../../../../types/FunctionalResponse";
 import { divideProteinRegions } from "../ProteinHelper";
 import ActivityRegulations, { getActivityRegulation } from './ActivityRegulations';
 import AdditionalResources from './AdditionalResources';

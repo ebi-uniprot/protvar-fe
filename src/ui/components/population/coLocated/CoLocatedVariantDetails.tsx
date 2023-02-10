@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import CoLocatedVariantAccordion from "./CoLocatedVariantAccordion";
-import { ProteinColocatedVariant } from "../PopulationDetail";
+import {ProteinColocatedVariant} from "../../../../types/PopulationObservationResponse";
 
 interface CoLocatedVariantDetailsProps {
   coLocatedVariants: Array<ProteinColocatedVariant>

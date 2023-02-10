@@ -1,4 +1,4 @@
-import { Comment } from './FunctionalDetail'
+import { Comment } from "../../../types/FunctionalResponse";
 
 export function divideProteinRegions(regions: Array<Comment> | null | undefined) {
   const catalyticActivities: Array<Comment> = [];

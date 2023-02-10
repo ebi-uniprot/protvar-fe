@@ -1,11 +1,11 @@
 import { TOTAL_COLS } from '../../../constants/SearchResultTable';
 import ProteinFunctionTable from './ProteinFunctionTable';
-import { FunctionalResponse } from './FunctionalDetail';
 import GeneAndTranslatedSequenceTable from './GeneAndTranslatedSequenceTable';
 import ProteinInformationTable from './ProteinInformationTable';
 import ResidueRegionTable from './ResidueRegionTable';
 import { TranslatedSequence } from '../../../utills/Convertor';
 import ProteinIcon from '../../../images/proteins.svg';
+import {FunctionalResponse} from "../../../types/FunctionalResponse";
 
 interface FunctionalDataRowProps {
   apiData: FunctionalResponse

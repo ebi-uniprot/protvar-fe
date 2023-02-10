@@ -1,6 +1,6 @@
-import { FunctionalResponse, GeneName } from "./FunctionalDetail";
 import LabelValueLi from "./LabelValueLi";
 import ProteinInformationRegions from "./region/ProteinInformationRegions";
+import {FunctionalResponse, GeneName} from "../../../types/FunctionalResponse";
 
 interface ProteinInformationTableProps {
   apiData: FunctionalResponse

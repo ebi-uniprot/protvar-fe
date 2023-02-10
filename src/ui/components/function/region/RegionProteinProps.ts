@@ -1,5 +1,5 @@
 import { StringVoidFun } from '../../../../constants/CommonTypes';
-import { Comment } from '../FunctionalDetail'
+import {Comment} from "../../../../types/FunctionalResponse";
 interface RegionProteinProps {
   comments: Array<Comment>
   // accession: string

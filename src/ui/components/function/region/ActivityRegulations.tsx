@@ -1,5 +1,5 @@
 import RegionProteinProps from "./RegionProteinProps";
-import { Comment } from '../FunctionalDetail'
+import {Comment} from "../../../../types/FunctionalResponse";
 import Evidences from "../Evidences";
 import RegionProteinAccordion from "./RegionProteinAccordion";
 import { EmptyElement } from "../../../../constants/Const";
