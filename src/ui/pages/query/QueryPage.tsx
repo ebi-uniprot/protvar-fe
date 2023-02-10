@@ -1,8 +1,6 @@
-import axios, { AxiosResponse } from "axios";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { API_HEADERS, G2P_MAPPING_URI } from "../../../constants/const";
-import MappingResponse, { ParsedInput } from "../../../types/MappingResponse";
+import { ParsedInput } from "../../../types/MappingResponse";
 import CaddLegendColors from "../../components/search/CaddLegendColors";
 import ResultTable from "../../components/search/ResultTable";
 import ResultTableButtonsLegend from "../../components/search/ResultTableButtonsLegend";
@@ -13,6 +11,7 @@ import {
 } from "../../../utills/Convertor";
 import Notify from "../../elements/Notify";
 import DownloadModal from "../../modal/DownloadModal";
+import {mappings} from "../../../services/ProtVarService";
 
 // basic tests on query params
 const chromosomeRegExp = new RegExp("[a-zA-Z0-9]+");
@@ -143,14 +142,7 @@ const QueryPageContent = () => {
     const query = getQueryFromUrl(location);
     if (query) {
       setUserInput(query);
-      axios
-        .post<string[], AxiosResponse<MappingResponse>>(
-          G2P_MAPPING_URI,
-          [query],
-          {
-            headers: API_HEADERS,
-          }
-        )
+      mappings([query])
         .then((response) => {
           const records = response.data.mappings.map(
             convertApiMappingToTableRecords

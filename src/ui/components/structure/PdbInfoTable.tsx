@@ -1,7 +1,8 @@
 import { PDB_URL_INTERFACE_BY_PROTEIN } from '../../../constants/ExternalUrls';
-import {baseSettings, ProteinStructureElement, StructType} from './StructuralDetail';
+import {baseSettings, StructType} from './StructuralDetail';
 import { ReactComponent as ExternalLinkIcon } from "../../../images/external-link.svg"
 import PdbeRef from "./PdbeRef";
+import {ProteinStructureElement} from "../../../types/ProteinStructureResponse";
 
 const pdbSettings = (molId: string) => {
   return {...baseSettings,

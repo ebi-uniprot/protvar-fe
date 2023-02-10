@@ -1,6 +1,7 @@
-import { ClinicalSignificance, PopulationFrequency, Xref } from "../PopulationDetail";
+//import { ClinicalSignificance, PopulationFrequency, Xref } from "../PopulationDetail";
 import { v1 as uuidv1 } from 'uuid';
 import XReferenceLi from "./XReferenceLi";
+import {ClinicalSignificance, PopulationFrequency, Xref} from "../../../../types/PopulationObservationResponse";
 
 interface XRefDetailProps {
   xrefs: Array<Xref>,

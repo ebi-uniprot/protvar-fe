@@ -1,8 +1,9 @@
 import { ALPHAFOLD_URL_INTERFACE_BY_PROTEIN } from '../../../constants/ExternalUrls';
-import {AlphafoldResponseElement, baseSettings, StructType} from "./StructuralDetail";
-import {Pocket} from "../function/FunctionalDetail";
 import {formatRange} from "../../../utills/Util";
 import PdbeRef from "./PdbeRef";
+import {AlphafoldResponseElement } from "../../../types/AlphafoldResponse";
+import {baseSettings, StructType} from "./StructuralDetail";
+import {Pocket} from "../../../types/FunctionalResponse";
 
 const afSettings = (alphaFoldUrl: string) => {
   return {...baseSettings,

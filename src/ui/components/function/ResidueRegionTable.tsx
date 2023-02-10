@@ -3,11 +3,11 @@ import { EmptyElement } from "../../../constants/Const";
 import { FEATURES } from "../../../constants/Protein";
 import AminoAcidModel from "./AminoAcidModel";
 import Evidences from "./Evidences";
-import {Pocket, Foldx, P2PInteraction, ProteinFeature, FunctionalResponse} from "./FunctionalDetail";
 import { ReactComponent as ChevronDownIcon } from "../../../images/chevron-down.svg"
 import { v1 as uuidv1 } from 'uuid';
 import { StringVoidFun } from "../../../constants/CommonTypes";
 import {formatRange, getKeyValue} from "../../../utills/Util";
+import {FunctionalResponse, Pocket, Foldx, P2PInteraction, ProteinFeature} from "../../../types/FunctionalResponse";
 
 interface ResidueRegionTableProps {
   apiData: FunctionalResponse

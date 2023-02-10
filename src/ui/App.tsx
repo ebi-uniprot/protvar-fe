@@ -1,11 +1,9 @@
 import {useState} from "react";
 import {Route, RouteComponentProps, withRouter} from "react-router-dom";
-import axios, {AxiosResponse} from "axios";
 import HomePage from "./pages/home/HomePage";
 import SearchResultsPage from "./pages/search/SearchResultPage";
 import APIErrorPage from "./pages/APIErrorPage";
-import {API_HEADERS, G2P_MAPPING_URI} from "../constants/const";
-import MappingResponse, {ParsedInput} from "../types/MappingResponse";
+import {ParsedInput} from "../types/MappingResponse";
 import {convertApiMappingToTableRecords, MappingRecord,} from "../utills/Convertor";
 import {firstPage, Page} from "../utills/AppHelper";
 import AboutPage from "./pages/AboutPage";
@@ -14,6 +12,7 @@ import {ABOUT, API_ERROR, CONTACT, HOME, QUERY, SEARCH,} from "../constants/Brow
 import Notify from "./elements/Notify";
 import QueryPage from "./pages/query/QueryPage";
 import {Assembly, DEFAULT_ASSEMBLY} from "../constants/CommonTypes";
+import {mappings} from "../services/ProtVarService";
 
 interface AppProps extends RouteComponentProps {}
 
@@ -106,14 +105,7 @@ function App(props: AppProps) {
   };
 
   function mappingApiCall(inputSubArray: string[]) {
-    axios
-      .post<string[], AxiosResponse<MappingResponse>>(
-        G2P_MAPPING_URI + "?assembly=" + assembly.toString(),
-        inputSubArray,
-        {
-          headers: API_HEADERS,
-        }
-      )
+    mappings(inputSubArray, assembly.toString())
       .then((response) => {
         const records = response.data.mappings.map(
           convertApiMappingToTableRecords

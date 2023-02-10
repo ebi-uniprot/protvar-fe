@@ -2,6 +2,7 @@ import RegionProteinProps from "./RegionProteinProps";
 import { EmptyElement } from "../../../../constants/Const";
 import { INTACT_URL } from "../../../../constants/ExternalUrls";
 import { ReactComponent as ChevronDownIcon } from "../../../../images/chevron-down.svg"
+import {Interaction} from "../../../../types/FunctionalResponse";
 
 interface InteractionsProps extends RegionProteinProps {
 	accession: string
@@ -14,7 +15,7 @@ function Interactions(props: InteractionsProps) {
 		var gene: string = "";
 		var interactor = '';
 		var key = 'interactions-' + accession;
-		comments[0].interactions.forEach((interaction) => {
+		comments[0].interactions.forEach((interaction: Interaction) => {
 			if (interaction.accession1 === accession) {
 				interactor = interaction.interactor1;
 				var geneInteractor = interaction.accession2 + '(' + interaction.gene + ')';

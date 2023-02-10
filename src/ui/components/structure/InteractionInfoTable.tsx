@@ -1,8 +1,8 @@
 import {baseSettings, StructType} from './StructuralDetail';
-import {P2PInteraction} from "../function/FunctionalDetail";
 import {formatRange} from "../../../utills/Util";
 import {API_URL} from "../../../constants/const";
 import PdbeRef from "./PdbeRef";
+import {P2PInteraction} from "../../../types/FunctionalResponse";
 
 const customSettings = (customUrl: string) => {
     return {...baseSettings,

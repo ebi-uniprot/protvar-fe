@@ -1,48 +1,16 @@
 import {useEffect, useRef, useState} from 'react';
-import { ALPHAFOLD_URL } from '../../../constants/ExternalUrls';
-import axios from 'axios';
 import PdbInfoTable from './PdbInfoTable';
 import AlphafoldInfoTable from './AlphafoldInfoTable';
-import { API_URL } from '../../../constants/const';
 import PdbeMolstar from "./PdbeMolstar";
 import InteractionInfoTable from "./InteractionInfoTable";
 import LoaderRow from "../search/LoaderRow";
-import {P2PInteraction, Pocket} from "../function/FunctionalDetail";
 import PdbeRef from "./PdbeRef";
+import {getPredictedStructure} from "../../../services/AlphafoldService";
+import {getFunctionalData, getStructureData} from "../../../services/ProtVarService";
+import {P2PInteraction, Pocket} from "../../../types/FunctionalResponse";
+import {ProteinStructureElement} from "../../../types/ProteinStructureResponse";
+import {AlphafoldResponseElement} from "../../../types/AlphafoldResponse";
 
-interface ProteinStructureResponse extends Array<ProteinStructureElement>{
-}
-
-export interface ProteinStructureElement {
-  chain_id: string,
-  pdb_id: string,
-  start: number,
-  resolution: number,
-  experimental_method: string,
-}
-
-type AlphafoldResponse = Array<AlphafoldResponseElement>
-
-export interface AlphafoldResponseElement {
-  entryId: string,
-  gene: string,
-  uniprotAccession: string,
-  uniprotId: string,
-  uniprotDescription: string,
-  taxId: number,
-  organismScientificName: string,
-  uniprotStart: number,
-  uniprotEnd: number,
-  uniprotSequence: string,
-  modelCreatedDate: string,
-  latestVersion: number,
-  allVersions: Array<number>,
-  cifUrl: string,
-  bcifUrl: string,
-  pdbUrl: string,
-  paeImageUrl: string,
-  paeDocUrl: string
-}
 
 interface StructuralDetailProps {
   isoFormAccession: string,
@@ -74,17 +42,15 @@ function StructuralDetail(props: StructuralDetailProps) {
 
   useEffect(() => {
     let id = ''
-    axios
-        .get<ProteinStructureResponse>(API_URL + proteinStructureUri)
-        .then(response => {
+    getStructureData(proteinStructureUri).then(
+        response => {
           setPdbData(response.data);
           if (response.data.length > 0) {
             id = response.data[0].pdb_id
             setSelected({type: StructType.PDB, id: response.data[0].pdb_id, url: ""});
           }
-          return axios.get<AlphafoldResponse>(ALPHAFOLD_URL + isoFormAccession)
-        })
-        .then(response => {
+          return getPredictedStructure(isoFormAccession);
+        }).then(response => {
           setAlphaFoldData(response.data);
           if (response.data.length > 0 && !id) {
             // if id already set (pdb id), use that, otherwise, use alphaFold id
@@ -93,16 +59,12 @@ function StructuralDetail(props: StructuralDetailProps) {
               url: response.data[0].cifUrl
             })
           }
-          return axios.all([
-            axios.get(API_URL + '/interaction/' + isoFormAccession + '/' + aaPosition),
-            axios.get(API_URL + '/pocket/' + isoFormAccession + '/' + aaPosition)
-          ])
-        })
-        .then(axios.spread((interaction, pocket) => {
-          setInteractionData(interaction.data)
-          setPocketData(pocket.data)
-        }))
-        .catch((err) => {
+          return getFunctionalData('/function/' + isoFormAccession + '/' + aaPosition)
+        }).then(response => {
+          const funcData = response.data
+          setInteractionData(funcData.interactions)
+          setPocketData(funcData.pockets)
+        }).catch(err => {
           console.log(err);
         });
   }, [proteinStructureUri, isoFormAccession, aaPosition]);

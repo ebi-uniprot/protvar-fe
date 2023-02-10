@@ -1,5 +1,5 @@
 import XRefDetail from "./common/XRefDetail";
-import { ProteinColocatedVariant } from "./PopulationDetail";
+import {ProteinColocatedVariant} from "../../../types/PopulationObservationResponse";
 
 
 interface SubmittedVariantDetailsProps {

@@ -1,7 +1,7 @@
 import { Fragment } from "react"
 import Evidences from "../../function/Evidences";
-import { Association } from "../PopulationDetail";
 import { v1 as uuidv1 } from 'uuid';
+import {Association} from "../../../../types/PopulationObservationResponse";
 
 interface AssociationDetailsProps {
   associations: Array<Association>
