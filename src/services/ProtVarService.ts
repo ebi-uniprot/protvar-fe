@@ -1,16 +1,20 @@
-import axios, {AxiosResponse} from "axios";
+import axios, {AxiosResponse} from 'axios';
+import { setupCache } from 'axios-cache-interceptor/dist/index.bundle';
 import {API_HEADERS, API_URL, DOWNLOAD_URI, EMAIL_URI, G2P_MAPPING_URI} from "../constants/const";
 import {FunctionalResponse} from "../types/FunctionalResponse";
 import {PopulationObservationResponse} from "../types/PopulationObservationResponse";
 import {ProteinStructureResponse} from "../types/ProteinStructureResponse";
 import MappingResponse from "../types/MappingResponse";
 
-const ProtVarAPI = axios.create({
+
+const instance = axios.create({
     baseURL: API_URL
 });
 
+const api = setupCache(instance, {})
+
 export function mappings(inputArr: string[], assembly?: string) {
-    return ProtVarAPI.post<string[], AxiosResponse<MappingResponse>>(
+    return api.post<any, string[], AxiosResponse<MappingResponse>>(
             G2P_MAPPING_URI,
         inputArr,
             {
@@ -21,7 +25,7 @@ export function mappings(inputArr: string[], assembly?: string) {
 }
 
 export function downloadMappings(inputArr: string[], functional: boolean, population: boolean, structure: boolean) {
-    return ProtVarAPI.post<string[], AxiosResponse>(
+    return api.post<any, string[], AxiosResponse>(
         DOWNLOAD_URI,
         inputArr,
         {
@@ -37,7 +41,7 @@ export function downloadMappings(inputArr: string[], functional: boolean, popula
 export function emailFileInput(file: File, email: string, jobName: string, functional: boolean, population: boolean, structure: boolean) {
     const formData = new FormData();
     formData.append('file', file);
-    return ProtVarAPI.post(
+    return api.post(
         EMAIL_URI + "/file",
         formData,
         {
@@ -50,7 +54,7 @@ export function emailFileInput(file: File, email: string, jobName: string, funct
 }
 
 export function emailTextInput(inputArr: string[], email: string, jobName: string, functional: boolean, population: boolean, structure: boolean) {
-    return ProtVarAPI.post(
+    return api.post(
         EMAIL_URI + "/inputs",
         inputArr,
         {
@@ -64,7 +68,7 @@ export function emailTextInput(inputArr: string[], email: string, jobName: strin
 }
 
 export function getFunctionalData(url: string) {
-    return ProtVarAPI.get<FunctionalResponse>(url).then(
+    return api.get<FunctionalResponse>(url).then(
         response => {
             if (response.data.interactions && response.data.interactions.length > 1) {
                 response.data.interactions.sort((a, b) => b.pdockq - a.pdockq);
@@ -75,9 +79,9 @@ export function getFunctionalData(url: string) {
 }
 
 export function getPopulationData(url: string) {
-    return ProtVarAPI.get<PopulationObservationResponse>(url);
+    return api.get<PopulationObservationResponse>(url);
 }
 
 export function getStructureData(url: string) {
-    return ProtVarAPI.get<ProteinStructureResponse>(url);
+    return api.get<ProteinStructureResponse>(url);
 }
