@@ -16,7 +16,8 @@ function PasteVariantSearch(props: PasteVariantSearchProps) {
   const populateVCF = () => {
     setSearchTerm('X\t149498202\t.\tC\tG\n' +
         '10\t43118436\t.\tA\tC\n' +
-        '2\t233760498\t.\tG\tA')
+        '2\t233760498\t.\tG\tA\n' +
+        '14\t89993420\t.\tA\tG')
     props.updateAssembly(DEFAULT_ASSEMBLY)
   };
 
@@ -83,7 +84,7 @@ function PasteVariantSearch(props: PasteVariantSearchProps) {
             <section className="uniprot-card__left">
 
               <div className="assembly">
-                  Reference Genome Assembly
+                  <span title="Genome assembly conversion from GRCh37 to GRCh38 works for genomic input types only i.e. for input in VCF, HGVS or gnomAD formats. Protein position and DBSNP ID inputs are assumed to be in GRCh38.">Reference Genome Assembly</span>
                   <div className="assembly-radio-check">
                     <label>
                     <input type="radio" name="grch" value="grch38" checked={props.assembly===Assembly.GRCh38} onChange={() => props.updateAssembly(Assembly.GRCh38)}/>
