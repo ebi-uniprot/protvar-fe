@@ -1,5 +1,7 @@
 import { API_URL } from '../../../constants/const';
 import Button from '../../elements/form/Button';
+import {QUERY} from "../../../constants/BrowserPaths";
+import {Link} from "react-router-dom";
 
 function RestApiComponent() {
   return <div id="api" className="card-table api">
@@ -25,6 +27,7 @@ function RestApiComponent() {
                 <li>Specific residues or ranges in genes, proteins or protein structures</li>
                 <li>Genomic positions or ranges using several different formats</li>
               </ul>
+              You can also use <b><Link to={QUERY} title="Direct query" id="directQuery">direct query</Link></b> to access annotations.
             </section>
           </section>
         </div>
