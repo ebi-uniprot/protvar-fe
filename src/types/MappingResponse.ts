@@ -1,16 +1,65 @@
-interface MappingResponse {
-  mappings: Array<GenomeProteinMapping>;
-  invalidInputs: Array<ParsedInput>;
+export interface MappingResponse {
+  inputs: Array<GenomicInput|ProteinInput|RSInput>
+  messages: Array<Message>
 }
+
+export interface Message {
+  type: string
+  text: string
+}
+
+export const INPUT_GEN = 'GEN'
+export const INPUT_PRO = 'PRO'
+export const INPUT_RS = 'RS'
+
+export const INFO = 'INFO'
+export const WARN = 'WARN'
+export const ERROR = 'ERROR'
+
+export interface UserInput {
+  inputStr: string
+  messages: Array<Message>
+  type: string
+  valid: boolean
+}
+
+export interface Message {
+  type: string
+  text: string
+}
+
+export interface GenomicInput extends UserInput {
+  chr:string
+  pos:number
+  ref:string
+  alt:string
+  id:string
+  converted:boolean
+  mappings:Array<GenomeProteinMapping>
+}
+
+export interface ProteinInput extends UserInput {
+  acc:string
+  pos:number
+  ref:string
+  alt:string
+  derivedGenomicInputs:Array<GenomicInput>
+}
+
+export interface RSInput extends UserInput {
+  id:string
+  derivedGenomicInputs:Array<GenomicInput>
+}
+
 export interface GenomeProteinMapping {
-  chromosome: string;
-  geneCoordinateStart: number;
-  geneCoordinateEnd: number;
-  id: string;
-  userAllele: string;
-  variantAllele: string;
+  //chromosome: string;
+  //geneCoordinateStart: number;
+  //geneCoordinateEnd: number;
+  //id: string;
+  //userAllele: string;
+  //variantAllele: string;
   genes: Array<Gene>;
-  input: string;
+  //input: string;
 }
 interface Gene {
   ensg: string;
