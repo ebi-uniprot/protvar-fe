@@ -81,6 +81,9 @@ function getRegions(regions: Array<ProteinFeature>, accession: string, pockets: 
       <label style={{ textAlign: 'center', fontWeight: 'bold' }}>
         No functional data for the region
       </label>
+      <br/><br/>
+      <b>Predictions</b>
+      <br/>(Source: PubMed ID <a href="https://pubmed.ncbi.nlm.nih.gov/36690744" target="_blank">15980494</a>)<br/>
       <Pockets pockets={pockets} expendedRowKey={expendedRowKey} toggleRow={toggleRow} />
       <Interfaces accession={accession} interactions={interactions} expendedRowKey={expendedRowKey} toggleRow={toggleRow} />
     </>);
@@ -92,7 +95,11 @@ function getRegions(regions: Array<ProteinFeature>, accession: string, pockets: 
     regionsList.push(list);
   });
   return <>
+    <b>Curated observations</b>
     {regionsList}
+    <br/><br/>
+    <b>Predictions</b>
+    <br/>(Source: PubMed ID <a href="https://pubmed.ncbi.nlm.nih.gov/36690744" target="_blank">15980494</a>)<br/>
     <Pockets pockets={pockets} expendedRowKey={expendedRowKey} toggleRow={toggleRow} />
     <Interfaces accession={accession} interactions={interactions} expendedRowKey={expendedRowKey} toggleRow={toggleRow} />
     </>
@@ -110,7 +117,7 @@ function getFeatureList(feature: ProteinFeature, key: string, expendedRowKey: st
 
   return <Fragment key={key}>
     <button type="button" className="collapsible" onClick={(e) => toggleRow(key)}>
-      {category}
+      {category ? category : 'Unnamed'}
       <ChevronDownIcon className="chevronicon" />
     </button>
     {getFeatureDetail(key, feature, expendedRowKey)}
@@ -167,6 +174,8 @@ function getFoldxDetail(foldxs: Array<Foldx>, rowKey: string, expendedRowKey: st
               <b title="Difference between the predicted ΔG before and after the variant. A value above 2 often indicates a destabilising variant.">ΔΔG<sub>pred</sub> :</b> {foldxs[0].foldxDdq}
               <br />
               <b title="AlphaFold per-residue confidence score (pLDDT).">pLDDT :</b> {foldxs[0].plddt}
+              <br />
+              (Source: PubMed ID <a href="http://www.ncbi.nlm.nih.gov/pubmed/15980494" target="_blank">15980494</a>)
             </li>
           </ul>
   }
