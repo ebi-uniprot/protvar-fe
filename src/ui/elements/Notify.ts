@@ -3,7 +3,7 @@ import "simple-react-notifications2/dist/index.css";
 import { Config } from "simple-react-notifications2/dist/NotificationContainer/NotificationContainer";
 
 const defaultConfig : Config = {
-  autoClose: 6000,
+  //autoClose: 6000,
   width: "400",
   position: "top-right",
   delay: 0,
@@ -12,11 +12,11 @@ const defaultConfig : Config = {
   onlyLast: false,
   rtl: false,
   newestOnTop: true,
-  animation: {
+  /*animation: {
     in: "fadeIn",
     out: "fadeOut",
     duration: 400
-  }
+  }*/
 };
 
 class Notify {
