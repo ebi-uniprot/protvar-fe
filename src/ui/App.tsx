@@ -3,7 +3,7 @@ import {Route, RouteComponentProps, withRouter} from "react-router-dom";
 import HomePage from "./pages/home/HomePage";
 import SearchResultsPage from "./pages/search/SearchResultPage";
 import APIErrorPage from "./pages/APIErrorPage";
-import {ERROR, INFO, ParsedInput, WARN} from "../types/MappingResponse";
+import {ERROR, INFO, WARN} from "../types/MappingResponse";
 import {convertApiMappingToTableRecords, MappingRecord,} from "../utills/Convertor";
 import {firstPage, Page} from "../utills/AppHelper";
 import AboutPage from "./pages/AboutPage";

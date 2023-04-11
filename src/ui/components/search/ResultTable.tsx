@@ -72,14 +72,14 @@ const getTableRows = (mappings: MappingRecord[][][], isoFormGroupExpanded: strin
   const rowStyle = { a: {backgroundColor: "#ebf6fb" }, b: {backgroundColor: "#fff" }}
   let prevInput = ""
   let currStyle = rowStyle.a
-  let swapStyle = (s: object) => (s == rowStyle.a) ? rowStyle.b : rowStyle.a;
+  let swapStyle = (s: object) => (s === rowStyle.a) ? rowStyle.b : rowStyle.a;
   mappings.forEach((mapping, inputRecordIndex) => {
     mapping.forEach((matchingIsoForms) => {
       for (let index = 0; index < matchingIsoForms.length; index++) {
         const isoform = matchingIsoForms[index];
         const currentGroup = inputRecordIndex + '-' + isoform.canonicalAccession + '-' + isoform.position + '-' + isoform.altAllele;
         let currInput = isoform.input
-        if (currInput != prevInput) {
+        if (currInput !== prevInput) {
           currStyle = swapStyle(currStyle)
         }
         prevInput = currInput

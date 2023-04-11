@@ -83,7 +83,7 @@ function getRegions(regions: Array<ProteinFeature>, accession: string, pockets: 
       </label>
       <br/><br/>
       <b>Predictions</b>
-      <br/>(Source: PubMed ID <a href="https://pubmed.ncbi.nlm.nih.gov/36690744" target="_blank">15980494</a>)<br/>
+      <br/>(Source: PubMed ID <a href="https://pubmed.ncbi.nlm.nih.gov/36690744" target="_blank" rel="noreferrer">15980494</a>)<br/>
       <Pockets pockets={pockets} expendedRowKey={expendedRowKey} toggleRow={toggleRow} />
       <Interfaces accession={accession} interactions={interactions} expendedRowKey={expendedRowKey} toggleRow={toggleRow} />
     </>);
@@ -99,7 +99,7 @@ function getRegions(regions: Array<ProteinFeature>, accession: string, pockets: 
     {regionsList}
     <br/><br/>
     <b>Predictions</b>
-    <br/>(Source: PubMed ID <a href="https://pubmed.ncbi.nlm.nih.gov/36690744" target="_blank">15980494</a>)<br/>
+    <br/>(Source: PubMed ID <a href="https://pubmed.ncbi.nlm.nih.gov/36690744" target="_blank" rel="noreferrer">15980494</a>)<br/>
     <Pockets pockets={pockets} expendedRowKey={expendedRowKey} toggleRow={toggleRow} />
     <Interfaces accession={accession} interactions={interactions} expendedRowKey={expendedRowKey} toggleRow={toggleRow} />
     </>
@@ -175,7 +175,7 @@ function getFoldxDetail(foldxs: Array<Foldx>, rowKey: string, expendedRowKey: st
               <br />
               <b title="AlphaFold per-residue confidence score (pLDDT).">pLDDT :</b> {foldxs[0].plddt}
               <br />
-              (Source: PubMed ID <a href="http://www.ncbi.nlm.nih.gov/pubmed/15980494" target="_blank">15980494</a>)
+              (Source: PubMed ID <a href="http://www.ncbi.nlm.nih.gov/pubmed/15980494" target="_blank" rel="noreferrer">15980494</a>)
             </li>
           </ul>
   }

@@ -10,8 +10,6 @@ import {
 } from "../../../utills/Convertor";
 import DownloadModal from "../../modal/DownloadModal";
 import {mappings} from "../../../services/ProtVarService";
-import {ERROR, INFO, WARN} from "../../../types/MappingResponse";
-import Notify from "../../elements/Notify";
 
 // basic tests on query params
 const chromosomeRegExp = new RegExp("[a-zA-Z0-9]+");
