@@ -280,9 +280,7 @@
 			border-top: 1px dotted #ccc;
 			border-bottom: 1px dotted #ccc;
 		}
-		tr:nth-child(even) {
-			background-color: $search-results-table-zebra-background-colour;
-		}
+
 
 		th {
 			background-color: $search-results-table-header-background-colour;
@@ -302,7 +300,7 @@
 		}
 
 		td {
-			border-bottom: 1px solid $search-results-divider-border-colour;
+			//border-bottom: 1px solid $search-results-divider-border-colour;
 			font-size: 0.9rem;
 			padding: 0;
 			/* width: fit-content; */
@@ -310,8 +308,8 @@
 			width: 0.1%;
 			white-space: nowrap;
 			padding: 0.3rem 0.5rem;
-			border-right: 1px dotted #ccc;
-			border-left: 1px dotted #ccc;
+			//border-right: 1px dotted #ccc;
+			//border-left: 1px dotted #ccc;
 			word-wrap: break-word;
 		}
 

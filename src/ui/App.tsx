@@ -3,7 +3,7 @@ import {Route, RouteComponentProps, withRouter} from "react-router-dom";
 import HomePage from "./pages/home/HomePage";
 import SearchResultsPage from "./pages/search/SearchResultPage";
 import APIErrorPage from "./pages/APIErrorPage";
-import {ParsedInput} from "../types/MappingResponse";
+import {ERROR, INFO, WARN} from "../types/MappingResponse";
 import {convertApiMappingToTableRecords, MappingRecord,} from "../utills/Convertor";
 import {firstPage, Page} from "../utills/AppHelper";
 import AboutPage from "./pages/AboutPage";
@@ -21,7 +21,29 @@ function App(props: AppProps) {
   const [userInputs, setUserInputs] = useState<string[]>([]);
   const [file, setFile] = useState<File | null>(null);
   const [searchResults, setSearchResults] = useState<MappingRecord[][][]>([]);
-  const [invalidInputs, setInvalidInputs] = useState<Array<ParsedInput>>([]);
+  // MappingRecord 3d array -> [][][] list of mappings/genes/isoforms
+    // mappings : [
+    //     ...
+    //     genes: [
+    //        ...
+    //        isoforms: [ -> for can, all fields; for non-can, no INPUT & GENOMIC fields, only PROTEIN fields
+    //           ...
+    //            ]
+    //     ]
+    // ]
+    // e.g.
+    // input 1   gene 1   isoform1 (can)
+    //                    isoform2 (non-can)
+    // input 2   gene 1   isoform 1 (can)
+    //                    isoform 2 (non-can)
+    //                    ...
+    //           gene 2  isoform 1 (can)
+    //                   isoform 2 (non-can)
+    //                   ...
+    //           ...
+    // ...
+
+
   const [page, setPage] = useState<Page>(firstPage(0));
   const [assembly, setAssembly] = useState(DEFAULT_ASSEMBLY)
 
@@ -105,15 +127,20 @@ function App(props: AppProps) {
   };
 
   function mappingApiCall(inputSubArray: string[]) {
+      console.log("in mappingApiCall " + assembly)
     mappings(inputSubArray, assembly.toString())
       .then((response) => {
-        const records = response.data.mappings.map(
-          convertApiMappingToTableRecords
-        );
+        const records = convertApiMappingToTableRecords(response.data.inputs);
         setSearchResults(records);
-        setInvalidInputs(response.data.invalidInputs);
-        if (response.data.invalidInputs.length > 0)
-          Notify.err("Some input rows are not valid");
+        response.data.messages.forEach(message => {
+            if (message.type === INFO) {
+                Notify.info(message.text)
+            } else if (message.type === WARN) {
+                Notify.warn(message.text)
+            } else if (message.type === ERROR) {
+                Notify.err(message.text)
+            }
+        });
         props.history.push(SEARCH);
       })
       .catch((err) => {
@@ -147,7 +174,6 @@ function App(props: AppProps) {
             page={page}
             pastedInputs={userInputs}
             fetchNextPage={fetchPage}
-            invalidInputs={invalidInputs}
             loading={loading}
           />
         )}

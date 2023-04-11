@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { ParsedInput } from "../../../types/MappingResponse";
 import CaddLegendColors from "../../components/search/CaddLegendColors";
 import ResultTable from "../../components/search/ResultTable";
 import ResultTableButtonsLegend from "../../components/search/ResultTableButtonsLegend";
@@ -9,7 +8,6 @@ import {
   convertApiMappingToTableRecords,
   MappingRecord,
 } from "../../../utills/Convertor";
-import Notify from "../../elements/Notify";
 import DownloadModal from "../../modal/DownloadModal";
 import {mappings} from "../../../services/ProtVarService";
 
@@ -35,26 +33,21 @@ const proteinExamples = [
 
 const gExamples = genomicExamples.map((ex, idx) => (
   <li key={"gEx" + idx}>
-    <pre>
-      <a href={ex}>{ex}</a>
-    </pre>
+    <a href={ex}>{ex}</a>
   </li>
 ));
 const pExamples = proteinExamples.map((ex, idx) => (
   <li key={"pEx" + idx}>
-    <pre>
-      <a href={ex}>{ex}</a>
-    </pre>
+    <a href={ex}>{ex}</a>
   </li>
 ));
 
-const InvalidQueryContent = () => (
+const QueryInfoContent = () => (
   <>
-    <h3>Invalid Query</h3>
+    <h3>Query</h3>
     <p>
-      The URL request format is invalid. Examples of valid requests to access
-      variant annotations using either genomic coordinates or protein accession
-      and position:
+      Direct access to variant annotations using permanent URL. Examples of valid requests using genomic coordinates
+      and protein information are given below.
     </p>
     Using genomic coordinates
     <ul>{gExamples}</ul>
@@ -136,7 +129,6 @@ const QueryPageContent = () => {
 
   const [userInput, setUserInput] = useState("");
   const [searchResults, setSearchResults] = useState<MappingRecord[][][]>([]);
-  const [invalidInputs, setInvalidInputs] = useState<Array<ParsedInput>>([]);
 
   useEffect(() => {
     const query = getQueryFromUrl(location);
@@ -144,13 +136,8 @@ const QueryPageContent = () => {
       setUserInput(query);
       mappings([query])
         .then((response) => {
-          const records = response.data.mappings.map(
-            convertApiMappingToTableRecords
-          );
+          const records = convertApiMappingToTableRecords(response.data.inputs)
           setSearchResults(records);
-          setInvalidInputs(response.data.invalidInputs);
-          if (response.data.invalidInputs.length > 0)
-            Notify.err("Some input rows are not valid");
         })
         .catch((err) => {
           console.log(err);
@@ -169,12 +156,12 @@ const QueryPageContent = () => {
           />
           <ResultTableButtonsLegend />
         </div>
-        <ResultTable invalidInputs={invalidInputs} mappings={searchResults} />
+        <ResultTable mappings={searchResults} />
         <CaddLegendColors />
       </div>
     </>
   ) : (
-    <InvalidQueryContent />
+    <QueryInfoContent />
   );
 
   //if (!searchResults || searchResults.length < 1) return <>Nothing!</>;

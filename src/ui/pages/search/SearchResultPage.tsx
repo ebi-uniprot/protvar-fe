@@ -4,7 +4,6 @@ import PaginationRow from "./PaginationRow";
 import { Redirect } from 'react-router-dom'
 import { NextPageFun, Page } from "../../../utills/AppHelper";
 import { MappingRecord } from "../../../utills/Convertor";
-import { ParsedInput } from "../../../types/MappingResponse";
 import DownloadModal from "../../modal/DownloadModal";
 import { MAX_IN_PLACE_DOWNLOAD_WITHOUT_EMAIL } from "../../../constants/const";
 import CaddLegendColors from "../../components/search/CaddLegendColors";
@@ -17,12 +16,11 @@ interface SearchResultPageProps {
   page: Page
   fetchNextPage: NextPageFun
   rows: MappingRecord[][][]
-  invalidInputs: Array<ParsedInput>
   loading: boolean
 }
 
 function SearchResultsPageContent(props: SearchResultPageProps) {
-  const { pastedInputs, file, page, invalidInputs, rows, fetchNextPage, loading } = props;
+  const { pastedInputs, file, page, rows, fetchNextPage, loading } = props;
   if (!rows || rows.length < 1)
     return <Redirect to="/" />
 
@@ -33,7 +31,7 @@ function SearchResultsPageContent(props: SearchResultPageProps) {
         <DownloadModal pastedInputs={pastedInputs} file={file} sendEmail={page.totalItems > MAX_IN_PLACE_DOWNLOAD_WITHOUT_EMAIL} />
         <ResultTableButtonsLegend />
       </div>
-      <ResultTable invalidInputs={invalidInputs} mappings={rows} />
+      <ResultTable mappings={rows} />
       <PaginationRow page={page} fetchNextPage={fetchNextPage} loading={loading} />
       <CaddLegendColors />
       <EveScoreColors />
