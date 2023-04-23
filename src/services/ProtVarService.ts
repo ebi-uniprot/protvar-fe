@@ -1,10 +1,11 @@
 import axios, {AxiosResponse} from 'axios';
 import { setupCache } from 'axios-cache-interceptor/dist/index.bundle';
-import {API_HEADERS, API_URL, DOWNLOAD_URI, EMAIL_URI, G2P_MAPPING_URI} from "../constants/const";
+import {API_HEADERS, API_URL, DOWNLOAD_STATUS, EMAIL_URI, G2P_MAPPING_URI} from "../constants/const";
 import {FunctionalResponse} from "../types/FunctionalResponse";
 import {PopulationObservationResponse} from "../types/PopulationObservationResponse";
 import {ProteinStructureResponse} from "../types/ProteinStructureResponse";
 import MappingResponse from "../types/MappingResponse";
+import {DownloadResponse} from "../types/DownloadResponse";
 
 
 const instance = axios.create({
@@ -24,25 +25,12 @@ export function mappings(inputArr: string[], assembly?: string) {
         );
 }
 
-export function downloadMappings(inputArr: string[], functional: boolean, population: boolean, structure: boolean) {
-    return api.post<any, string[], AxiosResponse>(
-        DOWNLOAD_URI,
-        inputArr,
-        {
-            params : { function: functional, population, structure },
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: '*'
-            },
-        }
-    );
-}
 
-export function emailFileInput(file: File, email: string, jobName: string, functional: boolean, population: boolean, structure: boolean) {
+export function downloadFileInput(file: File, email: string, jobName: string, functional: boolean, population: boolean, structure: boolean) {
     const formData = new FormData();
     formData.append('file', file);
-    return api.post(
-        EMAIL_URI + "/file",
+    return api.post<any, FormData, AxiosResponse<DownloadResponse>>(
+        `${API_URL}/download/fileInput`,
         formData,
         {
             params : { email, jobName, function: functional, population, structure },
@@ -53,9 +41,9 @@ export function emailFileInput(file: File, email: string, jobName: string, funct
     );
 }
 
-export function emailTextInput(inputArr: string[], email: string, jobName: string, functional: boolean, population: boolean, structure: boolean) {
-    return api.post(
-        EMAIL_URI + "/inputs",
+export function downloadTextInput(inputArr: string[], email: string, jobName: string, functional: boolean, population: boolean, structure: boolean) {
+    return api.post<any, string[], AxiosResponse<DownloadResponse>>(
+        `${API_URL}/download/textInput`,
         inputArr,
         {
             params : { email, jobName, function: functional, population, structure },
@@ -84,4 +72,17 @@ export function getPopulationData(url: string) {
 
 export function getStructureData(url: string) {
     return api.get<ProteinStructureResponse>(url);
+}
+
+export function getDownloadStatus(ids: string[]) {
+    return api.post(
+        DOWNLOAD_STATUS,
+        ids,
+        {
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: '*'
+            },
+        }
+    );
 }

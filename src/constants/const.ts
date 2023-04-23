@@ -7,3 +7,5 @@ export const EMAIL_URI = `${API_URL}/email/process`;
 export const API_HEADERS = { "Content-Type": "application/json", Accept: "*" };
 export const USER = 'protvar';
 export const DOMAIN = 'ebi.ac.uk';
+export const DOWNLOAD_STATUS=`${API_URL}/download/status`;
+export const LOCAL_DOWNLOADS='PV_downloads'
