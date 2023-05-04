@@ -1,4 +1,4 @@
-import {baseSettings, StructType} from './StructuralDetail';
+import {baseSettings} from './StructuralDetail';
 import {formatRange} from "../../../utills/Util";
 import {API_URL} from "../../../constants/const";
 import PdbeRef from "./PdbeRef";
@@ -10,7 +10,9 @@ const customSettings = (customUrl: string) => {
                 url: customUrl,
                 format: "pdb"
             }
-        }}
+        },
+        alphafoldView: false
+    }
 }
 
 interface InteractionInfoTableProps {
@@ -67,7 +69,7 @@ function getInteractionInfoRow(i: P2PInteraction, props: InteractionInfoTablePro
 
   const clicked = () => {
     props.pdbeRef.update(customSettings(modelUrl));
-    props.setSelected({type:StructType.CUSTOM, id: (i.a+"_"+i.b), url: modelUrl})
+    props.setSelected(i)
   }
 
   return (

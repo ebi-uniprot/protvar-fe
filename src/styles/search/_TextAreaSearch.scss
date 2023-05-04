@@ -41,9 +41,9 @@
 }
 .wrapper {
 	display: grid;
-	grid-template-columns: 1fr 1fr 1fr;
+	grid-template-columns: 1fr 1fr;
 	grid-template-rows: auto;
-	grid-template-areas: "search upload api";
+	grid-template-areas: "search upload";
 	/*
   grid-column-gap:1em;
   grid-row-gap:1em;
@@ -58,9 +58,6 @@
 
 .upload {
 	grid-area: upload;
-}
-.api {
-	grid-area: api;
 }
 
 @media only screen and (max-width: 700) {

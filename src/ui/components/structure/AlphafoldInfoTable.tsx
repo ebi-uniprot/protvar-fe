@@ -2,7 +2,7 @@ import { ALPHAFOLD_URL_INTERFACE_BY_PROTEIN } from '../../../constants/ExternalU
 import {formatRange} from "../../../utills/Util";
 import PdbeRef from "./PdbeRef";
 import {AlphafoldResponseElement } from "../../../types/AlphafoldResponse";
-import {baseSettings, StructType} from "./StructuralDetail";
+import {baseSettings} from "./StructuralDetail";
 import {Pocket} from "../../../types/FunctionalResponse";
 
 const afSettings = (alphaFoldUrl: string) => {
@@ -29,12 +29,13 @@ function AlphafoldInfoTable(props: AlphafoldInfoTableProps) {
   const alphaFoldUrl = props.alphaFoldData[0].cifUrl
   const isRowSelected = props.selectedAlphaFoldId === alphaFoldId;
   const rowClass = isRowSelected ? 'clickable-row active' : 'clickable-row';
+  const paeImg = props.alphaFoldData[0].paeImageUrl;
 
   const id = isRowSelected ? <u onMouseOver={(_) => props.pdbeRef.clearSelect()}>{alphaFoldId}</u> : <>{alphaFoldId}</>
   const pos = isRowSelected ? <u onMouseOver={(_) => props.pdbeRef.selectPos(props.aaPos)}>{props.aaPos}</u> : <>{props.aaPos}</>
   const clicked = () => {
     props.pdbeRef.update(afSettings(alphaFoldUrl));
-    props.setSelected({type:StructType.AF, id:alphaFoldId, url:alphaFoldUrl})
+    props.setSelected(props.alphaFoldData[0])
   }
 
   return (
@@ -62,8 +63,7 @@ function AlphafoldInfoTable(props: AlphafoldInfoTableProps) {
           </tr>
         </tbody>
       </table>
-
-      {isRowSelected && <ModelConfidence />}
+      {isRowSelected && <ModelConfidenceAndPAE paeImg={paeImg} />}
     </div>
   );
 }
@@ -87,31 +87,55 @@ const Pockets = (props: AlphafoldInfoTableProps) => {
   return <>{pocketsList}</>
 }
 
-function ModelConfidence() {
-  return (
-    <div className="search-results-legends">
-      <strong>Model Confidence</strong>
-      <br />
-      <ul>
-        <li>
-          <span className="legend-icon button--legends button--legends--high" /> Very high (pLDDT &gt; 90)
-        </li>
-        <li>
-          <span className="legend-icon button--legends button--legends--confident" /> Confident (90 &gt; pLDDT &gt; 70)
-        </li>
-        <li>
-          <span className="legend-icon button--legends button--legends--low" /> Low (70 &gt; pLDDT &gt; 50)
-        </li>
-        <li>
-          <span className="legend-icon button--legends button--legends--verylow" /> Very low (pLDDT &lt; 50)
-        </li>
-      </ul>
 
-      <p>
-        AlphaFold produces a per-residue confidence score (pLDDT) between 0 and 100. Some regions with
-        low pLDDT may be unstructured in isolation.
-      </p>
-    </div>
+function ModelConfidenceAndPAE(props: { paeImg: any; }) {
+  return (
+      <div className="search-results-legends small">
+        <div>
+          <strong>Model Confidence</strong>
+          <br />
+          <ul>
+            <li>
+              <span className="legend-icon button--legends button--legends--high" /> Very high (pLDDT &gt; 90)
+            </li>
+            <li>
+              <span className="legend-icon button--legends button--legends--confident" /> Confident (90 &gt; pLDDT &gt; 70)
+            </li>
+            <li>
+              <span className="legend-icon button--legends button--legends--low" /> Low (70 &gt; pLDDT &gt; 50)
+            </li>
+            <li>
+              <span className="legend-icon button--legends button--legends--verylow" /> Very low (pLDDT &lt; 50)
+            </li>
+          </ul>
+        </div>
+        <div>
+          <strong>Predicted Align Error</strong>
+          <br />
+          <div>
+            <div className="pae-axis pae-y-axis">
+              Aligned residue
+            </div>
+            <div className="pae-img">
+              <img src={props.paeImg} alt="AlphaFold PAE" className={"pae-img-box-border "}/>
+            </div>
+          </div>
+          <div className="pae-axis pae-x-axis">
+            Scored residue
+          </div>
+        </div>
+
+        <p>
+          AlphaFold produces a per-residue confidence score (pLDDT) between 0 and 100. Some regions with
+          low pLDDT may be unstructured in isolation.
+        </p>
+
+        <p>
+          The colour at position (x, y) indicates AlphaFold's expected position error at residue x, when the predicted and true structures are aligned on residue y.
+          <br/>
+          This is useful for assessing inter-domain accuracy.
+        </p>
+      </div>
   );
 }
 

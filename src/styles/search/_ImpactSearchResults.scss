@@ -636,3 +636,42 @@
     // background-color: #7778c7;
 	background-color: #898adf85;
 }
+
+.pae {
+	padding: 20px;
+}
+
+.pae {
+	img {
+		border: 1px gray solid;
+	}
+}
+
+.pae-img {
+	width: 150px;
+	height: 150px;
+	float: left;
+	padding: 10px;
+}
+.pae-axis {
+	font-size: small;
+	text-align: center;
+}
+
+.pae-y-axis {
+	writing-mode: tb-rl;
+	transform: rotate(-180deg);
+	height: 150px;
+	float:left;
+}
+
+.pae-x-axis {
+	font-size: small;
+	clear: both;
+	width: 140px;
+	text-align: right;
+}
+
+.pae-desc {
+	padding-left: 20px;
+}

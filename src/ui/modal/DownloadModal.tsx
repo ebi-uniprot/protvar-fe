@@ -3,13 +3,12 @@ import Button from '../elements/form/Button';
 import Modal from './Modal';
 import { ReactComponent as DownloadIcon } from "../../images/download.svg"
 import useOnClickOutside from '../../hooks/useOnClickOutside';
-import { sendDownloadEmail, download } from './DownloadModalHelper'
+import {processDownload} from './DownloadModalHelper'
 import { emailValidate } from '../../utills/Validator';
 
 interface DownloadModalProps {
   file: File | null
   pastedInputs: string[]
-  sendEmail: boolean
 }
 function DownloadModal(props: DownloadModalProps) {
   const [showModel, setShowModel] = useState(false)
@@ -24,13 +23,12 @@ function DownloadModal(props: DownloadModalProps) {
 
   const handleSubmit = () => {
     const err = emailValidate(email)
-    if (props.sendEmail && err) {
+    if (err) {
       setErrorMsg(err)
       return
     }
     setShowModel(false)
-    if (props.sendEmail) sendDownloadEmail(props.file, props.pastedInputs, annotations.fun, annotations.pop, annotations.str, email, jobName);
-    else download(props.file, props.pastedInputs, annotations.fun, annotations.pop, annotations.str);
+    processDownload(props.file, props.pastedInputs, annotations.fun, annotations.pop, annotations.str, email, jobName);
   };
   return <div id="divDownload" ref={downloadModelDiv} className="padding-left-1x">
     <Button onClick={() => setShowModel(val => !val)}>
@@ -39,7 +37,7 @@ function DownloadModal(props: DownloadModalProps) {
     </Button>
     <Modal show={showModel} handleClose={() => setShowModel(false)}>
       <div className="window__header">
-        <span className="window__header__title">{props.sendEmail ? "Enter Details" : "Select Options"}</span>
+        <span className="window__header__title">Select Options</span>
       </div>
       <div className="form-group">
         <div>
@@ -116,27 +114,26 @@ function DownloadModal(props: DownloadModalProps) {
             </tbody>
           </table>
 
-          {props.sendEmail && <>
-            <p className="padding-left-1x">We will send you email onces your file is ready to download</p>
-            <label className="download-label">
-              Email: <span style={{color:"red"}}>{errorMsg ? errorMsg : ""}</span>
-              <input
-                type="email"
-                value={email}
-                name="email"
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </label>
-            <label className="download-label">
-              Job Name:
-              <input
-                type="text"
-                value={jobName}
-                name="jobName"
-                onChange={(e) => setJobName(e.target.value)}
-              />
-            </label>
-          </>}
+          <label className="download-label">
+            Email: <span style={{color:"red"}}>{errorMsg ? errorMsg : ""}</span>
+            <div className="small">(Optional, specify an email address for notification when file is ready to download)</div>
+            <input
+              type="email"
+              value={email}
+              name="email"
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </label>
+          <label className="download-label">
+            Job Name:
+            <div className="small">(Optional)</div>
+            <input
+              type="text"
+              value={jobName}
+              name="jobName"
+              onChange={(e) => setJobName(e.target.value)}
+            />
+          </label>
         </div>
       </div>
       <div className="window__footer">
@@ -144,9 +141,7 @@ function DownloadModal(props: DownloadModalProps) {
           <Button
             onClick={handleSubmit}
             className="window__action-button window__default-close-button button "
-          >
-            {props.sendEmail ? "Submit" : "Download"}
-          </Button>
+          >Submit</Button>
           <Button
             onClick={() => setShowModel(false)}
             className="window__action-button window__default-close-button button"

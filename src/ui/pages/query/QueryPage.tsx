@@ -152,7 +152,6 @@ const QueryPageContent = () => {
           <DownloadModal
             pastedInputs={[userInput]}
             file={null}
-            sendEmail={false}
           />
           <ResultTableButtonsLegend />
         </div>

@@ -1,15 +1,18 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ABOUT, CONTACT, HOME } from '../../constants/BrowserPaths';
+import {ABOUT, CONTACT, DOWNLOAD, HOME} from '../../constants/BrowserPaths';
+import {API_URL, LOCAL_DOWNLOADS} from "../../constants/const";
 
 import DefaultPageContent from './DefaultPageContent';
-import AppVersion from "./AppVersion";
 
 interface DefaultPageLayoutProps {
   content: JSX.Element
 }
 
 function DefaultPageLayout(props: DefaultPageLayoutProps) {
+
+  let localDownloads = JSON.parse(localStorage.getItem(LOCAL_DOWNLOADS) || "[]")
+  let numDownloads = localDownloads.length
 
   useEffect(() => {
     const win: any = window
@@ -72,23 +75,28 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                 <tbody>
                   <tr className="navbar">
                     <td>
-                      <AppVersion />
                       <Link
                         className="local-title"
                         to={HOME}
                         title="Back to ProtVar's homepage"
                       >
-                        <i className="fa fa-fw fa-home" /> ProtVar
+                        <img src="ProtVar_logo.png" alt="ProtVar logo" width="140px"/>
                       </Link>
                       <Link
                         className="local-sub-title"
                         to={HOME}
                         title="Back to ProtVar's homepage"
                       >
-                        Predicting the effect of varying amino acids in proteins
+                        Contextualising human missense variation
                       </Link>
                     </td>
 
+                    <td className="topnav-right local-sub-title">
+                      <Link to="" onClick={() => window.open(API_URL + '/docs', '_blank')} title="ProtVar REST API" target="_blank"  rel='noreferrer'> API </Link>
+                    </td>
+                    <td className="topnav-right local-sub-title">
+                      <Link to={DOWNLOAD} title="Contact us"> MY DOWNLOADS ({numDownloads}) </Link>
+                    </td>
                     <td className="topnav-right local-sub-title">
                       <Link to={ABOUT} title="About ProtVar's" id="aboutProject"> ABOUT </Link>
                     </td>

@@ -5,7 +5,6 @@ import { Redirect } from 'react-router-dom'
 import { NextPageFun, Page } from "../../../utills/AppHelper";
 import { MappingRecord } from "../../../utills/Convertor";
 import DownloadModal from "../../modal/DownloadModal";
-import { MAX_IN_PLACE_DOWNLOAD_WITHOUT_EMAIL } from "../../../constants/const";
 import CaddLegendColors from "../../components/search/CaddLegendColors";
 import ResultTableButtonsLegend from "../../components/search/ResultTableButtonsLegend";
 import EveScoreColors from "../../components/search/EveScoreColors";
@@ -28,7 +27,7 @@ function SearchResultsPageContent(props: SearchResultPageProps) {
     <div className="search-results">
       <div className="flex justify-content-space-between">
         <PaginationRow page={page} fetchNextPage={fetchNextPage} loading={loading} />
-        <DownloadModal pastedInputs={pastedInputs} file={file} sendEmail={page.totalItems > MAX_IN_PLACE_DOWNLOAD_WITHOUT_EMAIL} />
+        <DownloadModal pastedInputs={pastedInputs} file={file} />
         <ResultTableButtonsLegend />
       </div>
       <ResultTable mappings={rows} />

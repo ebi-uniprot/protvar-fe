@@ -76,6 +76,16 @@ function PasteVariantSearch(props: PasteVariantSearchProps) {
     props.fetchPasteResult(searchTerm)
   };
 
+  const pasteBox: string = "Paste variants here. Accepted formats are VCF, HGVS, dbSNP, protein position.\n" +
+      "Mixed formats are allowed, however mixed genome assemblies are not.\n" +
+      "Test inputs can be found to the right\n" +
+      "\n" +
+      "X\t149498202\t.\tC\tG\n" +
+      "X-149498202-C-G\n" +
+      "NC_000023.11:g.149498202C>G\n" +
+      "P22304 A205P\n" +
+      "rs864622779\n"
+
   return <div id="search" className="card-table search">
     <div className="card">
       <section className="card__actions">
@@ -122,7 +132,7 @@ function PasteVariantSearch(props: PasteVariantSearchProps) {
                 id="main-textarea-search-field"
                 className="main-textarea-search-field"
                 value={searchTerm}
-                placeholder="Paste variants in VCF or HGVS format"
+                placeholder={pasteBox}
                 onChange={e => setSearchTerm(e.target.value)}
               />
             </section>
