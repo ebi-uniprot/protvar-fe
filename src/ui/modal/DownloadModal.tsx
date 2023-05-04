@@ -116,7 +116,7 @@ function DownloadModal(props: DownloadModalProps) {
 
           <label className="download-label">
             Email: <span style={{color:"red"}}>{errorMsg ? errorMsg : ""}</span>
-            <div className="small">(Notification will be sent to this address when file is ready to download)</div>
+            <div className="small">(Optional, specify an email address for notification when file is ready to download)</div>
             <input
               type="email"
               value={email}
