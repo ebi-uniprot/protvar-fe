@@ -34,7 +34,7 @@ function DownloadPageContent() {
                 })
                 setDownloads(updatedDownloads)
             })}
-    )
+    , [])
 
 
     useEffect(() => {
