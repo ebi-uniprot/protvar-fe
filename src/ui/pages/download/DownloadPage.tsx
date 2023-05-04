@@ -9,7 +9,8 @@ import Notify from "../../elements/Notify";
 
 
 function testDownloadRes() : DownloadResponse {
-    return {inputType: "FILE", requested: new Date(), downloadId: uuidv4(), status: -1}
+    const id: string = uuidv4()
+    return {inputType: "FILE", requested: new Date(), downloadId: id, url: `api/download/${id}`, jobName: 'test', status: -1}
 }
 
 const statusMap: { [code: number]: string; } = {};
@@ -44,15 +45,13 @@ function DownloadPageContent() {
         <h4>Download History</h4>
         # of downloads: {downloads.length}
 
-        <p className="small">
-            You will be notified if you provided an email address.
-        </p>
-
+        {/**
         <p>
             <button type="button" className="btn btn-primary btn-sm" onClick={() => setDownloads([...downloads, testDownloadRes()])}><span
                 className="bi-plus-square-fill"></span> Add
             </button>
         </p>
+        */}
 
         {downloads.length > 0 && (
             <table className="table">
@@ -61,6 +60,7 @@ function DownloadPageContent() {
                     <th scope="col">#</th>
                     <th scope="col">Requested</th>
                     <th scope="col">ID</th>
+                    <th scope="col">Job name</th>
                     <th scope="col">Status</th>
                     <th scope="col">Download</th>
                     <th scope="col">Delete</th>
@@ -74,8 +74,9 @@ function DownloadPageContent() {
                             <th scope="row">{index+1}</th>
                             <td>{download.requested.toLocaleString()}</td>
                             <td>{download.downloadId}</td>
+                            <td>{download.jobName}</td>
                             <td>{statusMap[download.status]}</td>
-                            <td><button onClick={() => downloadFile(download.downloadId)} disabled={download.status !== 1}><i className="bi bi-download"></i></button></td>
+                            <td><button onClick={() => downloadFile(download.url)} disabled={download.status !== 1}><i className="bi bi-download"></i></button></td>
                             <td><button onClick={() => {
                                 setDownloads(
                                     downloads.filter(d =>
@@ -96,8 +97,9 @@ function DownloadPageContent() {
     </div>
 }
 
-function downloadFile(id: string) {
+function downloadFile(url: string) {
     Notify.info("Downloading file...")
+    window.open(url, "_blank");
 }
 
 function DownloadPage() {
