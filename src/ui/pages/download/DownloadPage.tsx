@@ -21,12 +21,14 @@ statusMap[-1] = 'Not Available';
 function DownloadPageContent() {
     let localDownloads = JSON.parse(localStorage.getItem(LOCAL_DOWNLOADS) || "[]")
     const [downloads, setDownloads] = useState<DownloadResponse[]>(localDownloads)
-    const ids = downloads.map(d => d.downloadId)
+    //
 
     useEffect(() => {
+        let ds: DownloadResponse[] = JSON.parse(localStorage.getItem(LOCAL_DOWNLOADS) || "[]")
+        const ids = ds.map(d => d.downloadId)
         getDownloadStatus(ids)
             .then((response) => {
-                const updatedDownloads = downloads.map(d => {
+                const updatedDownloads = ds.map(d => {
                     if (d.downloadId in response.data) {
                         d.status = response.data[d.downloadId]
                     }
