@@ -1,5 +1,5 @@
 import { useState, Fragment } from "react";
-import { EmptyElement } from "../../../constants/Const";
+import { EmptyElement } from "../../../constants/ConstElement";
 import { FEATURES } from "../../../constants/Protein";
 import AminoAcidModel from "./AminoAcidModel";
 import Evidences from "./Evidences";

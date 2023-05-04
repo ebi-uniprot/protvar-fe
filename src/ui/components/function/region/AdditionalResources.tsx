@@ -1,7 +1,7 @@
 import RegionProteinProps from "./RegionProteinProps";
 import {Comment} from "../../../../types/FunctionalResponse";
 import RegionProteinAccordion from "./RegionProteinAccordion";
-import { EmptyElement } from "../../../../constants/Const";
+import { EmptyElement } from "../../../../constants/ConstElement";
 function AdditionalResources(props: RegionProteinProps) {
   return <RegionProteinAccordion title="Additional Resources" detailComponentGenerator={getWebResource} {...props} />
 }

@@ -3,7 +3,7 @@ import {Comment} from "../../../../types/FunctionalResponse";
 import RegionProteinAccordion from "./RegionProteinAccordion";
 import { getActivityRegulation } from "./ActivityRegulations";
 import { v1 as uuidv1 } from 'uuid';
-import { EmptyElement } from "../../../../constants/Const";
+import { EmptyElement } from "../../../../constants/ConstElement";
 
 function SubcellularLocations(props: RegionProteinProps) {
   return <RegionProteinAccordion title="Subcellular Location" detailComponentGenerator={getSubcellularLocation} {...props} />

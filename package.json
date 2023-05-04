@@ -14,7 +14,6 @@
     "compression-webpack-plugin": "^10.0.0",
     "cra-template-typescript": "1.1.2",
     "file-saver": "^2.0.5",
-    "node-sass": "^6.0.1",
     "pdbe-molstar": "^3.1.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
@@ -50,5 +49,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "dependencies": {
+    "sass": "^1.62.1"
   }
 }

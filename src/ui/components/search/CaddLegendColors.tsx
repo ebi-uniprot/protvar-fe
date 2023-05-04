@@ -1,4 +1,4 @@
-import { EmptyElement } from "../../../constants/Const";
+import { EmptyElement } from "../../../constants/ConstElement";
 import { getColor, getTitle } from "./CaddHelper";
 
 function CaddLegendColors() {
