@@ -1,6 +1,6 @@
 import axios, {AxiosResponse} from 'axios';
 import { setupCache } from 'axios-cache-interceptor/dist/index.bundle';
-import {API_HEADERS, API_URL, DOWNLOAD_STATUS, EMAIL_URI, G2P_MAPPING_URI} from "../constants/const";
+import {API_HEADERS, API_URL, DOWNLOAD_STATUS, G2P_MAPPING_URI} from "../constants/const";
 import {FunctionalResponse} from "../types/FunctionalResponse";
 import {PopulationObservationResponse} from "../types/PopulationObservationResponse";
 import {ProteinStructureResponse} from "../types/ProteinStructureResponse";

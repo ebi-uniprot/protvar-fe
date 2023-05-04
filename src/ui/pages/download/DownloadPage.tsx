@@ -3,15 +3,15 @@ import React, {useEffect, useState} from "react";
 import "./DownloadPage.css";
 import {getDownloadStatus} from "../../../services/ProtVarService";
 import {LOCAL_DOWNLOADS} from "../../../constants/const"
-import { v4 as uuidv4 } from 'uuid';
+//import { v4 as uuidv4 } from 'uuid';
 import {DownloadResponse} from "../../../types/DownloadResponse";
 import Notify from "../../elements/Notify";
 
-
+/*
 function testDownloadRes() : DownloadResponse {
     const id: string = uuidv4()
     return {inputType: "FILE", requested: new Date(), downloadId: id, url: `api/download/${id}`, jobName: 'test', status: -1}
-}
+}*/
 
 const statusMap: { [code: number]: string; } = {};
 statusMap[1] = 'Ready';
@@ -34,7 +34,7 @@ function DownloadPageContent() {
                 })
                 setDownloads(updatedDownloads)
             })}
-    ,[])
+    )
 
 
     useEffect(() => {

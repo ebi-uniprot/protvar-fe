@@ -80,7 +80,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                         to={HOME}
                         title="Back to ProtVar's homepage"
                       >
-                        <img src="ProtVar_logo.png" width="140px"/>
+                        <img src="ProtVar_logo.png" alt="ProtVar logo" width="140px"/>
                       </Link>
                       <Link
                         className="local-sub-title"

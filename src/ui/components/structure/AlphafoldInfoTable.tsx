@@ -117,7 +117,7 @@ function ModelConfidenceAndPAE(props: { paeImg: any; }) {
               Aligned residue
             </div>
             <div className="pae-img">
-              <img src={props.paeImg} className={"pae-img-box-border "}/>
+              <img src={props.paeImg} alt="AlphaFold PAE" className={"pae-img-box-border "}/>
             </div>
           </div>
           <div className="pae-axis pae-x-axis">
