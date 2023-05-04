@@ -10,7 +10,9 @@ const customSettings = (customUrl: string) => {
                 url: customUrl,
                 format: "pdb"
             }
-        }}
+        },
+        alphafoldView: false
+    }
 }
 
 interface InteractionInfoTableProps {

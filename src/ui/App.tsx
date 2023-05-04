@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {Route, RouteComponentProps, withRouter} from "react-router-dom";
+import {Redirect, Route, RouteComponentProps, withRouter} from "react-router-dom";
 import HomePage from "./pages/home/HomePage";
 import SearchResultsPage from "./pages/search/SearchResultPage";
 import APIErrorPage from "./pages/APIErrorPage";

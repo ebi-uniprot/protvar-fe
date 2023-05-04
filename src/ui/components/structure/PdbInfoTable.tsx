@@ -8,7 +8,9 @@ const pdbSettings = (molId: string) => {
   return {...baseSettings,
     ...{
       moleculeId: molId
-    }}
+    },
+    alphafoldView: false
+  }
 }
 
 interface PdbInfoTableProps {
