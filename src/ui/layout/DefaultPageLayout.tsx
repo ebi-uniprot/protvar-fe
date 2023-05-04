@@ -87,7 +87,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                         to={HOME}
                         title="Back to ProtVar's homepage"
                       >
-                        Predicting the effect of varying amino acids in proteins
+                        Contextualising human missense variation
                       </Link>
                     </td>
 
