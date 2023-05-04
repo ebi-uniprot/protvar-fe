@@ -2,7 +2,7 @@ import { ALPHAFOLD_URL_INTERFACE_BY_PROTEIN } from '../../../constants/ExternalU
 import {formatRange} from "../../../utills/Util";
 import PdbeRef from "./PdbeRef";
 import {AlphafoldResponseElement } from "../../../types/AlphafoldResponse";
-import {baseSettings, StructType} from "./StructuralDetail";
+import {baseSettings} from "./StructuralDetail";
 import {Pocket} from "../../../types/FunctionalResponse";
 
 const afSettings = (alphaFoldUrl: string) => {
@@ -34,7 +34,7 @@ function AlphafoldInfoTable(props: AlphafoldInfoTableProps) {
   const pos = isRowSelected ? <u onMouseOver={(_) => props.pdbeRef.selectPos(props.aaPos)}>{props.aaPos}</u> : <>{props.aaPos}</>
   const clicked = () => {
     props.pdbeRef.update(afSettings(alphaFoldUrl));
-    props.setSelected({type:StructType.AF, id:alphaFoldId, url:alphaFoldUrl})
+    props.setSelected(props.alphaFoldData[0])
   }
 
   return (
@@ -62,7 +62,6 @@ function AlphafoldInfoTable(props: AlphafoldInfoTableProps) {
           </tr>
         </tbody>
       </table>
-
       {isRowSelected && <ModelConfidence />}
     </div>
   );
@@ -87,31 +86,32 @@ const Pockets = (props: AlphafoldInfoTableProps) => {
   return <>{pocketsList}</>
 }
 
+
 function ModelConfidence() {
   return (
-    <div className="search-results-legends">
-      <strong>Model Confidence</strong>
-      <br />
-      <ul>
-        <li>
-          <span className="legend-icon button--legends button--legends--high" /> Very high (pLDDT &gt; 90)
-        </li>
-        <li>
-          <span className="legend-icon button--legends button--legends--confident" /> Confident (90 &gt; pLDDT &gt; 70)
-        </li>
-        <li>
-          <span className="legend-icon button--legends button--legends--low" /> Low (70 &gt; pLDDT &gt; 50)
-        </li>
-        <li>
-          <span className="legend-icon button--legends button--legends--verylow" /> Very low (pLDDT &lt; 50)
-        </li>
-      </ul>
+      <div className="search-results-legends">
+        <strong>Model Confidence</strong>
+        <br />
+        <ul>
+          <li>
+            <span className="legend-icon button--legends button--legends--high" /> Very high (pLDDT &gt; 90)
+          </li>
+          <li>
+            <span className="legend-icon button--legends button--legends--confident" /> Confident (90 &gt; pLDDT &gt; 70)
+          </li>
+          <li>
+            <span className="legend-icon button--legends button--legends--low" /> Low (70 &gt; pLDDT &gt; 50)
+          </li>
+          <li>
+            <span className="legend-icon button--legends button--legends--verylow" /> Very low (pLDDT &lt; 50)
+          </li>
+        </ul>
 
-      <p>
-        AlphaFold produces a per-residue confidence score (pLDDT) between 0 and 100. Some regions with
-        low pLDDT may be unstructured in isolation.
-      </p>
-    </div>
+        <p>
+          AlphaFold produces a per-residue confidence score (pLDDT) between 0 and 100. Some regions with
+          low pLDDT may be unstructured in isolation.
+        </p>
+      </div>
   );
 }
 

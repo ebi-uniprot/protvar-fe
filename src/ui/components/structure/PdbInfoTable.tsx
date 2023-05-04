@@ -1,5 +1,5 @@
 import { PDB_URL_INTERFACE_BY_PROTEIN } from '../../../constants/ExternalUrls';
-import {baseSettings, StructType} from './StructuralDetail';
+import {baseSettings} from './StructuralDetail';
 import { ReactComponent as ExternalLinkIcon } from "../../../images/external-link.svg"
 import PdbeRef from "./PdbeRef";
 import {ProteinStructureElement} from "../../../types/ProteinStructureResponse";
@@ -84,7 +84,7 @@ function getPdbInfoRow(str: ProteinStructureElement, props: PdbInfoTableProps) {
 
   const clicked = () => {
     props.pdbeRef.update(pdbSettings(str.pdb_id));
-    props.setSelected({type:StructType.PDB, id:str.pdb_id, url:""})
+    props.setSelected(str)
   }
 
   return (

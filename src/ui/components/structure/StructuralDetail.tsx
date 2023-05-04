@@ -35,7 +35,7 @@ function StructuralDetail(props: StructuralDetailProps) {
   const { isoFormAccession, aaPosition, proteinStructureUri } = props;
   const [pdbData, setPdbData] = useState(new Array<ProteinStructureElement>());
   const [alphaFoldData, setAlphaFoldData] = useState(new Array<AlphafoldResponseElement>());
-  const [selected, setSelected] = useState({type: StructType.PDB, id: "", url: "" });
+  const [selected, setSelected] = useState<ProteinStructureElement|AlphafoldResponseElement|P2PInteraction>();
   const [interactionData, setInteractionData] = useState(new Array<P2PInteraction>());
   const [pocketData, setPocketData] = useState(new Array<Pocket>());
   const [pdbeRef] = useState(new PdbeRef(useRef(null)))
@@ -47,17 +47,14 @@ function StructuralDetail(props: StructuralDetailProps) {
           setPdbData(response.data);
           if (response.data.length > 0) {
             id = response.data[0].pdb_id
-            setSelected({type: StructType.PDB, id: response.data[0].pdb_id, url: ""});
+            setSelected(response.data[0]);
           }
           return getPredictedStructure(isoFormAccession);
         }).then(response => {
           setAlphaFoldData(response.data);
           if (response.data.length > 0 && !id) {
             // if id already set (pdb id), use that, otherwise, use alphaFold id
-            setSelected({
-              type: StructType.AF, id: response.data[0].entryId,
-              url: response.data[0].cifUrl
-            })
+            setSelected(response.data[0])
           }
           return getFunctionalData('/function/' + isoFormAccession + '/' + aaPosition)
         }).then(response => {
@@ -69,8 +66,18 @@ function StructuralDetail(props: StructuralDetailProps) {
         });
   }, [proteinStructureUri, isoFormAccession, aaPosition]);
 
-  if (!selected.id) {
+  if (!selected) {
     return <LoaderRow />
+  }
+
+  if (pdbeRef.ref && pdbeRef.ref.current) {
+      (pdbeRef.ref.current as any).viewerInstance.events.loadComplete.subscribe(() => {
+          if ("pdb_id" in selected) {
+              pdbeRef.onloadSelect(selected.start)
+          } else if ("entryId" in selected) {
+              pdbeRef.onloadSelect(aaPosition)
+          }
+      });
   }
 
   return (
@@ -80,19 +87,19 @@ function StructuralDetail(props: StructuralDetailProps) {
         {pdbData.length > 0 && <>
           <br />
           <PdbInfoTable isoFormAccession={isoFormAccession} pdbApiData={pdbData}
-                        selectedPdbId={selected.type === StructType.PDB ? selected.id : ""}
+                        selectedPdbId={"pdb_id" in selected ? selected.pdb_id : ""}
                         setSelected={setSelected} pdbeRef={pdbeRef} />
         </>}
         {alphaFoldData.length > 0 && <>
           <br />
           <AlphafoldInfoTable isoFormAccession={isoFormAccession} alphaFoldData={alphaFoldData}
-                              selectedAlphaFoldId={selected.type === StructType.AF ? selected.id : ""}
+                              selectedAlphaFoldId={"entryId" in selected ? selected.entryId : ""}
                               setSelected={setSelected} aaPos={aaPosition} pocketData={pocketData} pdbeRef={pdbeRef} />
         </>}
         {interactionData.length > 0 && <>
         <br />
         <InteractionInfoTable isoFormAccession={isoFormAccession} interactionData={interactionData}
-                            selectedInteraction={selected.type === StructType.CUSTOM ? selected.id : ""}
+                            selectedInteraction={"a" in selected && "b" in selected ? (selected.a+"_"+selected.b) : ""}
                             setSelected={setSelected} pdbeRef={pdbeRef} />
       </>}
       </td>
