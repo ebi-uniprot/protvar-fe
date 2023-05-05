@@ -28,7 +28,8 @@ export const baseSettings = {
   bgColor: {
     r: 255, g: 255, b: 255
   },
-  hideControls: true
+  hideControls: true,
+  hideWater: true
 }
 
 function StructuralDetail(props: StructuralDetailProps) {
