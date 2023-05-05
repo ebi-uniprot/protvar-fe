@@ -16,6 +16,9 @@
 }
 
 .navbar {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
 	width: 100%;
 	// background-color: linear-gradient(45deg, #014371, rgba(1, 67, 113, 0.7), #014371, #014371);
 	overflow: auto;
@@ -30,10 +33,20 @@
 	}
 }
 
+.logo-container {
+	display: flex;
+	flex-direction: column;
+	.sub-title {
+		font-size: 14px;
+		color: #666;
+		padding: 0.5rem 0 0 3rem;
+	}
+}
+
 /* Navbar links */
 .navbar a {
-	float: left;
-	text-align: center;
+	// float: left;
+	// text-align: center;
 	// padding: 6px;
 	color: white;
 	text-decoration: none;

@@ -75,6 +75,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                 <tbody>
                   <tr className="navbar">
                     <td>
+                      <div className="logo-container">
                       <Link
                         className="local-title"
                         to={HOME}
@@ -83,15 +84,17 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                         <img src="ProtVar_logo.png" alt="ProtVar logo" width="140px"/>
                       </Link>
                       <Link
-                        className="local-sub-title"
+                        className="sub-title"
                         to={HOME}
                         title="Back to ProtVar's homepage"
                       >
                         Contextualising human missense variation
                       </Link>
+                      </div>
+                      
                     </td>
-
-                    <td className="topnav-right local-sub-title">
+                      <div>
+                      <td className="topnav-right local-sub-title">
                       <Link to="" onClick={() => window.open(API_URL + '/docs', '_blank')} title="ProtVar REST API" target="_blank"  rel='noreferrer'> API </Link>
                     </td>
                     <td className="topnav-right local-sub-title">
@@ -103,6 +106,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                     <td className="topnav-right local-sub-title">
                       <Link to={CONTACT} title="Contact us"> CONTACT </Link>
                     </td>
+                      </div>
                   </tr>
                 </tbody>
               </table>
