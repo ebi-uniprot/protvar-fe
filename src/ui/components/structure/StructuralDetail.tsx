@@ -1,44 +1,16 @@
-import { useEffect, useState } from 'react';
-import { ALPHAFOLD_URL } from '../../../constants/ExternalUrls';
-import axios from 'axios';
-import ProtVista3D from './ProtVista3D';
+import {useEffect, useRef, useState} from 'react';
 import PdbInfoTable from './PdbInfoTable';
 import AlphafoldInfoTable from './AlphafoldInfoTable';
-//import LoaderRow from '../search/LoaderRow';
-import { API_URL } from '../../../constants/const';
-interface ProteinStructureResponse extends Array<ProteinStructureElement>{
-}
+import PdbeMolstar from "./PdbeMolstar";
+import InteractionInfoTable from "./InteractionInfoTable";
+import LoaderRow from "../search/LoaderRow";
+import PdbeRef from "./PdbeRef";
+import {getPredictedStructure} from "../../../services/AlphafoldService";
+import {getFunctionalData, getStructureData} from "../../../services/ProtVarService";
+import {P2PInteraction, Pocket} from "../../../types/FunctionalResponse";
+import {ProteinStructureElement} from "../../../types/ProteinStructureResponse";
+import {AlphafoldResponseElement} from "../../../types/AlphafoldResponse";
 
-export interface ProteinStructureElement {
-  chain_id: string,
-  pdb_id: string,
-  start: number,
-  resolution: number,
-  experimental_method: string,
-}
-
-type AlphafoldResponse = Array<AlphafoldResponseElement>
-
-interface AlphafoldResponseElement {
-  entryId: string,
-  gene: string,
-  uniprotAccession: string,
-  uniprotId: string,
-  uniprotDescription: string,
-  taxId: number,
-  organismScientificName: string,
-  uniprotStart: number,
-  uniprotEnd: number,
-  uniprotSequence: string,
-  modelCreatedDate: string,
-  latestVersion: number,
-  allVersions: Array<number>,
-  cifUrl: string,
-  bcifUrl: string,
-  pdbUrl: string,
-  paeImageUrl: string,
-  paeDocUrl: string
-}
 
 interface StructuralDetailProps {
   isoFormAccession: string,
@@ -46,61 +18,91 @@ interface StructuralDetailProps {
   proteinStructureUri: string
 }
 
+export enum StructType {
+  PDB,
+  AF,
+  CUSTOM
+}
+
+export const baseSettings = {
+  bgColor: {
+    r: 255, g: 255, b: 255
+  },
+  hideControls: true,
+  hideWater: true
+}
+
 function StructuralDetail(props: StructuralDetailProps) {
   const { isoFormAccession, aaPosition, proteinStructureUri } = props;
   const [pdbData, setPdbData] = useState(new Array<ProteinStructureElement>());
-  const [alphaFoldId, setAlphaFoldId] = useState("");
-  const [selected3DId, setSelected3DId] = useState("");
+  const [alphaFoldData, setAlphaFoldData] = useState(new Array<AlphafoldResponseElement>());
+  const [selected, setSelected] = useState<ProteinStructureElement|AlphafoldResponseElement|P2PInteraction>();
+  const [interactionData, setInteractionData] = useState(new Array<P2PInteraction>());
+  const [pocketData, setPocketData] = useState(new Array<Pocket>());
+  const [pdbeRef] = useState(new PdbeRef(useRef(null)))
 
   useEffect(() => {
-    const url = API_URL + proteinStructureUri;
-    axios
-      .get<ProteinStructureResponse>(url)
-      .then(response => {
-        setPdbData(response.data);
-        setSelected3DId(response.data.length > 0 ? response.data[0].pdb_id : "")
-      })
-      .catch((err) => {
-        setPdbData([]);
-        console.log(err);
-      });
-  }, [proteinStructureUri]);
+    let id = ''
+    getStructureData(proteinStructureUri).then(
+        response => {
+          setPdbData(response.data);
+          if (response.data.length > 0) {
+            id = response.data[0].pdb_id
+            setSelected(response.data[0]);
+          }
+          return getPredictedStructure(isoFormAccession);
+        }).then(response => {
+          setAlphaFoldData(response.data);
+          if (response.data.length > 0 && !id) {
+            // if id already set (pdb id), use that, otherwise, use alphaFold id
+            setSelected(response.data[0])
+          }
+          return getFunctionalData('/function/' + isoFormAccession + '/' + aaPosition)
+        }).then(response => {
+          const funcData = response.data
+          setInteractionData(funcData.interactions)
+          setPocketData(funcData.pockets)
+        }).catch(err => {
+          console.log(err);
+        });
+  }, [proteinStructureUri, isoFormAccession, aaPosition]);
 
-  useEffect(() => {
-    const url = ALPHAFOLD_URL + isoFormAccession;
-    axios
-      .get<AlphafoldResponse>(url)
-      .then((response) => {
-        if (response.data.length > 0) {
-          setAlphaFoldId(response.data[0].entryId)
-          setSelected3DId(id => id ? id : response.data[0].entryId)
-        }
-      })
-      .catch((err) => {
-        setAlphaFoldId("")
-        console.log(err)
-      });
-  }, [isoFormAccession]);
-
-  const change3dDiagram = (id: string) => {
-    setSelected3DId(id);
+  if (!selected) {
+    return <LoaderRow />
   }
 
-  //if (!selected3DId) {
-  //  return <LoaderRow />
-  //}
+  if (pdbeRef.ref && pdbeRef.ref.current) {
+      (pdbeRef.ref.current as any).viewerInstance.events.loadComplete.subscribe(() => {
+          if ("pdb_id" in selected) {
+              pdbeRef.onloadSelect(selected.start)
+          } else if ("entryId" in selected) {
+              pdbeRef.onloadSelect(aaPosition)
+          }
+      });
+  }
 
   return (
     <tr key={isoFormAccession}>
-      <ProtVista3D accession={isoFormAccession} pos={aaPosition} id={selected3DId} />
+      <PdbeMolstar selected={selected} pdbeRef={pdbeRef.ref} />
       <td colSpan={5} className="expanded-row">
         {pdbData.length > 0 && <>
           <br />
-          <PdbInfoTable isoFormAccession={isoFormAccession} pdbApiData={pdbData} selectedPdbId={selected3DId} change3dDiagram={change3dDiagram} />
+          <PdbInfoTable isoFormAccession={isoFormAccession} pdbApiData={pdbData}
+                        selectedPdbId={"pdb_id" in selected ? selected.pdb_id : ""}
+                        setSelected={setSelected} pdbeRef={pdbeRef} />
         </>}
+        {alphaFoldData.length > 0 && <>
+          <br />
+          <AlphafoldInfoTable isoFormAccession={isoFormAccession} alphaFoldData={alphaFoldData}
+                              selectedAlphaFoldId={"entryId" in selected ? selected.entryId : ""}
+                              setSelected={setSelected} aaPos={aaPosition} pocketData={pocketData} pdbeRef={pdbeRef} />
+        </>}
+        {interactionData.length > 0 && <>
         <br />
-        <AlphafoldInfoTable isoFormAccession={isoFormAccession} change3dDiagram={change3dDiagram} alphaFoldId={alphaFoldId}
-          selectedAlphaFoldId={selected3DId} aaPos={aaPosition} />
+        <InteractionInfoTable isoFormAccession={isoFormAccession} interactionData={interactionData}
+                            selectedInteraction={"a" in selected && "b" in selected ? (selected.a+"_"+selected.b) : ""}
+                            setSelected={setSelected} pdbeRef={pdbeRef} />
+      </>}
       </td>
     </tr>
   );

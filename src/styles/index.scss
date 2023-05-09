@@ -5,3 +5,11 @@
 @import "search/_all";
 @import "elements/_all";
 @import "other/_all";
+
+.banner {
+  padding: 10px;
+  text-align: center;
+  background: #1abc9c;
+  color: white;
+  font-size: 15px;
+}

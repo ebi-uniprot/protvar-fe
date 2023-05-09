@@ -1,10 +1,10 @@
 import AssociationDetails from "../common/AssociationDetails";
 import XRefDetail from "../common/XRefDetail";
-import { Association, ProteinColocatedVariant } from "../PopulationDetail";
 import { v1 as uuidv1 } from 'uuid';
 import PopulationFrequencyDetails from "../common/PopulationFrequencyDetails";
 import { StringVoidFun } from "../../../../constants/CommonTypes";
 import { ReactComponent as ChevronDownIcon } from "../../../../images/chevron-down.svg"
+import {Association, ProteinColocatedVariant} from "../../../../types/PopulationObservationResponse";
 
 interface CoLocatedVariantGenomicLocationAccordionProps {
   coLocatedVariant: ProteinColocatedVariant

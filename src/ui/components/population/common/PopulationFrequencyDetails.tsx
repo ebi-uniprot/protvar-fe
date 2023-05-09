@@ -1,5 +1,5 @@
 import { v1 as uuidv1 } from 'uuid';
-import { PopulationFrequency } from '../PopulationDetail';
+import {PopulationFrequency} from "../../../../types/PopulationObservationResponse";
 interface PopulationFrequencyDetailsProps {
   populationFrequencies: Array<PopulationFrequency>
 }

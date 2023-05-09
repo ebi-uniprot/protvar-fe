@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { ReactComponent as ChevronDownIcon } from "../../../../images/chevron-down.svg"
 import { v1 as uuidv1 } from 'uuid';
 import { StringVoidFun } from '../../../../constants/CommonTypes';
-import { ProteinColocatedVariant } from '../PopulationDetail';
 import CoLocatedVariantGenomicLocationAccordion from './CoLocatedVariantGenomicLocationAccordion';
+import {ProteinColocatedVariant} from "../../../../types/PopulationObservationResponse";
 interface CoLocatedVariantAccordionProps {
   toggleCoLocated: StringVoidFun
   coLocatedVariants: Array<ProteinColocatedVariant>

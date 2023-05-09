@@ -2,7 +2,7 @@ import { Fragment } from "react"
 import { v1 as uuidv1 } from 'uuid';
 import RegionProteinProps from "./RegionProteinProps";
 import Evidences from "../Evidences";
-import { Comment, DBReference, Reaction } from '../FunctionalDetail'
+import {Comment, DBReference, Reaction} from "../../../../types/FunctionalResponse";
 import { RHEA_URL } from "../../../../constants/ExternalUrls";
 import RegionProteinAccordion from "./RegionProteinAccordion";
 

@@ -1,5 +1,5 @@
 import { UNIPROT_ACCESSION_URL } from "../../../constants/ExternalUrls";
-import { ANNOTATION_COLS, CONSEQUENCES, GENOMIC_COLS, INPUT_COLS } from "../../../constants/SearchResultTable";
+import { ANNOTATION_COLS, CONSEQUENCES, GENOMIC_COLS } from "../../../constants/SearchResultTable";
 import { MappingRecord } from "../../../utills/Convertor";
 import { fullAminoAcidName } from "../../../utills/Util";
 import Tool from "../../elements/Tool";
@@ -20,12 +20,13 @@ export function CanonicalIcon(props: { isCanonical: boolean | undefined }) {
     return <Tool el="span" tip="Non canonical isoform" className="protein-type-icon protein-type-icon--isoform">iso</Tool>
 }
 interface AlternateIsoFormRowProps {
-  record: MappingRecord
+  record: MappingRecord,
+  currStyle: object
 }
 function AlternateIsoFormRow(props: AlternateIsoFormRowProps) {
-  const { record } = props;
-  return <tr>
-    <td colSpan={INPUT_COLS + GENOMIC_COLS} />
+  const { record, currStyle } = props;
+  return <tr style={currStyle}>
+    <td colSpan={GENOMIC_COLS} />
     <td>
       <CanonicalIcon isCanonical={false} />
       <Spaces />
@@ -37,8 +38,7 @@ function AlternateIsoFormRow(props: AlternateIsoFormRowProps) {
     <td><Tool tip="The amino acid position in this isoform">{record.aaPos}</Tool></td>
     <td><Tool tip={aaChangeTip(record.aaChange)}>{record.aaChange}</Tool></td>
     <td><Tool tip={CONSEQUENCES.get(record.consequences!)} pos="up-right">{record.consequences}</Tool></td>
-    <td><br /><br /></td>
-    <td colSpan={ANNOTATION_COLS}><br /><br /></td>
+    <td colSpan={ANNOTATION_COLS+1}><br /><br /></td>
   </tr>
 }
 export default AlternateIsoFormRow;

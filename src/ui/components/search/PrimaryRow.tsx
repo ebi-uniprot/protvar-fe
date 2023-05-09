@@ -22,18 +22,31 @@ import { ReactComponent as ChevronDownIcon } from "../../../images/chevron-down.
 import { ReactComponent as ChevronUpIcon } from "../../../images/chevron-up.svg"
 import { EmptyElement } from "../../../constants/Const";
 import { aaChangeTip, CanonicalIcon } from "./AlternateIsoFormRow";
+import {EveIcon, getEveClassText} from "./EveScore";
+import {INPUT_GEN, INPUT_PRO, INPUT_RS} from "../../../types/MappingResponse";
 
 const StructuralDetail = lazy(() => import(/* webpackChunkName: "StructuralDetail" */ "../structure/StructuralDetail"));
 const PopulationDetail = lazy(() => import(/* webpackChunkName: "PopulationDetail" */ "../population/PopulationDetail"));
 const FunctionalDetail = lazy(() => import(/* webpackChunkName: "FunctionalDetail" */ "../function/FunctionalDetail"));
 
 const getPrimaryRow = (record: MappingRecord, toggleOpenGroup: string, isoFormGroupExpanded: string, toggleIsoFormGroup: StringVoidFun,
-  annotationExpanded: string, toggleAnnotation: StringVoidFun, hasAltIsoForm: boolean) => {
+  annotationExpanded: string, toggleAnnotation: StringVoidFun, hasAltIsoForm: boolean, currStyle: object) => {
   let caddCss = getCaddCss(record.CADD);
   let caddTitle = getTitle(record.CADD);
   let strand = record.strand ? '(-)' : '(+)';
   if (!record.codon) {
     strand = '';
+  }
+  let inputStyle = {
+    gen: {
+      backgroundColor: record.type === INPUT_GEN ? "#FFFAF0" : ""
+    },
+    pro: {
+      backgroundColor: record.type === INPUT_PRO ? "#FFFAF0" : ""
+    },
+    rs: {
+      backgroundColor: record.type === INPUT_RS ? "#FFFAF0" : ""
+    }
   }
 
   const positionUrl = ENSEMBL_VIEW_URL + record.chromosome + ':' + record.position + '-' + record.position;
@@ -43,22 +56,22 @@ const getPrimaryRow = (record: MappingRecord, toggleOpenGroup: string, isoFormGr
   const populationKey = 'population-' + expandedGroup;
 
   return <Fragment key={`${toggleOpenGroup}-${record.isoform}`}>
-    <tr >
-      <td>
+    <tr style={currStyle} title={'Input: ' + record.input} >
+      <td style={inputStyle.gen}>
         <Tool tip="Click to see the a summary for this chromosome from Ensembl" pos="up-left">
           <a href={ENSEMBL_CHRM_URL + record.chromosome} target="_blank" rel="noopener noreferrer">
             {record.chromosome}
           </a>
         </Tool>
       </td>
-      <td>
+      <td style={inputStyle.gen}>
         <Tool tip="Click to see the region detail for this genomic coordinate from Ensembl" pos="up-left">
           <a href={positionUrl} target="_blank" rel="noopener noreferrer">
             {record.position}
           </a>
         </Tool>
       </td>
-      <td><Tool tip="Variant ID provided by the user">
+      <td style={inputStyle.rs}><Tool tip="Variant ID provided by the user">
         <a href={DBSNP_URL + record.id} target="_blank" rel="noopener noreferrer">{record.id}</a>
       </Tool></td>
       <td><Tool tip={ALLELE.get(record.refAllele)}>{record.refAllele}</Tool></td>
@@ -80,7 +93,7 @@ const getPrimaryRow = (record: MappingRecord, toggleOpenGroup: string, isoFormGr
           </a>
         </Tool>
       </td>
-      <td>
+      <td style={inputStyle.pro}>
         <div className="flex">
           <CanonicalIcon isCanonical={record.canonical} />
           <Spaces />
@@ -104,7 +117,7 @@ const getPrimaryRow = (record: MappingRecord, toggleOpenGroup: string, isoFormGr
       <td>
         <Tool tip={record.proteinName}>{getProteinName(record)}</Tool>
       </td>
-      <td><Tool tip="The amino acid position in this isoform">{record.aaPos}</Tool></td>
+      <td style={inputStyle.pro}><Tool tip="The amino acid position in this isoform">{record.aaPos}</Tool></td>
       <td><Tool tip={aaChangeTip(record.aaChange)}>{record.aaChange}</Tool></td>
       <td><Tool tip={CONSEQUENCES.get(record.consequences!)} pos="up-right">{record.consequences}</Tool></td>
       <td><Tool className="eve-score" tip={record.eveScore + '-' + getEveClassText(record.eveClass)}>
@@ -162,29 +175,6 @@ function getSignificancesButton(rowKey: string, buttonLabel: string, accession: 
       {buttonTag}
     </Tool>
   );
-}
-
-function getEveClassText(eveClass?: number) {
-  switch(eveClass) {
-    case 1: return "Benign";
-    case 2: return "Pathogenic";
-    case 3: return "Uncertain";
-    default: return "N/A";
-  }
-}
-
-interface EveIconProps {
-  eveScore?: string
-  eveClass?: number
-}
-
-function EveIcon(props: EveIconProps) {
-  switch(props.eveClass) {
-    case 1: return <><div className="circle-icon" style={{ background: 'Blue' }}></div></>;
-    case 2: return <><div className="circle-icon" style={{ background: 'Red' }}></div></>
-    case 3: return <><div className="circle-icon" style={{ background: 'LightGrey' }}></div></>;
-    default: return <>N/A</>;
-  }
 }
 
 export default getPrimaryRow;
