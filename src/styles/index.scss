@@ -13,3 +13,31 @@
   color: white;
   font-size: 15px;
 }
+
+.download, .download-ready, .download-nr, .download-na {
+  width: 15px;
+  height: 15px;
+  -moz-border-radius: 50px;
+  -webkit-border-radius: 50px;
+  border-radius: 50px;
+  display: inline-block;
+}
+.download-ready {
+  background: linear-gradient(white, green);
+}
+.download-nr {
+  background: linear-gradient(white, orange);
+}
+.download-na {
+  background: linear-gradient(white, red);
+}
+
+.download-btn:hover:disabled {
+  cursor: default;
+}
+.download-btn:hover {
+  cursor: pointer;
+}
+.trash-btn:hover {
+  cursor: pointer;
+}
