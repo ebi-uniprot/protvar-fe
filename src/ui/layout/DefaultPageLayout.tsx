@@ -130,7 +130,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
     </div>
 
     <footer id="footer-target">
-      <div className='collaborators-logo-container'>
+    <div className='collaborators-logo-container row'>
         <img src={EMBLEBILogo} loading="lazy" alt="" width="130" height="50" />
         <img src={UniProtLogo} loading="lazy" alt="" width="130" height="50" />
         <img src={openTargetsLogo} loading="lazy" alt="" width="130" height="50" />

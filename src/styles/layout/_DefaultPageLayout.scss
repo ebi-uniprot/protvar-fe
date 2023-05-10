@@ -256,9 +256,6 @@ a {
 			background-color: rgba(0, 0, 0, .5);
 		}
 
-		.link {
-		}
-
 		.text {
 			height: 120px;
 			overflow: hidden;
@@ -426,8 +423,8 @@ span.space:before {
 }
 
 .collaborators-logo-container {
-	margin: 8px;
 	> img {
-		margin-right: 3rem;
+		margin-left: 1rem;
+		margin-right: 2rem;
 	}
 }
