@@ -425,6 +425,9 @@ span.space:before {
     white-space: pre;
 }
 
-.collaborators-logo-container img{
-	margin-right: 3rem;
+.collaborators-logo-container {
+	margin: 8px;
+	> img {
+		margin-right: 3rem;
+	}
 }
