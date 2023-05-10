@@ -13,20 +13,27 @@ function testDownloadRes() : DownloadResponse {
     return {inputType: "FILE", requested: new Date(), downloadId: id, url: `api/download/${id}`, jobName: 'test', status: -1}
 }*/
 
-const statusMap: { [code: number]: string; } = {};
-statusMap[1] = 'Ready';
-statusMap[0] = 'Not Ready';
-statusMap[-1] = 'Not Available';
+const downloadStatusText: { [code: number]: string; } = {};
+downloadStatusText[1] = 'Ready';
+downloadStatusText[0] = 'Not Ready';
+downloadStatusText[-1] = 'Not Available';
+
+const downloadStatusIcon: { [code: number]: string; } = {};
+downloadStatusIcon[1] = 'download-ready';
+downloadStatusIcon[0] = 'download-nr';
+downloadStatusIcon[-1] = 'download-na';
 
 function DownloadPageContent() {
     let localDownloads = JSON.parse(localStorage.getItem(LOCAL_DOWNLOADS) || "[]")
     const [downloads, setDownloads] = useState<DownloadResponse[]>(localDownloads)
-    const ids = downloads.map(d => d.downloadId)
+    //
 
     useEffect(() => {
+        let ds: DownloadResponse[] = JSON.parse(localStorage.getItem(LOCAL_DOWNLOADS) || "[]")
+        const ids = ds.map(d => d.downloadId)
         getDownloadStatus(ids)
             .then((response) => {
-                const updatedDownloads = downloads.map(d => {
+                const updatedDownloads = ds.map(d => {
                     if (d.downloadId in response.data) {
                         d.status = response.data[d.downloadId]
                     }
@@ -75,15 +82,15 @@ function DownloadPageContent() {
                             <td>{download.requested.toLocaleString()}</td>
                             <td>{download.downloadId}</td>
                             <td>{download.jobName}</td>
-                            <td>{statusMap[download.status]}</td>
-                            <td><button onClick={() => downloadFile(download.url)} disabled={download.status !== 1}><i className="bi bi-download"></i></button></td>
-                            <td><button onClick={() => {
+                            <td><div className={downloadStatusIcon[download.status]}></div> {downloadStatusText[download.status]}</td>
+                            <td><button className="bi bi-download download-btn" onClick={() => downloadFile(download.url)} disabled={download.status !== 1} /></td>
+                            <td><button className="bi bi-trash trash-btn" onClick={() => {
                                 setDownloads(
                                     downloads.filter(d =>
                                         d.downloadId !== download.downloadId
                                     )
                                 );
-                            }}><i className="bi bi-trash"></i></button></td>
+                            }}></button></td>
                         </tr>
                     );
                 })}
