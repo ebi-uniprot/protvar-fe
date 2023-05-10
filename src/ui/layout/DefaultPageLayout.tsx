@@ -5,6 +5,9 @@ import {API_URL, LOCAL_DOWNLOADS} from "../../constants/const";
 
 import DefaultPageContent from './DefaultPageContent';
 
+import UniProtLogo from '../../images/uniprot-logo.svg';
+import EMBLEBILogo from '../../images/embl-ebi-logo.svg';
+import openTargetsLogo from '../../images/open-targets-logo.png';
 interface DefaultPageLayoutProps {
   content: JSX.Element
 }
@@ -127,8 +130,14 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
     </div>
 
     <footer id="footer-target">
+      <div className='collaborators-logo-container'>
+        <img src={EMBLEBILogo} loading="lazy" alt="" width="130" height="50" />
+        <img src={UniProtLogo} loading="lazy" alt="" width="130" height="50" />
+        <img src={openTargetsLogo} loading="lazy" alt="" width="130" height="50" />
+      </div>
       <div id="global-footer" className="global-footer">
-        <nav id="global-nav-expanded" className="global-nav-expanded row" />
+        {/* Below expanded footer content is commented for now. Restore it back if there are any concerns */}
+        {/* <nav id="global-nav-expanded" className="global-nav-expanded row" /> */}
         <section id="ebi-footer-meta" className="ebi-footer-meta row" />
       </div>
     </footer>
