@@ -6,6 +6,7 @@ import {Assembly, StringVoidFun} from '../../../constants/CommonTypes';
 import { Link } from 'react-router-dom';
 import { ABOUT, CONTACT } from '../../../constants/BrowserPaths';
 import {API_URL} from "../../../constants/const";
+import SearchVariant from './SearchVariant';
 
 const HomePageContent = (props: HomePageProps) => {
   const { loading, assembly, updateAssembly, fetchFileResult, fetchPasteResult } = props;
@@ -24,9 +25,12 @@ const HomePageContent = (props: HomePageProps) => {
         Variants can be submitted below in genomic or protein formats, uploaded or accessed via our <Link to="" onClick={() => window.open(API_URL + '/docs', '_blank')} title="ProtVar REST API" target="_blank"  rel='noreferrer'> API </Link>.
       </p>
     </div>
-    <div className="wrapper">
+    {/* <div className="wrapper">
       <PasteVariantSearch isLoading={loading} assembly={assembly} updateAssembly={updateAssembly} fetchPasteResult={fetchPasteResult} />
       <FileUpload isLoading={loading} fetchFileResult={fetchFileResult} />
+    </div> */}
+    <div>
+      <SearchVariant isLoading={loading} assembly={assembly} updateAssembly={updateAssembly} fetchPasteResult={fetchPasteResult} />
     </div>
     <div>
       <br />

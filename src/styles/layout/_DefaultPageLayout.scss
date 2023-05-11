@@ -287,7 +287,7 @@ a {
 			margin-bottom: 0.5rem;
 			.assembly-radio-check {
 				display: inline-flex;
-				padding-left: 0.5rem;
+				padding: 0.5rem 0 0 0.5rem;
 				label {
 					font-size: 11px;
 					margin-left: 0.5rem;
@@ -324,6 +324,34 @@ a {
 			margin-bottom: 1rem;
 		}
 	}
+
+	.search-card__actions {
+		display: flex;
+		flex-wrap: nowrap;
+		overflow-x: auto;
+		padding: 0;
+		background-color: #014371;
+	}
+
+	.search-card-header {
+		font-family: Lato, sans-serif;
+		font-size: 16px;
+		color: #ffffff;
+		margin: 0.5rem;
+		p {
+			margin: 0;
+		}
+	}
+
+	.search-card {
+		padding: 0 1rem 0 1rem;
+		display: flex;
+	}
+	
+	.search-card-selection {
+		margin-left: 1rem;
+	}
+
 	.uniprot-card {
 		padding-left: 1rem;
 		padding-right: 1rem;

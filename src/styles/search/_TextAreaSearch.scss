@@ -1,7 +1,8 @@
 // Text-area search field
 // ----------------------
 .main-textarea-search-field {
-	min-height: 15vh;
+	min-height: 40vh;
+	width: 55%;
 	border-radius: 5px;
 	line-height: 1.2rem;
 	font-family: Lato, sans-serif;
@@ -9,7 +10,7 @@
 	resize: none;
 	white-space: pre-wrap;
 	margin: 0;
-	margin-bottom: 0.3rem
+	margin-bottom: 0.3rem;
 }
 
 .ref-link {
@@ -73,16 +74,21 @@
 .search-button-group {
 	margin: 1rem 0;
 	display: flex;
-
+	justify-content: center; /* Center the buttons horizontally */
+	align-items: center; /* Center the buttons vertically */
+  
 	.button-new {
-		position: absolute;
-		padding: 10px;
-		width: 92%;
+		margin: 0 1rem;
+		// position: absolute;
+		// padding: 10px;
+		// width: 92%;
 		border-style: solid;
-		color: #00658c;
+		background-color: #014371;
+		color: #ffffff;
+		// color: #00658c;
 		font-weight: bold;
-		bottom: 0.5rem;
-		margin-left: 1rem
+		// bottom: 0.5rem;
+		// margin-left: 1rem
 	}
 }
 
