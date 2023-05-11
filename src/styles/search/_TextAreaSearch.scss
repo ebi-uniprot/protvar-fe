@@ -1,7 +1,7 @@
 // Text-area search field
 // ----------------------
 .main-textarea-search-field {
-	min-height: 40vh;
+	min-height: 32vh;
 	width: 55%;
 	border-radius: 5px;
 	line-height: 1.2rem;
@@ -74,14 +74,14 @@
 .search-button-group {
 	margin: 1rem 0;
 	display: flex;
-	justify-content: center; /* Center the buttons horizontally */
-	align-items: center; /* Center the buttons vertically */
+	justify-content: space-around;
+	align-items: center; 
   
 	.button-new {
 		margin: 0 1rem;
 		// position: absolute;
 		// padding: 10px;
-		// width: 92%;
+		width: 30%;
 		border-style: solid;
 		background-color: #014371;
 		color: #ffffff;
