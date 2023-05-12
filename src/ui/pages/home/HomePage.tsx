@@ -30,7 +30,7 @@ const HomePageContent = (props: HomePageProps) => {
       <FileUpload isLoading={loading} fetchFileResult={fetchFileResult} />
     </div> */}
     <div>
-      <SearchVariant isLoading={loading} assembly={assembly} updateAssembly={updateAssembly} fetchPasteResult={fetchPasteResult} />
+      <SearchVariant isLoading={loading} assembly={assembly} updateAssembly={updateAssembly} fetchPasteResult={fetchPasteResult} fetchFileResult={fetchFileResult}/>
     </div>
     <div>
       <br />
