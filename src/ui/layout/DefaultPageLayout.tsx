@@ -1,38 +1,38 @@
-import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import {ABOUT, CONTACT, DOWNLOAD, HOME} from '../../constants/BrowserPaths';
-import {API_URL, LOCAL_DOWNLOADS} from "../../constants/const";
+import { useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import { ABOUT, CONTACT, DOWNLOAD, HOME } from '../../constants/BrowserPaths'
+import { API_URL, LOCAL_DOWNLOADS } from '../../constants/const'
 
-import DefaultPageContent from './DefaultPageContent';
+import DefaultPageContent from './DefaultPageContent'
 
-import UniProtLogo from '../../images/uniprot-logo.svg';
-import EMBLEBILogo from '../../images/embl-ebi-logo.svg';
-import openTargetsLogo from '../../images/open-targets-logo.png';
+import UniProtLogo from '../../images/uniprot-logo.svg'
+import EMBLEBILogo from '../../images/embl-ebi-logo.svg'
+import openTargetsLogo from '../../images/open-targets-logo.png'
 interface DefaultPageLayoutProps {
   content: JSX.Element
 }
 
 function DefaultPageLayout(props: DefaultPageLayoutProps) {
-
-  let localDownloads = JSON.parse(localStorage.getItem(LOCAL_DOWNLOADS) || "[]")
+  let localDownloads = JSON.parse(localStorage.getItem(LOCAL_DOWNLOADS) || '[]')
   let numDownloads = localDownloads.length
 
   useEffect(() => {
     const win: any = window
     if (win.ebiFrameworkInvokeScripts) {
-      win.ebiFrameworkInvokeScripts();
+      win.ebiFrameworkInvokeScripts()
     }
-  }, []);
+  }, [])
 
-  const { content } = props;
+  const { content } = props
 
-  return <>
-    <div id="skip-to">
-      <a href="#content">Skip to main content</a>
-    </div>
+  return (
+    <>
+      <div id="skip-to">
+        <a href="#content">Skip to main content</a>
+      </div>
 
-    {/* Below is the EBI master header content. Restore it if there are any concerns */}
-    {/* <header id="masthead-black-bar" className="clearfix masthead-black-bar">
+      {/* Below is the EBI master header content. Restore it if there are any concerns */}
+      {/* <header id="masthead-black-bar" className="clearfix masthead-black-bar">
       <nav className="row">
         <ul id="global-nav" className="menu global-nav text-right">
           <li key="logo" className="home-mobile">
@@ -63,86 +63,135 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
       </nav>
     </header> */}
 
-    <div id="content" className="content">
-      <div data-sticky-container>
-        <div
-          id="masthead"
-          className="masthead"
-          data-sticky
-          data-sticky-on="large"
-          data-top-anchor="main-content-area:top"
-          data-btm-anchor="main-content-area:bottom"
-        >
-          <div className="masthead-inner row">
-            <div className="navbar">
-              <table>
-                <tbody>
-                  <tr className="navbar">
-                    <td>
-                      <div className="logo-container">
-                      <Link
-                        className="local-title"
-                        to={HOME}
-                        title="Back to ProtVar's homepage"
-                      >
-                        <img src="ProtVar_logo.png" alt="ProtVar logo" width="140px"/>
-                      </Link>
-                      <Link
-                        className="sub-title"
-                        to={HOME}
-                        title="Back to ProtVar's homepage"
-                      >
-                        Contextualising human missense variation
-                      </Link>
-                      </div>
-                      
-                    </td>
+      <div id="content" className="content">
+        <div data-sticky-container>
+          <div
+            id="masthead"
+            className="masthead"
+            data-sticky
+            data-sticky-on="large"
+            data-top-anchor="main-content-area:top"
+            data-btm-anchor="main-content-area:bottom"
+          >
+            <div className="masthead-inner row">
+              <div className="navbar">
+                <table>
+                  <tbody>
+                    <tr className="navbar">
+                      <td>
+                        <div className="logo-container">
+                          <Link
+                            className="local-title"
+                            to={HOME}
+                            title="Back to ProtVar's homepage"
+                          >
+                            <img
+                              src="ProtVar_logo.png"
+                              alt="ProtVar logo"
+                              width="140px"
+                            />
+                          </Link>
+                          <Link
+                            className="sub-title"
+                            to={HOME}
+                            title="Back to ProtVar's homepage"
+                          >
+                            Contextualising human missense variation
+                          </Link>
+                        </div>
+                      </td>
                       <div>
-                      <td className="topnav-right local-sub-title">
-                      <Link to="" onClick={() => window.open(API_URL + '/docs', '_blank')} title="ProtVar REST API" target="_blank"  rel='noreferrer'> API </Link>
-                    </td>
-                    <td className="topnav-right local-sub-title">
-                      <Link to={DOWNLOAD} title="Contact us"> MY DOWNLOADS ({numDownloads}) </Link>
-                    </td>
-                    <td className="topnav-right local-sub-title">
-                      <Link to={ABOUT} title="About ProtVar's" id="aboutProject"> ABOUT </Link>
-                    </td>
-                    <td className="topnav-right local-sub-title">
-                      <Link to={CONTACT} title="Contact us"> CONTACT </Link>
-                    </td>
+                        <td className="topnav-right local-sub-title">
+                          <Link to={CONTACT} title="Contact us">
+                            Contact
+                          </Link>
+                        </td>
+                        <td className="topnav-right local-sub-title">
+                          <Link
+                            to=""
+                            onClick={() =>
+                              window.open(API_URL + '/docs', '_blank')
+                            }
+                            title="ProtVar REST API"
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            API
+                          </Link>
+                        </td>
+                        <td className="topnav-right local-sub-title">
+                          <Link
+                            // Replace with the right link
+                            to={'/'}
+                            title="About ProtVar's"
+                            id="aboutProject"
+                          >
+                            Help
+                          </Link>
+                        </td>
+                        <td className="topnav-right local-sub-title">
+                          <Link
+                            to={ABOUT}
+                            title="About ProtVar's"
+                            id="aboutProject"
+                          >
+                            About
+                          </Link>
+                        </td>
                       </div>
-                  </tr>
-                </tbody>
-              </table>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <section className="row" role="main">
-        <div id="main-content-area" className="main-content-area row">
-          <div className="small-12 columns">
-            <div className="default-page-layout">
-              <DefaultPageContent downloadCount={numDownloads}>{content}</DefaultPageContent>
+        <section className="row" role="main">
+          <div id="main-content-area" className="main-content-area row">
+            <div className="small-12 columns">
+              <div className="default-page-layout">
+                <DefaultPageContent downloadCount={numDownloads}>
+                  {content}
+                </DefaultPageContent>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
-    </div>
+        </section>
+      </div>
 
-    <footer id="footer-target">
-    <div className='collaborators-logo-container row'>
-        <img src={EMBLEBILogo} loading="lazy" alt="" width="130" height="50" />
-        <img src={UniProtLogo} loading="lazy" alt="" width="130" height="50" />
-        <img src={openTargetsLogo} loading="lazy" alt="" width="130" height="50" />
-      </div>
-      <div id="global-footer" className="global-footer">
-        {/* Below expanded footer content is commented for now. Restore it back if there are any concerns */}
-        {/* <nav id="global-nav-expanded" className="global-nav-expanded row" /> */}
-        <section id="ebi-footer-meta" className="ebi-footer-meta row" />
-      </div>
-    </footer>
-  </>
+      <footer id="footer-target">
+        <div className="collaborators-logo-container row">
+          <img
+            src={EMBLEBILogo}
+            loading="lazy"
+            alt=""
+            width="130"
+            height="50"
+          />
+          <img
+            src={UniProtLogo}
+            loading="lazy"
+            alt=""
+            width="130"
+            height="50"
+          />
+          <img
+            src={openTargetsLogo}
+            loading="lazy"
+            alt=""
+            width="130"
+            height="50"
+          />
+        </div>
+        <div id="global-footer" className="global-footer">
+          {/* Below expanded footer content is commented for now. Restore it back if there are any concerns */}
+          {/* <nav id="global-nav-expanded" className="global-nav-expanded row" /> */}
+          <section id="ebi-footer-meta" className="ebi-footer-meta row" />
+        </div>
+      </footer>
+    </>
+  )
 }
 
-export default DefaultPageLayout;
+export default DefaultPageLayout
