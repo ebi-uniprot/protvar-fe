@@ -31,7 +31,8 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
       <a href="#content">Skip to main content</a>
     </div>
 
-    <header id="masthead-black-bar" className="clearfix masthead-black-bar">
+    {/* Below is the EBI master header content. Restore it if there are any concerns */}
+    {/* <header id="masthead-black-bar" className="clearfix masthead-black-bar">
       <nav className="row">
         <ul id="global-nav" className="menu global-nav text-right">
           <li key="logo" className="home-mobile">
@@ -60,7 +61,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
           </li>
         </ul>
       </nav>
-    </header>
+    </header> */}
 
     <div id="content" className="content">
       <div data-sticky-container>
@@ -122,7 +123,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
         <div id="main-content-area" className="main-content-area row">
           <div className="small-12 columns">
             <div className="default-page-layout">
-              <DefaultPageContent>{content}</DefaultPageContent>
+              <DefaultPageContent downloadCount={numDownloads}>{content}</DefaultPageContent>
             </div>
           </div>
         </div>
