@@ -63,7 +63,11 @@ function SearchVariant(props: VariantSearchProps) {
       return
     }
     var file = target.files[0]
-    props.fetchFileResult(file)
+    if (file.type.startsWith("text/")) {
+      props.fetchFileResult(file)
+    } else {
+      alert("File type " + file.type + " is not accepted.")
+    }
   }
 
   const protACTitle =
