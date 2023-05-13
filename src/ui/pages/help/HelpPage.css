@@ -1,0 +1,49 @@
+.help {
+
+}
+
+.help h1 {
+    font-size: 30px;
+    color: #FF9901;
+}
+
+.help h2 {
+    font-size: 25px;
+    color: #FF9901;
+}
+
+.help h3 {
+    font-size: 20px;
+    color: #FF9901;
+}
+
+.help h4 {
+    font-size: 14px;
+    color: #FF9901;
+}
+
+/* unvisited link */
+.help a:link {
+    color: blue;
+}
+
+/* visited link */
+.help a:visited {
+    color: green;
+}
+
+/* mouse over link */
+.help a:hover {
+    color: #FF9901;
+}
+
+/* selected link */
+.help a:active {
+    color: blue;
+    font-weight: bold;
+}
+
+.help ol {
+    list-style-type: upper-alpha;
+
+}
