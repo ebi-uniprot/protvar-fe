@@ -8,7 +8,6 @@ import {uriTransformer} from "react-markdown";
 import {useLocation } from 'react-router-dom';
 
 function HelpPageContent() {
-    console.log('hi')
     const [markdown, setMarkdown] = useState("")
 
     const addHelpPrefix = function (uri: string) {
@@ -31,9 +30,7 @@ function HelpPageContent() {
         // if not a hash link, scroll to top
         if (hash === '') {
             window.scrollTo(0, 0);
-        }
-        // else scroll to id
-        else {
+        } else { // else scroll to id
             setTimeout(() => {
                 const id = hash.replace('#', '');
                 const element = document.getElementById(id);
