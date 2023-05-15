@@ -8,6 +8,7 @@ import {uriTransformer} from "react-markdown";
 import {useLocation } from 'react-router-dom';
 
 function HelpPageContent() {
+    console.log('hi')
     const [markdown, setMarkdown] = useState("")
 
     const addHelpPrefix = function (uri: string) {
@@ -17,7 +18,7 @@ function HelpPageContent() {
     }
 
     useEffect(() => {
-        fetch(window.location.href + ".md")
+        fetch(window.location.pathname + ".md")
             .then((res) => res.text())
             .then((text) => setMarkdown(text));
     }, []);
@@ -25,6 +26,8 @@ function HelpPageContent() {
 
     const { hash } = useLocation();
     useEffect(() => {
+        if (!markdown)
+            return
         // if not a hash link, scroll to top
         if (hash === '') {
             window.scrollTo(0, 0);
@@ -39,7 +42,7 @@ function HelpPageContent() {
                 }
             }, 0);
         }
-    }, [hash]); // do this on route change
+    }, [markdown, hash]); // do this on route change
 
     return <div className="container help">
         <ReactMarkdown rehypePlugins={[rehypeRaw]} transformLinkUri={addHelpPrefix} remarkPlugins={[remarkGfm]}>{markdown}</ReactMarkdown>
