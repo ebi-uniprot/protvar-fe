@@ -22,7 +22,7 @@ Clicking each category in the contents below will take you to an annotated image
 - [My Downloads](#my-downloads)
 - [ProtVar API](#protvar-api)
 
-## Home Page
+## <a name="home-page"></a>Home Page
 
 ![ProtVar Home Page](images/home_page.png)
 
@@ -36,7 +36,7 @@ Clicking each category in the contents below will take you to an annotated image
 **H.** [File upload](#file-upload) can be used for uploading large files from your computer.  
 **I.** [ProtVar REST API](#protvar-rest-api) can be used to obtain data programmatically.
 
-## Results Page
+## <a name="results-page"></a>Results Page
 
 ![ProtVar Results Page](images/results_page.png)
 
@@ -55,7 +55,7 @@ Clicking each category in the contents below will take you to an annotated image
 **M.** [EVE](#eve) is an amino acid level predictor of pathogenicity  
 **N.** Each of three Annotation types [Function annotation](#function-annotations) and [Population Observations](#population-observations) and [Structure Annotations](#structure-annotations) regarding each variant can be explored by clicking on the icons.
 
-## Function Annotations
+## <a name="function-annotations"></a>Function Annotations
 
 ![ProtVar Function Annotations](images/function_annotations.png)  
 **A** - This page contains the [function annotations](#function-annotations) relating to the variant position in the protein.  
@@ -69,7 +69,7 @@ Clicking each category in the contents below will take you to an annotated image
 **I** - [General protein information](#general-protein-information) from UniProt.  
 **J** - [Ensembl identifiers](#ensembl-identifiers) for the gene and for the transcript which translates to the UniProt canonical isoform.
 
-## Population Observations
+## <a name="population-observations"></a>Population Observations
 
 ![ProtVar Population Observations](images/population_observations.png)  
 **A** - This page contains This page contains data about the variant in other resources and [co-located variants](#co-located-variants)  
@@ -77,7 +77,7 @@ Clicking each category in the contents below will take you to an annotated image
 **C** - Variants [co-located](#co-located-variants) at the same amino acid as the user variant and associated diseases.  
 **D** - Diseases associated with variation in the protein.
 
-## Structure Annotations
+## <a name="structure-annotations"></a>Structure Annotations
 
 ![ProtVar Structure Annotations](images/structure_annotations.png)  
 **A** - This page shows the position of the user variant in protein structures.  
@@ -93,7 +93,7 @@ Clicking each category in the contents below will take you to an annotated image
 **K** - The latest AlphaFold model for the protein containing the variant.  
 **L** - Predicted [protein-protein interactions](#protein-protein-interfaces) are displayed in this table if the variant is considered to be part of the interface.
 
-## Download Options
+## <a name="download-options"></a>Download Options
 
 ![ProtVar Download Options](images/download_options.png)  
 **A** - Users can choose to obtain mappings with annotations or mappings only (which is much faster).  
@@ -103,7 +103,7 @@ Clicking each category in the contents below will take you to an annotated image
 **E** - Pressing submit will put the job in a queue. The results will be available from the [My Downloads](#my-downloads) tab.  
 **F** - Close to return to the results page
 
-## My Downloads
+## <a name="my-downloads"></a>My Downloads
 
 ![ProtVar My Downloads](images/my_downloads.png)  
 **A** - All of the users downloads for this session will be displayed in this page.  
@@ -115,7 +115,7 @@ Clicking each category in the contents below will take you to an annotated image
 **G** - Button to download to the user’s local machine.  
 **H** - Delete the file from the list.
 
-## ProtVar API
+## <a name="protvar-api"></a>ProtVar API
 
 ![ProtVar API](images/protvar_api.png)
 
