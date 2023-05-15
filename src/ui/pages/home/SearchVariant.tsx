@@ -17,9 +17,10 @@ interface VariantSearchProps {
   fetchFileResult: FileLoadFun
 }
 
-function SearchVariant(props: VariantSearchProps) {
-  const [searchTerm, setSearchTerm] = useState('')
-  const uploadInputField = useRef<HTMLInputElement>(null)
+const SearchVariant = (props: VariantSearchProps) => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [file, setFile] = useState<File | null>(null);
+  const uploadInputField = useRef<HTMLInputElement>(null);
 
   const populateVCF = () => {
     setSearchTerm(
@@ -28,7 +29,7 @@ function SearchVariant(props: VariantSearchProps) {
         '2\t233760498\t.\tG\tA\n' +
         '14\t89993420\t.\tA\tG',
     )
-  }
+  };
 
   const populateGnomAD = () => {
     setSearchTerm(
@@ -37,7 +38,7 @@ function SearchVariant(props: VariantSearchProps) {
         '2-233760498-G-A\n' +
         '14-89993420-A-G',
     )
-  }
+  };
 
   const populateHGVS = () => {
     setSearchTerm(
@@ -45,30 +46,28 @@ function SearchVariant(props: VariantSearchProps) {
         'NC_000010.11:g.43118436A>C\n' +
         'NC_000002.12:g.233760498G>A',
     )
-  }
+  };
 
   const populateProtAC = () => {
     setSearchTerm('P22304 A205P\n' + 'P07949 asn783thr\n' + 'P22309 71 Gly Arg')
     props.updateAssembly(DEFAULT_ASSEMBLY)
-  }
+  };
 
   const populateRs = () => {
     setSearchTerm('rs864622779\n' + 'rs587778656\n' + 'rs4148323')
     props.updateAssembly(DEFAULT_ASSEMBLY)
-  }
+  };
 
-  function viewResult(event: React.ChangeEvent<HTMLInputElement>) {
+  const viewResult = (event: React.ChangeEvent<HTMLInputElement>) => {
     const target = event.target
     if (!target.files || !(target.files.length > 0)) {
       return
     }
     var file = target.files[0]
-    if (file.type.startsWith("text/")) {
-      props.fetchFileResult(file)
-    } else {
-      alert("File type " + file.type + " is not accepted.")
+    if (file.type.startsWith('text/')) {
+      setFile(file);
     }
-  }
+  };
 
   const protACTitle =
     'Supported format examples:\n' +
@@ -94,10 +93,22 @@ function SearchVariant(props: VariantSearchProps) {
   const handleSubmit = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    if (searchTerm === '') {
-      return
+    if (file) {
+      props.fetchFileResult(file);
+      // file takes precendence over text search
+      return;
     }
-    props.fetchPasteResult(searchTerm)
+    if (searchTerm !== '') {
+      props.fetchPasteResult(searchTerm) 
+    }
+  }
+
+  const clearFileInput = () => {
+    if ( uploadInputField?.current) {
+      const fileInput = uploadInputField.current;
+      fileInput.value = '';
+      setFile(null);
+    }
   }
 
   const pasteBox: string =
@@ -138,7 +149,7 @@ function SearchVariant(props: VariantSearchProps) {
                   <Spaces count={2} />
                   <button
                     onClick={populateVCF}
-                    className="ref-link"
+                    className="example-link"
                     id="vcfExampleButton"
                   >
                     VCF
@@ -146,7 +157,7 @@ function SearchVariant(props: VariantSearchProps) {
                   <Spaces count={2} />
                   <button
                     onClick={populateGnomAD}
-                    className="ref-link"
+                    className="example-link"
                     id="gnomadExampleButton"
                   >
                     gnomAD
@@ -154,7 +165,7 @@ function SearchVariant(props: VariantSearchProps) {
                   <Spaces count={2} />
                   <button
                     onClick={populateHGVS}
-                    className="ref-link"
+                    className="example-link"
                     id="hgvsExampleButton"
                   >
                     HGVS
@@ -162,7 +173,7 @@ function SearchVariant(props: VariantSearchProps) {
                   <Spaces count={2} />
                   <button
                     onClick={populateProtAC}
-                    className="ref-link"
+                    className="example-link"
                     id="protACExampleButton"
                     title={protACTitle}
                   >
@@ -171,7 +182,7 @@ function SearchVariant(props: VariantSearchProps) {
                   <Spaces count={2} />
                   <button
                     onClick={populateRs}
-                    className="ref-link"
+                    className="example-link"
                     id="rsExampleButton"
                     title={rsTitle}
                   >
@@ -216,10 +227,11 @@ function SearchVariant(props: VariantSearchProps) {
                   </div>
 
                   <div>
-                  <span>
-                    <b>Supported file formats</b><br />
-                    <i>.txt, .fasta</i>
-                  </span>
+                    <span>
+                      <b>Supported file formats</b>
+                      <br />
+                      <i>.txt, .fasta</i>
+                    </span>
                     <p>
                       <b>
                         ProtVar will interpret only the first five fields of the
@@ -251,27 +263,35 @@ function SearchVariant(props: VariantSearchProps) {
                       ref={uploadInputField}
                       onChange={viewResult}
                     />
+                    {file && !file.type.startsWith('text/') && 'Unsupported file'}
+                    {file?.name && (
+                      <div className='file-name'>
+                        <span className='name'>{file?.name.substring(0, file.name.lastIndexOf('.'))}</span>
+                        <span className='extension'>{file?.name.substring(file.name.lastIndexOf('.'))}</span>
+                      </div>
+                    )}
                   </div>
                 </div>
 
                 <div className="search-button-group">
                   <Button
                     onClick={
-                      props.isLoading
-                        ? () => null
+                      file
+                        ? clearFileInput
                         : () => uploadInputField.current?.click()
                     }
-                    className="button-primary"
+                    className={`button-primary ${file ? 'clear-file bi bi-x-lg': 'bi bi-file-earmark-fill'}`}
                   >
-                    {props.isLoading ? 'Loading...' : 'Upload File'}
+                    {' '}{file ? 'Clear file' : 'Upload File'
+                     }
                   </Button>
                   <Button
                     type="submit"
                     onClick={props.isLoading ? () => {} : handleSubmit}
-                    className="button-primary"
+                    className={`button-primary bi bi-box-arrow-right ${file || searchTerm ? '' : 'disable-submit'}`}
                     id="searchButton"
                   >
-                    {props.isLoading ? 'Loading...' : 'Submit'}
+                    {' '}{props.isLoading ? 'Loading...' : 'Submit'}
                   </Button>
                 </div>
               </div>

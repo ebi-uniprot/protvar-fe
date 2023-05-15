@@ -16,7 +16,7 @@
 	background: #FFFFFF;
 }
 
-.ref-link {
+.example-link {
 	text-decoration: none;
 	cursor: pointer;
 	border: 0.5px solid #000000;
@@ -24,9 +24,24 @@
 	padding: 0 2px 0 2px;
 }
 
-.ref-link:hover {
+.example-link:hover {
 	color: #FFFFFF;
 	background-color: #014373;
+	opacity:.9;
+	outline-width:0;
+}
+
+.ref-link {
+	color: #0000ff;
+	border-bottom-style: none;
+	text-decoration: none;
+	border-bottom-width: 1px;
+	cursor: pointer
+}
+
+.ref-link:hover {
+	color: rgb(0,124,130);
+	border-bottom-style: solid;
 	opacity:.9;
 	outline-width:0;
 }
@@ -86,13 +101,32 @@
 		// padding: 10px;
 		width: 30%;
 		border-style: solid;
-		background-color: #014373;;
+		background-color: #014373;
 		color: #ffffff;
 		// color: #00658c;
 		font-weight: bold;
 		// bottom: 0.5rem;
 		// margin-left: 1rem
+
+		img {
+			width: 15px;
+			height: 15px;
+			fill: #ffffff;
+		}
+
+		&:focus {
+			background-color: #014373;;
+		}
 	}
+}
+
+.button-primary.clear-file:hover {
+	background-color: #FF9901;
+}
+
+.button-primary.disable-submit {
+	background-color: #656565 ;
+	cursor: not-allowed;
 }
 
 .info {
@@ -172,6 +206,19 @@
 	color: #4949c7;
 	padding-top: 0.3rem;
 }
+
+.file-name {
+	max-width: 150px;
+	display: flex;
+	.name {
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		overflow: hidden;
+	  }
+}
+
+
+
 .download-list {
 	display: block;
 	list-style-type: none;
