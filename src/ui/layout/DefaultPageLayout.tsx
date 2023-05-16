@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { ABOUT, CONTACT, DOWNLOAD, HOME } from '../../constants/BrowserPaths'
+import {ABOUT, CONTACT, HELP, HOME} from '../../constants/BrowserPaths'
 import { API_URL, LOCAL_DOWNLOADS } from '../../constants/const'
 
 import DefaultPageContent from './DefaultPageContent'
@@ -122,7 +122,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                         <td className="topnav-right local-sub-title">
                           <Link
                             // Replace with the right link
-                            to={'/'}
+                            to={HELP}
                             title="About ProtVar's"
                             id="aboutProject"
                           >
