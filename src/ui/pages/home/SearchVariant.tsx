@@ -19,6 +19,7 @@ interface VariantSearchProps {
 const SearchVariant = (props: VariantSearchProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [file, setFile] = useState<File | null>(null);
+  const [invalidInput, setInvalidInput] = useState(false);
   const uploadInputField = useRef<HTMLInputElement>(null);
 
   const populateVCF = () => {
@@ -65,7 +66,10 @@ const SearchVariant = (props: VariantSearchProps) => {
     var file = target.files[0]
     if (file.type.startsWith('text/')) {
       setFile(file);
+    } else {
+      setInvalidInput(true);
     }
+    
   };
 
   const protACTitle =
@@ -241,7 +245,7 @@ const SearchVariant = (props: VariantSearchProps) => {
                       ref={uploadInputField}
                       onChange={viewResult}
                     />
-                    {file && !file.type.startsWith('text/') && (
+                    {invalidInput && (
                       <>
                       <i className="file-warning bi bi-exclamation-triangle-fill"></i>{' '}
                       Unsupported file
