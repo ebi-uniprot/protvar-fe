@@ -2,7 +2,7 @@ import RegionProteinProps from "./RegionProteinProps";
 import {Comment} from "../../../../types/FunctionalResponse";
 import Evidences from "../Evidences";
 import RegionProteinAccordion from "./RegionProteinAccordion";
-import { EmptyElement } from "../../../../constants/Const";
+import { EmptyElement } from "../../../../constants/ConstElement";
 
 function ActivityRegulations(props: RegionProteinProps) {
   return <RegionProteinAccordion title="Activity Regulation" detailComponentGenerator={getActivityRegulation} {...props} />

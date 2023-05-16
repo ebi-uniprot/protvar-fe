@@ -1,7 +1,10 @@
 // Text-area search field
 // ----------------------
 .main-textarea-search-field {
-	min-height: 15vh;
+	min-height: 32vh;
+	width: 55%;
+	border: 1px solid #000000;
+	border-radius: 2px;
 	border-radius: 5px;
 	line-height: 1.2rem;
 	font-family: Lato, sans-serif;
@@ -9,7 +12,28 @@
 	resize: none;
 	white-space: pre-wrap;
 	margin: 0;
-	margin-bottom: 0.3rem
+	margin-bottom: 0.3rem;
+	background: #FFFFFF;
+}
+
+.examples-container {
+	display: flex;
+	padding: 0.5rem 0 1rem 0;
+}
+
+.example-link {
+	text-decoration: none;
+	cursor: pointer;
+	border: 0.5px solid #000000;
+	border-radius: 5px;
+	padding: 0 2px 0 2px;
+}
+
+.example-link:hover {
+	color: #FFFFFF;
+	background-color: #014373;
+	opacity:.9;
+	outline-width:0;
 }
 
 .ref-link {
@@ -71,19 +95,38 @@
 // Search button-group
 // -------------------
 .search-button-group {
-	margin: 1rem 0;
-	display: flex;
-
+	align-self: flex-end;
+    margin: auto auto 0.5rem auto;
+    display: flex;
+    justify-content: space-around;
+  
 	.button-new {
-		position: absolute;
-		padding: 10px;
-		width: 92%;
+		margin: 0 1rem;
+		width: 166px;
 		border-style: solid;
-		color: #00658c;
+		background-color: #014373;
+		color: #ffffff;
 		font-weight: bold;
-		bottom: 0.5rem;
-		margin-left: 1rem
+		
+		img {
+			width: 15px;
+			height: 15px;
+			fill: #ffffff;
+		}
+
+		&:focus {
+			background-color: #014373;;
+		}
 	}
+}
+
+.button-primary.clear-file:hover {
+	background-color: #FF9901;
+}
+
+.button-primary.disable-submit {
+	background-color: #656565 ;
+	cursor: not-allowed;
 }
 
 .info {
@@ -163,6 +206,21 @@
 	color: #4949c7;
 	padding-top: 0.3rem;
 }
+
+.file-name {
+	max-width: 150px;
+	display: flex;
+	.name {
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		overflow: hidden;
+	  }
+}
+
+.file-warning {
+	color: #FF9901;
+}
+
 .download-list {
 	display: block;
 	list-style-type: none;

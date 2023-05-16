@@ -24,7 +24,7 @@ $default-radius: $base-font-size;
 // -------
 $default-button-height: 2.5 * $base-font-size;
 $default-button-padding: 0 $default-padding;
-$default-button-radius: $default-button-height / 2;
+$default-button-radius: $default-button-height * 0.5;
 
 // Protein Structure Colours
 // -------------------------

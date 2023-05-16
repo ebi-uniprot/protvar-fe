@@ -20,7 +20,7 @@ import PopulationIcon from '../../../images/human.svg';
 import LoaderRow from "./LoaderRow";
 import { ReactComponent as ChevronDownIcon } from "../../../images/chevron-down.svg"
 import { ReactComponent as ChevronUpIcon } from "../../../images/chevron-up.svg"
-import { EmptyElement } from "../../../constants/Const";
+import { EmptyElement } from "../../../constants/ConstElement";
 import { aaChangeTip, CanonicalIcon } from "./AlternateIsoFormRow";
 import {EveIcon, getEveClassText} from "./EveScore";
 import {INPUT_GEN, INPUT_PRO, INPUT_RS} from "../../../types/MappingResponse";
