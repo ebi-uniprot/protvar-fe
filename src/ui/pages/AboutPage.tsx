@@ -39,49 +39,49 @@ function AboutPageContent() {
 
       <p>
         The ProtVar team consists of:<br/>
-        <a href="https://www.ebi.ac.uk/people/person/james-stephenson/" target="_blank">James Stephenson</a> - ProtVar lead<br/>
-        <a href="https://www.ebi.ac.uk/people/person/prabhat-totoo/" target="_blank">Prabhat Totoo</a> - Lead developer<br/>
+        <a href="https://www.ebi.ac.uk/people/person/james-stephenson/" target="_blank" rel="noreferrer">James Stephenson</a> - ProtVar lead<br/>
+        <a href="https://www.ebi.ac.uk/people/person/prabhat-totoo/" target="_blank" rel="noreferrer">Prabhat Totoo</a> - Lead developer<br/>
       </p>
 
       <p>
         We would like to thank the following resources for the data used in ProtVar <br/>
-        <a href="https://www.uniprot.org/" target="_blank"><img
+        <a href="https://www.uniprot.org/" target="_blank" rel="noreferrer"><img
             src={UniprotLogo}
             loading="lazy"
             alt=""
             width="120"
         /></a>&nbsp;&nbsp;
-        <a href="https://www.ensembl.org/" target="_blank"><img
+        <a href="https://www.ensembl.org/" target="_blank" rel="noreferrer"><img
             src={EnsemblLogo}
             loading="lazy"
             alt=""
             width="140"
         /></a>&nbsp;&nbsp;
-        <a href="https://www.ebi.ac.uk/pdbe/" target="_blank"><img
+        <a href="https://www.ebi.ac.uk/pdbe/" target="_blank" rel="noreferrer"><img
             src={PDBeLogo}
             loading="lazy"
             alt=""
             width="50"
         /></a>&nbsp;&nbsp;
-        <a href="https://cadd.gs.washington.edu/" target="_blank"><img
+        <a href="https://cadd.gs.washington.edu/" target="_blank" rel="noreferrer"><img
             src={CADDLogo}
             loading="lazy"
             alt=""
             width="60"
         /></a>&nbsp;&nbsp;
-        <a href="https://evemodel.org/" target="_blank"><img
+        <a href="https://evemodel.org/" target="_blank" rel="noreferrer"><img
             src={EVELogo}
             loading="lazy"
             alt=""
             width="120"
         /></a>&nbsp;&nbsp;
-        <a href="https://alphafold.ebi.ac.uk/" target="_blank"><img
+        <a href="https://alphafold.ebi.ac.uk/" target="_blank" rel="noreferrer"><img
             src={DMLogo}
             loading="lazy"
             alt=""
             width="120"
         /></a>&nbsp;&nbsp;
-        <a href="https://foldxsuite.crg.eu/" target="_blank"><img
+        <a href="https://foldxsuite.crg.eu/" target="_blank" rel="noreferrer"><img
             src={FoldXLogo}
             loading="lazy"
             alt=""
