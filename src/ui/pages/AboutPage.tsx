@@ -1,5 +1,4 @@
 import DefaultPageLayout from "../layout/DefaultPageLayout";
-import {ENSEMBL_ASML_URL, HUMSAVAR_URL} from "../../constants/ExternalUrls";
 import React from "react";
 
 function AboutPageContent() {
