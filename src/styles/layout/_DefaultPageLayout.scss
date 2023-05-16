@@ -3,7 +3,6 @@
 }
 
 .badge {
-  float: left;
   background-color: #3cb55b;
   border-radius: 5px;
   color: #ffffff;
@@ -45,18 +44,12 @@
 
 /* Navbar links */
 .navbar a {
-  // float: left;
-  // text-align: center;
-  // padding: 6px;
   color: white;
   text-decoration: none;
-
-  // font-size: 17px;
 }
 
 /* Navbar links on mouse-over */
 .navbar a:hover {
-  // background-color: #000;
   border-bottom: none;
 }
 a {
@@ -89,10 +82,7 @@ a {
     padding-bottom: 1em;
     padding-left: 1em;
     margin-bottom: 0.2rem;
-    // border-width: thin;
-    // border-color: #00709b;
-    // cursor: pointer;
-    // color: #00709b;
+    cursor: pointer;
   }
   .modal__backdrop {
     background-color: transparent;
@@ -102,8 +92,6 @@ a {
     button {
       background-color: transparent;
       padding-top: 0.5em;
-      // padding-right: 1em;
-      // padding-bottom: 1em;
       padding-left: 1em;
       border-width: thin;
       border-color: #00709b;
@@ -305,25 +293,7 @@ nav .sidebar-menu .active {
     .container {
       position: relative;
     }
-    //label {
-    //position: absolute;
-    //top: 100%;
-    //font-weight: bold;
-    //color: blue;
-    //padding-bottom: 1rem;
-    //}
-    //input {
-    //	display: none;
-    //}
-    //label:after {
-    //	content: "Show More";
-    //}
-    //input:checked + label:after {
-    //	content: "Show Less";
-    //}
-    //input:checked ~ div {
-    //	height: 100%;
-    //}
+    
     .assembly {
       font-size: 12px;
       margin-bottom: 0.5rem;
@@ -395,6 +365,8 @@ nav .sidebar-menu .active {
   }
 
   .search-card-selection {
+    display: flex;
+    flex-direction: column;
     margin-left: 1rem;
   }
 

@@ -1,6 +1,5 @@
 import React, { useState, useRef } from 'react'
 import Button from '../../elements/form/Button'
-import { VCF_FORMAT_INFO_URL } from '../../../constants/ExternalUrls'
 import { FileLoadFun } from '../../../utills/AppHelper'
 import {
   Assembly,
@@ -144,8 +143,9 @@ const SearchVariant = (props: VariantSearchProps) => {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
               <div className="search-card-selection">
-                <div className="flex padding-bottom-1x">
-                  <b>Examples:</b>
+                <div>
+                <b>Examples:</b><br />
+                <div className="examples-container">
                   <Spaces count={2} />
                   <button
                     onClick={populateVCF}
@@ -189,6 +189,7 @@ const SearchVariant = (props: VariantSearchProps) => {
                     Variant ID
                   </button>
                 </div>
+                </div>
                 <div className="assembly">
                   <span title="Genome assembly conversion from GRCh37 to GRCh38 works for genomic input types only i.e. for input in VCF, HGVS or gnomAD formats. Protein position and DBSNP ID inputs are assumed to be in GRCh38.">
                     <b>Reference Genome Assembly</b>
@@ -228,33 +229,10 @@ const SearchVariant = (props: VariantSearchProps) => {
 
                   <div>
                     <span>
-                      <b>Supported file formats</b>
-                      <br />
-                      <i>.txt, .fasta</i>
+                      <b>Supported file formats</b><br />
                     </span>
                     <p>
-                      <b>
-                        ProtVar will interpret only the first five fields of the
-                        VCF
-                      </b>
-                      <br />
-                      #CHROM POS ID REF ALT
-                      <br />
-                      Missing values can be specified with a dot (‘.’){' '}
-                      <a
-                        target="_blank"
-                        rel="noreferrer"
-                        href={VCF_FORMAT_INFO_URL}
-                        className="ref-link"
-                      >
-                        more info
-                      </a>
-                      <br />
-                      <br />
-                      <b>ProtVar also supports HGVS in the following format:</b>
-                      <br />
-                      {'NC_000010.11:g.121479868C>G'}
-                      <br />
+                      ProtVar accepts any files that are in plain text format (i.e. .txt, .csv)
                     </p>
                     <input
                       id="myInput"
@@ -263,7 +241,12 @@ const SearchVariant = (props: VariantSearchProps) => {
                       ref={uploadInputField}
                       onChange={viewResult}
                     />
-                    {file && !file.type.startsWith('text/') && 'Unsupported file'}
+                    {file && !file.type.startsWith('text/') && (
+                      <>
+                      <i className="file-warning bi bi-exclamation-triangle-fill"></i>{' '}
+                      Unsupported file
+                      </>
+                    )}
                     {file?.name && (
                       <div className='file-name'>
                         <span className='name'>{file?.name.substring(0, file.name.lastIndexOf('.'))}</span>

@@ -16,6 +16,11 @@
 	background: #FFFFFF;
 }
 
+.examples-container {
+	display: flex;
+	padding: 0.5rem 0 1rem 0;
+}
+
 .example-link {
 	text-decoration: none;
 	cursor: pointer;
@@ -90,24 +95,19 @@
 // Search button-group
 // -------------------
 .search-button-group {
-	margin: 1rem 0;
-	display: flex;
-	justify-content: space-around;
-	align-items: center; 
+	align-self: flex-end;
+    margin: auto auto 0.5rem auto;
+    display: flex;
+    justify-content: space-around;
   
 	.button-new {
 		margin: 0 1rem;
-		// position: absolute;
-		// padding: 10px;
-		width: 30%;
+		width: 166px;
 		border-style: solid;
 		background-color: #014373;
 		color: #ffffff;
-		// color: #00658c;
 		font-weight: bold;
-		// bottom: 0.5rem;
-		// margin-left: 1rem
-
+		
 		img {
 			width: 15px;
 			height: 15px;
@@ -217,7 +217,9 @@
 	  }
 }
 
-
+.file-warning {
+	color: #FF9901;
+}
 
 .download-list {
 	display: block;

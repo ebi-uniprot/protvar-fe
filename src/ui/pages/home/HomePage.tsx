@@ -18,20 +18,6 @@ const HomePageContent = (props: HomePageProps) => {
   return (
     <>
       <div>
-        <div className="banner">
-          ProtVar will be launched on <strong>Wednesday 24th May</strong> at an
-          EMBL-EBI webinar at 15:30 BST (UTC+1). We will discuss the various
-          ways in which ProtVar can help users with their work as well as recent
-          improvements and fixes. Places are limited so please register to
-          secure your place{' '}
-          <a
-            href="https://www.ebi.ac.uk/training/events/contextualise-and-interpret-human-missense-variation-protvar/"
-            target="_blank"
-            rel="noreferrer"
-          >
-            here.
-          </a>
-        </div>
         <p>
           ProtVar (<strong>Prot</strong>ein <strong>Var</strong>iation) is a
           resource to investigate missense variation in humans by presenting
