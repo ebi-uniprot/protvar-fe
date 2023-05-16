@@ -1,7 +1,7 @@
 export const ABOUT = "/about"
 export const CONTACT = "/contact"
 export const SEARCH = "/results"
-export const QUERY = "/q"
+export const QUERY = "/query"
 export const HOME = "/"
 export const API_ERROR = "/error"
 export const DOWNLOAD = "/download"
