@@ -298,13 +298,11 @@ nav .sidebar-menu .active {
     }
     
     .assembly {
-      font-size: 12px;
       margin-bottom: 0.5rem;
       .assembly-radio-check {
         display: inline-flex;
         padding: 0.5rem 0 0 0.5rem;
         label {
-          font-size: 11px;
           margin-left: 0.5rem;
           input {
             accent-color: #014373;
@@ -371,6 +369,7 @@ nav .sidebar-menu .active {
     display: flex;
     flex-direction: column;
     margin-left: 1rem;
+    font-size: 14px;
   }
 
   .uniprot-card {

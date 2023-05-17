@@ -236,7 +236,7 @@ const SearchVariant = (props: VariantSearchProps) => {
                     <span>
                       <b>Supported file formats</b><br />
                     </span>
-                    <p>
+                    <p className='supported-file-text'>
                       ProtVar accepts any files that are in plain text format (i.e. .txt, .csv)
                     </p>
                     <input
