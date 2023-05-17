@@ -1,19 +1,13 @@
-Major section 4
-Minor sections 5
-
-
 ### Help
 
-1. [Website Help](#website-help)
-2. [Download File Help](#download-file-help)
-3. [API Help](#api-help)
-4. [Direct Variant Link Help](#direct-variant-link-help)
+1. [Website](#website)
+2. [Download File](#download-file)
+3. [API](#api)
+4. [Direct Variant Link](#direct-variant-link)
 
 ---
 
-##### <a name="website-help"></a>Website Help
-
-###### Website Help Contents
+##### <a name="website"></a>Website
 
 Clicking each category in the contents below will take you to an annotated image of the relevant page in ProtVar linked to more detailed descriptions of each feature.
 
@@ -125,81 +119,85 @@ Clicking each category in the contents below will take you to an annotated image
 
 #### Website Help Further Information
 
-**3D Structure Viewer:** 3D structures are visualised using the Mol* viewer which “is a modern web-based open-source toolkit for visualisation and analysis of large-scale molecular data”. Further information can be found at their website: https://molstar.org/
+<a name="3d-structure-viewer"></a>**3D Structure Viewer:** 3D structures are visualised using the Mol* viewer which “is a modern web-based open-source toolkit for visualisation and analysis of large-scale molecular data”. Further information can be found at their website: https://molstar.org/
 ProtVar uses a limited version of Mol* with less functionality than the full version to allow proteins to be displayed quickly and smoothly.  
 
-**Annotations:** Annotations are subdivided into function annotations, population observations and structure annotations. Annotations either help the user to understand the function of the reference amino acid at the variant position, evaluate the likelihood that the variant amino acid will alter the functional and contextualise the variant position and protein role to suggest what effect the variant may have on the organism.
+<a name="annotations"></a>**Annotations:** Annotations are subdivided into function annotations, population observations and structure annotations. Annotations either help the user to understand the function of the reference amino acid at the variant position, evaluate the likelihood that the variant amino acid will alter the functional and contextualise the variant position and protein role to suggest what effect the variant may have on the organism.
 
-**CADD:** CADD scores “the deleteriousness of single nucleotide variants as well as insertion/deletions variants in the human genome” - from https://cadd.gs.washington.edu/ CADD scores are freely available for all non-commercial applications however a licence is required for commercial applications, details of which can be found on their website. CADD citation: ref doi: 10.1038/ng.2892
+<a name="cadd"></a>**CADD:** CADD scores “the deleteriousness of single nucleotide variants as well as insertion/deletions variants in the human genome” - from https://cadd.gs.washington.edu/ CADD scores are freely available for all non-commercial applications however a licence is required for commercial applications, details of which can be found on their website. CADD citation: ref doi: 10.1038/ng.2892
 
-**Co-located Variants:** ProtVar retrieves variants which have been reported at the same amino acid position as the variant. This mean that the point mutation itself may be any of the three nucleotide position of the codon, not necessarily the same genomic position as the user entered variant.
+<a name="co-located-variants"></a>**Co-located Variants:** ProtVar retrieves variants which have been reported at the same amino acid position as the variant. This mean that the point mutation itself may be any of the three nucleotide position of the codon, not necessarily the same genomic position as the user entered variant.
 
-**Contact:** If you have any problems using ProtVar or cannot retrieve the data you want then please use the contact form to get in touch with the ProtVar team who will do their best to assist you. Additionally if you have any suggestions to improve ProtVar or requests to add something new to help your work then please let us know.
+<a name="contact"></a>**Contact:** If you have any problems using ProtVar or cannot retrieve the data you want then please use the contact form to get in touch with the ProtVar team who will do their best to assist you. Additionally if you have any suggestions to improve ProtVar or requests to add something new to help your work then please let us know.
 
-**Data Types:** The following variant input data types are currently supported by ProtVar: [VCF](#vcf), [gnomAD](#gnomad), [HGVS](#HGVS), [Protein position](#protein-position), [dbSNP ID](#dbsnp-id).  
+<a name="data-types"></a>**Data Types:** The following variant input data types are currently supported by ProtVar: [VCF](#vcf), [gnomAD](#gnomad), [HGVS](#HGVS), [Protein position](#protein-position), [dbSNP ID](#dbsnp-id).  
 
 Examples of each of the formats can be found to the right of the paste input box.
 A mixture of formats can be submitted. For example:    
-rs864622779  
+>rs864622779  
 P22304 A205P  
 X 149498202 . C G  
+
 ProtVar will evaluate each one and map them to the protein position in a unified format.
 
-**dbSNP ID:** dbSNP is a resource which “contains human single nucleotide variations, microsatellites, and small-scale insertions and deletions." The resource can be found here: https://www.ncbi.nlm.nih.gov/snp/. Variants in ProtVar can be searched in the paste box or uploaded using the dbSNP RefSNP ID for example: rs4148323. 
+<a name="dbsnp-id"></a>**dbSNP ID:** dbSNP is a resource which “contains human single nucleotide variations, microsatellites, and small-scale insertions and deletions." The resource can be found here: https://www.ncbi.nlm.nih.gov/snp/. Variants in ProtVar can be searched in the paste box or uploaded using the dbSNP RefSNP ID for example: rs4148323. 
 Because dbSNP IDs may represent more than one variant allele, ProtVar will separate the different variant alleles onto different lines on the mapping page. This is because the different variant alleles may have different consequences to the protein
 
-**Download:** Downloads can be tailored according to the users’ needs. If only mappings from genomic coordinates to protein positions are required then “mappings only” can be used. If specific annotations are required then these can be selected individually. Each annotation category selected adds extra time to produce the downloadable file. Files ready for download are displayed in the ~My Downloads” section. Optionally users can add a job name to keep track of multiple jobs and an email address so that they can be informed when the file is ready to be downloaded. All of the annotations in the download file can also be accessed programmatically via the ProtVar REST API.
+<a name="download"></a>**Download:** Downloads can be tailored according to the users’ needs. If only mappings from genomic coordinates to protein positions are required then “mappings only” can be used. If specific annotations are required then these can be selected individually. Each annotation category selected adds extra time to produce the downloadable file. Files ready for download are displayed in the ~My Downloads” section. Optionally users can add a job name to keep track of multiple jobs and an email address so that they can be informed when the file is ready to be downloaded. All of the annotations in the download file can also be accessed programmatically via the ProtVar REST API.
 
-**Ensembl identifiers:**
+<a name="ensembl-identifiers"></a>**Ensembl identifiers:**
 
-**EVE:** EVE is “a model for the prediction of clinical significance of human variants based on sequences of diverse organisms across evolution”. To cite the use of EVE scores: (ref doi: 10.1038/s41586-021-04207-6)
+<a name="eve"></a>**EVE:** EVE is “a model for the prediction of clinical significance of human variants based on sequences of diverse organisms across evolution”. To cite the use of EVE scores: (ref doi: 10.1038/s41586-021-04207-6)
 To explore EVE scores further visit the website: https://evemodel.org/
 
-**Function Annotations:** Function annotations are principally sourced from UniProt. There are three sections. The first section contains annotations describing the variant position only. The second section describes the region surrounding the variant as the variant may play a role in a function reliant on the region. The third section describes the role of the protein more generally in order for the user to predict the effect on the organism if the variant affects protein function.
+<a name="function-annotationse"></a>**Function Annotations:** Function annotations are principally sourced from UniProt. There are three sections. The first section contains annotations describing the variant position only. The second section describes the region surrounding the variant as the variant may play a role in a function reliant on the region. The third section describes the role of the protein more generally in order for the user to predict the effect on the organism if the variant affects protein function.
 
-**File Upload:**
+<a name="file-upload"></a>**File Upload:**
 
-**General protein information:**
+<a name="general-protein-information"></a>**General protein information:**
 
-**Genomic position:**
+<a name="genomic-position"></a>**Genomic position:**
 
-**Genome Assembly:** All of the annotations in ProtVar are based upon the mappings between GRCh38 assembly and the UniProt canonical isoform sequence. However, ProtVar does support coordinates in GRCh37 which can be uploaded or pasted to search. ProtVar will map the positions from the GRCh37 to the GRCh38 equivalent positions using pre-mapped equivalency tables derived from the CrossMap tool doi: 10.1093/bioinformatics/btt730. Users should specify the assembly if they know it. However, ProtVar will by default attempt to predict which assembly the user has submitted by comparing the nucleotides at each user entered coordinate against each reference assembly. This will not work reliably for very small (<10) numbers of variants submitted.
+<a name="genome-assembly"></a>**Genome Assembly:** All of the annotations in ProtVar are based upon the mappings between GRCh38 assembly and the UniProt canonical isoform sequence. However, ProtVar does support coordinates in GRCh37 which can be uploaded or pasted to search. ProtVar will map the positions from the GRCh37 to the GRCh38 equivalent positions using pre-mapped equivalency tables derived from the CrossMap tool doi: 10.1093/bioinformatics/btt730. Users should specify the assembly if they know it. However, ProtVar will by default attempt to predict which assembly the user has submitted by comparing the nucleotides at each user entered coordinate against each reference assembly. This will not work reliably for very small (<10) numbers of variants submitted.
 
-**genomic coordinates to protein positions:**
+<a name="genomic-coordinates-to-protein-positions"></a>**Genomic Coordinates to Protein Positions:**
 
-**gnomAD:** Users may want to copy and paste variants directly from the GnomAD UI to rapidly retrieve annotations, the gnomAD website can be found here: http://www.gnomad-sg.org/. The following VCF-like format is therefore supported in ProtVar:   X-149498202-C-G
+<a name="gnomad"></a>**gnomAD:** Users may want to copy and paste variants directly from the GnomAD UI to rapidly retrieve annotations, the gnomAD website can be found here: http://www.gnomad-sg.org/. The following VCF-like format is therefore supported in ProtVar:   
+>X-149498202-C-G
 
-**HGVS:** Variants can be submitted to ProtVar using the HGVS nomenclature standard for single nucleotide polymorphisms. This format differs from VCF in that it incorporates the reference sequence the coordinate is based upon, for example: NC_000023.11:g.149498202C>G  
+<a name="hgvs"></a>**HGVS:** Variants can be submitted to ProtVar using the HGVS nomenclature standard for single nucleotide polymorphisms. This format differs from VCF in that it incorporates the reference sequence the coordinate is based upon, for example: 
+>NC_000023.11:g.149498202C>G  
+
 Futher details about the HGVS format can be found here: https://varnomen.hgvs.org/bg-material/simple/
 
-**Isoforms:** ProtVar maps from genomic coordinates to as many different isoforms of the protein as possible. This is limited by the match between the translated transcripts and isoform sequences in UniProt. The isoform displayed by default is the Uniprot canonical isoform which is denoted by a logo “can”. All of the annotations are based upon the numbering in the canonical isoform. Other isoforms, where the variant may be in a different numerical position, are denoted by a logo “iso”.
+<a name="isoforms"></a>**Isoforms:** ProtVar maps from genomic coordinates to as many different isoforms of the protein as possible. This is limited by the match between the translated transcripts and isoform sequences in UniProt. The isoform displayed by default is the Uniprot canonical isoform which is denoted by a logo “can”. All of the annotations are based upon the numbering in the canonical isoform. Other isoforms, where the variant may be in a different numerical position, are denoted by a logo “iso”.
 
-**Missense:** ProtVar retrieves annotations and predictions for the evaluation of missense mutations. Missense mutations are single nucleotide changes which result in a codon which encodes a different amino acid. Synonymous mutations are also handled by ProtVar where a point mutation does not alter the encoded amino acid.
+<a name="gmissense"></a>**Missense:** ProtVar retrieves annotations and predictions for the evaluation of missense mutations. Missense mutations are single nucleotide changes which result in a codon which encodes a different amino acid. Synonymous mutations are also handled by ProtVar where a point mutation does not alter the encoded amino acid.
 
-**My Downloads:**
+<a name="my-downloads"></a>**My Downloads:**
 
-**Paste:** Several thousand variants can be pasted into the box (for longer lists please upload a file).
+<a name="paste"></a>**Paste:** Several thousand variants can be pasted into the box (for longer lists please upload a file).
 
-**Population Observations:** Descriptions of other humans with the same variation, variations in the same amino acid location or the same gene may help users to assess the likely effect of their variant. ProtVar retrieves IDs from several databases which report the same variant as the user query. It also pulls data on co-located variants at the same amino acid position along with accompanying disease notes. ProtVar also retrieves information regarding diseases which have been associated with the protein.
+<a name="population-observations"></a>**Population Observations:** Descriptions of other humans with the same variation, variations in the same amino acid location or the same gene may help users to assess the likely effect of their variant. ProtVar retrieves IDs from several databases which report the same variant as the user query. It also pulls data on co-located variants at the same amino acid position along with accompanying disease notes. ProtVar also retrieves information regarding diseases which have been associated with the protein.
 
-**Predicted Free Energy Change:**
+<a name="predicted-free-energy-change"></a>**Predicted Free Energy Change:**
 
-**Protein-protein Interfaces:** Doi: 10.17044/scilifelab.16866202.v1.
+<a name="protein-protein-interfaces"></a>**Protein-protein Interfaces:** Doi: 10.17044/scilifelab.16866202.v1.
 
-**Protein Pockets:**
+<a name="protein-pockets"></a>**Protein Pockets:**
 
-**Protein Position:** Variants annotations can be accessed in ProtVar via their protein accession and position. The proteins should be named according to the UniProt canonical isoform accession and numbered according to the UniProt canonical isoform. ProtVar maps the protein position to the genomic coordinates of the relevant codon on the GRCh38 assembly. ProtVar then considers the codon sequence and the reference and variant amino acids provided to calculate the exact coordinate(s) and the variant nucleotide(s). If there are more than one variant or coordinate which could be possible then both alternatives are shown on different rows in the results.
+<a name="protein-position"></a>**Protein Position:** Variants annotations can be accessed in ProtVar via their protein accession and position. The proteins should be named according to the UniProt canonical isoform accession and numbered according to the UniProt canonical isoform. ProtVar maps the protein position to the genomic coordinates of the relevant codon on the GRCh38 assembly. ProtVar then considers the codon sequence and the reference and variant amino acids provided to calculate the exact coordinate(s) and the variant nucleotide(s). If there are more than one variant or coordinate which could be possible then both alternatives are shown on different rows in the results.
 
-**Protein Position to Genomic Coordinates:**
+<a name="protein-position-to-genomic-coordinate"></a>**Protein Position to Genomic Coordinates:**
 
-**ProtVar REST API:**
+<a name="protvar-rest-api"></a>**ProtVar REST API:**
 
-**Region:**
+<a name="region"></a>**Region:**
 
-**Structure Annotations:**
+<a name="structure-annotations"></a>**Structure Annotations:**
 
-**VCF:** VCF is a tab separated text file format. It contains information about a position in the genome. ProtVar evaluates the first five fields in each line, namely:  
-CHROM  - The name of the chromosome on which the variation is being called  
+<a name="vcf"></a>**VCF:** VCF is a tab separated text file format. It contains information about a position in the genome. ProtVar evaluates the first five fields in each line, namely:  
+>CHROM  - The name of the chromosome on which the variation is being called  
 POS - The position of the variation on the sequence  
 ID - An identifier of the variation for example dbSNP ID. This is not a mandatory field for ProtVar and can be left out or included as “.”  
 REF - The reference base at the given position on the reference sequence. ProtVar always uses the reference of the most recent version of the assembly. If the user base does not match then a warning will appear on the results screen informing the user of the mismatch.  
@@ -216,7 +214,7 @@ X 149498202 . C/G
 
 ---
 
-##### <a name="download-file-help"></a>Download File Help
+##### <a name="download-file"></a>Download File
 
 The output file has 36 columns in total. Every column value is double quoted, for example “User input” and then separated by a comma.
 Columns can contain “N/A” as a value indicating either:
@@ -266,170 +264,185 @@ This field replicates the user input with no changes to the format. Users can us
 <a name="chromosome"></a>**B - Chromosome:**
 Only numbers 1-22 or “X” or “Y” or mitochondria (chrM, mitochondria, mitochondrion, MT, mtDNA, mit) are accepted. All case insensitive.
 
-**3(C). Coordinate** The genomic coordinate position of the variant as interpreted from the user input. Only numeric characters.
+<a name="coordinate"></a>**C - Coordinate:** The genomic coordinate position of the variant as interpreted from the user input. Only numeric characters.
 
-- **4(D). ID** This is a field which can optionally be provided by the user to keep track of their variants or store information about teh variant which will be retained in the output file.
+<a name="id"></a>**D - ID:** This is a field which can optionally be provided by the user to keep track of their variants or store information about teh variant which will be retained in the output file.
 
-- **5(E). Reference_allele** This is the reference allele. It is defined by the nucleotide identity at that coordinate in the reference genome build. If the user inputted nucleotide differs from the reference build the reference build nucleotide identity will be shown and not the user inputted identity. This conflict will be noted in the "notes" column. Any user inputs except 'A', 'G', 'C', 'T' will be flagged in the "notes section.
+<a name="reference-allele"></a>**E - Reference_allele:** This is the reference allele. It is defined by the nucleotide identity at that coordinate in the reference genome build. If the user inputted nucleotide differs from the reference build the reference build nucleotide identity will be shown and not the user inputted identity. This conflict will be noted in the "notes" column. Any user inputs except 'A', 'G', 'C', 'T' will be flagged in the "notes section.
 
-- **6(F). Alternative_allele** This is the alternative allele and will always match the user input. Any user inputs except 'A', 'G', 'C', 'T' will be flagged in the "notes section.
+<a name="alternative-allele"></a>**F - Alternative_allele** This is the alternative allele and will always match the user input. Any user inputs except 'A', 'G', 'C', 'T' will be flagged in the "notes section.
 
 ###### <a name="mapping-notes-columns"></a>Mapping Notes Columns
 
-- **7(G). Mapping_notes** Single column which describes potential issue with the user input. It will contain “N/A” if there is nothing to report. Possible issues include:
-    - Invalid input - Such as a nonesense chromosome, a non-numeric coordinate of invalid nucleotides in either the reference or variant allele positions.
-    - The input sequence does not match the reference. Possible reasons for this include
-      - user error
-      - an updated sequence in the reference build
-      - because the user has submitted variants from an older reference genome such as GRCh37)
-    - Mapping not found. Reasons may include:
-      - variant in an intergenic region
-      - variant in an intronic region
-      - no transcript maps to the canonical isoform
+<a name="mapping-notes"></a>**G - Mapping_notes:** Single column which describes potential issue with the user input. It will contain “N/A” if there is nothing to report. Possible issues include:  
+- Invalid input - Such as a nonesense chromosome, a non-numeric coordinate of invalid nucleotides in either the reference or variant allele positions
+- The input sequence does not match the reference. Possible reasons for this include:
+ - user error  
+ - an updated sequence in the reference build
+ - because the user has submitted variants from a different reference genome such as GRCh37)
+- Mapping not found. Reasons may include:
+ - variant in an intergenic region
+ - variant in an intronic region
+ - no transcript maps to the canonical isoform
 
 ###### <a name="genomic-mapping-columns"></a>Genomic Mapping Columns
 
-Contains information regarding mapping of the user variant input to the relevant gene(s), transcript(s) and codon. The category contains 6 columns:  
+Contains information regarding mapping of the user variant input to the relevant gene(s), transcript(s) and codon. The category contains 6 columns:
+- [Gene](#gene) 
+- [Codon_change](#codon-change) 
+- [Strand](#strand)
+- [CADD_phred-like_score](#cadd-phred-like-score)
+- [Canonical_isoform_transcripts](canonical-isoform-transcripts)
+- [MANE_transcript](#mane-transcript)
 
-- Gene. 
-- Codon_change  
-- Strand  
-- CADD_phred-like_score  
-- Canonical_isoform_transcripts  
-- MANE_transcript
-
-- **8(H). Gene** The gene symbol as defined by the HGNC (https://www.genenames.org/about/guidelines/)
+<a name="gene"></a>**H - Gene** The gene symbol as defined by the HGNC (https://www.genenames.org/about/guidelines/)
 Symbols contain only uppercase Latin letters and Arabic numerals, and punctuation is avoided, with an exception for
 hyphens in specific groups.
 
-- **9(I). Codon_change** The format is three nucleotides containing the reference allele which make the codon, followed by “/” and then the
+<a name="codon-change"></a>**I - Codon_change** The format is three nucleotides containing the reference allele which make the codon, followed by “/” and then the
 three corresponding nucleotides but containing the alternative nucleotide. The position which is changed is capitalised,
 for example aCg/aTg where the middle nucleotide of the codon is changed from a Cytosine (C) to a Thymine (T).
 
-- **10(J). Strand** The reference genome and variants are stated as the positive strand only, therefore if a user enteres G->T variant but the gene is on the negative strand the codon change displayed will be C->A (the reverse complement).
+<a name="strand"></a>**J - Strand** The reference genome and variants are stated as the positive strand only, therefore if a user enteres G->T variant but the gene is on the negative strand the codon change displayed will be C->A (the reverse complement).
 
-- **11(K). CADD_phred_like_score** The CADD (Combined Annotation Dependent Depletion) score is devised by the University of Washington - https://cadd.gs.washington.edu/ .
+<a name="cadd-phred-like-score"></a>**K - CADD_phred_like_score** The CADD (Combined Annotation Dependent Depletion) score is devised by the University of Washington - https://cadd.gs.washington.edu/ .
 They calculate a score for every possible change in the genome. The phred-like score ("scaled C-scores") ranges from 1 to 99. It is based on the rank of each variant relative to all possible 8.6 billion substitutions in the human reference genome.
 
-- **12(L). Canonical_isoform_transcripts** The transcripts and transcript translation identifiers which correspond to the UniProt canonical isoform. Transcripts
+<a name="canonical-isoform-transcripts"></a>**L - Canonical_isoform_transcripts** The transcripts and transcript translation identifiers which correspond to the UniProt canonical isoform. Transcripts
 (DNA sequences) have an ID starting with “ENST”. There can be several different transcripts which encode the same
 isoform because they may differ in their untranslated (non-coding) regions at either end. The translated transcript has an ID
 starting “ENSP”. For example [ENSP00000337353(ENST00000335725,ENST00000123456).
 
-- **13(M). MANE_transcript** MANE (Matched Annotation between NCBI and EBI). - One of the transcripts is selected as the representative by NCBI and Ensembl. This transcript
+<a name="mapping-notes"></a>**M - MANE_transcript** MANE (Matched Annotation between NCBI and EBI). - One of the transcripts is selected as the representative by NCBI and Ensembl. This transcript
 may not translate into the UniProt canonical isoform sequence. If the MANE select corresponds directly to the isoform described in the row the MANE select ID is given. If they do not match "N/A" is found in the column and the MANE select ID is found with the corresponding transcript in the "Alternative_isoform_mappings" column.
 
 ###### <a name="protein-mapping-columns"></a>Protein Mapping Columns
 
 Contains information regarding mapping of the user variant input to the encoded protein(s). The category contains 6 columns:
 
-- Uniprot canonical_isoform (non_canonical)
-- Alternative_isoform_mappings
-- Protein_name
-- Amino_acid_position
-- Amino_acid_change
-- Consequences
+- [Uniprot canonical_isoform (non_canonical)](#uniprot-canonical)
+- [Alternative_isoform_mappings](#alternative-isoform-mappings)
+- [Protein_name](#protein-name)
+- [Amino_acid_position](#amino-acid-position)
+- [Amino_acid_change](#amino-acid-change)
+- [Consequences](#consequences)
 
 
-- **14(N). Uniprot*canonical_isoform*(non_canonical)** This is the accession of the canonical isoform of the protein if ProtVar can map to this. ProtVar always attempts to map to this isoform because
+<a name="mapping-notes"></a>**N - Uniprot canonical_isoform (non_canonical):** This is the accession of the canonical isoform of the protein if ProtVar can map to this. ProtVar always attempts to map to this isoform because
 most of the UniProt annotations are based on numbering in the canonical. Sometimes ProtVar cannot map to the canonical isoform
 but can to another isoform (sequence version of the protein). In these cases brackets are displayed around the accession to show that the mapping is to a non-canonical isoform.
 accessions? P12345
 
-- **15(O). Alternative_isoform_mappings** Details about each isoform including the isoform accession, amino acid position in the isoform, amino acid change,
+<a name="mapping-notes"></a>**O - Alternative_isoform_mappings** Details about each isoform including the isoform accession, amino acid position in the isoform, amino acid change,
 consequence and ENSP and ENST identifiers. Many genes have several transcripts caused by alternative splicing,
 some of which translate into different isoforms. Here we list details about all the isoforms where we can map from
 genomic location to isoform. Isoforms are separated by "|".
 
-- **16(P). Protein_name** The full protein name from UniProt.
+<a name="protein-name"></a>**P - Protein_name** The full protein name from UniProt.
 
-- **17(Q). Amino_acid_position** The position of the amino acid in the UniProt canonical isoform or the alternative isoform shown in the Uniprot*canonical_isoform*(non_canonical) column.
+<a name="amino-acid-position"></a>**Q - Amino_acid_position** The position of the amino acid in the UniProt canonical isoform or the alternative isoform shown in the Uniprot*canonical_isoform*(non_canonical) column.
 
-- **18(R). Amino_acid_change** The identity of the reference and alternative amino acid caused by the variant three letter amino acid nomenclature separated by "/". Stop codons are shown as asterisk (\*).
+<a name="amino-acid-change"></a>**R - Amino_acid_change** The identity of the reference and alternative amino acid caused by the variant three letter amino acid nomenclature separated by "/". Stop codons are shown as asterisk (\*).
 
-- **19(S). Consequences** The consequence of the variant on the amino acid/protein.
+<a name="consequences"></a>**S - Consequences** The consequence of the variant on the amino acid/protein.
 
 ###### <a name="function-annotations-columns"></a>Function Annotations Columns
 
-These columns contain functional annotations regarding the variant amino acid, region and protein. This data is retrieved from UniProt API. There
-are 11 columns in this category:
+These columns contain functional annotations regarding the variant amino acid, region and protein. There are 12 columns in this category:
 
-- Residue*function*(evidence)
-- Region*function*(evidence)
-- Protein_existence_evidence
-- Protein_length
-- Entry_last_updated
-- Sequence_last_updated
-- Protein_catalytic_activity
-- Protein_complex
-- Protein_sub_cellular_location
-- Protein_family
-- Protein_interactions_PROTEIN(gene)
+- [EVE Score](#eve-score)
+- [Residue_function_(evidence)](#residue-function)
+- [Region_function_(evidence)](#region-function)
+- [Protein_existence_evidence](#protein-existence)
+- [Protein_length](#protein-length)
+- [Entry_last_updated](#entry-last-updated)
+- [Sequence_last_updated](#sequence-last-updated)
+- [Protein_catalytic_activity](#protein-catalytic-activity)
+- [Protein_complex](#protein-complex)
+- [Protein_sub_cellular_location](#protein-sub-cellular-location)
+- [Protein_family](#protein-family)
+- [Protein_interactions_PROTEIN(gene)](#protein_interactions)
 
+<a name="eve"></a>**T - EVE:**
 
-- **20(T). Residue*function*(evidence)** Functional features specifically describing the residue encoded by the user submitted variant.
+<a name="residue-function"></a>**U - Residue_function_(evidence):** Functional features specifically describing the residue encoded by the user submitted variant.
 
-- **21(U). Region*function*(evidence)** This column describes functional features of the region which the residue encoded by the user submitted variant falls. The range of the region is provided after the ";". Overlapping regions describing the variant are separated by "|".
+<a name="amino-acid-change"></a>**V - Region_function_(evidence):** This column describes functional features of the region which the residue encoded by the user submitted variant falls. The range of the region is provided after the ";". Overlapping regions describing the variant are separated by "|".
 but any of them could be.
 
-- **22(V). Protein_existence_evidence** Describes if there is experimental evidence to support the existence of the protein
+<a name="protein-existence"></a>**W - Protein_existence_evidence:** Describes if there is experimental evidence to support the existence of the protein
 
-- **23(W). Protein_length** The length of the UniProt canonical isoform sequence.
+<a name="protein-length"></a>**X - Protein_length:** The length of the UniProt canonical isoform sequence.
 
-- **24(X). Entry_last_updated** When the UniProt entry was last updated with any type of information.
+<a name="entry-last-updated"></a>**Y - Entry_last_updated:** When the UniProt entry was last updated with any type of information.
 
-- **25(Y). Sequence_last_updated** When the canonical isoform sequence was last updated.
+<a name="amino-acid-change"></a>**Z - Sequence_last_updated:** When the canonical isoform sequence was last updated.
 
-- **26(Z). Protein_catalytic_activity** Describes the reactions previously ascribed to this protein. These are not necessarily reactions affected by the variant amino
+<a name="protein-catalytic-activity"></a>**AA - Protein_catalytic_activity:** Describes the reactions previously ascribed to this protein. These are not necessarily reactions affected by the variant amino
 acid but they could be. The RHEA ID (a SIB reactions database) is given as is the evidence(s) from publications. Different reactions are separated by "|". For example:
 RHEA:25017(PubMed:[16824732,9593664,9811831])|RHEA:20629(PubMed:[9256433])
 
-- **27(AA). Protein_complex** Describes whether the protein containing the varant exists in a complex.
+<a name="protein-complex"></a>**AB - Protein_complex:** Describes whether the protein containing the varant exists in a complex.
 
-- **28(AB). Protein_sub_cellular_location** Describes the location within the cell where the protein is localised. There may be more than one location if multiple have been described.
+<a name="protein-sub-cellular-location"></a>**AC - Protein_sub_cellular_location:** Describes the location within the cell where the protein is localised. There may be more than one location if multiple have been described.
 
-- **29(AC). Protein_family** Describes the functional family that the protein belongs to.
+<a name="protein-family"></a>**AD - Protein_family:** Describes the functional family that the protein belongs to.
 
-- **30(AD). Protein_interactions_PROTEIN(gene)** This shows which other proteins have been shown to interact with the variant containing protein. This data is from the EMBL-EBI IntAct
+<a name="amino-acid-change"></a>**AE - Protein_interactions_PROTEIN(gene):** This shows which other proteins have been shown to interact with the variant containing protein. This data is from the EMBL-EBI IntAct
 database and is predominantly from manual curation. The format is: UniProt accession(gene symbol). Different interacting partners are separated by ";".
+
+###### <a name="predictions-columns"></a>Predictions Columns
+There are 4 columns in this category:
+
+- [Predicted_pockets](#predicted-pockets)
+- [Predicted_interactions](#predicted-interactions)
+- [Foldx_prediction](#foldx-prediction)
+- [Conservation_score](#conservation-score)
+
+<a name="predicted-pockets"></a>**AF - Predicted_pockets:**  
+<a name="predicted-interactions"></a>**AG - Predicted_interactions:**  
+<a name="foldx-predictions"></a>**AH - Foldx_prediction:**  
+<a name="conservation-score"></a>**AI - Conservation_score:**  
 
 ###### <a name="population-observations-columns"></a>Population Observations Columns
 
-There are 11 columns in this category:
+There are five columns in this category:
 
-- Genomic_location
-- Cytogenetic_band
-- Other_identifiers_for_the_variant
-- Diseases_associated_with_variant
-- Variants_colocated_at_residue_position
+- [Genomic_location](#genomic-location)
+- [Cytogenetic_band](#cytogenetic-band)
+- [Other_identifiers_for_the_variant](#other-identifiers-for-the-variant)
+- [Diseases_associated_with_variant](#diseases-associated-with-variant)
+- [Variants_colocated_at_residue_position](#variants-colocated-at-residue-position)
 
-- **31(AE). Genomic_location** The variant described in HGVS format. This is a different way of describing the variant which included the sequence
+<a name="predicted-pockets"></a>**AJ - Genomic_location:** The variant described in HGVS format. This is a different way of describing the variant which included the sequence
 version of the reference.
 
-- **32(AF). Cytogenetic_band** The region of the chromosome containing the variant position. Cytogenic bands are areas of chromosomes rich in
+<a name="predicted-pockets"></a>**AK - Cytogenetic_band:** The region of the chromosome containing the variant position. Cytogenic bands are areas of chromosomes rich in
 actively transcribing DNA.
 
-- **33(AG). Other_identifiers_for_the_variant** Description of the same variant (position and nucleotide change) as the user entered in different databases.
-The source database name is given, separated by the variant ID with "-" then separated from the clinical consequence with ";". Each separate databse is separated by "|". For example, ClinVar-RCV000003593;Pathogenic|UniProt-VAR_017144;Pathogenic.
+<a name="other-identifiers-for-the-variant"></a>**AL - Other_identifiers_for_the_variant** Description of the same variant (position and nucleotide change) as the user entered in different databases.
+The source database name is given, separated by the variant ID with "-" then separated from the clinical consequence with ";". Each separate databse is separated by "|". For example, 
+> ClinVar-RCV000003593;Pathogenic|UniProt-VAR_017144;Pathogenic.
 
-- **34(AH). Diseases_associated_with_variant** Describes diseases from literature which have been associated with the specific variant entered by the user. There may be multiple diseases
+<a name="diseases-associated-with-variant"></a>**AM - Diseases_associated_with_variant** Describes diseases from literature which have been associated with the specific variant entered by the user. There may be multiple diseases
 listed which are separated by “|”. The evidence for each disease is in brackets which may be a CliVar ID or Pubmed link to a publication.
 
-- **35(AI). Variants_colocated_at_residue_position** This column describes other variants which have been described at the same AMINO ACID position. As a codon is three
+<a name="variants-colocated-at-residue-position"></a>**AN - Variants_colocated_at_residue_position:** This column describes other variants which have been described at the same AMINO ACID position. As a codon is three
 nucleotides this means that the variants here could be at any one of three positions and can be any alternative allele.
 
 ###### <a name="structure-annotations-columns"></a>Structure Annotations Columns
 
 This category has one column:
 
-- **36(AJ). Position_in_structures** The column shows which PDB protein structures contain the variant. This is not an exhaustive list of all structures
+<a name="other-identifiers-for-the-variant"></a>**AO - Position_in_structures:** The column shows which PDB protein structures contain the variant. This is not an exhaustive list of all structures
 of the protein as some structures will not cover the region containing the variant.
-The format is: PDB_accesion;chain_position_in_structure,chain_position_in_structure;structure_resolution;structure_method. Structures are separated by "|".
+The format is: 
+> PDB_accesion;chain_position_in_structure,chain_position_in_structure;structure_resolution;structure_method. Structures are separated by "|".
 
-###### <a name="predictions-columns"></a>User Predictions Columns
+
 
 ---
-##### <a name="api-help"></a>API Help
+##### <a name="api"></a>API
 
 ProtVar REST API is a programmatic way to obtain information from ProtVar. You can query:
 
