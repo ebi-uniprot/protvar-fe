@@ -246,14 +246,26 @@ const SearchVariant = (props: VariantSearchProps) => {
                       ref={uploadInputField}
                       onChange={viewResult}
                     />
+                    <Button
+                    onClick={
+                      file
+                        ? clearFileInput
+                        : () => uploadInputField.current?.click()
+                    }
+                    className={`file-upload ${file ? 'clear-file bi bi-x-lg': 'bi bi-file-earmark-fill'}`}
+                  >
+                    {' '}{file ? 'Clear file' : 'Upload File'
+                     }
+                  </Button>
                     {invalidInput && (
-                      <>
+                      <span className="padding-left-1x">
                       <i className="file-warning bi bi-exclamation-triangle-fill"></i>{' '}
                       Unsupported file
-                      </>
+                      </span>
                     )}
                     {file?.name && (
                       <div className='file-name'>
+                        <i className="bi bi-check-circle tick-icon"></i>
                         <span className='name'>{file?.name.substring(0, file.name.lastIndexOf('.'))}</span>
                         <span className='extension'>{file?.name.substring(file.name.lastIndexOf('.'))}</span>
                       </div>
@@ -261,18 +273,7 @@ const SearchVariant = (props: VariantSearchProps) => {
                   </div>
                 </div>
 
-                <div className="search-button-group">
-                  <Button
-                    onClick={
-                      file
-                        ? clearFileInput
-                        : () => uploadInputField.current?.click()
-                    }
-                    className={`button-primary ${file ? 'clear-file bi bi-x-lg': 'bi bi-file-earmark-fill'}`}
-                  >
-                    {' '}{file ? 'Clear file' : 'Upload File'
-                     }
-                  </Button>
+                <div className="search-button-wrapper">
                   <Button
                     type="submit"
                     onClick={props.isLoading ? () => {} : handleSubmit}
