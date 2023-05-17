@@ -66,6 +66,7 @@ const SearchVariant = (props: VariantSearchProps) => {
     var file = target.files[0]
     if (file.type.startsWith('text/')) {
       setFile(file);
+      setInvalidInput(false);
     } else {
       setInvalidInput(true);
     }

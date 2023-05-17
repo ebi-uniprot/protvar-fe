@@ -8,4 +8,5 @@ export const API_HEADERS = { "Content-Type": "application/json", Accept: "*" };
 export const USER = 'protvar';
 export const DOMAIN = 'ebi.ac.uk';
 export const DOWNLOAD_STATUS=`${API_URL}/download/status`;
-export const LOCAL_DOWNLOADS='PV_downloads'
+export const LOCAL_DOWNLOADS='PV_downloads';
+export const DISMISS_BANNER = 'PV_banner';
