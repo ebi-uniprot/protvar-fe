@@ -16,7 +16,7 @@
 
 .navbar {
   display: flex;
-  align-items: end;
+  align-items: flex-end;
   justify-content: space-between;
   width: 100%;
   // background-color: linear-gradient(45deg, #014371, rgba(1, 67, 113, 0.7), #014371, #014371);
@@ -46,6 +46,7 @@
 .navbar a {
   color: white;
   text-decoration: none;
+  font-size: 16px;
 }
 
 /* Navbar links on mouse-over */
