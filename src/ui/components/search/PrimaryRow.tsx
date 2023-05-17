@@ -39,13 +39,13 @@ const getPrimaryRow = (record: MappingRecord, toggleOpenGroup: string, isoFormGr
   }
   let inputStyle = {
     gen: {
-      backgroundColor: record.type === INPUT_GEN ? "#FFFAF0" : ""
+      backgroundColor: record.type === INPUT_GEN ? "#F8EDF0" : ""
     },
     pro: {
-      backgroundColor: record.type === INPUT_PRO ? "#FFFAF0" : ""
+      backgroundColor: record.type === INPUT_PRO ? "#F8EDF0" : ""
     },
     rs: {
-      backgroundColor: record.type === INPUT_RS ? "#FFFAF0" : ""
+      backgroundColor: record.type === INPUT_RS ? "#F8EDF0" : ""
     }
   }
 
