@@ -8,12 +8,13 @@ import {convertApiMappingToTableRecords, MappingRecord,} from "../utills/Convert
 import {firstPage, Page} from "../utills/AppHelper";
 import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
-import {ABOUT, API_ERROR, CONTACT, DOWNLOAD, HOME, QUERY, SEARCH,} from "../constants/BrowserPaths";
+import {ABOUT, API_ERROR, CONTACT, DOWNLOAD, HOME, QUERY, SEARCH, HELP } from "../constants/BrowserPaths";
 import Notify from "./elements/Notify";
 import QueryPage from "./pages/query/QueryPage";
 import {Assembly, DEFAULT_ASSEMBLY} from "../constants/CommonTypes";
 import {mappings} from "../services/ProtVarService";
 import DownloadPage from "./pages/download/DownloadPage";
+import HelpPage from "./pages/help/HelpPage";
 
 interface AppProps extends RouteComponentProps {}
 
@@ -182,8 +183,9 @@ function App(props: AppProps) {
       <Route path={QUERY} render={() => <QueryPage />} />
       <Route path={API_ERROR} render={() => <APIErrorPage />} />
       <Route path={ABOUT} render={() => <AboutPage />} />
-        <Route path={CONTACT} render={() => <ContactPage />} />
-        <Route path={DOWNLOAD} render={() => <DownloadPage />} />
+      <Route path={CONTACT} render={() => <ContactPage />} />
+      <Route path={DOWNLOAD} render={() => <DownloadPage />} />
+      <Route path={HELP} render={() => <HelpPage />} />
 
         <Route exact path="/test">
             <Redirect push to={"/test.html"} />

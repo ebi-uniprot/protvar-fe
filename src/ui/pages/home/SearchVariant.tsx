@@ -49,12 +49,12 @@ const SearchVariant = (props: VariantSearchProps) => {
   };
 
   const populateProtAC = () => {
-    setSearchTerm('P22304 A205P\n' + 'P07949 asn783thr\n' + 'P22309 71 Gly Arg')
+    setSearchTerm('P22304 A205P\nP07949 asn783thr\nP22309 71 Gly Arg')
     props.updateAssembly(DEFAULT_ASSEMBLY)
   };
 
   const populateRs = () => {
-    setSearchTerm('rs864622779\n' + 'rs587778656\n' + 'rs4148323')
+    setSearchTerm('rs864622779\nrs587778656\nrs4148323')
     props.updateAssembly(DEFAULT_ASSEMBLY)
   };
 

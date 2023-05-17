@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ABOUT, CONTACT, HOME } from '../../constants/BrowserPaths'
+import {ABOUT, CONTACT, HELP, HOME} from '../../constants/BrowserPaths'
 import { API_URL, LOCAL_DOWNLOADS, DISMISS_BANNER } from '../../constants/const'
 
 import DefaultPageContent from './DefaultPageContent'
 
-import UniProtLogo from '../../images/uniprot-logo.svg'
 import EMBLEBILogo from '../../images/embl-ebi-logo.svg'
 import openTargetsLogo from '../../images/open-targets-logo.png'
 interface DefaultPageLayoutProps {
@@ -132,7 +131,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                         <td className="topnav-right local-sub-title">
                           <Link
                             // Replace with the right link
-                            to={'/'}
+                            to={HELP}
                             title="About ProtVar's"
                             id="aboutProject"
                           >

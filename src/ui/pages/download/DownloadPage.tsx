@@ -49,8 +49,7 @@ function DownloadPageContent() {
     }, [downloads])
 
     return <div className="container">
-        <h4>Download History</h4>
-        # of downloads: {downloads.length}
+        <strong>{downloads.length} download{downloads.length > 1 ? 's' : ''}</strong>
 
         {/**
         <p>
