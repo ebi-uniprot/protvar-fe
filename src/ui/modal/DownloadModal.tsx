@@ -31,9 +31,9 @@ function DownloadModal(props: DownloadModalProps) {
     processDownload(props.file, props.pastedInputs, annotations.fun, annotations.pop, annotations.str, email, jobName);
   };
   return <div id="divDownload" ref={downloadModelDiv} className="padding-left-1x">
-    <Button onClick={() => setShowModel(val => !val)}>
+    <Button onClick={() => setShowModel(val => !val)} className={'download-button'}>
       <DownloadIcon className="downloadicon" />
-      Download
+      {' '}Download Results
     </Button>
     <Modal show={showModel} handleClose={() => setShowModel(false)}>
       <div className="window__header">

@@ -8,6 +8,7 @@ import DownloadModal from "../../modal/DownloadModal";
 import CaddLegendColors from "../../components/search/CaddLegendColors";
 import ResultTableButtonsLegend from "../../components/search/ResultTableButtonsLegend";
 import EveScoreColors from "../../components/search/EveScoreColors";
+import LegendModal from "../../modal/LegendModal";
 
 interface SearchResultPageProps {
   pastedInputs: string[]
@@ -27,13 +28,14 @@ function SearchResultsPageContent(props: SearchResultPageProps) {
     <div className="search-results">
       <div className="flex justify-content-space-between">
         <PaginationRow page={page} fetchNextPage={fetchNextPage} loading={loading} />
+        <div className="legend-container" >
+        <LegendModal />
         <DownloadModal pastedInputs={pastedInputs} file={file} />
-        <ResultTableButtonsLegend />
+        </div>
+        
       </div>
       <ResultTable mappings={rows} />
       <PaginationRow page={page} fetchNextPage={fetchNextPage} loading={loading} />
-      <CaddLegendColors />
-      <EveScoreColors />
     </div>
   </>
 }
