@@ -471,9 +471,13 @@ span.space:before {
   white-space: pre;
 }
 
-.collaborators-logo-container {
+.custom-pv-footer {
   > img {
     margin-left: 1rem;
     margin-right: 2rem;
+  }
+
+  & .newsletter-form {
+    width: 500px;
   }
 }

@@ -7,6 +7,7 @@ import DefaultPageContent from './DefaultPageContent'
 
 import EMBLEBILogo from '../../images/embl-ebi-logo.svg'
 import openTargetsLogo from '../../images/open-targets-logo.png'
+import SignUp from './SignUp'
 interface DefaultPageLayoutProps {
   content: JSX.Element
 }
@@ -196,7 +197,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
       </div>
 
       <footer id="footer-target">
-        <div className="collaborators-logo-container row">
+        <div className="custom-pv-footer row">
           <img
             src={EMBLEBILogo}
             loading="lazy"
@@ -211,6 +212,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
             width="130"
             height="50"
           />
+          {/* <SignUp /> */}
         </div>
         <div id="global-footer" className="global-footer">
           {/* Below expanded footer content is commented for now. Restore it back if there are any concerns */}

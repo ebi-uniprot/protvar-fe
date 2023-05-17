@@ -142,7 +142,7 @@ const SearchVariant = (props: VariantSearchProps) => {
             <section className="search-card">
               <textarea
                 id="main-textarea-search-field"
-                className="main-textarea-search-field"
+                className={`main-textarea-search-field ${file ? 'disable' : ''}`}
                 value={searchTerm}
                 placeholder={pasteBox}
                 onChange={(e) => setSearchTerm(e.target.value)}

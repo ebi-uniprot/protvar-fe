@@ -14,6 +14,12 @@
 	margin: 0;
 	margin-bottom: 0.3rem;
 	background: #FFFFFF;
+
+	&.disable {
+		pointer-events: none;
+		background: #ededed;
+		color: #a5a5a5;
+	}
 }
 
 .examples-container {
