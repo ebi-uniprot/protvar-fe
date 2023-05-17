@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ABOUT, CONTACT, DOWNLOAD, HOME } from '../../constants/BrowserPaths'
+import { ABOUT, CONTACT, HOME } from '../../constants/BrowserPaths'
 import { API_URL, LOCAL_DOWNLOADS, DISMISS_BANNER } from '../../constants/const'
 
 import DefaultPageContent from './DefaultPageContent'
@@ -200,13 +200,6 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
         <div className="collaborators-logo-container row">
           <img
             src={EMBLEBILogo}
-            loading="lazy"
-            alt=""
-            width="130"
-            height="50"
-          />
-          <img
-            src={UniProtLogo}
             loading="lazy"
             alt=""
             width="130"
