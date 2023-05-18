@@ -43,9 +43,7 @@ function AboutPageContent() {
       </p>
 
       <p>
-        The ProtVar team consists of:<br/>
-        <a href="https://www.ebi.ac.uk/people/person/james-stephenson/" target="_blank" rel="noreferrer">James Stephenson</a> - ProtVar lead<br/>
-        <a href="https://www.ebi.ac.uk/people/person/prabhat-totoo/" target="_blank" rel="noreferrer">Prabhat Totoo</a> - Lead developer<br/>
+        ProtVar is maintained by the UniProt protein function development team.
       </p>
 
       <p>
