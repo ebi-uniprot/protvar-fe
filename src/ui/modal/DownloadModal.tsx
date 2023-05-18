@@ -37,9 +37,15 @@ function DownloadModal(props: DownloadModalProps) {
     </Button>
     <Modal show={showModel} handleClose={() => setShowModel(false)}>
       <div className="window__header">
-        <span className="window__header__title">Select Options</span>
+        <span className="window__header__title">Select Options</span>        
+        <span
+            className="modal-close-button"
+            onClick={() => setShowModel(false)}
+          >
+            <i className="bi bi-x-lg"></i>
+        </span>
       </div>
-      <div className="form-group">
+      <div className="form-group ">
         <div>
           <table>
             <tbody>

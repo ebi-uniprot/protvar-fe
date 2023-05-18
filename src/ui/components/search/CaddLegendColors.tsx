@@ -3,7 +3,7 @@ import { getColor, getTitle } from "./CaddHelper";
 
 function CaddLegendColors() {
   return (
-    <div className="search-results-legends" style={{ float: "unset" }}>
+    <div className="search-results-legends">
       <strong>CADD phred-like score colour</strong>
       <br />
       <br />
