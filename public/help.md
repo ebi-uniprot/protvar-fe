@@ -168,7 +168,7 @@ Futher details about the HGVS format can be found here: https://varnomen.hgvs.or
 
 <a name="isoforms"></a>**Isoforms:** ProtVar maps from genomic coordinates to as many different isoforms of the protein as possible. This is limited by the match between the translated transcripts and isoform sequences in UniProt. The isoform displayed by default is the Uniprot canonical isoform which is denoted by a logo “can”. All of the annotations are based upon the numbering in the canonical isoform. Other isoforms, where the variant may be in a different numerical position, are denoted by a logo “iso”.
 
-<a name="gmissense"></a>**Missense:** ProtVar retrieves annotations and predictions for the evaluation of missense mutations. Missense mutations are single nucleotide changes which result in a codon which encodes a different amino acid. Synonymous mutations are also handled by ProtVar where a point mutation does not alter the encoded amino acid.
+<a name="missense"></a>**Missense:** ProtVar retrieves annotations and predictions for the evaluation of missense mutations. Missense mutations are single nucleotide changes which result in a codon which encodes a different amino acid. Synonymous mutations are also handled by ProtVar where a point mutation does not alter the encoded amino acid.
 
 <a name="my-downloads"></a>**My Downloads:** This page contains all the jobs sent for download for this browser session. This mean that if you submit several different variant sets you will see a list of jobs here. From this page you can see the status of jobs to check if they are ready. When they are, the files can be downloaded to your local machine.
 
