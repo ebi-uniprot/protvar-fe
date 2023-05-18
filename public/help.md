@@ -250,7 +250,7 @@ These are the columns created from the user variant input. There are six columns
 - [Chromosome](#chromosome) 
 - [Coordinate](#coordinate)
 - [ID](#id)
-- [Reference_allele](#reference_allele)
+- [Reference_allele](#reference-allele)
 - [Alternative_allele](#alterntative-allele)  
   
 
