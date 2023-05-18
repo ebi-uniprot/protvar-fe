@@ -38,9 +38,15 @@ function LegendModal() {
         </span>
         </div>
         <div className="legend-modal-content">
-          <EveScoreColors />
+            <div className="legend-div">
+            <EveScoreColors />
+            </div>
+          <div className="legend-div">
           <CaddLegendColors />
+          </div>
+          <div className="legend-div">
           <ResultTableButtonsLegend />
+          </div>
         </div>
       </Modal>
     </div>
