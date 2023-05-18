@@ -5,9 +5,6 @@ import { Redirect } from 'react-router-dom'
 import { NextPageFun, Page } from "../../../utills/AppHelper";
 import { MappingRecord } from "../../../utills/Convertor";
 import DownloadModal from "../../modal/DownloadModal";
-import CaddLegendColors from "../../components/search/CaddLegendColors";
-import ResultTableButtonsLegend from "../../components/search/ResultTableButtonsLegend";
-import EveScoreColors from "../../components/search/EveScoreColors";
 import LegendModal from "../../modal/LegendModal";
 
 interface SearchResultPageProps {
