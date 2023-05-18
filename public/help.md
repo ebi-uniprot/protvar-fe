@@ -359,11 +359,11 @@ These columns contain functional annotations regarding the variant amino acid, r
 - [Protein_family](#protein-family)
 - [Protein_interactions_PROTEIN(gene)](#protein_interactions)
 
-<a name="eve"></a>**T - EVE:** Evolutionary model of variant effect. A score from 0-1 (predicted benign-pathogenic) and a category benign/uncertain/pathogenic. Please cite the following paper if this useful to you: https://www.nature.com/articles/s41586-021-04043-8
+<a name="eve-score"></a>**T - EVE:** Evolutionary model of variant effect. A score from 0-1 (predicted benign-pathogenic) and a category benign/uncertain/pathogenic. Please cite the following paper if this useful to you: https://www.nature.com/articles/s41586-021-04043-8
 
 <a name="residue-function"></a>**U - Residue_function_(evidence):** Functional features specifically describing the residue encoded by the user submitted variant.
 
-<a name="amino-acid-change"></a>**V - Region_function_(evidence):** This column describes functional features of the region which the residue encoded by the user submitted variant falls. The range of the region is provided after the ";". Overlapping regions describing the variant are separated by "|".
+<a name="region-function"></a>**V - Region_function_(evidence):** This column describes functional features of the region which the residue encoded by the user submitted variant falls. The range of the region is provided after the ";". Overlapping regions describing the variant are separated by "|".
 but any of them could be.
 
 <a name="protein-existence"></a>**W - Protein_existence_evidence:** Describes if there is experimental evidence to support the existence of the protein
@@ -372,7 +372,7 @@ but any of them could be.
 
 <a name="entry-last-updated"></a>**Y - Entry_last_updated:** When the UniProt entry was last updated with any type of information.
 
-<a name="amino-acid-change"></a>**Z - Sequence_last_updated:** When the canonical isoform sequence was last updated.
+<a name="sequence-last-updated"></a>**Z - Sequence_last_updated:** When the canonical isoform sequence was last updated.
 
 <a name="protein-catalytic-activity"></a>**AA - Protein_catalytic_activity:** Describes the reactions previously ascribed to this protein. These are not necessarily reactions affected by the variant amino
 acid but they could be. The RHEA ID (a SIB reactions database) is given as is the evidence(s) from publications. Different reactions are separated by "|". For example:
@@ -384,7 +384,7 @@ RHEA:25017(PubMed:[16824732,9593664,9811831])|RHEA:20629(PubMed:[9256433])
 
 <a name="protein-family"></a>**AD - Protein_family:** Describes the functional family that the protein belongs to.
 
-<a name="amino-acid-change"></a>**AE - Protein_interactions_PROTEIN(gene):** This shows which other proteins have been shown to interact with the variant containing protein. This data is from the EMBL-EBI IntAct
+<a name="protein-interaction"></a>**AE - Protein_interactions_PROTEIN(gene):** This shows which other proteins have been shown to interact with the variant containing protein. This data is from the EMBL-EBI IntAct
 database and is predominantly from manual curation. The format is: UniProt accession(gene symbol). Different interacting partners are separated by ";".
 
 ###### <a name="predictions-columns"></a>Predictions Columns
@@ -410,10 +410,10 @@ There are five columns in this category:
 - [Diseases_associated_with_variant](#diseases-associated-with-variant)
 - [Variants_colocated_at_residue_position](#variants-colocated-at-residue-position)
 
-<a name="predicted-pockets"></a>**AJ - Genomic_location:** The variant described in HGVS format. This is a different way of describing the variant which included the sequence
+<a name="genomic-location"></a>**AJ - Genomic_location:** The variant described in HGVS format. This is a different way of describing the variant which included the sequence
 version of the reference.
 
-<a name="predicted-pockets"></a>**AK - Cytogenetic_band:** The region of the chromosome containing the variant position. Cytogenic bands are areas of chromosomes rich in
+<a name="cytogenetic-band"></a>**AK - Cytogenetic_band:** The region of the chromosome containing the variant position. Cytogenic bands are areas of chromosomes rich in
 actively transcribing DNA.
 
 <a name="other-identifiers-for-the-variant"></a>**AL - Other_identifiers_for_the_variant** Description of the same variant (position and nucleotide change) as the user entered in different databases.
