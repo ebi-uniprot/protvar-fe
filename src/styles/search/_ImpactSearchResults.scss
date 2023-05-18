@@ -143,26 +143,34 @@
 
 	.button {
 		margin-right: 1rem;
-		background: #cfe8ef;
+		background: #ffffff;
 		color: #00709b;
 		border-style: solid;
 		border-width: thin;
 		border-color: #00709b;
 	}
 	.window__header {
-		background-color: #5caecd;
+		background-color: #014373;
 		color: #fff;
 	}
+
+	.new-select {
+		input[type=radio],
+		input[type=checkbox] {
+    		accent-color: #014373;
+		}
+	}
+
 	.modal {
 		background: rgba(0, 0, 0, 0.6);
 	}
 
 	.modal-container {
-		position: fixed;
-		width: 30%;
+		position: absolute;
+		width: 40%;
 		background-color: #fbfeff;
 		border-style: solid;
-		border-color: #5caecd;
+		border-color: #014373;
 		border-width: thin;
 		z-index: 1;
 	}
@@ -176,9 +184,37 @@
 		margin-right: 2px;
 	}
 
+	.button-new.pagination-button {
+		background-color: #014373;
+		color: #ffffff;
+		font-weight: bold;
+		border-radius: 5px;
+
+	}
+
+	.button-new.download-button {
+		background-color: #014373;
+		color: #ffffff;
+		font-weight: bold;
+		border-radius: 5px;
+
+	}
+
+	.button-new.view-legend {
+		background: #F4F3F3;
+		border-radius: 5px;
+		color: #014373;
+	}
+
 	.button-icon {
 		height: 45%;
 		width: 45%;
+	}
+
+	.legend-container {
+		display: flex;
+		align-items: flex-end;
+		margin-bottom: 1rem;
 	}
 
 	.window__footer .button {
@@ -390,13 +426,13 @@
 	}
 
 	.expanded-row {
-		background-color: #cfe8ef;
+		background-color: #CDD9E4;
 	}
 
 	.significances-groups {
 		width: 100%;
 		display: flex;
-		background-color: #cfe8ef;
+		background-color: #CDD9E4;
 		.significances-column {
 			width: 100%;
 			min-height: 150px;

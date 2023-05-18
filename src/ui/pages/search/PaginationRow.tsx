@@ -29,14 +29,18 @@ function PaginationRow(props: PaginationRowProps) {
   return <table className="table-header">
     <tbody>
       <tr>
-        <td>
-          <Button onClick={() => fetchPage(-1)} loading={loading} disabled={page === undefined || page.currentPage === 1}>&laquo; Previous</Button>
+        <td >
+          <Button className={'pagination-button'} onClick={() => fetchPage(-1)} loading={loading} disabled={page === undefined || page.currentPage === 1}>
+          <i className="bi bi-chevron-compact-left" /> Prev
+            </Button>
         </td>
         <td>
-          {page.currentPage} of {totalPages}
+          {page.currentPage} / {totalPages}
         </td>
         <td>
-          <Button onClick={() => fetchPage(1)} loading={loading} disabled={page === undefined || !page.nextPage}>Next &raquo;</Button>
+          <Button className={'pagination-button'} onClick={() => fetchPage(1)} loading={loading} disabled={page === undefined || !page.nextPage}>
+            Next <i className="bi bi-chevron-compact-right" />
+          </Button>
         </td>
         <td>
           <Dropdown

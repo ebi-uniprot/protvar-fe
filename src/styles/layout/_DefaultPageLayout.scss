@@ -16,7 +16,7 @@
 
 .navbar {
   display: flex;
-  align-items: end;
+  align-items: flex-end;
   justify-content: space-between;
   width: 100%;
   // background-color: linear-gradient(45deg, #014371, rgba(1, 67, 113, 0.7), #014371, #014371);
@@ -46,6 +46,7 @@
 .navbar a {
   color: white;
   text-decoration: none;
+  font-size: 16px;
 }
 
 /* Navbar links on mouse-over */
@@ -179,6 +180,9 @@ a {
   background: #ffffff;
   width: 15%;
   height: fit-content;
+  box-shadow: -2px 2px 2px rgba(0, 0, 0, 0.25);
+  border-radius: 2px 0px 0px 2px;
+
   ul {
     margin: 0;
   }
@@ -186,7 +190,6 @@ a {
 
 .sidebar-menu {
   list-style: none;
- 
 }
 
 nav .sidebar-menu a {
@@ -217,10 +220,33 @@ nav .sidebar-menu .active {
     float: none;
     display: block;
   }
+
+  .default-page-content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar {
+    background: #ffffff;
+    width: 100%;
+    ul {
+      display: flex;
+    }
+  }
+
+  .sidebar-content {
+    padding-top: 0.5rem;
+  }
+
+  .search-card {
+    padding: 0 1rem 0 1rem;
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 .content {
-  font-size: 1rem;
+  font-size: 14px;
 
   .masthead {
     border-bottom: 1px solid lighten($black-colour, 50%);
@@ -295,13 +321,11 @@ nav .sidebar-menu .active {
     }
     
     .assembly {
-      font-size: 12px;
       margin-bottom: 0.5rem;
       .assembly-radio-check {
         display: inline-flex;
         padding: 0.5rem 0 0 0.5rem;
         label {
-          font-size: 11px;
           margin-left: 0.5rem;
           input {
             accent-color: #014373;
@@ -368,6 +392,7 @@ nav .sidebar-menu .active {
     display: flex;
     flex-direction: column;
     margin-left: 1rem;
+    font-size: 14px;
   }
 
   .uniprot-card {
@@ -431,7 +456,7 @@ div#local-title {
 }
 
 .significance {
-  background: #0fcaff !important;
+  background: #cdd9e4 !important;
 }
 
 .flex {
@@ -468,9 +493,13 @@ span.space:before {
   white-space: pre;
 }
 
-.collaborators-logo-container {
+.custom-pv-footer {
   > img {
     margin-left: 1rem;
     margin-right: 2rem;
+  }
+
+  & .newsletter-form {
+    width: 500px;
   }
 }

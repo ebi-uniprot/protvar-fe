@@ -1,29 +1,39 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import {ABOUT, CONTACT, HELP, HOME} from '../../constants/BrowserPaths'
-import { API_URL, LOCAL_DOWNLOADS } from '../../constants/const'
+import { API_URL, LOCAL_DOWNLOADS, DISMISS_BANNER } from '../../constants/const'
 
 import DefaultPageContent from './DefaultPageContent'
 
-import UniProtLogo from '../../images/uniprot-logo.svg'
 import EMBLEBILogo from '../../images/embl-ebi-logo.svg'
 import openTargetsLogo from '../../images/open-targets-logo.png'
+import SignUp from './SignUp'
 interface DefaultPageLayoutProps {
   content: JSX.Element
 }
 
 function DefaultPageLayout(props: DefaultPageLayoutProps) {
+  const [showBanner, setShowBanner ] =useState(true);
   let localDownloads = JSON.parse(localStorage.getItem(LOCAL_DOWNLOADS) || '[]')
-  let numDownloads = localDownloads.length
-
+  let numDownloads = localDownloads.length;
+  
   useEffect(() => {
     const win: any = window
     if (win.ebiFrameworkInvokeScripts) {
       win.ebiFrameworkInvokeScripts()
     }
+    const bannerDismissed = sessionStorage.getItem(DISMISS_BANNER);
+    if (bannerDismissed) {
+      setShowBanner(false);
+    }
   }, [])
 
-  const { content } = props
+  const { content } = props;
+
+  const handleDismiss = () => {
+    sessionStorage.setItem(DISMISS_BANNER, 'true');
+    setShowBanner(false);
+  }
 
   return (
     <>
@@ -150,20 +160,32 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
         <section className="row" role="main">
           <div id="main-content-area" className="main-content-area row">
             <div className="small-12 columns">
-            <div className="banner">
-          ProtVar will be launched on <strong>Wednesday 24th May</strong> at an
-          EMBL-EBI webinar at 15:30 BST (UTC+1). We will discuss the various
-          ways in which ProtVar can help users with their work as well as recent
-          improvements and fixes. Places are limited so please register to
-          secure your place{' '}
-          <a
-            href="https://www.ebi.ac.uk/training/events/contextualise-and-interpret-human-missense-variation-protvar/"
-            target="_blank"
-            rel="noreferrer"
-          >
-            here.
-          </a>
-        </div>
+              {showBanner && (
+                <div className="banner">
+                  <button
+                    className="dismiss-button"
+                    onClick={handleDismiss}
+                  >
+                    X
+                  </button>
+                  <div className="banner-content">
+                    ProtVar will be launched on{' '}
+                    <strong>Wednesday 24th May</strong> at an EMBL-EBI webinar
+                    at 15:30 BST (UTC+1). We will discuss the various ways in
+                    which ProtVar can help users with their work as well as
+                    recent improvements and fixes. Places are limited so please
+                    register to secure your place{' '}
+                    <a
+                      href="https://www.ebi.ac.uk/training/events/contextualise-and-interpret-human-missense-variation-protvar/"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      here.
+                    </a>
+                  </div>
+                </div>
+              )}
+
               <div className="default-page-layout">
                 <DefaultPageContent downloadCount={numDownloads}>
                   {content}
@@ -175,16 +197,9 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
       </div>
 
       <footer id="footer-target">
-        <div className="collaborators-logo-container row">
+        <div className="custom-pv-footer row">
           <img
             src={EMBLEBILogo}
-            loading="lazy"
-            alt=""
-            width="130"
-            height="50"
-          />
-          <img
-            src={UniProtLogo}
             loading="lazy"
             alt=""
             width="130"
@@ -197,6 +212,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
             width="130"
             height="50"
           />
+          {/* <SignUp /> */}
         </div>
         <div id="global-footer" className="global-footer">
           {/* Below expanded footer content is commented for now. Restore it back if there are any concerns */}

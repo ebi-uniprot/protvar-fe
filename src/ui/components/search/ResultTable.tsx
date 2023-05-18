@@ -69,7 +69,7 @@ function ResultTable(props: ResultTableProps) {
 const getTableRows = (mappings: MappingRecord[][][], isoFormGroupExpanded: string, toggleIsoFormGroup: StringVoidFun,
   annotationExpanded: string, toggleAnnotation: StringVoidFun) => {
   const tableRows: Array<JSX.Element> = [];
-  const rowStyle = { a: {backgroundColor: "#ebf6fb" }, b: {backgroundColor: "#fff" }}
+  const rowStyle = { a: {backgroundColor: "#F4F3F3" }, b: {backgroundColor: "#FFFFFF" }}
   let prevInput = ""
   let currStyle = rowStyle.a
   let swapStyle = (s: object) => (s === rowStyle.a) ? rowStyle.b : rowStyle.a;
