@@ -60,8 +60,8 @@ function DownloadPageContent() {
         */}
 
         {downloads.length > 0 && (
-            <table className="table">
-                <thead>
+            <table className="table download-table">
+                <thead style={{backgroundColor: '#6987C3', color: '#FFFFFF'}}>
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Requested</th>
