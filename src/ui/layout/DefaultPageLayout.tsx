@@ -7,7 +7,7 @@ import DefaultPageContent from './DefaultPageContent'
 
 import EMBLEBILogo from '../../images/embl-ebi-logo.svg'
 import openTargetsLogo from '../../images/open-targets-logo.png'
-import SignUp from './SignUp'
+//import SignUp from './SignUp'
 interface DefaultPageLayoutProps {
   content: JSX.Element
 }
