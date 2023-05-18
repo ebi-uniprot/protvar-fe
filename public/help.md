@@ -18,7 +18,7 @@ Clicking each category in the contents below will take you to an annotated image
 - [Structure Annotations](#structure-annotations)
 - [Download Options](#download-options)
 - [My Downloads](#my-downloads)
-- [ProtVar API](#protvar-api)
+
 
 ###### <a name="home-page"></a>Home Page
 
@@ -113,10 +113,6 @@ Clicking each category in the contents below will take you to an annotated image
 **G** - Button to download to the user’s local machine.  
 **H** - Delete the file from the list.
 
-###### <a name="protvar-api"></a>ProtVar API
-
-![ProtVar API](images/protvar_api.png)
-
 #### Website Help Further Information
 
 <a name="3d-structure-viewer"></a>**3D Structure Viewer:** 3D structures are visualised using the Mol* viewer which “is a modern web-based open-source toolkit for visualisation and analysis of large-scale molecular data”. Further information can be found at their website: https://molstar.org/
@@ -145,22 +141,22 @@ Because dbSNP IDs may represent more than one variant allele, ProtVar will separ
 
 <a name="download"></a>**Download:** Downloads can be tailored according to the users’ needs. If only mappings from genomic coordinates to protein positions are required then “mappings only” can be used. If specific annotations are required then these can be selected individually. Each annotation category selected adds extra time to produce the downloadable file. Files ready for download are displayed in the ~My Downloads” section. Optionally users can add a job name to keep track of multiple jobs and an email address so that they can be informed when the file is ready to be downloaded. All of the annotations in the download file can also be accessed programmatically via the ProtVar REST API.
 
-<a name="ensembl-identifiers"></a>**Ensembl identifiers:**
+<a name="ensembl-identifiers"></a>**Ensembl identifiers:** The ENSG (ensembl gene identifiers), ENSP (Ensembl translaed sequence identifiers) and ENST (Ensembl transcript identifiers) are given for each isoform. The identifiers in the function annotation section correspond to those associated with teh UniProt canonical isoform. More information about Ensembl stable IDs can be found here: http://www.ensembl.org/info/genome/stable_ids/index.html
 
 <a name="eve"></a>**EVE:** EVE is “a model for the prediction of clinical significance of human variants based on sequences of diverse organisms across evolution”. To cite the use of EVE scores: (ref doi: 10.1038/s41586-021-04207-6)
-To explore EVE scores further visit the website: https://evemodel.org/
+To explore EVE scores further visit the website: https://evemodel.org/g
 
 <a name="function-annotationse"></a>**Function Annotations:** Function annotations are principally sourced from UniProt. There are three sections. The first section contains annotations describing the variant position only. The second section describes the region surrounding the variant as the variant may play a role in a function reliant on the region. The third section describes the role of the protein more generally in order for the user to predict the effect on the organism if the variant affects protein function.
 
-<a name="file-upload"></a>**File Upload:**
+<a name="file-upload"></a>**File Upload:** Any file in plain text format can be uploaded to protvar, the delimiter is unimportant and could be a space, tab or comma etc. ProtVar will strip header lines from uploaded files as well as any other data provided additionally to the 4/5 columns required. The output will be in the same variant order as the input file.
 
-<a name="general-protein-information"></a>**General protein information:**
+<a name="general-protein-information"></a>**General protein information:** Annotations regarding the variant position itself and the surrounding region may inform users as to the probability that the variation may perturb a protein function. However the generalprotein information is required to consider what that effect might have the organism. This information is all taken from UniProt.
 
-<a name="genomic-position"></a>**Genomic position:**
+<a name="genomic-position"></a>**Genomic position:** Genomic position is defined in terms of the chromosome the variant is found on in the DNA sequence and the position within the sequence in terms of a reference assembly. The genomic descriptions in ProtVar results also include the codon which the variant is in with the precise position in upper case as well as the reference and variant nucleotides. Also, in this section is the CADD score of predicted pathogenicity.
 
 <a name="genome-assembly"></a>**Genome Assembly:** All of the annotations in ProtVar are based upon the mappings between GRCh38 assembly and the UniProt canonical isoform sequence. However, ProtVar does support coordinates in GRCh37 which can be uploaded or pasted to search. ProtVar will map the positions from the GRCh37 to the GRCh38 equivalent positions using pre-mapped equivalency tables derived from the CrossMap tool doi: 10.1093/bioinformatics/btt730. Users should specify the assembly if they know it. However, ProtVar will by default attempt to predict which assembly the user has submitted by comparing the nucleotides at each user entered coordinate against each reference assembly. This will not work reliably for very small (<10) numbers of variants submitted.
 
-<a name="genomic-coordinates-to-protein-positions"></a>**Genomic Coordinates to Protein Positions:**
+<a name="genomic-coordinates-to-protein-positions"></a>**Genomic Coordinates to Protein Positions:** ProtVar maps genomic coordinates to protein positions by using Ensembl exon boundary coordinates, mapping tp relevant positions on transcripts, matching translated transcripts to canonical isoforms and calculating protein positions. By default the canonical isoform is shown as the UniProt annotations use this isoform for numbering.
 
 <a name="gnomad"></a>**gnomAD:** Users may want to copy and paste variants directly from the GnomAD UI to rapidly retrieve annotations, the gnomAD website can be found here: http://www.gnomad-sg.org/. The following VCF-like format is therefore supported in ProtVar:   
 >X-149498202-C-G
@@ -172,29 +168,29 @@ Futher details about the HGVS format can be found here: https://varnomen.hgvs.or
 
 <a name="isoforms"></a>**Isoforms:** ProtVar maps from genomic coordinates to as many different isoforms of the protein as possible. This is limited by the match between the translated transcripts and isoform sequences in UniProt. The isoform displayed by default is the Uniprot canonical isoform which is denoted by a logo “can”. All of the annotations are based upon the numbering in the canonical isoform. Other isoforms, where the variant may be in a different numerical position, are denoted by a logo “iso”.
 
-<a name="gmissense"></a>**Missense:** ProtVar retrieves annotations and predictions for the evaluation of missense mutations. Missense mutations are single nucleotide changes which result in a codon which encodes a different amino acid. Synonymous mutations are also handled by ProtVar where a point mutation does not alter the encoded amino acid.
+<a name="missense"></a>**Missense:** ProtVar retrieves annotations and predictions for the evaluation of missense mutations. Missense mutations are single nucleotide changes which result in a codon which encodes a different amino acid. Synonymous mutations are also handled by ProtVar where a point mutation does not alter the encoded amino acid.
 
-<a name="my-downloads"></a>**My Downloads:**
+<a name="my-downloads"></a>**My Downloads:** This page contains all the jobs sent for download for this browser session. This mean that if you submit several different variant sets you will see a list of jobs here. From this page you can see the status of jobs to check if they are ready. When they are, the files can be downloaded to your local machine.
 
 <a name="paste"></a>**Paste:** Several thousand variants can be pasted into the box (for longer lists please upload a file).
 
 <a name="population-observations"></a>**Population Observations:** Descriptions of other humans with the same variation, variations in the same amino acid location or the same gene may help users to assess the likely effect of their variant. ProtVar retrieves IDs from several databases which report the same variant as the user query. It also pulls data on co-located variants at the same amino acid position along with accompanying disease notes. ProtVar also retrieves information regarding diseases which have been associated with the protein.
 
-<a name="predicted-free-energy-change"></a>**Predicted Free Energy Change:**
+<a name="predicted-free-energy-change"></a>**Predicted Free Energy Change:** This is the difference in gibbs free energy (stability) of the protein between the wild type state and the protein containing the variant amino acid. It is calculated using the AlphaFold2 structure using FoldX software, details of which can be found here: https://foldxsuite.crg.eu/
 
-<a name="protein-protein-interfaces"></a>**Protein-protein Interfaces:** Doi: 10.17044/scilifelab.16866202.v1.
+<a name="protein-protein-interfaces"></a>**Protein-protein Interfaces:** Protein-protein interfaces have been predicted between proteins thought to interact. Both chains are predicted together using the ALphafold2 algorithm. All of the interface data in ProtVar is taken from the following paper which should be cited if this information is used: https://www.nature.com/articles/s41594-022-00910-8
 
-<a name="protein-pockets"></a>**Protein Pockets:**
+<a name="protein-pockets"></a>**Protein Pockets:** Protein pockets are predicted based on geometry and physico-chemical properties from the regions of high confidence in the AlphaFold2 models.
 
 <a name="protein-position"></a>**Protein Position:** Variants annotations can be accessed in ProtVar via their protein accession and position. The proteins should be named according to the UniProt canonical isoform accession and numbered according to the UniProt canonical isoform. ProtVar maps the protein position to the genomic coordinates of the relevant codon on the GRCh38 assembly. ProtVar then considers the codon sequence and the reference and variant amino acids provided to calculate the exact coordinate(s) and the variant nucleotide(s). If there are more than one variant or coordinate which could be possible then both alternatives are shown on different rows in the results.
 
-<a name="protein-position-to-genomic-coordinate"></a>**Protein Position to Genomic Coordinates:**
+<a name="protein-position-to-genomic-coordinate"></a>**Protein Position to Genomic Coordinates:** If the user enters a UniProt accession and position the variant will firstly be mapped to the genomic location on the GRCh38 reference. ProtVar will then retrieve information based on that position. ProtVar uses the codon sequence of the refrence and the amino acid variant to calculate which of the positions in the codon must be changed and to whic other nucleotide to affect the user entered change. This means that the result is not always a single genomic position or nucleotide change if more than one change can cause the same amino acid variation.
 
-<a name="protvar-rest-api"></a>**ProtVar REST API:**
+<a name="protvar-rest-api"></a>**ProtVar REST API:** The REST API can be used to access single or groups of positions programatically without needing to use the user interface. This may be useful for embedding in a pipeline or if the user wants to write a parser to extract specific information from the resulting json object.
 
-<a name="region"></a>**Region:**
+<a name="region"></a>**Region:** The region has no fixed size but is simply the area surrounding the variant position in sequene space. This may include structural features such as helices or functional features such as binding regions.
 
-<a name="structure-annotations"></a>**Structure Annotations:**
+<a name="structure-annotations"></a>**Structure Annotations:** ProtVar retrieves all human experimental structures which contain the protein position of the user defined variant. This is not necessarily all of the structures for that protein. Mol* is used to view the proteins which are retrieved from the PDBe. AlphaFold models are also shown for each protein and predicted pocket regions which contain the variant are displayed on these structures. The third table shows predicted protein-protein interactions where the variant is considered to be part of the interface.
 
 <a name="vcf"></a>**VCF:** VCF is a tab separated text file format. It contains information about a position in the genome. ProtVar evaluates the first five fields in each line, namely:  
 >CHROM  - The name of the chromosome on which the variation is being called  
@@ -207,10 +203,10 @@ Meta information and header lines are ignored by ProtVar
 Further details regarding the VCF format can be found here: https://samtools.github.io/hts-specs/VCFv4.2.pdf
 
 ProtVar is as forgiving as possible with regards to the input format and will attempt to interpret the input if possible. For example the following formats can be read:  
-X 149498202 . C/G  
-10 43118436 A C  
-2 233760498 . G A . . .  
-14 89993420 A G
+>X 149498202 . C/G  
+>10 43118436 A C  
+>2 233760498 . G A . . .  
+>14 89993420 A G
 
 ---
 
@@ -363,7 +359,7 @@ These columns contain functional annotations regarding the variant amino acid, r
 - [Protein_family](#protein-family)
 - [Protein_interactions_PROTEIN(gene)](#protein_interactions)
 
-<a name="eve"></a>**T - EVE:**
+<a name="eve"></a>**T - EVE:** Evolutionary model of variant effect. A score from 0-1 (predicted benign-pathogenic) and a category benign/uncertain/pathogenic. Please cite the following paper if this useful to you: https://www.nature.com/articles/s41586-021-04043-8
 
 <a name="residue-function"></a>**U - Residue_function_(evidence):** Functional features specifically describing the residue encoded by the user submitted variant.
 
@@ -399,10 +395,10 @@ There are 4 columns in this category:
 - [Foldx_prediction](#foldx-prediction)
 - [Conservation_score](#conservation-score)
 
-<a name="predicted-pockets"></a>**AF - Predicted_pockets:**  
-<a name="predicted-interactions"></a>**AG - Predicted_interactions:**  
-<a name="foldx-predictions"></a>**AH - Foldx_prediction:**  
-<a name="conservation-score"></a>**AI - Conservation_score:**  
+<a name="predicted-pockets"></a>**AF - Predicted_pockets:** This shows the residues which are predicted to form a pocket in the AlphaFold modeled protein.   
+<a name="predicted-interactions"></a>**AG - Predicted_interactions:**  Interface residues are predicted from folding proteins which are considered to interact simultaneously using the Alphafold2 algorithm. The interfaces are then scored for comfidence  
+<a name="foldx-predictions"></a>**AH - Foldx_prediction:** The predicted Gibbs free energy change of the protein when the variant is introduced as calculated using the FoldX algorithm: https://foldxsuite.crg.eu/   
+<a name="conservation-score"></a>**AI - Conservation_score:**  Is a score from 0-1 where 0 is not at all conerved and 1 is totally conserved in multiple sequence alignments.
 
 ###### <a name="population-observations-columns"></a>Population Observations Columns
 
@@ -452,7 +448,7 @@ Individual amino acid positions to retrieve functional/structural/co-located var
 REST API uses OpenAPI 3 which means you can use utils like openapi-generator to generate model classes
 
 ---
-##### <a name="direct-variant-link-help"></a>Direct variant Link Help
+##### <a name="direct-variant-link"></a>Direct variant Link Help
 
 You can access variant annotations directly using a permanent URL which mean that you can bypass the input screen. You can use either genomic coordinates or protein positions but you must state both the reference and variant allele.
 
