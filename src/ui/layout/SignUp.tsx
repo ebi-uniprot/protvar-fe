@@ -1,9 +1,14 @@
 import { useRef, useState } from 'react'
 import { SUBSCRIPTION_STATUS } from '../../constants/const'
+import axios from "axios";
+import Notify from "../elements/Notify";
 
 const emailRegEx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 function SignUp() {
+  const form_id = "1ehAvWJrstnYdSfl_j9fT3mJIF7w4pztXrjDKfaFTZ_g"
+  const formUrl = "https://docs.google.com/forms/d/" + form_id + "/formResponse"
+  const email_field_name = "entry.857245557"
   const [subscriptionStatus, setSubscriptionStatus] = useState(
     JSON.parse(localStorage.getItem(SUBSCRIPTION_STATUS) || 'false'),
   )
@@ -11,8 +16,18 @@ function SignUp() {
 
   const handleSubscription = () => {
       if (emailInputRef?.current && emailRegEx.test(emailInputRef?.current.value)) {
-        localStorage.setItem(SUBSCRIPTION_STATUS, 'true')
-        setSubscriptionStatus('true')
+        var params: { [k: string]: any } = {};
+        params[email_field_name] = emailInputRef?.current.value
+        axios.post(formUrl, null, {params: params})
+            .then((response) => {
+              if (response.status === 200) {
+                localStorage.setItem(SUBSCRIPTION_STATUS, 'true')
+                setSubscriptionStatus('true')
+              }
+            })
+            .catch((err) => {
+              Notify.warn('Could not subscribe. Try later.')
+            });
       }
   }
 
@@ -21,7 +36,7 @@ function SignUp() {
       {subscriptionStatus ? (
         <>Thanks for subscribing!</>
       ) : (
-        <form
+        <form onSubmit={handleSubscription}
           method="POST"
           action="https://docs.google.com/forms/d/{YOUR_FORM_ID_HERE}/formResponse"
         >
@@ -32,12 +47,11 @@ function SignUp() {
               className="input email-input"
               type="email"
               placeholder="email@domain.com"
-              name="entry.857245557"
+              name={email_field_name}
             />
             <button
               className="button subscribe-button"
               type="submit"
-              onClick={handleSubscription}
             >
               Subscribe
             </button>
