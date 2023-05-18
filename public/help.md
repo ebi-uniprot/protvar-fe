@@ -448,7 +448,7 @@ Individual amino acid positions to retrieve functional/structural/co-located var
 REST API uses OpenAPI 3 which means you can use utils like openapi-generator to generate model classes
 
 ---
-##### <a name="direct-variant-link-help"></a>Direct variant Link Help
+##### <a name="direct-variant-link"></a>Direct variant Link Help
 
 You can access variant annotations directly using a permanent URL which mean that you can bypass the input screen. You can use either genomic coordinates or protein positions but you must state both the reference and variant allele.
 
