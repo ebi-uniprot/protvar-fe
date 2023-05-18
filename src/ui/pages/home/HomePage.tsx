@@ -31,6 +31,7 @@ const HomePageContent = (props: HomePageProps) => {
             title="ProtVar REST API"
             target="_blank"
             rel="noreferrer"
+            className='ref-link'
           >
             {' '}
             API{' '}
