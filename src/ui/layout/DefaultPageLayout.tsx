@@ -88,7 +88,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                 <table>
                   <tbody>
                     <tr className="navbar">
-                      <td>
+                      <td className="topnav-logo">
                         <div className="logo-container">
                           <Link
                             className="local-title"

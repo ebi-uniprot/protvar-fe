@@ -15,6 +15,9 @@
 }
 
 .navbar {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
   width: 100%;
   // background-color: linear-gradient(45deg, #014371, rgba(1, 67, 113, 0.7), #014371, #014371);
   overflow: auto;
@@ -57,6 +60,10 @@ a {
 // .active {
 // 	background-color: #04aa6d;
 // }
+
+.topnav-logo {
+  flex-grow: 1;
+}
 
 .topnav-right {
   float: right;
