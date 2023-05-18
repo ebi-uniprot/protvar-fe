@@ -58,7 +58,7 @@ Clicking each category in the contents below will take you to an annotated image
 ![ProtVar Function Annotations](images/function_annotations.png)  
 **A** - This page contains the [function annotations](#function-annotations) relating to the variant position in the protein.  
 **B** - This window contains data regarding the precise variant position in the protein from UniProt and predictions.  
-**C** - [The predicted free energy change](predicted-free-energy-change) in the protein when the reference amino acid is replaced with the variant.  
+**C** - [The predicted free energy change](#predicted-free-energy-change) in the protein when the reference amino acid is replaced with the variant.  
 **D** - Information regarding the [region](#region) in which the variant position is located from UniProt.  
 **E** - Predicted [protein pockets](#protein-pockets) and [protein-protein interfaces](#protein-protein-interfaces) containing the variant position.  
 **F** - A description of the function of the protein from UniProt.  
