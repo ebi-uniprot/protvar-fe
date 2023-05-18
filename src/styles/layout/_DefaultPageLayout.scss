@@ -220,6 +220,19 @@ nav .sidebar-menu .active {
     float: none;
     display: block;
   }
+
+  .default-page-content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar {
+    background: #ffffff;
+    width: 100%;
+    ul {
+      display: flex;
+    }
+  }
 }
 
 .content {

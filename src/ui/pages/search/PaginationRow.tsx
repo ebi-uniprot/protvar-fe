@@ -30,7 +30,7 @@ function PaginationRow(props: PaginationRowProps) {
     <tbody>
       <tr>
         <td >
-          <Button onClick={() => fetchPage(-1)} loading={loading} disabled={page === undefined || page.currentPage === 1}>
+          <Button className={'pagination-button'} onClick={() => fetchPage(-1)} loading={loading} disabled={page === undefined || page.currentPage === 1}>
           <i className="bi bi-chevron-compact-left" /> Prev
             </Button>
         </td>
@@ -38,7 +38,7 @@ function PaginationRow(props: PaginationRowProps) {
           {page.currentPage} / {totalPages}
         </td>
         <td>
-          <Button onClick={() => fetchPage(1)} loading={loading} disabled={page === undefined || !page.nextPage}>
+          <Button className={'pagination-button'} onClick={() => fetchPage(1)} loading={loading} disabled={page === undefined || !page.nextPage}>
             Next <i className="bi bi-chevron-compact-right" />
           </Button>
         </td>
