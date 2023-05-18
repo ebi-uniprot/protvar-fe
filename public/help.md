@@ -288,7 +288,7 @@ Contains information regarding mapping of the user variant input to the relevant
 - [Codon_change](#codon-change) 
 - [Strand](#strand)
 - [CADD_phred-like_score](#cadd-phred-like-score)
-- [Canonical_isoform_transcripts](canonical-isoform-transcripts)
+- [Canonical_isoform_transcripts](#canonical-isoform-transcripts)
 - [MANE_transcript](#mane-transcript)
 
 <a name="gene"></a>**H - Gene** The gene symbol as defined by the HGNC (https://www.genenames.org/about/guidelines/)
