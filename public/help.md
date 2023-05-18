@@ -357,7 +357,7 @@ These columns contain functional annotations regarding the variant amino acid, r
 - [Protein_complex](#protein-complex)
 - [Protein_sub_cellular_location](#protein-sub-cellular-location)
 - [Protein_family](#protein-family)
-- [Protein_interactions_PROTEIN(gene)](#protein_interactions)
+- [Protein_interactions_PROTEIN(gene)](#protein-interactions)
 
 <a name="eve-score"></a>**T - EVE:** Evolutionary model of variant effect. A score from 0-1 (predicted benign-pathogenic) and a category benign/uncertain/pathogenic. Please cite the following paper if this useful to you: https://www.nature.com/articles/s41586-021-04043-8
 
@@ -384,7 +384,7 @@ RHEA:25017(PubMed:[16824732,9593664,9811831])|RHEA:20629(PubMed:[9256433])
 
 <a name="protein-family"></a>**AD - Protein_family:** Describes the functional family that the protein belongs to.
 
-<a name="protein-interaction"></a>**AE - Protein_interactions_PROTEIN(gene):** This shows which other proteins have been shown to interact with the variant containing protein. This data is from the EMBL-EBI IntAct
+<a name="protein-interactions"></a>**AE - Protein_interactions_PROTEIN(gene):** This shows which other proteins have been shown to interact with the variant containing protein. This data is from the EMBL-EBI IntAct
 database and is predominantly from manual curation. The format is: UniProt accession(gene symbol). Different interacting partners are separated by ";".
 
 ###### <a name="predictions-columns"></a>Predictions Columns
