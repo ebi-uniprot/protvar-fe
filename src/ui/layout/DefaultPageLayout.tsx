@@ -204,6 +204,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
             alt=""
             width="130"
             height="50"
+            className='collaborator-img'
           />
           <img
             src={openTargetsLogo}
@@ -211,6 +212,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
             alt=""
             width="130"
             height="50"
+            className='collaborator-img'
           />
           <SignUp />
         </div>

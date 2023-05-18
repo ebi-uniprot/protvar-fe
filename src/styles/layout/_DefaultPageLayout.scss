@@ -205,7 +205,7 @@ nav .sidebar-menu .active {
 }
 
 nav .sidebar-menu .disabled {
-  background-color: #d4d2d2;
+  background-color: #d4d2d247;
   pointer-events: none;
 }
 
@@ -501,12 +501,29 @@ span.space:before {
 .custom-pv-footer {
   display: flex;
   align-items: flex-start;
-  > img {
+  
+  .collaborator-img {
     margin-left: 1rem;
     margin-right: 2rem;
   }
 
   & .newsletter-form {
-    margin-left: 30%;
+    margin-left: auto;
+    padding: 0 1rem;
+
+    .subscription-input {
+      display: flex;
+
+      .email-input {
+        flex: 1;
+      }
+      .subscribe-button {
+        border-radius: 4px;
+        background-color: #CDD9E4;
+        color: #240F16;
+        margin-left: 0.5rem;
+        font-weight: 400;
+      }
+    }
   }
 }
