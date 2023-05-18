@@ -15,7 +15,7 @@ const Button = ({ className = '', type = "button", onClick = () => { }, children
     children = "Loading..."
   if (loading || disabled) {
     disabled = true
-    className = "button-disabled"
+    className = `${className} button-disabled`
     onClick = () => { }
   }
   return (

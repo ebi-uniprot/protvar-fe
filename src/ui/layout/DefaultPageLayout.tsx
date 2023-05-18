@@ -88,7 +88,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                 <table>
                   <tbody>
                     <tr className="navbar">
-                      <td>
+                      <td className="topnav-logo">
                         <div className="logo-container">
                           <Link
                             className="local-title"
@@ -110,7 +110,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                           </Link>
                         </div>
                       </td>
-                      <div>
+                      
                         <td className="topnav-right local-sub-title">
                           <Link to={CONTACT} title="Contact us">
                             Contact
@@ -148,7 +148,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                             About
                           </Link>
                         </td>
-                      </div>
+                    
                     </tr>
                   </tbody>
                 </table>

@@ -48,7 +48,7 @@ function PaginationRow(props: PaginationRowProps) {
             options={[25, 50, 100]}
             value={page.itemsPerPage}
             onChange={(option) => changePageSize(option.value)}
-          />
+          /> 
         </td>
       </tr>
     </tbody>

@@ -4,6 +4,7 @@
   ul {
     list-style: none;
     display: inline-block;
+    margin-left: auto;
   }
 
   .legend-icon {
@@ -33,5 +34,5 @@
   line-height: 20px;
   vertical-align: middle;
   padding: 5px;
-  margin: 0px 10px 10px 10px;
+  margin: 0px 10px 10px 0px;
 }

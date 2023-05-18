@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom'
 import { DOWNLOAD, HOME, SEARCH } from '../../constants/BrowserPaths'
 

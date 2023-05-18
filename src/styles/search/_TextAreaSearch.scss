@@ -48,8 +48,9 @@
   outline-width: 0;
 }
 
-.ref-link {
-  color: #0000ff;
+.ref-link,
+.ref-link:visited {
+  color: #6987C3;
   border-bottom-style: none;
   text-decoration: none;
   border-bottom-width: 1px;
