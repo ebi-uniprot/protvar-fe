@@ -212,7 +212,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
             width="130"
             height="50"
           />
-          {/* <SignUp /> */}
+          <SignUp />
         </div>
         <div id="global-footer" className="global-footer">
           {/* Below expanded footer content is commented for now. Restore it back if there are any concerns */}

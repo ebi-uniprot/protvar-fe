@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom'
 import { DOWNLOAD, HOME, SEARCH } from '../../constants/BrowserPaths'
 
@@ -22,6 +23,7 @@ const DefaultPageContent = (props: { children: JSX.Element, downloadCount: numbe
               <NavLink
                 to={SEARCH}
                 activeClassName="active"
+                // className={`${initialLoading ? 'disabled': ''}`}
               >
                 {' '}
                 Results{' '}
@@ -29,9 +31,9 @@ const DefaultPageContent = (props: { children: JSX.Element, downloadCount: numbe
             </li>
             <li className="sidebar-menu">
               <NavLink
-                
                 to={DOWNLOAD}
                 activeClassName="active"
+                className={`${downloadCount ? '': 'disabled'}`}
               >
                 {' '}
                 My Downloads{' '}({downloadCount})

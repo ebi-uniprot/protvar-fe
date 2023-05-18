@@ -204,6 +204,11 @@ nav .sidebar-menu .active {
   border-bottom-style: none;
 }
 
+nav .sidebar-menu .disabled {
+  background-color: #d4d2d2;
+  pointer-events: none;
+}
+
 .sidebar-content {
   width: 85%;
   margin-left: 1px;
@@ -494,12 +499,14 @@ span.space:before {
 }
 
 .custom-pv-footer {
+  display: flex;
+  align-items: flex-start;
   > img {
     margin-left: 1rem;
     margin-right: 2rem;
   }
 
   & .newsletter-form {
-    width: 500px;
+    margin-left: 30%;
   }
 }
