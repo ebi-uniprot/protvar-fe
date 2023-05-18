@@ -204,6 +204,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
             alt=""
             width="130"
             height="50"
+            className='collaborator-img'
           />
           <img
             src={openTargetsLogo}
@@ -211,8 +212,9 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
             alt=""
             width="130"
             height="50"
+            className='collaborator-img'
           />
-          {/* <SignUp /> */}
+          <SignUp />
         </div>
         <div id="global-footer" className="global-footer">
           {/* Below expanded footer content is commented for now. Restore it back if there are any concerns */}
