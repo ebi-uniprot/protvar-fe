@@ -191,7 +191,7 @@ const SearchVariant = (props: VariantSearchProps) => {
                     id="rsExampleButton"
                     title={rsTitle}
                   >
-                    Variant ID
+                    dbSNP ID
                   </button>
                 </div>
                 </div>
