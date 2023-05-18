@@ -309,7 +309,7 @@ They calculate a score for every possible change in the genome. The phred-like s
 isoform because they may differ in their untranslated (non-coding) regions at either end. The translated transcript has an ID
 starting “ENSP”. For example [ENSP00000337353(ENST00000335725,ENST00000123456).
 
-<a name="mapping-notes"></a>**M - MANE_transcript** MANE (Matched Annotation between NCBI and EBI). - One of the transcripts is selected as the representative by NCBI and Ensembl. This transcript
+<a name="mane-transcript"></a>**M - MANE_transcript** MANE (Matched Annotation between NCBI and EBI). - One of the transcripts is selected as the representative by NCBI and Ensembl. This transcript
 may not translate into the UniProt canonical isoform sequence. If the MANE select corresponds directly to the isoform described in the row the MANE select ID is given. If they do not match "N/A" is found in the column and the MANE select ID is found with the corresponding transcript in the "Alternative_isoform_mappings" column.
 
 ###### <a name="protein-mapping-columns"></a>Protein Mapping Columns
@@ -324,12 +324,12 @@ Contains information regarding mapping of the user variant input to the encoded 
 - [Consequences](#consequences)
 
 
-<a name="mapping-notes"></a>**N - Uniprot canonical_isoform (non_canonical):** This is the accession of the canonical isoform of the protein if ProtVar can map to this. ProtVar always attempts to map to this isoform because
+<a name="uniprot-canonical"></a>**N - Uniprot canonical_isoform (non_canonical):** This is the accession of the canonical isoform of the protein if ProtVar can map to this. ProtVar always attempts to map to this isoform because
 most of the UniProt annotations are based on numbering in the canonical. Sometimes ProtVar cannot map to the canonical isoform
 but can to another isoform (sequence version of the protein). In these cases brackets are displayed around the accession to show that the mapping is to a non-canonical isoform.
 accessions? P12345
 
-<a name="mapping-notes"></a>**O - Alternative_isoform_mappings** Details about each isoform including the isoform accession, amino acid position in the isoform, amino acid change,
+<a name="alternative-isoform-mappings"></a>**O - Alternative_isoform_mappings** Details about each isoform including the isoform accession, amino acid position in the isoform, amino acid change,
 consequence and ENSP and ENST identifiers. Many genes have several transcripts caused by alternative splicing,
 some of which translate into different isoforms. Here we list details about all the isoforms where we can map from
 genomic location to isoform. Isoforms are separated by "|".
