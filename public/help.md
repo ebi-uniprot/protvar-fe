@@ -251,7 +251,7 @@ These are the columns created from the user variant input. There are six columns
 - [Coordinate](#coordinate)
 - [ID](#id)
 - [Reference_allele](#reference-allele)
-- [Alternative_allele](#alterntative-allele)  
+- [Alternative_allele](#alternative-allele)  
   
 
 <a name="user-input"></a>**A - User input:** 
