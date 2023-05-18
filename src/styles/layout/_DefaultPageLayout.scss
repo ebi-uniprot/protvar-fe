@@ -233,6 +233,16 @@ nav .sidebar-menu .active {
       display: flex;
     }
   }
+
+  .sidebar-content {
+    padding-top: 0.5rem;
+  }
+
+  .search-card {
+    padding: 0 1rem 0 1rem;
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 .content {
