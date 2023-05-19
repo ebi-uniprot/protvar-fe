@@ -16,7 +16,7 @@ const DefaultPageContent = (props: {
       setEnableResults(true)
     }
   }, [searchResults])
-  console.log(searchResults)
+
   return (
     <div className="default-page-content">
       <div className="sidebar">
