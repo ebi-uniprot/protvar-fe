@@ -47,7 +47,7 @@ Clicking each category in the contents below will take you to an annotated image
 **G.** Choose how many results to display on the page.  
 **H.** Download all variant results. The file will be available in [My downloads](#my-downloads)  
 **I.** The data is split into [genomic position](#genomic-position) and [protein position](#protein-position) and [annotations](#annotations)  
-**J.** The [data type](#data-types) used to submit the variant is shown in yellow. Multiple lines may be shown for a single input in cases such as overlapping genes or when the specific SNP is ambiguous.  
+**J.** The [data type](#data-types) used to submit the variant is shown in pink. Multiple lines may be shown for a single input in cases such as overlapping genes or when the specific SNP is ambiguous.  
 **K.** [CADD](#cadd) score is a nucleotide level predictor of pathogenicity.  
 **L.** Mappings to different [isoforms](#isoforms) can be observed by expanding.  
 **M.** [EVE](#eve) is an amino acid level predictor of pathogenicity.  
