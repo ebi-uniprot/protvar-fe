@@ -11,7 +11,7 @@ import SignUp from "./SignUp";
 import { MappingRecord } from '../../utills/Convertor'
 interface DefaultPageLayoutProps {
   content: JSX.Element,
-  searchResults: MappingRecord[][][]
+  searchResults?: MappingRecord[][][]
 }
 
 function DefaultPageLayout(props: DefaultPageLayoutProps) {
