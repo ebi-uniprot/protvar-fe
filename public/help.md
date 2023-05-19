@@ -202,7 +202,7 @@ REF - The reference base at the given position on the reference sequence. ProtVa
 ALT - The alternative allele at this position. This must be a single nucleotide for ProtVar.
 
 Meta information and header lines are ignored by ProtVar
-Further details regarding the VCF format can be found here: https://samtools.github.io/hts-specs/VCFv4.2.pdf
+Further details regarding the VCF format can be found here: [VCF pdf](https://samtools.github.io/hts-specs/VCFv4.2.pdf)
 
 ProtVar is as forgiving as possible with regards to the input format and will attempt to interpret the input if possible. For example the following formats can be read:  
 >X 149498202 . C/G  
