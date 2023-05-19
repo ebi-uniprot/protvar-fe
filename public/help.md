@@ -278,7 +278,7 @@ Only numbers 1-22 or “X” or “Y” or mitochondria (chrM, mitochondria, mit
 
 ###### <a name="genomic-mapping-columns"></a>Genomic Mapping Columns
 
-Contains information regarding mapping of the user variant input to the relevant gene(s), transcript(s) and codon. The category contains 6 columns:
+Contains information regarding mapping of the user variant input to the relevant gene(s), transcript(s) and codon. The category contains six columns:
 - [Gene](#gene) 
 - [Codon_change](#codon-change) 
 - [Strand](#strand)
@@ -286,30 +286,28 @@ Contains information regarding mapping of the user variant input to the relevant
 - [Canonical_isoform_transcripts](#canonical-isoform-transcripts)
 - [MANE_transcript](#mane-transcript)
 
-<a name="gene"></a>**H - Gene** The gene symbol as defined by the HGNC (https://www.genenames.org/about/guidelines/)
+<a name="gene"></a>**H - Gene:** The gene symbol as defined by the HGNC. [HGNC website](https://www.genenames.org/about/guidelines/)
 Symbols contain only uppercase Latin letters and Arabic numerals, and punctuation is avoided, with an exception for
 hyphens in specific groups.
 
-<a name="codon-change"></a>**I - Codon_change** The format is three nucleotides containing the reference allele which make the codon, followed by “/” and then the
+<a name="codon-change"></a>**I - Codon_change:** The format is three nucleotides containing the reference allele which make the codon, followed by “/” and then the
 three corresponding nucleotides but containing the alternative nucleotide. The position which is changed is capitalised,
 for example aCg/aTg where the middle nucleotide of the codon is changed from a Cytosine (C) to a Thymine (T).
 
-<a name="strand"></a>**J - Strand** The reference genome and variants are stated as the positive strand only, therefore if a user enteres G->T variant but the gene is on the negative strand the codon change displayed will be C->A (the reverse complement).
+<a name="strand"></a>**J - Strand:** The reference genome and variants are stated as the positive strand only, therefore if a user enteres G->T variant but the gene is on the negative strand the codon change displayed will be C->A (the reverse complement).
 
-<a name="cadd-phred-like-score"></a>**K - CADD_phred_like_score** The CADD (Combined Annotation Dependent Depletion) score is devised by the University of Washington - https://cadd.gs.washington.edu/ .
+<a name="cadd-phred-like-score"></a>**K - CADD_phred_like_score:** The CADD (Combined Annotation Dependent Depletion) score is a nucleotide specific pathogenicty score devised at the University of Washington - [CADD website](https://cadd.gs.washington.edu/)
 They calculate a score for every possible change in the genome. The phred-like score ("scaled C-scores") ranges from 1 to 99. It is based on the rank of each variant relative to all possible 8.6 billion substitutions in the human reference genome.
 
-<a name="canonical-isoform-transcripts"></a>**L - Canonical_isoform_transcripts** The transcripts and transcript translation identifiers which correspond to the UniProt canonical isoform. Transcripts
-(DNA sequences) have an ID starting with “ENST”. There can be several different transcripts which encode the same
+<a name="canonical-isoform-transcripts"></a>**L - Canonical_isoform_transcripts:** The transcripts and transcript translation identifiers which correspond to the UniProt canonical isoform. Transcripts (DNA sequences) have an ID starting with “ENST”. There can be several different transcripts which encode the same
 isoform because they may differ in their untranslated (non-coding) regions at either end. The translated transcript has an ID
 starting “ENSP”. For example [ENSP00000337353(ENST00000335725,ENST00000123456).
 
-<a name="mane-transcript"></a>**M - MANE_transcript** MANE (Matched Annotation between NCBI and EBI). - One of the transcripts is selected as the representative by NCBI and Ensembl. This transcript
-may not translate into the UniProt canonical isoform sequence. If the MANE select corresponds directly to the isoform described in the row the MANE select ID is given. If they do not match "N/A" is found in the column and the MANE select ID is found with the corresponding transcript in the "Alternative_isoform_mappings" column.
+<a name="mane-transcript"></a>**M - MANE_transcript:** MANE (Matched Annotation between NCBI and EBI). - One of the transcripts is selected as the representative by NCBI and Ensembl. This transcript may not translate into the UniProt canonical isoform sequence. If the MANE select corresponds directly to the isoform described in the row the MANE select ID is given. If they do not match "N/A" is found in the column and the MANE select ID is found with the corresponding transcript in the "Alternative_isoform_mappings" column. More information can be found on the [Ensembl website](https://www.ensembl.org/info/genome/genebuild/mane.html)
 
 ###### <a name="protein-mapping-columns"></a>Protein Mapping Columns
 
-Contains information regarding mapping of the user variant input to the encoded protein(s). The category contains 6 columns:
+Contains information regarding mapping of the user variant input to the encoded protein(s). The category contains six columns:
 
 - [Uniprot canonical_isoform (non_canonical)](#uniprot-canonical)
 - [Alternative_isoform_mappings](#alternative-isoform-mappings)
