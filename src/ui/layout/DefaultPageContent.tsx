@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { NavLink, useLocation } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { DOWNLOAD, HOME, SEARCH } from '../../constants/BrowserPaths'
 import { MappingRecord } from '../../utills/Convertor'
 
@@ -9,7 +9,6 @@ const DefaultPageContent = (props: {
   searchResults: MappingRecord[][][]
 }) => {
   const [enableResults, setEnableResults] = useState(false)
-  const { pathname } = useLocation()
   const { children, downloadCount, searchResults } = props
   useEffect(() => {
     if (searchResults?.length) {

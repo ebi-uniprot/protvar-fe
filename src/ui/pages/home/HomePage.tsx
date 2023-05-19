@@ -14,7 +14,6 @@ const HomePageContent = (props: HomePageProps) => {
     updateAssembly,
     fetchFileResult,
     fetchPasteResult,
-    searchResults
   } = props
 
   return (
