@@ -382,9 +382,9 @@ There are 4 columns in this category:
 - [Conservation_score](#conservation-score)
 
 <a name="predicted-pockets"></a>**AF - Predicted_pockets:** This shows the residues which are predicted to form a pocket in the AlphaFold modeled protein.   
-<a name="predicted-interactions"></a>**AG - Predicted_interactions:**  Interface residues are predicted from folding proteins which are considered to interact simultaneously using the Alphafold2 algorithm. The interfaces are then scored for comfidence  
-<a name="foldx-prediction"></a>**AH - Foldx_prediction:** The predicted Gibbs free energy change of the protein when the variant is introduced as calculated using the FoldX algorithm: https://foldxsuite.crg.eu/   
-<a name="conservation-score"></a>**AI - Conservation_score:**  Is a score from 0-1 where 0 is not at all conerved and 1 is totally conserved in multiple sequence alignments.
+<a name="predicted-interactions"></a>**AG - Predicted_interactions:**  Interface residues are predicted from folding proteins which are considered to interact simultaneously using the Alphafold2 algorithm. The interfaces are then scored for confidence.  
+<a name="foldx-prediction"></a>**AH - Foldx_prediction:** The predicted Gibbs free energy change of the protein when the variant is introduced as calculated using the FoldX algorithm: [foldX website](https://foldxsuite.crg.eu/)   
+<a name="conservation-score"></a>**AI - Conservation_score:**  Is a score from 0-1 where 0 is not at all conserved and 1 is totally conserved in pre-calculated multiple sequence alignments.
 
 ###### <a name="population-observations-columns"></a>Population Observations Columns
 
@@ -402,11 +402,10 @@ version of the reference.
 <a name="cytogenetic-band"></a>**AK - Cytogenetic_band:** The region of the chromosome containing the variant position. Cytogenic bands are areas of chromosomes rich in
 actively transcribing DNA.
 
-<a name="other-identifiers-for-the-variant"></a>**AL - Other_identifiers_for_the_variant** Description of the same variant (position and nucleotide change) as the user entered in different databases.
-The source database name is given, separated by the variant ID with "-" then separated from the clinical consequence with ";". Each separate databse is separated by "|". For example, 
+<a name="other-identifiers-for-the-variant"></a>**AL - Other_identifiers_for_the_variant:** Description of the same variant (position and nucleotide change) as the user entered in different databases. The source database name is given, separated by the variant ID with "-" then separated from the clinical consequence with ";". Each separate databse is separated by "|". For example, 
 > ClinVar-RCV000003593;Pathogenic|UniProt-VAR_017144;Pathogenic.
 
-<a name="diseases-associated-with-variant"></a>**AM - Diseases_associated_with_variant** Describes diseases from literature which have been associated with the specific variant entered by the user. There may be multiple diseases
+<a name="diseases-associated-with-variant"></a>**AM - Diseases_associated_with_variant:** Describes diseases from literature which have been associated with the specific variant entered by the user. There may be multiple diseases
 listed which are separated by “|”. The evidence for each disease is in brackets which may be a CliVar ID or Pubmed link to a publication.
 
 <a name="variants-colocated-at-residue-position"></a>**AN - Variants_colocated_at_residue_position:** This column describes other variants which have been described at the same AMINO ACID position. As a codon is three
