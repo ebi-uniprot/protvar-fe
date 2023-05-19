@@ -115,12 +115,12 @@ Clicking each category in the contents below will take you to an annotated image
 
 #### Website Help Further Information
 
-<a name="3d-structure-viewer"></a>**3D Structure Viewer:** 3D structures are visualised using the Mol* viewer which “is a modern web-based open-source toolkit for visualisation and analysis of large-scale molecular data”. Further information can be found at their website: https://molstar.org/
+<a name="3d-structure-viewer"></a>**3D Structure Viewer:** 3D structures are visualised using the Mol* viewer which “is a modern web-based open-source toolkit for visualisation and analysis of large-scale molecular data”. Further information can be found at their website: [Mol* website](https://molstar.org/)
 ProtVar uses a limited version of Mol* with less functionality than the full version to allow proteins to be displayed quickly and smoothly.  
 
 <a name="annotations"></a>**Annotations:** Annotations are subdivided into function annotations, population observations and structure annotations. Annotations either help the user to understand the function of the reference amino acid at the variant position, evaluate the likelihood that the variant amino acid will alter the function or contextualise the variant position and protein role to suggest what effect the variant may have on the organism.
 
-<a name="cadd"></a>**CADD:** CADD scores “the deleteriousness of single nucleotide variants as well as insertion/deletions variants in the human genome” - from https://cadd.gs.washington.edu/ CADD scores are freely available for all non-commercial applications however a licence is required for commercial applications, details of which can be found on their website. CADD citation: ref doi: 10.1038/ng.2892
+<a name="cadd"></a>**CADD:** CADD scores “the deleteriousness of single nucleotide variants as well as insertion/deletions variants in the human genome” - from the [CADD website](https://cadd.gs.washington.edu/) CADD scores are freely available for all non-commercial applications however a licence is required for commercial applications, details of which can be found on their website. [CADD citation](https://www.nature.com/articles/ng.2892)
 
 <a name="co-located-variants"></a>**Co-located Variants:** ProtVar retrieves variants which have been reported at the same amino acid position as the variant. This mean that the point mutation itself may be any of the three nucleotide position of the codon, not necessarily the same genomic position as the user entered variant.
 
