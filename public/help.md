@@ -214,7 +214,7 @@ ProtVar is as forgiving as possible with regards to the input format and will at
 
 ##### <a name="download-file"></a>Download File
 
-The output file has 36 columns in total. Every column value is double quoted, for example “User input” and then separated by a comma.
+The output file has 41 columns in total. Every column value is double quoted, for example “User input” and then separated by a comma.
 Columns can contain “N/A” as a value indicating either:
 
 - The user did not requested the data (for example if only mappings are requested without annotation)
