@@ -11,10 +11,10 @@ import DMLogo from "../../images/dm-logo.png";
 import FoldXLogo from "../../images/FoldX-logo.png";
 
 function AboutPageContent() {
-  var today = new Date();
-  var dd = String(today.getDate()).padStart(2, '0');
-  var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-  var yyyy = today.getFullYear();
+  //var today = new Date();
+  //var dd = String(today.getDate()).padStart(2, '0');
+  //var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+  //var yyyy = today.getFullYear();
 
   return <div className="container">
     <h4>About</h4>
@@ -43,9 +43,7 @@ function AboutPageContent() {
       </p>
 
       <p>
-        The ProtVar team consists of:<br/>
-        <a href="https://www.ebi.ac.uk/people/person/james-stephenson/" target="_blank" rel="noreferrer">James Stephenson</a> - ProtVar lead<br/>
-        <a href="https://www.ebi.ac.uk/people/person/prabhat-totoo/" target="_blank" rel="noreferrer">Prabhat Totoo</a> - Lead developer<br/>
+        ProtVar is maintained by the UniProt protein function development team.
       </p>
 
       <p>
@@ -93,13 +91,14 @@ function AboutPageContent() {
             width="80"
         /></a>
       </p>
-
+      {/*
       <p>
         If you found ProtVar useful for your work please cite: <br/>
         EMBL-EBI ({yyyy}). <em>ProtVar: A tool to contextualise and interpret missense variation. </em>
         Available at <a href="http://www.ebi.ac.uk/ProtVar" target="_blank" rel="noreferrer">http://www.ebi.ac.uk/ProtVar</a>.
         [Accessed {dd + '/' + mm + '/' + yyyy}].
       </p>
+      */}
     </div>
 
   </div>
