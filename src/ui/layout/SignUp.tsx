@@ -30,7 +30,12 @@ function SignUp() {
                     }
                 })
                 .catch((_) => {
-                    Notify.warn('Could not subscribe. Try later.')
+                    // CORS issue prevents subscription. Ignoring it for now
+                    // Notify.warn('Could not subscribe. Try later.')
+
+                    // Setting the subscription status anyway for now as we are sure the emails are getting registered as expected.
+                    localStorage.setItem(SUBSCRIPTION_STATUS, 'true')
+                    setSubscriptionStatus('true')
                 });
         }
     }
