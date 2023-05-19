@@ -384,8 +384,11 @@ There are 4 columns in this category:
 - [Conservation_score](#conservation-score)
 
 <a name="predicted-pockets"></a>**AF - Predicted_pockets:** This shows the residues which are predicted to form a pocket in the AlphaFold modeled protein.   
+
 <a name="predicted-interactions"></a>**AG - Predicted_interactions:**  Interface residues are predicted from folding proteins which are considered to interact simultaneously using the Alphafold2 algorithm. The interfaces are then scored for confidence.  
+
 <a name="foldx-prediction"></a>**AH - Foldx_prediction:** The predicted Gibbs free energy change of the protein when the variant is introduced as calculated using the FoldX algorithm: [foldX website](https://foldxsuite.crg.eu/)   
+
 <a name="conservation-score"></a>**AI - Conservation_score:**  Is a score from 0-1 where 0 is not at all conserved and 1 is totally conserved in pre-calculated multiple sequence alignments.
 
 ###### <a name="population-observations-columns"></a>Population Observations Columns
