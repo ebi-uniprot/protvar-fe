@@ -70,7 +70,7 @@ Clicking each category in the contents below will take you to an annotated image
 ###### <a name="population-observations"></a>Population Observations
 
 ![ProtVar Population Observations](images/population_observations.png)  
-**A** - This page contains This page contains data about the variant in other resources and [co-located variants](#co-located-variants)  
+**A** - This page contains data about the variant in other resources and [co-located variants](#co-located-variants)  
 **B** - This window displays identifiers of the user submitted variant in different databases with links to them.  
 **C** - Variants [co-located](#co-located-variants) at the same amino acid as the user variant and associated diseases.  
 **D** - Diseases associated with variation in the protein.
