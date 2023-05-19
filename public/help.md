@@ -396,30 +396,26 @@ There are five columns in this category:
 - [Diseases_associated_with_variant](#diseases-associated-with-variant)
 - [Variants_colocated_at_residue_position](#variants-colocated-at-residue-position)
 
-<a name="genomic-location"></a>**AJ - Genomic_location:** The variant described in HGVS format. This is a different way of describing the variant which included the sequence
-version of the reference.
+<a name="genomic-location"></a>**AJ - Genomic_location:** The variant described in HGVS format. This is a different way of describing the variant which includes the sequence
+version of the reference genome assembly: [HGVS website](https://varnomen.hgvs.org/bg-material/simple/)
 
 <a name="cytogenetic-band"></a>**AK - Cytogenetic_band:** The region of the chromosome containing the variant position. Cytogenic bands are areas of chromosomes rich in
 actively transcribing DNA.
 
-<a name="other-identifiers-for-the-variant"></a>**AL - Other_identifiers_for_the_variant:** Description of the same variant (position and nucleotide change) as the user entered in different databases. The source database name is given, separated by the variant ID with "-" then separated from the clinical consequence with ";". Each separate databse is separated by "|". For example, 
+<a name="other-identifiers-for-the-variant"></a>**AL - Other_identifiers_for_the_variant:** Description of the same variant (position and nucleotide change) as the user entered variant in different databases. The source database name is given, separated by the variant ID with "-" then separated from the clinical consequence with ";". Each separate database is separated by "|". For example, 
 > ClinVar-RCV000003593;Pathogenic|UniProt-VAR_017144;Pathogenic.
 
-<a name="diseases-associated-with-variant"></a>**AM - Diseases_associated_with_variant:** Describes diseases from literature which have been associated with the specific variant entered by the user. There may be multiple diseases
-listed which are separated by “|”. The evidence for each disease is in brackets which may be a CliVar ID or Pubmed link to a publication.
+<a name="diseases-associated-with-variant"></a>**AM - Diseases_associated_with_variant:** Describes diseases from literature which have been associated with the variant containing protein. There may be multiple diseases listed which are separated by “|”. The evidence for each disease is in brackets which may be a CliVar ID or Pubmed link to a publication.
 
-<a name="variants-colocated-at-residue-position"></a>**AN - Variants_colocated_at_residue_position:** This column describes other variants which have been described at the same AMINO ACID position. As a codon is three
-nucleotides this means that the variants here could be at any one of three positions and can be any alternative allele.
+<a name="variants-colocated-at-residue-position"></a>**AN - Variants_colocated_at_residue_position:** This column describes other variants which have been described at the same AMINO ACID position. As a codon is three nucleotides this means that the variants here could be at any one of three positions and can be any alternative allele.
 
 ###### <a name="structure-annotations-columns"></a>Structure Annotations Columns
 
 This category has one column:
 
-<a name="other-identifiers-for-the-variant"></a>**AO - Position_in_structures:** The column shows which PDB protein structures contain the variant. This is not an exhaustive list of all structures
-of the protein as some structures will not cover the region containing the variant.
-The format is: 
+<a name="other-identifiers-for-the-variant"></a>**AO - Position_in_structures:** This column shows which PDB protein structures contain the variant. This is not an exhaustive list of all structures
+of the protein as some structures will not cover the region containing the variant. The format is: 
 > PDB_accesion;chain_position_in_structure,chain_position_in_structure;structure_resolution;structure_method. Structures are separated by "|".
-
 
 
 ---
