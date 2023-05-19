@@ -1,5 +1,5 @@
 import RegionProteinProps from "./RegionProteinProps";
-import { EmptyElement } from "../../../../constants/Const";
+import { EmptyElement } from "../../../../constants/ConstElement";
 import { INTACT_URL } from "../../../../constants/ExternalUrls";
 import { ReactComponent as ChevronDownIcon } from "../../../../images/chevron-down.svg"
 import {Interaction} from "../../../../types/FunctionalResponse";

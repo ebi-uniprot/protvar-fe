@@ -5,7 +5,7 @@ import { fullAminoAcidName } from "../../../utills/Util";
 import Tool from "../../elements/Tool";
 import { getProteinName } from "./ResultTable";
 import Spaces from "../../elements/Spaces";
-import { EmptyElement } from "../../../constants/Const";
+import { EmptyElement } from "../../../constants/ConstElement";
 
 export function aaChangeTip(change: string | undefined) {
   return "Amino acid change " + fullAminoAcidName(change?.split("/")[0]) + " -> " + fullAminoAcidName(change?.split("/")[1]);

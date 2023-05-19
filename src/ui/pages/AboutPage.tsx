@@ -1,114 +1,106 @@
 import DefaultPageLayout from "../layout/DefaultPageLayout";
-import {ENSEMBL_ASML_URL, HUMSAVAR_URL} from "../../constants/ExternalUrls";
 import React from "react";
+import EMBLEBILogo from "../../images/embl-ebi-logo.svg";
+import openTargetsLogo from "../../images/open-targets-logo.png";
+import UniprotLogo from "../../images/uniprot-logo.svg";
+import EnsemblLogo from "../../images/ensembl-logo.png";
+import PDBeLogo from "../../images/pdbe-logo.png";
+import CADDLogo from "../../images/cadd-logo.png";
+import EVELogo from "../../images/eve-logo.svg";
+import DMLogo from "../../images/dm-logo.png";
+import FoldXLogo from "../../images/FoldX-logo.png";
 
 function AboutPageContent() {
+  //var today = new Date();
+  //var dd = String(today.getDate()).padStart(2, '0');
+  //var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+  //var yyyy = today.getFullYear();
+
   return <div className="container">
-    <span>
-      <b>What is ProtVar</b>
-      <br />
-    </span>
+    <h4>About</h4>
     <div className="text">
       <p>
-        ProtVar is an online service to interpret the effects of variants on protein function and
-        structure. It utilises functional information from the Ensembl Variant Effect Predictor
-        (VEP), the UniProt functional residue annotation (Protein function), and the PDBe structural
-        residue annotation.
+        ProtVar is a regularly updated and maintained human variant annotation and assessment web tool which offers
+        users flexibility and ease of accessibility and integration. It combines the data and analysis from a plethora
+        of resources to bring together genomic, protein sequence, structure and function as well as structural insights
+        and predictions to better understand the potential effects of missense variation on humans.
       </p>
+
+      <p>
+          It is funded by <img
+            src={EMBLEBILogo}
+            loading="lazy"
+            alt=""
+            width="130"
+            height="50"
+        /> and <img
+            src={openTargetsLogo}
+            loading="lazy"
+            alt=""
+            width="130"
+            height="50"
+        />
+      </p>
+
+      <p>
+        ProtVar is maintained by the UniProt protein function development team.
+      </p>
+
+      <p>
+        We would like to thank the following resources for the data used in ProtVar <br/>
+        <a href="https://www.uniprot.org/" target="_blank" rel="noreferrer"><img
+            src={UniprotLogo}
+            loading="lazy"
+            alt=""
+            width="120"
+        /></a>&nbsp;&nbsp;
+        <a href="https://www.ensembl.org/" target="_blank" rel="noreferrer"><img
+            src={EnsemblLogo}
+            loading="lazy"
+            alt=""
+            width="140"
+        /></a>&nbsp;&nbsp;
+        <a href="https://www.ebi.ac.uk/pdbe/" target="_blank" rel="noreferrer"><img
+            src={PDBeLogo}
+            loading="lazy"
+            alt=""
+            width="50"
+        /></a>&nbsp;&nbsp;
+        <a href="https://cadd.gs.washington.edu/" target="_blank" rel="noreferrer"><img
+            src={CADDLogo}
+            loading="lazy"
+            alt=""
+            width="60"
+        /></a>&nbsp;&nbsp;
+        <a href="https://evemodel.org/" target="_blank" rel="noreferrer"><img
+            src={EVELogo}
+            loading="lazy"
+            alt=""
+            width="120"
+        /></a>&nbsp;&nbsp;
+        <a href="https://alphafold.ebi.ac.uk/" target="_blank" rel="noreferrer"><img
+            src={DMLogo}
+            loading="lazy"
+            alt=""
+            width="120"
+        /></a>&nbsp;&nbsp;
+        <a href="https://foldxsuite.crg.eu/" target="_blank" rel="noreferrer"><img
+            src={FoldXLogo}
+            loading="lazy"
+            alt=""
+            width="80"
+        /></a>
+      </p>
+      {/*
+      <p>
+        If you found ProtVar useful for your work please cite: <br/>
+        EMBL-EBI ({yyyy}). <em>ProtVar: A tool to contextualise and interpret missense variation. </em>
+        Available at <a href="http://www.ebi.ac.uk/ProtVar" target="_blank" rel="noreferrer">http://www.ebi.ac.uk/ProtVar</a>.
+        [Accessed {dd + '/' + mm + '/' + yyyy}].
+      </p>
+      */}
     </div>
-    <hr />
-    <span>
-      <b>Examples:</b>
-    </span>
-    <div className="text">
-      <ul>
-        <li>
-          VCF
-          <br />
-          3 165830358 165830358 T/C . . .<br />
-          21 43072000 43072000 T/C . . .<br />
-        </li>
-        <li>
-          HGVS
-          <br />
-          {"NC_000014.9:g.89993420A>G"}<br />
-          {"NC_000010.11:g.87933147C>G"}<br />
-        </li>
-        <li>
-          VCF FILE
-          <br />
-          #CHROM POS ID REF ALT QUAL FILTER INFO<br />
-          21 25891796 . C T . . . <br />
-          14 73173574 . C T . . .<br />
-        </li>
-      </ul>
-    </div>
-    <hr />
-    <span>
-      <b>Response:</b>
-    </span>
 
-    <div className="text">
-      <ul>
-        <li>
-          The genes and transcripts where the variants are located, with Ensembl identifiers.
-        </li>
-        <li>
-          The proteins and protein isoforms affected by the variants, with UniProt identifiers and
-          corresponding amino acid positions and changes.
-        </li>
-        <li>
-          The consequence of your variants on the protein sequence (e.g. stop gained, missense,
-          stop lost, frameshift).
-        </li>
-
-        <li>SIFT, PolyPhen and CADD scores for changes in the protein sequence.</li>
-
-        <li>
-          Known variants in the nucleotide and amino acid position that match your variants, with
-          dbSNPs, ClinVar and UniProt variant identifiers.
-        </li>
-        <li>Population frequency from 1000 Genomes project and gnomAD.</li>
-
-        <li>
-          Functional information per amino acid residue affected by your variants (e.g. functional
-          domains, and sites like active, binding sites and post-translational modifications).
-        </li>
-        <li>
-          Known disease associations in the amino acid position that match your variants as
-          described in UniProt.
-        </li>
-
-        <li>
-          Known mutagenesis experiments in the amino acid position that match your variants as
-          described in UniProt.
-        </li>
-        <li>
-          Known structures and ligand binding sites in the amino acid position that match your
-          variants.
-        </li>
-      </ul>
-
-      <span>
-      <b>Useful links:</b>
-      </span>
-
-      <div className="text">
-        <ul>
-          <li>
-            <a href={ENSEMBL_ASML_URL} target="_blank" rel="noopener noreferrer" className="ref-link">
-              Ensembl's Assembly Remapping
-            </a>
-          </li>
-          <li>
-            <a href={HUMSAVAR_URL} target="_blank" rel="noopener noreferrer" className="ref-link">
-              Human variants curated from literature reports
-            </a>
-          </li>
-        </ul>
-      </div>
-
-    </div>
   </div>
 }
 

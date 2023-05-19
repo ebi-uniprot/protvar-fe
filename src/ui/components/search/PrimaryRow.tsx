@@ -20,7 +20,7 @@ import PopulationIcon from '../../../images/human.svg';
 import LoaderRow from "./LoaderRow";
 import { ReactComponent as ChevronDownIcon } from "../../../images/chevron-down.svg"
 import { ReactComponent as ChevronUpIcon } from "../../../images/chevron-up.svg"
-import { EmptyElement } from "../../../constants/Const";
+import { EmptyElement } from "../../../constants/ConstElement";
 import { aaChangeTip, CanonicalIcon } from "./AlternateIsoFormRow";
 import {EveIcon, getEveClassText} from "./EveScore";
 import {INPUT_GEN, INPUT_PRO, INPUT_RS} from "../../../types/MappingResponse";
@@ -39,13 +39,13 @@ const getPrimaryRow = (record: MappingRecord, toggleOpenGroup: string, isoFormGr
   }
   let inputStyle = {
     gen: {
-      backgroundColor: record.type === INPUT_GEN ? "#FFFAF0" : ""
+      backgroundColor: record.type === INPUT_GEN ? "#F8EDF0" : ""
     },
     pro: {
-      backgroundColor: record.type === INPUT_PRO ? "#FFFAF0" : ""
+      backgroundColor: record.type === INPUT_PRO ? "#F8EDF0" : ""
     },
     rs: {
-      backgroundColor: record.type === INPUT_RS ? "#FFFAF0" : ""
+      backgroundColor: record.type === INPUT_RS ? "#F8EDF0" : ""
     }
   }
 

@@ -1,9 +1,9 @@
-import { EmptyElement } from "../../../constants/Const";
+import { EmptyElement } from "../../../constants/ConstElement";
 import { getColor, getTitle } from "./CaddHelper";
 
 function CaddLegendColors() {
   return (
-    <div className="search-results-legends" style={{ float: "unset" }}>
+    <div className="search-results-legends">
       <strong>CADD phred-like score colour</strong>
       <br />
       <br />
@@ -20,14 +20,13 @@ function CaddLegendColors() {
 
 function CaddColourLi(props: { cadd: number }) {
   const texts = getTitle(props.cadd.toString())?.split("-")
-  if (!texts || texts.length < 3)
+  if (!texts || texts.length < 2)
     return EmptyElement
   return <>
     <div className="flex">
       <ul><li><span className="legend-icon button--legends" style={{ backgroundColor: getColor(props.cadd) }} /></li></ul>
       <div className="flex1">{texts[0]}</div>
       <div className="flex2">{texts[1]}</div>
-      <div className="flex6">{texts[2]}</div>
     </div>
   </>
 }

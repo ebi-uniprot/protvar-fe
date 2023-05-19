@@ -49,8 +49,7 @@ function DownloadPageContent() {
     }, [downloads])
 
     return <div className="container">
-        <h4>Download History</h4>
-        # of downloads: {downloads.length}
+        <strong>{downloads.length} download{downloads.length > 1 ? 's' : ''}</strong>
 
         {/**
         <p>
@@ -61,8 +60,8 @@ function DownloadPageContent() {
         */}
 
         {downloads.length > 0 && (
-            <table className="table">
-                <thead>
+            <table className="table download-table">
+                <thead style={{backgroundColor: '#6987C3', color: '#FFFFFF'}}>
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Requested</th>

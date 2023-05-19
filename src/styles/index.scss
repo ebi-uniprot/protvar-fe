@@ -1,5 +1,3 @@
-
-
 @import "base/_all";
 @import "layout/_all";
 @import "search/_all";
@@ -8,13 +6,36 @@
 
 .banner {
   padding: 10px;
+  margin-bottom: 10px;
   text-align: center;
-  background: #1abc9c;
-  color: white;
+  background: #f8edf0;
   font-size: 15px;
+  position: relative;
+
+  a {
+    color: #6987c3;
+  }
+
+  .banner-content {
+    padding: 0 1rem;
+  }
+
+  .dismiss-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    color: #999;
+  }
 }
 
-.download, .download-ready, .download-nr, .download-na {
+.download,
+.download-ready,
+.download-nr,
+.download-na {
   width: 15px;
   height: 15px;
   -moz-border-radius: 50px;

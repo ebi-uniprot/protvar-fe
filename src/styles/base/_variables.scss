@@ -24,7 +24,7 @@ $default-radius: $base-font-size;
 // -------
 $default-button-height: 2.5 * $base-font-size;
 $default-button-padding: 0 $default-padding;
-$default-button-radius: $default-button-height / 2;
+$default-button-radius: $default-button-height * 0.5;
 
 // Protein Structure Colours
 // -------------------------
@@ -36,7 +36,7 @@ $protein-structure-coverage-colour: #143468;
 // -----
 $search-results-table-border-colour: #ebf6fb;
 $search-results-table-zebra-background-colour: #deeff5;
-$search-results-table-header-background-colour: #5caecd;
+$search-results-table-header-background-colour: #6987C3;
 $search-results-table-header-border-colour: #ebf6fb;
 $search-results-divider-border-colour: #c4d9e2;
 $search-results-query-row-background-colour: #ebf6fb;
