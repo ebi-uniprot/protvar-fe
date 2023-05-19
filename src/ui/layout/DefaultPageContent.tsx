@@ -1,9 +1,20 @@
-import { NavLink, useLocation } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { NavLink } from 'react-router-dom'
 import { DOWNLOAD, HOME, SEARCH } from '../../constants/BrowserPaths'
+import { MappingRecord } from '../../utills/Convertor'
 
-const DefaultPageContent = (props: { children: JSX.Element, downloadCount: number }) => {
-  const { pathname } = useLocation();
-  const { children, downloadCount } = props;
+const DefaultPageContent = (props: {
+  children: JSX.Element
+  downloadCount: number
+  searchResults: MappingRecord[][][]
+}) => {
+  const [enableResults, setEnableResults] = useState(false)
+  const { children, downloadCount, searchResults } = props
+  useEffect(() => {
+    if (searchResults?.length) {
+      setEnableResults(true)
+    }
+  }, [searchResults])
 
   return (
     <div className="default-page-content">
@@ -11,33 +22,33 @@ const DefaultPageContent = (props: { children: JSX.Element, downloadCount: numbe
         <nav>
           <ul>
             <li className="sidebar-menu">
-              <NavLink
-                to={HOME}
-                exact
-                activeClassName="active"
-              >
+              <NavLink to={HOME} exact activeClassName="active">
                 Search
               </NavLink>
             </li>
             <li className="sidebar-menu">
-              <NavLink
-                to={SEARCH}
-                activeClassName={`${pathname === HOME ? '' : 'active' }`}
-                className={`${pathname === HOME ? 'disabled' : '' }`}
-                // className={`${initialLoading ? 'disabled': ''}`}
-              >
-                {' '}
-                Results{' '}
-              </NavLink>
+              {enableResults ? (
+                <NavLink to={SEARCH} activeClassName="active">
+                  {' '}
+                  Results{' '}
+                </NavLink>
+              ) : (
+                <NavLink
+                  to={SEARCH}
+                  className={'disabled'}
+                >
+                  {' '}
+                  Results{' '}
+                </NavLink>
+              )}
             </li>
             <li className="sidebar-menu">
               <NavLink
                 to={DOWNLOAD}
                 activeClassName="active"
-                className={`${downloadCount ? '': 'disabled'}`}
               >
                 {' '}
-                My Downloads{' '}({downloadCount})
+                My Downloads ({downloadCount})
               </NavLink>
             </li>
           </ul>
