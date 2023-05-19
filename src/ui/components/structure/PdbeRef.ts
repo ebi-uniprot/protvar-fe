@@ -13,6 +13,14 @@ class PdbeRef {
         }
     }
 
+    subscribeOnload(pos: number) {
+        if (this.ref && this.ref.current) {
+            (this.ref.current as any).viewerInstance.events.loadComplete.subscribe(() => {
+                this.onloadSelect(pos)
+            });
+        }
+    }
+
     onloadSelect(pos: number) {
         (this.ref.current as any).viewerInstance.visual.select({
             data: [{
