@@ -6,7 +6,7 @@ import { MappingRecord } from '../../utills/Convertor'
 const DefaultPageContent = (props: {
   children: JSX.Element
   downloadCount: number
-  searchResults: MappingRecord[][][]
+  searchResults?: MappingRecord[][][]
 }) => {
   const [enableResults, setEnableResults] = useState(false)
   const { children, downloadCount, searchResults } = props
