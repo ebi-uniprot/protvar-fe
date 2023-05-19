@@ -219,8 +219,8 @@ Columns can contain “N/A” as a value indicating either:
 
 - The user did not requested the data (for example if only mappings are requested without annotation)
 - We can not provide a value for reasons such as:
--  No data exists in our database in the category for this variant
--  One of the external APIs is not working
+ - No data exists in our database in the category for this variant
+ - One of the external APIs is not working
 
 ###### Download Help File Contents
 
