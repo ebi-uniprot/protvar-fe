@@ -268,13 +268,13 @@ Only numbers 1-22 or “X” or “Y” or mitochondria (chrM, mitochondria, mit
 <a name="mapping-notes"></a>**G - Mapping_notes:** Single column which describes potential issue with the user input. It will contain “N/A” if there is nothing to report. Possible issues include:  
 - Invalid input - Such as a nonesense chromosome, a non-numeric coordinate of invalid nucleotides in either the reference or variant allele positions
 - The input sequence does not match the reference. Possible reasons for this include:
- - user error  
- - an updated sequence in the reference build
- - because the user has submitted variants from a different reference genome such as GRCh37)
+  - user error  
+  - an updated sequence in the reference build
+  - because the user has submitted variants from a different reference genome such as GRCh37)
 - Mapping not found. Reasons may include:
- - variant in an intergenic region
- - variant in an intronic region
- - no transcript maps to the canonical isoform
+  - variant in an intergenic region
+  - variant in an intronic region
+  - no transcript maps to the canonical isoform
 
 ###### <a name="genomic-mapping-columns"></a>Genomic Mapping Columns
 
