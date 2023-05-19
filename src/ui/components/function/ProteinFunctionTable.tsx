@@ -28,7 +28,7 @@ function ProteinFunctionTable(props: ProteinFunctionTableProps) {
   return <table>
     <thead>
       <tr>
-        <th>General Protein Function (not specific to the variant)</th>
+        <th>General Protein Function (not specific to the variant) from UniProt</th>
       </tr>
     </thead>
     <tbody>

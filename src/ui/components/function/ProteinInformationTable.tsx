@@ -11,7 +11,7 @@ function ProteinInformationTable(props: ProteinInformationTableProps) {
   return <table>
     <tbody>
       <tr>
-        <th>Further General Protein Information (not specific to the variant)</th>
+        <th>Further General Protein Information (not specific to the variant) from UniProt</th>
       </tr>
       <tr>
         <td>
