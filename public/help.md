@@ -257,7 +257,7 @@ Only numbers 1-22 or “X” or “Y” or mitochondria (chrM, mitochondria, mit
 
 <a name="coordinate"></a>**C - Coordinate:** The genomic coordinate position of the variant as interpreted from the user input. Only numeric characters.
 
-<a name="id"></a>**D - ID:** This is a field which can optionally be provided by the user to keep track of their variants or store information about teh variant which will be retained in the output file.
+<a name="id"></a>**D - ID:** This is a field which can optionally be provided by the user to keep track of their variants or store information about the variant which will be retained in the output file.
 
 <a name="reference-allele"></a>**E - Reference_allele:** This is the reference allele. It is defined by the nucleotide identity at that coordinate in the reference genome build. If the user inputted nucleotide differs from the reference build the reference build nucleotide identity will be shown and not the user inputted identity. This conflict will be noted in the "notes" column. Any user inputs except 'A', 'G', 'C', 'T' will be flagged in the "notes section.
 
