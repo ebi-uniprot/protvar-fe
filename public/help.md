@@ -146,7 +146,7 @@ Because dbSNP IDs may represent more than one variant allele, ProtVar will separ
 <a name="ensembl-identifiers"></a>**Ensembl identifiers:** The ENSG (ensembl gene identifiers), ENSP (Ensembl translaed sequence identifiers) and ENST (Ensembl transcript identifiers) are given for each isoform. The identifiers in the "Function Annotation" section correspond to those associated with the UniProt canonical isoform. More information about Ensembl stable IDs can be found here: [Ensembl website](http://www.ensembl.org/info/genome/stable_ids/index.html)
 
 <a name="eve"></a>**EVE:** EVE is “a model for the prediction of clinical significance of human variants based on sequences of diverse organisms across evolution”. To cite the use of EVE scores: [EVE paper](https://www.nature.com/articles/s41586-021-04043-8)
-To explore EVE scores further visit the website: https://evemodel.org/g
+To explore EVE scores further visit the [EVE website](https://evemodel.org/)
 
 <a name="function-annotationse"></a>**Function Annotations:** Function annotations are principally sourced from UniProt. There are three sections. The first section contains annotations describing the variant position only. The second section describes the region surrounding the variant as the variant may play a role in a function reliant on the region. The third section describes the role of the protein more generally in order for the user to predict the effect on the organism if the variant affects protein function.
 
