@@ -232,9 +232,10 @@ The output file will be in CSV (comma separated values) format. The file is divi
 - [Genomic Mapping columns](#genomic-mapping-columns) 
 - [Protein Mapping Columns](#protein-mapping-columns)  
 - [Function Annotations Columns](#function-annotations-columns)  
+- [Predictions Columns](#predictions-columns)
 - [Population Observations Columns](#population-observations-columns)  
 - [Structure Annotations Columns](#structure-annotations-columns)  
-- [Predictions Columns](#predictions-columns)
+
 
 The descriptions of the columns in the download file below are numbered from left to right. The letters in brackets correspond to the columns when visualised in a spreadsheet.
 
