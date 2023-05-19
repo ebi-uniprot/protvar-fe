@@ -95,7 +95,7 @@ function getRegions(regions: Array<ProteinFeature>, accession: string, pockets: 
     regionsList.push(list);
   });
   return <>
-    <b>Curated observations</b>
+    <b>Curated observations from UniProt</b>
     {regionsList}
     <br/><br/>
     <b>Predictions</b>

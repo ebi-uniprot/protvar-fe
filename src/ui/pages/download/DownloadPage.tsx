@@ -6,6 +6,7 @@ import {LOCAL_DOWNLOADS} from "../../../constants/const"
 //import { v4 as uuidv4 } from 'uuid';
 import {DownloadResponse} from "../../../types/DownloadResponse";
 import Notify from "../../elements/Notify";
+import { MappingRecord } from "../../../utills/Convertor";
 
 /*
 function testDownloadRes() : DownloadResponse {
@@ -26,7 +27,6 @@ downloadStatusIcon[-1] = 'download-na';
 function DownloadPageContent() {
     let localDownloads = JSON.parse(localStorage.getItem(LOCAL_DOWNLOADS) || "[]")
     const [downloads, setDownloads] = useState<DownloadResponse[]>(localDownloads)
-    //
 
     useEffect(() => {
         let ds: DownloadResponse[] = JSON.parse(localStorage.getItem(LOCAL_DOWNLOADS) || "[]")
@@ -47,6 +47,10 @@ function DownloadPageContent() {
     useEffect(() => {
         localStorage.setItem(LOCAL_DOWNLOADS, JSON.stringify(downloads));
     }, [downloads])
+
+    if (!downloads.length) {
+        return (<strong className="padding-left-1x">There have been no downloads.</strong>)
+    }
 
     return <div className="container">
         <strong>{downloads.length} download{downloads.length > 1 ? 's' : ''}</strong>
@@ -108,7 +112,7 @@ function downloadFile(url: string) {
     window.open(url, "_blank");
 }
 
-function DownloadPage() {
-    return <DefaultPageLayout content={<DownloadPageContent />} />
+function DownloadPage(props: {searchResults: MappingRecord[][][]}) {
+    return <DefaultPageLayout content={<DownloadPageContent />} searchResults={props.searchResults}/>
 }
 export default DownloadPage;

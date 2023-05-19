@@ -129,7 +129,6 @@ function App(props: AppProps) {
   };
 
   function mappingApiCall(inputSubArray: string[]) {
-      console.log("in mappingApiCall " + assembly)
     mappings(inputSubArray, assembly.toString())
       .then((response) => {
         const records = convertApiMappingToTableRecords(response.data.inputs);
@@ -164,6 +163,7 @@ function App(props: AppProps) {
             updateAssembly={updateAssembly}
             fetchPasteResult={fetchPasteResult}
             fetchFileResult={fetchFileResult}
+            searchResults={searchResults}
           />
         )}
       />
@@ -184,7 +184,7 @@ function App(props: AppProps) {
       <Route path={API_ERROR} render={() => <APIErrorPage />} />
       <Route path={ABOUT} render={() => <AboutPage />} />
       <Route path={CONTACT} render={() => <ContactPage />} />
-      <Route path={DOWNLOAD} render={() => <DownloadPage />} />
+      <Route path={DOWNLOAD} render={() => <DownloadPage searchResults={searchResults}/>} />
       <Route path={HELP} render={() => <HelpPage />} />
 
         <Route exact path="/test">

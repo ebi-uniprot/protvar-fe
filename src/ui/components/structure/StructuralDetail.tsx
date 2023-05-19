@@ -49,6 +49,7 @@ function StructuralDetail(props: StructuralDetailProps) {
           if (response.data.length > 0) {
             id = response.data[0].pdb_id
             setSelected(response.data[0]);
+            pdbeRef.subscribeOnload(response.data[0].start)
           }
           return getPredictedStructure(isoFormAccession);
         }).then(response => {
@@ -56,6 +57,7 @@ function StructuralDetail(props: StructuralDetailProps) {
           if (response.data.length > 0 && !id) {
             // if id already set (pdb id), use that, otherwise, use alphaFold id
             setSelected(response.data[0])
+            pdbeRef.subscribeOnload(aaPosition)
           }
           return getFunctionalData('/function/' + isoFormAccession + '/' + aaPosition)
         }).then(response => {
@@ -65,20 +67,10 @@ function StructuralDetail(props: StructuralDetailProps) {
         }).catch(err => {
           console.log(err);
         });
-  }, [proteinStructureUri, isoFormAccession, aaPosition]);
+  }, [proteinStructureUri, isoFormAccession, aaPosition, pdbeRef]);
 
   if (!selected) {
     return <LoaderRow />
-  }
-
-  if (pdbeRef.ref && pdbeRef.ref.current) {
-      (pdbeRef.ref.current as any).viewerInstance.events.loadComplete.subscribe(() => {
-          if ("pdb_id" in selected) {
-              pdbeRef.onloadSelect(selected.start)
-          } else if ("entryId" in selected) {
-              pdbeRef.onloadSelect(aaPosition)
-          }
-      });
   }
 
   return (
