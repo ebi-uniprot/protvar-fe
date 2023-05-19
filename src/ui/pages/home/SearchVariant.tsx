@@ -72,7 +72,7 @@ const SearchVariant = (props: VariantSearchProps) => {
     }
     
   };
-
+/*
   const protACTitle =
     'Supported format examples:\n' +
     ' ACC X 999 Y\n' +
@@ -93,6 +93,12 @@ const SearchVariant = (props: VariantSearchProps) => {
     ' 999=protein position.'
 
   const rsTitle = 'Search by Variant (rs) IDs.'
+*/
+  const protACTitle = 'for e.g. in one of the following formats\n' +
+      'P22304 Ala205Pro\n' +
+      'P22304 A205P\n' +
+      'P22304 205 A/P\n'
+  const rsTitle = 'dbSNP reference number'
 
   const handleSubmit = (e: React.MouseEvent) => {
     e.preventDefault()
