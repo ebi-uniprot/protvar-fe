@@ -88,7 +88,7 @@ Clicking each category in the contents below will take you to an annotated image
 **H** - Change the settings.  
 **I** - Selection mode for residues or regions.  
 **J** - All experimental structures which contain the variant position are shown in this table.  
-**K** - The latest AlphaFold model for the protein containing the variant. Predicted pockets are also displayed in this table if they contain the variant position.
+**K** - The latest AlphaFold model for the protein containing the variant. Predicted pockets are also displayed in this table if they contain the variant position.  
 **L** - Predicted [protein-protein interactions](#protein-protein-interfaces) are displayed in this table if the variant is considered to be part of the interface.
 
 ###### <a name="download-options"></a>Download Options
