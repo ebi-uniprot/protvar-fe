@@ -41,7 +41,7 @@ interface PageSpecificStructureProps {
 
 const PageSpecificStructure = (props: PageSpecificStructureProps) => {
     return (
-        <td colSpan={10} className="expanded-row">
+        <td colSpan={10} className="expanded-row structure-data-cell">
             <div className="significances-groups">
                 <div className="column">
                     <h5><img src={StructureIcon} className="click-icon" alt="structure icon" title="3D structure" /> Structures</h5>

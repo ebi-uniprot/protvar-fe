@@ -23,7 +23,7 @@ interface PdbInfoTableProps {
 
 function PdbInfoTable(props: PdbInfoTableProps) {
   return <>
-    <div>
+    <div className="tableFixHead">
       <a href={PDB_URL_INTERFACE_BY_PROTEIN + props.isoFormAccession}>Further information from PDBeKB <ExternalLinkIcon width={12.5}/></a>
       <table>
         <thead>

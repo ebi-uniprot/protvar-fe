@@ -6,7 +6,7 @@
 		height: 200px;
 	}
 	.tableFixHead thead th {
-		position: sticky;
+		// position: sticky;
 		top: 0;
 	}
 
@@ -456,6 +456,10 @@
 
 	.expanded-row {
 		background-color: #CDD9E4;
+	}
+
+	.structure-data-cell {
+		vertical-align: top;
 	}
 
 	.significances-groups {
