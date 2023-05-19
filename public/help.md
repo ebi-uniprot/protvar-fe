@@ -301,7 +301,8 @@ They calculate a score for every possible change in the genome. The phred-like s
 
 <a name="canonical-isoform-transcripts"></a>**L - Canonical_isoform_transcripts:** The transcripts and transcript translation identifiers which correspond to the UniProt canonical isoform. Transcripts (DNA sequences) have an ID starting with “ENST”. There can be several different transcripts which encode the same
 isoform because they may differ in their untranslated (non-coding) regions at either end. The translated transcript has an ID
-starting “ENSP”. For example [ENSP00000337353(ENST00000335725,ENST00000123456).
+starting “ENSP”. For example:  
+>[ENSP00000337353(ENST00000335725,ENST00000123456).
 
 <a name="mane-transcript"></a>**M - MANE_transcript:** MANE (Matched Annotation between NCBI and EBI). - One of the transcripts is selected as the representative by NCBI and Ensembl. This transcript may not translate into the UniProt canonical isoform sequence. If the MANE select corresponds directly to the isoform described in the row the MANE select ID is given. If they do not match "N/A" is found in the column and the MANE select ID is found with the corresponding transcript in the "Alternative_isoform_mappings" column. More information can be found on the [Ensembl website](https://www.ensembl.org/info/genome/genebuild/mane.html)
 
