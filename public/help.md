@@ -24,15 +24,15 @@ Clicking each category in the contents below will take you to an annotated image
 
 ![ProtVar Home Page](images/home_page.png)
 
-**A.** ProtVar retrieves annotations and predictions for human [missense](#missense) variants  
-**B.** The [results page](#results-page) page following variant list submission  
+**A.** ProtVar retrieves annotations and predictions for human [missense](#missense) variants.  
+**B.** The [results page](#results-page) page following variant list submission.  
 **C.** [My downloads](#my-downloads) contains all the files you have submitted for download. These can be downloaded from here to your local computer.  
-**D.** This can be used to [contact](#contact) ProtVar with questions, comments or suggestions  
-**E.** Contains useful information to help users understand the ProtVar resource  
+**D.** This can be used to [contact](#contact) ProtVar with questions, comments or suggestions.  
+**E.** About contains information about the ProtVar resource. HELP contains information to help users use the ProtVar resource.  
 **F.** Variants can be pasted in the box and then submitted to ProtVar by clicking “Search”. Several [data types](#data-types) and formats can be submitted. ProtVar maps [genomic coordinates to protein positions](#genomic-coordinates-to-protein-positions) and [protein positions to genomic coordinates](#protein-position-to-genomic-coordinates)  
 **G.** Users can choose which [genome assembly](#genome-assembly) to use for mapping or leave it for ProtVar to decide.  
 **H.** [File upload](#file-upload) can be used for uploading large files from your computer.  
-**I.** [ProtVar REST API](#protvar-rest-api) can be used to obtain data programmatically.
+**I.** [ProtVar REST API](#protvar-rest-api) can be used to obtain data programmatically.  
 
 ###### <a name="results-page"></a>Results Page
 
@@ -41,16 +41,16 @@ Clicking each category in the contents below will take you to an annotated image
 **A.** Return to [home page](#home-page) where new variants can be submitted.  
 **B.** The results page, showing the results of variant submission.  
 **C.** [My downloads](#my-downloads) contains all the files you have submitted for download. These can be downloaded from here to your local computer.  
-**D.** This can be used to [contact](#contact) ProtVar with questions, comments or suggestions  
-**E.** Contains useful information to help users understand the ProtVar resource  
-**F.** Navigate to the previous or next page of results  
-**G.** Choose how many results to display on the page  
+**D.** This can be used to [contact](#contact) ProtVar with questions, comments or suggestions.  
+**E.** About contains information about the ProtVar resource. HELP contains information to help users use the ProtVar resource.  
+**F.** Navigate to the previous or next page of results.  
+**G.** Choose how many results to display on the page.  
 **H.** Download all variant results. The file will be available in [My downloads](#my-downloads)  
 **I.** The data is split into [genomic position](#genomic-position) and [protein position](#protein-position) and [annotations](#annotations)
-**J.** The [data type](#data-types) used to submit the variant is shown in yellow. Multiple lines may be shown for a single input in cases such as overlapping genes or when the specific SNP is ambiguous  
-**K.** [CADD](#cadd) score is a nucleotide level predictor of pathogenicity  
-**L.** Mappings to different [isoforms](#isoforms) can be observed by expanding  
-**M.** [EVE](#eve) is an amino acid level predictor of pathogenicity  
+**J.** The [data type](#data-types) used to submit the variant is shown in yellow. Multiple lines may be shown for a single input in cases such as overlapping genes or when the specific SNP is ambiguous.  
+**K.** [CADD](#cadd) score is a nucleotide level predictor of pathogenicity.  
+**L.** Mappings to different [isoforms](#isoforms) can be observed by expanding.  
+**M.** [EVE](#eve) is an amino acid level predictor of pathogenicity.  
 **N.** Each of three Annotation types [Function annotation](#function-annotations) and [Population Observations](#population-observations) and [Structure Annotations](#structure-annotations) regarding each variant can be explored by clicking on the icons.
 
 ###### <a name="function-annotations"></a>Function Annotations
