@@ -166,7 +166,7 @@ To explore EVE scores further visit the [EVE website](https://evemodel.org/)
 <a name="hgvs"></a>**HGVS:** Variants can be submitted to ProtVar using the HGVS nomenclature standard for single nucleotide polymorphisms. This format differs from VCF in that it incorporates the reference sequence the coordinate is based upon, for example: 
 >NC_000023.11:g.149498202C>G  
 
-Futher details about the HGVS format can be found here: https://varnomen.hgvs.org/bg-material/simple/
+Futher details about the HGVS format can be found on the [HGVS website](https://varnomen.hgvs.org/bg-material/simple/)
 
 <a name="isoforms"></a>**Isoforms:** ProtVar maps from genomic coordinates to as many different isoforms of the protein as possible. This is limited by the match between the translated transcripts and isoform sequences in UniProt. The isoform displayed by default is the Uniprot canonical isoform which is denoted by a logo “can”. All of the annotations are based upon the numbering in the canonical isoform. Other isoforms, where the variant may be in a different numerical position, are denoted by a logo “iso”.
 
