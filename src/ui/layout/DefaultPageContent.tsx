@@ -46,7 +46,6 @@ const DefaultPageContent = (props: {
               <NavLink
                 to={DOWNLOAD}
                 activeClassName="active"
-                className={`${downloadCount ? '' : 'disabled'}`}
               >
                 {' '}
                 My Downloads ({downloadCount})

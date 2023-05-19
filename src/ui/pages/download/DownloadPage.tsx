@@ -27,7 +27,6 @@ downloadStatusIcon[-1] = 'download-na';
 function DownloadPageContent() {
     let localDownloads = JSON.parse(localStorage.getItem(LOCAL_DOWNLOADS) || "[]")
     const [downloads, setDownloads] = useState<DownloadResponse[]>(localDownloads)
-    //
 
     useEffect(() => {
         let ds: DownloadResponse[] = JSON.parse(localStorage.getItem(LOCAL_DOWNLOADS) || "[]")
@@ -48,6 +47,10 @@ function DownloadPageContent() {
     useEffect(() => {
         localStorage.setItem(LOCAL_DOWNLOADS, JSON.stringify(downloads));
     }, [downloads])
+
+    if (!downloads.length) {
+        return (<strong className="padding-left-1x">There have been no downloads.</strong>)
+    }
 
     return <div className="container">
         <strong>{downloads.length} download{downloads.length > 1 ? 's' : ''}</strong>

@@ -35,17 +35,17 @@ function LegendModal() {
             onClick={() => setShowModel(false)}
           >
             <i className="bi bi-x-lg"></i>
-        </span>
+          </span>
         </div>
         <div className="legend-modal-content">
-            <div className="legend-div">
-            <EveScoreColors />
-            </div>
           <div className="legend-div">
-          <CaddLegendColors />
+            <EveScoreColors />
           </div>
           <div className="legend-div">
-          <ResultTableButtonsLegend />
+            <CaddLegendColors />
+          </div>
+          <div className="legend-div">
+            <ResultTableButtonsLegend />
           </div>
         </div>
       </Modal>
