@@ -317,23 +317,19 @@ Contains information regarding mapping of the user variant input to the encoded 
 - [Consequences](#consequences)
 
 
-<a name="uniprot-canonical"></a>**N - Uniprot canonical_isoform (non_canonical):** This is the accession of the canonical isoform of the protein if ProtVar can map to this. ProtVar always attempts to map to this isoform because
-most of the UniProt annotations are based on numbering in the canonical. Sometimes ProtVar cannot map to the canonical isoform
-but can to another isoform (sequence version of the protein). In these cases brackets are displayed around the accession to show that the mapping is to a non-canonical isoform.
-accessions? P12345
+<a name="uniprot-canonical"></a>**N - Uniprot canonical_isoform (non_canonical):** This is the accession of the canonical isoform of the protein if ProtVar is able to map th evariant to it. ProtVar always attempts to map to this isoform because most of the UniProt annotations are based on numbering in the canonical isoform. Sometimes ProtVar cannot map to the canonical isoform
+but can to an alternative isoform (sequence version of the protein). In these cases brackets are displayed around the accession to show that the mapping is to a non-canonical isoform.
 
-<a name="alternative-isoform-mappings"></a>**O - Alternative_isoform_mappings** Details about each isoform including the isoform accession, amino acid position in the isoform, amino acid change,
-consequence and ENSP and ENST identifiers. Many genes have several transcripts caused by alternative splicing,
-some of which translate into different isoforms. Here we list details about all the isoforms where we can map from
-genomic location to isoform. Isoforms are separated by "|".
+<a name="alternative-isoform-mappings"></a>**O - Alternative_isoform_mappings:** Details about each isoform including the isoform accession, amino acid position in the isoform, amino acid change,
+consequence and ENSP and ENST identifiers. Many genes have several transcripts caused by alternative splicing, some of which translate into different isoforms. Here we list details about all the isoforms where we can map from genomic location to isoform. Isoforms are separated by "|".
 
-<a name="protein-name"></a>**P - Protein_name** The full protein name from UniProt.
+<a name="protein-name"></a>**P - Protein_name:** The full protein name from UniProt.
 
-<a name="amino-acid-position"></a>**Q - Amino_acid_position** The position of the amino acid in the UniProt canonical isoform or the alternative isoform shown in the Uniprot*canonical_isoform*(non_canonical) column.
+<a name="amino-acid-position"></a>**Q - Amino_acid_position** The position of the amino acid in the UniProt canonical isoform or the alternative isoform shown in the UniProt canonical_isoform(non_canonical) column.
 
-<a name="amino-acid-change"></a>**R - Amino_acid_change** The identity of the reference and alternative amino acid caused by the variant three letter amino acid nomenclature separated by "/". Stop codons are shown as asterisk (\*).
+<a name="amino-acid-change"></a>**R - Amino_acid_change:** The identity of the reference and variant amino acid caused by the missense mutation. Three letter amino acid nomenclature is used separated by "/". Stop codons are shown as an asterisk (\*).
 
-<a name="consequences"></a>**S - Consequences** The consequence of the variant on the amino acid/protein.
+<a name="consequences"></a>**S - Consequences:** The consequence of the variant on the amino acid sequence.
 
 ###### <a name="function-annotations-columns"></a>Function Annotations Columns
 
