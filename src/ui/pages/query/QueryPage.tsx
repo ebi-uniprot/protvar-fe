@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import CaddLegendColors from '../../components/search/CaddLegendColors'
 import ResultTable from '../../components/search/ResultTable'
-import ResultTableButtonsLegend from '../../components/search/ResultTableButtonsLegend'
 import DefaultPageLayout from '../../layout/DefaultPageLayout'
 import {
   convertApiMappingToTableRecords,
