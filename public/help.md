@@ -407,7 +407,7 @@ version of the reference genome assembly: [HGVS website](https://varnomen.hgvs.o
 <a name="cytogenetic-band"></a>**AK - Cytogenetic_band:** The region of the chromosome containing the variant position. Cytogenic bands are areas of chromosomes rich in
 actively transcribing DNA.
 
-<a name="other-identifiers-for-the-variant"></a>**AL - Other_identifiers_for_the_variant:** Description of the same variant (position and nucleotide change) as the user entered variant in different databases. The source database name is given, separated by the variant ID with "-" then separated from the clinical consequence with ";". Each separate database is separated by "|". For example, 
+<a name="other-identifiers-for-the-variant"></a>**AL - Other_identifiers_for_the_variant:** Description of the same variant (position and nucleotide change) as the user entered variant in different databases. The source database name is given, separated by the variant ID with "-" then separated from the clinical consequence with ";". Each separate database is separated by "|". For example: 
 > ClinVar-RCV000003593;Pathogenic|UniProt-VAR_017144;Pathogenic.
 
 <a name="diseases-associated-with-variant"></a>**AM - Diseases_associated_with_variant:** Describes diseases from literature which have been associated with the variant containing protein. There may be multiple diseases listed which are separated by “|”. The evidence for each disease is in brackets which may be a CliVar ID or Pubmed link to a publication.
