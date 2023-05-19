@@ -129,7 +129,6 @@ function App(props: AppProps) {
   };
 
   function mappingApiCall(inputSubArray: string[]) {
-      console.log("in mappingApiCall " + assembly)
     mappings(inputSubArray, assembly.toString())
       .then((response) => {
         const records = convertApiMappingToTableRecords(response.data.inputs);
