@@ -363,8 +363,9 @@ These columns contain functional annotations regarding the variant amino acid, r
 
 <a name="sequence-last-updated"></a>**Z - Sequence_last_updated:** When the canonical isoform sequence was last updated.
 
-<a name="protein-catalytic-activity"></a>**AA - Protein_catalytic_activity:** Describes the reactions previously ascribed to this protein. These are not necessarily reactions affected by the variant amino acid but they could be. The RHEA ID (a SIB reactions database) is given as is the evidence(s) from publications. Different reactions are separated by "|". For example:
-RHEA:25017(PubMed:[16824732,9593664,9811831])|RHEA:20629(PubMed:[9256433])
+<a name="protein-catalytic-activity"></a>**AA - Protein_catalytic_activity:** Describes the reactions previously ascribed to this protein. These are not necessarily reactions affected by the variant amino acid but they could be. The RHEA ID (a SIB reactions database) is given as is the evidence(s) from publications. Different reactions are separated by "|". For example:  
+
+> RHEA:25017(PubMed:[16824732,9593664,9811831])|RHEA:20629(PubMed:[9256433])
 
 <a name="protein-complex"></a>**AB - Protein_complex:** Describes whether the protein containing the variant exists in a complex.
 
