@@ -226,7 +226,7 @@ Columns can contain “N/A” as a value indicating either:
 
 The output file will be in CSV (comma separated values) format. The file is divided into the following general categories:
 
-- [Header Rows](#header-rows)  
+
 - [User Input Columns](#user-input-columns)  
 - [Mapping Notes Columns](#mapping-notes-columns)  
 - [Genomic Mapping columns](#genomic-mapping-columns) 
@@ -236,15 +236,7 @@ The output file will be in CSV (comma separated values) format. The file is divi
 - [Population Observations Columns](#population-observations-columns)  
 - [Structure Annotations Columns](#structure-annotations-columns)  
 
-
 The descriptions of the columns in the download file below are numbered from left to right. The letters in brackets correspond to the columns when visualised in a spreadsheet.
-
-###### <a name="header-rows"></a>Header Rows
-
-Metadata about the file and data. Theses lines include:
-
-- File version, for example - version-1
-- information about columns or columns. Values are all capital letters and words are separated by spaces
 
 ###### <a name="user-input-columns"></a>User Input Columns
 
