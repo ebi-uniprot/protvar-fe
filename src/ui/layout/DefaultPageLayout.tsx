@@ -8,8 +8,10 @@ import DefaultPageContent from './DefaultPageContent'
 import EMBLEBILogo from '../../images/embl-ebi-logo.svg'
 import openTargetsLogo from '../../images/open-targets-logo.png'
 import SignUp from "./SignUp";
+import { MappingRecord } from '../../utills/Convertor'
 interface DefaultPageLayoutProps {
-  content: JSX.Element
+  content: JSX.Element,
+  searchResults: MappingRecord[][][]
 }
 
 function DefaultPageLayout(props: DefaultPageLayoutProps) {
@@ -187,7 +189,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
               )}
 
               <div className="default-page-layout">
-                <DefaultPageContent downloadCount={numDownloads}>
+                <DefaultPageContent downloadCount={numDownloads} searchResults={props.searchResults}>
                   {content}
                 </DefaultPageContent>
               </div>

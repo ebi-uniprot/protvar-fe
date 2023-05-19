@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import { ABOUT, CONTACT } from '../../../constants/BrowserPaths'
 import { API_URL } from '../../../constants/const'
 import SearchVariant from './SearchVariant'
+import { MappingRecord } from '../../../utills/Convertor'
 
 const HomePageContent = (props: HomePageProps) => {
   const {
@@ -13,6 +14,7 @@ const HomePageContent = (props: HomePageProps) => {
     updateAssembly,
     fetchFileResult,
     fetchPasteResult,
+    searchResults
   } = props
 
   return (
@@ -72,8 +74,9 @@ interface HomePageProps {
   updateAssembly: (assembly: Assembly) => void
   fetchFileResult: FileLoadFun
   fetchPasteResult: StringVoidFun
+  searchResults: MappingRecord[][][]
 }
 const HomePage = (props: HomePageProps) => (
-  <DefaultPageLayout content={<HomePageContent {...props} />} />
+  <DefaultPageLayout content={<HomePageContent {...props} />} searchResults={props.searchResults} />
 )
 export default HomePage
