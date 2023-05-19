@@ -40,7 +40,7 @@ Clicking each category in the contents below will take you to an annotated image
 
 **A.** Return to [home page](#home-page) where new variants can be submitted.  
 **B.** The results page, showing the results of variant submission.  
-**C.** [My downloads](#my-downloads) contains all the files you have submitted for download. These can be downloaded from here to your local computer.  
+**C.** [My downloads](#my-downloads) contains all the files you have submitted for download. These can be downloaded from here to your local computer. Users can return to the same results again by clicking the 'Results' tab.    
 **D.** This can be used to [contact](#contact) ProtVar with questions, comments or suggestions.  
 **E.** About contains information about the ProtVar resource. HELP contains information to help users use the ProtVar resource.  
 **F.** Navigate to the previous or next page of results.  
