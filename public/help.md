@@ -40,7 +40,7 @@ Clicking each category in the contents below will take you to an annotated image
 
 **A.** Return to [home page](#home-page) where new variants can be submitted.  
 **B.** The results page, showing the results of variant submission.  
-**C.** [My downloads](#my-downloads) contains all the files you have submitted for download. These can be downloaded from here to your local computer. Users can return to the same results again by clicking the 'Results' tab.    
+**C.** [My downloads](#my-downloads) contains all the files you have submitted for download. These can be downloaded from here to your local computer. Users can return to the same results again by clicking the 'Results' tab. The reults will remain during the users session or until they are replaced by new results.   
 **D.** This can be used to [contact](#contact) ProtVar with questions, comments or suggestions.  
 **E.** About contains information about the ProtVar resource. HELP contains information to help users use the ProtVar resource.  
 **F.** Navigate to the previous or next page of results.  
@@ -88,7 +88,7 @@ Clicking each category in the contents below will take you to an annotated image
 **H** - Change the settings.  
 **I** - Selection mode for residues or regions.  
 **J** - All experimental structures which contain the variant position are shown in this table.  
-**K** - The latest AlphaFold model for the protein containing the variant. Predicted pockets are also displayed in this table if they contain the variant position.  
+**K** - The latest AlphaFold model for the protein containing the variant. [Predicted pockets](#predicted-pockets) are also displayed in this table if they contain the variant position.  
 **L** - Predicted [protein-protein interactions](#protein-protein-interfaces) are displayed in this table if the variant is considered to be part of the interface.
 
 ###### <a name="download-options"></a>Download Options
