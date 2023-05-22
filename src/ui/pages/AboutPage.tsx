@@ -1,7 +1,7 @@
 import DefaultPageLayout from "../layout/DefaultPageLayout";
 import React from "react";
-import EMBLEBILogo from "../../images/embl-ebi-logo.svg";
-import openTargetsLogo from "../../images/open-targets-logo.png";
+import EMBLLogo from "../../images/EMBL_logo.jpg";
+import OTLogo from "../../images/OT_logo.png";
 import UniprotLogo from "../../images/uniprot-logo.svg";
 import EnsemblLogo from "../../images/ensembl-logo.png";
 import PDBeLogo from "../../images/pdbe-logo.png";
@@ -27,23 +27,21 @@ function AboutPageContent() {
       </p>
 
       <p>
-          It is funded by <img
-            src={EMBLEBILogo}
+          It is funded by EMBL <a href="https://www.embl.de/" target="_blank" rel="noreferrer"><img
+            src={EMBLLogo}
             loading="lazy"
             alt=""
-            width="130"
-            height="50"
-        /> and <img
-            src={openTargetsLogo}
+            width="80"
+      /></a> and Open Targets <a href="https://www.opentargets.org/" target="_blank" rel="noreferrer"><img
+            src={OTLogo}
             loading="lazy"
             alt=""
-            width="130"
-            height="50"
-        />
+            width="60"
+      /></a>
       </p>
 
       <p>
-        ProtVar is maintained by the UniProt protein function development team.
+        ProtVar is developed and maintained by <a href="https://www.ebi.ac.uk/people/person/james-stephenson" target="_blank" rel="noreferrer">James Stephenson</a> and <a href="https://www.ebi.ac.uk/people/person/prabhat-totoo" target="_blank" rel="noreferrer">Prabhat Totoo</a> in the <a href="https://www.ebi.ac.uk/about/teams/protein-function-development/" target="_blank" rel="noreferrer">UniProt protein function development</a> team.
       </p>
 
       <p>
@@ -78,7 +76,8 @@ function AboutPageContent() {
             alt=""
             width="120"
         /></a>&nbsp;&nbsp;
-        <a href="https://alphafold.ebi.ac.uk/" target="_blank" rel="noreferrer"><img
+        <a href="https://alphafold.ebi.ac.uk/" target="_blank" rel="noreferrer">AlphaFold</a>&nbsp;&nbsp;
+        <a href="https://www.deepmind.com/" target="_blank" rel="noreferrer"><img
             src={DMLogo}
             loading="lazy"
             alt=""
