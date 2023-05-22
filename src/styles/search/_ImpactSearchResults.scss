@@ -221,6 +221,14 @@
 		border: none;
 	}
 
+	.button-new.pagination-button.button-disabled {
+		pointer-events: unset;;
+		cursor: not-allowed;
+		background-color: #ffffff;
+		color: #c2c2c2;
+		border: none;
+	}
+
 	.button-new.download-button {
 		background-color: #014373;
 		color: #ffffff;
