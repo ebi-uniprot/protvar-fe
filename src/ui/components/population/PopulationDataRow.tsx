@@ -43,7 +43,7 @@ function PopulationDataRow(props: PopulationDataRowProps) {
             <table>
               <tbody>
                 <tr>
-                  <th>Associated Diseases</th>
+                  <th>Associated Diseases from UniProt</th>
                 </tr>
 
                 <tr>

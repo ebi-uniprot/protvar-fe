@@ -56,7 +56,7 @@ function getAssociationsTag(associations: Array<Association>) {
   if (associations && associations.length > 0) {
     return (
       <li key={uuidv1()}>
-        <b>Associated Diseases:</b>
+        <b>Associated Diseases from UniProt:</b>
         <AssociationDetails associations={associations} />
       </li>
     );

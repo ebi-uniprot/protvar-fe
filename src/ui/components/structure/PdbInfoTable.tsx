@@ -28,7 +28,7 @@ function PdbInfoTable(props: PdbInfoTableProps) {
       <table>
         <thead>
           <tr>
-            <th colSpan={5}>Experimental Structure</th>
+            <th colSpan={5}>Experimental Structure - PDBe</th>
           </tr>
           <tr>
             <th>PDB ID</th>

@@ -29,7 +29,7 @@ Clicking each category in the contents below will take you to an annotated image
 **C.** [My downloads](#my-downloads) contains all the files you have submitted for download. These can be downloaded from here to your local computer.  
 **D.** This can be used to [contact](#contact) ProtVar with questions, comments or suggestions.  
 **E.** About contains information about the ProtVar resource. HELP contains information to help users use the ProtVar resource.  
-**F.** Variants can be pasted in the box and then submitted to ProtVar by clicking “Search”. Several [data types](#data-types) and formats can be submitted. ProtVar maps [genomic coordinates to protein positions](#genomic-coordinates-to-protein-positions) and [protein positions to genomic coordinates](#protein-position-to-genomic-coordinates)  
+**F.** Variants can be pasted in the box and then submitted to ProtVar by clicking “Submit”. Several [data types](#data-types) and formats can be submitted. ProtVar maps [genomic coordinates to protein positions](#genomic-coordinates-to-protein-positions) and [protein positions to genomic coordinates](#protein-position-to-genomic-coordinates)  
 **G.** Users can choose which [genome assembly](#genome-assembly) to use for mapping or leave it for ProtVar to decide.  
 **H.** [File upload](#file-upload) can be used for uploading large files from your computer.  
 **I.** [ProtVar REST API](#protvar-rest-api) can be used to obtain data programmatically.  
@@ -40,7 +40,7 @@ Clicking each category in the contents below will take you to an annotated image
 
 **A.** Return to [home page](#home-page) where new variants can be submitted.  
 **B.** The results page, showing the results of variant submission.  
-**C.** [My downloads](#my-downloads) contains all the files you have submitted for download. These can be downloaded from here to your local computer. Users can return to the same results again by clicking the 'Results' tab.    
+**C.** [My downloads](#my-downloads) contains all the files you have submitted for download. These can be downloaded from here to your local computer. Users can return to the same results again by clicking the 'Results' tab. The reults will remain during the users session or until they are replaced by new results.   
 **D.** This can be used to [contact](#contact) ProtVar with questions, comments or suggestions.  
 **E.** About contains information about the ProtVar resource. HELP contains information to help users use the ProtVar resource.  
 **F.** Navigate to the previous or next page of results.  
@@ -88,7 +88,7 @@ Clicking each category in the contents below will take you to an annotated image
 **H** - Change the settings.  
 **I** - Selection mode for residues or regions.  
 **J** - All experimental structures which contain the variant position are shown in this table.  
-**K** - The latest AlphaFold model for the protein containing the variant. Predicted pockets are also displayed in this table if they contain the variant position.  
+**K** - The latest AlphaFold model for the protein containing the variant. [Predicted pockets](#predicted-pockets) are also displayed in this table if they contain the variant position.  
 **L** - Predicted [protein-protein interactions](#protein-protein-interfaces) are displayed in this table if the variant is considered to be part of the interface.
 
 ###### <a name="download-options"></a>Download Options
@@ -137,7 +137,7 @@ X 149498202 . C G
 ProtVar will evaluate each one and map them to the protein position in a unified format.
 
 <a name="dbsnp-id"></a>**dbSNP ID:** dbSNP is a resource which “contains human single nucleotide variations, microsatellites, and small-scale insertions and deletions." The resource can be found here: [dbSNP website](https://www.ncbi.nlm.nih.gov/snp/) Variants in ProtVar can be searched via the paste box or uploaded using dbSNP RefSNP IDs for example:  
-> rs4148323.  
+> rs4148323  
 
 Because dbSNP IDs may represent more than one variant allele, ProtVar will separate the different variant alleles onto different lines on the mapping page. This is because the different variant alleles may have different consequences to the protein
 

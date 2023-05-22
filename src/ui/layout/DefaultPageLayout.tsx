@@ -125,7 +125,6 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                               window.open(API_URL + '/docs', '_blank')
                             }
                             title="ProtVar REST API"
-                            target="_blank"
                             rel="noreferrer"
                           >
                             API
