@@ -29,7 +29,7 @@ Clicking each category in the contents below will take you to an annotated image
 **C.** [My downloads](#my-downloads) contains all the files you have submitted for download. These can be downloaded from here to your local computer.  
 **D.** This can be used to [contact](#contact) ProtVar with questions, comments or suggestions.  
 **E.** About contains information about the ProtVar resource. HELP contains information to help users use the ProtVar resource.  
-**F.** Variants can be pasted in the box and then submitted to ProtVar by clicking “Search”. Several [data types](#data-types) and formats can be submitted. ProtVar maps [genomic coordinates to protein positions](#genomic-coordinates-to-protein-positions) and [protein positions to genomic coordinates](#protein-position-to-genomic-coordinates)  
+**F.** Variants can be pasted in the box and then submitted to ProtVar by clicking “Submit”. Several [data types](#data-types) and formats can be submitted. ProtVar maps [genomic coordinates to protein positions](#genomic-coordinates-to-protein-positions) and [protein positions to genomic coordinates](#protein-position-to-genomic-coordinates)  
 **G.** Users can choose which [genome assembly](#genome-assembly) to use for mapping or leave it for ProtVar to decide.  
 **H.** [File upload](#file-upload) can be used for uploading large files from your computer.  
 **I.** [ProtVar REST API](#protvar-rest-api) can be used to obtain data programmatically.  
