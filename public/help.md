@@ -137,7 +137,7 @@ X 149498202 . C G
 ProtVar will evaluate each one and map them to the protein position in a unified format.
 
 <a name="dbsnp-id"></a>**dbSNP ID:** dbSNP is a resource which “contains human single nucleotide variations, microsatellites, and small-scale insertions and deletions." The resource can be found here: [dbSNP website](https://www.ncbi.nlm.nih.gov/snp/) Variants in ProtVar can be searched via the paste box or uploaded using dbSNP RefSNP IDs for example:  
-> rs4148323.  
+> rs4148323  
 
 Because dbSNP IDs may represent more than one variant allele, ProtVar will separate the different variant alleles onto different lines on the mapping page. This is because the different variant alleles may have different consequences to the protein
 
