@@ -104,7 +104,7 @@ Clicking each category in the contents below will take you to an annotated image
 ###### <a name="my-downloads"></a>My Downloads
 
 ![ProtVar My Downloads](images/my_downloads.png)  
-**A** - All of the users downloads for this session will be displayed in this page.  
+**A** - All of the user's downloads for this session will be displayed on this page.  
 **B** - The number of downloads for this session.  
 **C** - A date and time stamp when the download request was received.  
 **D** - ProtVar generated ID.  
@@ -122,7 +122,7 @@ ProtVar uses a limited version of Mol* with less functionality than the full ver
 
 <a name="cadd"></a>**CADD:** CADD scores “the deleteriousness of single nucleotide variants as well as insertion/deletions variants in the human genome” - from the [CADD website](https://cadd.gs.washington.edu/) CADD scores are freely available for all non-commercial applications however a licence is required for commercial applications, details of which can be found on their website. [CADD citation](https://www.nature.com/articles/ng.2892)
 
-<a name="co-located-variants"></a>**Co-located Variants:** ProtVar retrieves variants which have been reported at the same amino acid position as the variant. This mean that the point mutation itself may be any of the three nucleotide position of the codon, not necessarily the same genomic position as the user entered variant.
+<a name="co-located-variants"></a>**Co-located Variants:** ProtVar retrieves variants which have been reported at the same amino acid position as the variant. This means that the point mutation itself may be any of the three nucleotide positions of the codon, not necessarily the same genomic position as the user entered variant.
 
 <a name="contact"></a>**Contact:** If you have any problems using ProtVar or cannot retrieve the data you want then please use the contact form to get in touch with the ProtVar team who will do their best to assist you. Additionally if you have any suggestions to improve ProtVar or requests to add something new to help your work then please let us know.
 
@@ -172,7 +172,7 @@ Futher details about the HGVS format can be found on the [HGVS website](https://
 
 <a name="missense"></a>**Missense:** ProtVar retrieves annotations and predictions for the evaluation of missense mutations. Missense mutations are single nucleotide changes which result in a codon which encodes a different amino acid to the reference sequence. Synonymous mutations are also handled by ProtVar where a point mutation does not alter the encoded amino acid.
 
-<a name="my-downloads"></a>**My Downloads:** This page contains all the jobs sent for download for this browser session. This mean that if you submit several different variant sets you will see a list of jobs here. From this page you can see the status of jobs to check if they are ready. When they are, the files can be downloaded to your local machine.
+<a name="my-downloads"></a>**My Downloads:** This page contains all the jobs sent for download for this browser session. This means that if you submit several different variant sets you will see a list of jobs here. From this page you can see the status of jobs to check if they are ready. When they are, the files can be downloaded to your local machine.
 
 <a name="paste"></a>**Paste:** Several thousand variants can be pasted into the box (for longer lists please upload a file).
 
@@ -184,11 +184,11 @@ Futher details about the HGVS format can be found on the [HGVS website](https://
 
 <a name="protein-pockets"></a>**Protein Pockets:** Protein pockets are predicted based on geometry and physico-chemical properties from the regions of high confidence in the AlphaFold2 models.
 
-<a name="protein-position"></a>**Protein Position:** Variants annotations can be accessed in ProtVar via their protein accession and position. The proteins should be named according to the UniProt canonical isoform accession and numbering. ProtVar maps the protein position to the genomic coordinates of the relevant codon on the GRCh38 assembly. ProtVar then considers the codon sequence and the reference and variant amino acids provided by the user to calculate the exact coordinate(s) and the variant nucleotide(s). If there is more than one variant or coordinate which could be possible then both alternatives are shown on different rows in the results.
+<a name="protein-position"></a>**Protein Position:** Variant annotations can be accessed in ProtVar via their protein accession and position. The proteins should be named according to the UniProt canonical isoform accession and numbering. ProtVar maps the protein position to the genomic coordinates of the relevant codon on the GRCh38 assembly. ProtVar then considers the codon sequence and the reference and variant amino acids provided by the user to calculate the exact coordinate(s) and the variant nucleotide(s). If there is more than one variant or coordinate which could be possible then both alternatives are shown on different rows in the results.
 
-<a name="protein-position-to-genomic-coordinates"></a>**Protein Position to Genomic Coordinates:** If the user enters a UniProt accession and position the variant will firstly be mapped to the genomic location on the GRCh38 reference. ProtVar will then retrieve information based on that position. ProtVar uses the codon sequence of the refrence and the amino acid variant to calculate which of the positions in the codon must be changed and to whic other nucleotide to affect the user entered change. This means that the result is not always a single genomic position or nucleotide change if more than one change can cause the same amino acid variation.
+<a name="protein-position-to-genomic-coordinates"></a>**Protein Position to Genomic Coordinates:** If the user enters a UniProt accession and position the variant will firstly be mapped to the genomic location on the GRCh38 reference. ProtVar will then retrieve information based on that position. ProtVar uses the codon sequence of the reference and the amino acid variant to calculate which of the positions in the codon must be changed and to which other nucleotide to affect the user entered change. This means that the result is not always a single genomic position or nucleotide change if more than one change can cause the same amino acid variation.
 
-<a name="protvar-rest-api"></a>**ProtVar REST API:** The REST API can be used to access single or groups of positions programatically without needing to use the user interface. This may be useful for embedding in a pipeline or if the user wants to write a parser to extract specific information from the resulting json object.
+<a name="protvar-rest-api"></a>**ProtVar REST API:** The REST API can be used to access single or groups of positions programmatically without needing to use the user interface. This may be useful for embedding in a pipeline or if the user wants to write a parser to extract specific information from the resulting json object.
 
 <a name="region"></a>**Region:** The region has no fixed size but is simply the area surrounding the variant position in sequence space. This may include structural features such as helices or functional features such as binding regions.
 
@@ -265,8 +265,8 @@ Only numbers 1-22 or “X” or “Y” or mitochondria (chrM, mitochondria, mit
 
 ###### <a name="mapping-notes-columns"></a>Mapping Notes Columns
 
-<a name="mapping-notes"></a>**G - Mapping_notes:** Single column which describes potential issue with the user input. It will contain “N/A” if there is nothing to report. Possible issues include:  
-- Invalid input - Such as a nonesense chromosome, a non-numeric coordinate of invalid nucleotides in either the reference or variant allele positions
+<a name="mapping-notes"></a>**G - Mapping_notes:** Single column which describes potential issues with the user input. It will contain “N/A” if there is nothing to report. Possible issues include:  
+- Invalid input - Such as a nonsense chromosome, a non-numeric coordinate of invalid nucleotides in either the reference or variant allele positions
 - The input sequence does not match the reference. Possible reasons for this include:
   - user error  
   - an updated sequence in the reference build
@@ -294,9 +294,9 @@ hyphens in specific groups.
 three corresponding nucleotides but containing the alternative nucleotide. The position which is changed is capitalised,
 for example aCg/aTg where the middle nucleotide of the codon is changed from a Cytosine (C) to a Thymine (T).
 
-<a name="strand"></a>**J - Strand:** The reference genome and variants are stated as the positive strand only, therefore if a user enteres G->T variant but the gene is on the negative strand the codon change displayed will be C->A (the reverse complement).
+<a name="strand"></a>**J - Strand:** The reference genome and variants are stated as the positive strand only, therefore if a user enters G->T variant but the gene is on the negative strand the codon change displayed will be C->A (the reverse complement).
 
-<a name="cadd-phred-like-score"></a>**K - CADD_phred_like_score:** The CADD (Combined Annotation Dependent Depletion) score is a nucleotide specific pathogenicty score devised at the University of Washington - [CADD website](https://cadd.gs.washington.edu/)
+<a name="cadd-phred-like-score"></a>**K - CADD_phred_like_score:** The CADD (Combined Annotation Dependent Depletion) score is a nucleotide specific pathogenicity score devised at the University of Washington - [CADD website](https://cadd.gs.washington.edu/)
 They calculate a score for every possible change in the genome. The phred-like score ("scaled C-scores") ranges from 1 to 99. It is based on the rank of each variant relative to all possible 8.6 billion substitutions in the human reference genome.
 
 <a name="canonical-isoform-transcripts"></a>**L - Canonical_isoform_transcripts:** The transcripts and transcript translation identifiers which correspond to the UniProt canonical isoform. Transcripts (DNA sequences) have an ID starting with “ENST”. There can be several different transcripts which encode the same
@@ -304,7 +304,7 @@ isoform because they may differ in their untranslated (non-coding) regions at ei
 starting “ENSP”. For example:  
 >[ENSP00000337353(ENST00000335725,ENST00000123456).
 
-<a name="mane-transcript"></a>**M - MANE_transcript:** MANE (Matched Annotation from NCBI and EBI). - One of the transcripts is selected as the representative by NCBI and Ensembl. This transcript may not translate into the UniProt canonical isoform sequence. If the MANE Select corresponds directly to the isoform described in the row the MANE Select ID is given. If they do not match "N/A" is found in the column and the MANE Select ID is found with the corresponding transcript in the "Alternative_isoform_mappings" column. More information can be found on the [Ensembl website](https://www.ensembl.org/info/genome/genebuild/mane.html)
+<a name="mane-transcript"></a>**M - MANE_transcript:** MANE (Matched Annotation from NCBI and EBI). - One of the transcripts is selected as the representative by NCBI and Ensembl. This transcript may not translate into the UniProt canonical isoform sequence. If the MANE Select corresponds directly to the isoform described in the row the MANE Select ID is given. If they do not match, "N/A" is found in the column and the MANE Select ID is found with the corresponding transcript in the "Alternative_isoform_mappings" column. More information can be found on the [Ensembl website](https://www.ensembl.org/info/genome/genebuild/mane.html)
 
 ###### <a name="protein-mapping-columns"></a>Protein Mapping Columns
 
@@ -318,7 +318,7 @@ Contains information regarding mapping of the user variant input to the encoded 
 - [Consequences](#consequences)
 
 
-<a name="uniprot-canonical"></a>**N - Uniprot canonical_isoform (non_canonical):** This is the accession of the canonical isoform of the protein if ProtVar is able to map th evariant to it. ProtVar always attempts to map to this isoform because most of the UniProt annotations are based on numbering in the canonical isoform. Sometimes ProtVar cannot map to the canonical isoform
+<a name="uniprot-canonical"></a>**N - Uniprot canonical_isoform (non_canonical):** This is the accession of the canonical isoform of the protein if ProtVar is able to map the variant to it. ProtVar always attempts to map to this isoform because most of the UniProt annotations are based on numbering in the canonical isoform. Sometimes ProtVar cannot map to the canonical isoform
 but can to an alternative isoform (sequence version of the protein). In these cases brackets are displayed around the accession to show that the mapping is to a non-canonical isoform.
 
 <a name="alternative-isoform-mappings"></a>**O - Alternative_isoform_mappings:** Details about each isoform including the isoform accession, amino acid position in the isoform, amino acid change,
@@ -353,7 +353,7 @@ These columns contain functional annotations regarding the variant amino acid, r
 
 <a name="residue-function"></a>**U - Residue_function_(evidence):** Functional features specifically describing the residue encoded by the user submitted variant.
 
-<a name="region-function"></a>**V - Region_function_(evidence):** This column describes functional features of the region which the residue encoded by the user submitted variant falls. The range of the region is provided after the ";". Overlapping regions describing the variant are separated by "|".
+<a name="region-function"></a>**V - Region_function_(evidence):** This column describes functional features of the region in which the residue encoded by the user submitted variant falls. The range of the region is provided after the ";". Overlapping regions describing the variant are separated by "|".
 
 <a name="protein-existence"></a>**W - Protein_existence_evidence:** Describes if there is experimental evidence to support the existence of the protein.
 
@@ -383,7 +383,7 @@ There are 4 columns in this category:
 - [Foldx_prediction](#foldx-prediction)
 - [Conservation_score](#conservation-score)
 
-<a name="predicted-pockets"></a>**AF - Predicted_pockets:** This shows the residues which are predicted to form a pocket in the AlphaFold modeled protein.   
+<a name="predicted-pockets"></a>**AF - Predicted_pockets:** This shows the residues which are predicted to form a pocket in the AlphaFold modelled protein.   
 
 <a name="predicted-interactions"></a>**AG - Predicted_interactions:**  Interface residues are predicted from folding proteins which are considered to interact simultaneously using the Alphafold2 algorithm. The interfaces are then scored for confidence.  
 
@@ -437,7 +437,7 @@ REST API uses OpenAPI 3 which means you can use utils like openapi-generator to 
 ---
 ##### <a name="direct-variant-link"></a>Direct variant Link Help
 
-You can access variant annotations directly using a permanent URL which mean that you can bypass the input screen. You can use either genomic coordinates or protein positions but you must state both the reference and variant allele.
+You can access variant annotations directly using a permanent URL which means that you can bypass the input screen. You can use either genomic coordinates or protein positions but you must state both the reference and variant allele.
 
 Examples of valid requests using genomic coordinates and protein information are given below.
 
