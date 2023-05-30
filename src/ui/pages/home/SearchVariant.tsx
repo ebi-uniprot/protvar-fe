@@ -20,7 +20,11 @@ const SearchVariant = (props: VariantSearchProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [file, setFile] = useState<File | null>(null);
   const [invalidInput, setInvalidInput] = useState(false);
+  const [invalidMsg, setInvalidMsg] = useState('');
   const uploadInputField = useRef<HTMLInputElement>(null);
+  const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+  const UNSUPPORTED_FILE = 'Unsupported file type';
+  const FILE_EXCEEDS_LIMIT = 'File exceeds 10MB limit';
 
   const populateVCF = () => {
     setSearchTerm(
@@ -64,11 +68,15 @@ const SearchVariant = (props: VariantSearchProps) => {
       return
     }
     var file = target.files[0]
-    if (file.type.startsWith('text/')) {
+    if (!file.type.startsWith('text/')) {
+      setInvalidInput(true);
+      setInvalidMsg(UNSUPPORTED_FILE);
+    } else if (file.size > MAX_FILE_SIZE) {
+      setInvalidInput(true);
+      setInvalidMsg(FILE_EXCEEDS_LIMIT);
+    } else {
       setFile(file);
       setInvalidInput(false);
-    } else {
-      setInvalidInput(true);
     }
     
   };
@@ -266,7 +274,7 @@ const SearchVariant = (props: VariantSearchProps) => {
                     {invalidInput && (
                       <span className="padding-left-1x">
                       <i className="file-warning bi bi-exclamation-triangle-fill"></i>{' '}
-                      Unsupported file
+                        {invalidMsg}
                       </span>
                     )}
                     {file?.name && (
