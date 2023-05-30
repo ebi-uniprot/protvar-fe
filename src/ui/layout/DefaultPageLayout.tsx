@@ -1,7 +1,7 @@
-import { useEffect } from 'react'
+import {useEffect, useState} from 'react'
 import { Link } from 'react-router-dom'
 import {ABOUT, CONTACT, HELP, HOME} from '../../constants/BrowserPaths'
-import { API_URL, LOCAL_DOWNLOADS/*, DISMISS_BANNER*/ } from '../../constants/const'
+import { API_URL, LOCAL_DOWNLOADS, DISMISS_BANNER } from '../../constants/const'
 
 import DefaultPageContent from './DefaultPageContent'
 
@@ -15,10 +15,10 @@ interface DefaultPageLayoutProps {
 }
 
 function DefaultPageLayout(props: DefaultPageLayoutProps) {
-  //const [showBanner, setShowBanner ] =useState(true);
+  const [showBanner, setShowBanner ] = useState(true);
   // to re-enable banner, uncomment state above, and the lines within
   // the handleDismiss function
-  const showBanner = false
+  //const showBanner = false
   let localDownloads = JSON.parse(localStorage.getItem(LOCAL_DOWNLOADS) || '[]')
   let numDownloads = localDownloads.length;
   
@@ -27,18 +27,18 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
     if (win.ebiFrameworkInvokeScripts) {
       win.ebiFrameworkInvokeScripts()
     }
-    /*
+
     const bannerDismissed = sessionStorage.getItem(DISMISS_BANNER);
     if (bannerDismissed) {
       setShowBanner(false);
-    }*/
+    }
   }, [])
 
   const { content } = props;
 
   const handleDismiss = () => {
-    //sessionStorage.setItem(DISMISS_BANNER, 'true');
-    //setShowBanner(false);
+    sessionStorage.setItem(DISMISS_BANNER, 'true');
+    setShowBanner(false);
   }
 
   return (
@@ -174,19 +174,10 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                     X
                   </button>
                   <div className="banner-content">
-                    ProtVar will be launched on{' '}
-                    <strong>Wednesday 24th May</strong> at an EMBL-EBI webinar
-                    at 15:30 BST (UTC+1). We will discuss the various ways in
-                    which ProtVar can help users with their work as well as
-                    recent improvements and fixes. Places are limited so please
-                    register to secure your place{' '}
-                    <a
-                      href="https://www.ebi.ac.uk/training/events/contextualise-and-interpret-human-missense-variation-protvar/"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      here.
-                    </a>
+                    30/05/2023 UPDATE: We have made some fixes and changes since the release on May 24th.<br/>
+                    - novel predictions now in downloaded result files<br/>
+                    - fixed failure of some large files due to a bug<br/>
+                    - added a max. file limit of 10MB to cope with load
                   </div>
                 </div>
               )}
