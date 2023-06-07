@@ -9,6 +9,7 @@ import {
 import DownloadModal from '../../modal/DownloadModal'
 import { mappings } from '../../../services/ProtVarService'
 import LegendModal from '../../modal/LegendModal'
+import {FormData, initialFormData} from "../../../types/FormData";
 
 // basic tests on query params
 const chromosomeRegExp = new RegExp('[a-zA-Z0-9]+')
@@ -127,14 +128,15 @@ function getQueryFromUrl(location: any) {
 const QueryPageContent = () => {
   const location = useLocation()
 
-  const [userInput, setUserInput] = useState('')
+  const [formData, setFormData] = useState<FormData>(initialFormData);
   const [searchResults, setSearchResults] = useState<MappingRecord[][][]>([])
 
   useEffect(() => {
     const query = getQueryFromUrl(location)
     if (query) {
-      setUserInput(query)
-      mappings([query])
+      formData.userInputs = [query]
+      setFormData(formData)
+      mappings(formData.userInputs)
         .then((response) => {
           const records = convertApiMappingToTableRecords(response.data.inputs)
           setSearchResults(records)
@@ -143,15 +145,15 @@ const QueryPageContent = () => {
           console.log(err)
         })
     }
-  }, [location])
+  }, [location, formData])
 
-  const queryOutput = userInput ? (
+  const queryOutput = formData.userInputs ? (
     <>
       <div className="search-results">
         <div className="flex justify-content-space-between float-right">
           <div className="legend-container">
             <LegendModal />
-            <DownloadModal pastedInputs={[userInput]} file={null} />
+            <DownloadModal formData={formData} />
           </div>
         </div>
         <ResultTable mappings={searchResults} />

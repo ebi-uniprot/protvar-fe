@@ -11,17 +11,18 @@ import ContactPage from "./pages/ContactPage";
 import {ABOUT, API_ERROR, CONTACT, DOWNLOAD, HOME, QUERY, SEARCH, HELP } from "../constants/BrowserPaths";
 import Notify from "./elements/Notify";
 import QueryPage from "./pages/query/QueryPage";
-import {Assembly, DEFAULT_ASSEMBLY} from "../constants/CommonTypes";
+import {Assembly} from "../constants/CommonTypes";
 import {mappings} from "../services/ProtVarService";
 import DownloadPage from "./pages/download/DownloadPage";
 import HelpPage from "./pages/help/HelpPage";
+import {FormData, initialFormData} from "../types/FormData";
 
 interface AppProps extends RouteComponentProps {}
 
 function App(props: AppProps) {
   const [loading, setLoading] = useState(false);
-  const [userInputs, setUserInputs] = useState<string[]>([]);
-  const [file, setFile] = useState<File | null>(null);
+  const [formData, setFormData] = useState<FormData>(initialFormData);
+  const [page, setPage] = useState<Page>(firstPage(0));
   const [searchResults, setSearchResults] = useState<MappingRecord[][][]>([]);
   // MappingRecord 3d array -> [][][] list of mappings/genes/isoforms
     // mappings : [
@@ -45,28 +46,26 @@ function App(props: AppProps) {
     //           ...
     // ...
 
-
-  const [page, setPage] = useState<Page>(firstPage(0));
-  const [assembly, setAssembly] = useState(DEFAULT_ASSEMBLY)
-
   const fetchPage = (page: Page) => {
     setLoading(true);
-    if (file) {
-      fetchFromFile(page, file);
-    } else if (userInputs) {
-      handleSearch(page, userInputs);
+    if (formData.file) {
+      fetchFromFile(page, formData.file);
+    } else if (formData.userInputs) {
+      handleSearch(page, formData.userInputs);
     }
   };
 
   function updateAssembly(assembly: Assembly) {
-    setAssembly(assembly);
+      formData.assembly = assembly;
+      setFormData(formData);
   }
 
   function fetchPasteResult(userInputString: string) {
     const userInputs = userInputString.split("\n");
-    setUserInputs(userInputs);
+    formData.userInputs = userInputs;
+    formData.file = null;
+    setFormData(formData);
     setLoading(true);
-    setFile(null);
     handleSearch(firstPage(userInputs.length), userInputs);
   }
 
@@ -75,7 +74,7 @@ function App(props: AppProps) {
     var skipRecord = (page.currentPage - 1) * PAGE_SIZE;
     if (inputArr.length <= skipRecord) return;
 
-    var inputSubArray = [];
+    var inputSubArray;
     const isNextPage = inputArr.length > skipRecord + PAGE_SIZE;
     if (isNextPage) {
       inputSubArray = inputArr.slice(skipRecord, skipRecord + PAGE_SIZE);
@@ -89,8 +88,9 @@ function App(props: AppProps) {
 
   function fetchFileResult(file: File) {
     setLoading(true);
-    setFile(file);
-    setUserInputs([]);
+    formData.file = file;
+    formData.userInputs = [];
+    setFormData(formData);
     file
       .text()
       .then((text) => fetchFromFile(firstPage(text.split("\n").length), file));
@@ -129,7 +129,7 @@ function App(props: AppProps) {
   };
 
   function mappingApiCall(inputSubArray: string[]) {
-    mappings(inputSubArray, assembly.toString())
+    mappings(inputSubArray, formData.assembly.toString())
       .then((response) => {
         const records = convertApiMappingToTableRecords(response.data.inputs);
         setSearchResults(records);
@@ -159,7 +159,7 @@ function App(props: AppProps) {
         render={() => (
           <HomePage
             loading={loading}
-            assembly={assembly}
+            formData={formData}
             updateAssembly={updateAssembly}
             fetchPasteResult={fetchPasteResult}
             fetchFileResult={fetchFileResult}
@@ -172,9 +172,8 @@ function App(props: AppProps) {
         render={() => (
           <SearchResultsPage
             rows={searchResults}
-            file={file}
             page={page}
-            pastedInputs={userInputs}
+            formData={formData}
             fetchNextPage={fetchPage}
             loading={loading}
           />

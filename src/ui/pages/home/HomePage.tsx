@@ -6,11 +6,12 @@ import { ABOUT, CONTACT } from '../../../constants/BrowserPaths'
 import { API_URL } from '../../../constants/const'
 import SearchVariant from './SearchVariant'
 import { MappingRecord } from '../../../utills/Convertor'
+import {FormData} from '../../../types/FormData'
 
 const HomePageContent = (props: HomePageProps) => {
   const {
     loading,
-    assembly,
+    formData,
     updateAssembly,
     fetchFileResult,
     fetchPasteResult,
@@ -43,7 +44,7 @@ const HomePageContent = (props: HomePageProps) => {
       <div className='search-page-layout'>
         <SearchVariant
           isLoading={loading}
-          assembly={assembly}
+          assembly={formData.assembly}
           updateAssembly={updateAssembly}
           fetchPasteResult={fetchPasteResult}
           fetchFileResult={fetchFileResult}
@@ -69,7 +70,7 @@ const HomePageContent = (props: HomePageProps) => {
 
 interface HomePageProps {
   loading: boolean
-  assembly: Assembly
+  formData: FormData
   updateAssembly: (assembly: Assembly) => void
   fetchFileResult: FileLoadFun
   fetchPasteResult: StringVoidFun

@@ -6,10 +6,10 @@ import { NextPageFun, Page } from "../../../utills/AppHelper";
 import { MappingRecord } from "../../../utills/Convertor";
 import DownloadModal from "../../modal/DownloadModal";
 import LegendModal from "../../modal/LegendModal";
+import {FormData} from '../../../types/FormData'
 
 interface SearchResultPageProps {
-  pastedInputs: string[]
-  file: File | null
+  formData: FormData
   page: Page
   fetchNextPage: NextPageFun
   rows: MappingRecord[][][]
@@ -17,7 +17,7 @@ interface SearchResultPageProps {
 }
 
 function SearchResultsPageContent(props: SearchResultPageProps) {
-  const { pastedInputs, file, page, rows, fetchNextPage, loading } = props;
+  const { formData, page, rows, fetchNextPage, loading } = props;
   if (!rows || rows.length < 1)
     return <Redirect to="/" />
 
@@ -27,7 +27,7 @@ function SearchResultsPageContent(props: SearchResultPageProps) {
         <PaginationRow page={page} fetchNextPage={fetchNextPage} loading={loading} />
         <div className="legend-container" >
         <LegendModal />
-        <DownloadModal pastedInputs={pastedInputs} file={file} />
+        <DownloadModal formData={formData} />
         </div>
         
       </div>

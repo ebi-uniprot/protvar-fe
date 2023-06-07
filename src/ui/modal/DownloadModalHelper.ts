@@ -2,9 +2,9 @@ import Notify from "../elements/Notify";
 import {downloadFileInput,downloadTextInput} from "../../services/ProtVarService";
 import {DownloadResponse} from "../../types/DownloadResponse";
 import {LOCAL_DOWNLOADS} from "../../constants/const";
+import {FormData} from '../../types/FormData'
 
-
-export function processDownload(file: File | null, searchTerms: string[], functional: boolean, population: boolean, structure: boolean,
+export function processDownload(formData: FormData, functional: boolean, population: boolean, structure: boolean,
                                 email: string, jobName: string) {
 
     const handleSucc = (downloadRes: DownloadResponse) => {
@@ -17,12 +17,12 @@ export function processDownload(file: File | null, searchTerms: string[], functi
         Notify.err(`Job ${jobName} failed. Please try again.`)
     }
 
-    if (file !== null) {
-        downloadFileInput(file, email, jobName, functional, population, structure)
+    if (formData.file !== null) {
+        downloadFileInput(formData.file, formData.assembly, email, jobName, functional, population, structure)
             .then((response ) => handleSucc(response.data))
             .catch(handleErr);
     } else {
-        downloadTextInput(searchTerms, email, jobName, functional, population, structure)
+        downloadTextInput(formData.userInputs, formData.assembly, email, jobName, functional, population, structure)
             .then((response ) => handleSucc(response.data))
             .catch(handleErr);
     }
