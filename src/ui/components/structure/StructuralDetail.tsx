@@ -15,6 +15,7 @@ import {AlphafoldResponseElement} from "../../../types/AlphafoldResponse";
 interface StructuralDetailProps {
   isoFormAccession: string,
   aaPosition: number,
+  variantAA: string, // 3 letter
   proteinStructureUri: string
 }
 
@@ -33,7 +34,7 @@ export const baseSettings = {
 }
 
 function StructuralDetail(props: StructuralDetailProps) {
-  const { isoFormAccession, aaPosition, proteinStructureUri } = props;
+  const { isoFormAccession, aaPosition, variantAA, proteinStructureUri } = props;
   const [pdbData, setPdbData] = useState(new Array<ProteinStructureElement>());
   const [alphaFoldData, setAlphaFoldData] = useState(new Array<AlphafoldResponseElement>());
   const [selected, setSelected] = useState<ProteinStructureElement|AlphafoldResponseElement|P2PInteraction>();
@@ -59,7 +60,8 @@ function StructuralDetail(props: StructuralDetailProps) {
             setSelected(response.data[0])
             pdbeRef.subscribeOnload(aaPosition)
           }
-          return getFunctionalData('/function/' + isoFormAccession + '/' + aaPosition)
+          let functionUrl = '/function/' + isoFormAccession + '/' + aaPosition + (variantAA == null ? '' : ('?variantAA=' + variantAA))
+        return getFunctionalData(functionUrl)
         }).then(response => {
           const funcData = response.data
           setInteractionData(funcData.interactions)
@@ -67,7 +69,7 @@ function StructuralDetail(props: StructuralDetailProps) {
         }).catch(err => {
           console.log(err);
         });
-  }, [proteinStructureUri, isoFormAccession, aaPosition, pdbeRef]);
+  }, [proteinStructureUri, isoFormAccession, aaPosition, variantAA, pdbeRef]);
 
   if (!selected) {
     return <LoaderRow />
