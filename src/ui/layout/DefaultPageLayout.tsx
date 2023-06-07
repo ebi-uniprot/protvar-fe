@@ -210,6 +210,11 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
             height="50"
             className='collaborator-img'
           />
+          <div>
+            <a className="twitter-timeline" data-width="400" data-height="200" data-theme="light"
+               href="https://twitter.com/EBIProtVar?ref_src=twsrc%5Etfw">Tweets by EBIProtVar</a>
+            <script async src="https://platform.twitter.com/widgets.js" charSet="utf-8"></script>
+          </div>
           <SignUp />
         </div>
         <div id="global-footer" className="global-footer">
