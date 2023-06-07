@@ -26,14 +26,14 @@ export function mappings(inputArr: string[], assembly?: string) {
 }
 
 
-export function downloadFileInput(file: File, email: string, jobName: string, functional: boolean, population: boolean, structure: boolean) {
+export function downloadFileInput(file: File, assembly: string, email: string, jobName: string, functional: boolean, population: boolean, structure: boolean) {
     const formData = new FormData();
     formData.append('file', file);
     return api.post<any, FormData, AxiosResponse<DownloadResponse>>(
         `${API_URL}/download/fileInput`,
         formData,
         {
-            params : { email, jobName, function: functional, population, structure },
+            params : { email, jobName, function: functional, population, structure, assembly },
             headers: {
                 'Content-Type': 'multipart/form-data'
             },
@@ -41,12 +41,12 @@ export function downloadFileInput(file: File, email: string, jobName: string, fu
     );
 }
 
-export function downloadTextInput(inputArr: string[], email: string, jobName: string, functional: boolean, population: boolean, structure: boolean) {
+export function downloadTextInput(inputArr: string[], assembly: string, email: string, jobName: string, functional: boolean, population: boolean, structure: boolean) {
     return api.post<any, string[], AxiosResponse<DownloadResponse>>(
         `${API_URL}/download/textInput`,
         inputArr,
         {
-            params : { email, jobName, function: functional, population, structure },
+            params : { email, jobName, function: functional, population, structure, assembly },
             headers: {
                 'Content-Type': 'application/json',
                 Accept: '*'

@@ -18,11 +18,11 @@ export function processDownload(formData: FormData, functional: boolean, populat
     }
 
     if (formData.file !== null) {
-        downloadFileInput(formData.file, formData.assembly, email, jobName, functional, population, structure)
+        downloadFileInput(formData.file, formData.assembly.toString(), email, jobName, functional, population, structure)
             .then((response ) => handleSucc(response.data))
             .catch(handleErr);
     } else {
-        downloadTextInput(formData.userInputs, formData.assembly, email, jobName, functional, population, structure)
+        downloadTextInput(formData.userInputs, formData.assembly.toString(), email, jobName, functional, population, structure)
             .then((response ) => handleSucc(response.data))
             .catch(handleErr);
     }
