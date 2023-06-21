@@ -173,12 +173,14 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                   >
                     X
                   </button>
+
                   <div className="banner-content">
-                    07/06/2023 UPDATE<br/>
-                    - improve foldx coverage to 208M (from 5.9M) predicted values ie all 19 possible mutations<br/>
+                    21/06/2023 UPDATE<br/>
+                    - improve foldx coverage to 208M (from 5.9M) predicted values covering all 19 possible mutations<br/>
                     - bug fix: ensure that GRCh37 build is correctly used in the download<br/>
-                    - bug fix: missing fields (<samp>Genomic_location, Cytogenetic_band, Other_identifiers_for_the_variant, Diseases_associated_with_variant</samp>) in the download<br/>
-                    - added optional variantAA query parameter to <samp>/foldx/&#123;acc&#125;/&#123;pos&#125;</samp> and <samp>/function/&#123;acc&#125;/&#123;pos&#125;</samp> endpoints
+                    - bug fix: missing fields (<samp>Genomic_location, Cytogenetic_band, Other_identifiers_for_the_variant, Diseases_associated_with_variant</samp>) added to generated download<br/>
+                    - added <samp>variantAA</samp> filter to <samp>/foldx/&#123;acc&#125;/&#123;pos&#125;</samp> and <samp>/function/&#123;acc&#125;/&#123;pos&#125;</samp> endpoints<br/>
+                    - added direct variant link using search terms
                   </div>
                 </div>
               )}
