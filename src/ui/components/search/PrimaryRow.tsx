@@ -140,7 +140,7 @@ const getPrimaryRow = (record: MappingRecord, toggleOpenGroup: string, isoFormGr
     }
     {structuralKey === annotationExpanded &&
       <Suspense fallback={<LoaderRow />}>
-        <StructuralDetail isoFormAccession={record.isoform!} aaPosition={record.aaPos!} proteinStructureUri={record.proteinStructureUri!}/>
+        <StructuralDetail isoFormAccession={record.isoform!} aaPosition={record.aaPos!} variantAA={record.variantAA!} proteinStructureUri={record.proteinStructureUri!}/>
       </Suspense>
     }
     {functionalKey === annotationExpanded &&

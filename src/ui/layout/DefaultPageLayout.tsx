@@ -173,11 +173,14 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                   >
                     X
                   </button>
+
                   <div className="banner-content">
-                    30/05/2023 UPDATE: We have made some fixes and changes since the release on May 24th.<br/>
-                    - novel predictions now in downloaded result files<br/>
-                    - fixed failure of some large files due to a bug<br/>
-                    - added a max. file limit of 10MB to cope with load
+                    21/06/2023 UPDATE<br/>
+                    - improve foldx coverage to 208M (from 5.9M) predicted values covering all 19 possible mutations<br/>
+                    - bug fix: ensure that GRCh37 build is correctly used in the download<br/>
+                    - bug fix: missing fields (<samp>Genomic_location, Cytogenetic_band, Other_identifiers_for_the_variant, Diseases_associated_with_variant</samp>) added to generated download<br/>
+                    - added <samp>variantAA</samp> filter to <samp>/foldx/&#123;acc&#125;/&#123;pos&#125;</samp> and <samp>/function/&#123;acc&#125;/&#123;pos&#125;</samp> endpoints<br/>
+                    - added direct variant link using search terms
                   </div>
                 </div>
               )}
@@ -210,6 +213,11 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
             height="50"
             className='collaborator-img'
           />
+          <div>
+            <a className="twitter-timeline" data-width="400" data-height="200" data-theme="light"
+               href="https://twitter.com/EBIProtVar?ref_src=twsrc%5Etfw">Tweets by EBIProtVar</a>
+            <script async src="https://platform.twitter.com/widgets.js" charSet="utf-8"></script>
+          </div>
           <SignUp />
         </div>
         <div id="global-footer" className="global-footer">

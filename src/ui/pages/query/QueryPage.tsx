@@ -9,6 +9,8 @@ import {
 import DownloadModal from '../../modal/DownloadModal'
 import { mappings } from '../../../services/ProtVarService'
 import LegendModal from '../../modal/LegendModal'
+import {FormData, initialFormData} from "../../../types/FormData";
+import Notify from "../../elements/Notify";
 
 // basic tests on query params
 const chromosomeRegExp = new RegExp('[a-zA-Z0-9]+')
@@ -29,6 +31,10 @@ const proteinExamples = [
   '/ProtVar/query?accession=P60484&protein_position=130&reference_AA=R&variant_AA=T',
   '/ProtVar/query?accession=P60484&protein_position=130&reference_AA=N&variant_AA=G',
 ]
+const searchExamples = [
+  '/ProtVar/query?search=NC_000021.9:g.25905076A>T',
+  '/ProtVar/query?search=rs864622779,P22304 A205P',
+]
 
 const gExamples = genomicExamples.map((ex, idx) => (
   <li key={'gEx' + idx}>
@@ -36,23 +42,31 @@ const gExamples = genomicExamples.map((ex, idx) => (
   </li>
 ))
 const pExamples = proteinExamples.map((ex, idx) => (
-  <li key={'pEx' + idx}>
-    <a href={ex}>{ex}</a>
-  </li>
+    <li key={'pEx' + idx}>
+      <a href={ex}>{ex}</a>
+    </li>
+))
+const sExamples = searchExamples.map((ex, idx) => (
+    <li key={'sEx' + idx}>
+      <a href={ex}>{ex}</a>
+    </li>
 ))
 
 const QueryInfoContent = () => (
   <>
     <h4>Query</h4>
+
     <p>
-      Direct access to variant annotations using permanent URL. Examples of
-      valid requests using genomic coordinates and protein information are given
-      below.
+      You can access variant annotations directly using the following URL structures and bypassing the
+      input screen.
     </p>
     Using genomic coordinates
     <ul>{gExamples}</ul>
     Using protein accession and position
     <ul>{pExamples}</ul>
+    Using search terms
+    <ul>{sExamples}</ul>
+    The search option supports all the accepted formats and up to a maximum of 10 inputs separated by comma.
   </>
 )
 
@@ -70,7 +84,7 @@ const requiredProteinParams = [
   'variant_AA',
 ]
 
-function getQueryFromUrl(location: any) {
+function getInputsFromUrl(location: any): any {
   const params = new URLSearchParams(location.search)
 
   const isGenomicQuery = requiredGenomicParams.reduce(function (acc, p) {
@@ -94,7 +108,7 @@ function getQueryFromUrl(location: any) {
       alt &&
       alleleRegExp.test(alt)
     ) {
-      return `${chromo} ${pos} ${ref} ${alt}`
+      return [`${chromo} ${pos} ${ref} ${alt}`]
     }
   }
 
@@ -118,23 +132,41 @@ function getQueryFromUrl(location: any) {
       alt &&
       oneletterAARegExp.test(alt)
     ) {
-      return `${acc} ${pos} ${ref} ${alt}`
+      return [`${acc} ${pos} ${ref} ${alt}`]
     }
   }
-  return ''
+
+  if (params.has('search')) {
+    let str = params.get('search')
+    let arr = str?.split(",").map(function(item) {
+      return item.trim();
+    }).filter(item => item);
+    if (arr && arr.length > 0) {
+      if (arr.length <= 10) {
+        return arr
+      }
+      else {
+        Notify.err('Maximum inputs (10) exceeded.')
+        return []
+      }
+    }
+  }
+  Notify.warn('Use a valid query input.')
+  return []
 }
 
 const QueryPageContent = () => {
   const location = useLocation()
 
-  const [userInput, setUserInput] = useState('')
+  const [formData, setFormData] = useState<FormData>(initialFormData);
   const [searchResults, setSearchResults] = useState<MappingRecord[][][]>([])
 
   useEffect(() => {
-    const query = getQueryFromUrl(location)
-    if (query) {
-      setUserInput(query)
-      mappings([query])
+    const inputs = getInputsFromUrl(location)
+    if (inputs.length > 0) {
+      formData.userInputs = inputs
+      setFormData(formData)
+      mappings(formData.userInputs)
         .then((response) => {
           const records = convertApiMappingToTableRecords(response.data.inputs)
           setSearchResults(records)
@@ -143,15 +175,15 @@ const QueryPageContent = () => {
           console.log(err)
         })
     }
-  }, [location])
+  }, [location, formData])
 
-  const queryOutput = userInput ? (
+  const queryOutput = formData.userInputs.length > 0 ? (
     <>
       <div className="search-results">
         <div className="flex justify-content-space-between float-right">
           <div className="legend-container">
             <LegendModal />
-            <DownloadModal pastedInputs={[userInput]} file={null} />
+            <DownloadModal formData={formData} />
           </div>
         </div>
         <ResultTable mappings={searchResults} />
