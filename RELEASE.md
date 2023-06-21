@@ -12,8 +12,9 @@ We have made some fixes and changes since the release on May 24th.
 - fixed failure of some large files due to a bug
 - added a max. file limit of 10MB to cope with load
 
-## 07/06/2023 UPDATE
-- improve foldx coverage to 208M (from 5.9M) predicted values ie all 19 possible mutations 
+## 21/06/2023 UPDATE
+- improve foldx coverage to 208M (from 5.9M) predicted values covering all 19 possible mutations 
 - bug fix: ensure that GRCh37 build is correctly used in the download
-- bug fix: missing fields (`Genomic_location, Cytogenetic_band, Other_identifiers_for_the_variant, Diseases_associated_with_variant`) in the download
-- added optional `variantAA` query parameter to `/foldx/{acc}/{pos}` and `/function/{acc}/{pos}` endpoints
+- bug fix: missing fields (`Genomic_location, Cytogenetic_band, Other_identifiers_for_the_variant, Diseases_associated_with_variant`) added to generated download
+- added optional `variantAA` filter to `/foldx/{acc}/{pos}` and `/function/{acc}/{pos}` endpoints
+- added direct variant link using search terms
