@@ -18,6 +18,7 @@ interface VariantSearchProps {
 
 const SearchVariant = (props: VariantSearchProps) => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [assembly, setAssembly] = useState(props.assembly);
   const [file, setFile] = useState<File | null>(null);
   const [invalidInput, setInvalidInput] = useState(false);
   const [invalidMsg, setInvalidMsg] = useState('');
@@ -25,6 +26,11 @@ const SearchVariant = (props: VariantSearchProps) => {
   const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
   const UNSUPPORTED_FILE = 'Unsupported file type';
   const FILE_EXCEEDS_LIMIT = 'File exceeds 10MB limit';
+
+  const update = (a: Assembly) => {
+    setAssembly(a); // set assembly in the search variant form
+    props.updateAssembly(a); // set assembly in the top-level
+  }
 
   const populateVCF = () => {
     setSearchTerm(
@@ -54,12 +60,12 @@ const SearchVariant = (props: VariantSearchProps) => {
 
   const populateProtAC = () => {
     setSearchTerm('P22304 A205P\nP07949 asn783thr\nP22309 71 Gly Arg')
-    props.updateAssembly(DEFAULT_ASSEMBLY)
+    update(DEFAULT_ASSEMBLY)
   };
 
   const populateRs = () => {
     setSearchTerm('rs864622779\nrs587778656\nrs4148323')
-    props.updateAssembly(DEFAULT_ASSEMBLY)
+    update(DEFAULT_ASSEMBLY)
   };
 
   const viewResult = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -162,7 +168,7 @@ const SearchVariant = (props: VariantSearchProps) => {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
               <div className="search-card-selection">
-                <div>
+                <div>{assembly}
                 <b>Examples:</b><br />
                 <div className="examples-container">
                   <Spaces count={2} />
@@ -219,8 +225,8 @@ const SearchVariant = (props: VariantSearchProps) => {
                         type="radio"
                         name="grch"
                         value="grch38"
-                        checked={props.assembly === Assembly.GRCh38}
-                        onChange={() => props.updateAssembly(Assembly.GRCh38)}
+                        checked={assembly === Assembly.GRCh38}
+                        onChange={() => update(Assembly.GRCh38)}
                       />
                       GRCh38
                     </label>
@@ -229,8 +235,8 @@ const SearchVariant = (props: VariantSearchProps) => {
                         type="radio"
                         name="grch"
                         value="grch37"
-                        checked={props.assembly === Assembly.GRCh37}
-                        onChange={() => props.updateAssembly(Assembly.GRCh37)}
+                        checked={assembly === Assembly.GRCh37}
+                        onChange={() => update(Assembly.GRCh37)}
                       />
                       GRCh37
                     </label>
@@ -239,8 +245,8 @@ const SearchVariant = (props: VariantSearchProps) => {
                         type="radio"
                         name="grch"
                         value="auto"
-                        checked={props.assembly === Assembly.AUTO}
-                        onChange={() => props.updateAssembly(Assembly.AUTO)}
+                        checked={assembly === Assembly.AUTO}
+                        onChange={() => update(Assembly.AUTO)}
                       />
                       Auto-detect
                     </label>
