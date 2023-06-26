@@ -84,8 +84,11 @@ const getTableRows = (mappings: MappingRecord[][][], isoFormGroupExpanded: strin
         }
         prevInput = currInput
         if (index === 0)
-          if (isoform.note)
-            tableRows.push(<NoteRow record={isoform} key={isoform.chromosome + isoform.position + isoform.id + isoform.refAllele + isoform.altAllele} currStyle={currStyle} />)
+          if (isoform.note) {
+            tableRows.push(<NoteRow record={isoform}
+                                    key={currentGroup}
+                                    currStyle={currStyle}/>)
+          }
           else
             tableRows.push(getPrimaryRow(isoform, currentGroup, isoFormGroupExpanded, toggleIsoFormGroup, annotationExpanded,
               toggleAnnotation, matchingIsoForms.length > 1, currStyle))
