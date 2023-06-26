@@ -168,7 +168,7 @@ const SearchVariant = (props: VariantSearchProps) => {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
               <div className="search-card-selection">
-                <div>{assembly}
+                <div>
                 <b>Examples:</b><br />
                 <div className="examples-container">
                   <Spaces count={2} />
