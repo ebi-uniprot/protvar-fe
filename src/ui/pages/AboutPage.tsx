@@ -19,6 +19,13 @@ function AboutPageContent() {
   return <div className="container">
     <h4>About</h4>
     <div className="text">
+      <p>Watch the <a href="https://www.youtube.com/watch?v=6dsbozAi1lk" target="_blank" rel="noreferrer">ProtVar launch webinar</a>.
+        <br/>
+        <iframe id="ytplayer" title="Launch webinar video" width="360" height="202.5"
+                src="https://www.youtube.com/embed/6dsbozAi1lk"
+                frameBorder="0" allowFullScreen />
+      </p>
+
       <p>
         ProtVar is a regularly updated and maintained human variant annotation and assessment web tool which offers
         users flexibility and ease of accessibility and integration. It combines the data and analysis from a plethora
