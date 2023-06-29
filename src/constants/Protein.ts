@@ -47,28 +47,29 @@ export const FEATURES = {
   HELIX: 'Helix'
 };
 
-export const AMINO_ACID_FULL_NAME: Map<string, string> = new Map(Object.entries({
-  ala: "Alanine",
-  arg: "Arginine",
-  asn: "Asparagine",
-  asp: "Aspartic acid",
-  asx: "Asparagine or aspartic acid",
-  cys: "Cysteine",
-  glu: "Glutamic acid",
-  gln: "Glutamine",
-  glx: "Glutamine or glutamic acid",
-  gly: "Glycine",
-  his: "Histidine",
-  ile: "Isoleucine",
-  leu: "Leucine",
-  lys: "Lysine",
-  met: "Methionine",
-  phe: "Phenylalanine",
-  pro: "Proline",
-  ser: "Serine",
-  thr: "Threonine",
-  trp: "Tryptophan",
-  tyr: "Tyrosine",
-  val: "Valine",
-  "*": "Stop"
-}));
+export const AMINO_ACID_FULL_NAME = {
+  ala: {name: "Alanine", oneLetter: "a"},
+  arg: {name: "Arginine", oneLetter: "r"},
+  asn: {name: "Asparagine", oneLetter: "n"},
+  asp: {name: "Aspartic acid", oneLetter: "d"},
+  cys: {name: "Cysteine", oneLetter: "c"},
+  gln: {name: "Glutamine", oneLetter: "q"},
+  glu: {name: "Glutamic acid", oneLetter: "e"},
+  gly: {name: "Glycine", oneLetter: "g"},
+  his: {name: "Histidine", oneLetter: "h"},
+  ile: {name: "Isoleucine", oneLetter: "i"},
+  leu: {name: "Leucine", oneLetter: "l"},
+  lys: {name: "Lysine", oneLetter: "k"},
+  met: {name: "Methionine", oneLetter: "m"},
+  phe: {name: "Phenylalanine", oneLetter: "f"},
+  pro: {name: "Proline", oneLetter: "p"},
+  ser: {name: "Serine", oneLetter: "s"},
+  thr: {name: "Threonine", oneLetter: "t"},
+  trp: {name: "Tryptophan", oneLetter: "w"},
+  tyr: {name: "Tyrosine", oneLetter: "y"},
+  val: {name: "Valine", oneLetter: "v"},
+  ter: {name: "Stop", oneLetter: "*"},
+// extended - no img
+  glx: {name: "Glutamine or glutamic acid", oneLetter: "z"},
+  asx: {name: "Asparagine or aspartic acid", oneLetter: "b"}, // no img
+};
