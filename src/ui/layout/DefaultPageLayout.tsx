@@ -40,7 +40,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
     sessionStorage.setItem(DISMISS_BANNER, 'true');
     setShowBanner(false);
   }
-
+debugger
   return (
     <>
       <div id="skip-to">
@@ -216,7 +216,6 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
           <div>
             <a className="twitter-timeline" data-width="400" data-height="200" data-theme="light"
                href="https://twitter.com/EBIProtVar?ref_src=twsrc%5Etfw">Tweets by EBIProtVar</a>
-            <script async src="https://platform.twitter.com/widgets.js" charSet="utf-8"></script>
           </div>
           <SignUp />
         </div>
