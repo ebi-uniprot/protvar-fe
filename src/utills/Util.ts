@@ -5,9 +5,30 @@ export const getKeyValue = (key: string) => (obj: Record<string, any>) => obj[ke
 export const fullAminoAcidName = (key: string | undefined | null) => {
   if (!key)
     return ""
-  return AMINO_ACID_FULL_NAME.get(key.toLowerCase())
+  if (key==="*")
+    key = "ter"
+  if (key.toLowerCase() in AMINO_ACID_FULL_NAME) {
+    return getKeyValue(key.toLowerCase())(AMINO_ACID_FULL_NAME).name
+  }
+  return ""
 }
 
+export const aminoAcid1to3Letter = (oneLetter: string): string|null => {
+  Object.entries(AMINO_ACID_FULL_NAME).forEach(([key, value], index) => {
+    if (value.oneLetter === oneLetter.toLowerCase())
+      return key;
+  });
+  return null;
+}
+
+export const aminoAcid3to1Letter = (threeLetter: string): string|null => {
+  let v = null;
+  Object.entries(AMINO_ACID_FULL_NAME).forEach(([key, value], index) => {
+    if (key === threeLetter.toLowerCase())
+      v = value.oneLetter;
+  });
+  return v;
+}
 
 export function formatRange(xs: number[]) {
   if (xs.length === 0)
