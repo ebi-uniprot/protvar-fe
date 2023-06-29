@@ -40,7 +40,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
     sessionStorage.setItem(DISMISS_BANNER, 'true');
     setShowBanner(false);
   }
-debugger
+
   return (
     <>
       <div id="skip-to">
@@ -194,6 +194,10 @@ debugger
           </div>
         </section>
       </div>
+      <div className='twitter-content'>
+            <a className="twitter-timeline" data-width="400" data-height="200" data-theme="light"
+               href="https://twitter.com/EBIProtVar?ref_src=twsrc%5Etfw">Tweets by EBIProtVar</a>
+      </div>
 
       <footer id="footer-target">
         <div className="custom-pv-footer row">
@@ -212,11 +216,7 @@ debugger
             width="130"
             height="50"
             className='collaborator-img'
-          />
-          <div>
-            <a className="twitter-timeline" data-width="400" data-height="200" data-theme="light"
-               href="https://twitter.com/EBIProtVar?ref_src=twsrc%5Etfw">Tweets by EBIProtVar</a>
-          </div>
+          /> 
           <SignUp />
         </div>
         <div id="global-footer" className="global-footer">
