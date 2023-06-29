@@ -1,7 +1,7 @@
-import {useEffect, useState} from 'react'
+import {useEffect/*, useState*/} from 'react'
 import { Link } from 'react-router-dom'
 import {ABOUT, CONTACT, HELP, HOME} from '../../constants/BrowserPaths'
-import { API_URL, LOCAL_DOWNLOADS, DISMISS_BANNER } from '../../constants/const'
+import { API_URL, LOCAL_DOWNLOADS/*, DISMISS_BANNER*/ } from '../../constants/const'
 
 import DefaultPageContent from './DefaultPageContent'
 
@@ -15,10 +15,10 @@ interface DefaultPageLayoutProps {
 }
 
 function DefaultPageLayout(props: DefaultPageLayoutProps) {
-  const [showBanner, setShowBanner ] = useState(true);
+  //const [showBanner, setShowBanner ] = useState(true);
   // to re-enable banner, uncomment state above, and the lines within
   // the handleDismiss function
-  //const showBanner = false
+  const showBanner = false
   let localDownloads = JSON.parse(localStorage.getItem(LOCAL_DOWNLOADS) || '[]')
   let numDownloads = localDownloads.length;
   
@@ -27,18 +27,18 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
     if (win.ebiFrameworkInvokeScripts) {
       win.ebiFrameworkInvokeScripts()
     }
-
+/*
     const bannerDismissed = sessionStorage.getItem(DISMISS_BANNER);
     if (bannerDismissed) {
       setShowBanner(false);
-    }
+    }*/
   }, [])
 
   const { content } = props;
 
   const handleDismiss = () => {
-    sessionStorage.setItem(DISMISS_BANNER, 'true');
-    setShowBanner(false);
+    //sessionStorage.setItem(DISMISS_BANNER, 'true');
+    //setShowBanner(false);
   }
 
   return (
@@ -175,12 +175,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                   </button>
 
                   <div className="banner-content">
-                    21/06/2023 UPDATE<br/>
-                    - improve foldx coverage to 208M (from 5.9M) predicted values covering all 19 possible mutations<br/>
-                    - bug fix: ensure that GRCh37 build is correctly used in the download<br/>
-                    - bug fix: missing fields (<samp>Genomic_location, Cytogenetic_band, Other_identifiers_for_the_variant, Diseases_associated_with_variant</samp>) added to generated download<br/>
-                    - added <samp>variantAA</samp> filter to <samp>/foldx/&#123;acc&#125;/&#123;pos&#125;</samp> and <samp>/function/&#123;acc&#125;/&#123;pos&#125;</samp> endpoints<br/>
-                    - added direct variant link using search terms
+                    Banner text...
                   </div>
                 </div>
               )}
@@ -213,11 +208,9 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
             height="50"
             className='collaborator-img'
           />
-          <div>
-            <a className="twitter-timeline" data-width="400" data-height="200" data-theme="light"
-               href="https://twitter.com/EBIProtVar?ref_src=twsrc%5Etfw">Tweets by EBIProtVar</a>
-            <script async src="https://platform.twitter.com/widgets.js" charSet="utf-8"></script>
-          </div>
+          <a className="twitter-follow-button" data-size="large" data-show-screen-name="false"
+             href="https://twitter.com/EBIProtVar">
+            Follow @EBIProtVar</a>
           <SignUp />
         </div>
         <div id="global-footer" className="global-footer">

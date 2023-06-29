@@ -64,6 +64,13 @@ const HomePageContent = (props: HomePageProps) => {
           us with specific queries or suggestions.
         </p>
       </div>
+      <div className='twitter-content'>
+
+        <br/>
+        <a className="twitter-timeline" data-width="400" data-height="300" data-theme="light"
+           data-chrome="noheader nofooter noborders transparent"
+           href="https://twitter.com/EBIProtVar?ref_src=twsrc%5Etfw">Tweets by EBIProtVar</a>
+      </div>
     </>
   )
 }

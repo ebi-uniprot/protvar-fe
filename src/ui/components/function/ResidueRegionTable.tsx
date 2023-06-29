@@ -6,7 +6,7 @@ import Evidences from "./Evidences";
 import { ReactComponent as ChevronDownIcon } from "../../../images/chevron-down.svg"
 import { v1 as uuidv1 } from 'uuid';
 import { StringVoidFun } from "../../../constants/CommonTypes";
-import {formatRange, getKeyValue} from "../../../utills/Util";
+import {aminoAcid3to1Letter, formatRange, getKeyValue} from "../../../utills/Util";
 import {FunctionalResponse, Pocket, Foldx, P2PInteraction, ProteinFeature} from "../../../types/FunctionalResponse";
 
 interface ResidueRegionTableProps {
@@ -31,6 +31,7 @@ function ResidueRegionTable(props: ResidueRegionTableProps) {
           regions.push(feature);
       }
     });
+    const oneLetterVariantAA = aminoAcid3to1Letter(props.variantAA);
     return <table>
       <tbody>
         <tr>
@@ -38,7 +39,7 @@ function ResidueRegionTable(props: ResidueRegionTableProps) {
           <th>Region Containing Variant Position</th>
         </tr>
         <tr>
-          <td>{getResidues(residues, props.apiData.conservScore, props.apiData.foldxs, props.refAA, props.variantAA, expendedRowKey, toggleRow)}</td>
+          <td>{getResidues(residues, props.apiData.conservScore, props.apiData.foldxs, props.refAA, props.variantAA, oneLetterVariantAA, expendedRowKey, toggleRow)}</td>
           <td>{getRegions(regions, props.apiData.accession, props.apiData.pockets, props.apiData.interactions, expendedRowKey, toggleRow)}</td>
         </tr>
       </tbody>
@@ -46,15 +47,16 @@ function ResidueRegionTable(props: ResidueRegionTableProps) {
   }
   return EmptyElement
 }
-function getResidues(regions: Array<ProteinFeature>, conservScore: number, foldxs: Array<Foldx>, refAA: string, variantAA: string, expendedRowKey: string, toggleRow: StringVoidFun) {
+function getResidues(regions: Array<ProteinFeature>, conservScore: number, foldxs: Array<Foldx>, refAA: string, variantAA: string, oneLetterVariantAA: string | null, expendedRowKey: string, toggleRow: StringVoidFun) {
   let regionsList: Array<JSX.Element> = [];
   let counter = 0;
+  let foldxs_ = oneLetterVariantAA ? foldxs.filter(foldx => foldx.mutatedType.toLowerCase() === oneLetterVariantAA) : foldxs
 
   if (regions.length === 0) {
     return <>
         <AminoAcidModel refAA={refAA} variantAA={variantAA} />
         <b>Conservation score: </b> {conservScore} <br/>
-        <FoldxPred foldxs={foldxs} expendedRowKey={expendedRowKey} toggleRow={toggleRow} />
+        <FoldxPred foldxs={foldxs_} expendedRowKey={expendedRowKey} toggleRow={toggleRow} />
       </>;
   }
 
@@ -68,7 +70,7 @@ function getResidues(regions: Array<ProteinFeature>, conservScore: number, foldx
     <AminoAcidModel refAA={refAA} variantAA={variantAA} />
     <b>Conservation score: </b> {conservScore} <br/>
     {regionsList}
-    <FoldxPred foldxs={foldxs} expendedRowKey={expendedRowKey} toggleRow={toggleRow} />
+    <FoldxPred foldxs={foldxs_} expendedRowKey={expendedRowKey} toggleRow={toggleRow} />
   </>
 }
 

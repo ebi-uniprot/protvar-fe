@@ -18,7 +18,7 @@ import thr from '../../../images/thr.png';
 import trp from '../../../images/trp.png';
 import tyr from '../../../images/tyr.png';
 import val from '../../../images/val.png';
-import stop from '../../../images/stop.png';
+import ter from '../../../images/ter.png';
 import { fullAminoAcidName, getKeyValue } from '../../../utills/Util';
 
 const aminoAcids = {
@@ -42,13 +42,12 @@ const aminoAcids = {
   trp,
   tyr,
   val,
-  stop
+  ter
 };
 function getImageByKey(key: string) {
-  if (key === "Ter")
-    key = "stop"
   return getKeyValue(key.toLowerCase())(aminoAcids);
 }
+
 interface AminoAcidModelProps {
   refAA: string
   variantAA: string
