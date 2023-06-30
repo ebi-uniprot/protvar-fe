@@ -11,6 +11,7 @@ import { mappings } from '../../../services/ProtVarService'
 import LegendModal from '../../modal/LegendModal'
 import {FormData, initialFormData} from "../../../types/FormData";
 import Notify from "../../elements/Notify";
+import Loader from "../../elements/Loader";
 
 // basic tests on query params
 const chromosomeRegExp = new RegExp('[a-zA-Z0-9]+')
@@ -151,12 +152,14 @@ function getInputsFromUrl(location: any): any {
       }
     }
   }
-  Notify.warn('Use a valid query input.')
+  Notify.warn('Invalid search query.')
   return []
 }
 
 const QueryPageContent = () => {
   const location = useLocation()
+  const [loaded, setLoaded] = useState(false)
+  const [err, setErr] = useState(false)
 
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [searchResults, setSearchResults] = useState<MappingRecord[][][]>([])
@@ -170,15 +173,18 @@ const QueryPageContent = () => {
         .then((response) => {
           const records = convertApiMappingToTableRecords(response.data.inputs)
           setSearchResults(records)
+          setLoaded(true)
         })
         .catch((err) => {
           console.log(err)
+          setErr(true)
         })
+    } else {
+      setErr(true)
     }
   }, [location, formData])
 
-  const queryOutput = formData.userInputs.length > 0 ? (
-    <>
+  const result = <>
       <div className="search-results">
         <div className="flex justify-content-space-between float-right">
           <div className="legend-container">
@@ -189,13 +195,10 @@ const QueryPageContent = () => {
         <ResultTable mappings={searchResults} />
       </div>
     </>
-  ) : (
-    <QueryInfoContent />
-  )
 
   //if (!searchResults || searchResults.length < 1) return <>Nothing!</>;
 
-  return <>{queryOutput}</>
+  return <>{loaded ? result : (err ? <QueryInfoContent /> : <Loader />)}</>
 }
 
 function QueryPage() {
