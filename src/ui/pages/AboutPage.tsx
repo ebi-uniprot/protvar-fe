@@ -1,5 +1,5 @@
 import DefaultPageLayout from "../layout/DefaultPageLayout";
-import React from "react";
+import React, {useEffect} from "react";
 import EMBLLogo from "../../images/EMBL_logo.jpg";
 import OTLogo from "../../images/OT_logo.png";
 import UniprotLogo from "../../images/uniprot-logo.svg";
@@ -9,12 +9,16 @@ import CADDLogo from "../../images/cadd-logo.png";
 import EVELogo from "../../images/eve-logo.svg";
 import DMLogo from "../../images/dm-logo.png";
 import FoldXLogo from "../../images/FoldX-logo.png";
+import {TITLE} from "../../constants/const";
 
 function AboutPageContent() {
   //var today = new Date();
   //var dd = String(today.getDate()).padStart(2, '0');
   //var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
   //var yyyy = today.getFullYear();
+  useEffect(() => {
+    document.title = 'About - ' + TITLE;
+  }, []);
 
   return <div className="container">
     <h4>About</h4>

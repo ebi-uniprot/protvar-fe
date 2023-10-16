@@ -9,3 +9,4 @@ export const DOWNLOAD_STATUS=`${API_URL}/download/status`;
 export const LOCAL_DOWNLOADS='PV_downloads';
 export const DISMISS_BANNER = 'PV_banner';
 export const SUBSCRIPTION_STATUS = 'PV_subscribed';
+export const TITLE='EMBL-EBI ProtVar - Contextualising human missense variation'
