@@ -3,6 +3,7 @@ import {baseSettings} from './StructuralDetail';
 import { ReactComponent as ExternalLinkIcon } from "../../../images/external-link.svg"
 import PdbeRef from "./PdbeRef";
 import {ProteinStructureElement} from "../../../types/ProteinStructureResponse";
+import { groupBy } from "../../../utills/Util";
 
 const pdbSettings = (molId: string) => {
   return {...baseSettings,
@@ -22,13 +23,11 @@ interface PdbInfoTableProps {
 }
 
 function PdbInfoTable(props: PdbInfoTableProps) {
-  return <>
-    <div className="tableFixHead">
-      <a href={PDB_URL_INTERFACE_BY_PROTEIN + props.isoFormAccession}>Further information from PDBeKB <ExternalLinkIcon width={12.5}/></a>
+  return <div className="tableFixHead">
       <table>
         <thead>
           <tr>
-            <th colSpan={5}>Experimental Structure - PDBe</th>
+            <th colSpan={5}>PDBe Experimental Structure <a href={PDB_URL_INTERFACE_BY_PROTEIN + props.isoFormAccession} target="_blank" rel="noreferrer" title="Click for further information from PDBeKB"><ExternalLinkIcon width={12.5}/></a></th>
           </tr>
           <tr>
             <th>PDB ID</th>
@@ -38,65 +37,68 @@ function PdbInfoTable(props: PdbInfoTableProps) {
             <th>Method</th>
           </tr>
         </thead>
-        <tbody>{getPdbInfoRows(props)}</tbody>
+        {getPdbInfoRows(props)}
       </table>
     </div>
-  </>
 }
 
 function getPdbInfoRows(props: PdbInfoTableProps) {
   const rows: Array<JSX.Element> = [];
-  const pdbMap = combineChainsByPdbId(props.pdbApiData)
-  pdbMap.forEach((value) => {
-    const copyPdbEntry = {...value.pdbEntry}
-    copyPdbEntry.chain_id = value.chains.sort().join(',')
-    rows.push(getPdbInfoRow(copyPdbEntry, props));
-  })
+  const pdbeGroups = groupBy(props.pdbApiData, "pdb_id")
+
+  for (let groupId in pdbeGroups) {
+    let chainGroup = pdbeGroups[groupId];
+    chainGroup.sort((a,b) => a.chain_id.localeCompare(b.chain_id))
+   rows.push(getPdbInfoRow(groupId, chainGroup, props));
+  }
   return rows;
 }
 
-function combineChainsByPdbId(pdbApiData: Array<ProteinStructureElement>) {
-  const chainsMap = new Map<string, { chains: Array<string>, pdbEntry: ProteinStructureElement }>();
-
-  pdbApiData.forEach((pdbEntry) => {
-    let pdbId = pdbEntry.pdb_id;
-    if (chainsMap.get(pdbId)) {
-      chainsMap.get(pdbId)?.chains.push(pdbEntry.chain_id)
-    }
-    else {
-      const chains = new Array<string>(pdbEntry.chain_id)
-      chainsMap.set(pdbId, { chains, pdbEntry })
-    }
-  });
-
-  return chainsMap;
-}
-
-
-function getPdbInfoRow(str: ProteinStructureElement, props: PdbInfoTableProps) {
-  const isRowSelected = props.selectedPdbId === str.pdb_id
+const getPdbInfoRow = (id: string, chainGroup:ProteinStructureElement[], props: PdbInfoTableProps) => {
+  const isRowSelected = props.selectedPdbId === id
   const rowClass = isRowSelected ? 'clickable-row active' : 'clickable-row';
-  const id = isRowSelected ? <u onMouseOver={(_) => props.pdbeRef.clearSelect()}>{str.pdb_id}</u> : <>{str.pdb_id}</>
-  const pos = isRowSelected ? <u onMouseOver={(_) => props.pdbeRef.selectPos(str.start)}>{str.start}</u> : <>{str.start}</>
+  const chains = chainGroup.map(c => c.chain_id).join(", ")
+  const firstChain = chainGroup[0]
 
-  const chain = str.chain_id.split(',').map(c => {
-    const k = id+'chain-'+c
-    return isRowSelected ? <u key={k} onMouseOut={(_) => props.pdbeRef.clearSelect()} onMouseOver={(_) => props.pdbeRef.selectChain(c)}>{c}</u> : <span key={k}>{c}</span>
+  const tooltip = chainGroup.map(c => c.pdb_id + '\t' + c.chain_id + '\t' + c.start + '\t' + c.resolution + '\t' + c.experimental_method).join('\n')
+
+  let chainNum = 0;
+  const highlightChainBtn = chainGroup.map(c => {
+    const k = 'highlightBtn-'+id+'-'+c.chain_id
+    chainNum++
+    let highlightText = chainNum === 1 ? 'Highlight chain ' + c.chain_id : c.chain_id
+    return <button key={k} className="button-new" onClick={() => props.pdbeRef.highlightChain(c.start, c.chain_id)}>{highlightText}</button>
   })
 
   const clicked = () => {
-    props.pdbeRef.update(pdbSettings(str.pdb_id));
-    props.setSelected(str)
+    props.setSelected(firstChain)
+    props.pdbeRef.update(pdbSettings(id)).then(() =>
+        props.pdbeRef.subscribeOnload(firstChain.start, firstChain.chain_id)
+    );
   }
 
+  const options = isRowSelected ?
+      <tr className="active" key={'options-'+id}>
+        <td className="small" colSpan={5}>
+          <button className="button-new" onClick={() => props.pdbeRef.zoomToVariant(firstChain.start, firstChain.chain_id)}>Zoom to variant</button>
+          {highlightChainBtn}
+          <button className="button-new" onClick={() => props.pdbeRef.resetDefault(firstChain.start, firstChain.chain_id)}>Reset</button>
+        </td>
+      </tr>
+      : <></>
+
   return (
-    <tr className={rowClass} onClick={clicked} key={str.pdb_id}>
-      <td className="small">{id}</td>
-      <td className="small">{chain}</td>
-      <td className="small">{pos}</td>
-      <td className="small">{str.resolution}</td>
-      <td className="small">{str.experimental_method}</td>
-    </tr>
+      <tbody key={id} >
+      <tr className={rowClass} title={tooltip} onClick={clicked}>
+        <td className="small">{id}</td>
+        <td className="small">{chains}</td>
+        <td className="small">{firstChain.start}</td>
+        <td className="small">{firstChain.resolution}</td>
+        <td className="small">{firstChain.experimental_method}</td>
+      </tr>
+      {options}
+      </tbody>
   );
 }
+
 export default PdbInfoTable;
