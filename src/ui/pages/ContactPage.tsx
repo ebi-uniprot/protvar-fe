@@ -1,6 +1,11 @@
 import DefaultPageLayout from "../layout/DefaultPageLayout";
+import {useEffect} from "react";
+import {TITLE} from "../../constants/const";
 
 function ContactPageContent() {
+  useEffect(() => {
+  document.title = 'Contact - ' + TITLE;
+  }, []);
   return <>
     <div className="container">
       <h4>Contact us</h4>

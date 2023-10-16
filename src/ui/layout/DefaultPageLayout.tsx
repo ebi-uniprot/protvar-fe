@@ -99,7 +99,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                           <Link
                             className="local-title"
                             to={HOME}
-                            title="Back to ProtVar's homepage"
+                            title="ProtVar homepage"
                           >
                             <img
                               src="ProtVar_logo.png"
@@ -110,7 +110,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                           <Link
                             className="sub-title"
                             to={HOME}
-                            title="Back to ProtVar's homepage"
+                            title="ProtVar homepage"
                           >
                             Contextualising human missense variation
                           </Link>
@@ -118,7 +118,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                       </td>
                       
                         <td className="topnav-right local-sub-title">
-                          <Link to={CONTACT} title="Contact us">
+                          <Link to={CONTACT} title="ProtVar Contact">
                             Contact
                           </Link>
                         </td>
@@ -128,7 +128,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                             onClick={() =>
                               window.open(API_URL + '/docs', '_blank')
                             }
-                            title="ProtVar REST API"
+                            title="ProtVar API"
                             rel="noreferrer"
                           >
                             API
@@ -138,7 +138,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                           <Link
                             // Replace with the right link
                             to={HELP}
-                            title="About ProtVar's"
+                            title="ProtVar Help"
                             id="aboutProject"
                           >
                             Help
@@ -147,7 +147,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                         <td className="topnav-right local-sub-title">
                           <Link
                             to={ABOUT}
-                            title="About ProtVar's"
+                            title="ProtVar About"
                             id="aboutProject"
                           >
                             About

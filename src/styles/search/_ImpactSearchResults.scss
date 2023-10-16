@@ -715,7 +715,9 @@
 }
 
 .pae {
-	padding: 20px;
+	display: grid;
+	grid-template-rows: auto auto;
+	grid-template-columns: 2em auto 1fr;
 }
 
 .pae {
@@ -745,8 +747,6 @@
 .pae-x-axis {
 	font-size: small;
 	clear: both;
-	width: 140px;
-	text-align: right;
 }
 
 .pae-desc {

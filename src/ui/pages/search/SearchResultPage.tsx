@@ -7,6 +7,8 @@ import { MappingRecord } from "../../../utills/Convertor";
 import DownloadModal from "../../modal/DownloadModal";
 import LegendModal from "../../modal/LegendModal";
 import {FormData} from '../../../types/FormData'
+import {useEffect} from "react";
+import {TITLE} from "../../../constants/const";
 
 interface SearchResultPageProps {
   formData: FormData
@@ -18,6 +20,12 @@ interface SearchResultPageProps {
 
 function SearchResultsPageContent(props: SearchResultPageProps) {
   const { formData, page, rows, fetchNextPage, loading } = props;
+
+  useEffect(() => {
+    const titleSummary = props.formData.file ? 'Showing results for file input' : (props.formData.userInputs.length === 1 ? props.formData.userInputs[0].trim() : 'Showing results for ' + props.formData.userInputs.length + ' user inputs')
+    document.title = titleSummary + ' - ' + TITLE;
+  }, [props]);
+
   if (!rows || rows.length < 1)
     return <Redirect to="/" />
 

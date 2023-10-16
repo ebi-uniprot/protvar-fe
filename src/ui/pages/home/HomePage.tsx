@@ -3,10 +3,11 @@ import { FileLoadFun } from '../../../utills/AppHelper'
 import { Assembly, StringVoidFun } from '../../../constants/CommonTypes'
 import { Link } from 'react-router-dom'
 import { ABOUT, CONTACT } from '../../../constants/BrowserPaths'
-import { API_URL } from '../../../constants/const'
+import {API_URL, TITLE} from '../../../constants/const'
 import SearchVariant from './SearchVariant'
 import { MappingRecord } from '../../../utills/Convertor'
 import {FormData} from '../../../types/FormData'
+import {useEffect} from "react";
 
 const HomePageContent = (props: HomePageProps) => {
   const {
@@ -16,6 +17,10 @@ const HomePageContent = (props: HomePageProps) => {
     fetchFileResult,
     fetchPasteResult,
   } = props
+
+  useEffect(() => {
+    document.title = TITLE;
+  }, []);
 
   return (
     <>

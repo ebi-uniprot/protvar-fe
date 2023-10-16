@@ -1,12 +1,14 @@
 import StructureIcon from '../../../images/structures-3d.svg';
 import "./PdbeMolstar.css";
-import "pdbe-molstar/build/pdbe-molstar-component-3.1.0";
-import "pdbe-molstar/build/pdbe-molstar-light-3.1.0.css";
+import "pdbe-molstar/build/pdbe-molstar-component-3.1.2";
+import "pdbe-molstar/build/pdbe-molstar-light-3.1.2.css";
 import Loader from "../../elements/Loader";
 import {ProteinStructureElement} from "../../../types/ProteinStructureResponse";
 import {AlphafoldResponseElement} from "../../../types/AlphafoldResponse";
 import {P2PInteraction} from "../../../types/FunctionalResponse";
 import {API_URL} from "../../../constants/const";
+import {useEffect, useState} from "react";
+import {PAE} from "./AlphafoldInfoTable";
 
 interface PdbeMolstarProps {
     selected: ProteinStructureElement|AlphafoldResponseElement|P2PInteraction
@@ -14,6 +16,11 @@ interface PdbeMolstarProps {
 }
 
 const PdbeMolstar = (props: PdbeMolstarProps) => {
+    const [pae, setPae] = useState(<></>);
+    useEffect(() => {
+        setPae(props.selected && "paeImageUrl" in props.selected ? <PAE paeImg={props.selected.paeImageUrl} /> : <></>)
+    }, [props.selected]);
+
     let pdbeComponent = <Loader />
 
     if ("pdb_id" in props.selected) {
@@ -32,11 +39,12 @@ const PdbeMolstar = (props: PdbeMolstarProps) => {
                                       custom-data-url={modelUrl} custom-data-format="pdb" alphafold-view="false" hide-water="true" />
     }
 
-    return <PageSpecificStructure component={pdbeComponent} />
+    return <PageSpecificStructure component={pdbeComponent} pae={pae}/>
 }
 
 interface PageSpecificStructureProps {
     component: JSX.Element
+    pae: JSX.Element
  }
 
 const PageSpecificStructure = (props: PageSpecificStructureProps) => {
@@ -45,11 +53,10 @@ const PageSpecificStructure = (props: PageSpecificStructureProps) => {
             <div className="significances-groups">
                 <div className="column">
                     <h5><img src={StructureIcon} className="click-icon" alt="structure icon" title="3D structure" /> Structures</h5>
-                    Image zoomed to show variant location in green<br/>
-                    Reference amino acid shown
                     {props.component}
                     Click variant to see surrounding residues<br/>
                     Click white space to zoom out to whole structure
+                    {props.pae}
                 </div>
             </div>
         </td>

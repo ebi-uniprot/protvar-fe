@@ -2,7 +2,7 @@ import DefaultPageLayout from "../../layout/DefaultPageLayout";
 import React, {useEffect, useState} from "react";
 import "./DownloadPage.css";
 import {getDownloadStatus} from "../../../services/ProtVarService";
-import {LOCAL_DOWNLOADS} from "../../../constants/const"
+import {LOCAL_DOWNLOADS, TITLE} from "../../../constants/const"
 //import { v4 as uuidv4 } from 'uuid';
 import {DownloadResponse} from "../../../types/DownloadResponse";
 import Notify from "../../elements/Notify";
@@ -29,6 +29,7 @@ function DownloadPageContent() {
     const [downloads, setDownloads] = useState<DownloadResponse[]>(localDownloads)
 
     useEffect(() => {
+        document.title = 'My Downloads - ' + TITLE;
         let ds: DownloadResponse[] = JSON.parse(localStorage.getItem(LOCAL_DOWNLOADS) || "[]")
         const ids = ds.map(d => d.downloadId)
         getDownloadStatus(ids)

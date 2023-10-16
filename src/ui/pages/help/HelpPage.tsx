@@ -6,9 +6,13 @@ import remarkGfm from 'remark-gfm';
 import rehypeRaw from "rehype-raw";
 import {uriTransformer} from "react-markdown";
 import {useLocation } from 'react-router-dom';
+import {TITLE} from "../../../constants/const";
 
 function HelpPageContent() {
     const [markdown, setMarkdown] = useState("")
+    useEffect(() => {
+        document.title = 'Help - ' + TITLE;
+    }, []);
 
     const addHelpPrefix = function (uri: string) {
         if (uri.startsWith('#'))

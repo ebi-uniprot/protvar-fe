@@ -40,7 +40,8 @@ function StructuralDetail(props: StructuralDetailProps) {
   const [selected, setSelected] = useState<ProteinStructureElement|AlphafoldResponseElement|P2PInteraction>();
   const [interactionData, setInteractionData] = useState(new Array<P2PInteraction>());
   const [pocketData, setPocketData] = useState(new Array<Pocket>());
-  const [pdbeRef] = useState(new PdbeRef(useRef(null)))
+  const ref = useRef(null);
+  const [pdbeRef] = useState(new PdbeRef(ref))
 
   useEffect(() => {
     let id = ''
@@ -50,7 +51,7 @@ function StructuralDetail(props: StructuralDetailProps) {
           if (response.data.length > 0) {
             id = response.data[0].pdb_id
             setSelected(response.data[0]);
-            pdbeRef.subscribeOnload(response.data[0].start)
+            //pdbeRef.subscribeOnload(response.data[0].start)
           }
           return getPredictedStructure(isoFormAccession);
         }).then(response => {
@@ -58,7 +59,7 @@ function StructuralDetail(props: StructuralDetailProps) {
           if (response.data.length > 0 && !id) {
             // if id already set (pdb id), use that, otherwise, use alphaFold id
             setSelected(response.data[0])
-            pdbeRef.subscribeOnload(aaPosition)
+            //pdbeRef.subscribeOnload(aaPosition)
           }
           let functionUrl = '/function/' + isoFormAccession + '/' + aaPosition + (variantAA == null ? '' : ('?variantAA=' + variantAA))
         return getFunctionalData(functionUrl)
@@ -69,7 +70,7 @@ function StructuralDetail(props: StructuralDetailProps) {
         }).catch(err => {
           console.log(err);
         });
-  }, [proteinStructureUri, isoFormAccession, aaPosition, variantAA, pdbeRef]);
+  }, [proteinStructureUri, isoFormAccession, aaPosition, variantAA]);
 
   if (!selected) {
     return <LoaderRow />
@@ -77,26 +78,20 @@ function StructuralDetail(props: StructuralDetailProps) {
 
   return (
     <tr key={isoFormAccession}>
-      <PdbeMolstar selected={selected} pdbeRef={pdbeRef.ref} />
-      <td colSpan={5} className="expanded-row">
-        {pdbData.length > 0 && <>
-          <br />
-          <PdbInfoTable isoFormAccession={isoFormAccession} pdbApiData={pdbData}
+      <PdbeMolstar selected={selected} pdbeRef={ref} />
+      <td colSpan={5} className="expanded-row structure-data-cell">
+        {pdbData.length > 0 && <><br/>
+            <PdbInfoTable isoFormAccession={isoFormAccession} pdbApiData={pdbData}
                         selectedPdbId={"pdb_id" in selected ? selected.pdb_id : ""}
-                        setSelected={setSelected} pdbeRef={pdbeRef} />
-        </>}
-        {alphaFoldData.length > 0 && <>
-          <br />
-          <AlphafoldInfoTable isoFormAccession={isoFormAccession} alphaFoldData={alphaFoldData}
+                        setSelected={setSelected} pdbeRef={pdbeRef} /></>}
+        {alphaFoldData.length > 0 && <><br/>
+            <AlphafoldInfoTable isoFormAccession={isoFormAccession} alphaFoldData={alphaFoldData}
                               selectedAlphaFoldId={"entryId" in selected ? selected.entryId : ""}
-                              setSelected={setSelected} aaPos={aaPosition} pocketData={pocketData} pdbeRef={pdbeRef} />
-        </>}
-        {interactionData.length > 0 && <>
-        <br />
-        <InteractionInfoTable isoFormAccession={isoFormAccession} interactionData={interactionData}
+                              setSelected={setSelected} aaPos={aaPosition} pocketData={pocketData} pdbeRef={pdbeRef} /></>}
+        {interactionData.length > 0 && <><br/>
+            <InteractionInfoTable isoFormAccession={isoFormAccession} interactionData={interactionData}
                             selectedInteraction={"a" in selected && "b" in selected ? (selected.a+"_"+selected.b) : ""}
-                            setSelected={setSelected} pdbeRef={pdbeRef} />
-      </>}
+                            setSelected={setSelected} aaPos={aaPosition} pdbeRef={pdbeRef} /></>}
       </td>
     </tr>
   );

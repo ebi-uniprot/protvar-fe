@@ -12,6 +12,7 @@ import LegendModal from '../../modal/LegendModal'
 import {FormData, initialFormData} from "../../../types/FormData";
 import Notify from "../../elements/Notify";
 import Loader from "../../elements/Loader";
+import {TITLE} from "../../../constants/const";
 
 // basic tests on query params
 const chromosomeRegExp = new RegExp('[a-zA-Z0-9]+')
@@ -166,6 +167,7 @@ const QueryPageContent = () => {
 
   useEffect(() => {
     const inputs = getInputsFromUrl(location)
+    document.title = inputs + ' - ' + TITLE;
     if (inputs.length > 0) {
       formData.userInputs = inputs
       setFormData(formData)
