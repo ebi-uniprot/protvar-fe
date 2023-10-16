@@ -1,3 +1,5 @@
+import {CYAN, MAGENTA, WHITE, YELLOW} from "../../../types/Colors";
+
 class PdbeRef {
 
     ref: any
@@ -6,74 +8,116 @@ class PdbeRef {
         this.ref = ref
     }
 
-    update(opts: any) {
-        if (this.ref && this.ref.current) {
-            (this.ref.current as any).viewerInstance.visual.update(opts, true);
+    async highlightVariant(pos: number, chain?: string) { // we mean "select"
+        await this.ref.current?.viewerInstance.visual.clearSelection();
+        await this.ref.current?.viewerInstance.visual.select({
+            data: [{
+                start_residue_number: pos, end_residue_number: pos,
+                color: YELLOW,
+                sideChain: true,
+                ...chain && {struct_asym_id: chain}
+            }]
+        })
+    }
+
+    // Focus (and maintain select on) variant
+    async zoomToVariant(pos: number, chain?: string) {
+        await this.ref.current?.viewerInstance.visual.clearSelection();
+        // focus
+        await this.ref.current?.viewerInstance.visual.focus([{
+            start_residue_number: pos, end_residue_number: pos,
+            ...chain && {struct_asym_id: chain}
+        }])
+        // select
+        await this.ref.current?.viewerInstance.visual.select({
+            data: [{
+                start_residue_number: pos, end_residue_number: pos,
+                color: YELLOW,
+                sideChain: true,
+                ...chain && {struct_asym_id: chain}
+            }]
+        })
+    }
+
+    async highlightChain(pos: number, chain: string) { // we mean "select"
+        await this.ref.current?.viewerInstance.visual.clearSelection();
+        await this.ref.current?.viewerInstance.visual.select({
+            data: [
+                {struct_asym_id: chain, color: MAGENTA},  // select chain
+                {
+                    start_residue_number: pos, end_residue_number: pos,
+                    color: YELLOW,
+                    sideChain: true,
+                    ...chain && {struct_asym_id: chain}
+                } // select variant in different color
+            ]
+            , nonSelectedColor: WHITE
+        })
+    }
+
+    async resetDefault(pos: number, chain?: string) {
+        await this.ref.current?.viewerInstance.visual.reset({camera: true});
+        await this.highlightVariant(pos, chain);
+    }
+
+
+    async update(opts: any) {
+        await this.ref.current?.viewerInstance.visual.update(opts, true);
             //(this.ref.current as any).viewerInstance.visual.reset({ theme: true });
-        }
     }
 
-    subscribeOnload(pos: number) {
-        if (this.ref && this.ref.current) {
-            (this.ref.current as any).viewerInstance.events.loadComplete.subscribe(() => {
-                this.onloadSelect(pos)
-            });
-        }
-    }
-
-    onloadSelect(pos: number) {
-        (this.ref.current as any).viewerInstance.visual.select({
-            data: [{
-                start_residue_number: pos, end_residue_number: pos,
-                color: {r: 255, g: 255, b: 0}, focus: true,
-                sideChain: true
-            }]
-        })
-    }
-
-    selectPos(pos: number) {
-        (this.ref.current as any).viewerInstance.visual.select({
-            data: [{
-                start_residue_number: pos, end_residue_number: pos,
-                color: {r: 255, g: 255, b: 0}, focus: true
-            }]
-        })
-    }
-
-    highlightPos(pos: number) {
-        (this.ref.current as any).viewerInstance.visual.highlight({
-            data: [ {start_residue_number: pos, end_residue_number: pos, } ]
+    async subscribeOnload(pos: number, chain?: string) {
+        await this.ref.current?.viewerInstance.events.loadComplete.subscribe(() => {
+            this.highlightVariant(pos, chain)
         });
     }
 
-    selectPocket(pos: number[]) {
-        const d = pos.map((p) => {
-            return {start_residue_number: p, end_residue_number: p,
-                color: { r: 255, g: 255, b: 0 }, focus:true};
-        });
-        (this.ref.current as any).viewerInstance.visual.select({
-            data: d
+    async highlightPocket(aaPos: number, pocketResids: number[]) {
+        await this.ref.current?.viewerInstance.visual.clearSelection();
+        await this.ref.current?.viewerInstance.visual.select({
+            data: pocketResids.map((p) => {
+                return {
+                    start_residue_number: p, end_residue_number: p,
+                    color: MAGENTA,
+                    sideChain: false
+                };
+            }).concat(
+                {
+                    start_residue_number: aaPos, end_residue_number: aaPos,
+                    color: YELLOW,
+                    sideChain: true
+                } // select variant in different color
+            )
+            , nonSelectedColor: WHITE
         })
     }
 
-    clearSelect(reset?:boolean) {
-        (this.ref.current as any).viewerInstance.visual.clearSelection();
-        (this.ref.current as any).viewerInstance.visual.reset({ camera: true });
-    }
-
-    selectChain(chain: string) {
-        (this.ref.current as any).viewerInstance.visual.select({
-            data: [{struct_asym_id: chain, color:{r:255,g:255,b:0}}], nonSelectedColor: {r:255,g:255,b:255}
-        })
-    }
-
-    highlightResids(resids: number[], chain: string) {
-        const rs = resids.map((r) => {
-            return {struct_asym_id: chain, start_residue_number: r, end_residue_number: r,
-                color: { r: 255, g: 255, b: 0 }, focus:true};
-        });
-        (this.ref.current as any).viewerInstance.visual.highlight({
-            data: rs
+    async highlightInterface(aresids: number[], bresids: number[], pos: number, protChain: string) {
+        await this.ref.current?.viewerInstance.visual.clearSelection();
+        await this.ref.current?.viewerInstance.visual.select({
+            data: aresids.map((p) => {
+                return {
+                    struct_asym_id: 'A',
+                    start_residue_number: p, end_residue_number: p,
+                    color: MAGENTA,
+                    sideChain: false
+                };
+            }).concat(bresids.map((p) => {
+                return {
+                    struct_asym_id: 'B',
+                    start_residue_number: p, end_residue_number: p,
+                    color: CYAN,
+                    sideChain: false
+                };
+            })).concat(
+                {
+                    struct_asym_id: protChain,
+                    start_residue_number: pos, end_residue_number: pos,
+                    color: YELLOW,
+                    sideChain: true
+                } // select variant in different color
+            )
+            , nonSelectedColor: WHITE
         })
     }
 }
