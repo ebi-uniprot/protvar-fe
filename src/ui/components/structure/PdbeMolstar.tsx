@@ -1,7 +1,7 @@
 import StructureIcon from '../../../images/structures-3d.svg';
 import "./PdbeMolstar.css";
-import "pdbe-molstar/build/pdbe-molstar-component-3.1.0";
-import "pdbe-molstar/build/pdbe-molstar-light-3.1.0.css";
+import "pdbe-molstar/build/pdbe-molstar-component-3.1.2";
+import "pdbe-molstar/build/pdbe-molstar-light-3.1.2.css";
 import Loader from "../../elements/Loader";
 import {ProteinStructureElement} from "../../../types/ProteinStructureResponse";
 import {AlphafoldResponseElement} from "../../../types/AlphafoldResponse";
