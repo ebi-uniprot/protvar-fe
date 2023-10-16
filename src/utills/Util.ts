@@ -85,3 +85,13 @@ export function formatRange(xs: number[]) {
   }
   return str
 }
+
+export const groupBy = (arr: Array<any>, k: string) => {
+  return arr.reduce((group: { [key: string]: any[] }, item) => {
+    if (!group[item[k]]) {
+      group[item[k]] = [];
+    }
+    group[item[k]].push(item);
+    return group;
+  }, {})
+}
