@@ -56,12 +56,14 @@ class PdbeRef {
     }
 
     async resetDefault(pos: number, chain?: string) {
+        await this.ref.current?.viewerInstance.visual.clearSelection();
         await this.ref.current?.viewerInstance.visual.reset({camera: true});
         await this.highlightVariant(pos, chain);
     }
 
 
     async update(opts: any) {
+        await this.ref.current?.viewerInstance.visual.clearSelection();
         await this.ref.current?.viewerInstance.visual.update(opts, true);
             //(this.ref.current as any).viewerInstance.visual.reset({ theme: true });
     }
