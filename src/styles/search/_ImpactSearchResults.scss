@@ -9,6 +9,9 @@
 		// position: sticky;
 		top: 0;
 	}
+	.tableFixHead table tr:hover {
+		background-color: #e0e0e0;
+	}
 	.tableFixHead table tr td {
 		word-wrap: normal;
 		white-space: nowrap;
