@@ -69,6 +69,11 @@ class PdbeRef {
     }
 
     async subscribeOnload(pos: number, chain?: string) {
+        this.ref.current?.viewerInstance.events.loadComplete.observers?.forEach((o: any) => o.unsubscribe())
+        //if (this.ref.current?.viewerInstance.events.loadComplete.observers.length > 0) {
+        //    console.log(this.ref.current?.viewerInstance.events.loadComplete.observers.length + ' observers')
+        //    this.ref.current?.viewerInstance.events.loadComplete.observers[0].unsubscribe()
+        //}
         await this.ref.current?.viewerInstance.events.loadComplete.subscribe(() => {
             this.ref.current?.viewerInstance.visual.clearSelection();
             this.highlightVariant(pos, chain)
