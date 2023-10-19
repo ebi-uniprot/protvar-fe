@@ -70,26 +70,32 @@ class PdbeRef {
 
     async subscribeOnload(pos: number, chain?: string) {
         await this.ref.current?.viewerInstance.events.loadComplete.subscribe(() => {
+            this.ref.current?.viewerInstance.visual.clearSelection();
             this.highlightVariant(pos, chain)
         });
     }
 
     async highlightPocket(aaPos: number, pocketResids: number[]) {
         await this.ref.current?.viewerInstance.visual.clearSelection();
+        let d = pocketResids.filter((val) => val !== aaPos).map((p) => {
+            return {
+                start_residue_number: p, end_residue_number: p,
+                //color: MAGENTA,
+                sideChain: false,
+                representation: 'spacefill',
+                representationColor: MAGENTA
+            };
+        }).concat(
+            {
+                start_residue_number: aaPos, end_residue_number: aaPos,
+                //color: YELLOW,
+                sideChain: true,
+                representation: 'spacefill',
+                representationColor: YELLOW
+            } // select variant in different color
+        )
         await this.ref.current?.viewerInstance.visual.select({
-            data: pocketResids.map((p) => {
-                return {
-                    start_residue_number: p, end_residue_number: p,
-                    color: MAGENTA,
-                    sideChain: false
-                };
-            }).concat(
-                {
-                    start_residue_number: aaPos, end_residue_number: aaPos,
-                    color: YELLOW,
-                    sideChain: true
-                } // select variant in different color
-            )
+            data: d
             , nonSelectedColor: WHITE
         })
     }
@@ -97,26 +103,32 @@ class PdbeRef {
     async highlightInterface(aresids: number[], bresids: number[], pos: number, protChain: string) {
         await this.ref.current?.viewerInstance.visual.clearSelection();
         await this.ref.current?.viewerInstance.visual.select({
-            data: aresids.map((p) => {
+            data: aresids.filter((val) => val !== pos).map((p) => {
                 return {
                     struct_asym_id: 'A',
                     start_residue_number: p, end_residue_number: p,
                     color: MAGENTA,
-                    sideChain: false
+                    sideChain: false,
+                    representation: 'spacefill',
+                    representationColor: MAGENTA
                 };
-            }).concat(bresids.map((p) => {
+            }).concat(bresids.filter((val) => val !== pos).map((p) => {
                 return {
                     struct_asym_id: 'B',
                     start_residue_number: p, end_residue_number: p,
                     color: CYAN,
-                    sideChain: false
+                    sideChain: false,
+                    representation: 'spacefill',
+                    representationColor: CYAN
                 };
             })).concat(
                 {
                     struct_asym_id: protChain,
                     start_residue_number: pos, end_residue_number: pos,
                     color: YELLOW,
-                    sideChain: true
+                    sideChain: true,
+                    representation: 'spacefill',
+                    representationColor: YELLOW
                 } // select variant in different color
             )
             , nonSelectedColor: WHITE
