@@ -10,6 +10,7 @@ import {getFunctionalData, getStructureData} from "../../../services/ProtVarServ
 import {P2PInteraction, Pocket} from "../../../types/FunctionalResponse";
 import {ProteinStructureElement} from "../../../types/ProteinStructureResponse";
 import {AlphafoldResponseElement} from "../../../types/AlphafoldResponse";
+import {WHITE} from "../../../types/Colors";
 
 
 interface StructuralDetailProps {
@@ -26,9 +27,7 @@ export enum StructType {
 }
 
 export const baseSettings = {
-  bgColor: {
-    r: 255, g: 255, b: 255
-  },
+  bgColor: WHITE,
   hideControls: true,
   hideWater: true
 }

@@ -30,19 +30,7 @@ function AlphafoldInfoTable(props: AlphafoldInfoTableProps) {
   const alphaFoldUrl = props.alphaFoldData[0].cifUrl
   const isRowSelected = props.selectedAlphaFoldId === alphaFoldId;
   const rowClass = isRowSelected ? 'clickable-row active' : 'clickable-row';
-
-  let pocketsList: Array<JSX.Element> = [];
-  let pocketsBtn: Array<JSX.Element> = [];
-  let pnum = 0;
-
-  props.pocketData.forEach((pocket) => {
-    pnum++
-    const p = 'P' + pnum
-    const formattedPockets = 'Residues: ' + formatRange(pocket.residList)
-    const highlightText = pnum === 1 ? 'Highlight ' + p : p
-    pocketsList.push(<span key={'pocketsList-'+pnum} title={formattedPockets}>{p}</span>);
-    pocketsBtn.push(<button key={'pocketsBtn-'+pnum} title={formattedPockets} className="button-new" onClick={() => props.pdbeRef.highlightPocket(props.aaPos, pocket.residList)}>{highlightText}</button>)
-  });
+  let options = <></>
 
   const clicked = () => {
     props.setSelected(props.alphaFoldData[0])
@@ -51,19 +39,31 @@ function AlphafoldInfoTable(props: AlphafoldInfoTableProps) {
     );
   }
 
-  const options = isRowSelected ?
-      <tr className="active" key={'options-'+alphaFoldId}>
-        <td className="small" colSpan={3}>
-          <button className="button-new" onClick={() => props.pdbeRef.zoomToVariant(props.aaPos)}>Zoom to variant</button>
-          {pocketsBtn}
-          <button className="button-new" onClick={() => props.pdbeRef.resetDefault(props.aaPos)}>Reset</button>
-        </td>
-      </tr>
-      : <></>
+  let pocketsList: Array<JSX.Element> = [];
+  let pocketsBtn: Array<JSX.Element> = [];
+  let pnum = 0;
+
+  props.pocketData.forEach((pocket, idx, array) => {
+    pnum++
+    const p = 'P' + pnum
+    const formattedPockets = 'Residues: ' + formatRange(pocket.residList)
+    const highlightText = pnum === 1 ? 'Highlight ' + p : p
+    pocketsList.push(<span key={'pocketsList-'+pnum} title={formattedPockets}>{p}{idx === array.length - 1 ? '' : ', '}</span>);
+    pocketsBtn.push(<button key={'pocketsBtn-'+pnum} title={formattedPockets} className="button-new" onClick={() => props.pdbeRef.highlightPocket(props.aaPos, pocket.residList)}>{highlightText}</button>)
+  });
+
+  if (isRowSelected) {
+    options = <div className="small">
+            <button className="button-new" onClick={() => props.pdbeRef.zoomToVariant(props.aaPos)}>Zoom to variant</button>
+            {pocketsBtn}
+            <button className="button-new" onClick={() => props.pdbeRef.resetDefault(props.aaPos)}>Reset</button>
+          </div>
+  }
 
   return <div>
+    <div className="tableFixHead">
     <table>
-          <thead>
+      <thead>
           <tr>
             <th colSpan={3}>AlphaFold Predicted Structure <a href={ALPHAFOLD_URL_INTERFACE_BY_PROTEIN + props.isoFormAccession} target="_blank" rel="noreferrer" title="Click for further information from AlphaFold"><ExternalLinkIcon width={12.5}/></a></th>
           </tr>
@@ -79,10 +79,11 @@ function AlphafoldInfoTable(props: AlphafoldInfoTableProps) {
             <td className="small">{props.aaPos}</td>
             <td className="small"><>{props.pocketData.length === 0 ? '-' : pocketsList}</></td>
           </tr>
-          {options}
         </tbody>
       </table>
-    {isRowSelected && <ModelConfidence />}
+    </div>
+    {options}
+    {isRowSelected && <><br/><ModelConfidence /></>}
   </div>
 }
 
