@@ -1,7 +1,7 @@
-import {useEffect/*, useState*/} from 'react'
+import {useEffect, useState} from 'react'
 import { Link } from 'react-router-dom'
 import {ABOUT, CONTACT, HELP, HOME} from '../../constants/BrowserPaths'
-import { API_URL, LOCAL_DOWNLOADS/*, DISMISS_BANNER*/ } from '../../constants/const'
+import { API_URL, LOCAL_DOWNLOADS, DISMISS_BANNER } from '../../constants/const'
 
 import DefaultPageContent from './DefaultPageContent'
 
@@ -15,10 +15,10 @@ interface DefaultPageLayoutProps {
 }
 
 function DefaultPageLayout(props: DefaultPageLayoutProps) {
-  //const [showBanner, setShowBanner ] = useState(true);
+  const [showBanner, setShowBanner ] = useState(true);
   // to re-enable banner, uncomment state above, and the lines within
   // the handleDismiss function
-  const showBanner = false
+  //const showBanner = false
   let localDownloads = JSON.parse(localStorage.getItem(LOCAL_DOWNLOADS) || '[]')
   let numDownloads = localDownloads.length;
   
@@ -27,18 +27,18 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
     if (win.ebiFrameworkInvokeScripts) {
       win.ebiFrameworkInvokeScripts()
     }
-/*
+
     const bannerDismissed = sessionStorage.getItem(DISMISS_BANNER);
     if (bannerDismissed) {
       setShowBanner(false);
-    }*/
+    }
   }, [])
 
   const { content } = props;
 
   const handleDismiss = () => {
-    //sessionStorage.setItem(DISMISS_BANNER, 'true');
-    //setShowBanner(false);
+    sessionStorage.setItem(DISMISS_BANNER, 'true');
+    setShowBanner(false);
   }
 
   return (
@@ -175,7 +175,8 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                   </button>
 
                   <div className="banner-content">
-                    Banner text...
+                    We're having a bit of trouble getting the Population Observation data.
+                    We're on it and aiming to fix things ASAP! Thanks for your understanding.
                   </div>
                 </div>
               )}
