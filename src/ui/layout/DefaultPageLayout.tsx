@@ -175,7 +175,8 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                   </button>
 
                   <div className="banner-content">
-                    We know there's a hiccup in getting the Population Observation data. Don't worry, we're on it and aiming to fix things ASAP! Thanks for your understanding.
+                    We're having a bit of trouble getting the Population Observation data.
+                    We're on it and aiming to fix things ASAP! Thanks for your understanding.
                   </div>
                 </div>
               )}
