@@ -102,6 +102,39 @@
 		cursor: pointer;
 	}
 
+	.img-icon {
+		width: 24px;
+		height: 24px;
+		opacity: 0.85;
+	}
+
+	.msg-icon {
+		padding: 2px 8px;
+		border-radius: 50%;
+		font-family: Georgia, serif;
+		font-size: 12px;
+		font-weight: bold;
+		color: #fff;
+		margin: 0 5px 0 2px;
+	}
+
+	.msg-warn {
+		@extend .msg-icon;
+		color:darkorange;
+		border:2px solid darkorange;
+	}
+	.msg-error {
+		@extend .msg-icon;
+		color:orangered;
+		border:2px solid orangered;
+		padding: 2px 6px;
+	}
+	.msg-info {
+		@extend .msg-icon;
+		color:cornflowerblue;
+		border:2px solid cornflowerblue;
+	}
+
 	.active {
 		background-color: rgba(255, 235, 59, 0.3) !important;
 	}
