@@ -174,7 +174,7 @@ const SearchVariant = (props: VariantSearchProps) => {
                     title="VCF ✅
                     gnomAD ✅
                     HGVS g. ✅
-                    Custom genomic input incl. in the following formats
+                    Custom genomic input including in the following formats
                     X 149498202 C G ✅ (without variant ID/lenient VCF)
                     X 149498202 C/G ✅
                     X 149498202 C>G ✅"
@@ -186,7 +186,7 @@ const SearchVariant = (props: VariantSearchProps) => {
                     onClick={cDNAExamples}
                     className="example-link"
                     id="cDNAExamples"
-                    title="HGVS c."
+                    title="HGVS c. ✅"
                   >
                     cDNA
                   </button>
@@ -196,7 +196,7 @@ const SearchVariant = (props: VariantSearchProps) => {
                     className="example-link"
                     id="proteinExamples"
                     title="HGVS p. ✅
-                     Custom protein input incl. in the following formats
+                     Custom protein input including in the following formats
                      P22304 A205P ✅
                      P07949 asn783thr ✅
                      P22309 71 Gly Arg ✅

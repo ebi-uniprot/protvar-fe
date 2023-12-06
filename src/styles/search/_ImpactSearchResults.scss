@@ -102,31 +102,14 @@
 		cursor: pointer;
 	}
 
-	.msg-icon {
-		padding: 2px 8px;
-		border-radius: 50%;
-		font-family: Georgia, serif;
-		font-size: 12px;
-		font-weight: bold;
-		color: #fff;
-		margin: 0 5px 0 2px;
-	}
-
 	.msg-warn {
-		@extend .msg-icon;
-		color:darkorange;
-		border:2px solid darkorange;
+		color:#ffc107;
 	}
 	.msg-error {
-		@extend .msg-icon;
-		color:orangered;
-		border:2px solid orangered;
-		padding: 2px 6px;
+		color:#dc3545;
 	}
 	.msg-info {
-		@extend .msg-icon;
-		color:cornflowerblue;
-		border:2px solid cornflowerblue;
+		color:#0dcaf0;
 	}
 
 	.active {
@@ -704,6 +687,18 @@
 		width: 100%;
 		float: left;
 		padding-left: 1rem;
+	}
+
+	.eve-benign {
+		color: blue;
+	}
+
+	.eve-pathogenic {
+		color: red;
+	}
+
+	.eve-uncertain {
+		color: lightgrey;
 	}
 }
 

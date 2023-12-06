@@ -14,9 +14,9 @@ export interface EveIconProps {
 
 export function EveIcon(props: EveIconProps) {
     switch(props.eveClass) {
-        case 1: return <><div className="circle-icon" style={{ background: 'Blue' }}></div></>;
-        case 2: return <><div className="circle-icon" style={{ background: 'Red' }}></div></>
-        case 3: return <><div className="circle-icon" style={{ background: 'LightGrey' }}></div></>;
-        default: return <>N/A</>;
+        case 1: return <i className="eve-benign bi bi-circle-fill"></i>
+        case 2: return <i className="eve-pathogenic bi bi-circle-fill"></i>
+        case 3: return <i className="eve-uncertain bi bi-circle-fill"></i>
+        default: return <></>
     }
 }

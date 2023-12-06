@@ -7,16 +7,22 @@ function EveScoreColors() {
             <br />
             <div className="flex-column">
                 <div className="flex">
-                    <div className="circle-icon" style={{ background: 'Blue' }}></div>
-                    <div className="flex1">Benign</div>
+                  <span className="padding-left-right-1x">
+                    <i className="eve-benign bi bi-circle-fill"></i>
+                  </span>
+                  <div className="flex1">Benign</div>
                 </div>
                 <div className="flex">
-                    <div className="circle-icon" style={{ background: 'Red' }}></div>
-                    <div className="flex1">Pathogenic</div>
+                  <span className="padding-left-right-1x">
+                    <i className="eve-pathogenic bi bi-circle-fill"></i>
+                  </span>
+                  <div className="flex1">Pathogenic</div>
                 </div>
                 <div className="flex">
-                    <div className="circle-icon" style={{ background: 'LightGrey' }}></div>
-                    <div className="flex1">Uncertain</div>
+                  <span className="padding-left-right-1x">
+                    <i className="eve-uncertain bi bi-circle-fill"></i>
+                  </span>
+                  <div className="flex1">Uncertain</div>
                 </div>
             </div>
         </div>
