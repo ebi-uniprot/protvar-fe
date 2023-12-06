@@ -131,8 +131,8 @@ const SearchVariant = (props: VariantSearchProps) => {
   }
 
   const pasteBox: string =
-    'Paste variants here. Accepted formats are VCF, HGVS, dbSNP, protein position.\n' +
-    'Mixed formats are allowed, however mixed genome assemblies are not.\n' +
+    'Paste variants here. Genomic, cDNA, Protein and ID input types are accepted. Click on the examples to see supported ' +
+    'formats. Mixed formats are allowed, however mixed genome assemblies are not.\n' +
     'Test inputs can be found to the right\n' +
     '\n' +
     'X\t149498202\t.\tC\tG\n' +
@@ -174,7 +174,7 @@ const SearchVariant = (props: VariantSearchProps) => {
                     title="VCF ✅
                     gnomAD ✅
                     HGVS g. ✅
-                    Custom genomic input including in the following formats
+                    Custom genomic formats including the following
                     X 149498202 C G ✅ (without variant ID/lenient VCF)
                     X 149498202 C/G ✅
                     X 149498202 C>G ✅"
@@ -186,7 +186,7 @@ const SearchVariant = (props: VariantSearchProps) => {
                     onClick={cDNAExamples}
                     className="example-link"
                     id="cDNAExamples"
-                    title="HGVS c. ✅"
+                    title="HGVS c. (using RefSeq NM identifier) ✅"
                   >
                     cDNA
                   </button>
@@ -195,8 +195,8 @@ const SearchVariant = (props: VariantSearchProps) => {
                     onClick={proteinExamples}
                     className="example-link"
                     id="proteinExamples"
-                    title="HGVS p. ✅
-                     Custom protein input including in the following formats
+                    title="HGVS p. (using RefSeq NP identifier) ✅
+                     Custom protein inputs including the following
                      P22304 A205P ✅
                      P07949 asn783thr ✅
                      P22309 71 Gly Arg ✅
