@@ -1,5 +1,7 @@
+export type InputType = GenomicInput|ProteinInput|IDInput|CodingInput
+
 export interface MappingResponse {
-  inputs: Array<GenomicInput|ProteinInput|RSInput>
+  inputs: Array<InputType>
   messages: Array<Message>
 }
 
@@ -8,9 +10,10 @@ export interface Message {
   text: string
 }
 
-export const INPUT_GEN = 'GEN'
-export const INPUT_PRO = 'PRO'
-export const INPUT_RS = 'RS'
+export const INPUT_GEN = 'GENOMIC'
+export const INPUT_PRO = 'PROTEIN'
+export const INPUT_CDNA = 'CODING'
+export const INPUT_ID = 'ID'
 
 export const INFO = 'INFO'
 export const WARN = 'WARN'
@@ -20,6 +23,7 @@ export interface UserInput {
   inputStr: string
   messages: Array<Message>
   type: string
+  format: string
   valid: boolean
 }
 
@@ -46,8 +50,27 @@ export interface ProteinInput extends UserInput {
   derivedGenomicInputs:Array<GenomicInput>
 }
 
-export interface RSInput extends UserInput {
+export interface IDInput extends UserInput {
   id:string
+  derivedGenomicInputs:Array<GenomicInput>
+}
+
+// for HGVSc input
+export interface CodingInput extends UserInput {
+  acc:string
+  pos:number
+  ref:string
+  alt:string
+
+  gene:string
+  protRef:string
+  protAlt:string
+  protPos:number
+
+  derivedUniprotAcc:string
+  derivedProtPos:number
+  derivedCodonPos:number
+
   derivedGenomicInputs:Array<GenomicInput>
 }
 

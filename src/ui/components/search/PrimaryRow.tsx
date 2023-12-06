@@ -1,7 +1,7 @@
 import { Fragment, lazy, Suspense } from "react";
 import { StringVoidFun } from "../../../constants/CommonTypes";
 import {
-  CADD_INFO_URL,
+  CADD_INFO_URL, CLINVAR_RCV_URL, CLINVAR_VCV_URL, COSMIC_URL,
   DBSNP_URL,
   ENSEMBL_CHRM_URL,
   ENSEMBL_GENE_URL,
@@ -23,7 +23,7 @@ import { ReactComponent as ChevronUpIcon } from "../../../images/chevron-up.svg"
 import { EmptyElement } from "../../../constants/ConstElement";
 import { aaChangeTip, CanonicalIcon } from "./AlternateIsoFormRow";
 import {EveIcon, getEveClassText} from "./EveScore";
-import {INPUT_GEN, INPUT_PRO, INPUT_RS} from "../../../types/MappingResponse";
+import {INPUT_GEN, INPUT_PRO, INPUT_ID, INPUT_CDNA} from "../../../types/MappingResponse";
 
 const StructuralDetail = lazy(() => import(/* webpackChunkName: "StructuralDetail" */ "../structure/StructuralDetail"));
 const PopulationDetail = lazy(() => import(/* webpackChunkName: "PopulationDetail" */ "../population/PopulationDetail"));
@@ -42,11 +42,28 @@ const getPrimaryRow = (record: MappingRecord, toggleOpenGroup: string, isoFormGr
       backgroundColor: record.type === INPUT_GEN ? "#F8EDF0" : ""
     },
     pro: {
-      backgroundColor: record.type === INPUT_PRO ? "#F8EDF0" : ""
+      backgroundColor: (record.type === INPUT_PRO || record.type === INPUT_CDNA)? "#F8EDF0" : ""
     },
     rs: {
-      backgroundColor: record.type === INPUT_RS ? "#F8EDF0" : ""
+      backgroundColor: record.type === INPUT_ID ? "#F8EDF0" : ""
     }
+  }
+
+  const getUrl = (id:string) => {
+    if (id) {
+      let idLowerCase = id.toLowerCase()
+      let idUpperCase = id.toUpperCase()
+      if (idLowerCase.startsWith("rs")) {
+        return DBSNP_URL + id;
+      } else if (idUpperCase.startsWith("RCV")) {
+        return CLINVAR_RCV_URL + id;
+      } else if (idUpperCase.startsWith("VCV")) {
+        return CLINVAR_VCV_URL + id;
+      } else if (idUpperCase.startsWith("COSV") || idUpperCase.startsWith("COSM") || idUpperCase.startsWith("COSN")) {
+        return COSMIC_URL + id;
+      }
+    }
+    return "";
   }
 
   const positionUrl = ENSEMBL_VIEW_URL + record.chromosome + ':' + record.position + '-' + record.position;
@@ -72,7 +89,7 @@ const getPrimaryRow = (record: MappingRecord, toggleOpenGroup: string, isoFormGr
         </Tool>
       </td>
       <td style={inputStyle.rs}><Tool tip="Variant ID provided by the user">
-        <a href={DBSNP_URL + record.id} target="_blank" rel="noopener noreferrer">{record.id}</a>
+        <a href={getUrl(record.id)} target="_blank" rel="noopener noreferrer">{record.id}</a>
       </Tool></td>
       <td><Tool tip={ALLELE.get(record.refAllele)}>{record.refAllele}</Tool></td>
       <td><Tool tip={ALLELE.get(record.altAllele)}>{record.altAllele}</Tool></td>

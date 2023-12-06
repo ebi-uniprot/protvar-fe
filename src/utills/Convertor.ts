@@ -1,4 +1,13 @@
-import {GenomeProteinMapping, INPUT_GEN, INPUT_PRO, INPUT_RS, UserInput, GenomicInput, ProteinInput, RSInput} from "../types/MappingResponse";
+import {
+  GenomeProteinMapping,
+  INPUT_GEN,
+  INPUT_PRO,
+  INPUT_ID,
+  INPUT_CDNA,
+  UserInput,
+  GenomicInput,
+  InputType, Message, ERROR
+} from "../types/MappingResponse";
 
 export interface MappingRecord {
   idx: number
@@ -95,7 +104,7 @@ TableRow
  */
 
 
-export function convertApiMappingToTableRecords(inputs: Array<GenomicInput|ProteinInput|RSInput>) {
+export function convertApiMappingToTableRecords(inputs: Array<InputType>) {
   var records: Array<Array<Array<MappingRecord>>> = [];
   inputs.forEach((input, index) => {
 
@@ -106,7 +115,7 @@ export function convertApiMappingToTableRecords(inputs: Array<GenomicInput|Prote
     if (input.type === INPUT_GEN && "mappings" in input) {
       records.push(convertGenInputMappings(input, input, index))
     }
-    else if ((input.type === INPUT_PRO || input.type === INPUT_RS) && "derivedGenomicInputs" in input) {
+    else if ((input.type === INPUT_PRO || input.type === INPUT_CDNA || input.type === INPUT_ID) && "derivedGenomicInputs" in input) {
       input.derivedGenomicInputs.forEach((gInput: GenomicInput) => {
         records.push(convertGenInputMappings(input, gInput, index))
       })
