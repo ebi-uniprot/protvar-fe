@@ -34,7 +34,7 @@ export interface MappingRecord {
   // OTHER properties
   ensp?: Array<TranslatedSequence>  // passed to FunctionalDetail component
   ensg?: string                     // passed to FunctionalDetail component
-  note?: string
+  msg?: Message
 }
 
 export interface TranslatedSequence {
@@ -75,11 +75,11 @@ function emptyRow(input: UserInput) {
   }
 }
 
-function msgRow(input: UserInput, inputIdx:number, err: string) {
+function msgRow(input: UserInput, inputIdx:number, m: Message) {
   var genes: Array<Array<MappingRecord>> = [];
   var rows: Array<MappingRecord> = [];
   const empty: MappingRecord = emptyRow(input);
-  empty.note = err;
+  empty.msg = m;
   empty.idx = inputIdx
   rows.push(empty);
   genes.push(rows);
@@ -98,10 +98,10 @@ TableRow
 export function convertApiMappingToTableRecords(inputs: Array<GenomicInput|ProteinInput|RSInput>) {
   var records: Array<Array<Array<MappingRecord>>> = [];
   inputs.forEach((input, index) => {
-    if (input.messages.length > 0) {
-      var err = input.messages.map(m => m.text).join(" ")
-      records.push(msgRow(input, index, err))
-    }
+
+    input.messages.forEach(m => {
+      records.push(msgRow(input, index, m))
+    });
 
     if (input.type === INPUT_GEN && "mappings" in input) {
       records.push(convertGenInputMappings(input, input, index))
@@ -115,10 +115,12 @@ export function convertApiMappingToTableRecords(inputs: Array<GenomicInput|Prote
   return records;
 }
 
+const NO_MAPPING: Message = {type: 'ERROR', text: 'No mapping found' }
+
 function convertGenInputMappings(originalInput: UserInput, gInput: GenomicInput, idx: number) {
   if (gInput.mappings.length === 0 || (gInput.mappings.length === 1 && gInput.mappings[0].genes.length === 0)) {
     if (!(originalInput.messages.length > 0 || gInput.messages.length > 0)) {
-      return msgRow(gInput, idx, "No mapping found")
+      return msgRow(gInput, idx, NO_MAPPING)
     }
   }
   var genes: Array<Array<MappingRecord>> = [];

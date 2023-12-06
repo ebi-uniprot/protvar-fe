@@ -5,7 +5,7 @@ import AlternateIsoFormRow from "./AlternateIsoFormRow";
 import { GENOMIC_COLS, PROTEIN_COLS } from "../../../constants/SearchResultTable";
 import Tool from "../../elements/Tool";
 import getPrimaryRow from "./PrimaryRow";
-import NoteRow from "./NoteRow";
+import MsgRow from "./MsgRow";
 
 interface ResultTableProps {
   mappings: Array<Array<Array<MappingRecord>>>
@@ -84,10 +84,10 @@ const getTableRows = (mappings: MappingRecord[][][], isoFormGroupExpanded: strin
         }
         prevInput = currInput
         if (index === 0)
-          if (isoform.note) {
-            tableRows.push(<NoteRow record={isoform}
-                                    key={currentGroup}
-                                    currStyle={currStyle}/>)
+          if (isoform.msg) {
+            tableRows.push(<MsgRow record={isoform}
+                                   key={currentGroup}
+                                   currStyle={currStyle}/>)
           }
           else
             tableRows.push(getPrimaryRow(isoform, currentGroup, isoFormGroupExpanded, toggleIsoFormGroup, annotationExpanded,
