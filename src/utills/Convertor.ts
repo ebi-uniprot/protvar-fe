@@ -6,7 +6,7 @@ import {
   INPUT_CDNA,
   UserInput,
   GenomicInput,
-  InputType, Message, ERROR
+  InputType, Message
 } from "../types/MappingResponse";
 
 export interface MappingRecord {

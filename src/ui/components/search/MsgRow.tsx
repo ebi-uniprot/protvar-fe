@@ -13,11 +13,11 @@ export const INFO_ICON = <><i className="msg-info bi bi-info-circle-fill"></i>{'
 
 const getIcon = (m?: Message) => {
   if (m) {
-    if (m.type == ERROR)
+    if (m.type === ERROR)
       return ERROR_ICON
-    else if (m.type == WARN)
+    else if (m.type === WARN)
       return WARN_ICON
-    else if (m.type == INFO)
+    else if (m.type === INFO)
       return INFO_ICON
   }
 }
