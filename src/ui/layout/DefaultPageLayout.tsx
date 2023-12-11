@@ -14,8 +14,10 @@ interface DefaultPageLayoutProps {
   searchResults?: MappingRecord[][][]
 }
 
+const bannerText = null
+
 function DefaultPageLayout(props: DefaultPageLayoutProps) {
-  const [showBanner, setShowBanner ] = useState(true);
+  const [showBanner, setShowBanner ] = useState(bannerText == null ? false : true);
   // to re-enable banner, uncomment state above, and the lines within
   // the handleDismiss function
   //const showBanner = false
@@ -175,8 +177,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                   </button>
 
                   <div className="banner-content">
-                    We're having a bit of trouble getting the Population Observation data.
-                    We're on it and aiming to fix things ASAP! Thanks for your understanding.
+                    {bannerText}
                   </div>
                 </div>
               )}
