@@ -24,7 +24,7 @@ export interface UserInput {
   messages: Array<Message>
   type: string
   format: string
-  valid: boolean
+  //valid: boolean
 }
 
 export interface Message {

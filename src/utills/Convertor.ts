@@ -98,11 +98,10 @@ function msgRow(input: UserInput, inputIdx:number, m: Message) {
 /*
 TableRow
 -PrimaryRow - contains all fields
--IsoformRow     - contains isoform fields
+-IsoformRow - contains isoform fields
 -MsgRow     - contains any message
 
  */
-
 
 export function convertApiMappingToTableRecords(inputs: Array<InputType>) {
   var records: Array<Array<Array<MappingRecord>>> = [];
@@ -117,6 +116,9 @@ export function convertApiMappingToTableRecords(inputs: Array<InputType>) {
     }
     else if ((input.type === INPUT_PRO || input.type === INPUT_CDNA || input.type === INPUT_ID) && "derivedGenomicInputs" in input) {
       input.derivedGenomicInputs.forEach((gInput: GenomicInput) => {
+        gInput.messages.forEach(m => {
+          records.push(msgRow(gInput, index, m))
+        });
         records.push(convertGenInputMappings(input, gInput, index))
       })
     }
@@ -126,26 +128,35 @@ export function convertApiMappingToTableRecords(inputs: Array<InputType>) {
 
 const NO_MAPPING: Message = {type: 'ERROR', text: 'No mapping found' }
 
-function convertGenInputMappings(originalInput: UserInput, gInput: GenomicInput, idx: number) {
-  if (gInput.mappings.length === 0 || (gInput.mappings.length === 1 && gInput.mappings[0].genes.length === 0)) {
-    if (!(originalInput.messages.length > 0 || gInput.messages.length > 0)) {
-      return msgRow(gInput, idx, NO_MAPPING)
+function hasNoMapping(genInput: GenomicInput) {
+  return genInput.mappings.length === 0 || (genInput.mappings.length === 1 && genInput.mappings[0].genes.length === 0)
+}
+
+function hasNoMessage(originalInput: UserInput, genInput: GenomicInput) {
+  return !(originalInput.messages.length > 0 || genInput.messages.length > 0)
+}
+
+function convertGenInputMappings(originalInput: UserInput, genInput: GenomicInput, idx: number) {
+  // if derivedGenInput (or originalInput - same for Gen Input) has no mappings
+  if (hasNoMapping(genInput)) {
+    if (hasNoMessage(originalInput, genInput)) {
+      return msgRow(genInput, idx, NO_MAPPING)
     }
   }
   var genes: Array<Array<MappingRecord>> = [];
 
-  gInput.mappings.forEach(mapping => {
+  genInput.mappings.forEach(mapping => {
     mapping.genes.forEach((gene) => {
       var rows: Array<MappingRecord> = [];
       let ensg = gene.ensg;
       gene.isoforms.forEach((isoform) => {
-        var record: MappingRecord = getEmptyMapping(gInput, mapping)
+        var record: MappingRecord = getEmptyMapping(genInput, mapping)
         record.idx = idx;
         record.type = originalInput.type
         // GENOMIC
         if (isoform.canonical || isoform.canonicalAccession === null) {
-          record.chromosome = gInput.chr;
-          record.id = gInput.id;
+          record.chromosome = genInput.chr;
+          record.id = genInput.id;
           record.refAllele = gene.refAllele;
           record.geneName = gene.geneName;
           record.codon = isoform.refCodon + '/' + isoform.variantCodon;
