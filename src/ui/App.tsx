@@ -131,7 +131,7 @@ function App(props: AppProps) {
   function mappingApiCall(inputSubArray: string[]) {
     mappings(inputSubArray, formData.assembly.toString())
       .then((response) => {
-        const records = convertApiMappingToTableRecords(response.data.inputs);
+        const records = convertApiMappingToTableRecords(response.data);
         setSearchResults(records);
         response.data.messages.forEach(message => {
             if (message.type === INFO) {

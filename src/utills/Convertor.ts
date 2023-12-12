@@ -6,7 +6,7 @@ import {
   INPUT_CDNA,
   UserInput,
   GenomicInput,
-  InputType, Message
+  Message, MappingResponse
 } from "../types/MappingResponse";
 
 export interface MappingRecord {
@@ -70,7 +70,7 @@ function getEmptyMapping(input: GenomicInput, mapping: GenomeProteinMapping) {
   ret.refAllele = "";
   return ret;
 }
-function emptyRow(input: UserInput) {
+function emptyRow(input?: UserInput) {
   return {
     idx: 0,
     chromosome: "",
@@ -79,12 +79,12 @@ function emptyRow(input: UserInput) {
     refAllele: "",
     altAllele: "",
     canonicalAccession: null,
-    input: input.inputStr,
-    type: input.type
+    input: input ? input.inputStr : "",
+    type: input ? input.type : ""
   }
 }
 
-function msgRow(input: UserInput, inputIdx:number, m: Message) {
+function msgRow(inputIdx:number, m: Message, input?: UserInput) {
   var genes: Array<Array<MappingRecord>> = [];
   var rows: Array<MappingRecord> = [];
   const empty: MappingRecord = emptyRow(input);
@@ -103,12 +103,17 @@ TableRow
 
  */
 
-export function convertApiMappingToTableRecords(inputs: Array<InputType>) {
+export function convertApiMappingToTableRecords(response: MappingResponse) {
   var records: Array<Array<Array<MappingRecord>>> = [];
-  inputs.forEach((input, index) => {
+
+  response.messages.forEach(m => {
+    records.push(msgRow(-1, m))
+  });
+
+  response.inputs.forEach((input, index) => {
 
     input.messages.forEach(m => {
-      records.push(msgRow(input, index, m))
+      records.push(msgRow(index, m, input))
     });
 
     if (input.type === INPUT_GEN && "mappings" in input) {
@@ -117,7 +122,7 @@ export function convertApiMappingToTableRecords(inputs: Array<InputType>) {
     else if ((input.type === INPUT_PRO || input.type === INPUT_CDNA || input.type === INPUT_ID) && "derivedGenomicInputs" in input) {
       input.derivedGenomicInputs.forEach((gInput: GenomicInput) => {
         gInput.messages.forEach(m => {
-          records.push(msgRow(gInput, index, m))
+          records.push(msgRow(index, m, gInput))
         });
         records.push(convertGenInputMappings(input, gInput, index))
       })
@@ -140,7 +145,7 @@ function convertGenInputMappings(originalInput: UserInput, genInput: GenomicInpu
   // if derivedGenInput (or originalInput - same for Gen Input) has no mappings
   if (hasNoMapping(genInput)) {
     if (hasNoMessage(originalInput, genInput)) {
-      return msgRow(genInput, idx, NO_MAPPING)
+      return msgRow(idx, NO_MAPPING, genInput)
     }
   }
   var genes: Array<Array<MappingRecord>> = [];

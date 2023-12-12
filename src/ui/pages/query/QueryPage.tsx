@@ -173,7 +173,7 @@ const QueryPageContent = () => {
       setFormData(formData)
       mappings(formData.userInputs)
         .then((response) => {
-          const records = convertApiMappingToTableRecords(response.data.inputs)
+          const records = convertApiMappingToTableRecords(response.data)
           setSearchResults(records)
           setLoaded(true)
         })
