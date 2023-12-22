@@ -11,18 +11,6 @@ spec:
     app: protvar-fe # Selects the Deployment to attach the Service to
   type: NodePort # Tell K8s this wants to expose an external port
 ---
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
-  name: protvar-logs
-spec:
-  storageClassName: standard-nfs-production
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 5Gi
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -50,19 +38,12 @@ spec:
               port: 80
             initialDelaySeconds: 4 # wait 4 seconds before performing the first liveness probe
             periodSeconds: 5 # perform a liveness probe every 5 seconds
-          volumeMounts:
-            - name: protvar-fe-logs
-              mountPath: /var/log/nginx
           resources:
             requests:
               memory: "20Mi"
               cpu: "100m"
             limits:
               memory: "50Mi"
-      volumes:
-        - name: protvar-fe-logs
-          persistentVolumeClaim:
-            claimName: protvar-logs
       imagePullSecrets:
         - name: protvar-fe-gitlab-registry-to #allows K8s to connect to dockerhub.ebi.ac.uk
         - name: protvar-fe-gitlab-registry-ci #should exit by default
