@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react'
 import { Link } from 'react-router-dom'
-import {ABOUT, CONTACT, HELP, HOME} from '../../constants/BrowserPaths'
+import {ABOUT, CONTACT, HELP, HOME, RELEASE} from '../../constants/BrowserPaths'
 import { API_URL, LOCAL_DOWNLOADS, DISMISS_BANNER } from '../../constants/const'
 
 import DefaultPageContent from './DefaultPageContent'
@@ -141,20 +141,29 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                             // Replace with the right link
                             to={HELP}
                             title="ProtVar Help"
-                            id="aboutProject"
+                            id="protvarHelp"
                           >
                             Help
                           </Link>
                         </td>
-                        <td className="topnav-right local-sub-title">
-                          <Link
-                            to={ABOUT}
-                            title="ProtVar About"
-                            id="aboutProject"
-                          >
-                            About
-                          </Link>
-                        </td>
+                      <td className="topnav-right local-sub-title">
+                        <Link
+                          to={ABOUT}
+                          title="ProtVar About"
+                          id="protvarAbout"
+                        >
+                          About
+                        </Link>
+                      </td>
+                      <td className="topnav-right local-sub-title">
+                        Release <Link
+                          to={RELEASE}
+                          title="ProtVar Release"
+                          id="protvarRelease"
+                        >
+                          {process.env.REACT_APP_UNIPROT_RELEASE}
+                        </Link>
+                      </td>
                     
                     </tr>
                   </tbody>
