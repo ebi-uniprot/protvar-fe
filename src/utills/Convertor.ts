@@ -158,6 +158,7 @@ function convertGenInputMappings(originalInput: UserInput, genInput: GenomicInpu
         var record: MappingRecord = getEmptyMapping(genInput, mapping)
         record.idx = idx;
         record.type = originalInput.type
+        record.altAllele = gene.altAllele
         // GENOMIC
         if (isoform.canonical || isoform.canonicalAccession === null) {
           record.chromosome = genInput.chr;

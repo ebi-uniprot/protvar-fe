@@ -89,6 +89,7 @@ interface Gene {
   reverseStrand: boolean;
   geneName: string;
   refAllele: string;
+  altAllele: string;
   isoforms: Array<IsoFormMapping>;
   caddScore: number;
 }
