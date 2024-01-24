@@ -42,7 +42,7 @@ function ReleasePageContent() {
         </tr>
         <tr>
           <td>19,038</td>
-          <td>SwissProt proteins mapped (&gt93%)</td>
+          <td>SwissProt proteins mapped (&gt;93%)</td>
         </tr>
         <tr>
           <td>134,527</td>
