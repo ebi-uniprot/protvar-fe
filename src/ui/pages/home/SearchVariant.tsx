@@ -43,8 +43,8 @@ const SearchVariant = (props: VariantSearchProps) => {
   const cDNAExamples = () => {
     setSearchTerm(
       'NM_004006.2:c.234C>G\n' +
-      'NM_017547.4(FOXRED1):c.1289A>G(p.Asn430Ser)\n' +
-      'NM_014630.3(ZNF592):c.3136G>A (p.Gly1046Arg)\n',
+      'NM_017547.4(FOXRED1):c.1289A>Gp.(Asn430Ser)\n' +
+      'NM_014630.3(ZNF592):c.3136G>A p.(Gly1046Arg)\n',
     )
   };
 
