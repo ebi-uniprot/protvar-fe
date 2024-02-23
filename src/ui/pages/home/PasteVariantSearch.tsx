@@ -101,18 +101,21 @@ function PasteVariantSearch(props: PasteVariantSearchProps) {
             <section className="uniprot-card__left">
 
               <div className="assembly">
-                  <span title="Genome assembly conversion from GRCh37 to GRCh38 works for genomic input types only i.e. for input in VCF, HGVS or gnomAD formats. Protein position and DBSNP ID inputs are assumed to be in GRCh38.">Reference Genome Assembly</span>
-                  <div className="assembly-radio-check">
-                    <label>
-                      <input type="radio" name="grch" value="grch38" checked={props.assembly===Assembly.GRCh38} onChange={() => props.updateAssembly(Assembly.GRCh38)}/>
-                      GRCh38</label>
-                    <label>
-                    <input type="radio" name="grch" value="grch37" checked={props.assembly===Assembly.GRCh37} onChange={() => props.updateAssembly(Assembly.GRCh37)}/>
+                  <span title="Genome assembly GRCh37 to GRCh38 conversion for genomic inputs (VCF, HGVS g., gnomAD and any other custom genomic formats).">Reference Genome Assembly</span>
+                <div className="assembly-radio-check">
+                  <label>
+                    <input type="radio" name="grch" value="auto" checked={props.assembly === Assembly.AUTO}
+                           onChange={() => props.updateAssembly(Assembly.AUTO)}/>
+                    Auto-detect</label>
+                  <label>
+                    <input type="radio" name="grch" value="grch38" checked={props.assembly === Assembly.GRCh38}
+                           onChange={() => props.updateAssembly(Assembly.GRCh38)}/>
+                    GRCh38</label>
+                  <label>
+                    <input type="radio" name="grch" value="grch37" checked={props.assembly === Assembly.GRCh37}
+                           onChange={() => props.updateAssembly(Assembly.GRCh37)}/>
                     GRCh37</label>
-                    <label>
-                      <input type="radio" name="grch" value="auto" checked={props.assembly===Assembly.AUTO} onChange={() => props.updateAssembly(Assembly.AUTO)}/>
-                      Auto-detect</label>
-                  </div>
+                </div>
               </div>
               <div className="flex padding-bottom-1x">
                 <b>Examples:</b>

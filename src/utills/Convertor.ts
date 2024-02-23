@@ -16,6 +16,7 @@ export interface MappingRecord {
   // GENOMIC column properties
   chromosome: string
   position: number
+  converted?: boolean
   id: string
   refAllele: string
   altAllele: string
@@ -161,6 +162,7 @@ function convertGenInputMappings(originalInput: UserInput, genInput: GenomicInpu
         record.altAllele = gene.altAllele
         // GENOMIC
         if (isoform.canonical || isoform.canonicalAccession === null) {
+          record.converted = genInput.converted;
           record.chromosome = genInput.chr;
           record.id = genInput.id;
           record.refAllele = gene.refAllele;

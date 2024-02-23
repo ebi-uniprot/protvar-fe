@@ -220,10 +220,20 @@ const SearchVariant = (props: VariantSearchProps) => {
                 </div>
 
                 <div className="assembly">
-                  <span title="Genome assembly conversion from GRCh37 to GRCh38 works for genomic input types only i.e. for input in VCF, HGVS or gnomAD formats. Protein position and DBSNP ID inputs are assumed to be in GRCh38.">
+                  <span title="Genome assembly GRCh37 to GRCh38 conversion for genomic inputs (VCF, HGVS g., gnomAD and any other custom genomic formats).">
                     <b>Reference Genome Assembly</b>
                   </span>
                   <div className="assembly-radio-check">
+                    <label>
+                      <input
+                        type="radio"
+                        name="grch"
+                        value="auto"
+                        checked={assembly === Assembly.AUTO}
+                        onChange={() => update(Assembly.AUTO)}
+                      />
+                      Auto-detect
+                    </label>
                     <label>
                       <input
                         type="radio"
@@ -243,16 +253,6 @@ const SearchVariant = (props: VariantSearchProps) => {
                         onChange={() => update(Assembly.GRCh37)}
                       />
                       GRCh37
-                    </label>
-                    <label>
-                      <input
-                        type="radio"
-                        name="grch"
-                        value="auto"
-                        checked={assembly === Assembly.AUTO}
-                        onChange={() => update(Assembly.AUTO)}
-                      />
-                      Auto-detect
                     </label>
                   </div>
 

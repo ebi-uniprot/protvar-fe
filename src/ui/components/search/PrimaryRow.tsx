@@ -83,6 +83,7 @@ const getPrimaryRow = (record: MappingRecord, toggleOpenGroup: string, isoFormGr
       </td>
       <td style={inputStyle.gen}>
         <Tool tip="Click to see the region detail for this genomic coordinate from Ensembl" pos="up-left">
+          {record.converted && <span className="h37">37&rarr;38</span>}
           <a href={positionUrl} target="_blank" rel="noopener noreferrer">
             {record.position}
           </a>
