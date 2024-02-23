@@ -214,7 +214,7 @@ const SearchVariant = (props: VariantSearchProps) => {
                     COSMIC ✅
                     VARID ❌"
                   >
-                    ID/Ref
+                    Variant ID
                   </button>
                 </div>
                 </div>
