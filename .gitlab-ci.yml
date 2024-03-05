@@ -104,7 +104,7 @@ test-deploy:
     refs:
       - test
   script:
-    - ./deploy.sh HX protvar-fe-test protvar-dev deployment
+    - ./deploy.sh HX protvar-fe protvar-test deployment
 
 prod-deploy:
   extends: .kubectl
