@@ -1,14 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
+import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import './styles/index.scss';
 import reportWebVitals from './reportWebVitals';
 
 import App from './ui/App';
+import NewApp from "./ui/NewApp";
 
 ReactDOM.render(
 	<BrowserRouter basename={process.env.PUBLIC_URL}>
-		<App />
+		<Switch>
+			<Route exact path="/">
+				<App />
+			</Route>
+			<Route path="/v2">
+				<NewApp />
+			</Route>
+		</Switch>
 	</BrowserRouter>,
 	document.getElementById('root')
 );

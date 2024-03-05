@@ -1,0 +1,319 @@
+import React, { useState, useRef } from 'react'
+import Button from '../../elements/form/Button'
+import { FileLoadFun } from '../../../utills/AppHelper'
+import {
+  Assembly,
+  StringVoidFun,
+} from '../../../constants/CommonTypes'
+import {NewFormData} from "../../NewApp";
+
+type StringAnyVoid = (field: string, value: any) => void
+
+interface VariantSearchProps {
+  loading: boolean
+  formData: NewFormData
+  updateFormData: any
+  submitData: any
+}
+
+const SearchVariant = (props: VariantSearchProps) => {
+
+  const { loading, formData, updateFormData, submitData } = props
+
+  //const [searchTerm, setSearchTerm] = useState('');
+  //const [assembly, setAssembly] = useState(props.assembly);
+  //const [file, setFile] = useState<File | null>(null);
+  const [invalidInput, setInvalidInput] = useState(false);
+  const [invalidMsg, setInvalidMsg] = useState('');
+  const uploadInputField = useRef<HTMLInputElement>(null);
+  const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+  const UNSUPPORTED_FILE = 'Unsupported file type';
+  const FILE_EXCEEDS_LIMIT = 'File exceeds 10MB limit';
+
+  const genomicExamples = () => {
+    updateFormData("textInput",
+      'X\t149498202\t.\tC\tG\n' +
+      '10-43118436-A-C\n' +
+      'NC_000002.12:g.233760498G>A\n' +
+      '14 89993420 A/G',
+    )
+  };
+
+  const cDNAExamples = () => {
+    updateFormData("textInput",
+      'NM_004006.2:c.234C>G\n' +
+      'NM_017547.4(FOXRED1):c.1289A>Gp.(Asn430Ser)\n' +
+      'NM_014630.3(ZNF592):c.3136G>A p.(Gly1046Arg)\n',
+    )
+  };
+
+  const proteinExamples = () => {
+    updateFormData("textInput",
+      'NP_001305738.1:p.Pro267Ser\n' +
+      'P22304 A205P\n' +
+      'P07949 asn783thr\n' +
+      'P22309 71 Gly Arg')
+    updateFormData("assembly", Assembly.AUTO)
+  };
+
+  const idExamples = () => {
+    updateFormData("textInput", 'rs864622779\n' +
+      'rs587778656\n' +
+      'RCV001270034\n' +
+      'VCV002573141\n' +
+      'COSV10469109\n' +
+      'COSM5381302\n' +
+      'COSN5742537')
+    updateFormData("assembly", Assembly.AUTO)
+  };
+
+  const viewResult = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const target = event.target
+    if (!target.files || !(target.files.length > 0)) {
+      return
+    }
+    var file = target.files[0]
+    if (!file.type.startsWith('text/')) {
+      setInvalidInput(true);
+      setInvalidMsg(UNSUPPORTED_FILE);
+    } else if (file.size > MAX_FILE_SIZE) {
+      setInvalidInput(true);
+      setInvalidMsg(FILE_EXCEEDS_LIMIT);
+    } else {
+      updateFormData("file", file)
+      setInvalidInput(false);
+    }
+
+  };
+  /*
+    const protACTitle =
+      'Supported format examples:\n' +
+      ' ACC X 999 Y\n' +
+      ' ACC/X/999/Y\n' +
+      ' ACC X/999/Y\n' +
+      ' ACC 999 X Y\n' +
+      ' ACC 999    X     Y\n' +
+      ' ACC p.XXX999YYY\n' +
+      ' ACC X999Y\n' +
+      ' ACC 999 X/Y\n' +
+      ' ACC 999 XXX/YYY\n' +
+      ' ACC XXX999YYY\n' +
+      ' ACC/999/YYY\n' +
+      ' where\n' +
+      ' ACC=protein accession,\n' +
+      ' X=one letter ref AA, XXX=three letters ref AA (case-insensitive),\n' +
+      ' Y=one letter variant AA, YYY=three letters variant AA (case-insensitive),\n' +
+      ' 999=protein position.'
+
+    const rsTitle = 'Search by Variant (rs) IDs.'
+  */
+
+  const handleSubmit = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (formData.file) {
+      //props.fetchFileResult(file);
+      // file takes precendence over text search
+      return;
+    }
+    if (formData.textInput !== '') {
+      //props.fetchPasteResult(searchTerm)
+      submitData()
+    }
+  }
+
+  const clearFileInput = () => {
+    if ( uploadInputField?.current) {
+      const fileInput = uploadInputField.current;
+      fileInput.value = '';
+      updateFormData("file", null);
+    }
+  }
+
+  const pasteBox: string =
+    'Paste variants here. Genomic, cDNA, Protein and ID input types are accepted. Click on the examples to see supported ' +
+    'formats. Mixed formats are allowed, however mixed genome assemblies are not.\n' +
+    'Test inputs can be found to the right\n' +
+    '\n' +
+    'X\t149498202\t.\tC\tG\n' +
+    'X-149498202-C-G\n' +
+    'NC_000023.11:g.149498202C>G\n' +
+    'P22304 A205P\n' +
+    'rs864622779\n'
+
+  return (
+    <div id="search" className="card-table search">
+      <div className="card">
+        <section className="search-card__actions">
+          <span className="search-card-header">
+            <p>
+              <b>Search Variants</b> - Please paste your variants below or
+              upload your file
+            </p>
+          </span>
+        </section>
+        <section className="card--has-hover top-row" role="button">
+          <div className="card__content">
+            <section className="search-card">
+              <textarea
+                id="main-textarea-search-field"
+                className={`main-textarea-search-field ${formData.file ? 'disable' : ''}`}
+                value={formData.textInput}
+                placeholder={pasteBox}
+                onChange={(e) => updateFormData("textInput", e.target.value)}
+              />
+              <div className="search-card-selection">
+                <div>
+                  <b>Examples:</b><br />
+                  <div className="examples-container">
+
+                    <button
+                      onClick={genomicExamples}
+                      className="example-link"
+                      id="genomicExamples"
+                      title="VCF ✅
+                    gnomAD ✅
+                    HGVS g. ✅
+                    Custom genomic formats including the following
+                    X 149498202 C G ✅ (without variant ID/lenient VCF)
+                    X 149498202 C/G ✅
+                    X 149498202 C>G ✅"
+                    >
+                      Genomic
+                    </button>
+
+                    <button
+                      onClick={cDNAExamples}
+                      className="example-link"
+                      id="cDNAExamples"
+                      title="HGVS c. (using RefSeq NM identifier) ✅"
+                    >
+                      cDNA
+                    </button>
+
+                    <button
+                      onClick={proteinExamples}
+                      className="example-link"
+                      id="proteinExamples"
+                      title="HGVS p. (using RefSeq NP identifier) ✅
+                     Custom protein inputs including the following
+                     P22304 A205P ✅
+                     P07949 asn783thr ✅
+                     P22309 71 Gly Arg ✅
+                     P22304 205 A/P ✅"
+                    >
+                      Protein
+                    </button>
+
+                    <button
+                      onClick={idExamples}
+                      className="example-link"
+                      id="idExamples"
+                      title="DBSNP ✅
+                    ClinVar ✅
+                    COSMIC ✅
+                    VARID ❌"
+                    >
+                      Variant ID
+                    </button>
+                  </div>
+                </div>
+
+                <div className="assembly">
+                  <span title="Genome assembly GRCh37 to GRCh38 conversion for genomic inputs (VCF, HGVS g., gnomAD and any other custom genomic formats).">
+                    <b>Reference Genome Assembly</b>
+                  </span>
+                  <div className="assembly-radio-check">
+                    <label>
+                      <input
+                        type="radio"
+                        name="assembly"
+                        value={Assembly.AUTO}
+                        checked={formData.assembly === Assembly.AUTO}
+                        onChange={e => updateFormData("assembly", e.target.value) }
+                      />
+                      Auto-detect
+                    </label>
+                    <label>
+                      <input
+                        type="radio"
+                        name="assembly"
+                        value={Assembly.GRCh38}
+                        checked={formData.assembly === Assembly.GRCh38}
+                        onChange={e => updateFormData("assembly", e.target.value) }
+                      />
+                      GRCh38
+                    </label>
+                    <label>
+                      <input
+                        type="radio"
+                        name="assembly"
+                        value={Assembly.GRCh37}
+                        checked={formData.assembly === Assembly.GRCh37}
+                        onChange={e => updateFormData("assembly", e.target.value) }
+                      />
+                      GRCh37
+                    </label>
+                  </div>
+
+                  <div>
+                    <span>
+                      <b>Supported file formats</b><br />
+                    </span>
+                    <p className='supported-file-text'>
+                      ProtVar accepts any files that are in plain text format (i.e. .txt, .csv)
+                    </p>
+                    <input
+                      id="myInput"
+                      type="file"
+                      style={{ display: 'none' }}
+                      ref={uploadInputField}
+                      onChange={viewResult}
+                    />
+                    <Button
+                      onClick={
+                        formData.file
+                          ? clearFileInput
+                          : () => uploadInputField.current?.click()
+                      }
+                      className={`file-upload ${formData.file ? 'clear-file bi bi-x-lg': 'bi bi-file-earmark-fill'}`}
+                    >
+                      {' '}{formData.file ? 'Clear file' : 'Upload File'
+                    }
+                    </Button>
+                    {invalidInput && (
+                      <span className="padding-left-1x">
+                      <i className="file-warning bi bi-exclamation-triangle-fill"></i>{' '}
+                        {invalidMsg}
+                      </span>
+                    )}
+                    {formData.file?.name && (
+                      <div className='file-name'>
+                        <i className="bi bi-check-circle tick-icon"></i>
+                        <span className='name'>{formData.file?.name.substring(0, formData.file.name.lastIndexOf('.'))}</span>
+                        <span className='extension'>{formData.file?.name.substring(formData.file.name.lastIndexOf('.'))}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="search-button-wrapper">
+                  <Button
+                    type="submit"
+                    onClick={loading ? () => {} : handleSubmit}
+                    className={`button-primary bi bi-box-arrow-right ${formData.file || formData.textInput ? '' : 'disable-submit'}`}
+                    id="searchButton"
+                  >
+                    {' '}{loading ? 'Loading...' : 'Submit'}
+                  </Button>
+                </div>
+              </div>
+            </section>
+          </div>
+        </section>
+      </div>
+    </div>
+  )
+}
+
+export default SearchVariant

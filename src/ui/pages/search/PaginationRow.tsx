@@ -2,6 +2,7 @@ import Button from '../../elements/form/Button';
 import { Dropdown } from 'react-dropdown-now';
 import 'react-dropdown-now/style.css';
 import { NextPageFun, Page } from "../../../utills/AppHelper";
+import {NewFormData} from "../../NewApp";
 
 interface PaginationRowProps {
   page: Page
@@ -54,4 +55,60 @@ function PaginationRow(props: PaginationRowProps) {
     </tbody>
   </table>
 }
+
+// V2
+interface NewPaginationRowProps {
+  loading: boolean
+  formData: NewFormData
+  getData: any
+}
+export function NewPaginationRow(props: NewPaginationRowProps) {
+
+  const { loading, formData, getData } = props;
+  let id = ""
+  let pageNo = 1
+  let totalPages = 1
+  let pageSize = 10
+
+  if (formData.response != null) {
+    id = formData.response.resultId
+    pageNo = formData.response.pageNo
+    pageSize = formData.response.pageSize
+  }
+
+  function changePageSize(newPageSize: any) {
+    if (newPageSize !== pageSize) {
+      getData(id, 1, newPageSize)
+    }
+  }
+
+  return <table className="table-header">
+    <tbody>
+    <tr>
+      <td >
+        <Button className={'pagination-button'} onClick={() => getData(id, pageNo-1)} loading={loading} disabled={formData.response == null || formData.response.pageNo === 1}>
+          <i className="bi bi-chevron-compact-left" /> Prev
+        </Button>
+      </td>
+      <td>
+        {pageNo} / {totalPages}
+      </td>
+      <td>
+        <Button className={'pagination-button'} onClick={() => getData(id, pageNo+1)} loading={loading} disabled={formData.response == null || formData.response.last}>
+          Next <i className="bi bi-chevron-compact-right" />
+        </Button>
+      </td>
+      <td>
+        <Dropdown
+          placeholder="Pages"
+          options={[25, 50, 100]}
+          value={pageSize}
+          onChange={(option) => changePageSize(option.value)}
+        />
+      </td>
+    </tr>
+    </tbody>
+  </table>
+}
+// <V2
 export default PaginationRow;

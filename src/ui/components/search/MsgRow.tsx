@@ -32,4 +32,15 @@ const MsgRow = (props: MsgRowProps) => {
   </tr>
 };
 
+// V2
+export const NewMsgRow = (props: {msg: Message}) => {
+  return <tr>
+    <td colSpan={TOTAL_COLS}>
+      {getIcon(props.msg)}
+      {props.msg.text}
+    </td>
+  </tr>
+};
+// <V2
+
 export default MsgRow;
