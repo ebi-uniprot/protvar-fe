@@ -1,13 +1,9 @@
 import React, { useState, useRef } from 'react'
 import Button from '../../elements/form/Button'
-import { FileLoadFun } from '../../../utills/AppHelper'
 import {
   Assembly,
-  StringVoidFun,
 } from '../../../constants/CommonTypes'
 import {NewFormData} from "../../NewApp";
-
-type StringAnyVoid = (field: string, value: any) => void
 
 interface VariantSearchProps {
   loading: boolean

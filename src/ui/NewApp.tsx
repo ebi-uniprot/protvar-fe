@@ -8,7 +8,7 @@ import {PagedMappingResponse} from "../types/PagedMappingResponse";
 import {getResult, postInput} from "../services/ProtVarService";
 import {ERROR, INFO, WARN} from "../types/MappingResponse";
 import Notify from "./elements/Notify";
-import {API_ERROR, SEARCH} from "../constants/BrowserPaths";
+import {API_ERROR} from "../constants/BrowserPaths";
 
 interface NewAppProps extends RouteComponentProps {}
 

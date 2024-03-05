@@ -7,7 +7,7 @@ import {
   INPUT_CDNA,
   INPUT_GEN,
   INPUT_ID,
-  INPUT_PRO, Message
+  INPUT_PRO
 } from "../../../types/MappingResponse";
 import {NewMsgRow} from "../search/MsgRow";
 import {StringVoidFun} from "../../../constants/CommonTypes";

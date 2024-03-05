@@ -2,11 +2,9 @@ import DefaultPageLayout from "../../layout/DefaultPageLayout";
 import LegendModal from "../../modal/LegendModal";
 import {useParams} from "react-router-dom";
 import NewResultTable from "../../components/result/NewResultTable";
-import {useEffect, useState} from "react";
-import {getResult} from "../../../services/ProtVarService";
-import {PagedMappingResponse} from "../../../types/PagedMappingResponse";
+import {useEffect} from "react";
 import {NewFormData} from "../../NewApp";
-import PaginationRow, {NewPaginationRow} from "../search/PaginationRow";
+import {NewPaginationRow} from "../search/PaginationRow";
 
 interface ResultPageProps {
   loading: boolean
@@ -28,7 +26,7 @@ function ResultPageContent(props: ResultPageProps) {
     if (formData.response == null)
       getData(id)
 
-  }, [id])
+  }, [id, formData, getData])
 
   if (loading)
     return <>Loading...</>
