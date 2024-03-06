@@ -2,7 +2,7 @@ import Button from '../../elements/form/Button';
 import { Dropdown } from 'react-dropdown-now';
 import 'react-dropdown-now/style.css';
 import { NextPageFun, Page } from "../../../utills/AppHelper";
-import {NewFormData} from "../../NewApp";
+import {AppState} from "../../App";
 
 interface PaginationRowProps {
   page: Page
@@ -59,21 +59,21 @@ function PaginationRow(props: PaginationRowProps) {
 // V2
 interface NewPaginationRowProps {
   loading: boolean
-  formData: NewFormData
+  state: AppState
   getData: any
 }
 export function NewPaginationRow(props: NewPaginationRowProps) {
 
-  const { loading, formData, getData } = props;
+  const { loading, state, getData } = props;
   let id = ""
   let pageNo = 1
   let totalPages = 1
   let pageSize = 10
 
-  if (formData.response != null) {
-    id = formData.response.resultId
-    pageNo = formData.response.pageNo
-    pageSize = formData.response.pageSize
+  if (state.response != null) {
+    id = state.response.resultId
+    pageNo = state.response.pageNo
+    pageSize = state.response.pageSize
   }
 
   function changePageSize(newPageSize: any) {
@@ -86,7 +86,7 @@ export function NewPaginationRow(props: NewPaginationRowProps) {
     <tbody>
     <tr>
       <td >
-        <Button className={'pagination-button'} onClick={() => getData(id, pageNo-1)} loading={loading} disabled={formData.response == null || formData.response.pageNo === 1}>
+        <Button className={'pagination-button'} onClick={() => getData(id, pageNo-1)} loading={loading} disabled={state.response == null || state.response.pageNo === 1}>
           <i className="bi bi-chevron-compact-left" /> Prev
         </Button>
       </td>
@@ -94,7 +94,7 @@ export function NewPaginationRow(props: NewPaginationRowProps) {
         {pageNo} / {totalPages}
       </td>
       <td>
-        <Button className={'pagination-button'} onClick={() => getData(id, pageNo+1)} loading={loading} disabled={formData.response == null || formData.response.last}>
+        <Button className={'pagination-button'} onClick={() => getData(id, pageNo+1)} loading={loading} disabled={state.response == null || state.response.last}>
           Next <i className="bi bi-chevron-compact-right" />
         </Button>
       </td>

@@ -1,20 +1,23 @@
-import { useEffect, useState } from 'react'
+import {useContext, useEffect, useState} from 'react'
 import { NavLink } from 'react-router-dom'
-import { DOWNLOAD, HOME, SEARCH } from '../../constants/BrowserPaths'
-import { MappingRecord } from '../../utills/Convertor'
+import { DOWNLOAD, HOME, RESULT } from '../../constants/BrowserPaths'
+import {AppContext} from "../App";
 
 const DefaultPageContent = (props: {
   children: JSX.Element
   downloadCount: number
-  searchResults?: MappingRecord[][][]
 }) => {
+  const state = useContext(AppContext);
   const [enableResults, setEnableResults] = useState(false)
-  const { children, downloadCount, searchResults } = props
+  const [resultLink, setResultLink] = useState(RESULT)
+  const { children, downloadCount } = props
+
   useEffect(() => {
-    if (searchResults?.length) {
+    if (state.response?.resultId) {
+      setResultLink( RESULT + '/' + state.response?.resultId)
       setEnableResults(true)
     }
-  }, [searchResults])
+  }, [state])
 
   return (
     <div className="default-page-content">
@@ -28,13 +31,13 @@ const DefaultPageContent = (props: {
             </li>
             <li className="sidebar-menu">
               {enableResults ? (
-                <NavLink to={SEARCH} activeClassName="active">
+                <NavLink to={resultLink} activeClassName="active">
                   {' '}
                   Results{' '}
                 </NavLink>
               ) : (
                 <NavLink
-                  to={SEARCH}
+                  to={resultLink}
                   className={'disabled'}
                 >
                   {' '}

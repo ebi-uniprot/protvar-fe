@@ -2,9 +2,9 @@ import Notify from "../elements/Notify";
 import {downloadFileInput,downloadTextInput} from "../../services/ProtVarService";
 import {DownloadResponse} from "../../types/DownloadResponse";
 import {LOCAL_DOWNLOADS} from "../../constants/const";
-import {FormData} from '../../types/FormData'
+import {AppState} from "../App";
 
-export function processDownload(formData: FormData, functional: boolean, population: boolean, structure: boolean,
+export function processDownload(state: AppState, functional: boolean, population: boolean, structure: boolean,
                                 email: string, jobName: string) {
 
     const handleSucc = (downloadRes: DownloadResponse) => {
@@ -17,12 +17,14 @@ export function processDownload(formData: FormData, functional: boolean, populat
         Notify.err(`Job ${jobName} failed. Please try again.`)
     }
 
-    if (formData.file !== null) {
-        downloadFileInput(formData.file, formData.assembly.toString(), email, jobName, functional, population, structure)
+    if (state.file !== null) {
+        downloadFileInput(state.file, state.assembly.toString(), email, jobName, functional, population, structure)
             .then((response ) => handleSucc(response.data))
             .catch(handleErr);
     } else {
-        downloadTextInput(formData.userInputs, formData.assembly.toString(), email, jobName, functional, population, structure)
+        const userInputs = state.textInput.split(/[\n,]/)
+          .filter(i => !i.trimStart().startsWith("#"))
+        downloadTextInput(userInputs, state.assembly.toString(), email, jobName, functional, population, structure)
             .then((response ) => handleSucc(response.data))
             .catch(handleErr);
     }

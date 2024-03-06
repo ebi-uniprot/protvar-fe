@@ -1,18 +1,14 @@
 import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import ResultTable from '../../components/search/ResultTable'
 import DefaultPageLayout from '../../layout/DefaultPageLayout'
-import {
-  convertApiMappingToTableRecords,
-  MappingRecord,
-} from '../../../utills/Convertor'
 import DownloadModal from '../../modal/DownloadModal'
-import { mappings } from '../../../services/ProtVarService'
+import {postInput} from '../../../services/ProtVarService'
 import LegendModal from '../../modal/LegendModal'
-import {FormData, initialFormData} from "../../../types/FormData";
+import {AppState, initialState} from "../../App";
 import Notify from "../../elements/Notify";
 import Loader from "../../elements/Loader";
 import {TITLE} from "../../../constants/const";
+import NewResultTable from "../../components/result/NewResultTable";
 
 // basic tests on query params
 const chromosomeRegExp = new RegExp('[a-zA-Z0-9]+')
@@ -86,7 +82,7 @@ const requiredProteinParams = [
   'variant_AA',
 ]
 
-function getInputsFromUrl(location: any): any {
+function getInputFromUrl(location: any): any {
   const params = new URLSearchParams(location.search)
 
   const isGenomicQuery = requiredGenomicParams.reduce(function (acc, p) {
@@ -110,7 +106,7 @@ function getInputsFromUrl(location: any): any {
       alt &&
       alleleRegExp.test(alt)
     ) {
-      return [`${chromo} ${pos} ${ref} ${alt}`]
+      return `${chromo} ${pos} ${ref} ${alt}`
     }
   }
 
@@ -134,47 +130,36 @@ function getInputsFromUrl(location: any): any {
       alt &&
       oneletterAARegExp.test(alt)
     ) {
-      return [`${acc} ${pos} ${ref} ${alt}`]
+      return `${acc} ${pos} ${ref} ${alt}`
     }
   }
 
   if (params.has('search')) {
     let str = params.get('search')
-    let arr = str?.split(",").map(function(item) {
-      return item.trim();
-    }).filter(item => item);
-    if (arr && arr.length > 0) {
-      if (arr.length <= 10) {
-        return arr
-      }
-      else {
-        Notify.err('Maximum inputs (10) exceeded.')
-        return []
-      }
-    }
+    return str
   }
   Notify.warn('Invalid search query.')
-  return []
+  return ""
 }
 
 const QueryPageContent = () => {
   const location = useLocation()
+  const [state, setState] = useState<AppState>(initialState);
   const [loaded, setLoaded] = useState(false)
   const [err, setErr] = useState(false)
 
-  const [formData, setFormData] = useState<FormData>(initialFormData);
-  const [searchResults, setSearchResults] = useState<MappingRecord[][][]>([])
-
   useEffect(() => {
-    const inputs = getInputsFromUrl(location)
-    document.title = inputs + ' - ' + TITLE;
-    if (inputs.length > 0) {
-      formData.userInputs = inputs
-      setFormData(formData)
-      mappings(formData.userInputs)
+    const input = getInputFromUrl(location)
+    const firstLine = input.split('\n')[0];
+    document.title = (firstLine ? firstLine : input) + ' - ' + TITLE;
+    if (input) {
+      state.textInput = input
+      setState(state)
+      // TODO - no need to cache this. use a diff singleInput endpoint maybe?
+      postInput(state.textInput)
         .then((response) => {
-          const records = convertApiMappingToTableRecords(response.data)
-          setSearchResults(records)
+          state.response = response.data
+          setState(state)
           setLoaded(true)
         })
         .catch((err) => {
@@ -184,17 +169,17 @@ const QueryPageContent = () => {
     } else {
       setErr(true)
     }
-  }, [location, formData])
+  }, [location, state])
 
   const result = <>
       <div className="search-results">
         <div className="flex justify-content-space-between float-right">
           <div className="legend-container">
             <LegendModal />
-            <DownloadModal formData={formData} />
+            <DownloadModal state={state} />
           </div>
         </div>
-        <ResultTable mappings={searchResults} />
+        <NewResultTable state={state} />
       </div>
     </>
 

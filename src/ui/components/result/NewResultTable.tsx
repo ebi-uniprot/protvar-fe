@@ -13,11 +13,10 @@ import {NewMsgRow} from "../search/MsgRow";
 import {StringVoidFun} from "../../../constants/CommonTypes";
 import {getAlternateIsoFormRow} from "../search/AlternateIsoFormRow";
 import {getNewPrimaryRow} from "../search/PrimaryRow";
-import {NewFormData} from "../../NewApp";
+import {AppState} from "../../App";
 
 interface NewResultTableProps {
-  id: string
-  data: NewFormData
+  state: AppState
 }
 
 function NewResultTable(props: NewResultTableProps) {
@@ -32,7 +31,7 @@ function NewResultTable(props: NewResultTableProps) {
     setAnnotationExpanded(annotationExpanded === key ? '' : key);
   }
 
-  const tableRows = getTableRows(props.data.response, isoFormGroupExpanded, toggleIsoFormGroup, annotationExpanded, toggleAnnotation);
+  const tableRows = getTableRows(props.state.response, isoFormGroupExpanded, toggleIsoFormGroup, annotationExpanded, toggleAnnotation);
   return <table className="" cellPadding="0" cellSpacing="0" id="resultTable">
     <thead>
     <tr>

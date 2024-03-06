@@ -1,22 +1,13 @@
 import DefaultPageLayout from '../../layout/DefaultPageLayout'
-import { FileLoadFun } from '../../../utills/AppHelper'
-import { Assembly, StringVoidFun } from '../../../constants/CommonTypes'
 import { Link } from 'react-router-dom'
 import { ABOUT, CONTACT } from '../../../constants/BrowserPaths'
 import {API_URL, TITLE} from '../../../constants/const'
-import SearchVariant from './SearchVariant'
-import { MappingRecord } from '../../../utills/Convertor'
-import {FormData} from '../../../types/FormData'
 import {useEffect} from "react";
+import SearchVariant from "./SearchVariant";
+import {AppState} from "../../App";
 
 const HomePageContent = (props: HomePageProps) => {
-  const {
-    loading,
-    formData,
-    updateAssembly,
-    fetchFileResult,
-    fetchPasteResult,
-  } = props
+  const { loading, state, updateState, submitData } = props
 
   useEffect(() => {
     document.title = TITLE;
@@ -48,11 +39,10 @@ const HomePageContent = (props: HomePageProps) => {
       </div>
       <div className='search-page-layout'>
         <SearchVariant
-          isLoading={loading}
-          assembly={formData.assembly}
-          updateAssembly={updateAssembly}
-          fetchPasteResult={fetchPasteResult}
-          fetchFileResult={fetchFileResult}
+          loading={loading}
+          state={state}
+          updateState={updateState}
+          submitData={submitData}
         />
       </div>
       <div>
@@ -82,13 +72,11 @@ const HomePageContent = (props: HomePageProps) => {
 
 interface HomePageProps {
   loading: boolean
-  formData: FormData
-  updateAssembly: (assembly: Assembly) => void
-  fetchFileResult: FileLoadFun
-  fetchPasteResult: StringVoidFun
-  searchResults: MappingRecord[][][]
+  state: AppState
+  updateState: any
+  submitData: any
 }
 const HomePage = (props: HomePageProps) => (
-  <DefaultPageLayout content={<HomePageContent {...props} />} searchResults={props.searchResults} />
+  <DefaultPageLayout content={<HomePageContent {...props} />} />
 )
 export default HomePage

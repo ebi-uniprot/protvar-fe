@@ -1,149 +1,80 @@
-import {useState} from "react";
 import {Redirect, Route, RouteComponentProps, withRouter} from "react-router-dom";
-import HomePage from "./pages/home/HomePage";
-import SearchResultsPage from "./pages/search/SearchResultPage";
-import APIErrorPage from "./pages/APIErrorPage";
+
+import ResultPage from "./pages/result/ResultPage";
+import {createContext, useState} from "react";
+import {Assembly} from "../constants/CommonTypes";
+import {PagedMappingResponse} from "../types/PagedMappingResponse";
+import {getResult, postInput} from "../services/ProtVarService";
 import {ERROR, INFO, WARN} from "../types/MappingResponse";
-import {convertApiMappingToTableRecords, MappingRecord,} from "../utills/Convertor";
-import {firstPage, Page} from "../utills/AppHelper";
+import Notify from "./elements/Notify";
+import {
+  ABOUT,
+  API_ERROR,
+  CONTACT,
+  DOWNLOAD,
+  HELP,
+  HOME,
+  QUERY,
+  RELEASE,
+  RESULT
+} from "../constants/BrowserPaths";
+import HomePage from "./pages/home/HomePage";
+import QueryPage from "./pages/query/QueryPage";
+import APIErrorPage from "./pages/APIErrorPage";
 import AboutPage from "./pages/AboutPage";
 import ReleasePage from "./pages/ReleasePage";
 import ContactPage from "./pages/ContactPage";
-import {ABOUT, API_ERROR, CONTACT, DOWNLOAD, HOME, QUERY, SEARCH, HELP, RELEASE} from "../constants/BrowserPaths";
-import Notify from "./elements/Notify";
-import QueryPage from "./pages/query/QueryPage";
-import {Assembly} from "../constants/CommonTypes";
-import {mappings} from "../services/ProtVarService";
 import DownloadPage from "./pages/download/DownloadPage";
 import HelpPage from "./pages/help/HelpPage";
-import {FormData, initialFormData} from "../types/FormData";
 
 interface AppProps extends RouteComponentProps {}
 
+export interface AppState {
+  textInput: string
+  numTextInput: number
+  file: File | null
+  assembly: Assembly
+  response: PagedMappingResponse | null
+}
+
+export const initialState = {
+  textInput: "",
+  numTextInput: 0,
+  file: null,
+  assembly: Assembly.AUTO,
+  response: null
+}
+
+export const AppContext = createContext<AppState>(initialState);
+
 function App(props: AppProps) {
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState<FormData>(initialFormData);
-  const [page, setPage] = useState<Page>(firstPage(0));
-  const [searchResults, setSearchResults] = useState<MappingRecord[][][]>([]);
-  // MappingRecord 3d array -> [][][] list of mappings/genes/isoforms
-    // mappings : [
-    //     ...
-    //     genes: [
-    //        ...
-    //        isoforms: [ -> for can, all fields; for non-can, no INPUT & GENOMIC fields, only PROTEIN fields
-    //           ...
-    //            ]
-    //     ]
-    // ]
-    // e.g.
-    // input 1   gene 1   isoform1 (can)
-    //                    isoform2 (non-can)
-    // input 2   gene 1   isoform 1 (can)
-    //                    isoform 2 (non-can)
-    //                    ...
-    //           gene 2  isoform 1 (can)
-    //                   isoform 2 (non-can)
-    //                   ...
-    //           ...
-    // ...
-
-  const fetchPage = (page: Page) => {
-    setLoading(true);
-    if (formData.file) {
-      fetchFromFile(page, formData.file);
-    } else if (formData.userInputs) {
-      handleSearch(page, formData.userInputs);
-    }
-  };
-
-  function updateAssembly(assembly: Assembly) {
-      formData.assembly = assembly;
-      setFormData(formData);
+  const [state, setState] = useState<AppState>(initialState);
+  const updateState = (name: string, value: any) => {
+    setState(prevState => {
+      return {
+        ...prevState,
+        [name]: value
+      }
+    })
   }
 
-  function fetchPasteResult(userInputString: string) {
-    const userInputs = userInputString.split("\n");
-    formData.userInputs = userInputs;
-    formData.file = null;
-    setFormData(formData);
-    setLoading(true);
-    handleSearch(firstPage(userInputs.length), userInputs);
-  }
-
-  const handleSearch = (page: Page, inputArr: string[]) => {
-    const PAGE_SIZE = page.itemsPerPage;
-    var skipRecord = (page.currentPage - 1) * PAGE_SIZE;
-    if (inputArr.length <= skipRecord) return;
-
-    var inputSubArray;
-    const isNextPage = inputArr.length > skipRecord + PAGE_SIZE;
-    if (isNextPage) {
-      inputSubArray = inputArr.slice(skipRecord, skipRecord + PAGE_SIZE);
-    } else {
-      inputSubArray = inputArr.slice(skipRecord);
-    }
-
-    setPage({ ...page, nextPage: isNextPage });
-    mappingApiCall(inputSubArray);
-  };
-
-  function fetchFileResult(file: File) {
-    setLoading(true);
-    formData.file = file;
-    formData.userInputs = [];
-    setFormData(formData);
-    file
-      .text()
-      .then((text) => fetchFromFile(firstPage(text.split("\n").length), file));
-  }
-
-  const fetchFromFile = (page: Page, uploadedFile: File) => {
-    const pageSize = page.itemsPerPage;
-    const skipRecord = (page.currentPage - 1) * pageSize;
-
-    uploadedFile
-      .text()
-      .then((text) => text.split("\n"))
-      .then((lines) => {
-        let count = 0,
-          recordsProcessed = 0;
-        const inputText: string[] = [];
-        for (const newInput of lines) {
-          if (recordsProcessed >= pageSize) {
-            break;
-          }
-          if (
-            count > skipRecord &&
-            newInput.length > 0 &&
-            !newInput.startsWith("#")
-          ) {
-            recordsProcessed++;
-            inputText.push(newInput);
-          } else {
-            count++;
-          }
-        }
-        setPage({ ...page, nextPage: recordsProcessed >= pageSize });
-        return inputText;
-      })
-      .then((inputs) => mappingApiCall(inputs));
-  };
-
-  function mappingApiCall(inputSubArray: string[]) {
-    mappings(inputSubArray, formData.assembly.toString())
+  const submitData = () => {
+    setLoading(true)
+    postInput(state.textInput)
       .then((response) => {
-        const records = convertApiMappingToTableRecords(response.data);
-        setSearchResults(records);
-        response.data.messages.forEach(message => {
-            if (message.type === INFO) {
-                Notify.info(message.text)
-            } else if (message.type === WARN) {
-                Notify.warn(message.text)
-            } else if (message.type === ERROR) {
-                Notify.err(message.text)
-            }
+        updateState("response", response.data)
+        const resultId = response.data.resultId
+        response.data.content.messages.forEach(message => {
+          if (message.type === INFO) {
+            Notify.info(message.text)
+          } else if (message.type === WARN) {
+            Notify.warn(message.text)
+          } else if (message.type === ERROR) {
+            Notify.err(message.text)
+          }
         });
-        props.history.push(SEARCH);
+        props.history.push(RESULT + "/" + resultId);
       })
       .catch((err) => {
         props.history.push(API_ERROR);
@@ -152,32 +83,32 @@ function App(props: AppProps) {
       .finally(() => setLoading(false));
   }
 
+  const getData = (id: string, pageNo?: number, pageSize?: number) => {
+    setLoading(true)
+    getResult(id).then((response) => {
+      updateState("response", response.data)
+    })
+      .catch((err) => {
+        //props.history.push(API_ERROR);
+        setLoading(false)
+        console.log(err);
+      })
+      .finally(() => setLoading(false));
+  }
+
   return (
-    <>
+    <AppContext.Provider value={state}>
       <Route
         path={HOME}
         exact
         render={() => (
-          <HomePage
-            loading={loading}
-            formData={formData}
-            updateAssembly={updateAssembly}
-            fetchPasteResult={fetchPasteResult}
-            fetchFileResult={fetchFileResult}
-            searchResults={searchResults}
-          />
+          <HomePage loading={loading} state={state} updateState={updateState} submitData={submitData} />
         )}
       />
       <Route
-        path={SEARCH}
+        path={RESULT + "/:id?"}
         render={() => (
-          <SearchResultsPage
-            rows={searchResults}
-            page={page}
-            formData={formData}
-            fetchNextPage={fetchPage}
-            loading={loading}
-          />
+          <ResultPage loading={loading} state={state} getData={getData} />
         )}
       />
       <Route path={QUERY} render={() => <QueryPage />} />
@@ -185,14 +116,15 @@ function App(props: AppProps) {
       <Route path={ABOUT} render={() => <AboutPage />} />
       <Route path={RELEASE} render={() => <ReleasePage />} />
       <Route path={CONTACT} render={() => <ContactPage />} />
-      <Route path={DOWNLOAD} render={() => <DownloadPage searchResults={searchResults}/>} />
+      <Route path={DOWNLOAD} render={() => <DownloadPage />} />
       <Route path={HELP} render={() => <HelpPage />} />
 
-        <Route exact path="/test">
-            <Redirect push to={"/test.html"} />
-        </Route>
-    </>
+      <Route exact path="/test">
+        <Redirect push to={"/test.html"} />
+      </Route>
+    </AppContext.Provider>
   );
+
 }
 
 export default withRouter(App);

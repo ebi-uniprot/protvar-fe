@@ -2,16 +2,13 @@ import {useEffect, useState} from 'react'
 import { Link } from 'react-router-dom'
 import {ABOUT, CONTACT, HELP, HOME, RELEASE} from '../../constants/BrowserPaths'
 import { API_URL, LOCAL_DOWNLOADS, DISMISS_BANNER } from '../../constants/const'
-
 import DefaultPageContent from './DefaultPageContent'
-
 import EMBLEBILogo from '../../images/embl-ebi-logo.svg'
 import openTargetsLogo from '../../images/open-targets-logo.png'
 import SignUp from "./SignUp";
-import { MappingRecord } from '../../utills/Convertor'
+
 interface DefaultPageLayoutProps {
-  content: JSX.Element,
-  searchResults?: MappingRecord[][][]
+  content: JSX.Element
 }
 
 const bannerText = null
@@ -192,7 +189,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
               )}
 
               <div className="default-page-layout">
-                <DefaultPageContent downloadCount={numDownloads} searchResults={props.searchResults}>
+                <DefaultPageContent downloadCount={numDownloads} >
                   {content}
                 </DefaultPageContent>
               </div>

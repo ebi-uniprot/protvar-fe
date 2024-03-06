@@ -5,14 +5,13 @@ import { ReactComponent as DownloadIcon } from "../../images/download.svg"
 import useOnClickOutside from '../../hooks/useOnClickOutside';
 import {processDownload} from './DownloadModalHelper'
 import { emailValidate } from '../../utills/Validator';
-import {FormData} from '../../types/FormData'
+import {AppState} from "../App";
 
 interface DownloadModalProps {
-  formData: FormData
+  state: AppState
 }
 
 function DownloadModal(props: DownloadModalProps) {
-  const { formData } = props;
   const [showModel, setShowModel] = useState(false)
   const [email, setEmail] = useState("")
   const [jobName, setJobName] = useState("")
@@ -30,7 +29,7 @@ function DownloadModal(props: DownloadModalProps) {
       return
     }
     setShowModel(false)
-    processDownload(formData, annotations.fun, annotations.pop, annotations.str, email, jobName);
+    processDownload(props.state, annotations.fun, annotations.pop, annotations.str, email, jobName);
   };
   return <div id="divDownload" ref={downloadModelDiv} className="padding-left-1x">
     <Button onClick={() => setShowModel(val => !val)} className={'download-button'}>
