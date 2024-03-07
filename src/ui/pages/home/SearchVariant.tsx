@@ -6,6 +6,15 @@ import {
   DEFAULT_ASSEMBLY,
   StringVoidFun,
 } from '../../../constants/CommonTypes'
+import {
+  CDNA_BTN_TITLE,
+  CDNA_EXAMPLE,
+  GENOMIC_BTN_TITLE,
+  GENOMIC_EXAMPLE, ID_BTN_TITLE,
+  ID_EXAMPLE,
+  PASTE_BOX, PROTEIN_BTN_TITLE,
+  PROTEIN_EXAMPLE
+} from "../../../constants/Example";
 
 interface VariantSearchProps {
   isLoading: boolean
@@ -32,39 +41,20 @@ const SearchVariant = (props: VariantSearchProps) => {
   }
 
   const genomicExamples = () => {
-    setSearchTerm(
-      'X\t149498202\t.\tC\tG\n' +
-      '10-43118436-A-C\n' +
-      'NC_000002.12:g.233760498G>A\n' +
-      '14 89993420 A/G',
-    )
+    setSearchTerm(GENOMIC_EXAMPLE)
   };
 
   const cDNAExamples = () => {
-    setSearchTerm(
-      'NM_004006.2:c.234C>G\n' +
-      'NM_017547.4(FOXRED1):c.1289A>Gp.(Asn430Ser)\n' +
-      'NM_014630.3(ZNF592):c.3136G>A p.(Gly1046Arg)\n',
-    )
+    setSearchTerm(CDNA_EXAMPLE)
   };
 
   const proteinExamples = () => {
-    setSearchTerm(
-      'NP_001305738.1:p.Pro267Ser\n' +
-      'P22304 A205P\n' +
-      'P07949 asn783thr\n' +
-      'P22309 71 Gly Arg')
+    setSearchTerm(PROTEIN_EXAMPLE)
     update(DEFAULT_ASSEMBLY)
   };
 
   const idExamples = () => {
-    setSearchTerm('rs864622779\n' +
-      'rs587778656\n' +
-      'RCV001270034\n' +
-      'VCV002573141\n' +
-      'COSV10469109\n' +
-      'COSM5381302\n' +
-      'COSN5742537')
+    setSearchTerm(ID_EXAMPLE)
     update(DEFAULT_ASSEMBLY)
   };
 
@@ -86,28 +76,6 @@ const SearchVariant = (props: VariantSearchProps) => {
     }
     
   };
-/*
-  const protACTitle =
-    'Supported format examples:\n' +
-    ' ACC X 999 Y\n' +
-    ' ACC/X/999/Y\n' +
-    ' ACC X/999/Y\n' +
-    ' ACC 999 X Y\n' +
-    ' ACC 999    X     Y\n' +
-    ' ACC p.XXX999YYY\n' +
-    ' ACC X999Y\n' +
-    ' ACC 999 X/Y\n' +
-    ' ACC 999 XXX/YYY\n' +
-    ' ACC XXX999YYY\n' +
-    ' ACC/999/YYY\n' +
-    ' where\n' +
-    ' ACC=protein accession,\n' +
-    ' X=one letter ref AA, XXX=three letters ref AA (case-insensitive),\n' +
-    ' Y=one letter variant AA, YYY=three letters variant AA (case-insensitive),\n' +
-    ' 999=protein position.'
-
-  const rsTitle = 'Search by Variant (rs) IDs.'
-*/
 
   const handleSubmit = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -130,17 +98,6 @@ const SearchVariant = (props: VariantSearchProps) => {
     }
   }
 
-  const pasteBox: string =
-    'Paste variants here. Genomic, cDNA, Protein and ID input types are accepted. Click on the examples to see supported ' +
-    'formats. Mixed formats are allowed, however mixed genome assemblies are not.\n' +
-    'Test inputs can be found to the right\n' +
-    '\n' +
-    'X\t149498202\t.\tC\tG\n' +
-    'X-149498202-C-G\n' +
-    'NC_000023.11:g.149498202C>G\n' +
-    'P22304 A205P\n' +
-    'rs864622779\n'
-
   return (
     <div id="search" className="card-table search">
       <div className="card">
@@ -159,7 +116,7 @@ const SearchVariant = (props: VariantSearchProps) => {
                 id="main-textarea-search-field"
                 className={`main-textarea-search-field ${file ? 'disable' : ''}`}
                 value={searchTerm}
-                placeholder={pasteBox}
+                placeholder={PASTE_BOX}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
               <div className="search-card-selection">
@@ -171,13 +128,7 @@ const SearchVariant = (props: VariantSearchProps) => {
                     onClick={genomicExamples}
                     className="example-link"
                     id="genomicExamples"
-                    title="VCF ✅
-                    gnomAD ✅
-                    HGVS g. ✅
-                    Custom genomic formats including the following
-                    X 149498202 C G ✅ (without variant ID/lenient VCF)
-                    X 149498202 C/G ✅
-                    X 149498202 C>G ✅"
+                    title={GENOMIC_BTN_TITLE}
                   >
                     Genomic
                   </button>
@@ -186,7 +137,7 @@ const SearchVariant = (props: VariantSearchProps) => {
                     onClick={cDNAExamples}
                     className="example-link"
                     id="cDNAExamples"
-                    title="HGVS c. (using RefSeq NM identifier) ✅"
+                    title={CDNA_BTN_TITLE}
                   >
                     cDNA
                   </button>
@@ -195,12 +146,7 @@ const SearchVariant = (props: VariantSearchProps) => {
                     onClick={proteinExamples}
                     className="example-link"
                     id="proteinExamples"
-                    title="HGVS p. (using RefSeq NP identifier) ✅
-                     Custom protein inputs including the following
-                     P22304 A205P ✅
-                     P07949 asn783thr ✅
-                     P22309 71 Gly Arg ✅
-                     P22304 205 A/P ✅"
+                    title={PROTEIN_BTN_TITLE}
                   >
                     Protein
                   </button>
@@ -209,10 +155,7 @@ const SearchVariant = (props: VariantSearchProps) => {
                     onClick={idExamples}
                     className="example-link"
                     id="idExamples"
-                    title="DBSNP ✅
-                    ClinVar ✅
-                    COSMIC ✅
-                    VARID ❌"
+                    title={ID_BTN_TITLE}
                   >
                     Variant ID
                   </button>
