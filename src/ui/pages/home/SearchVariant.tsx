@@ -6,7 +6,15 @@ import {
   DEFAULT_ASSEMBLY,
   StringVoidFun,
 } from '../../../constants/CommonTypes'
-import Spaces from '../../elements/Spaces'
+import {
+  CDNA_BTN_TITLE,
+  CDNA_EXAMPLE,
+  GENOMIC_BTN_TITLE,
+  GENOMIC_EXAMPLE, ID_BTN_TITLE,
+  ID_EXAMPLE,
+  PASTE_BOX, PROTEIN_BTN_TITLE,
+  PROTEIN_EXAMPLE
+} from "../../../constants/Example";
 
 interface VariantSearchProps {
   isLoading: boolean
@@ -32,39 +40,21 @@ const SearchVariant = (props: VariantSearchProps) => {
     props.updateAssembly(a); // set assembly in the top-level
   }
 
-  const populateVCF = () => {
-    setSearchTerm(
-      'X\t149498202\t.\tC\tG\n' +
-        '10\t43118436\t.\tA\tC\n' +
-        '2\t233760498\t.\tG\tA\n' +
-        '14\t89993420\t.\tA\tG',
-    )
+  const genomicExamples = () => {
+    setSearchTerm(GENOMIC_EXAMPLE)
   };
 
-  const populateGnomAD = () => {
-    setSearchTerm(
-      'X-149498202-C-G\n' +
-        '10-43118436-A-C\n' +
-        '2-233760498-G-A\n' +
-        '14-89993420-A-G',
-    )
+  const cDNAExamples = () => {
+    setSearchTerm(CDNA_EXAMPLE)
   };
 
-  const populateHGVS = () => {
-    setSearchTerm(
-      'NC_000023.11:g.149498202C>G\n' +
-        'NC_000010.11:g.43118436A>C\n' +
-        'NC_000002.12:g.233760498G>A',
-    )
-  };
-
-  const populateProtAC = () => {
-    setSearchTerm('P22304 A205P\nP07949 asn783thr\nP22309 71 Gly Arg')
+  const proteinExamples = () => {
+    setSearchTerm(PROTEIN_EXAMPLE)
     update(DEFAULT_ASSEMBLY)
   };
 
-  const populateRs = () => {
-    setSearchTerm('rs864622779\nrs587778656\nrs4148323')
+  const idExamples = () => {
+    setSearchTerm(ID_EXAMPLE)
     update(DEFAULT_ASSEMBLY)
   };
 
@@ -86,33 +76,6 @@ const SearchVariant = (props: VariantSearchProps) => {
     }
     
   };
-/*
-  const protACTitle =
-    'Supported format examples:\n' +
-    ' ACC X 999 Y\n' +
-    ' ACC/X/999/Y\n' +
-    ' ACC X/999/Y\n' +
-    ' ACC 999 X Y\n' +
-    ' ACC 999    X     Y\n' +
-    ' ACC p.XXX999YYY\n' +
-    ' ACC X999Y\n' +
-    ' ACC 999 X/Y\n' +
-    ' ACC 999 XXX/YYY\n' +
-    ' ACC XXX999YYY\n' +
-    ' ACC/999/YYY\n' +
-    ' where\n' +
-    ' ACC=protein accession,\n' +
-    ' X=one letter ref AA, XXX=three letters ref AA (case-insensitive),\n' +
-    ' Y=one letter variant AA, YYY=three letters variant AA (case-insensitive),\n' +
-    ' 999=protein position.'
-
-  const rsTitle = 'Search by Variant (rs) IDs.'
-*/
-  const protACTitle = 'for e.g. in one of the following formats\n' +
-      'P22304 Ala205Pro\n' +
-      'P22304 A205P\n' +
-      'P22304 205 A/P\n'
-  const rsTitle = 'dbSNP reference number'
 
   const handleSubmit = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -135,17 +98,6 @@ const SearchVariant = (props: VariantSearchProps) => {
     }
   }
 
-  const pasteBox: string =
-    'Paste variants here. Accepted formats are VCF, HGVS, dbSNP, protein position.\n' +
-    'Mixed formats are allowed, however mixed genome assemblies are not.\n' +
-    'Test inputs can be found to the right\n' +
-    '\n' +
-    'X\t149498202\t.\tC\tG\n' +
-    'X-149498202-C-G\n' +
-    'NC_000023.11:g.149498202C>G\n' +
-    'P22304 A205P\n' +
-    'rs864622779\n'
-
   return (
     <div id="search" className="card-table search">
       <div className="card">
@@ -164,62 +116,67 @@ const SearchVariant = (props: VariantSearchProps) => {
                 id="main-textarea-search-field"
                 className={`main-textarea-search-field ${file ? 'disable' : ''}`}
                 value={searchTerm}
-                placeholder={pasteBox}
+                placeholder={PASTE_BOX}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
               <div className="search-card-selection">
                 <div>
                 <b>Examples:</b><br />
                 <div className="examples-container">
-                  <Spaces count={2} />
+
                   <button
-                    onClick={populateVCF}
+                    onClick={genomicExamples}
                     className="example-link"
-                    id="vcfExampleButton"
+                    id="genomicExamples"
+                    title={GENOMIC_BTN_TITLE}
                   >
-                    VCF
+                    Genomic
                   </button>
-                  <Spaces count={2} />
+
                   <button
-                    onClick={populateGnomAD}
+                    onClick={cDNAExamples}
                     className="example-link"
-                    id="gnomadExampleButton"
+                    id="cDNAExamples"
+                    title={CDNA_BTN_TITLE}
                   >
-                    gnomAD
+                    cDNA
                   </button>
-                  <Spaces count={2} />
+
                   <button
-                    onClick={populateHGVS}
+                    onClick={proteinExamples}
                     className="example-link"
-                    id="hgvsExampleButton"
+                    id="proteinExamples"
+                    title={PROTEIN_BTN_TITLE}
                   >
-                    HGVS
+                    Protein
                   </button>
-                  <Spaces count={2} />
+
                   <button
-                    onClick={populateProtAC}
+                    onClick={idExamples}
                     className="example-link"
-                    id="protACExampleButton"
-                    title={protACTitle}
+                    id="idExamples"
+                    title={ID_BTN_TITLE}
                   >
-                    Protein Position
-                  </button>
-                  <Spaces count={2} />
-                  <button
-                    onClick={populateRs}
-                    className="example-link"
-                    id="rsExampleButton"
-                    title={rsTitle}
-                  >
-                    dbSNP ID
+                    Variant ID
                   </button>
                 </div>
                 </div>
+
                 <div className="assembly">
-                  <span title="Genome assembly conversion from GRCh37 to GRCh38 works for genomic input types only i.e. for input in VCF, HGVS or gnomAD formats. Protein position and DBSNP ID inputs are assumed to be in GRCh38.">
+                  <span title="Genome assembly GRCh37 to GRCh38 conversion for genomic inputs (VCF, HGVS g., gnomAD and any other custom genomic formats).">
                     <b>Reference Genome Assembly</b>
                   </span>
                   <div className="assembly-radio-check">
+                    <label>
+                      <input
+                        type="radio"
+                        name="grch"
+                        value="auto"
+                        checked={assembly === Assembly.AUTO}
+                        onChange={() => update(Assembly.AUTO)}
+                      />
+                      Auto-detect
+                    </label>
                     <label>
                       <input
                         type="radio"
@@ -239,16 +196,6 @@ const SearchVariant = (props: VariantSearchProps) => {
                         onChange={() => update(Assembly.GRCh37)}
                       />
                       GRCh37
-                    </label>
-                    <label>
-                      <input
-                        type="radio"
-                        name="grch"
-                        value="auto"
-                        checked={assembly === Assembly.AUTO}
-                        onChange={() => update(Assembly.AUTO)}
-                      />
-                      Auto-detect
                     </label>
                   </div>
 

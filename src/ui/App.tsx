@@ -7,8 +7,9 @@ import {ERROR, INFO, WARN} from "../types/MappingResponse";
 import {convertApiMappingToTableRecords, MappingRecord,} from "../utills/Convertor";
 import {firstPage, Page} from "../utills/AppHelper";
 import AboutPage from "./pages/AboutPage";
+import ReleasePage from "./pages/ReleasePage";
 import ContactPage from "./pages/ContactPage";
-import {ABOUT, API_ERROR, CONTACT, DOWNLOAD, HOME, QUERY, SEARCH, HELP } from "../constants/BrowserPaths";
+import {ABOUT, API_ERROR, CONTACT, DOWNLOAD, HOME, QUERY, SEARCH, HELP, RELEASE} from "../constants/BrowserPaths";
 import Notify from "./elements/Notify";
 import QueryPage from "./pages/query/QueryPage";
 import {Assembly} from "../constants/CommonTypes";
@@ -131,7 +132,7 @@ function App(props: AppProps) {
   function mappingApiCall(inputSubArray: string[]) {
     mappings(inputSubArray, formData.assembly.toString())
       .then((response) => {
-        const records = convertApiMappingToTableRecords(response.data.inputs);
+        const records = convertApiMappingToTableRecords(response.data);
         setSearchResults(records);
         response.data.messages.forEach(message => {
             if (message.type === INFO) {
@@ -182,6 +183,7 @@ function App(props: AppProps) {
       <Route path={QUERY} render={() => <QueryPage />} />
       <Route path={API_ERROR} render={() => <APIErrorPage />} />
       <Route path={ABOUT} render={() => <AboutPage />} />
+      <Route path={RELEASE} render={() => <ReleasePage />} />
       <Route path={CONTACT} render={() => <ContactPage />} />
       <Route path={DOWNLOAD} render={() => <DownloadPage searchResults={searchResults}/>} />
       <Route path={HELP} render={() => <HelpPage />} />

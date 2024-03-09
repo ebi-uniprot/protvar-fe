@@ -102,6 +102,16 @@
 		cursor: pointer;
 	}
 
+	.msg-warn {
+		color:#ffc107;
+	}
+	.msg-error {
+		color:#dc3545;
+	}
+	.msg-info {
+		color:#0dcaf0;
+	}
+
 	.active {
 		background-color: rgba(255, 235, 59, 0.3) !important;
 	}
@@ -677,6 +687,18 @@
 		width: 100%;
 		float: left;
 		padding-left: 1rem;
+	}
+
+	.eve-benign {
+		color: blue;
+	}
+
+	.eve-pathogenic {
+		color: red;
+	}
+
+	.eve-uncertain {
+		color: lightgrey;
 	}
 }
 

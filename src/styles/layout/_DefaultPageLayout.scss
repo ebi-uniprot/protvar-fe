@@ -455,6 +455,10 @@ div#local-title {
 .padding-left-1x {
   padding-left: 1rem;
 }
+.padding-left-right-1x {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
 
 .float-right {
   float: right;
@@ -542,4 +546,14 @@ span.space:before {
       }
     }
   }
+}
+
+.h37 {
+  border-radius: 10px;
+  padding:2px;
+  background: #fff;
+  color: #1e7532;
+  vertical-align: 1.5em;
+  font-family: "Lucida Console", "Courier New", monospace;
+  font-size: 0.7em;
 }
