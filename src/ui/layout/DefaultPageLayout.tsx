@@ -6,12 +6,13 @@ import DefaultPageContent from './DefaultPageContent'
 import EMBLEBILogo from '../../images/embl-ebi-logo.svg'
 import openTargetsLogo from '../../images/open-targets-logo.png'
 import SignUp from "./SignUp";
+import {WARN_ICON} from "../components/search/MsgRow";
 
 interface DefaultPageLayoutProps {
   content: JSX.Element
 }
 
-const bannerText = null
+const bannerText = "We're updating ProtVar with new datasets and features. Please bear with us as there may be some temporary disruptions while we're at it."
 
 function DefaultPageLayout(props: DefaultPageLayoutProps) {
   const [showBanner, setShowBanner ] = useState(bannerText == null ? false : true);
@@ -20,7 +21,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
   //const showBanner = false
   let localDownloads = JSON.parse(localStorage.getItem(LOCAL_DOWNLOADS) || '[]')
   let numDownloads = localDownloads.length;
-  
+
   useEffect(() => {
     const win: any = window
     if (win.ebiFrameworkInvokeScripts) {
@@ -92,77 +93,77 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
               <div className="navbar">
                 <table>
                   <tbody>
-                    <tr className="navbar">
-                      <td className="topnav-logo">
-                        <div className="logo-container">
-                          <Link
-                            className="local-title"
-                            to={HOME}
-                            title="ProtVar homepage"
-                          >
-                            <img
-                              src="ProtVar_logo.png"
-                              alt="ProtVar logo"
-                              width="140px"
-                            />
-                          </Link>
-                          <Link
-                            className="sub-title"
-                            to={HOME}
-                            title="ProtVar homepage"
-                          >
-                            Contextualising human missense variation
-                          </Link>
-                        </div>
-                      </td>
-                      
-                        <td className="topnav-right local-sub-title">
-                          <Link to={CONTACT} title="ProtVar Contact">
-                            Contact
-                          </Link>
-                        </td>
-                        <td className="topnav-right local-sub-title">
-                          <Link
-                            to=""
-                            onClick={() =>
-                              window.open(API_URL + '/docs', '_blank')
-                            }
-                            title="ProtVar API"
-                            rel="noreferrer"
-                          >
-                            API
-                          </Link>
-                        </td>
-                        <td className="topnav-right local-sub-title">
-                          <Link
-                            // Replace with the right link
-                            to={HELP}
-                            title="ProtVar Help"
-                            id="protvarHelp"
-                          >
-                            Help
-                          </Link>
-                        </td>
-                      <td className="topnav-right local-sub-title">
+                  <tr className="navbar">
+                    <td className="topnav-logo">
+                      <div className="logo-container">
                         <Link
-                          to={ABOUT}
-                          title="ProtVar About"
-                          id="protvarAbout"
+                          className="local-title"
+                          to={HOME}
+                          title="ProtVar homepage"
                         >
-                          About
+                          <img
+                            src="ProtVar_logo.png"
+                            alt="ProtVar logo"
+                            width="140px"
+                          />
                         </Link>
-                      </td>
-                      <td className="topnav-right local-sub-title">
-                        Release <Link
-                          to={RELEASE}
-                          title="ProtVar Release"
-                          id="protvarRelease"
+                        <Link
+                          className="sub-title"
+                          to={HOME}
+                          title="ProtVar homepage"
                         >
-                          {process.env.REACT_APP_UNIPROT_RELEASE}
+                          Contextualising human missense variation
                         </Link>
-                      </td>
-                    
-                    </tr>
+                      </div>
+                    </td>
+
+                    <td className="topnav-right local-sub-title">
+                      <Link to={CONTACT} title="ProtVar Contact">
+                        Contact
+                      </Link>
+                    </td>
+                    <td className="topnav-right local-sub-title">
+                      <Link
+                        to=""
+                        onClick={() =>
+                          window.open(API_URL + '/docs', '_blank')
+                        }
+                        title="ProtVar API"
+                        rel="noreferrer"
+                      >
+                        API
+                      </Link>
+                    </td>
+                    <td className="topnav-right local-sub-title">
+                      <Link
+                        // Replace with the right link
+                        to={HELP}
+                        title="ProtVar Help"
+                        id="protvarHelp"
+                      >
+                        Help
+                      </Link>
+                    </td>
+                    <td className="topnav-right local-sub-title">
+                      <Link
+                        to={ABOUT}
+                        title="ProtVar About"
+                        id="protvarAbout"
+                      >
+                        About
+                      </Link>
+                    </td>
+                    <td className="topnav-right local-sub-title">
+                      Release <Link
+                      to={RELEASE}
+                      title="ProtVar Release"
+                      id="protvarRelease"
+                    >
+                      {process.env.REACT_APP_UNIPROT_RELEASE}
+                    </Link>
+                    </td>
+
+                  </tr>
                   </tbody>
                 </table>
               </div>
@@ -183,7 +184,8 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                   </button>
 
                   <div className="banner-content">
-                    {bannerText}
+                    { WARN_ICON }
+                    { bannerText }
                   </div>
                 </div>
               )}
