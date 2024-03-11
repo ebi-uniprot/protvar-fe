@@ -9,12 +9,13 @@ import EMBLEBILogo from '../../images/embl-ebi-logo.svg'
 import openTargetsLogo from '../../images/open-targets-logo.png'
 import SignUp from "./SignUp";
 import { MappingRecord } from '../../utills/Convertor'
+import {WARN_ICON} from "../components/search/MsgRow";
 interface DefaultPageLayoutProps {
   content: JSX.Element,
   searchResults?: MappingRecord[][][]
 }
 
-const bannerText = null
+const bannerText = "We're updating ProtVar with new datasets and features. Please bear with us as there may be some temporary disruptions while we're at it."
 
 function DefaultPageLayout(props: DefaultPageLayoutProps) {
   const [showBanner, setShowBanner ] = useState(bannerText == null ? false : true);
@@ -186,7 +187,8 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                   </button>
 
                   <div className="banner-content">
-                    {bannerText}
+                    { WARN_ICON }
+                    { bannerText }
                   </div>
                 </div>
               )}
