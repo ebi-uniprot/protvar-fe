@@ -1,3 +1,5 @@
+#### _Please be aware that updates are underway for the Help section to incorporate recent changes in functionality and data._
+
 ### Help
 
 1. [Website](#website)
