@@ -15,7 +15,7 @@ interface DefaultPageLayoutProps {
   searchResults?: MappingRecord[][][]
 }
 
-const bannerText = "We're updating ProtVar with new datasets and features. Please bear with us as there may be some temporary disruptions while we're at it."
+const bannerText = null
 
 function DefaultPageLayout(props: DefaultPageLayoutProps) {
   const [showBanner, setShowBanner ] = useState(bannerText == null ? false : true);
