@@ -7,8 +7,13 @@ import EnsemblLogo from "../../images/ensembl-logo.png";
 import PDBeLogo from "../../images/pdbe-logo.png";
 import CADDLogo from "../../images/cadd-logo.png";
 import EVELogo from "../../images/eve-logo.svg";
-import DMLogo from "../../images/dm-logo.png";
+import GoogleDMLogo from "../../images/Google_DeepMind_Logo_new.png";
 import FoldXLogo from "../../images/FoldX-logo.png";
+import CrossMapLogo from "../../images/crossmap.png";
+import CosmicLogo from "../../images/cosmic.png";
+import MolstarLogo from "../../images/molstar.png";
+import NCBILogo from "../../images/NCBILogo.png";
+import VarSiteLogo from "../../images/VarSiteLogo.png";
 import {TITLE} from "../../constants/const";
 
 function AboutPageContent() {
@@ -37,52 +42,65 @@ function AboutPageContent() {
         and predictions to better understand the potential effects of missense variation on humans.
       </p>
 
+      <h5>Funding</h5>
       <p>
-          It is funded by EMBL <a href="https://www.embl.de/" target="_blank" rel="noreferrer"><img
-            src={EMBLLogo}
-            loading="lazy"
-            alt=""
-            width="80"
-      /></a> and Open Targets <a href="https://www.opentargets.org/" target="_blank" rel="noreferrer"><img
-            src={OTLogo}
-            loading="lazy"
-            alt=""
-            width="60"
+        ProtVar is funded by <br/>
+        EMBL <a href="https://www.embl.de/" target="_blank" rel="noreferrer"><img
+        src={EMBLLogo}
+        loading="lazy"
+        alt=""
+        width="80"
+      /></a>
+        Open Targets <a href="https://www.opentargets.org/" target="_blank" rel="noreferrer"><img
+        src={OTLogo}
+        loading="lazy"
+        alt=""
+        width="60"
       /></a>
       </p>
 
-      <p>
-        ProtVar is developed and maintained by <a href="https://www.ebi.ac.uk/people/person/james-stephenson" target="_blank" rel="noreferrer">James Stephenson</a> and <a href="https://www.ebi.ac.uk/people/person/prabhat-totoo" target="_blank" rel="noreferrer">Prabhat Totoo</a> in the <a href="https://www.ebi.ac.uk/about/teams/protein-function-development/" target="_blank" rel="noreferrer">UniProt protein function development</a> team.
-      </p>
+      <h5>Acknowledgements</h5>
+      We would like to thank the following resources for the data used in ProtVar <br/>
 
-      <p>
-        We would like to thank the following resources for the data used in ProtVar <br/>
-        <a href="https://www.uniprot.org/" target="_blank" rel="noreferrer"><img
-            src={UniprotLogo}
-            loading="lazy"
-            alt=""
-            width="120"
-        /></a>&nbsp;&nbsp;
-        <a href="https://www.ensembl.org/" target="_blank" rel="noreferrer"><img
-            src={EnsemblLogo}
-            loading="lazy"
-            alt=""
-            width="140"
-        /></a>&nbsp;&nbsp;
-        <a href="https://www.ebi.ac.uk/pdbe/" target="_blank" rel="noreferrer"><img
-            src={PDBeLogo}
-            loading="lazy"
-            alt=""
-            width="50"
-        /></a>&nbsp;&nbsp;
-        <a href="https://cadd.gs.washington.edu/" target="_blank" rel="noreferrer"><img
-            src={CADDLogo}
-            loading="lazy"
-            alt=""
-            width="60"
-        /></a>&nbsp;&nbsp;
-        <a href="https://evemodel.org/" target="_blank" rel="noreferrer"><img
-            src={EVELogo}
+      <div className="grid-container">
+        <div><a href="https://www.uniprot.org/" target="_blank" rel="noreferrer"><img
+          src={UniprotLogo}
+          loading="lazy"
+          alt="UniProt"
+          width="120"
+        /></a></div>
+        <div><a href="https://www.ensembl.org/" target="_blank" rel="noreferrer"><img
+          src={EnsemblLogo}
+          loading="lazy"
+          alt="Ensembl"
+          width="140"
+        /></a></div>
+        <div><a href="https://www.ebi.ac.uk/pdbe/" target="_blank" rel="noreferrer"><img
+          src={PDBeLogo}
+          loading="lazy"
+          alt="PDBe"
+          width="50"
+        /></a></div>
+        <div><a href="https://www.deepmind.com/" target="_blank" rel="noreferrer"><img
+          src={GoogleDMLogo}
+          loading="lazy"
+          alt="Google DeepMind"
+          width="120"
+        /></a>
+        <br/>
+        <a href="https://alphafold.ebi.ac.uk/" target="_blank" rel="noreferrer">AlphaFold</a></div>
+        <div><a href="https://www.ncbi.nlm.nih.gov/" target="_blank" rel="noreferrer"><img
+          src={NCBILogo}
+          loading="lazy"
+          alt="NCBI"
+          width="100"
+        /></a><br/>
+        <a href="https://www.ncbi.nlm.nih.gov/refseq/" target="_blank" rel="noreferrer">RefSeq</a>&nbsp;
+        <a href="https://www.ncbi.nlm.nih.gov/snp/" target="_blank" rel="noreferrer">dbSNP</a>&nbsp;
+        <a href="https://www.ncbi.nlm.nih.gov/clinvar/" target="_blank" rel="noreferrer">ClinVar</a></div>
+        <div>
+          <a href="https://cancer.sanger.ac.uk/cosmic" target="_blank" rel="noreferrer"><img
+            src={CosmicLogo}
             loading="lazy"
             alt=""
             width="120"
@@ -117,4 +135,5 @@ function AboutPageContent() {
 function AboutPage() {
   return <DefaultPageLayout content={<AboutPageContent />} />
 }
+
 export default AboutPage;
