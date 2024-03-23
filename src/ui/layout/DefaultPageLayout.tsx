@@ -126,16 +126,9 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                           </Link>
                         </td>
                         <td className="topnav-right local-sub-title">
-                          <Link
-                            to=""
-                            onClick={() =>
-                              window.open(API_URL + '/docs', '_blank')
-                            }
-                            title="ProtVar API"
-                            rel="noreferrer"
-                          >
+                          <a href={API_URL} title="ProtVar API" target="_self">
                             API
-                          </Link>
+                          </a>
                         </td>
                         <td className="topnav-right local-sub-title">
                           <Link

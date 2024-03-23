@@ -31,19 +31,8 @@ const HomePageContent = (props: HomePageProps) => {
           annotations which may be relevant to interpretation.
           <br />
           Variants can be submitted below in genomic or protein formats,
-          uploaded or accessed via our{' '}
-          <Link
-            to=""
-            onClick={() => window.open(API_URL + '/docs', '_blank')}
-            title="ProtVar REST API"
-            target="_blank"
-            rel="noreferrer"
-            className='ref-link'
-          >
-            {' '}
-            API{' '}
-          </Link>
-          .
+          uploaded or accessed via our <a href={API_URL}
+                                          title="ProtVar API" target="_self" className='ref-link'>API</a>.
         </p>
       </div>
       <div className='search-page-layout'>
