@@ -15,7 +15,7 @@ interface DefaultPageLayoutProps {
   searchResults?: MappingRecord[][][]
 }
 
-const bannerText = "We're updating ProtVar with new datasets and features. Please bear with us as there may be some temporary disruptions while we're at it."
+const bannerText = null
 
 function DefaultPageLayout(props: DefaultPageLayoutProps) {
   const [showBanner, setShowBanner ] = useState(bannerText == null ? false : true);
@@ -126,16 +126,9 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                           </Link>
                         </td>
                         <td className="topnav-right local-sub-title">
-                          <Link
-                            to=""
-                            onClick={() =>
-                              window.open(API_URL + '/docs', '_blank')
-                            }
-                            title="ProtVar API"
-                            rel="noreferrer"
-                          >
+                          <a href={API_URL} title="ProtVar API" target="_self">
                             API
-                          </Link>
+                          </a>
                         </td>
                         <td className="topnav-right local-sub-title">
                           <Link
