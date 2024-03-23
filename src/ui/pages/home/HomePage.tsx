@@ -27,9 +27,9 @@ const HomePageContent = (props: HomePageProps) => {
       <div>
         <p>
           ProtVar (<strong>Prot</strong>ein <strong>Var</strong>iation) is a
-          resource to investigate missense variation in humans by presenting
+          resource to investigate SNV missense variation (not InDels) in humans by presenting
           annotations which may be relevant to interpretation.
-          <br />
+          <br/>
           Variants can be submitted below in genomic or protein formats,
           uploaded or accessed via our <a href={API_URL}
                                           title="ProtVar API" target="_self" className='ref-link'>API</a>.
@@ -47,6 +47,9 @@ const HomePageContent = (props: HomePageProps) => {
       <div>
         <br />
         <p className="info">
+          This site is licensed under a <a
+          className="ref-link" href="https://creativecommons.org/licenses/by/4.0/"
+          target="_blank" rel="noreferrer">Creative Commons</a> license and uses cookie to improve user's experience.
           Further information can be found in the{' '}
           <Link to={ABOUT} title="About ProtVar's" className="ref-link">
             ABOUT
