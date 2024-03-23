@@ -104,7 +104,7 @@ const SearchVariant = (props: VariantSearchProps) => {
         <section className="search-card__actions">
           <span className="search-card-header">
             <p>
-              <b>Search Variants</b> - Please paste your variants below or
+              <b>Search single nucleotide variants</b> - Please paste your variants below or
               upload your file
             </p>
           </span>
