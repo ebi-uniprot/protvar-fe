@@ -69,6 +69,12 @@
   <noscript>You need to enable JavaScript to run this app.</noscript>
   <div id="root"></div>
   <script defer="defer" src="//ebi.emblstatic.net/web_guidelines/EBI-Framework/v1.2/js/script.js"></script>
+  <!-- Needed to override EBI-Framework with custom banner -->
+  <script>
+    var date = new Date();
+    date.setDate(date.getDate() + 90);
+    document.cookie = "embl-ebi-public-website-v1.0-data-protection-accepted=true;expires="  + date.toUTCString() + "; path=/";
+  </script>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-J7Q0Y482R9"></script>
   <script>
