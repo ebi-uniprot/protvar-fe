@@ -26,7 +26,8 @@
     "web-vitals": "2.1.4",
     "react-markdown": "^8.0.7",
     "remark-gfm": "3.0.1",
-    "rehype-raw": "6.1.1"
+    "rehype-raw": "6.1.1",
+    "react-cookie-consent": "9.0.0"
   },
   "scripts": {
     "start": "react-scripts start",

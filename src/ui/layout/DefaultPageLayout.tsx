@@ -10,6 +10,7 @@ import openTargetsLogo from '../../images/open-targets-logo.png'
 import SignUp from "./SignUp";
 import { MappingRecord } from '../../utills/Convertor'
 import {WARN_ICON} from "../components/search/MsgRow";
+import {CookieConsent} from "react-cookie-consent";
 interface DefaultPageLayoutProps {
   content: JSX.Element,
   searchResults?: MappingRecord[][][]
@@ -224,6 +225,21 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
           {/* <nav id="global-nav-expanded" className="global-nav-expanded row" /> */}
           <section id="ebi-footer-meta" className="ebi-footer-meta row" />
         </div>
+        <CookieConsent
+          location="bottom"
+          buttonText="I agree, dismiss this banner"
+          cookieName="dismiss-banner"
+        >
+          <div className="white-color">
+            This website uses cookies including Google Analytics. By using the site you are agreeing to this as
+            outlined in our <a target="_blank" rel="noreferrer"
+                               href="https://www.ebi.ac.uk/data-protection/privacy-notice/embl-ebi-public-website">Privacy
+            Notice</a> and <a target="_blank" rel="noreferrer"
+                              href="https://www.ebi.ac.uk/about/terms-of-use">Terms of Use</a>.<br/>
+            We do not use any of these services to track you individually or collect personal data.
+          </div>
+
+        </CookieConsent>
       </footer>
     </>
   )
