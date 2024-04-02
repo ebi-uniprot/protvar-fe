@@ -557,3 +557,19 @@ span.space:before {
   font-family: "Lucida Console", "Courier New", monospace;
   font-size: 0.7em;
 }
+
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  gap: 10px;
+  padding: 30px;
+}
+
+.grid-container > div {
+  text-align: center;
+  font-size: 12px;
+}
+
+.varsite-logo {
+  background-color: rgba(0, 124, 130, 0.65);
+}
