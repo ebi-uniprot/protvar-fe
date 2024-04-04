@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {Redirect, Route, RouteComponentProps, withRouter} from "react-router-dom";
+import {useNavigate, Route, Routes} from "react-router-dom";
 import HomePage from "./pages/home/HomePage";
 import SearchResultsPage from "./pages/search/SearchResultPage";
 import APIErrorPage from "./pages/APIErrorPage";
@@ -18,13 +18,13 @@ import DownloadPage from "./pages/download/DownloadPage";
 import HelpPage from "./pages/help/HelpPage";
 import {FormData, initialFormData} from "../types/FormData";
 
-interface AppProps extends RouteComponentProps {}
 
-function App(props: AppProps) {
+export default function App() {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [page, setPage] = useState<Page>(firstPage(0));
   const [searchResults, setSearchResults] = useState<MappingRecord[][][]>([]);
+  const navigate = useNavigate();
   // MappingRecord 3d array -> [][][] list of mappings/genes/isoforms
     // mappings : [
     //     ...
@@ -143,56 +143,43 @@ function App(props: AppProps) {
                 Notify.err(message.text)
             }
         });
-        props.history.push(SEARCH);
+        navigate(SEARCH);
       })
       .catch((err) => {
-        props.history.push(API_ERROR);
+        navigate(API_ERROR);
         console.log(err);
       })
       .finally(() => setLoading(false));
   }
 
   return (
-    <>
+    <Routes>
       <Route
         path={HOME}
-        exact
-        render={() => (
-          <HomePage
+        element={<HomePage
             loading={loading}
             formData={formData}
             updateAssembly={updateAssembly}
             fetchPasteResult={fetchPasteResult}
             fetchFileResult={fetchFileResult}
             searchResults={searchResults}
-          />
-        )}
-      />
+          />} />
       <Route
         path={SEARCH}
-        render={() => (
-          <SearchResultsPage
+        element={<SearchResultsPage
             rows={searchResults}
             page={page}
             formData={formData}
             fetchNextPage={fetchPage}
             loading={loading}
-          />
-        )}
-      />
-      <Route path={QUERY} render={() => <QueryPage />} />
-      <Route path={API_ERROR} render={() => <APIErrorPage />} />
-      <Route path={ABOUT} render={() => <AboutPage />} />
-      <Route path={RELEASE} render={() => <ReleasePage />} />
-      <Route path={CONTACT} render={() => <ContactPage />} />
-      <Route path={DOWNLOAD} render={() => <DownloadPage searchResults={searchResults}/>} />
-      <Route path={HELP} render={() => <HelpPage />} />
-
-        <Route exact path="/test">
-            <Redirect push to={"/test.html"} />
-        </Route>
-    </>
+          />} />
+      <Route path={QUERY} element={<QueryPage />} />
+      <Route path={API_ERROR} element={<APIErrorPage />} />
+      <Route path={ABOUT} element={<AboutPage />} />
+      <Route path={RELEASE} element={<ReleasePage />} />
+      <Route path={CONTACT} element={<ContactPage />} />
+      <Route path={DOWNLOAD} element={<DownloadPage searchResults={searchResults}/>} />
+      <Route path={HELP} element={<HelpPage />} />
+    </Routes>
   );
 }
-
-export default withRouter(App);
