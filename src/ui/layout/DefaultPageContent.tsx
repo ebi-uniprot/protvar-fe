@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { DOWNLOAD, HOME, SEARCH } from '../../constants/BrowserPaths'
 import { MappingRecord } from '../../utills/Convertor'
@@ -8,48 +7,23 @@ const DefaultPageContent = (props: {
   downloadCount: number
   searchResults?: MappingRecord[][][]
 }) => {
-  const [enableResults, setEnableResults] = useState(false)
   const { children, downloadCount, searchResults } = props
-  useEffect(() => {
-    if (searchResults?.length) {
-      setEnableResults(true)
-    }
-  }, [searchResults])
-
   return (
     <div className="default-page-content">
       <div className="sidebar">
         <nav>
           <ul>
             <li className="sidebar-menu">
-              <NavLink to={HOME} exact activeClassName="active">
-                Search
-              </NavLink>
+              <NavLink to={HOME}>Search</NavLink>
             </li>
             <li className="sidebar-menu">
-              {enableResults ? (
-                <NavLink to={SEARCH} activeClassName="active">
-                  {' '}
-                  Results{' '}
-                </NavLink>
-              ) : (
-                <NavLink
-                  to={SEARCH}
-                  className={'disabled'}
-                >
-                  {' '}
-                  Results{' '}
-                </NavLink>
-              )}
+              {searchResults?.length ?
+                <NavLink to={SEARCH}>Results</NavLink> :
+                <NavLink to={SEARCH} className="disabled">Results</NavLink>
+              }
             </li>
             <li className="sidebar-menu">
-              <NavLink
-                to={DOWNLOAD}
-                activeClassName="active"
-              >
-                {' '}
-                My Downloads ({downloadCount})
-              </NavLink>
+              <NavLink to={DOWNLOAD}>My Downloads ({downloadCount})</NavLink>
             </li>
           </ul>
         </nav>

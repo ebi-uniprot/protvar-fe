@@ -1,7 +1,7 @@
 import ResultTable from "../../components/search/ResultTable";
 import DefaultPageLayout from "../../layout/DefaultPageLayout";
 import PaginationRow from "./PaginationRow";
-import { Redirect } from 'react-router-dom'
+import { Navigate } from 'react-router-dom'
 import { NextPageFun, Page } from "../../../utills/AppHelper";
 import { MappingRecord } from "../../../utills/Convertor";
 import DownloadModal from "../../modal/DownloadModal";
@@ -27,7 +27,7 @@ function SearchResultsPageContent(props: SearchResultPageProps) {
   }, [props]);
 
   if (!rows || rows.length < 1)
-    return <Redirect to="/" />
+    return <Navigate to="/" replace />
 
   return <>
     <div className="search-results">
