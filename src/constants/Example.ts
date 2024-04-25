@@ -1,7 +1,6 @@
 export const PASTE_BOX =
-  `Paste variants here. Genomic, cDNA, Protein and ID input types are accepted. Click on the examples to see supported formats. Mixed formats are allowed, however mixed genome assemblies are not.
-Test inputs can be found to the right
-
+  `Input types can be explored by clicking on the example buttons to the right of this box.
+   
 X\t149498202\t.\tC\tG
 X-149498202-C-G
 NC_000023.11:g.149498202C>G

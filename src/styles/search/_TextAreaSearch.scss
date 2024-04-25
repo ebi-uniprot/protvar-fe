@@ -41,11 +41,14 @@
   padding: 0 2px 0 2px;
   margin-right: 0.3rem;
   height: 25px;
+  background-color: #014373;
+  color: #fff;
+  box-shadow: 2px 2px 1px lightblue;
 }
 
 .example-link:hover {
   color: #ffffff;
-  background-color: #014373;
+  background-color: #6987c3;
   opacity: 0.9;
   outline-width: 0;
 }
