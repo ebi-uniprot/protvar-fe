@@ -48,7 +48,7 @@ function ResultTable(props: ResultTableProps) {
         <Tool el="th" className="sticky" tip="Alternative allele">Alt.</Tool>
         <Tool el="th" className="sticky" tip="HGNC short gene name">Gene</Tool>
         <Tool el="th" className="sticky" tip="Change of the codon containing the variant nucleotide the position of which is capitalised">Codon (strand)</Tool>
-        <Tool el="th" className="sticky" tip="CADD (Combined Annotation Dependent Depletion) phred-like score. Colours are defined in the key at the bottom of the page. Source: PubMed PMID 30371827">CADD</Tool>
+        <Tool el="th" className="sticky" tip="CADD (Combined Annotation Dependent Depletion) phred-like score. Colours are defined in the legends. Source: PubMed PMID 30371827">CADD</Tool>
         <Tool el="th" className="sticky" tip="The protein isoform the variant is mapped to. 
         By default this is the UniProt canonical isoform, however other isoforms are shown if necessary. 
         Alternative isoforms can be shown by expanding the arrow to the right of the isoform" tSize="xlarge">Isoform</Tool>
@@ -56,7 +56,7 @@ function ResultTable(props: ResultTableProps) {
         <Tool el="th" className="sticky" tip="Position of the amino acid containing the variant in the displayed isoform">AA pos.</Tool>
         <Tool el="th" className="sticky" tip="Three letter amino acid code for the reference and alternative alleles">AA change</Tool>
         <Tool el="th" className="sticky" tip="A description of the consequence of the variant">Consequence(s)</Tool>
-        <Tool el="th" className="sticky" tip="EVE (Evolutionary model of Variant Effects) score. Source: PubMed PMID 34707284">EVE</Tool>
+        <Tool el="th" className="sticky" tip="AlphaMissense prediction. Colours are defined in the legends. Source: PubMed PMID 37733863">AlphaMiss. pred.</Tool>
         <th className="sticky">Click for details</th>
       </tr>
     </thead>
