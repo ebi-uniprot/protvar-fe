@@ -6,7 +6,7 @@ import {
   INPUT_CDNA,
   UserInput,
   GenomicInput,
-  Message, MappingResponse
+  Message, MappingResponse, EVEScore, ConservScore, ESMScore, AMScore
 } from "../types/MappingResponse";
 
 export interface MappingRecord {
@@ -23,7 +23,7 @@ export interface MappingRecord {
   geneName?: string
   codon?: string
   strand?: boolean
-  CADD?: string
+  cadd?: string
   // PROTEIN column properties
   canonical?: boolean   // display as can (true) or iso (false)
   isoform?: string
@@ -35,8 +35,10 @@ export interface MappingRecord {
   variantAA?: string
   cdsPosition?: number // not displayed or used anywhere
   consequences?: string
-  eveScore?: string
-  eveClass?: number
+  conservScore?: ConservScore
+  amScore?: AMScore
+  eveScore?: EVEScore
+  esmScore?: ESMScore
   // ANNOTATIONS column
   referenceFunctionUri?: string
   populationObservationsUri?: string
@@ -169,8 +171,8 @@ function convertGenInputMappings(originalInput: UserInput, genInput: GenomicInpu
           record.geneName = gene.geneName;
           record.codon = isoform.refCodon + '/' + isoform.variantCodon;
           record.strand = gene.reverseStrand;
-          if (gene.caddScore === null) record.CADD = '-';
-          else record.CADD = gene.caddScore.toString();
+          if (gene.caddScore === null) record.cadd = '-';
+          else record.cadd = gene.caddScore.toString();
         }
         // PROTEIN
         record.canonical = isoform.canonical;
@@ -183,12 +185,10 @@ function convertGenInputMappings(originalInput: UserInput, genInput: GenomicInpu
         record.variantAA = isoform.variantAA;
         record.cdsPosition = isoform.cdsPosition;
         record.consequences = isoform.consequences;
-        if (isoform.eveScore !== undefined && isoform.eveScore !== null) {
-          record.eveScore = isoform.eveScore.toString();
-          record.eveClass = isoform.eveClass;
-        } else {
-          record.eveScore = '-';
-        }
+        record.conservScore = isoform.conservScore;
+        record.amScore = isoform.amScore;
+        record.eveScore = isoform.eveScore;
+        record.esmScore = isoform.esmScore;
         // ANNOTATIONS
         record.referenceFunctionUri = isoform.referenceFunctionUri;
         record.populationObservationsUri = isoform.populationObservationsUri;

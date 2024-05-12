@@ -73,14 +73,6 @@
 			border-style: none;
 			height: 100%;
 		}
-
-		.cadd-score {
-			width: 2rem;
-			text-align: center;
-			display: inline-block;
-			margin-right: 1rem;
-			margin-bottom: 0.3rem;
-		}
 	}
 
 	.img-table {
@@ -443,37 +435,6 @@
 		vertical-align: top;
 	}
 
-	.cadd-score {
-		padding: 0.3rem 0.4rem;
-		border-radius: 0.75rem;
-		font-size: 0.8rem;
-		font-weight: 700;
-
-		&--DarkGreen {
-			background-color: DarkGreen;
-		}
-
-		&--DarkSeaGreen {
-			color: $white-colour;
-			background-color: DarkSeaGreen;
-		}
-
-		&--Gold {
-			color: $white-colour;
-			background-color:Gold;
-		}
-
-		&--DarkOrange {
-			color: $white-colour;
-			background-color: DarkOrange;
-		}
-
-		&--FireBrick {
-			color: $white-colour;
-			background-color: FireBrick;
-		}
-	}
-
 	.expanded-row {
 		background-color: #CDD9E4;
 	}
@@ -689,16 +650,29 @@
 		padding-left: 1rem;
 	}
 
-	.eve-benign {
-		color: blue;
+	.esm1b-score-grad {
+		background-color: #460556;
+		background-image: linear-gradient(to right, #460556 , #218c8f, #f9e725);
+		width: 8rem;
+		height: 1.5rem;
+	}
+	.score-label {
+		text-align: justify;
+		width: 8rem;
+		height: 1.5rem;
+		font-size: 0.7em;
+	}
+	.score-label:after {
+		content: "";
+		display: inline-block;
+		width: 100%;
 	}
 
-	.eve-pathogenic {
-		color: red;
-	}
-
-	.eve-uncertain {
-		color: lightgrey;
+	.conserv-score-grad {
+		background-color: #732faf;
+		background-image: linear-gradient(to right, #732faf, #194888, #277777, #72cb5d, #bab518, #c46307, #9d0101);
+		width: 8rem;
+		height: 1.5rem;
 	}
 }
 
@@ -775,4 +749,9 @@
 
 .pae-desc {
 	padding-left: 20px;
+}
+
+.aa-pred{
+	display: grid;
+	grid-template-columns: 35% 20% auto;
 }

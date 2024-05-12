@@ -1,0 +1,13 @@
+.score-box {
+    width: 2rem;
+    text-align: center;
+    display: inline-block;
+    padding: 0.1rem 0.2rem;
+    margin-right: 1rem;
+    margin-bottom: 0.3rem;
+    border: none;
+    border-radius: 0.75rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: white;
+}

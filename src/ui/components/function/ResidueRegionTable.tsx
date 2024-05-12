@@ -1,29 +1,32 @@
-import { useState, Fragment } from "react";
-import { EmptyElement } from "../../../constants/ConstElement";
-import { FEATURES } from "../../../constants/Protein";
+import {useState, Fragment} from "react";
+import {EmptyElement} from "../../../constants/ConstElement";
+import {FEATURES} from "../../../constants/Protein";
 import AminoAcidModel from "./AminoAcidModel";
 import Evidences from "./Evidences";
-import { ReactComponent as ChevronDownIcon } from "../../../images/chevron-down.svg"
-import { v1 as uuidv1 } from 'uuid';
-import { StringVoidFun } from "../../../constants/CommonTypes";
+import {ReactComponent as ChevronDownIcon} from "../../../images/chevron-down.svg"
+import {v1 as uuidv1} from 'uuid';
+import {StringVoidFun} from "../../../constants/CommonTypes";
 import {aminoAcid3to1Letter, formatRange, getKeyValue} from "../../../utills/Util";
 import {FunctionalResponse, Pocket, Foldx, P2PInteraction, ProteinFeature} from "../../../types/FunctionalResponse";
+import {MappingRecord} from "../../../utills/Convertor";
+import {Prediction} from "./prediction/Prediction";
 
 interface ResidueRegionTableProps {
-  apiData: FunctionalResponse
-  refAA: string
-  variantAA: string
+  functionalData: FunctionalResponse
+  record: MappingRecord
 }
+
 function ResidueRegionTable(props: ResidueRegionTableProps) {
   const [expendedRowKey, setExpendedRowKey] = useState('')
+
   function toggleRow(key: string) {
     setExpendedRowKey(expendedRowKey === key ? '' : key)
   }
 
   var regions: Array<ProteinFeature> = [];
   var residues: Array<ProteinFeature> = [];
-  if (props.apiData.features && props.apiData.features.length > 0) {
-    props.apiData.features.forEach((feature) => {
+  if (props.functionalData.features && props.functionalData.features.length > 0) {
+    props.functionalData.features.forEach((feature) => {
       if (feature.category !== 'VARIANTS') {
         if (feature.begin === feature.end)
           residues.push(feature);
@@ -31,46 +34,36 @@ function ResidueRegionTable(props: ResidueRegionTableProps) {
           regions.push(feature);
       }
     });
-    const oneLetterVariantAA = aminoAcid3to1Letter(props.variantAA);
+    const oneLetterVariantAA = aminoAcid3to1Letter(props.record.variantAA!);
     return <table>
       <tbody>
-        <tr>
-          <th>Variant Residue Position</th>
-          <th>Region Containing Variant Position</th>
-        </tr>
-        <tr>
-          <td>{getResidues(residues, props.apiData.conservScore, props.apiData.foldxs, props.refAA, props.variantAA, oneLetterVariantAA, expendedRowKey, toggleRow)}</td>
-          <td>{getRegions(regions, props.apiData.accession, props.apiData.pockets, props.apiData.interactions, expendedRowKey, toggleRow)}</td>
-        </tr>
+      <tr>
+        <th>Variant Residue Position</th>
+        <th>Region Containing Variant Position</th>
+      </tr>
+      <tr>
+        <td>{getResidues(residues, props.record, props.functionalData.foldxs, oneLetterVariantAA, expendedRowKey, toggleRow)}</td>
+        <td>{getRegions(regions, props.functionalData.accession, props.functionalData.pockets, props.functionalData.interactions, expendedRowKey, toggleRow)}</td>
+      </tr>
       </tbody>
     </table>
   }
   return EmptyElement
 }
-function getResidues(regions: Array<ProteinFeature>, conservScore: number, foldxs: Array<Foldx>, refAA: string, variantAA: string, oneLetterVariantAA: string | null, expendedRowKey: string, toggleRow: StringVoidFun) {
-  let regionsList: Array<JSX.Element> = [];
+
+function getResidues(regions: Array<ProteinFeature>, record: MappingRecord, foldxs: Array<Foldx>, oneLetterVariantAA: string | null, expendedRowKey: string, toggleRow: StringVoidFun) {
   let counter = 0;
   let foldxs_ = oneLetterVariantAA ? foldxs.filter(foldx => foldx.mutatedType.toLowerCase() === oneLetterVariantAA) : foldxs
-
-  if (regions.length === 0) {
-    return <>
-        <AminoAcidModel refAA={refAA} variantAA={variantAA} />
-        <b>Conservation score: </b> {conservScore} <br/>
-        <FoldxPred foldxs={foldxs_} expendedRowKey={expendedRowKey} toggleRow={toggleRow} />
-      </>;
-  }
-
-  regions.forEach((region) => {
-    counter = counter + 1;
-    let key = 'residue-' + counter;
-    var list = getFeatureList(region, key, expendedRowKey, toggleRow);
-    regionsList.push(list);
-  });
   return <>
-    <AminoAcidModel refAA={refAA} variantAA={variantAA} />
-    <b>Conservation score: </b> {conservScore} <br/>
-    {regionsList}
-    <FoldxPred foldxs={foldxs_} expendedRowKey={expendedRowKey} toggleRow={toggleRow} />
+    {
+      regions.forEach((region) => {
+        counter = counter + 1;
+        let key = 'residue-' + counter;
+        return getFeatureList(region, key, expendedRowKey, toggleRow);
+      })
+    }
+    <AminoAcidModel refAA={record.refAA!} variantAA={record.variantAA!}/>
+    <Prediction record={record} foldxs={foldxs_}/>
   </>
 }
 
@@ -80,14 +73,16 @@ function getRegions(regions: Array<ProteinFeature>, accession: string, pockets: 
 
   if (regions.length === 0) {
     return (<>
-      <label style={{ textAlign: 'center', fontWeight: 'bold' }}>
+      <label style={{textAlign: 'center', fontWeight: 'bold'}}>
         No functional data for the region
       </label>
       <br/><br/>
       <b>Predictions</b>
-      <br/>(Source: PubMed ID <a href="https://pubmed.ncbi.nlm.nih.gov/36690744" target="_blank" rel="noreferrer">15980494</a>)<br/>
-      <Pockets pockets={pockets} expendedRowKey={expendedRowKey} toggleRow={toggleRow} />
-      <Interfaces accession={accession} interactions={interactions} expendedRowKey={expendedRowKey} toggleRow={toggleRow} />
+      <br/>(Source: PubMed ID <a href="https://pubmed.ncbi.nlm.nih.gov/36690744" target="_blank"
+                                 rel="noreferrer">15980494</a>)<br/>
+      <Pockets pockets={pockets} expendedRowKey={expendedRowKey} toggleRow={toggleRow}/>
+      <Interfaces accession={accession} interactions={interactions} expendedRowKey={expendedRowKey}
+                  toggleRow={toggleRow}/>
     </>);
   }
   regions.forEach((region) => {
@@ -101,10 +96,12 @@ function getRegions(regions: Array<ProteinFeature>, accession: string, pockets: 
     {regionsList}
     <br/><br/>
     <b>Predictions</b>
-    <br/>(Source: PubMed ID <a href="https://pubmed.ncbi.nlm.nih.gov/36690744" target="_blank" rel="noreferrer">15980494</a>)<br/>
-    <Pockets pockets={pockets} expendedRowKey={expendedRowKey} toggleRow={toggleRow} />
-    <Interfaces accession={accession} interactions={interactions} expendedRowKey={expendedRowKey} toggleRow={toggleRow} />
-    </>
+    <br/>(Source: PubMed ID <a href="https://pubmed.ncbi.nlm.nih.gov/36690744" target="_blank"
+                               rel="noreferrer">15980494</a>)<br/>
+    <Pockets pockets={pockets} expendedRowKey={expendedRowKey} toggleRow={toggleRow}/>
+    <Interfaces accession={accession} interactions={interactions} expendedRowKey={expendedRowKey}
+                toggleRow={toggleRow}/>
+  </>
 }
 
 function getFeatureList(feature: ProteinFeature, key: string, expendedRowKey: string, toggleRow: StringVoidFun) {
@@ -120,7 +117,7 @@ function getFeatureList(feature: ProteinFeature, key: string, expendedRowKey: st
   return <Fragment key={key}>
     <button type="button" className="collapsible" onClick={(e) => toggleRow(key)}>
       {category ? category : 'Unnamed'}
-      <ChevronDownIcon className="chevronicon" />
+      <ChevronDownIcon className="chevronicon"/>
     </button>
     {getFeatureDetail(key, feature, expendedRowKey)}
   </Fragment>
@@ -130,11 +127,11 @@ function getFeatureDetail(rowKey: string, feature: ProteinFeature, expendedRowKe
   if (rowKey === expendedRowKey) {
     return (
       <>
-        <ul style={{ listStyleType: 'none', display: 'inline-block' }}>
+        <ul style={{listStyleType: 'none', display: 'inline-block'}}>
           <li key={uuidv1()}>
             {getPositionLabel(feature.begin, feature.end)}
-            <br />
-            <Evidences evidences={feature.evidences} />
+            <br/>
+            <Evidences evidences={feature.evidences}/>
           </li>
         </ul>
       </>
@@ -149,40 +146,6 @@ function getPositionLabel(begin: number, end: number) {
     return <><b>Range : </b> {begin} - {end}</>
 }
 
-interface FoldxPredProps {
-  foldxs: Array<Foldx>
-  expendedRowKey: string
-  toggleRow: StringVoidFun
-}
-
-const FoldxPred = (props: FoldxPredProps) => {
-  if (!props.foldxs || props.foldxs.length === 0) {
-    return <></>
-  }
-  let key = 'foldxs-0'
-  return <Fragment key={key}>
-    <button type="button" className="collapsible" onClick={(e) => props.toggleRow(key)}>
-      Foldx prediction
-      <ChevronDownIcon className="chevronicon" />
-    </button>
-    {getFoldxDetail(props.foldxs, key, props.expendedRowKey)}
-  </Fragment>
-}
-
-function getFoldxDetail(foldxs: Array<Foldx>, rowKey: string, expendedRowKey: string) {
-  if (rowKey === expendedRowKey) {
-    return <ul style={{ listStyleType: 'none', display: 'inline-block' }}>
-            <li key={uuidv1()}>
-              <b title="Difference between the predicted ΔG before and after the variant. A value above 2 often indicates a destabilising variant.">ΔΔG<sub>pred</sub> :</b> {foldxs[0].foldxDdq}
-              <br />
-              <b title="AlphaFold per-residue confidence score (pLDDT).">pLDDT :</b> {foldxs[0].plddt}
-              <br />
-              (Source: PubMed ID <a href="http://www.ncbi.nlm.nih.gov/pubmed/15980494" target="_blank" rel="noreferrer">15980494</a>)
-            </li>
-          </ul>
-  }
-}
-
 interface PocketsProps {
   pockets: Array<Pocket>
   expendedRowKey: string
@@ -195,13 +158,13 @@ const Pockets = (props: PocketsProps) => {
 
   props.pockets.forEach((pocket) => {
     counter = counter + 1;
-    let key = 'pockets-'+counter
+    let key = 'pockets-' + counter
     pocketsList.push(<li key={key}>
-          <b>Energy :</b> {pocket.energy}<br/>
-          <b>Energy/vol :</b> {pocket.energyPerVol}<br/>
-          <b>Score :</b> {pocket.score}<br/>
-          <b>Resid :</b> {formatRange(pocket.residList)}
-        </li>);
+      <b>Energy :</b> {pocket.energy}<br/>
+      <b>Energy/vol :</b> {pocket.energyPerVol}<br/>
+      <b>Score :</b> {pocket.score}<br/>
+      <b>Resid :</b> {formatRange(pocket.residList)}
+    </li>);
   });
 
   if (pocketsList.length === 0) return <></>;
@@ -210,7 +173,7 @@ const Pockets = (props: PocketsProps) => {
   return <Fragment key={key}>
     <button type="button" className="collapsible" onClick={(e) => props.toggleRow(key)}>
       Pockets containing variant
-      <ChevronDownIcon className="chevronicon" />
+      <ChevronDownIcon className="chevronicon"/>
     </button>
     {getList(pocketsList, key, props.expendedRowKey)}
   </Fragment>
@@ -229,7 +192,7 @@ const Interfaces = (props: InterfacesProps) => {
 
   props.interactions.forEach((interaction) => {
     counter = counter + 1;
-    let key = 'interfaces-'+counter
+    let key = 'interfaces-' + counter
     let chain = 'A'
     let pair = interaction.a
 
@@ -251,7 +214,7 @@ const Interfaces = (props: InterfacesProps) => {
   return <Fragment key={key}>
     <button type="button" className="collapsible" onClick={(e) => props.toggleRow(key)}>
       Protein-protein interfaces containing variant
-      <ChevronDownIcon className="chevronicon" />
+      <ChevronDownIcon className="chevronicon"/>
     </button>
     {getList(interfacesList, key, props.expendedRowKey)}
   </Fragment>
@@ -259,14 +222,10 @@ const Interfaces = (props: InterfacesProps) => {
 
 function getList(list: Array<JSX.Element>, rowKey: string, expendedRowKey: string) {
   if (rowKey === expendedRowKey) {
-    return <ul style={{ listStyleType: 'none', display: 'inline-block' }}>
+    return <ul style={{listStyleType: 'none', display: 'inline-block'}}>
       {list}
     </ul>
   }
 }
-/*
-const NoData = () => {
-  return <label style={{ marginLeft: '10px' }}>No data</label>
-}*/
 
 export default ResidueRegionTable;

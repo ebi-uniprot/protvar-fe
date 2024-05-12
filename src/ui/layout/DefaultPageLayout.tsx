@@ -16,7 +16,7 @@ interface DefaultPageLayoutProps {
   searchResults?: MappingRecord[][][]
 }
 
-const bannerText = null
+const bannerText = "AlphaMissense prediction has replaced EVE score in the main table. You can now find EVE score under Predictions in the Functional Annotations section."
 
 function DefaultPageLayout(props: DefaultPageLayoutProps) {
   const [showBanner, setShowBanner ] = useState(bannerText == null ? false : true);

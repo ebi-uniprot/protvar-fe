@@ -17,7 +17,6 @@ export interface FunctionalResponse {
     pockets: Array<Pocket>
     foldxs: Array<Foldx>
     interactions: Array<P2PInteraction>
-    conservScore: number
 }
 
 export interface GeneName {
@@ -81,7 +80,7 @@ export interface Foldx {
     position: number
     wildType: string
     mutatedType: string
-    foldxDdq: number
+    foldxDdg: number
     plddt: number
 }
 

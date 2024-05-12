@@ -1,7 +1,9 @@
+import './PrimaryRow.css';
 import { Fragment, lazy, Suspense } from "react";
 import { StringVoidFun } from "../../../constants/CommonTypes";
 import {
-  CADD_INFO_URL, CLINVAR_RCV_URL, CLINVAR_VCV_URL, COSMIC_URL,
+  CADD_INFO_URL, AM_INFO_URL,
+  CLINVAR_RCV_URL, CLINVAR_VCV_URL, COSMIC_URL,
   DBSNP_URL,
   ENSEMBL_CHRM_URL,
   ENSEMBL_GENE_URL,
@@ -12,7 +14,8 @@ import { ALLELE, CONSEQUENCES } from "../../../constants/SearchResultTable";
 import { MappingRecord } from "../../../utills/Convertor";
 import Spaces from "../../elements/Spaces";
 import Tool from "../../elements/Tool";
-import { getCaddCss, getTitle } from "./CaddHelper";
+import {caddScoreAttr} from "./CaddScorePred";
+import {amScoreAttr} from "../function/prediction/AlphaMissensePred";
 import { getProteinName } from "./ResultTable";
 import ProteinIcon from '../../../images/proteins.svg';
 import StructureIcon from '../../../images/structures-3d.svg';
@@ -22,7 +25,6 @@ import { ReactComponent as ChevronDownIcon } from "../../../images/chevron-down.
 import { ReactComponent as ChevronUpIcon } from "../../../images/chevron-up.svg"
 import { EmptyElement } from "../../../constants/ConstElement";
 import { aaChangeTip, CanonicalIcon } from "./AlternateIsoFormRow";
-import {EveIcon, getEveClassText} from "./EveScore";
 import {INPUT_GEN, INPUT_PRO, INPUT_ID, INPUT_CDNA} from "../../../types/MappingResponse";
 
 const StructuralDetail = lazy(() => import(/* webpackChunkName: "StructuralDetail" */ "../structure/StructuralDetail"));
@@ -31,8 +33,10 @@ const FunctionalDetail = lazy(() => import(/* webpackChunkName: "FunctionalDetai
 
 const getPrimaryRow = (record: MappingRecord, toggleOpenGroup: string, isoFormGroupExpanded: string, toggleIsoFormGroup: StringVoidFun,
   annotationExpanded: string, toggleAnnotation: StringVoidFun, hasAltIsoForm: boolean, currStyle: object) => {
-  let caddCss = getCaddCss(record.CADD);
-  let caddTitle = getTitle(record.CADD);
+
+  const caddAttr = caddScoreAttr(record.cadd)
+  const amAttr = amScoreAttr(record.amScore?.amClass)
+
   let strand = record.strand ? '(-)' : '(+)';
   if (!record.codon) {
     strand = '';
@@ -105,9 +109,9 @@ const getPrimaryRow = (record: MappingRecord, toggleOpenGroup: string, isoFormGr
         </div>
       </td>
       <td>
-        <Tool className={caddCss} tip={caddTitle}>
+        <Tool className="score-box" style={{ backgroundColor: caddAttr?.color }} tip={caddAttr?.title}>
           <a href={CADD_INFO_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'white' }}>
-            <Spaces count={parseInt(record.CADD!) > 9 ? 0 : 2} />{isNaN(parseFloat(record.CADD!)) ? "" : parseFloat(record.CADD!).toFixed(1)}
+            <Spaces count={parseInt(record.cadd!) > 9 ? 0 : 2} />{isNaN(parseFloat(record.cadd!)) ? "" : parseFloat(record.cadd!).toFixed(1)}
           </a>
         </Tool>
       </td>
@@ -138,12 +142,16 @@ const getPrimaryRow = (record: MappingRecord, toggleOpenGroup: string, isoFormGr
       <td style={inputStyle.pro}><Tool tip="The amino acid position in this isoform">{record.aaPos}</Tool></td>
       <td><Tool tip={aaChangeTip(record.aaChange)}>{record.aaChange}</Tool></td>
       <td><Tool tip={CONSEQUENCES.get(record.consequences!)} pos="up-right">{record.consequences}</Tool></td>
-      <td><Tool className="eve-score" tip={record.eveScore + '-' + getEveClassText(record.eveClass)}>
-        <EveIcon eveClass={record.eveClass}/>
-      </Tool></td>
-      <td >
+      <td>
+        <Tool className="score-box" style={{ backgroundColor: amAttr?.color }} tip={`${record.amScore?.amPathogenicity} ${amAttr?.title}`}>
+          <a href={AM_INFO_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'white' }}>
+            {record.amScore?.amPathogenicity.toString().substring(0,4)}
+          </a>
+        </Tool>
+      </td>
+      <td>
         <div className="flex">
-          {!record.canonical && <><br /><br /></>}
+          {!record.canonical && <><br/><br/></>}
           {getSignificancesButton(functionalKey, 'FUN', record, annotationExpanded, toggleAnnotation)}
           {getSignificancesButton(populationKey, 'POP', record, annotationExpanded, toggleAnnotation)}
           {getSignificancesButton(structuralKey, 'STR', record, annotationExpanded, toggleAnnotation)}
@@ -163,8 +171,7 @@ const getPrimaryRow = (record: MappingRecord, toggleOpenGroup: string, isoFormGr
     }
     {functionalKey === annotationExpanded &&
       <Suspense fallback={<LoaderRow />}>
-        <FunctionalDetail refAA={record.refAA!} variantAA={record.variantAA!}
-          ensg={record.ensg!} ensp={record.ensp!} referenceFunctionUri={record.referenceFunctionUri!} />
+        <FunctionalDetail record={record} referenceFunctionUri={record.referenceFunctionUri!} />
       </Suspense>
     }
   </Fragment>
