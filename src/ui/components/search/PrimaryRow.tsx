@@ -1,7 +1,7 @@
+import './PrimaryRow.css';
 import { Fragment, lazy, Suspense } from "react";
 import { StringVoidFun } from "../../../constants/CommonTypes";
 import {
-  CADD_INFO_URL, CLINVAR_RCV_URL, CLINVAR_VCV_URL, COSMIC_URL,
   CADD_INFO_URL, AM_INFO_URL,
   CLINVAR_RCV_URL, CLINVAR_VCV_URL, COSMIC_URL,
   DBSNP_URL,
@@ -171,8 +171,7 @@ const getPrimaryRow = (record: MappingRecord, toggleOpenGroup: string, isoFormGr
     }
     {functionalKey === annotationExpanded &&
       <Suspense fallback={<LoaderRow />}>
-        <FunctionalDetail refAA={record.refAA!} variantAA={record.variantAA!}
-          ensg={record.ensg!} ensp={record.ensp!} referenceFunctionUri={record.referenceFunctionUri!} />
+        <FunctionalDetail record={record} referenceFunctionUri={record.referenceFunctionUri!} />
       </Suspense>
     }
   </Fragment>
