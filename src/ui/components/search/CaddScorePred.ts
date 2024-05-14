@@ -1,11 +1,12 @@
 import {PredAttr} from "../function/prediction/Prediction";
+import {STD_COLOR_GRADIENT} from "../function/prediction/PredConstants";
 
 export const CADD_SCORE_ATTR: PredAttr[] = [
-  {color: 'DarkGreen',    title: '<15.0 Likely benign' },
-  {color: 'DarkSeaGreen', title: '15.0-19.9 Potentially deleterious' },
-  {color: 'Gold',         title: '20.0-24.9 Quite likely deleterious' },
-  {color: 'DarkOrange',   title: '25.0-29.9 Probably deleterious' },
-  {color: 'FireBrick',    title: '>29.9 Highly likely deleterious' }
+  {color: 'DarkGreen', stdColor: STD_COLOR_GRADIENT.rgbAt(0).toHexString(), title: '<15.0 Likely benign' },
+  {color: 'DarkSeaGreen', stdColor: STD_COLOR_GRADIENT.rgbAt(0.5).toHexString(), title: '15.0-19.9 Potentially deleterious' },
+  {color: 'Gold', stdColor: STD_COLOR_GRADIENT.rgbAt(0.65).toHexString(), title: '20.0-24.9 Quite likely deleterious' },
+  {color: 'DarkOrange', stdColor: STD_COLOR_GRADIENT.rgbAt(0.8).toHexString(), title: '25.0-29.9 Probably deleterious' },
+  {color: 'FireBrick', stdColor: STD_COLOR_GRADIENT.rgbAt(1).toHexString(), title: '>29.9 Highly likely deleterious' }
 ]
 
 export function caddScoreAttr(cadd?: string) {

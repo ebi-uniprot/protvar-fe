@@ -1,4 +1,5 @@
-import { useState, useCallback, useRef } from 'react'
+import {useState, useCallback, useRef, useContext} from 'react'
+import { v1 as uuidv1 } from 'uuid';
 import Button from '../elements/form/Button'
 import Modal from './Modal'
 import useOnClickOutside from '../../hooks/useOnClickOutside'
@@ -7,8 +8,10 @@ import {CADD_SCORE_ATTR} from "../components/search/CaddScorePred";
 import {PredAttr} from "../components/function/prediction/Prediction";
 import {AM_SCORE_ATTR} from "../components/function/prediction/AlphaMissensePred";
 import {EVE_SCORE_ATTR} from "../components/function/prediction/EvePred";
+import {StdColorContext} from "../App";
 
-function LegendModal() {
+function LegendModal(props: {toggleStdColor: () => void}) {
+  const stdColor = useContext(StdColorContext);
   const [showModel, setShowModel] = useState(false)
 
   const downloadModelDiv = useRef(null)
@@ -16,6 +19,7 @@ function LegendModal() {
     downloadModelDiv,
     useCallback(() => setShowModel(false), []),
   )
+
 
   return (
     <div
@@ -41,26 +45,36 @@ function LegendModal() {
         </div>
         <div className="legend-modal-content">
           <div className="legend-div">
-            <CaddLegend/>
+            <CaddLegend stdColor={stdColor} />
           </div>
           <div className="legend-div">
             <ConservLegend/><br/>
-            <AlphaMissenseLegend />
+            <AlphaMissenseLegend stdColor={stdColor} />
           </div>
           <div className="legend-div">
-            <EsmLegend/><br/>
-            <EveLegend/>
+            <EsmLegend stdColor={stdColor} /><br/>
+            <EveLegend stdColor={stdColor} />
           </div>
           <div className="legend-div">
             <AnnotationLegend/>
           </div>
+        </div>
+        <div className="padding-left-right-1x float-right">
+          <label>
+            <input type="checkbox" checked={stdColor} onChange={props.toggleStdColor} />
+            Standard colours
+          </label>
         </div>
       </Modal>
     </div>
   )
 }
 
-function CaddLegend() {
+interface CommonLegendProps {
+  stdColor: boolean
+}
+
+function CaddLegend(props: CommonLegendProps) {
   return (
     <div className="search-results-legends">
       <strong>CADD phred-like score</strong>
@@ -68,9 +82,9 @@ function CaddLegend() {
       <div className="flex-column">
         {
           Object.values(CADD_SCORE_ATTR).map((sc: PredAttr) => {
-            return <div className="flex">
+            return <div key={uuidv1()} className="flex">
               <span className="padding-left-right-1x">
-                  <i className="bi bi-square-fill" style={{color: sc.color}}></i>
+                  <i className="bi bi-square-fill" style={{color: (props.stdColor ? sc.stdColor : sc.color)}}></i>
                 </span>
               <div className="flex1">{sc.title}</div>
             </div>;
@@ -99,7 +113,7 @@ function ConservLegend() {
   );
 }
 
-function EsmLegend() {
+function EsmLegend(props: CommonLegendProps) {
   return (
     <div className="search-results-legends" style={{ float: "unset" }}>
       <strong>ESM1b LLR score</strong>
@@ -108,7 +122,7 @@ function EsmLegend() {
       <div className="flex-column">
         <div className="flex">
                   <span className="padding-left-right-1x">
-                    <div className="esm1b-score-grad"></div>
+                    <div className={`esm1b-score-grad${props.stdColor ? '-std' : ''}`}></div>
                     <div className="score-label">0  -5  -10  -15  -20  -25</div>
                   </span>
         </div>
@@ -117,16 +131,16 @@ function EsmLegend() {
   );
 }
 
-function AlphaMissenseLegend() {
+function AlphaMissenseLegend(props: CommonLegendProps) {
   return <div className="search-results-legends" style={{float: "unset"}}>
     <strong>AlphaMissense score</strong>
     <br/>
     <div className="flex-column">
       {
         Object.values(AM_SCORE_ATTR).map((sc: PredAttr) => {
-          return <div className="flex">
+          return <div key={uuidv1()} className="flex">
                 <span className="padding-left-right-1x">
-                  <i className="bi bi-circle-fill" style={{color: sc.color}}></i>
+                  <i className="bi bi-circle-fill" style={{color: (props.stdColor ? sc.stdColor : sc.color)}}></i>
                 </span>
             <div className="flex1">{sc.title}</div>
           </div>;
@@ -137,7 +151,7 @@ function AlphaMissenseLegend() {
   </div>;
 }
 
-function EveLegend() {
+function EveLegend(props: CommonLegendProps) {
   return (
     <div className="search-results-legends" style={{ float: "unset" }}>
       <strong>EVE score</strong>
@@ -145,9 +159,9 @@ function EveLegend() {
       <div className="flex-column">
         {
           Object.values(EVE_SCORE_ATTR).map((sc: PredAttr) => {
-            return <div className="flex">
+            return <div key={uuidv1()} className="flex">
               <span className="padding-left-right-1x">
-                <i className="bi bi-circle-fill" style={{color: sc.color}}></i>
+                <i className="bi bi-circle-fill" style={{color: (props.stdColor ? sc.stdColor : sc.color)}}></i>
               </span>
               <div className="flex1">{sc.title}</div>
             </div>;

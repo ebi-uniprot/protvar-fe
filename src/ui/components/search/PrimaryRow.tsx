@@ -1,5 +1,5 @@
 import './PrimaryRow.css';
-import { Fragment, lazy, Suspense } from "react";
+import {Fragment, lazy, Suspense} from "react";
 import { StringVoidFun } from "../../../constants/CommonTypes";
 import {
   CADD_INFO_URL, AM_INFO_URL,
@@ -32,7 +32,7 @@ const PopulationDetail = lazy(() => import(/* webpackChunkName: "PopulationDetai
 const FunctionalDetail = lazy(() => import(/* webpackChunkName: "FunctionalDetail" */ "../function/FunctionalDetail"));
 
 const getPrimaryRow = (record: MappingRecord, toggleOpenGroup: string, isoFormGroupExpanded: string, toggleIsoFormGroup: StringVoidFun,
-  annotationExpanded: string, toggleAnnotation: StringVoidFun, hasAltIsoForm: boolean, currStyle: object) => {
+  annotationExpanded: string, toggleAnnotation: StringVoidFun, hasAltIsoForm: boolean, currStyle: object, stdColor: boolean) => {
 
   const caddAttr = caddScoreAttr(record.cadd)
   const amAttr = amScoreAttr(record.amScore?.amClass)
@@ -109,7 +109,7 @@ const getPrimaryRow = (record: MappingRecord, toggleOpenGroup: string, isoFormGr
         </div>
       </td>
       <td>
-        <Tool className="score-box" style={{ backgroundColor: caddAttr?.color }} tip={caddAttr?.title}>
+        <Tool className="score-box" style={{ backgroundColor: (stdColor ? caddAttr?.stdColor : caddAttr?.color) }} tip={caddAttr?.title}>
           <a href={CADD_INFO_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'white' }}>
             <Spaces count={parseInt(record.cadd!) > 9 ? 0 : 2} />{isNaN(parseFloat(record.cadd!)) ? "" : parseFloat(record.cadd!).toFixed(1)}
           </a>
@@ -143,7 +143,7 @@ const getPrimaryRow = (record: MappingRecord, toggleOpenGroup: string, isoFormGr
       <td><Tool tip={aaChangeTip(record.aaChange)}>{record.aaChange}</Tool></td>
       <td><Tool tip={CONSEQUENCES.get(record.consequences!)} pos="up-right">{record.consequences}</Tool></td>
       <td>
-        <Tool className="score-box" style={{ backgroundColor: amAttr?.color }} tip={`${record.amScore?.amPathogenicity} ${amAttr?.title}`}>
+        <Tool className="score-box" style={{ backgroundColor: (stdColor ? amAttr?.stdColor : amAttr?.color) }} tip={`${record.amScore?.amPathogenicity} ${amAttr?.title}`}>
           <a href={AM_INFO_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'white' }}>
             {record.amScore?.amPathogenicity.toString().substring(0,4)}
           </a>

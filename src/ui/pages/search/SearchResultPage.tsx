@@ -16,6 +16,7 @@ interface SearchResultPageProps {
   fetchNextPage: NextPageFun
   rows: MappingRecord[][][]
   loading: boolean
+  toggleStdColor: () => void
 }
 
 function SearchResultsPageContent(props: SearchResultPageProps) {
@@ -34,7 +35,7 @@ function SearchResultsPageContent(props: SearchResultPageProps) {
       <div className="flex justify-content-space-between">
         <PaginationRow page={page} fetchNextPage={fetchNextPage} loading={loading} />
         <div className="legend-container" >
-        <LegendModal />
+        <LegendModal toggleStdColor={props.toggleStdColor}/>
         <DownloadModal formData={formData} />
         </div>
         
