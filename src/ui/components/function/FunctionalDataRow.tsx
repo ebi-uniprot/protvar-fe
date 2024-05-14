@@ -20,7 +20,7 @@ function FunctionalDataRow(props: FunctionalDataRowProps) {
       <td colSpan={TOTAL_COLS} className="expanded-row">
         <div className="significances-groups">
           <div className="column">
-            <h5><img src={ProteinIcon} className="click-icon" alt="protein icon" title="Functional information" /> Reference Function</h5>
+            <h5><img src={ProteinIcon} className="click-icon" alt="protein icon" title="Functional information" /> Functional information</h5>
             <ResidueRegionTable functionalData={functionalData} record={record} />
             <ProteinFunctionTable comments={functionalData.comments} />
             <ProteinInformationTable apiData={functionalData} />

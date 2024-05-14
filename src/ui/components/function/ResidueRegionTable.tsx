@@ -9,7 +9,8 @@ import {StringVoidFun} from "../../../constants/CommonTypes";
 import {aminoAcid3to1Letter, formatRange, getKeyValue} from "../../../utills/Util";
 import {FunctionalResponse, Pocket, Foldx, P2PInteraction, ProteinFeature} from "../../../types/FunctionalResponse";
 import {MappingRecord} from "../../../utills/Convertor";
-import {Prediction} from "./prediction/Prediction";
+import {Prediction, PUBMED_ID} from "./prediction/Prediction";
+import {pubmedRef} from "../common/Common";
 
 interface ResidueRegionTableProps {
   functionalData: FunctionalResponse
@@ -42,8 +43,8 @@ function ResidueRegionTable(props: ResidueRegionTableProps) {
         <th>Region Containing Variant Position</th>
       </tr>
       <tr>
-        <td>{getResidues(residues, props.record, props.functionalData.foldxs, oneLetterVariantAA, expendedRowKey, toggleRow)}</td>
-        <td>{getRegions(regions, props.functionalData.accession, props.functionalData.pockets, props.functionalData.interactions, expendedRowKey, toggleRow)}</td>
+        <td style={{verticalAlign: 'top' }}>{getResidues(residues, props.record, props.functionalData.foldxs, oneLetterVariantAA, expendedRowKey, toggleRow)}</td>
+        <td style={{verticalAlign: 'top' }}>{getRegions(regions, props.functionalData.accession, props.functionalData.pockets, props.functionalData.interactions, expendedRowKey, toggleRow)}</td>
       </tr>
       </tbody>
     </table>
@@ -52,14 +53,16 @@ function ResidueRegionTable(props: ResidueRegionTableProps) {
 }
 
 function getResidues(regions: Array<ProteinFeature>, record: MappingRecord, foldxs: Array<Foldx>, oneLetterVariantAA: string | null, expendedRowKey: string, toggleRow: StringVoidFun) {
-  let counter = 0;
   let foldxs_ = oneLetterVariantAA ? foldxs.filter(foldx => foldx.mutatedType.toLowerCase() === oneLetterVariantAA) : foldxs
   return <>
+    <b>Annotations from UniProt</b>
+    {regions.length === 0 && <div>
+      No functional data for the variant position
+    </div>
+    }
     {
-      regions.forEach((region) => {
-        counter = counter + 1;
-        let key = 'residue-' + counter;
-        return getFeatureList(region, key, expendedRowKey, toggleRow);
+      regions.map((region, idx) => {
+        return getFeatureList(region, `residue-${idx}`, expendedRowKey, toggleRow);
       })
     }
     <AminoAcidModel refAA={record.refAA!} variantAA={record.variantAA!}/>
@@ -68,40 +71,26 @@ function getResidues(regions: Array<ProteinFeature>, record: MappingRecord, fold
 }
 
 function getRegions(regions: Array<ProteinFeature>, accession: string, pockets: Array<Pocket>, interactions: Array<P2PInteraction>, expendedRowKey: string, toggleRow: StringVoidFun) {
-  let regionsList: Array<JSX.Element> = [];
-  let counter = 0;
-
-  if (regions.length === 0) {
-    return (<>
-      <label style={{textAlign: 'center', fontWeight: 'bold'}}>
-        No functional data for the region
-      </label>
-      <br/><br/>
-      <b>Predictions</b>
-      <br/>(Source: PubMed ID <a href="https://pubmed.ncbi.nlm.nih.gov/36690744" target="_blank"
-                                 rel="noreferrer">15980494</a>)<br/>
-      <Pockets pockets={pockets} expendedRowKey={expendedRowKey} toggleRow={toggleRow}/>
-      <Interfaces accession={accession} interactions={interactions} expendedRowKey={expendedRowKey}
-                  toggleRow={toggleRow}/>
-    </>);
-  }
-  regions.forEach((region) => {
-    counter = counter + 1;
-    let key = 'region-' + counter;
-    var list = getFeatureList(region, key, expendedRowKey, toggleRow);
-    regionsList.push(list);
-  });
-  return <>
-    <b>Curated observations from UniProt</b>
-    {regionsList}
-    <br/><br/>
-    <b>Predictions</b>
-    <br/>(Source: PubMed ID <a href="https://pubmed.ncbi.nlm.nih.gov/36690744" target="_blank"
-                               rel="noreferrer">15980494</a>)<br/>
+  return (<>
+    <b>Annotations from UniProt</b>
+    {regions.length === 0 && <div>
+      No functional data for the region
+    </div>
+    }
+    {
+      regions.map((region, idx) => {
+        return getFeatureList(region, `region-${idx}`, expendedRowKey, toggleRow);
+      })
+    }
+    {
+      (pockets.length > 0 || interactions.length >0) && <>
+        <b>Structure predictions</b>{pubmedRef(PUBMED_ID.INTERFACES)}
+      </>
+    }
     <Pockets pockets={pockets} expendedRowKey={expendedRowKey} toggleRow={toggleRow}/>
     <Interfaces accession={accession} interactions={interactions} expendedRowKey={expendedRowKey}
                 toggleRow={toggleRow}/>
-  </>
+  </>);
 }
 
 function getFeatureList(feature: ProteinFeature, key: string, expendedRowKey: string, toggleRow: StringVoidFun) {

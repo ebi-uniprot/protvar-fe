@@ -1,4 +1,4 @@
-import { useState } from "react"
+import {useContext, useState} from "react"
 import { StringVoidFun } from "../../../constants/CommonTypes";
 import { MappingRecord } from "../../../utills/Convertor";
 import AlternateIsoFormRow from "./AlternateIsoFormRow";
@@ -6,6 +6,7 @@ import { GENOMIC_COLS, PROTEIN_COLS } from "../../../constants/SearchResultTable
 import Tool from "../../elements/Tool";
 import getPrimaryRow from "./PrimaryRow";
 import MsgRow from "./MsgRow";
+import {StdColorContext} from "../../App";
 
 interface ResultTableProps {
   mappings: Array<Array<Array<MappingRecord>>>
@@ -20,6 +21,7 @@ export function getProteinName(record: MappingRecord) {
 }
 
 function ResultTable(props: ResultTableProps) {
+  const stdColor = useContext(StdColorContext);
   const [isoFormGroupExpanded, setIsoFormGroupExpanded] = useState('')
   const [annotationExpanded, setAnnotationExpanded] = useState('')
 
@@ -31,7 +33,7 @@ function ResultTable(props: ResultTableProps) {
     setAnnotationExpanded(annotationExpanded === key ? '' : key);
   }
 
-  const tableRows = getTableRows(props.mappings, isoFormGroupExpanded, toggleIsoFormGroup, annotationExpanded, toggleAnnotation);
+  const tableRows = getTableRows(props.mappings, isoFormGroupExpanded, toggleIsoFormGroup, annotationExpanded, toggleAnnotation, stdColor);
   return <table className="" cellPadding="0" cellSpacing="0" id="resultTable">
     <thead>
       <tr>
@@ -67,7 +69,7 @@ function ResultTable(props: ResultTableProps) {
 }
 
 const getTableRows = (mappings: MappingRecord[][][], isoFormGroupExpanded: string, toggleIsoFormGroup: StringVoidFun,
-  annotationExpanded: string, toggleAnnotation: StringVoidFun) => {
+  annotationExpanded: string, toggleAnnotation: StringVoidFun, stdColor: boolean) => {
   const tableRows: Array<JSX.Element> = [];
   const rowStyle = { a: {backgroundColor: "#F4F3F3" }, b: {backgroundColor: "#FFFFFF" }}
   let prevInput = ""
@@ -91,7 +93,7 @@ const getTableRows = (mappings: MappingRecord[][][], isoFormGroupExpanded: strin
           }
           else
             tableRows.push(getPrimaryRow(isoform, currentGroup, isoFormGroupExpanded, toggleIsoFormGroup, annotationExpanded,
-              toggleAnnotation, matchingIsoForms.length > 1, currStyle))
+              toggleAnnotation, matchingIsoForms.length > 1, currStyle, stdColor))
         else if (currentGroup === isoFormGroupExpanded)
           tableRows.push(<AlternateIsoFormRow record={isoform} key={isoform.isoform} currStyle={currStyle} />)
       }

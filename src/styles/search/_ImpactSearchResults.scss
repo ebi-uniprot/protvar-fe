@@ -652,7 +652,13 @@
 
 	.esm1b-score-grad {
 		background-color: #460556;
-		background-image: linear-gradient(to right, #460556 , #218c8f, #f9e725);
+		background-image: linear-gradient(to right, #460556, #218c8f, #f9e725);
+		width: 8rem;
+		height: 1.5rem;
+	}
+	.esm1b-score-grad-std {
+		background-color: red;
+		background-image: linear-gradient(to right, blue, lightgray, red);
 		width: 8rem;
 		height: 1.5rem;
 	}
@@ -755,3 +761,19 @@
 	display: grid;
 	grid-template-columns: 35% 20% auto;
 }
+
+.info {
+	display: inline-block;
+	padding-left: 4px;
+	padding-right: 4px;
+}
+.info::before {
+	content: 'i';
+	font-style: italic;
+	vertical-align: super;
+	font-size: smaller;
+}
+.info:hover {
+	cursor: help;
+}
+
