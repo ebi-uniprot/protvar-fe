@@ -5,7 +5,7 @@ import {
   PUBMED_ID
 } from "./Prediction";
 import Spaces from "../../../elements/Spaces";
-import {STD_BENIGN_COLOR, STD_PATHOGENIC_COLOR, STD_UNCERTAIN_COLOR} from "./PredConstants";
+import {STD_BENIGN_COLOR, STD_COLOR_GRADIENT, STD_PATHOGENIC_COLOR, STD_UNCERTAIN_COLOR} from "./PredConstants";
 import {Info, pubmedRef} from "../../common/Common";
 
 // likely pathogenic (yellow) -25 <------> 0 likely benign (blue)
@@ -16,6 +16,8 @@ export const ESM_SCORE_ATTR: PredAttr[] = [
 ]
 
 export const ESM_MAX_SCORE = -25
+
+export const ESM_COLOR_GRADIENT = tinygradient(ESM_SCORE_ATTR.map(s => s.color));
 
 export const EsmPred = (props: { esm?: ESMScore, stdColor: boolean }) => {
   if (props.esm === undefined || props.esm === null) {
@@ -30,7 +32,7 @@ export const EsmPred = (props: { esm?: ESMScore, stdColor: boolean }) => {
 
 function EsmPredIcon(props: {esm?: ESMScore, stdColor: boolean }) {
   if (props.esm) {
-    const colorGrad = tinygradient(ESM_SCORE_ATTR.map(s => (props.stdColor ? s.stdColor : s.color)));
+    const colorGrad = props.stdColor ? STD_COLOR_GRADIENT : ESM_COLOR_GRADIENT;
     const colorAtPos = colorGrad.rgbAt(props.esm.score/ ESM_MAX_SCORE).toHexString()
     const esmAttr = esmScoreAttr(props.esm.score)
     return <>
