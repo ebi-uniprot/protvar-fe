@@ -199,6 +199,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
 
       <footer id="footer-target">
         <div className="custom-pv-footer row">
+        <a href="https://www.embl.de/" target="_blank" rel="noreferrer">
           <img
             src={EMBLEBILogo}
             loading="lazy"
@@ -207,6 +208,8 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
             height="50"
             className='collaborator-img'
           />
+          </a>
+          <a href="https://www.opentargets.org/" target="_blank" rel="noreferrer">
           <img
             src={openTargetsLogo}
             loading="lazy"
@@ -215,6 +218,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
             height="50"
             className='collaborator-img'
           />
+          </a>
           <a className="twitter-follow-button" data-size="large" data-show-screen-name="false"
              href="https://twitter.com/EBIProtVar">
             Follow @EBIProtVar</a>
