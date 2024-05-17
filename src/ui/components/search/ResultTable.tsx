@@ -1,4 +1,4 @@
-import { useState } from "react"
+import {useContext, useState} from "react"
 import { StringVoidFun } from "../../../constants/CommonTypes";
 import { MappingRecord } from "../../../utills/Convertor";
 import AlternateIsoFormRow from "./AlternateIsoFormRow";
@@ -6,6 +6,7 @@ import { GENOMIC_COLS, PROTEIN_COLS } from "../../../constants/SearchResultTable
 import Tool from "../../elements/Tool";
 import getPrimaryRow from "./PrimaryRow";
 import MsgRow from "./MsgRow";
+import {StdColorContext} from "../../App";
 
 interface ResultTableProps {
   mappings: Array<Array<Array<MappingRecord>>>
@@ -20,6 +21,7 @@ export function getProteinName(record: MappingRecord) {
 }
 
 function ResultTable(props: ResultTableProps) {
+  const stdColor = useContext(StdColorContext);
   const [isoFormGroupExpanded, setIsoFormGroupExpanded] = useState('')
   const [annotationExpanded, setAnnotationExpanded] = useState('')
 
@@ -31,7 +33,7 @@ function ResultTable(props: ResultTableProps) {
     setAnnotationExpanded(annotationExpanded === key ? '' : key);
   }
 
-  const tableRows = getTableRows(props.mappings, isoFormGroupExpanded, toggleIsoFormGroup, annotationExpanded, toggleAnnotation);
+  const tableRows = getTableRows(props.mappings, isoFormGroupExpanded, toggleIsoFormGroup, annotationExpanded, toggleAnnotation, stdColor);
   return <table className="" cellPadding="0" cellSpacing="0" id="resultTable">
     <thead>
       <tr>
@@ -48,7 +50,7 @@ function ResultTable(props: ResultTableProps) {
         <Tool el="th" className="sticky" tip="Alternative allele">Alt.</Tool>
         <Tool el="th" className="sticky" tip="HGNC short gene name">Gene</Tool>
         <Tool el="th" className="sticky" tip="Change of the codon containing the variant nucleotide the position of which is capitalised">Codon (strand)</Tool>
-        <Tool el="th" className="sticky" tip="CADD (Combined Annotation Dependent Depletion) phred-like score. Colours are defined in the key at the bottom of the page. Source: PubMed PMID 30371827">CADD</Tool>
+        <Tool el="th" className="sticky" tip="CADD (Combined Annotation Dependent Depletion) phred-like score. Colours are defined in the legends. Source: PubMed PMID 30371827">CADD</Tool>
         <Tool el="th" className="sticky" tip="The protein isoform the variant is mapped to. 
         By default this is the UniProt canonical isoform, however other isoforms are shown if necessary. 
         Alternative isoforms can be shown by expanding the arrow to the right of the isoform" tSize="xlarge">Isoform</Tool>
@@ -56,7 +58,7 @@ function ResultTable(props: ResultTableProps) {
         <Tool el="th" className="sticky" tip="Position of the amino acid containing the variant in the displayed isoform">AA pos.</Tool>
         <Tool el="th" className="sticky" tip="Three letter amino acid code for the reference and alternative alleles">AA change</Tool>
         <Tool el="th" className="sticky" tip="A description of the consequence of the variant">Consequence(s)</Tool>
-        <Tool el="th" className="sticky" tip="EVE (Evolutionary model of Variant Effects) score. Source: PubMed PMID 34707284">EVE</Tool>
+        <Tool el="th" className="sticky" tip="AlphaMissense prediction. Colours are defined in the legends. Source: PubMed PMID 37733863">AlphaMiss. pred.</Tool>
         <th className="sticky">Click for details</th>
       </tr>
     </thead>
@@ -67,7 +69,7 @@ function ResultTable(props: ResultTableProps) {
 }
 
 const getTableRows = (mappings: MappingRecord[][][], isoFormGroupExpanded: string, toggleIsoFormGroup: StringVoidFun,
-  annotationExpanded: string, toggleAnnotation: StringVoidFun) => {
+  annotationExpanded: string, toggleAnnotation: StringVoidFun, stdColor: boolean) => {
   const tableRows: Array<JSX.Element> = [];
   const rowStyle = { a: {backgroundColor: "#F4F3F3" }, b: {backgroundColor: "#FFFFFF" }}
   let prevInput = ""
@@ -91,7 +93,7 @@ const getTableRows = (mappings: MappingRecord[][][], isoFormGroupExpanded: strin
           }
           else
             tableRows.push(getPrimaryRow(isoform, currentGroup, isoFormGroupExpanded, toggleIsoFormGroup, annotationExpanded,
-              toggleAnnotation, matchingIsoForms.length > 1, currStyle))
+              toggleAnnotation, matchingIsoForms.length > 1, currStyle, stdColor))
         else if (currentGroup === isoFormGroupExpanded)
           tableRows.push(<AlternateIsoFormRow record={isoform} key={isoform.isoform} currStyle={currStyle} />)
       }

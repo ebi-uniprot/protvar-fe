@@ -1,8 +1,8 @@
-import ProteinIcon from '../../../images/proteins.svg'
-import StructureIcon from '../../../images/structures-3d.svg'
-import PopulationIcon from '../../../images/human.svg'
+import ProteinIcon from '../../images/proteins.svg'
+import StructureIcon from '../../images/structures-3d.svg'
+import PopulationIcon from '../../images/human.svg'
 
-function ResultTableButtonsLegend() {
+function AnnotationLegend() {
   return (
     <div>
       <strong>Annotations</strong>
@@ -41,4 +41,4 @@ function ResultTableButtonsLegend() {
   )
 }
 
-export default ResultTableButtonsLegend
+export default AnnotationLegend

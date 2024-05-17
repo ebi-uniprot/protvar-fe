@@ -157,7 +157,7 @@ function getInputsFromUrl(location: any): any {
   return []
 }
 
-const QueryPageContent = () => {
+const QueryPageContent = (props: {toggleStdColor: () => void}) => {
   const location = useLocation()
   const [loaded, setLoaded] = useState(false)
   const [err, setErr] = useState(false)
@@ -190,7 +190,7 @@ const QueryPageContent = () => {
       <div className="search-results">
         <div className="flex justify-content-space-between float-right">
           <div className="legend-container">
-            <LegendModal />
+            <LegendModal toggleStdColor={props.toggleStdColor}/>
             <DownloadModal formData={formData} />
           </div>
         </div>
@@ -203,8 +203,8 @@ const QueryPageContent = () => {
   return <>{loaded ? result : (err ? <QueryInfoContent /> : <Loader />)}</>
 }
 
-function QueryPage() {
-  return <DefaultPageLayout content={<QueryPageContent />} />
+function QueryPage(props: {toggleStdColor: () => void}) {
+  return <DefaultPageLayout content={<QueryPageContent {...props} />} />
 }
 
 export default QueryPage

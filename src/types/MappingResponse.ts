@@ -118,8 +118,10 @@ interface IsoFormMapping {
 //  evolutionalInferenceUri: string;
 //  proteinStructure: Array<any>;
   proteinStructureUri: string;
-  eveScore: number;
-  eveClass: number;
+  conservScore: ConservScore;
+  amScore: AMScore;
+  eveScore: EVEScore;
+  esmScore: ESMScore;
 }
 interface Ensp {
   ensp: string;
@@ -139,4 +141,23 @@ export interface ParsedInput{
   inputString: string
   invalidReason: string
 }
+
+export interface ConservScore {
+  score:number
+}
+
+export interface EVEScore {
+  score:number
+  eveClass:string
+}
+
+export interface ESMScore {
+  score:number
+}
+
+export interface AMScore {
+  amPathogenicity:number
+  amClass:string
+}
+
 export default MappingResponse;

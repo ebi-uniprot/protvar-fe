@@ -1,4 +1,4 @@
-import {useState} from "react";
+import React, {createContext, useState} from "react";
 import {useNavigate, Route, Routes} from "react-router-dom";
 import HomePage from "./pages/home/HomePage";
 import SearchResultsPage from "./pages/search/SearchResultPage";
@@ -18,13 +18,19 @@ import DownloadPage from "./pages/download/DownloadPage";
 import HelpPage from "./pages/help/HelpPage";
 import {FormData, initialFormData} from "../types/FormData";
 
+export const StdColorContext = createContext(true);
 
 export default function App() {
+  const [stdColor, setStdColor] = useState(true);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [page, setPage] = useState<Page>(firstPage(0));
   const [searchResults, setSearchResults] = useState<MappingRecord[][][]>([]);
   const navigate = useNavigate();
+  const toggleStdColor = () => {
+    setStdColor(stdColor ? false : true);
+  };
+
   // MappingRecord 3d array -> [][][] list of mappings/genes/isoforms
     // mappings : [
     //     ...
@@ -152,7 +158,7 @@ export default function App() {
       .finally(() => setLoading(false));
   }
 
-  return (
+  return (<StdColorContext.Provider value={stdColor}>
     <Routes>
       <Route
         path={HOME}
@@ -172,8 +178,9 @@ export default function App() {
             formData={formData}
             fetchNextPage={fetchPage}
             loading={loading}
+            toggleStdColor={toggleStdColor}
           />} />
-      <Route path={QUERY} element={<QueryPage />} />
+      <Route path={QUERY} element={<QueryPage toggleStdColor={toggleStdColor} />} />
       <Route path={API_ERROR} element={<APIErrorPage />} />
       <Route path={ABOUT} element={<AboutPage />} />
       <Route path={RELEASE} element={<ReleasePage />} />
@@ -181,5 +188,6 @@ export default function App() {
       <Route path={DOWNLOAD} element={<DownloadPage searchResults={searchResults}/>} />
       <Route path={HELP} element={<HelpPage />} />
     </Routes>
+    </StdColorContext.Provider>
   );
 }
