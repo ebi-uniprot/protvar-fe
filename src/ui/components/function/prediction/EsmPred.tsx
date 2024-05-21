@@ -6,13 +6,16 @@ import {
 } from "./Prediction";
 import Spaces from "../../../elements/Spaces";
 import {STD_BENIGN_COLOR, STD_COLOR_GRADIENT, STD_PATHOGENIC_COLOR, STD_UNCERTAIN_COLOR} from "./PredConstants";
-import {Info, pubmedRef} from "../../common/Common";
+import {pubmedRef} from "../../common/Common";
+import {Tooltip} from "../../common/Tooltip";
+
+const PRECISION: number = 1 // dp
 
 // likely pathogenic (yellow) -25 <------> 0 likely benign (blue)
 export const ESM_SCORE_ATTR: PredAttr[] = [
-  {color: '#460556', stdColor: STD_BENIGN_COLOR , title: 'benign', info: '-5 to 0 likely benign' },
-  {color: '#218c8f', stdColor: STD_UNCERTAIN_COLOR, title: 'uncertain', info: '-10 to -5 uncertain significance' },
-  {color: '#f9e725', stdColor: STD_PATHOGENIC_COLOR, title: 'pathogenic', info: '-25 to -10 likely pathogenic' }
+  {color: '#460556', stdColor: STD_BENIGN_COLOR , text: 'benign', tip: '-5 to 0 likely benign' },
+  {color: '#218c8f', stdColor: STD_UNCERTAIN_COLOR, text: 'uncertain', tip: '-10 to -5 uncertain significance' },
+  {color: '#f9e725', stdColor: STD_PATHOGENIC_COLOR, text: 'pathogenic', tip: '-25 to -10 likely pathogenic' }
 ]
 
 export const ESM_MAX_SCORE = -25
@@ -20,14 +23,19 @@ export const ESM_MAX_SCORE = -25
 export const ESM_COLOR_GRADIENT = tinygradient(ESM_SCORE_ATTR.map(s => s.color));
 
 export const EsmPred = (props: { esm?: ESMScore, stdColor: boolean }) => {
-  if (props.esm === undefined || props.esm === null) {
-    return <></>
-  }
+  if (props.esm) {
   return <div className="aa-pred">
     <div>ESM-1b {pubmedRef(PUBMED_ID.ESM)}</div>
-    <div>{props.esm.score}</div>
-    <div><EsmPredIcon {...props}/></div>
-  </div>
+    <Tooltip tip="ESM (Evolutionary Scaled Model) score ranges from 0, least deleterious to -25 most deliterious">
+      {formatEsmScore(props.esm)}
+    </Tooltip>
+    <EsmPredIcon {...props}/>
+  </div>}
+return <></>
+}
+
+export function formatEsmScore(esm?: ESMScore) {
+  return esm ? esm.score.toFixed(PRECISION) : "";
 }
 
 function EsmPredIcon(props: {esm?: ESMScore, stdColor: boolean }) {
@@ -35,13 +43,12 @@ function EsmPredIcon(props: {esm?: ESMScore, stdColor: boolean }) {
     const colorGrad = props.stdColor ? STD_COLOR_GRADIENT : ESM_COLOR_GRADIENT;
     const colorAtPos = colorGrad.rgbAt(props.esm.score/ ESM_MAX_SCORE).toHexString()
     const esmAttr = esmScoreAttr(props.esm.score)
-    return <>
+    return <Tooltip tip={esmAttr?.tip}>
       <i className="bi bi-circle-fill" style={{color: colorAtPos}}></i>
       <Spaces/>{esmAttr && <>
-        {esmAttr.title}
-        <Info text={esmAttr.info}/>
+        {esmAttr.text}
       </>}
-    </>
+    </Tooltip>
   }
   return <></>
 }
