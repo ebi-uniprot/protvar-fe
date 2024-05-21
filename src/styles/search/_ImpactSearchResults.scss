@@ -759,5 +759,9 @@
 
 .aa-pred{
 	display: grid;
-	grid-template-columns: 35% 20% auto;
+	grid-template-columns: 40% 20% auto;
+}
+
+.aa-pred>*:nth-child(2) {
+	text-align: center;
 }
