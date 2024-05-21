@@ -14,8 +14,8 @@ import { ALLELE, CONSEQUENCES } from "../../../constants/SearchResultTable";
 import { MappingRecord } from "../../../utills/Convertor";
 import Spaces from "../../elements/Spaces";
 import Tool from "../../elements/Tool";
-import {caddScoreAttr} from "./CaddScorePred";
-import {amScoreAttr} from "../function/prediction/AlphaMissensePred";
+import {caddScoreAttr, formatCaddScore} from "../function/prediction/CaddScorePred";
+import {amScoreAttr, formatAMScore} from "../function/prediction/AlphaMissensePred";
 import { getProteinName } from "./ResultTable";
 import ProteinIcon from '../../../images/proteins.svg';
 import StructureIcon from '../../../images/structures-3d.svg';
@@ -109,9 +109,9 @@ const getPrimaryRow = (record: MappingRecord, toggleOpenGroup: string, isoFormGr
         </div>
       </td>
       <td>
-        <Tool className="score-box" style={{ backgroundColor: (stdColor ? caddAttr?.stdColor : caddAttr?.color) }} tip={caddAttr?.title}>
+        <Tool className="score-box" style={{ backgroundColor: (stdColor ? caddAttr?.stdColor : caddAttr?.color) }} tip={`${caddAttr?.range} ${caddAttr?.text}`}>
           <a href={CADD_INFO_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'white' }}>
-            <Spaces count={parseInt(record.cadd!) > 9 ? 0 : 2} />{isNaN(parseFloat(record.cadd!)) ? "" : parseFloat(record.cadd!).toFixed(1)}
+            {formatCaddScore(record.cadd)}
           </a>
         </Tool>
       </td>
@@ -143,9 +143,9 @@ const getPrimaryRow = (record: MappingRecord, toggleOpenGroup: string, isoFormGr
       <td><Tool tip={aaChangeTip(record.aaChange)}>{record.aaChange}</Tool></td>
       <td><Tool tip={CONSEQUENCES.get(record.consequences!)} pos="up-right">{record.consequences}</Tool></td>
       <td>
-        <Tool className="score-box" style={{ backgroundColor: (stdColor ? amAttr?.stdColor : amAttr?.color) }} tip={`${record.amScore?.amPathogenicity} ${amAttr?.title}`}>
+        <Tool className="score-box" style={{ backgroundColor: (stdColor ? amAttr?.stdColor : amAttr?.color) }} tip={`${record.amScore?.amPathogenicity} ${amAttr?.text}`}>
           <a href={AM_INFO_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'white' }}>
-            {record.amScore?.amPathogenicity.toString().substring(0,4)}
+            {formatAMScore(record.amScore)}
           </a>
         </Tool>
       </td>
