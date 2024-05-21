@@ -1,4 +1,4 @@
-import {useState, Fragment} from "react";
+import {useState, Fragment, useContext, MouseEventHandler} from "react";
 import {EmptyElement} from "../../../constants/ConstElement";
 import {FEATURES} from "../../../constants/Protein";
 import AminoAcidModel from "./AminoAcidModel";
@@ -11,8 +11,6 @@ import {FunctionalResponse, Pocket, Foldx, P2PInteraction, ProteinFeature} from 
 import {MappingRecord} from "../../../utills/Convertor";
 import {Prediction, PUBMED_ID} from "./prediction/Prediction";
 import {pubmedRef} from "../common/Common";
-import {AppContext} from "../../App";
-
 
 interface ResidueRegionTableProps {
   functionalData: FunctionalResponse
@@ -20,7 +18,6 @@ interface ResidueRegionTableProps {
 }
 
 function ResidueRegionTable(props: ResidueRegionTableProps) {
-  const context = useContext(AppContext)
   const [expendedRowKey, setExpendedRowKey] = useState('')
 
   function toggleRow(key: string) {
@@ -46,7 +43,7 @@ function ResidueRegionTable(props: ResidueRegionTableProps) {
         <th>Region Containing Variant Position</th>
       </tr>
       <tr>
-        <td style={{verticalAlign: 'top' }}>{getResidues(context, residues, props.record, props.functionalData.foldxs, oneLetterVariantAA, expendedRowKey, toggleRow)}</td>
+        <td style={{verticalAlign: 'top' }}>{getResidues(residues, props.record, props.functionalData.foldxs, oneLetterVariantAA, expendedRowKey, toggleRow)}</td>
         <td style={{verticalAlign: 'top' }}>{getRegions(regions, props.functionalData.accession, props.functionalData.pockets, props.functionalData.interactions, expendedRowKey, toggleRow)}</td>
       </tr>
       </tbody>
@@ -57,6 +54,9 @@ function ResidueRegionTable(props: ResidueRegionTableProps) {
 
 function getResidues(regions: Array<ProteinFeature>, record: MappingRecord, foldxs: Array<Foldx>, oneLetterVariantAA: string | null, expendedRowKey: string, toggleRow: StringVoidFun) {
   let foldxs_ = oneLetterVariantAA ? foldxs.filter(foldx => foldx.mutatedType.toLowerCase() === oneLetterVariantAA) : foldxs
+
+
+
   return <>
     <b>Annotations from UniProt</b>
     {regions.length === 0 && <div>
