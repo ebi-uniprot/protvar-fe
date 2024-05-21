@@ -29,7 +29,8 @@ const initialSettings = {
 export const AppContext = createContext({
   ...initialSettings,
   toggleStdColor: () => {},
-  toggleModal: () => {}
+  toggleModal: () => {},
+  setModalContent: (elem: JSX.Element) => {}
 })
 
 export default function App() {
