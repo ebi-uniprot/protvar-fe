@@ -52,6 +52,14 @@ function AboutPageContent() {
         <a href="ProtVar_tutorial.pdf" target="_blank" rel="noreferrer">ProtVar tutorial Sep 2023</a>
       </p>
 
+      <h5>How to cite ProtVar</h5>
+      <p>
+      James D Stephenson, Prabhat Totoo, David F Burke, Jürgen Jänes, Pedro Beltrao, Maria J Martin,
+      ProtVar: mapping and contextualizing human missense variation, <i>Nucleic Acids Research</i>, 2024;&nbsp;
+      <a className="ref-link" href="https://doi.org/10.1093/nar/gkae413"
+         target="_blank" rel="noreferrer">https://doi.org/10.1093/nar/gkae413</a>
+      </p>
+
 
       <h5>Licence & disclaimer</h5>
 
@@ -139,17 +147,17 @@ function AboutPageContent() {
           alt="Google DeepMind"
           width="120"
         /></a>
-        <br/>
-        <a href="https://alphafold.ebi.ac.uk/" target="_blank" rel="noreferrer">AlphaFold</a></div>
+          <br/>
+          <a href="https://alphafold.ebi.ac.uk/" target="_blank" rel="noreferrer">AlphaFold</a></div>
         <div><a href="https://www.ncbi.nlm.nih.gov/" target="_blank" rel="noreferrer"><img
           src={NCBILogo}
           loading="lazy"
           alt="NCBI"
           width="100"
         /></a><br/>
-        <a href="https://www.ncbi.nlm.nih.gov/refseq/" target="_blank" rel="noreferrer">RefSeq</a>&nbsp;
-        <a href="https://www.ncbi.nlm.nih.gov/snp/" target="_blank" rel="noreferrer">dbSNP</a>&nbsp;
-        <a href="https://www.ncbi.nlm.nih.gov/clinvar/" target="_blank" rel="noreferrer">ClinVar</a></div>
+          <a href="https://www.ncbi.nlm.nih.gov/refseq/" target="_blank" rel="noreferrer">RefSeq</a>&nbsp;
+          <a href="https://www.ncbi.nlm.nih.gov/snp/" target="_blank" rel="noreferrer">dbSNP</a>&nbsp;
+          <a href="https://www.ncbi.nlm.nih.gov/clinvar/" target="_blank" rel="noreferrer">ClinVar</a></div>
         <div>
           <a href="https://cancer.sanger.ac.uk/cosmic" target="_blank" rel="noreferrer"><img
             src={CosmicLogo}
@@ -158,24 +166,24 @@ function AboutPageContent() {
             width="120"
           /></a></div>
         <div><a href="https://molstar.org/" target="_blank" rel="noreferrer"><img
-            src={MolstarLogo}
-            loading="lazy"
-            alt="Molstar"
-            width="100"
-          /></a></div>
+          src={MolstarLogo}
+          loading="lazy"
+          alt="Molstar"
+          width="100"
+        /></a></div>
         <div><a href="https://crossmap.sourceforge.net/" target="_blank" rel="noreferrer"><img
-            src={CrossMapLogo}
-            loading="lazy"
-            alt="CrossMap"
-            width="120"
-          /></a></div>
+          src={CrossMapLogo}
+          loading="lazy"
+          alt="CrossMap"
+          width="120"
+        /></a></div>
         <div><a href="https://cadd.gs.washington.edu/" target="_blank" rel="noreferrer"><img
           src={CADDLogo}
           loading="lazy"
           alt="CADD"
           width="45"
         /></a><br/>
-        <a href="https://cadd.gs.washington.edu/" target="_blank" rel="noreferrer">CADD</a></div>
+          <a href="https://cadd.gs.washington.edu/" target="_blank" rel="noreferrer">CADD</a></div>
         <div><a href="https://evemodel.org/" target="_blank" rel="noreferrer"><img
           src={EVELogo}
           loading="lazy"
@@ -189,12 +197,12 @@ function AboutPageContent() {
           width="80"
         /></a></div>
         <div><a href="https://www.ebi.ac.uk/thornton-srv/databases/VarSite" target="_blank" rel="noreferrer"><img
-            src={VarSiteLogo}
-            loading="lazy"
-            alt="The VarSite database"
-            width="40"
-            className="varsite-logo"
-          /></a><br/>
+          src={VarSiteLogo}
+          loading="lazy"
+          alt="The VarSite database"
+          width="40"
+          className="varsite-logo"
+        /></a><br/>
           <a href="https://www.ebi.ac.uk/thornton-srv/databases/VarSite" target="_blank" rel="noreferrer">VarSite</a>
         </div>
 
