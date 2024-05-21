@@ -1,0 +1,15 @@
+.hover-text {
+    display: inline-block;
+}
+
+.hover-text:hover {
+    cursor: help;
+}
+
+.info-icon {
+    font-family: Bookman,Garamond,serif;
+    font-size: .75rem;
+    vertical-align: super;
+    padding-left: 4px;
+    padding-right: 4px;
+}

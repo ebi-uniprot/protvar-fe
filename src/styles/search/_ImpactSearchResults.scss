@@ -680,6 +680,12 @@
 		width: 8rem;
 		height: 1.5rem;
 	}
+	.conserv-score-grad-std {
+		background-color: red;
+		background-image: linear-gradient(to right, blue, lightgray, red);
+		width: 8rem;
+		height: 1.5rem;
+	}
 }
 
 .structure-position-help-text {
@@ -759,21 +765,9 @@
 
 .aa-pred{
 	display: grid;
-	grid-template-columns: 35% 20% auto;
+	grid-template-columns: 40% 20% auto;
 }
 
-.info {
-	display: inline-block;
-	padding-left: 4px;
-	padding-right: 4px;
+.aa-pred>*:nth-child(2) {
+	text-align: center;
 }
-.info::before {
-	content: 'i';
-	font-style: italic;
-	vertical-align: super;
-	font-size: smaller;
-}
-.info:hover {
-	cursor: help;
-}
-

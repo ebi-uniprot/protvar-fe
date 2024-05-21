@@ -1,9 +1,3 @@
-export function Info(props: {text?: string}) {
-  if (props.text === null)
-    return <></>
-  return <div className="info" title={props.text}></div>
-}
-
 export const pubmedRef = (id: number) => {
   return <sup><a href={`http://www.ncbi.nlm.nih.gov/pubmed/${id}`} target="_blank"
                  rel="noreferrer" title={`Source: PubMed ID ${id}`}>ref</a></sup>
