@@ -761,19 +761,3 @@
 	display: grid;
 	grid-template-columns: 35% 20% auto;
 }
-
-.info {
-	display: inline-block;
-	padding-left: 4px;
-	padding-right: 4px;
-}
-.info::before {
-	content: 'i';
-	font-style: italic;
-	vertical-align: super;
-	font-size: smaller;
-}
-.info:hover {
-	cursor: help;
-}
-
