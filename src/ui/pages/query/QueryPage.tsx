@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState} from 'react'
 import { useLocation } from 'react-router-dom'
 import ResultTable from '../../components/search/ResultTable'
 import DefaultPageLayout from '../../layout/DefaultPageLayout'
@@ -157,7 +157,7 @@ function getInputsFromUrl(location: any): any {
   return []
 }
 
-const QueryPageContent = (props: {toggleStdColor: () => void}) => {
+const QueryPageContent = () => {
   const location = useLocation()
   const [loaded, setLoaded] = useState(false)
   const [err, setErr] = useState(false)
@@ -190,7 +190,7 @@ const QueryPageContent = (props: {toggleStdColor: () => void}) => {
       <div className="search-results">
         <div className="flex justify-content-space-between float-right">
           <div className="legend-container">
-            <LegendModal toggleStdColor={props.toggleStdColor}/>
+            <LegendModal />
             <DownloadModal formData={formData} />
           </div>
         </div>
@@ -203,8 +203,8 @@ const QueryPageContent = (props: {toggleStdColor: () => void}) => {
   return <>{loaded ? result : (err ? <QueryInfoContent /> : <Loader />)}</>
 }
 
-function QueryPage(props: {toggleStdColor: () => void}) {
-  return <DefaultPageLayout content={<QueryPageContent {...props} />} />
+function QueryPage() {
+  return <DefaultPageLayout content={<QueryPageContent />} />
 }
 
 export default QueryPage

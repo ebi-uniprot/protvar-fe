@@ -6,7 +6,7 @@ import { GENOMIC_COLS, PROTEIN_COLS } from "../../../constants/SearchResultTable
 import Tool from "../../elements/Tool";
 import getPrimaryRow from "./PrimaryRow";
 import MsgRow from "./MsgRow";
-import {StdColorContext} from "../../App";
+import {AppContext} from "../../App";
 
 interface ResultTableProps {
   mappings: Array<Array<Array<MappingRecord>>>
@@ -21,7 +21,7 @@ export function getProteinName(record: MappingRecord) {
 }
 
 function ResultTable(props: ResultTableProps) {
-  const stdColor = useContext(StdColorContext);
+  const stdColor = useContext(AppContext).stdColor;
   const [isoFormGroupExpanded, setIsoFormGroupExpanded] = useState('')
   const [annotationExpanded, setAnnotationExpanded] = useState('')
 
