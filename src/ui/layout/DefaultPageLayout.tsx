@@ -110,6 +110,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                               alt="ProtVar logo"
                               width="140px"
                             />
+                            <span style={{ fontWeight: 'bold', fontSize: '10px', verticalAlign: 'bottom'}}>UI v1.2</span>
                           </Link>
                           <Link
                             className="sub-title"

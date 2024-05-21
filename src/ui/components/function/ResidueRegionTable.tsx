@@ -1,4 +1,4 @@
-import {useState, Fragment, useContext, MouseEventHandler} from "react";
+import {useState, Fragment} from "react";
 import {EmptyElement} from "../../../constants/ConstElement";
 import {FEATURES} from "../../../constants/Protein";
 import AminoAcidModel from "./AminoAcidModel";
@@ -54,9 +54,6 @@ function ResidueRegionTable(props: ResidueRegionTableProps) {
 
 function getResidues(regions: Array<ProteinFeature>, record: MappingRecord, foldxs: Array<Foldx>, oneLetterVariantAA: string | null, expendedRowKey: string, toggleRow: StringVoidFun) {
   let foldxs_ = oneLetterVariantAA ? foldxs.filter(foldx => foldx.mutatedType.toLowerCase() === oneLetterVariantAA) : foldxs
-
-
-
   return <>
     <b>Annotations from UniProt</b>
     {regions.length === 0 && <div>

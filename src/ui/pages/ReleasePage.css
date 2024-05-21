@@ -1,0 +1,28 @@
+.grid-container {
+  display: grid;
+  grid-template-columns: 33% 33% 34%;
+}
+
+.grid-container > div {
+  text-align: left;
+}
+
+.stats {
+  border: 1px solid #e3e3e3;
+  border-radius: 8px;
+}
+
+.stats:hover {
+  background: #f9f9f9;
+}
+
+.stats .content {
+  padding: 8px 16px;
+}
+.stats .content .main{
+  color:#0d0d0d;
+  font-weight: bold;
+}
+.stats .content .sub{
+  color: #9b9b9b;
+}
