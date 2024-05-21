@@ -680,6 +680,12 @@
 		width: 8rem;
 		height: 1.5rem;
 	}
+	.conserv-score-grad-std {
+		background-color: red;
+		background-image: linear-gradient(to right, blue, lightgray, red);
+		width: 8rem;
+		height: 1.5rem;
+	}
 }
 
 .structure-position-help-text {
