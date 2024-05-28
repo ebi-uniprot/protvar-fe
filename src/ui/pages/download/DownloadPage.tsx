@@ -2,7 +2,7 @@ import DefaultPageLayout from "../../layout/DefaultPageLayout";
 import React, {useEffect, useState} from "react";
 import "./DownloadPage.css";
 import {getDownloadStatus} from "../../../services/ProtVarService";
-import {LOCAL_DOWNLOADS, TITLE} from "../../../constants/const"
+import {LOCAL_DOWNLOADS, PV_FTP, TITLE} from "../../../constants/const"
 //import { v4 as uuidv4 } from 'uuid';
 import {DownloadResponse} from "../../../types/DownloadResponse";
 import Notify from "../../elements/Notify";
@@ -29,7 +29,7 @@ function DownloadPageContent() {
     const [downloads, setDownloads] = useState<DownloadResponse[]>(localDownloads)
 
     useEffect(() => {
-        document.title = 'My Downloads - ' + TITLE;
+        document.title = 'Downloads - ' + TITLE;
         let ds: DownloadResponse[] = JSON.parse(localStorage.getItem(LOCAL_DOWNLOADS) || "[]")
         const ids = ds.map(d => d.downloadId)
         getDownloadStatus(ids)
@@ -49,60 +49,67 @@ function DownloadPageContent() {
         localStorage.setItem(LOCAL_DOWNLOADS, JSON.stringify(downloads));
     }, [downloads])
 
-    if (!downloads.length) {
-        return (<strong className="padding-left-1x">There have been no downloads.</strong>)
-    }
-
     return <div className="container">
-        <strong>{downloads.length} download{downloads.length > 1 ? 's' : ''}</strong>
 
-        {/**
+        <h6>FTP download</h6>
         <p>
-            <button type="button" className="btn btn-primary btn-sm" onClick={() => setDownloads([...downloads, testDownloadRes()])}><span
-                className="bi-plus-square-fill"></span> Add
-            </button>
+            Bulk pre-computed datasets, separated by data type available to download from the <a href={PV_FTP}
+               title="ProtVar FTP site" target="_self" className='ref-link'>FTP site</a>.
         </p>
-        */}
 
-        {downloads.length > 0 && (
-            <table className="table download-table">
-                <thead style={{backgroundColor: '#6987C3', color: '#FFFFFF'}}>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Requested</th>
-                    <th scope="col">ID</th>
-                    <th scope="col">Job name</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Download</th>
-                    <th scope="col">Delete</th>
-                </tr>
-                </thead>
-                <tbody>
+        <h6>Result download</h6>
+        <p>
+        {downloads.length > 0 ? (
+          <>{downloads.length} download{downloads.length > 1 ? 's' : ''}
+              <table className="table download-table">
+                  <thead style={{backgroundColor: '#6987C3', color: '#FFFFFF'}}>
+                  <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Requested</th>
+                      <th scope="col">ID</th>
+                      <th scope="col">Job name</th>
+                      <th scope="col">Status</th>
+                      <th scope="col">Download</th>
+                      <th scope="col">Delete</th>
+                  </tr>
+                  </thead>
+                  <tbody>
 
-                {downloads.map(( download, index ) => {
-                    return (
-                        <tr className={download.status === 1 ? "table-success" : ""} key={'download'+index}>
-                            <th scope="row">{index+1}</th>
+                  {downloads.map((download, index) => {
+                      return (
+                        <tr className={download.status === 1 ? "table-success" : ""} key={'download' + index}>
+                            <th scope="row">{index + 1}</th>
                             <td>{download.requested.toLocaleString()}</td>
                             <td>{download.downloadId}</td>
                             <td>{download.jobName}</td>
-                            <td><div className={downloadStatusIcon[download.status]}></div> {downloadStatusText[download.status]}</td>
-                            <td><button className="bi bi-download download-btn" onClick={() => downloadFile(download.url)} disabled={download.status !== 1} /></td>
-                            <td><button className="bi bi-trash trash-btn" onClick={() => {
-                                setDownloads(
-                                    downloads.filter(d =>
+                            <td>
+                                <div className={downloadStatusIcon[download.status]}></div>
+                                {downloadStatusText[download.status]}</td>
+                            <td>
+                                <button className="bi bi-download download-btn"
+                                        onClick={() => downloadFile(download.url)} disabled={download.status !== 1}/>
+                            </td>
+                            <td>
+                                <button className="bi bi-trash trash-btn" onClick={() => {
+                                    setDownloads(
+                                      downloads.filter(d =>
                                         d.downloadId !== download.downloadId
-                                    )
-                                );
-                            }}></button></td>
+                                      )
+                                    );
+                                }}></button>
+                            </td>
                         </tr>
-                    );
-                })}
+                      );
+                  })}
 
-                </tbody>
-            </table>
+                  </tbody>
+              </table>
+          </>
+        ) : (
+          `No download`
         )
         }
+        </p>
 
 
     </div>
