@@ -10,7 +10,7 @@ export function processDownload(formData: FormData, functional: boolean, populat
     const handleSucc = (downloadRes: DownloadResponse) => {
         let localDownloads = JSON.parse(localStorage.getItem(LOCAL_DOWNLOADS) || "[]")
         localStorage.setItem(LOCAL_DOWNLOADS, JSON.stringify([...localDownloads, downloadRes]));
-        Notify.sucs(`Job ${downloadRes.downloadId} submitted. Check My Downloads page. `)
+        Notify.sucs(`Job ${downloadRes.downloadId} submitted. Check the Downloads page. `)
     }
 
     const handleErr = () => {

@@ -23,7 +23,7 @@ const DefaultPageContent = (props: {
               }
             </li>
             <li className="sidebar-menu">
-              <NavLink to={DOWNLOAD}>My Downloads ({downloadCount})</NavLink>
+              <NavLink to={DOWNLOAD}>Downloads ({downloadCount})</NavLink>
             </li>
           </ul>
         </nav>

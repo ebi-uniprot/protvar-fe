@@ -17,7 +17,7 @@ Clicking each category in the contents below will take you to an annotated image
 - [Population Observations](#population-observations)
 - [Structure Annotations](#structure-annotations)
 - [Download Options](#download-options)
-- [My Downloads](#my-downloads)
+- [Downloads](#downloads)
 
 
 ###### <a name="home-page"></a>Home Page
@@ -26,7 +26,7 @@ Clicking each category in the contents below will take you to an annotated image
 **A.** ProtVar retrieves annotations and predictions for human [missense](#missense) variants.  
 **B.** Users can submit a new search by pressing here and returning to the home screen.
 **C.** The [results page](#results-page) page following variant list submission.  
-**D.** [My downloads](#my-downloads) contains all the files you have submitted for download. These can be downloaded from here to your local computer.  
+**D.** [Downloads](#downloads) contains all the files you have submitted for download. These can be downloaded from here to your local computer.  
 **E.** This can be used to [contact](#contact) ProtVar with questions, comments or suggestions.  
 **F.** [ProtVar REST API](#protvar-rest-api) can be used to obtain data programmatically.
 **G.** The Help section in ProtVar contains information about the options and fields available in the user interface and a description of the columns in the download.
@@ -41,10 +41,10 @@ Clicking each category in the contents below will take you to an annotated image
 ###### <a name="results-page"></a>Results Page
 
 ![ProtVar Results Page](images/v1.2/results_page.png)
-**A.** [My downloads](#my-downloads) A. My downloads contains all the files you have submitted for download. These can be downloaded from here to your local computer. Users can return to the same results again by clicking the 'Results' tab. The results will remain during the users session or until they are replaced by new results.   
+**A.** [Downloads](#downloads) A. My downloads contains all the files you have submitted for download. These can be downloaded from here to your local computer. Users can return to the same results again by clicking the 'Results' tab. The results will remain during the users session or until they are replaced by new results.   
 **B.** Navigate to the previous or next page of results and choose how many results to display on the page.
 **C.** The legend shows the colour schemes and category boundaries for scores and predictions. The colours can be switched between ProtVar standardised colours and the original colours.
-**D.** Download all variant results. The file will be available in [My downloads](#my-downloads)  
+**D.** Download all variant results. The file will be available in [Downloads](#downloads)  
 **E.** The data is split into [genomic position](#genomic-position) and [protein position](#protein-position) and [annotations](#annotations)  
 **F.** The types and number of user inputs and processing by ProtVar is shown here.
 **G.** The [data type](#data-types) used to submit the variant is shown in pink. Multiple lines may be shown for a single input in cases such as overlapping genes or when the specific SNP is ambiguous.  
@@ -120,12 +120,12 @@ Clicking each category in the contents below will take you to an annotated image
 **B.** - Users can choose which specific fields are most useful to them.  
 **C.** - Email addresses are optional and are used to notify users when their job is ready.  
 **D.** - Job names are optional but can help users to identify specific jobs when multiple jobs have been submitted.  
-**E.** - Pressing submit will put the job in a queue. The results will be available from the [My Downloads](#my-downloads) tab.  
+**E.** - Pressing submit will put the job in a queue. The results will be available from the [Downloads](#downloads) tab.  
 **F.** - Close to return to the results page
 
-###### <a name="my-downloads"></a>My Downloads
+###### <a name="downloads"></a>Downloads
 
-![ProtVar My Downloads](images/my_downloads.png)  
+![ProtVar Downloads](images/downloads.png)  
 **A.** - All of the user's downloads for this session will be displayed on this page.  
 **B.** - The number of downloads for this session.  
 **C.** - A date and time stamp when the download request was received.  
@@ -163,7 +163,7 @@ ProtVar will evaluate each one and map them to the protein position in a unified
 
 Because dbSNP IDs may represent more than one variant allele, ProtVar will separate the different variant alleles onto different lines on the mapping page. This is because the different variant alleles may have different consequences to the protein
 
-<a name="download"></a>**Download:** Downloads can be tailored according to the users’ needs. If only mappings from genomic coordinates to protein positions are required then “mappings only” can be used. If specific annotations are required then these can be selected individually. Each annotation category selected adds extra time to produce the downloadable file. Files ready for download are displayed in the "My Downloads” section. Optionally users can add a job name to keep track of multiple jobs and an email address so that they can be informed when the file is ready to be downloaded. All of the annotations in the download file can also be accessed programmatically via the ProtVar REST API.
+<a name="download"></a>**Download:** Downloads can be tailored according to the users’ needs. If only mappings from genomic coordinates to protein positions are required then “mappings only” can be used. If specific annotations are required then these can be selected individually. Each annotation category selected adds extra time to produce the downloadable file. Files ready for download are displayed in the "Downloads” section. Optionally users can add a job name to keep track of multiple jobs and an email address so that they can be informed when the file is ready to be downloaded. All of the annotations in the download file can also be accessed programmatically via the ProtVar REST API.
 
 <a name="ensembl-identifiers"></a>**Ensembl identifiers:** The ENSG (Ensembl gene identifiers), ENSP (Ensembl translated sequence identifiers) and ENST (Ensembl transcript identifiers) are given for each isoform. The identifiers in the "Function Annotation" section correspond to those associated with the UniProt canonical isoform. More information about Ensembl stable IDs can be found here: [Ensembl website](http://www.ensembl.org/info/genome/stable_ids/index.html)
 
@@ -194,7 +194,7 @@ Futher details about the HGVS format can be found on the [HGVS website](https://
 
 <a name="missense"></a>**Missense:** ProtVar retrieves annotations and predictions for the evaluation of missense mutations. Missense mutations are single nucleotide changes which result in a codon which encodes a different amino acid to the reference sequence. Synonymous mutations are also handled by ProtVar where a point mutation does not alter the encoded amino acid.
 
-<a name="my-downloads"></a>**My Downloads:** This page contains all the jobs sent for download for this browser session. This means that if you submit several different variant sets you will see a list of jobs here. From this page you can see the status of jobs to check if they are ready. When they are, the files can be downloaded to your local machine.
+<a name="downloads"></a>**Downloads:** This page contains all the jobs sent for download for this browser session. This means that if you submit several different variant sets you will see a list of jobs here. From this page you can see the status of jobs to check if they are ready. When they are, the files can be downloaded to your local machine.
 
 <a name="paste"></a>**Paste:** Several thousand variants can be pasted into the box (for longer lists please upload a file).
 
