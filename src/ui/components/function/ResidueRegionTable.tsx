@@ -83,9 +83,9 @@ function getRegions(regions: Array<ProteinFeature>, accession: string, pockets: 
       })
     }
     {
-      (pockets.length > 0 || interactions.length >0) && <>
+      (pockets.length > 0 || interactions.length >0) && <div>
         <b>Structure predictions</b>{pubmedRef(PUBMED_ID.INTERFACES)}
-      </>
+      </div>
     }
     <Pockets pockets={pockets} expendedRowKey={expendedRowKey} toggleRow={toggleRow}/>
     <Interfaces accession={accession} interactions={interactions} expendedRowKey={expendedRowKey}
@@ -149,10 +149,19 @@ const Pockets = (props: PocketsProps) => {
     counter = counter + 1;
     let key = 'pockets-' + counter
     pocketsList.push(<li key={key}>
-      <b>Energy :</b> {pocket.energy}<br/>
-      <b>Energy/vol :</b> {pocket.energyPerVol}<br/>
-      <b>Score :</b> {pocket.score}<br/>
-      <b>Resid :</b> {formatRange(pocket.residList)}
+      <b title="The ID of the pocket to distinguish where there are multiple pockets for the same model.">Pocket ID
+        :</b> {pocket.pocketId}<br/>
+      <b title="A measure of pocket compactness">Radius of gyration :</b> {pocket.radGyration?.toFixed(2)}<br/>
+      <b>Energy/vol :</b> {pocket.energyPerVol?.toFixed(2)}<br/>
+      <b
+        title="Ranges from 0-1. 1.0 corresponds to a pocket entirely buried, 0.0 corresponds to a pocket entirely exposed to the solvent.">Buriedness
+        :</b> {pocket.buriedness?.toFixed(2)}<br/>
+      <b
+        title="The positions of residues which are predicted to make up the posket according to UniProt canonical (and AlphaFold) numbering.">Resid
+        :</b> {formatRange(pocket.resid)}<br/>
+      <b title="The mean pLDDT of all the residues considered to form the pocket from AlphaFold2 model.">Mean pLDDT
+        :</b> {pocket.meanPlddt?.toFixed(2)}<br/>
+      <b title="The score used to measure the confidence in the pocket. Score range 0-1000. Scores above 800 are high confidence and above 900 are very high confidence.">Score :</b> {pocket.score?.toFixed(2)}<br/>
     </li>);
   });
 

@@ -41,15 +41,13 @@ function AlphafoldInfoTable(props: AlphafoldInfoTableProps) {
 
   let pocketsList: Array<JSX.Element> = [];
   let pocketsBtn: Array<JSX.Element> = [];
-  let pnum = 0;
 
   props.pocketData.forEach((pocket, idx, array) => {
-    pnum++
-    const p = 'P' + pnum
-    const formattedPockets = 'Residues: ' + formatRange(pocket.residList)
-    const highlightText = pnum === 1 ? 'Highlight ' + p : p
-    pocketsList.push(<span key={'pocketsList-'+pnum} title={formattedPockets}>{p}{idx === array.length - 1 ? '' : ', '}</span>);
-    pocketsBtn.push(<button key={'pocketsBtn-'+pnum} title={formattedPockets} className="button-new" onClick={() => props.pdbeRef.highlightPocket(props.aaPos, pocket.residList)}>{highlightText}</button>)
+    const p = 'P' + pocket.pocketId
+    const formattedPockets = 'Residues: ' + formatRange(pocket.resid)
+    const highlightText = idx === 0 ? 'Highlight ' + p : p
+    pocketsList.push(<span key={'pocketsList-'+pocket.pocketId} title={formattedPockets}>{p}{idx === array.length - 1 ? '' : ', '}</span>);
+    pocketsBtn.push(<button key={'pocketsBtn-'+pocket.pocketId} title={formattedPockets} className="button-new" onClick={() => props.pdbeRef.highlightPocket(props.aaPos, pocket.resid)}>{highlightText}</button>)
   });
 
   if (isRowSelected) {
