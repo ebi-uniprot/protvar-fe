@@ -1,6 +1,6 @@
 import DefaultPageLayout from "../layout/DefaultPageLayout";
 import React, {useEffect} from "react";
-import {TITLE} from "../../constants/const";
+import {API_URL, PV_FTP, TITLE} from "../../constants/const";
 import "./ReleasePage.css"
 
 function ReleasePageContent() {
@@ -12,49 +12,154 @@ function ReleasePageContent() {
     document.title = 'Release - ' + TITLE;
   }, []);
 
-  return <div className="container">
-    <h5>ProtVar App</h5>
+  return <div className="container" style={{padding: '10px'}}>
 
-    <div className="grid-container">
-      <StatsCard main="ProtVar UI v1.2" subt="Last updated: May 2024"/>
-      <StatsCard main="ProtVar API v1.2" subt="Last updated: May 2024"/>
-    </div>
 
-    <h5>Data Release</h5>
-    <h6>Coordinate mapping</h6>
-    <div className="grid-container">
-      <StatsCard main="Genomic-protein mapping" subt="Last updated: Dec 2023"/>
-    </div>
+    <h4>ProtVar Release</h4>
+    Upcoming release: June 2024 (UniProt 2024_05)
+
+    <table style={{width: 'auto'}}>
+      <thead>
+      <tr>
+        <th>Component</th>
+        <th>Version</th>
+        <th>Last update</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td className="small"><a href={process.env.PUBLIC_URL} target="_blank"
+                                 rel="noreferrer">UI</a></td>
+        <td className="small">1.2</td>
+        <td className="small">June 1, 2024</td>
+      </tr>
+      <tr>
+        <td className="small"><a href={API_URL} target="_blank"
+                                 rel="noreferrer">API</a></td>
+        <td className="small">1.2</td>
+        <td className="small">May 28, 2024</td>
+      </tr>
+      <tr>
+        <td className="small"><a href={PV_FTP} target="_blank"
+                                 rel="noreferrer">FTP</a></td>
+        <td className="small"></td>
+        <td className="small">May 28, 2024</td>
+      </tr>
+      </tbody>
+    </table>
+
+
+    <h5>Data</h5>
+    <h6 title="Genomic-protein coordinate mapping">Coordinate mapping</h6>
+    Last update: Dec 2023
+    <table style={{width: 'auto'}}>
+      <thead>
+      <tr>
+        <th>Sequence source</th>
+        <th>Version</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td className="small">UniProt</td>
+        <td className="small">2023_03</td>
+      </tr>
+      <tr>
+        <td className="small">Ensembl</td>
+        <td className="small">109</td>
+      </tr>
+      </tbody>
+    </table>
 
     <h6>ID mapping</h6>
-    <div className="grid-container">
-      <StatsCard main="dbSNP" subt={process.env.REACT_APP_DBSNP_BUILD!}/>
-      <StatsCard main="ClinVar" subt="2023.07.23"/>
-      <StatsCard main="COSMIC" subt="2023.03.09"/>
-    </div>
+    <table style={{width: 'auto'}}>
+      <thead>
+      <tr>
+        <th>Source</th>
+        <th>Version</th>
+        <th>Last update</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td className="small">dbSNP</td>
+        <td className="small">155</td>
+        <td className="small"></td>
+      </tr>
+      <tr>
+        <td className="small">ClinVar</td>
+        <td className="small">20230723</td>
+        <td className="small">July 2023</td>
+      </tr>
+      <tr>
+        <td className="small">COSMIC</td>
+        <td className="small">rel v98</td>
+        <td className="small">March 2023</td>
+      </tr>
+      </tbody>
+    </table>
 
-    <h6>Sequence sources</h6>
-    <div className="grid-container">
-      <StatsCard main="UniProt" subt={process.env.REACT_APP_UNIPROT_RELEASE!}/>
-      <StatsCard main="Ensembl" subt={process.env.REACT_APP_ENSEMBL_RELEASE!}/>
-    </div>
-
+    <h6>Scores and predictions</h6>
+    <table style={{width: 'auto'}}>
+      <thead>
+      <tr>
+        <th>Algorithm</th>
+        <th>Version</th>
+        <th>Last update</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td className="small">Conservation</td>
+        <td className="small"></td>
+        <td className="small"></td>
+      </tr>
+      <tr>
+        <td className="small">Stability</td>
+        <td className="small"></td>
+        <td className="small">May 28, 2024</td>
+      </tr>
+      <tr>
+        <td className="small">CADD</td>
+        <td className="small">v1.6</td>
+        <td className="small"></td>
+      </tr>
+      <tr>
+        <td className="small">AlphaMissense</td>
+        <td className="small"></td>
+        <td className="small">May 2024</td>
+      </tr>
+      <tr>
+        <td className="small">EVE</td>
+        <td className="small"></td>
+        <td className="small">Dec 2022</td>
+      </tr>
+      <tr>
+        <td className="small">ESM-1b</td>
+        <td className="small"></td>
+        <td className="small">May 2024</td>
+      </tr>
+      <tr>
+        <td className="small">Pockets</td>
+        <td className="small">v2</td>
+        <td className="small">May 28, 2024</td>
+      </tr>
+      <tr>
+        <td className="small">Interfaces</td>
+        <td className="small">v1</td>
+        <td className="small">May 28, 2024</td>
+      </tr>
+      </tbody>
+    </table>
 
     <h5>Statistics</h5>
 
-    <h6>Mapping</h6>
     <div className="grid-container">
-      <StatsCard main="Genomic-protein" subt="166,077,832"/>
+      <StatsCard main="Genomic-protein mapping" subt="166,077,832"/>
       <StatsCard main="SwissProt proteins mapped" subt="19,038 (>93%)"/>
-    </div>
-
-    <h6>Scores and predictions</h6>
-    <div className="grid-container">
-      <StatsCard main="CADD" subt={process.env.REACT_APP_CADD_VERSION!} />
-      <StatsCard main="EVE" subt="2022.12.07"/>
+      <StatsCard main="Stability predictions" subt="208,792,558"/>
       <StatsCard main="Protein-protein interactions" subt="134,527"/>
       <StatsCard main="Pockets" subt="103,026"/>
-      <StatsCard main="Foldx predictions" subt="208,792,558"/>
     </div>
   </div>
 }
