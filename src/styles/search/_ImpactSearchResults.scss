@@ -771,3 +771,30 @@
 .aa-pred>*:nth-child(2) {
 	text-align: center;
 }
+
+.pred-grid {
+	display: grid;
+	padding: 2px 10px 2px 20px;
+	border-bottom: 1px solid #d3d3d3;
+}
+
+.pred-grid-col2 {
+	grid-template-columns: 35% auto;
+}
+
+.pred-grid-col3 {
+	grid-template-columns: 25% 25% auto;
+}
+
+.conf-low .conf-high .conf-vhigh {
+	font-size: x-small;
+}
+.conf-low {
+	color: #87CEFA;
+}
+.conf-high {
+	color: #00BFFF;
+}
+.conf-vhigh {
+	color: #1E90FF;
+}

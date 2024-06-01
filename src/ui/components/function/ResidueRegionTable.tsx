@@ -11,6 +11,8 @@ import {FunctionalResponse, Pocket, Foldx, P2PInteraction, ProteinFeature} from 
 import {MappingRecord} from "../../../utills/Convertor";
 import {Prediction, PUBMED_ID} from "./prediction/Prediction";
 import {pubmedRef} from "../common/Common";
+import {Tooltip} from "../common/Tooltip";
+import {Dropdown} from "react-dropdown-now";
 
 interface ResidueRegionTableProps {
   functionalData: FunctionalResponse
@@ -43,8 +45,10 @@ function ResidueRegionTable(props: ResidueRegionTableProps) {
         <th>Region Containing Variant Position</th>
       </tr>
       <tr>
-        <td style={{verticalAlign: 'top' }}>{getResidues(residues, props.record, props.functionalData.foldxs, oneLetterVariantAA, expendedRowKey, toggleRow)}</td>
-        <td style={{verticalAlign: 'top' }}>{getRegions(regions, props.functionalData.accession, props.functionalData.pockets, props.functionalData.interactions, expendedRowKey, toggleRow)}</td>
+        <td
+          style={{verticalAlign: 'top'}}>{getResidues(residues, props.record, props.functionalData.foldxs, oneLetterVariantAA, expendedRowKey, toggleRow)}</td>
+        <td
+          style={{verticalAlign: 'top'}}>{getRegions(regions, props.functionalData.accession, props.functionalData.pockets, props.functionalData.interactions, expendedRowKey, toggleRow)}</td>
       </tr>
       </tbody>
     </table>
@@ -83,12 +87,12 @@ function getRegions(regions: Array<ProteinFeature>, accession: string, pockets: 
       })
     }
     {
-      (pockets.length > 0 || interactions.length >0) && <div>
+      (pockets.length > 0 || interactions.length > 0) && <div>
         <b>Structure predictions</b>{pubmedRef(PUBMED_ID.INTERFACES)}
       </div>
     }
     <Pockets pockets={pockets} expendedRowKey={expendedRowKey} toggleRow={toggleRow}/>
-    <Interfaces accession={accession} interactions={interactions} expendedRowKey={expendedRowKey}
+    <Interfaces accession={accession} interactions={interactions} expandedRowKey={expendedRowKey}
                 toggleRow={toggleRow}/>
   </>);
 }
@@ -141,31 +145,38 @@ interface PocketsProps {
   toggleRow: StringVoidFun
 }
 
+const POCKET_ICONS = [
+  <i className="bi bi-caret-up-fill conf-vhigh"></i>,
+  <i className="bi bi-caret-up-fill conf-high"></i>,
+  <i className="bi bi-caret-down-fill conf-low"></i>
+]
+
+const POCKET_OPTS = [
+  {value: -1, label: <>Show all</>},
+  {value: 0, label: <>{POCKET_ICONS[0]} &gt;900 - very high pocket confidence</>},
+  {value: 1, label: <>{POCKET_ICONS[1]} 800-900 - high pocket confidence</>},
+  {value: 2, label: <>{POCKET_ICONS[2]} &lt;800 - low pocket confidence</>}
+]
+
 const Pockets = (props: PocketsProps) => {
-  let pocketsList: Array<JSX.Element> = [];
-  let counter = 0;
 
-  props.pockets.forEach((pocket) => {
-    counter = counter + 1;
-    let key = 'pockets-' + counter
-    pocketsList.push(<li key={key}>
-      <b title="The ID of the pocket to distinguish where there are multiple pockets for the same model.">Pocket ID
-        :</b> {pocket.pocketId}<br/>
-      <b title="A measure of pocket compactness">Radius of gyration :</b> {pocket.radGyration?.toFixed(2)}<br/>
-      <b>Energy/vol :</b> {pocket.energyPerVol?.toFixed(2)}<br/>
-      <b
-        title="Ranges from 0-1. 1.0 corresponds to a pocket entirely buried, 0.0 corresponds to a pocket entirely exposed to the solvent.">Buriedness
-        :</b> {pocket.buriedness?.toFixed(2)}<br/>
-      <b
-        title="The positions of residues which are predicted to make up the posket according to UniProt canonical (and AlphaFold) numbering.">Resid
-        :</b> {formatRange(pocket.resid)}<br/>
-      <b title="The mean pLDDT of all the residues considered to form the pocket from AlphaFold2 model.">Mean pLDDT
-        :</b> {pocket.meanPlddt?.toFixed(2)}<br/>
-      <b title="The score used to measure the confidence in the pocket. Score range 0-1000. Scores above 800 are high confidence and above 900 are very high confidence.">Score :</b> {pocket.score?.toFixed(2)}<br/>
-    </li>);
-  });
+  const [filteredPockets, setFilteredPockets] = useState(props.pockets)
+  const getIcon = (score: number) => {
+    if(score > 900) return POCKET_ICONS[0]
+    else if(score >= 800 && score <= 900) return POCKET_ICONS[1]
+    else return POCKET_ICONS[2]
+  }
 
-  if (pocketsList.length === 0) return <></>;
+  if (props.pockets.length === 0) return <></>;
+
+  const filterPockets = (op: any) => {
+    setFilteredPockets(props.pockets.filter(p => {
+      if (op === 0) return p.score > 900
+      else if (op === 1) return (p.score >= 800 && p.score <= 900)
+      else if (op === 2) return p.score < 800
+      else return true
+    }));
+  }
 
   let key = 'pockets-0'
   return <Fragment key={key}>
@@ -173,40 +184,67 @@ const Pockets = (props: PocketsProps) => {
       Pockets containing variant
       <ChevronDownIcon className="chevronicon"/>
     </button>
-    {getList(pocketsList, key, props.expendedRowKey)}
+    {(key === props.expendedRowKey) &&
+      <>
+      <div className="pred-grid pred-grid-col2">
+        <div>Pocket confidence
+        </div>
+        <div><Dropdown className="pocket-select"
+            placeholder="Show all"
+            options={POCKET_OPTS}
+            onChange={(option) => filterPockets(option.value)}
+          />
+        </div>
+      </div>
+        {
+          filteredPockets.map((pocket) => {
+            return <div key={`pocket-${pocket.pocketId}`} className="pred-grid pred-grid-col2">
+              <Tooltip
+                tip="The ID of the pocket to distinguish where there are multiple pockets for the same model.">Pocket</Tooltip>
+              <div>P{pocket.pocketId}</div>
+
+              <Tooltip
+                tip="The score used to measure the confidence in the pocket. Score range 0-1000. Scores above 800 are high confidence and above 900 are very high confidence.">
+                Combined score
+              </Tooltip>
+              <div>{getIcon(pocket.score)} {pocket.score?.toFixed(2)}</div>
+
+              <Tooltip tip="The mean pLDDT of all the residues considered to form the pocket from AlphaFold2 model.">
+                Pocket pLDDT mean
+              </Tooltip>
+              <div>{pocket.meanPlddt?.toFixed(2)}</div>
+
+              <div>Energy per volume</div>
+              <div>{pocket.energyPerVol?.toFixed(2)}</div>
+
+              <Tooltip
+                tip="Ranges from 0-1. 1.0 corresponds to a pocket entirely buried, 0.0 corresponds to a pocket entirely exposed to the solvent.">
+                Buriedness
+              </Tooltip>
+              <div>{pocket.buriedness?.toFixed(2)}</div>
+
+              <Tooltip tip="A measure of pocket compactness">Radius of gyration</Tooltip>
+              <div>{pocket.radGyration?.toFixed(2)}</div>
+
+              <div>Residues</div>
+              <div>{formatRange(pocket.resid)}</div>
+            </div>
+          })
+        }
+      </>
+    }
   </Fragment>
 }
 
 interface InterfacesProps {
   accession: string
   interactions: Array<P2PInteraction>
-  expendedRowKey: string
+  expandedRowKey: string
   toggleRow: StringVoidFun
 }
 
 const Interfaces = (props: InterfacesProps) => {
-  let interfacesList: Array<JSX.Element> = [];
-  let counter = 0;
-
-  props.interactions.forEach((interaction) => {
-    counter = counter + 1;
-    let key = 'interfaces-' + counter
-    let chain = 'A'
-    let pair = interaction.a
-
-    if (props.accession === interaction.a) {
-      chain = 'B';
-      pair = interaction.b;
-    }
-    interfacesList.push(<li key={key}>
-      {/* <b>Chain :</b> {chain}<br/> */}
-      {/* <b>Pair :</b> {pair}<br/> */}
-      {/* <b>Residues :</b> {formatRange(resids)} */}
-      <b>{pair}</b> (Chain {chain}) (pDockQ: {interaction.pdockq.toFixed(3)})
-    </li>);
-  });
-
-  if (interfacesList.length === 0) return <></>;
+  if (props.interactions.length === 0) return <></>;
 
   let key = 'interfaces-0'
   return <Fragment key={key}>
@@ -214,16 +252,35 @@ const Interfaces = (props: InterfacesProps) => {
       Protein-protein interfaces containing variant
       <ChevronDownIcon className="chevronicon"/>
     </button>
-    {getList(interfacesList, key, props.expendedRowKey)}
-  </Fragment>
-}
+    {(key === props.expandedRowKey) &&
+      <>
+        <div className="pred-grid pred-grid-col3">
+          <div>Protein</div>
+          <div>Chain</div>
+          <div>pDockQ</div>
+        </div>
+        {
+          props.interactions.map((interaction, index) => {
+            let chain = 'A'
+            let pair = interaction.a
 
-function getList(list: Array<JSX.Element>, rowKey: string, expendedRowKey: string) {
-  if (rowKey === expendedRowKey) {
-    return <ul style={{listStyleType: 'none', display: 'inline-block'}}>
-      {list}
-    </ul>
-  }
+            if (props.accession === interaction.a) {
+              chain = 'B';
+              pair = interaction.b;
+            }
+            return <div key={`interaction-${index+1}`}  className="pred-grid pred-grid-col3">
+              {/* <b>Chain :</b> {chain}<br/> */}
+              {/* <b>Pair :</b> {pair}<br/> */}
+              {/* <b>Residues :</b> {formatRange(resids)} */}
+              <div>{pair}</div>
+              <div>{chain}</div>
+              <div>{interaction.pdockq.toFixed(3)}</div>
+            </div>
+          })
+        }
+      </>
+    }
+  </Fragment>
 }
 
 export default ResidueRegionTable;
