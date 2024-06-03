@@ -16,7 +16,7 @@ function ReleasePageContent() {
 
 
     <h4>ProtVar Release</h4>
-    Upcoming release: June 2024 (UniProt 2024_05)
+    Upcoming release: June 2024 (UniProt 2024_03)
 
     <table style={{width: 'auto'}}>
       <thead>
@@ -71,7 +71,7 @@ function ReleasePageContent() {
       </tbody>
     </table>
 
-    <h6>ID mapping</h6>
+    <h6>Variant ID</h6>
     <table style={{width: 'auto'}}>
       <thead>
       <tr>
