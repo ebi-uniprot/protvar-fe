@@ -62,7 +62,7 @@ function ReleasePageContent() {
       <tbody>
       <tr>
         <td className="small">UniProt</td>
-        <td className="small">2023_03</td>
+        <td className="small">2023_05</td>
       </tr>
       <tr>
         <td className="small">Ensembl</td>
