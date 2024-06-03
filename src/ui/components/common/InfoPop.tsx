@@ -5,6 +5,8 @@ import {AppContext} from "../../App";
 function ExampleInfoPop(props: {}) {
   const context = useContext(AppContext)
   const openModalX = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    // relative position to trigger event/object
+    // https://stackoverflow.com/questions/3234256/find-mouse-position-relative-to-element
     console.log(event.pageX)
     console.log(event.pageY)
     context.setModalContent(<>XXX</>)
