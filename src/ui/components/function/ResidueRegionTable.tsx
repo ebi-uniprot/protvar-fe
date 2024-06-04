@@ -20,10 +20,10 @@ interface ResidueRegionTableProps {
 }
 
 function ResidueRegionTable(props: ResidueRegionTableProps) {
-  const [expendedRowKey, setExpendedRowKey] = useState('')
+  const [expandedRowKey, setExpandedRowKey] = useState('')
 
   function toggleRow(key: string) {
-    setExpendedRowKey(expendedRowKey === key ? '' : key)
+    setExpandedRowKey(expandedRowKey === key ? '' : key)
   }
 
   var regions: Array<ProteinFeature> = [];
@@ -46,9 +46,9 @@ function ResidueRegionTable(props: ResidueRegionTableProps) {
       </tr>
       <tr>
         <td
-          style={{verticalAlign: 'top'}}>{getResidues(residues, props.record, props.functionalData.foldxs, oneLetterVariantAA, expendedRowKey, toggleRow)}</td>
+          style={{verticalAlign: 'top'}}>{getResidues(residues, props.record, props.functionalData.foldxs, oneLetterVariantAA, expandedRowKey, toggleRow)}</td>
         <td
-          style={{verticalAlign: 'top'}}>{getRegions(regions, props.functionalData.accession, props.functionalData.pockets, props.functionalData.interactions, expendedRowKey, toggleRow)}</td>
+          style={{verticalAlign: 'top'}}>{getRegions(regions, props.functionalData.accession, props.functionalData.pockets, props.functionalData.interactions, expandedRowKey, toggleRow)}</td>
       </tr>
       </tbody>
     </table>
@@ -56,7 +56,7 @@ function ResidueRegionTable(props: ResidueRegionTableProps) {
   return EmptyElement
 }
 
-function getResidues(regions: Array<ProteinFeature>, record: MappingRecord, foldxs: Array<Foldx>, oneLetterVariantAA: string | null, expendedRowKey: string, toggleRow: StringVoidFun) {
+function getResidues(regions: Array<ProteinFeature>, record: MappingRecord, foldxs: Array<Foldx>, oneLetterVariantAA: string | null, expandedRowKey: string, toggleRow: StringVoidFun) {
   let foldxs_ = oneLetterVariantAA ? foldxs.filter(foldx => foldx.mutatedType.toLowerCase() === oneLetterVariantAA) : foldxs
   return <>
     <b>Annotations from UniProt</b>
@@ -66,7 +66,7 @@ function getResidues(regions: Array<ProteinFeature>, record: MappingRecord, fold
     }
     {
       regions.map((region, idx) => {
-        return getFeatureList(region, `residue-${idx}`, expendedRowKey, toggleRow);
+        return getFeatureList(region, `residue-${idx}`, expandedRowKey, toggleRow);
       })
     }
     <AminoAcidModel refAA={record.refAA!} variantAA={record.variantAA!}/>
@@ -74,7 +74,7 @@ function getResidues(regions: Array<ProteinFeature>, record: MappingRecord, fold
   </>
 }
 
-function getRegions(regions: Array<ProteinFeature>, accession: string, pockets: Array<Pocket>, interactions: Array<P2PInteraction>, expendedRowKey: string, toggleRow: StringVoidFun) {
+function getRegions(regions: Array<ProteinFeature>, accession: string, pockets: Array<Pocket>, interactions: Array<P2PInteraction>, expandedRowKey: string, toggleRow: StringVoidFun) {
   return (<>
     <b>Annotations from UniProt</b>
     {regions.length === 0 && <div>
@@ -83,7 +83,7 @@ function getRegions(regions: Array<ProteinFeature>, accession: string, pockets: 
     }
     {
       regions.map((region, idx) => {
-        return getFeatureList(region, `region-${idx}`, expendedRowKey, toggleRow);
+        return getFeatureList(region, `region-${idx}`, expandedRowKey, toggleRow);
       })
     }
     {
@@ -91,13 +91,13 @@ function getRegions(regions: Array<ProteinFeature>, accession: string, pockets: 
         <b>Structure predictions</b>{pubmedRef(PUBMED_ID.INTERFACES)}
       </div>
     }
-    <Pockets pockets={pockets} expendedRowKey={expendedRowKey} toggleRow={toggleRow}/>
-    <Interfaces accession={accession} interactions={interactions} expandedRowKey={expendedRowKey}
+    <Pockets pockets={pockets} expandedRowKey={expandedRowKey} toggleRow={toggleRow}/>
+    <Interfaces accession={accession} interactions={interactions} expandedRowKey={expandedRowKey}
                 toggleRow={toggleRow}/>
   </>);
 }
 
-function getFeatureList(feature: ProteinFeature, key: string, expendedRowKey: string, toggleRow: StringVoidFun) {
+function getFeatureList(feature: ProteinFeature, key: string, expandedRowKey: string, toggleRow: StringVoidFun) {
   let category = '';
   if (getKeyValue(feature.type)(FEATURES)) {
     category = getKeyValue(feature.type)(FEATURES);
@@ -112,12 +112,12 @@ function getFeatureList(feature: ProteinFeature, key: string, expendedRowKey: st
       {category ? category : 'Unnamed'}
       <ChevronDownIcon className="chevronicon"/>
     </button>
-    {getFeatureDetail(key, feature, expendedRowKey)}
+    {getFeatureDetail(key, feature, expandedRowKey)}
   </Fragment>
 }
 
-function getFeatureDetail(rowKey: string, feature: ProteinFeature, expendedRowKey: string) {
-  if (rowKey === expendedRowKey) {
+function getFeatureDetail(rowKey: string, feature: ProteinFeature, expandedRowKey: string) {
+  if (rowKey === expandedRowKey) {
     return (
       <>
         <ul style={{listStyleType: 'none', display: 'inline-block'}}>
@@ -141,7 +141,7 @@ function getPositionLabel(begin: number, end: number) {
 
 interface PocketsProps {
   pockets: Array<Pocket>
-  expendedRowKey: string
+  expandedRowKey: string
   toggleRow: StringVoidFun
 }
 
@@ -184,7 +184,7 @@ const Pockets = (props: PocketsProps) => {
       Pockets containing variant
       <ChevronDownIcon className="chevronicon"/>
     </button>
-    {(key === props.expendedRowKey) &&
+    {(key === props.expandedRowKey) &&
       <>
       <div className="pred-grid pred-grid-col2">
         <div>Pocket confidence
@@ -254,30 +254,36 @@ const Interfaces = (props: InterfacesProps) => {
     </button>
     {(key === props.expandedRowKey) &&
       <>
-        <div className="pred-grid pred-grid-col3">
+        Proteins which are predicted to interact with {props.accession} where the variant is at the interface:
+        <div className="pred-grid pred-grid-col2">
           <div>Protein</div>
-          <div>Chain</div>
-          <div>pDockQ</div>
+          {//<div>Chain</div>
+          }
+          <Tooltip tip="pDockQ is a confidence score based on the pLDDT model confidences and number of contacts at an interface. pDockQ>0.23, 70% are well modeled and for pDockQ>0.5, 80% are well modelled.">
+            pDockQ
+          </Tooltip>
         </div>
         {
           props.interactions.map((interaction, index) => {
-            let chain = 'A'
+            //let chain = 'A'
             let pair = interaction.a
 
             if (props.accession === interaction.a) {
-              chain = 'B';
+              //chain = 'B';
               pair = interaction.b;
             }
-            return <div key={`interaction-${index+1}`}  className="pred-grid pred-grid-col3">
+            return <div key={`interaction-${index+1}`}  className="pred-grid pred-grid-col2">
               {/* <b>Chain :</b> {chain}<br/> */}
               {/* <b>Pair :</b> {pair}<br/> */}
               {/* <b>Residues :</b> {formatRange(resids)} */}
               <div>{pair}</div>
-              <div>{chain}</div>
+              {//<div>{chain}</div>
+              }
               <div>{interaction.pdockq.toFixed(3)}</div>
             </div>
           })
         }
+        The interacting structure can be visualised in the 3D structure tab.
       </>
     }
   </Fragment>
