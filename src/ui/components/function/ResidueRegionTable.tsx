@@ -158,17 +158,16 @@ const POCKET_OPTS = [
   {value: 2, label: <>{POCKET_ICONS[2]} &lt;800 - low pocket confidence</>}
 ]
 
+const getIcon = (score: number) => {
+  if(score > 900) return POCKET_ICONS[0]
+  else if(score >= 800 && score <= 900) return POCKET_ICONS[1]
+  else return POCKET_ICONS[2]
+}
+
 const Pockets = (props: PocketsProps) => {
-
+  const [itemsToShow, setItemsToShow] = useState(PAGE);
   const [filteredPockets, setFilteredPockets] = useState(props.pockets)
-  const getIcon = (score: number) => {
-    if(score > 900) return POCKET_ICONS[0]
-    else if(score >= 800 && score <= 900) return POCKET_ICONS[1]
-    else return POCKET_ICONS[2]
-  }
-
   if (props.pockets.length === 0) return <></>;
-
   const filterPockets = (op: any) => {
     setFilteredPockets(props.pockets.filter(p => {
       if (op === 0) return p.score > 900
@@ -197,43 +196,51 @@ const Pockets = (props: PocketsProps) => {
         </div>
       </div>
         {
-          filteredPockets.map((pocket) => {
-            return <div key={`pocket-${pocket.pocketId}`} className="pred-grid pred-grid-col2">
-              <Tooltip
-                tip="The ID of the pocket to distinguish where there are multiple pockets for the same model.">Pocket</Tooltip>
-              <div>P{pocket.pocketId}</div>
-
-              <Tooltip
-                tip="The score used to measure the confidence in the pocket. Score range 0-1000. Scores above 800 are high confidence and above 900 are very high confidence.">
-                Combined score
-              </Tooltip>
-              <div>{getIcon(pocket.score)} {pocket.score?.toFixed(2)}</div>
-
-              <Tooltip tip="The mean pLDDT of all the residues considered to form the pocket from AlphaFold2 model.">
-                Pocket pLDDT mean
-              </Tooltip>
-              <div>{pocket.meanPlddt?.toFixed(2)}</div>
-
-              <div>Energy per volume</div>
-              <div>{pocket.energyPerVol?.toFixed(2)}</div>
-
-              <Tooltip
-                tip="Ranges from 0-1. 1.0 corresponds to a pocket entirely buried, 0.0 corresponds to a pocket entirely exposed to the solvent.">
-                Buriedness
-              </Tooltip>
-              <div>{pocket.buriedness?.toFixed(2)}</div>
-
-              <Tooltip tip="A measure of pocket compactness">Radius of gyration</Tooltip>
-              <div>{pocket.radGyration?.toFixed(2)}</div>
-
-              <div>Residues</div>
-              <div>{formatRange(pocket.resid)}</div>
-            </div>
+          // show all
+          /*filteredPockets.map((pocket) => {
+            return ShowPocket(pocket)
           })
+          */
+          // show more
+          ShowMore_(filteredPockets, ShowPocket, itemsToShow, setItemsToShow, PAGE)
         }
       </>
     }
   </Fragment>
+}
+
+function ShowPocket(pocket: Pocket) {
+  return <div key={`pocket-${pocket.pocketId}`} className="pred-grid pred-grid-col2">
+    <Tooltip
+      tip="The ID of the pocket to distinguish where there are multiple pockets for the same model.">Pocket</Tooltip>
+    <div>P{pocket.pocketId}</div>
+
+    <Tooltip
+      tip="The score used to measure the confidence in the pocket. Score range 0-1000. Scores above 800 are high confidence and above 900 are very high confidence.">
+      Combined score
+    </Tooltip>
+    <div>{getIcon(pocket.score)} {pocket.score?.toFixed(2)}</div>
+
+    <Tooltip tip="The mean pLDDT of all the residues considered to form the pocket from AlphaFold2 model.">
+      Pocket pLDDT mean
+    </Tooltip>
+    <div>{pocket.meanPlddt?.toFixed(2)}</div>
+
+    <div>Energy per volume</div>
+    <div>{pocket.energyPerVol?.toFixed(2)}</div>
+
+    <Tooltip
+      tip="Ranges from 0-1. 1.0 corresponds to a pocket entirely buried, 0.0 corresponds to a pocket entirely exposed to the solvent.">
+      Buriedness
+    </Tooltip>
+    <div>{pocket.buriedness?.toFixed(2)}</div>
+
+    <Tooltip tip="A measure of pocket compactness">Radius of gyration</Tooltip>
+    <div>{pocket.radGyration?.toFixed(2)}</div>
+
+    <div>Residues</div>
+    <div>{formatRange(pocket.resid)}</div>
+  </div>
 }
 
 interface InterfacesProps {
@@ -257,36 +264,66 @@ const Interfaces = (props: InterfacesProps) => {
         Proteins which are predicted to interact with {props.accession} where the variant is at the interface:
         <div className="pred-grid pred-grid-col2">
           <div>Protein</div>
-          {//<div>Chain</div>
-          }
-          <Tooltip tip="pDockQ is a confidence score based on the pLDDT model confidences and number of contacts at an interface. pDockQ>0.23, 70% are well modeled and for pDockQ>0.5, 80% are well modelled.">
+          <Tooltip
+            tip="pDockQ is a confidence score based on the pLDDT model confidences and number of contacts at an interface. pDockQ>0.23, 70% are well modeled and for pDockQ>0.5, 80% are well modelled.">
             pDockQ
           </Tooltip>
         </div>
         {
-          props.interactions.map((interaction, index) => {
-            //let chain = 'A'
-            let pair = interaction.a
-
-            if (props.accession === interaction.a) {
-              //chain = 'B';
-              pair = interaction.b;
-            }
-            return <div key={`interaction-${index+1}`}  className="pred-grid pred-grid-col2">
-              {/* <b>Chain :</b> {chain}<br/> */}
-              {/* <b>Pair :</b> {pair}<br/> */}
-              {/* <b>Residues :</b> {formatRange(resids)} */}
-              <div>{pair}</div>
-              {//<div>{chain}</div>
-              }
-              <div>{interaction.pdockq.toFixed(3)}</div>
-            </div>
-          })
+          // show all
+          /*props.interactions.map((interaction, index) => {
+            return ShowInteraction(props.accession, interaction, index)
+          })*/
+        }
+        {
+          // show more
+          ShowMore(props.interactions, ShowInteractionAcc(props.accession))
         }
         The interacting structure can be visualised in the 3D structure tab.
       </>
     }
   </Fragment>
 }
+
+function ShowInteractionAcc(acc: string) {
+  return function(interaction: P2PInteraction, index: number) {
+    return <div key={`interaction-${index + 1}`} className="pred-grid pred-grid-col2">
+      <div>{acc === interaction.a ? interaction.b : interaction.a}</div>
+      <div>{interaction.pdockq.toFixed(3)}</div>
+    </div>
+  }
+}
+
+function ShowInteraction(accession: string, interaction: P2PInteraction, index: number) {
+  return <div key={`interaction-${index + 1}`} className="pred-grid pred-grid-col2">
+    <div>{accession === interaction.a ? interaction.b : interaction.a}</div>
+    <div>{interaction.pdockq.toFixed(3)}</div>
+  </div>
+}
+
+function ShowMore(items:any[], showItem:any, page: number = PAGE) {
+  const [itemsToShow, setItemsToShow] = useState(page);
+  return ShowMore_(items, showItem, itemsToShow, setItemsToShow, page)
+}
+
+function ShowMore_(items:any[], showItem:any, itemsToShow:number, setItemsToShow: any, page: number = 2) {
+  const showmore = () => {
+    setItemsToShow(Math.min(itemsToShow+page, items.length))
+  }
+  const showless = () => {
+    setItemsToShow(Math.max(itemsToShow-page, page))
+  }
+  return (
+    <div>
+      {items.slice(0, itemsToShow).map((item, index) => showItem(item, index))}
+      <div style={{textAlign: 'right'}}>
+      {(items.length > itemsToShow) && <button className="show-btn" onClick={showmore}>Show More</button>}
+      {(itemsToShow > page) && <button className="show-btn" onClick={showless}>Show Less</button>}
+      </div>
+    </div>
+  )
+}
+
+const PAGE = 2;
 
 export default ResidueRegionTable;
