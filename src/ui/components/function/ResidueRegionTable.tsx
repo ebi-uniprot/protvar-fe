@@ -294,12 +294,13 @@ function ShowInteractionAcc(acc: string) {
   }
 }
 
+/*
 function ShowInteraction(accession: string, interaction: P2PInteraction, index: number) {
   return <div key={`interaction-${index + 1}`} className="pred-grid pred-grid-col2">
     <div>{accession === interaction.a ? interaction.b : interaction.a}</div>
     <div>{interaction.pdockq.toFixed(3)}</div>
   </div>
-}
+}*/
 
 function ShowMore(items:any[], showItem:any, page: number = PAGE) {
   const [itemsToShow, setItemsToShow] = useState(page);
