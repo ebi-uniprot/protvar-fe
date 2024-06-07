@@ -309,10 +309,11 @@ function ShowInteraction(accession: string, interaction: P2PInteraction, index: 
   </div>
 }
 
+/*
 function ShowMore(items:any[], showItem:any, page: number = PAGE) {
   const [itemsToShow, setItemsToShow] = useState(page);
   return ShowMore_(items, showItem, itemsToShow, setItemsToShow, page)
-}
+}*/
 
 function ShowMore_(items:any[], showItem:any, itemsToShow:number, setItemsToShow: any, page: number = 2) {
   const showmore = () => {
