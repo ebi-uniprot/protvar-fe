@@ -7,11 +7,14 @@ import Spaces from "../../../elements/Spaces";
 const PRECISION: number = 1 // dp
 
 export const CADD_SCORE_ATTR: PredAttr[] = [
-  {color: 'DarkGreen', stdColor: STD_COLOR_GRADIENT.rgbAt(0).toHexString(), text: 'likely benign', range: '<15.0' },
-  {color: 'DarkSeaGreen', stdColor: STD_COLOR_GRADIENT.rgbAt(0.5).toHexString(), text: 'potentially deleterious', range: '15.0-19.9' },
-  {color: 'Gold', stdColor: STD_COLOR_GRADIENT.rgbAt(0.65).toHexString(), text: 'quite likely deleterious', range: '20.0-24.9' },
-  {color: 'DarkOrange', stdColor: STD_COLOR_GRADIENT.rgbAt(0.8).toHexString(), text: 'probably deleterious', range: '25.0-29.9' },
-  {color: 'FireBrick', stdColor: STD_COLOR_GRADIENT.rgbAt(1).toHexString(), text: 'highly likely deleterious', range: '>29.9' }
+  // CADD score range 1 to 99
+  // benign (blue) - 15% of lower range
+  {color: 'DarkGreen', stdColor: STD_COLOR_GRADIENT.rgbAt(0).toHexString(), text: 'likely benign', range: '<15.0' }, // 15%
+  // deleterious (>15%) - 85% of remaining range
+  {color: 'DarkSeaGreen', stdColor: STD_COLOR_GRADIENT.rgbAt(0.60).toHexString(), text: 'potentially deleterious', range: '15.0-19.9' }, // 5%
+  {color: 'Gold', stdColor: STD_COLOR_GRADIENT.rgbAt(0.65).toHexString(), text: 'quite likely deleterious', range: '20.0-24.9' }, // 5%
+  {color: 'DarkOrange', stdColor: STD_COLOR_GRADIENT.rgbAt(0.7).toHexString(), text: 'probably deleterious', range: '25.0-29.9' }, // 5%
+  {color: 'FireBrick', stdColor: STD_COLOR_GRADIENT.rgbAt(1).toHexString(), text: 'highly likely deleterious', range: '>29.9' } // 70%
 ]
 
 export const CaddScorePred = (props: { cadd?: string, stdColor: boolean }) => {

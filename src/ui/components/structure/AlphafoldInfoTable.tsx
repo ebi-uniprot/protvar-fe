@@ -41,15 +41,13 @@ function AlphafoldInfoTable(props: AlphafoldInfoTableProps) {
 
   let pocketsList: Array<JSX.Element> = [];
   let pocketsBtn: Array<JSX.Element> = [];
-  let pnum = 0;
 
   props.pocketData.forEach((pocket, idx, array) => {
-    pnum++
-    const p = 'P' + pnum
-    const formattedPockets = 'Residues: ' + formatRange(pocket.residList)
-    const highlightText = pnum === 1 ? 'Highlight ' + p : p
-    pocketsList.push(<span key={'pocketsList-'+pnum} title={formattedPockets}>{p}{idx === array.length - 1 ? '' : ', '}</span>);
-    pocketsBtn.push(<button key={'pocketsBtn-'+pnum} title={formattedPockets} className="button-new" onClick={() => props.pdbeRef.highlightPocket(props.aaPos, pocket.residList)}>{highlightText}</button>)
+    const p = 'P' + pocket.pocketId
+    const formattedPockets = 'Residues: ' + formatRange(pocket.resid)
+    const highlightText = idx === 0 ? 'Highlight ' + p : p
+    pocketsList.push(<span key={'pocketsList-'+pocket.pocketId} title={formattedPockets}>{p}{idx === array.length - 1 ? '' : ', '}</span>);
+    pocketsBtn.push(<button key={'pocketsBtn-'+pocket.pocketId} title={formattedPockets} className="button-new" onClick={() => props.pdbeRef.highlightPocket(props.aaPos, pocket.resid)}>{highlightText}</button>)
   });
 
   if (isRowSelected) {
@@ -92,7 +90,6 @@ export function ModelConfidence() {
         <div className="search-results-legends" style={{ float: "unset" }}>
             <strong>Model Confidence</strong>
             <br/>
-            <br/>
             <div className="flex-column">
                 <div className="flex">
                     <div className="legend-icon button--legends button--legends--high"></div>
@@ -111,6 +108,9 @@ export function ModelConfidence() {
                     <div className="flex1">Very low (pLDDT &lt; 50)</div>
                 </div>
             </div>
+          <br/>
+          AlphaFold produces a per-residue confidence score (pLDDT) between 0 and 100. Some regions with
+          low pLDDT may be unstructured in isolation.
         </div>
     );
 }
@@ -127,13 +127,9 @@ export function PAE(props: { paeImg: any; }) {
                 </span>
                 <img width="150px" height="150px" src={props.paeImg} alt="AlphaFold PAE"/>
                 <div style={{paddingLeft: '15px'}}>
-                    AlphaFold produces a per-residue confidence score (pLDDT) between 0 and 100. Some regions with
-                    low pLDDT may be unstructured in isolation.
-                    <br/>
-                    The colour at position (x, y) indicates AlphaFold's expected position error at residue x, when
-                    the predicted and true structures are aligned on residue y.
-                    <br/>
-                    This is useful for assessing inter-domain accuracy.
+                  The colour at position (x, y) indicates AlphaFold's expected position error at residue x, when the
+                  predicted and true structures are aligned on residue y. This is useful for assessing inter-domain
+                  accuracy.
                 </div>
                 <div></div>
                 <div className="pae-axis pae-x-axis">

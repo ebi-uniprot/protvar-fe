@@ -657,8 +657,9 @@
 		height: 1.5rem;
 	}
 	.esm1b-score-grad-std {
-		background-color: red;
-		background-image: linear-gradient(to right, blue, lightgray, red);
+		//background-color: red;
+		//background-image: linear-gradient(to right, blue, lightgray, red);
+		background: linear-gradient(to right, blue 0%, blue 20%, lightgray 20%, lightgray 40%, red 40%, red 100%);
 		width: 8rem;
 		height: 1.5rem;
 	}
@@ -770,4 +771,56 @@
 
 .aa-pred>*:nth-child(2) {
 	text-align: center;
+}
+
+.pred-grid {
+	display: grid;
+	padding: 2px 10px 2px 20px;
+	border-bottom: 1px solid #d3d3d3;
+}
+
+.pred-grid-col2 {
+	grid-template-columns: 35% auto;
+}
+
+.pred-grid-col3 {
+	grid-template-columns: 25% 25% auto;
+}
+
+.conf-low .conf-high .conf-vhigh {
+	font-size: x-small;
+}
+.conf-low {
+	color: #87CEFA;
+}
+.conf-high {
+	color: #00BFFF;
+}
+.conf-vhigh {
+	color: #1E90FF;
+}
+
+.show-btn {
+	background: #cfe8ef;
+	color: #00709b;
+	padding: 3px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 11px;
+	margin: 4px 2px;
+	cursor: pointer;
+	border-style: solid;
+	border-width: thin;
+	border-color: #00709b;
+}
+
+.struct-pred {
+	padding: 2px 10px 15px 10px;
+}
+
+.pred-pocket-conf-dropdown {
+	div {
+		padding: 1px 3px 1px 3px;
+	}
 }

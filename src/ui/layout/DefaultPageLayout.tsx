@@ -152,13 +152,11 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                         </Link>
                       </td>
                       <td className="topnav-right local-sub-title">
-                        Release <Link
+                        <Link
                           to={RELEASE}
                           title="ProtVar Release"
                           id="protvarRelease"
-                        >
-                          {process.env.REACT_APP_UNIPROT_RELEASE}
-                        </Link>
+                        >Release</Link>
                       </td>
                     
                     </tr>

@@ -69,10 +69,13 @@ export interface Reaction {
 
 export interface Pocket {
     structId: string
-    energy: number
+    pocketId: number
+    radGyration: number
     energyPerVol: number
+    buriedness: number
+    resid: Array<number>
+    meanPlddt: number
     score: number
-    residList: Array<number>
 }
 
 export interface Foldx {

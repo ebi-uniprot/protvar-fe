@@ -5,7 +5,7 @@ import {
   PUBMED_ID
 } from "./Prediction";
 import Spaces from "../../../elements/Spaces";
-import {STD_BENIGN_COLOR, STD_COLOR_GRADIENT, STD_PATHOGENIC_COLOR, STD_UNCERTAIN_COLOR} from "./PredConstants";
+import {STD_BENIGN_COLOR, STD_PATHOGENIC_COLOR, STD_UNCERTAIN_COLOR} from "./PredConstants";
 import {pubmedRef} from "../../common/Common";
 import {Tooltip} from "../../common/Tooltip";
 
@@ -13,9 +13,9 @@ const PRECISION: number = 1 // dp
 
 // likely pathogenic (yellow) -25 <------> 0 likely benign (blue)
 export const ESM_SCORE_ATTR: PredAttr[] = [
-  {color: '#460556', stdColor: STD_BENIGN_COLOR , text: 'benign', tip: '-5 to 0 likely benign' },
-  {color: '#218c8f', stdColor: STD_UNCERTAIN_COLOR, text: 'uncertain', tip: '-10 to -5 uncertain significance' },
-  {color: '#f9e725', stdColor: STD_PATHOGENIC_COLOR, text: 'pathogenic', tip: '-25 to -10 likely pathogenic' }
+  {color: '#460556', stdColor: STD_BENIGN_COLOR , text: 'benign', tip: '-5 to 0 likely benign' },  // 5x4=20%
+  {color: '#218c8f', stdColor: STD_UNCERTAIN_COLOR, text: 'uncertain', tip: '-10 to -5 uncertain significance' },  // 5x4=20%
+  {color: '#f9e725', stdColor: STD_PATHOGENIC_COLOR, text: 'pathogenic', tip: '-25 to -10 likely pathogenic' } // 15x4=60%
 ]
 
 export const ESM_MAX_SCORE = -25
@@ -40,11 +40,11 @@ export function formatEsmScore(esm?: ESMScore) {
 
 function EsmPredIcon(props: {esm?: ESMScore, stdColor: boolean }) {
   if (props.esm) {
-    const colorGrad = props.stdColor ? STD_COLOR_GRADIENT : ESM_COLOR_GRADIENT;
-    const colorAtPos = colorGrad.rgbAt(props.esm.score/ ESM_MAX_SCORE).toHexString()
     const esmAttr = esmScoreAttr(props.esm.score)
+    const color = props.stdColor ? esmAttr?.stdColor :
+      ESM_COLOR_GRADIENT.rgbAt(props.esm.score/ ESM_MAX_SCORE).toHexString()
     return <Tooltip tip={esmAttr?.tip}>
-      <i className="bi bi-circle-fill" style={{color: colorAtPos}}></i>
+      <i className="bi bi-circle-fill" style={{color: color}}></i>
       <Spaces/>{esmAttr && <>
         {esmAttr.text}
       </>}
