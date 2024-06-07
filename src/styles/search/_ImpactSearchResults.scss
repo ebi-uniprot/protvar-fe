@@ -657,8 +657,9 @@
 		height: 1.5rem;
 	}
 	.esm1b-score-grad-std {
-		background-color: red;
-		background-image: linear-gradient(to right, blue, lightgray, red);
+		//background-color: red;
+		//background-image: linear-gradient(to right, blue, lightgray, red);
+		background: linear-gradient(to right, blue 0%, blue 20%, lightgray 20%, lightgray 40%, red 40%, red 100%);
 		width: 8rem;
 		height: 1.5rem;
 	}
