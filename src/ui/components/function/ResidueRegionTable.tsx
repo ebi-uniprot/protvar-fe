@@ -1,12 +1,11 @@
 import {useState, Fragment} from "react";
 import {EmptyElement} from "../../../constants/ConstElement";
-import {FEATURES} from "../../../constants/Protein";
 import AminoAcidModel from "./AminoAcidModel";
 import Evidences from "./Evidences";
 import {ReactComponent as ChevronDownIcon} from "../../../images/chevron-down.svg"
 import {v1 as uuidv1} from 'uuid';
 import {StringVoidFun} from "../../../constants/CommonTypes";
-import {aminoAcid3to1Letter, formatRange, getKeyValue} from "../../../utills/Util";
+import {aminoAcid3to1Letter, formatRange} from "../../../utills/Util";
 import {FunctionalResponse, Pocket, Foldx, P2PInteraction, ProteinFeature} from "../../../types/FunctionalResponse";
 import {MappingRecord} from "../../../utills/Convertor";
 import {Prediction, PUBMED_ID} from "./prediction/Prediction";
@@ -98,18 +97,23 @@ function getRegions(regions: Array<ProteinFeature>, accession: string, pockets: 
 }
 
 function getFeatureList(feature: ProteinFeature, key: string, expandedRowKey: string, toggleRow: StringVoidFun) {
-  let category = '';
+  /*let category = '';
   if (getKeyValue(feature.type)(FEATURES)) {
     category = getKeyValue(feature.type)(FEATURES);
   }
 
   if (feature.description) {
     category = category + '-' + feature.description;
+  }*/
+  let featureDesc = feature.typeDescription ? feature.typeDescription + (feature.description ? '-' + feature.description : '')
+    : (feature.description ? feature.description : '')
+  if (!featureDesc) {
+    featureDesc = 'Unnamed'
   }
 
   return <Fragment key={key}>
     <button type="button" className="collapsible" onClick={(e) => toggleRow(key)}>
-      {category ? category : 'Unnamed'}
+      {featureDesc}
       <ChevronDownIcon className="chevronicon"/>
     </button>
     {getFeatureDetail(key, feature, expandedRowKey)}
@@ -167,7 +171,6 @@ const getIcon = (score: number) => {
 const Pockets = (props: PocketsProps) => {
   const [itemsToShow, setItemsToShow] = useState(PAGE);
   const [filteredPockets, setFilteredPockets] = useState(props.pockets)
-  if (props.pockets.length === 0) return <></>;
   const filterPockets = (op: any) => {
     setFilteredPockets(props.pockets.filter(p => {
       if (op === 0) return p.score > 900
@@ -184,17 +187,20 @@ const Pockets = (props: PocketsProps) => {
       <ChevronDownIcon className="chevronicon"/>
     </button>
     {(key === props.expandedRowKey) &&
-      <>
-      <div className="pred-grid pred-grid-col2">
-        <div>Pocket confidence
-        </div>
-        <div><Dropdown className="pocket-select"
-            placeholder="Show all"
-            options={POCKET_OPTS}
-            onChange={(option) => filterPockets(option.value)}
+      (props.pockets.length === 0 ?
+      <div className="struct-pred">Variant not predicted to be in a pocket
+      </div> :
+      <div  className="struct-pred">
+        <div className="pred-grid pred-grid-col2">
+          <div>Pocket confidence
+          </div>
+          <div><Dropdown className="pred-pocket-conf-dropdown"
+                          placeholder="Show all"
+                         options={POCKET_OPTS}
+                         onChange={(option) => filterPockets(option.value)}
           />
+          </div>
         </div>
-      </div>
         {
           // show all
           /*filteredPockets.map((pocket) => {
@@ -204,7 +210,7 @@ const Pockets = (props: PocketsProps) => {
           // show more
           ShowMore_(filteredPockets, ShowPocket, itemsToShow, setItemsToShow, PAGE)
         }
-      </>
+      </div>)
     }
   </Fragment>
 }
@@ -251,8 +257,6 @@ interface InterfacesProps {
 }
 
 const Interfaces = (props: InterfacesProps) => {
-  if (props.interactions.length === 0) return <></>;
-
   let key = 'interfaces-0'
   return <Fragment key={key}>
     <button type="button" className="collapsible" onClick={(e) => props.toggleRow(key)}>
@@ -260,31 +264,35 @@ const Interfaces = (props: InterfacesProps) => {
       <ChevronDownIcon className="chevronicon"/>
     </button>
     {(key === props.expandedRowKey) &&
-      <>
-        Proteins which are predicted to interact with {props.accession} where the variant is at the interface:
-        <div className="pred-grid pred-grid-col2">
-          <div>Protein</div>
-          <Tooltip
-            tip="pDockQ is a confidence score based on the pLDDT model confidences and number of contacts at an interface. pDockQ>0.23, 70% are well modeled and for pDockQ>0.5, 80% are well modelled.">
-            pDockQ
-          </Tooltip>
-        </div>
-        {
-          // show all
-          /*props.interactions.map((interaction, index) => {
-            return ShowInteraction(props.accession, interaction, index)
-          })*/
-        }
-        {
-          // show more
-          ShowMore(props.interactions, ShowInteractionAcc(props.accession))
-        }
-        The interacting structure can be visualised in the 3D structure tab.
-      </>
+      (props.interactions.length === 0 ?
+        <div className="struct-pred">No P-P interaction predicted at variant position
+        </div> :
+        <div className="struct-pred">
+          Proteins which are predicted to interact with {props.accession} where the variant is at the interface:
+          <div className="pred-grid pred-grid-col2">
+            <div>Protein</div>
+            <Tooltip
+              tip="pDockQ is a confidence score based on the pLDDT model confidences and number of contacts at an interface. pDockQ>0.23, 70% are well modeled and for pDockQ>0.5, 80% are well modelled.">
+              pDockQ
+            </Tooltip>
+          </div>
+          {
+            // show all
+            props.interactions.map((interaction, index) => {
+              return ShowInteraction(props.accession, interaction, index)
+            })
+          }
+          {
+            // show more
+            //ShowMore(props.interactions, ShowInteractionAcc(props.accession))
+          }
+          The interacting structure can be visualised in the 3D structure tab.
+        </div>)
     }
   </Fragment>
 }
 
+/*
 function ShowInteractionAcc(acc: string) {
   return function(interaction: P2PInteraction, index: number) {
     return <div key={`interaction-${index + 1}`} className="pred-grid pred-grid-col2">
@@ -292,15 +300,14 @@ function ShowInteractionAcc(acc: string) {
       <div>{interaction.pdockq.toFixed(3)}</div>
     </div>
   }
-}
+}*/
 
-/*
 function ShowInteraction(accession: string, interaction: P2PInteraction, index: number) {
   return <div key={`interaction-${index + 1}`} className="pred-grid pred-grid-col2">
     <div>{accession === interaction.a ? interaction.b : interaction.a}</div>
     <div>{interaction.pdockq.toFixed(3)}</div>
   </div>
-}*/
+}
 
 function ShowMore(items:any[], showItem:any, page: number = PAGE) {
   const [itemsToShow, setItemsToShow] = useState(page);
