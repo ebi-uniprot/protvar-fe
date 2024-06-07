@@ -85,11 +85,9 @@ function getRegions(regions: Array<ProteinFeature>, accession: string, pockets: 
         return getFeatureList(region, `region-${idx}`, expandedRowKey, toggleRow);
       })
     }
-    {
-      (pockets.length > 0 || interactions.length > 0) && <div>
-        <b>Structure predictions</b>{pubmedRef(PUBMED_ID.INTERFACES)}
-      </div>
-    }
+    <div>
+      <b>Structure predictions</b>{pubmedRef(PUBMED_ID.INTERFACES)}
+    </div>
     <Pockets pockets={pockets} expandedRowKey={expandedRowKey} toggleRow={toggleRow}/>
     <Interfaces accession={accession} interactions={interactions} expandedRowKey={expandedRowKey}
                 toggleRow={toggleRow}/>
@@ -163,14 +161,16 @@ const POCKET_OPTS = [
 ]
 
 const getIcon = (score: number) => {
-  if(score > 900) return POCKET_ICONS[0]
-  else if(score >= 800 && score <= 900) return POCKET_ICONS[1]
+  if (score > 900) return POCKET_ICONS[0]
+  else if (score >= 800 && score <= 900) return POCKET_ICONS[1]
   else return POCKET_ICONS[2]
 }
 
 const Pockets = (props: PocketsProps) => {
   const [itemsToShow, setItemsToShow] = useState(PAGE);
   const [filteredPockets, setFilteredPockets] = useState(props.pockets)
+
+  if (props.pockets.length === 0) return <div className="struct-pred">Variant not predicted to be in a pocket</div>
   const filterPockets = (op: any) => {
     setFilteredPockets(props.pockets.filter(p => {
       if (op === 0) return p.score > 900
@@ -187,15 +187,12 @@ const Pockets = (props: PocketsProps) => {
       <ChevronDownIcon className="chevronicon"/>
     </button>
     {(key === props.expandedRowKey) &&
-      (props.pockets.length === 0 ?
-      <div className="struct-pred">Variant not predicted to be in a pocket
-      </div> :
-      <div  className="struct-pred">
+      <div className="struct-pred">
         <div className="pred-grid pred-grid-col2">
           <div>Pocket confidence
           </div>
           <div><Dropdown className="pred-pocket-conf-dropdown"
-                          placeholder="Show all"
+                         placeholder="Show all"
                          options={POCKET_OPTS}
                          onChange={(option) => filterPockets(option.value)}
           />
@@ -210,7 +207,7 @@ const Pockets = (props: PocketsProps) => {
           // show more
           ShowMore_(filteredPockets, ShowPocket, itemsToShow, setItemsToShow, PAGE)
         }
-      </div>)
+      </div>
     }
   </Fragment>
 }
@@ -257,6 +254,7 @@ interface InterfacesProps {
 }
 
 const Interfaces = (props: InterfacesProps) => {
+  if (props.interactions.length === 0) return <div className="struct-pred">No P-P interaction predicted at variant position</div>
   let key = 'interfaces-0'
   return <Fragment key={key}>
     <button type="button" className="collapsible" onClick={(e) => props.toggleRow(key)}>
@@ -264,30 +262,27 @@ const Interfaces = (props: InterfacesProps) => {
       <ChevronDownIcon className="chevronicon"/>
     </button>
     {(key === props.expandedRowKey) &&
-      (props.interactions.length === 0 ?
-        <div className="struct-pred">No P-P interaction predicted at variant position
-        </div> :
-        <div className="struct-pred">
-          Proteins which are predicted to interact with {props.accession} where the variant is at the interface:
-          <div className="pred-grid pred-grid-col2">
-            <div>Protein</div>
-            <Tooltip
-              tip="pDockQ is a confidence score based on the pLDDT model confidences and number of contacts at an interface. pDockQ>0.23, 70% are well modeled and for pDockQ>0.5, 80% are well modelled.">
-              pDockQ
-            </Tooltip>
-          </div>
-          {
-            // show all
-            props.interactions.map((interaction, index) => {
-              return ShowInteraction(props.accession, interaction, index)
-            })
-          }
-          {
-            // show more
-            //ShowMore(props.interactions, ShowInteractionAcc(props.accession))
-          }
-          The interacting structure can be visualised in the 3D structure tab.
-        </div>)
+      <div className="struct-pred">
+        Proteins which are predicted to interact with {props.accession} where the variant is at the interface:
+        <div className="pred-grid pred-grid-col2">
+          <div>Protein</div>
+          <Tooltip
+            tip="pDockQ is a confidence score based on the pLDDT model confidences and number of contacts at an interface. pDockQ>0.23, 70% are well modeled and for pDockQ>0.5, 80% are well modelled.">
+            pDockQ
+          </Tooltip>
+        </div>
+        {
+          // show all
+          props.interactions.map((interaction, index) => {
+            return ShowInteraction(props.accession, interaction, index)
+          })
+        }
+        {
+          // show more
+          //ShowMore(props.interactions, ShowInteractionAcc(props.accession))
+        }
+        The interacting structure can be visualised in the 3D structure tab.
+      </div>
     }
   </Fragment>
 }
@@ -315,19 +310,19 @@ function ShowMore(items:any[], showItem:any, page: number = PAGE) {
   return ShowMore_(items, showItem, itemsToShow, setItemsToShow, page)
 }*/
 
-function ShowMore_(items:any[], showItem:any, itemsToShow:number, setItemsToShow: any, page: number = 2) {
+function ShowMore_(items: any[], showItem: any, itemsToShow: number, setItemsToShow: any, page: number = 2) {
   const showmore = () => {
-    setItemsToShow(Math.min(itemsToShow+page, items.length))
+    setItemsToShow(Math.min(itemsToShow + page, items.length))
   }
   const showless = () => {
-    setItemsToShow(Math.max(itemsToShow-page, page))
+    setItemsToShow(Math.max(itemsToShow - page, page))
   }
   return (
     <div>
       {items.slice(0, itemsToShow).map((item, index) => showItem(item, index))}
       <div style={{textAlign: 'right'}}>
-      {(items.length > itemsToShow) && <button className="show-btn" onClick={showmore}>Show More</button>}
-      {(itemsToShow > page) && <button className="show-btn" onClick={showless}>Show Less</button>}
+        {(items.length > itemsToShow) && <button className="show-btn" onClick={showmore}>Show More</button>}
+        {(itemsToShow > page) && <button className="show-btn" onClick={showless}>Show Less</button>}
       </div>
     </div>
   )
