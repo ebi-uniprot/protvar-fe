@@ -104,7 +104,7 @@ export default function App() {
   }
 
   function fetchPasteResult(userInputString: string) {
-    const userInputs = userInputString.split("\n");
+    const userInputs = userInputString.split(/[\n,;|]/);
     formData.userInputs = userInputs;
     formData.file = null;
     setFormData(formData);
