@@ -6,7 +6,6 @@ import {LOCAL_DOWNLOADS, PV_FTP, TITLE} from "../../../constants/const"
 //import { v4 as uuidv4 } from 'uuid';
 import {DownloadResponse} from "../../../types/DownloadResponse";
 import Notify from "../../elements/Notify";
-import { MappingRecord } from "../../../utills/Convertor";
 
 /*
 function testDownloadRes() : DownloadResponse {
@@ -120,7 +119,7 @@ function downloadFile(url: string) {
     window.open(url, "_blank");
 }
 
-function DownloadPage(props: {searchResults: MappingRecord[][][]}) {
-    return <DefaultPageLayout content={<DownloadPageContent />} searchResults={props.searchResults}/>
+function DownloadPage() {
+    return <DefaultPageLayout content={<DownloadPageContent />} />
 }
 export default DownloadPage;

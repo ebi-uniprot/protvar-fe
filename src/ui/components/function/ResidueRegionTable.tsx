@@ -5,17 +5,26 @@ import Evidences from "./Evidences";
 import {ReactComponent as ChevronDownIcon} from "../../../images/chevron-down.svg"
 import {v1 as uuidv1} from 'uuid';
 import {StringVoidFun} from "../../../constants/CommonTypes";
-import {aminoAcid3to1Letter, formatRange} from "../../../utills/Util";
-import {FunctionalResponse, Pocket, Foldx, P2PInteraction, ProteinFeature} from "../../../types/FunctionalResponse";
-import {MappingRecord} from "../../../utills/Convertor";
+import {formatRange} from "../../../utills/Util";
+import {FunctionalResponse, Pocket, P2PInteraction, ProteinFeature} from "../../../types/FunctionalResponse";
+import {TranslatedSequence} from "../../../utills/Convertor";
 import {Prediction, PUBMED_ID} from "./prediction/Prediction";
 import {pubmedRef} from "../common/Common";
 import {Tooltip} from "../common/Tooltip";
 import {Dropdown} from "react-dropdown-now";
+import {AMScore, ConservScore, ESMScore, EVEScore} from "../../../types/MappingResponse";
 
-interface ResidueRegionTableProps {
+export interface ResidueRegionTableProps {
   functionalData: FunctionalResponse
-  record: MappingRecord
+  refAA: string
+  variantAA: string
+  ensg: string
+  ensp: Array<TranslatedSequence>
+  caddScore: string
+  conservScore: ConservScore
+  amScore: AMScore
+  eveScore: EVEScore
+  esmScore: ESMScore
 }
 
 function ResidueRegionTable(props: ResidueRegionTableProps) {
@@ -36,7 +45,6 @@ function ResidueRegionTable(props: ResidueRegionTableProps) {
           regions.push(feature);
       }
     });
-    const oneLetterVariantAA = aminoAcid3to1Letter(props.record.variantAA!);
     return <table>
       <tbody>
       <tr>
@@ -45,7 +53,7 @@ function ResidueRegionTable(props: ResidueRegionTableProps) {
       </tr>
       <tr>
         <td
-          style={{verticalAlign: 'top'}}>{getResidues(residues, props.record, props.functionalData.foldxs, oneLetterVariantAA, expandedRowKey, toggleRow)}</td>
+          style={{verticalAlign: 'top'}}>{getResidues(residues, props, expandedRowKey, toggleRow)}</td>
         <td
           style={{verticalAlign: 'top'}}>{getRegions(regions, props.functionalData.accession, props.functionalData.pockets, props.functionalData.interactions, expandedRowKey, toggleRow)}</td>
       </tr>
@@ -55,8 +63,7 @@ function ResidueRegionTable(props: ResidueRegionTableProps) {
   return EmptyElement
 }
 
-function getResidues(regions: Array<ProteinFeature>, record: MappingRecord, foldxs: Array<Foldx>, oneLetterVariantAA: string | null, expandedRowKey: string, toggleRow: StringVoidFun) {
-  let foldxs_ = oneLetterVariantAA ? foldxs.filter(foldx => foldx.mutatedType.toLowerCase() === oneLetterVariantAA) : foldxs
+function getResidues(regions: Array<ProteinFeature>, props: ResidueRegionTableProps, expandedRowKey: string, toggleRow: StringVoidFun) {
   return <>
     <b>Annotations from UniProt</b>
     {regions.length === 0 && <div>
@@ -68,8 +75,8 @@ function getResidues(regions: Array<ProteinFeature>, record: MappingRecord, fold
         return getFeatureList(region, `residue-${idx}`, expandedRowKey, toggleRow);
       })
     }
-    <AminoAcidModel refAA={record.refAA!} variantAA={record.variantAA!}/>
-    <Prediction record={record} foldxs={foldxs_}/>
+    <AminoAcidModel refAA={props.refAA} variantAA={props.variantAA!}/>
+    <Prediction {...props} />
   </>
 }
 

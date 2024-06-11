@@ -3,18 +3,25 @@ import "./InfoPop.css"
 import {AppContext} from "../../App";
 
 function ExampleInfoPop(props: {}) {
-  const context = useContext(AppContext)
+  const state = useContext(AppContext)
+  const toggleModal = () => {
+    state.updateState("showModal", state.showModal ? false : true);
+  }
+  const setModalContent = (newContent: JSX.Element) => {
+    state.updateState("modalContent", newContent);
+  }
+
   const openModalX = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     // relative position to trigger event/object
     // https://stackoverflow.com/questions/3234256/find-mouse-position-relative-to-element
     console.log(event.pageX)
     console.log(event.pageY)
-    context.setModalContent(<>XXX</>)
-    context.toggleModal()
+    setModalContent(<>XXX</>)
+    toggleModal()
   }
   const openModalY = () => {
-    context.setModalContent(<>YYY</>)
-    context.toggleModal()
+    setModalContent(<>YYY</>)
+    toggleModal()
   }
 
   return <>
@@ -24,19 +31,22 @@ function ExampleInfoPop(props: {}) {
 }
 
 export const InfoPop = () => {
-  const context = useContext(AppContext)
+  const state = useContext(AppContext)
+  const toggleModal = () => {
+    state.updateState("showModal", state.showModal ? false : true);
+  }
   return (
-    context.showModal ?
-      <div className="info-modal" onClick={context.toggleModal}>
+    state.showModal ?
+      <div className="info-modal" onClick={toggleModal}>
         {
           // <div style={{ top: '517px', left: '632px', width: '200px'}} className="info-modal-content" onClick={(e) => e.stopPropagation()}>
         }
         <div className="element-center"
              onClick={(e) => e.stopPropagation()}>
-        <span className="info-close" onClick={context.toggleModal}>
+        <span className="info-close" onClick={toggleModal}>
           &times;
         </span>
-          {context.modalContent}
+          {state.modalContent}
         </div>
       </div>
       :

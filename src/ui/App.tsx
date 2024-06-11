@@ -1,6 +1,6 @@
 import React, {createContext, ReactElement, useState} from "react";
 import {useNavigate, Route, Routes} from "react-router-dom";
-import HomePage from "./pages/home/HomePage";
+import HomePage, {NewHomePage} from "./pages/home/HomePage";
 import SearchResultsPage from "./pages/search/SearchResultPage";
 import APIErrorPage from "./pages/APIErrorPage";
 import {ERROR, INFO, WARN} from "../types/MappingResponse";
@@ -9,63 +9,126 @@ import {firstPage, Page} from "../utills/AppHelper";
 import AboutPage from "./pages/AboutPage";
 import ReleasePage from "./pages/ReleasePage";
 import ContactPage from "./pages/ContactPage";
-import {ABOUT, API_ERROR, CONTACT, DOWNLOAD, HOME, QUERY, SEARCH, HELP, RELEASE} from "../constants/BrowserPaths";
+import {ABOUT, API_ERROR, CONTACT, DOWNLOAD, HOME, QUERY, RESULT, HELP, RELEASE} from "../constants/BrowserPaths";
 import Notify from "./elements/Notify";
 import QueryPage from "./pages/query/QueryPage";
 import {Assembly} from "../constants/CommonTypes";
-import {mappings} from "../services/ProtVarService";
+import {getResult, mappings, postInput} from "../services/ProtVarService";
 import DownloadPage from "./pages/download/DownloadPage";
 import HelpPage from "./pages/help/HelpPage";
 import {FormData, initialFormData} from "../types/FormData";
+import {PagedMappingResponse} from "../types/PagedMappingResponse";
+import ResultPage from "./pages/result/ResultPage";
+import {PAGE_SIZE} from "../constants/const";
 
 const empty: ReactElement = <></>;
 
-const initialSettings = {
-  stdColor: true,
-  showModal: false,
-  modalContent: empty
+export interface AppState {
+  stdColor: boolean
+  showModal: boolean
+  modalContent: JSX.Element
+  // V2
+  textInput: string
+  numTextInput: number
+  file: File | null
+  assembly: Assembly
+  pageSize: number
+  response: PagedMappingResponse | null
+  updateState: (key: string, value: any) => void
 }
 
-export const AppContext = createContext({
-  ...initialSettings,
-  toggleStdColor: () => {},
-  toggleModal: () => {},
-  setModalContent: (elem: JSX.Element) => {}
-})
+export const initialState = {
+  stdColor: true,
+  showModal: false,
+  modalContent: empty,
+  // V2
+  textInput: "",
+  numTextInput: 0,
+  file: null,
+  assembly: Assembly.AUTO,
+  pageSize: PAGE_SIZE, // needs to be localStore, not appState
+  response: null,
+  updateState: (key: string, value: any) => {}
+}
+
+export const AppContext = createContext(initialState)
 
 export default function App() {
-  const toggleStdColor = () => {
-    setSettings(prevSettings => ({...prevSettings,
-      stdColor: prevSettings.stdColor ? false : true
-    }));
+  const navigate = useNavigate();
+
+  const updateState = (key: string, value: any) => {
+    setAppState(prevState => {
+      return {
+        ...prevState,
+        [key]: value
+      }
+    })
   }
 
-  const toggleModal = () => {
-    setSettings(prevSettings => ({...prevSettings,
-      showModal: prevSettings.showModal ? false : true
-    }));
+  // V2
+  const [newLoading, setNewLoading] = useState(false);
+  const [appState, setAppState] = useState({
+    ...initialState,
+    updateState
+  });
+
+  const submitInput = () => {
+    setNewLoading(true)
+    postInput(appState.textInput)
+      .then((response) => {
+        updateState("response", response.data)
+        updateState("pageSize", response.data.pageSize) // reset pageSize
+        const resultId = response.data.resultId
+        response.data.content.messages?.forEach(message => {
+          if (message.type === INFO) {
+            Notify.info(message.text)
+          } else if (message.type === WARN) {
+            Notify.warn(message.text)
+          } else if (message.type === ERROR) {
+            Notify.err(message.text)
+          }
+        });
+        navigate(`/home/result/${resultId}`)
+      })
+      .catch((err) => {
+        navigate(API_ERROR);
+        console.log(err);
+      })
+      .finally(() => setNewLoading(false));
   }
 
-  const setModalContent = (newContent: JSX.Element) => {
-    setSettings(prevSettings => ({...prevSettings,
-      modalContent: newContent
-    }));
+  // API /{id} = /{id}?pageNo=1
+  const getData = (id: string, pageNo?: number, pageSize?: number) => {
+    setNewLoading(true)
+    getResult(id, pageNo, pageSize).then((response) => {
+      updateState("response", response.data)
+      updateState("pageSize", response.data.pageSize)
+    })
+      .catch((err) => {
+        //props.history.push(API_ERROR);
+        setNewLoading(false)
+        console.log(err);
+      })
+      .finally(() => setNewLoading(false));
   }
 
-  const [settings, setSettings] = useState({
-    ...initialSettings,
-    toggleStdColor,
-    toggleModal,
-    setModalContent
-  })
+  // TODO - no need to cache this. use a diff singleInput endpoint maybe?
+  const getQueryData = (input: string) => {
+    postInput(input)
+      .then((response) => {
+        updateState("response", response.data)
+      })
+      .catch((err) => {
+        console.log(err);
+        throw err;
+      })
+  }
+  // <V2
 
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [page, setPage] = useState<Page>(firstPage(0));
   const [searchResults, setSearchResults] = useState<MappingRecord[][][]>([]);
-  const navigate = useNavigate();
-
-
 
   // MappingRecord 3d array -> [][][] list of mappings/genes/isoforms
     // mappings : [
@@ -185,7 +248,7 @@ export default function App() {
                 Notify.err(message.text)
             }
         });
-        navigate(SEARCH);
+        navigate(RESULT);
       })
       .catch((err) => {
         navigate(API_ERROR);
@@ -194,8 +257,14 @@ export default function App() {
       .finally(() => setLoading(false));
   }
 
-  return (<AppContext.Provider value={settings}>
+  return (<AppContext.Provider value={appState}>
     <Routes>
+      {/* V2 */ }
+      <Route path="/home"
+             element={<NewHomePage loading={newLoading} submitInput={submitInput} />} />
+      <Route path="/home/result/:id?"
+             element={<ResultPage loading={newLoading} getData={getData} />} />
+      {/* <V2 */ }
       <Route
         path={HOME}
         element={<HomePage
@@ -207,7 +276,7 @@ export default function App() {
             searchResults={searchResults}
           />} />
       <Route
-        path={SEARCH}
+        path={RESULT}
         element={<SearchResultsPage
             rows={searchResults}
             page={page}
@@ -215,12 +284,12 @@ export default function App() {
             fetchNextPage={fetchPage}
             loading={loading}
           />} />
-      <Route path={QUERY} element={<QueryPage />} />
+      <Route path={QUERY} element={<QueryPage getQueryData={getQueryData} />} />
       <Route path={API_ERROR} element={<APIErrorPage />} />
       <Route path={ABOUT} element={<AboutPage />} />
       <Route path={RELEASE} element={<ReleasePage />} />
       <Route path={CONTACT} element={<ContactPage />} />
-      <Route path={DOWNLOAD} element={<DownloadPage searchResults={searchResults}/>} />
+      <Route path={DOWNLOAD} element={<DownloadPage />} />
       <Route path={HELP} element={<HelpPage />} />
     </Routes>
     </AppContext.Provider>);

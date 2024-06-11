@@ -3,9 +3,10 @@ import {downloadFileInput,downloadTextInput} from "../../services/ProtVarService
 import {DownloadResponse} from "../../types/DownloadResponse";
 import {LOCAL_DOWNLOADS} from "../../constants/const";
 import {FormData} from '../../types/FormData'
+import {AppState} from "../App";
 
-export function processDownload(formData: FormData, functional: boolean, population: boolean, structure: boolean,
-                                email: string, jobName: string) {
+export function processDownload(functional: boolean, population: boolean, structure: boolean,
+                                email: string, jobName: string, state: AppState, formData?: FormData) {
 
     const handleSucc = (downloadRes: DownloadResponse) => {
         let localDownloads = JSON.parse(localStorage.getItem(LOCAL_DOWNLOADS) || "[]")
@@ -17,13 +18,22 @@ export function processDownload(formData: FormData, functional: boolean, populat
         Notify.err(`Job ${jobName} failed. Please try again.`)
     }
 
-    if (formData.file !== null) {
-        downloadFileInput(formData.file, formData.assembly.toString(), email, jobName, functional, population, structure)
-            .then((response ) => handleSucc(response.data))
-            .catch(handleErr);
+    let file = formData?.file || state.file || null;
+    let assembly = formData?.assembly?.toString() || state.assembly.toString();
+    let userInputs: string[] = [];
+
+    if (!file) {
+        userInputs = formData?.userInputs ||
+          state.textInput.split(/[\n,]/).filter(i => !i.trimStart().startsWith("#"));
+    }
+
+    if (file) {
+        downloadFileInput(file, assembly, email, jobName, functional, population, structure)
+          .then((response) => handleSucc(response.data))
+          .catch(handleErr);
     } else {
-        downloadTextInput(formData.userInputs, formData.assembly.toString(), email, jobName, functional, population, structure)
-            .then((response ) => handleSucc(response.data))
-            .catch(handleErr);
+        downloadTextInput(userInputs, assembly, email, jobName, functional, population, structure)
+          .then((response) => handleSucc(response.data))
+          .catch(handleErr);
     }
 }

@@ -1,6 +1,6 @@
 import {TOTAL_COLS} from "../../../constants/SearchResultTable";
 import { MappingRecord } from "../../../utills/Convertor";
-import {ERROR, INFO, Message, WARN} from "../../../types/MappingResponse";
+import {ERROR, INFO, InputType, Message, WARN} from "../../../types/MappingResponse";
 
 interface MsgRowProps {
   record: MappingRecord,
@@ -31,5 +31,16 @@ const MsgRow = (props: MsgRowProps) => {
     </td>
   </tr>
 };
+
+// V2
+export const NewMsgRow = (props: {msg: Message, input?: InputType}) => {
+  return <tr>
+    <td colSpan={TOTAL_COLS}>
+      {getIcon(props.msg)}
+      <b>{props.input && props.input.inputStr}</b> {props.msg.text}
+    </td>
+  </tr>
+};
+// <V2
 
 export default MsgRow;

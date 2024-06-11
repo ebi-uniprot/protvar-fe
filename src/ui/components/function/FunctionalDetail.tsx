@@ -2,18 +2,27 @@ import { useState, useEffect } from 'react';
 import NoFunctionalDataRow from './NoFunctionalDataRow';
 import FunctionalDataRow from './FunctionalDataRow';
 import LoaderRow from '../search/LoaderRow';
-import {MappingRecord} from '../../../utills/Convertor';
+import {TranslatedSequence} from '../../../utills/Convertor';
 import {getFunctionalData} from "../../../services/ProtVarService";
 import {FunctionalResponse} from "../../../types/FunctionalResponse";
+import {AMScore, ConservScore, ESMScore, EVEScore} from "../../../types/MappingResponse";
 
 
 interface FunctionalDetailProps {
   referenceFunctionUri: string
-  record: MappingRecord
+  refAA: string
+  variantAA: string
+  ensg: string
+  ensp: Array<TranslatedSequence>
+  caddScore: string
+  conservScore: ConservScore
+  amScore: AMScore
+  eveScore: EVEScore
+  esmScore: ESMScore
 }
 
 function FunctionalDetail(props: FunctionalDetailProps) {
-  const { referenceFunctionUri, record } = props;
+  const { referenceFunctionUri } = props;
   const [apiData, setApiData] = useState<FunctionalResponse>()
   useEffect(() => {
     getFunctionalData(referenceFunctionUri).then(
@@ -25,7 +34,7 @@ function FunctionalDetail(props: FunctionalDetailProps) {
   if (!apiData)
     return <LoaderRow />
   else if (apiData.id)
-    return <FunctionalDataRow functionalData={apiData} record={record} />
+    return <FunctionalDataRow functionalData={apiData} {...props} />
   else
     return <NoFunctionalDataRow />;
 }

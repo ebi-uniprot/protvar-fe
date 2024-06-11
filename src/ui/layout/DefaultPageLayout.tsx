@@ -8,12 +8,10 @@ import DefaultPageContent from './DefaultPageContent'
 import EMBLEBILogo from '../../images/embl-ebi-logo.svg'
 import openTargetsLogo from '../../images/open-targets-logo.png'
 import SignUp from "./SignUp";
-import { MappingRecord } from '../../utills/Convertor'
 import {WARN_ICON} from "../components/search/MsgRow";
 import {CookieConsent} from "react-cookie-consent";
 interface DefaultPageLayoutProps {
-  content: JSX.Element,
-  searchResults?: MappingRecord[][][]
+  content: JSX.Element
 }
 
 const bannerText = "AlphaMissense prediction has replaced EVE score in the main table. You can now find EVE score under Predictions in the Functional Information section."
@@ -187,7 +185,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
               )}
 
               <div className="default-page-layout">
-                <DefaultPageContent downloadCount={numDownloads} searchResults={props.searchResults}>
+                <DefaultPageContent downloadCount={numDownloads}>
                   {content}
                 </DefaultPageContent>
               </div>

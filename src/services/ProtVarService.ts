@@ -6,6 +6,7 @@ import {PopulationObservationResponse} from "../types/PopulationObservationRespo
 import {ProteinStructureResponse} from "../types/ProteinStructureResponse";
 import MappingResponse from "../types/MappingResponse";
 import {DownloadResponse} from "../types/DownloadResponse";
+import {PagedMappingResponse} from "../types/PagedMappingResponse";
 
 
 const instance = axios.create({
@@ -86,3 +87,23 @@ export function getDownloadStatus(ids: string[]) {
         }
     );
 }
+
+// V2
+export function postInput( textInput: string) {
+  return api.post<PagedMappingResponse>(
+    `${API_URL}/mappings/textInput`, textInput,
+    {
+      headers: { "Content-Type": "text/plain" }
+    }
+  );
+}
+export function getResult(id: string, pageNo?: number, pageSize?: number) {
+  return api.get<PagedMappingResponse>(
+    `${API_URL}/input/${id}`,
+    {
+      params : { pageNo, pageSize },
+      headers: API_HEADERS,
+    }
+  );
+}
+// <V2

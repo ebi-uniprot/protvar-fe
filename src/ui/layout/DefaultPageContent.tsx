@@ -1,13 +1,24 @@
 import { NavLink } from 'react-router-dom'
-import { DOWNLOAD, HOME, SEARCH } from '../../constants/BrowserPaths'
-import { MappingRecord } from '../../utills/Convertor'
+import { DOWNLOAD, HOME } from '../../constants/BrowserPaths'
+import {useContext, useEffect, useState} from "react";
+import {AppContext, AppState} from "../App";
 
 const DefaultPageContent = (props: {
   children: JSX.Element
   downloadCount: number
-  searchResults?: MappingRecord[][][]
 }) => {
-  const { children, downloadCount, searchResults } = props
+  const state: AppState = useContext(AppContext)
+  const { children, downloadCount } = props
+  const [enableLink, setEnableLink] = useState(false)
+  const [link, setLink] = useState("/home/result")
+
+  useEffect(() => {
+    if (state.response && state.response.resultId) {
+      setLink("/home/result/" + state.response.resultId)
+      setEnableLink(true)
+    }
+  }, [state]);
+
   return (
     <div className="default-page-content">
       <div className="sidebar">
@@ -17,9 +28,9 @@ const DefaultPageContent = (props: {
               <NavLink to={HOME}>Search</NavLink>
             </li>
             <li className="sidebar-menu">
-              {searchResults?.length ?
-                <NavLink to={SEARCH}>Results</NavLink> :
-                <NavLink to={SEARCH} className="disabled">Results</NavLink>
+              {enableLink ?
+                <NavLink to={link}>Results</NavLink> :
+                <NavLink to={link} className="disabled">Results</NavLink>
               }
             </li>
             <li className="sidebar-menu">

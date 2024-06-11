@@ -46,6 +46,6 @@ function SearchResultsPageContent(props: SearchResultPageProps) {
 }
 
 function SearchResultPage(props: SearchResultPageProps) {
-  return <DefaultPageLayout content={<SearchResultsPageContent {...props} /> } searchResults={props.rows} />
+  return <DefaultPageLayout content={<SearchResultsPageContent {...props} /> } />
 }
 export default SearchResultPage;

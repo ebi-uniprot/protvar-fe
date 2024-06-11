@@ -1,14 +1,14 @@
-import {MappingRecord} from "../../../../utills/Convertor";
 import {ConservPred} from "./ConservPred";
 import {AlphaMissensePred} from "./AlphaMissensePred";
 import {EvePred} from "./EvePred";
 import {EsmPred} from "./EsmPred";
 import {FoldxPred} from "./FoldxPred";
-import {Foldx} from "../../../../types/FunctionalResponse";
 import {useContext} from "react";
 import {AppContext} from "../../../App";
 import {CaddScorePred} from "./CaddScorePred";
 import {ColourCheckbox} from "../../../modal/ColourCheckbox";
+import {ResidueRegionTableProps} from "../ResidueRegionTable";
+import {aminoAcid3to1Letter} from "../../../../utills/Util";
 
 export type PredAttr = {
   text: string,
@@ -27,21 +27,25 @@ export const PUBMED_ID = {
   INTERFACES: 36690744
 }
 
-export const Prediction = (props: { record: MappingRecord, foldxs: Array<Foldx> }) => {
-  const {stdColor, toggleStdColor} = useContext(AppContext);
+export const Prediction = (props: ResidueRegionTableProps) => {
+  const state = useContext(AppContext);
+  const oneLetterVariantAA = aminoAcid3to1Letter(props.variantAA);
+  const foldxs = props.functionalData.foldxs
+  let foldxs_ = oneLetterVariantAA ? foldxs.filter(foldx => foldx.mutatedType.toLowerCase() === oneLetterVariantAA) : foldxs
+
   return <><br/>
-    <ConservPred conserv={props.record.conservScore} stdColor={stdColor} />
+    <ConservPred conserv={props.conservScore} stdColor={state.stdColor} />
     <b>Structure predictions</b><br/>
-    <FoldxPred foldxs={props.foldxs}/>
+    <FoldxPred foldxs={foldxs_}/>
     <b>Pathogenicity predictions</b><br/>
-    {(!props.record.cadd && !props.record.amScore && !props.record.eveScore && !props.record.esmScore) &&
+    {(!props.caddScore && !props.amScore && !props.eveScore && !props.esmScore) &&
       <div>No predictions available for this variant</div>
     }
-    <CaddScorePred cadd={props.record.cadd} stdColor={stdColor}/>
-    <AlphaMissensePred am={props.record.amScore} stdColor={stdColor}/>
-    <EvePred eve={props.record.eveScore} stdColor={stdColor}/>
-    <EsmPred esm={props.record.esmScore} stdColor={stdColor}/>
-    <ColourCheckbox stdColor={stdColor} toggleStdColor={toggleStdColor}/>
+    <CaddScorePred cadd={props.caddScore} stdColor={state.stdColor}/>
+    <AlphaMissensePred am={props.amScore} stdColor={state.stdColor}/>
+    <EvePred eve={props.eveScore} stdColor={state.stdColor}/>
+    <EsmPred esm={props.esmScore} stdColor={state.stdColor}/>
+    <ColourCheckbox state={state} />
   </>
 }
 

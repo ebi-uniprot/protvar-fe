@@ -12,7 +12,7 @@ import {AppContext} from "../App";
 import {ColourCheckbox} from "./ColourCheckbox";
 
 function LegendModal() {
-  const context = useContext(AppContext)
+  const state = useContext(AppContext)
   const [showModel, setShowModel] = useState(false)
 
   const downloadModelDiv = useRef(null)
@@ -20,7 +20,6 @@ function LegendModal() {
     downloadModelDiv,
     useCallback(() => setShowModel(false), []),
   )
-
 
   return (
     <div
@@ -46,22 +45,22 @@ function LegendModal() {
         </div>
         <div className="legend-modal-content">
           <div className="legend-div">
-            <CaddLegend stdColor={context.stdColor} />
+            <CaddLegend stdColor={state.stdColor} />
           </div>
           <div className="legend-div">
-            <ConservLegend stdColor={context.stdColor} /><br/>
-            <AlphaMissenseLegend stdColor={context.stdColor} />
+            <ConservLegend stdColor={state.stdColor} /><br/>
+            <AlphaMissenseLegend stdColor={state.stdColor} />
           </div>
           <div className="legend-div">
-            <EsmLegend stdColor={context.stdColor} /><br/>
-            <EveLegend stdColor={context.stdColor} />
+            <EsmLegend stdColor={state.stdColor} /><br/>
+            <EveLegend stdColor={state.stdColor} />
           </div>
           <div className="legend-div">
             <AnnotationLegend/>
           </div>
         </div>
         <div className="padding-left-right-1x float-right">
-          <ColourCheckbox stdColor={context.stdColor} toggleStdColor={context.toggleStdColor} />
+          <ColourCheckbox state={state} />
         </div>
       </Modal>
     </div>
