@@ -14,6 +14,7 @@ import HelpPage from "./pages/help/HelpPage";
 import {PagedMappingResponse} from "../types/PagedMappingResponse";
 import ResultPage from "./pages/result/ResultPage";
 import {PAGE_SIZE} from "../constants/const";
+import {LocalStorageProvider} from "../provider/LocalStorageContextProps";
 
 const empty: ReactElement = <></>;
 
@@ -46,6 +47,7 @@ export const initialState = {
 export const AppContext = createContext(initialState)
 
 export default function App() {
+
   const updateState = (key: string, value: any) => {
     setAppState(prevState => {
       return {
@@ -74,6 +76,7 @@ export default function App() {
   // <V2
 
   return (<AppContext.Provider value={appState}>
+    <LocalStorageProvider>
     <Routes>
       <Route path={HOME} element={<HomePage />} />
       <Route path={`${RESULT}/:id`} element={<ResultPage />} />
@@ -85,5 +88,6 @@ export default function App() {
       <Route path={DOWNLOAD} element={<DownloadPage />} />
       <Route path={HELP} element={<HelpPage />} />
     </Routes>
+      </LocalStorageProvider>
     </AppContext.Provider>);
 }
