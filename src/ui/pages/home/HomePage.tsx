@@ -1,22 +1,11 @@
 import DefaultPageLayout from '../../layout/DefaultPageLayout'
-import { FileLoadFun } from '../../../utills/AppHelper'
-import { Assembly, StringVoidFun } from '../../../constants/CommonTypes'
-import { Link } from 'react-router-dom'
-import { ABOUT, CONTACT } from '../../../constants/BrowserPaths'
+import {Link} from 'react-router-dom'
+import {ABOUT, CONTACT} from '../../../constants/BrowserPaths'
 import {API_URL, TITLE} from '../../../constants/const'
-import SearchVariant, {NewSearchVariant} from './SearchVariant'
-import { MappingRecord } from '../../../utills/Convertor'
-import {FormData} from '../../../types/FormData'
+import SearchVariant from './SearchVariant'
 import React, {useEffect} from "react";
 
-const HomePageContent = (props: HomePageProps) => {
-  const {
-    loading,
-    formData,
-    updateAssembly,
-    fetchFileResult,
-    fetchPasteResult,
-  } = props
+const HomePageContent = () => {
 
   useEffect(() => {
     document.title = TITLE;
@@ -36,13 +25,7 @@ const HomePageContent = (props: HomePageProps) => {
         </p>
       </div>
       <div className='search-page-layout'>
-        <SearchVariant
-          isLoading={loading}
-          assembly={formData.assembly}
-          updateAssembly={updateAssembly}
-          fetchPasteResult={fetchPasteResult}
-          fetchFileResult={fetchFileResult}
-        />
+        <SearchVariant />
       </div>
       <div style={{display: 'grid', gridTemplateColumns: '60% auto'}}>
         <div style={{paddingTop: '20px'}}>
@@ -84,87 +67,7 @@ const HomePageContent = (props: HomePageProps) => {
   )
 }
 
-interface HomePageProps {
-  loading: boolean
-  formData: FormData
-  updateAssembly: (assembly: Assembly) => void
-  fetchFileResult: FileLoadFun
-  fetchPasteResult: StringVoidFun
-  searchResults: MappingRecord[][][]
-}
-
-const HomePage = (props: HomePageProps) => (
-  <DefaultPageLayout content={<HomePageContent {...props} />} />
-)
-
-const NewHomePageContent = (props: NewHomePageProps) => {
-  const { loading, submitInput } = props
-
-  useEffect(() => {
-    document.title = TITLE;
-  }, []);
-
-  return (
-    <>
-      <div>
-        <p>
-          ProtVar (<strong>Prot</strong>ein <strong>Var</strong>iation) is a
-          resource to investigate missense variation in humans by presenting
-          annotations which may be relevant to interpretation.
-          <br />
-          Variants can be submitted below in genomic or protein formats,
-          uploaded or accessed via our{' '}
-          <Link
-            to=""
-            onClick={() => window.open(API_URL + '/docs', '_blank')}
-            title="ProtVar REST API"
-            target="_blank"
-            rel="noreferrer"
-            className='ref-link'
-          >
-            {' '}
-            API{' '}
-          </Link>
-          .
-        </p>
-      </div>
-      <div className='search-page-layout'>
-        <NewSearchVariant
-          loading={loading}
-          submitInput={submitInput}
-        />
-      </div>
-      <div>
-        <br/>
-        <p className="info">
-          Further information can be found in the{' '}
-          <Link to={ABOUT} title="About ProtVar's" className="ref-link">
-            ABOUT
-          </Link>{' '}
-          section. Please{' '}
-          <Link to={CONTACT} title="Contact us" className="ref-link">
-            CONTACT
-          </Link>{' '}
-          us with specific queries or suggestions.
-        </p>
-      </div>
-      <div className='twitter-content'>
-
-        <br/>
-        <a className="twitter-timeline" data-width="400" data-height="300" data-theme="light"
-           data-chrome="noheader nofooter noborders transparent"
-           href="https://twitter.com/EBIProtVar?ref_src=twsrc%5Etfw">Tweets by EBIProtVar</a>
-      </div>
-    </>
-  )
-}
-
-interface NewHomePageProps {
-  loading: boolean
-  submitInput: any
-}
-
-export const NewHomePage = (props: NewHomePageProps) => (
-  <DefaultPageLayout content={<NewHomePageContent {...props} />} />
+export const HomePage = () => (
+  <DefaultPageLayout content={<HomePageContent />} />
 )
 export default HomePage

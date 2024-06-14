@@ -2,10 +2,10 @@ import Button from '../../elements/form/Button';
 import { Dropdown } from 'react-dropdown-now';
 import 'react-dropdown-now/style.css';
 import { NextPageFun, Page } from "../../../utills/AppHelper";
-import {AppContext, AppState} from "../../App";
-import {useContext} from "react";
-import {useNavigate} from "react-router-dom";
-import {PAGE_SIZES} from "../../../constants/const";
+import {useNavigate, useSearchParams} from "react-router-dom";
+import {PAGE_SIZE, PAGE_SIZES} from "../../../constants/const";
+import {PagedMappingResponse} from "../../../types/PagedMappingResponse";
+import {RESULT} from "../../../constants/BrowserPaths";
 
 interface PaginationRowProps {
   page: Page
@@ -62,81 +62,81 @@ function PaginationRow(props: PaginationRowProps) {
 // V2
 interface NewPaginationRowProps {
   loading: boolean
-  getData: any
+  data: PagedMappingResponse | null
+  loadData: any
+  pageSize: number
+  setPageSize: any
 }
 export function NewPaginationRow(props: NewPaginationRowProps) {
-  const state: AppState = useContext(AppContext)
   const navigate = useNavigate();
-  const { loading, getData } = props;
+  const [searchParams] = useSearchParams();
+  const assembly = searchParams.get("assembly")
+  const { loading, data, loadData, pageSize, setPageSize } = props;
 
-  function hasPrev() {
-    if (state.response && state.response?.pageNo > 1) {
-      return true
-    }
-    return false;
-  }
-
-  function hasNext() {
-    if (state.response && !state.response.last) {
-      return true
-    }
-    return false;
-  }
   function prevPage() {
-    const currPage = state.response?.pageNo
-    if (currPage && currPage > 1) {
-      const prev = currPage - 1
-      changePage(prev)
+    if (data) {
+      changePage(data.page-1)
     }
   }
 
   function nextPage() {
-    if (state.response && !state.response.last) {
-      const next = state.response?.pageNo + 1
-      changePage(next)
+    if (data) {
+      changePage(data.page + 1)
     }
   }
 
   function changePage(p: number) {
-    const resultId = state.response?.resultId;
-    getData(resultId, p, state.pageSize);
-    const url = p === 1
-      ? `/home/result/${resultId}`
-      : `/home/result/${resultId}?page=${p}`;
-    navigate(url);
+    if (data) {
+      loadData(data.id, assembly, p, pageSize);
+      if (p === 1)
+        searchParams.delete("page");
+      else
+        searchParams.set("page", p.toString());
+
+      const url = `${RESULT}/${data.id}${searchParams.size > 0 ? `?${searchParams.toString()}` : ``}`
+      navigate(url);
+    }
   }
 
   function changePageSize(newPageSize: any) {
-    if (newPageSize !== state.pageSize) {
-      state.updateState("pageSize", newPageSize);
-      const resultId = state.response?.resultId;
-      getData(resultId, 1, newPageSize);
-      navigate(`/home/result/${resultId}`);
+    if (data && newPageSize !== pageSize) {
+      setPageSize(newPageSize);
+      loadData(data.id, assembly, 1, newPageSize);// go back to page 1
+      searchParams.delete("page");
+
+      if (newPageSize === PAGE_SIZE)
+        searchParams.delete("pageSize");
+      else
+        searchParams.set("pageSize", newPageSize.toString());
+
+      const url = `${RESULT}/${data.id}${searchParams.size > 0 ? `?${searchParams.toString()}` : ``}`
+      navigate(url);
     }
   }
 
   return <table className="table-header">
     <tbody>
     <tr>
-      <td >
-        <Button className={'pagination-button'} onClick={prevPage} loading={loading} disabled={!hasPrev()}>
-          <i className="bi bi-chevron-compact-left" /> Prev
+      <td>
+        <Button className={'pagination-button'} onClick={prevPage} loading={loading} disabled={data === null || data.page === 1}>
+          <i className="bi bi-chevron-compact-left"/> Prev
         </Button>
       </td>
       <td>
-        {state.response?.pageNo} / {state.response?.totalPages}
+        {data && `${data.page} / ${data.totalPages}`}
       </td>
       <td>
-        <Button className={'pagination-button'} onClick={nextPage} loading={loading} disabled={!hasNext()}>
-          Next <i className="bi bi-chevron-compact-right" />
+        <Button className={'pagination-button'} onClick={nextPage} loading={loading} disabled={data === null || data.last}>
+          Next <i className="bi bi-chevron-compact-right"/>
         </Button>
       </td>
       <td>
         <Dropdown
           placeholder="Pages"
-          options={addAndSort(PAGE_SIZES, state.response?.pageSize)}
-          value={state.pageSize}
+          options={PAGE_SIZES}
+          value={pageSize}
           onChange={(option) => changePageSize(option.value)}
+          disabled={data === undefined}
         />
       </td>
     </tr>
@@ -144,12 +144,5 @@ export function NewPaginationRow(props: NewPaginationRowProps) {
   </table>
 }
 
-function addAndSort(array: number[], num?: number | null): number[] {
-  if (num != null && !array.includes(num)) {
-    array.push(num);
-    array.sort((a, b) => a - b);
-  }
-  return array;
-}
 // <V2
 export default PaginationRow;

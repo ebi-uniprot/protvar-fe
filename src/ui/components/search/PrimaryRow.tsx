@@ -228,10 +228,10 @@ export const aaChangeStr = (ref: string, alt: string) => {
   return ref + '/' + alt
 }
 
-export const getNewPrimaryRow = (index: number, input: GenomicInput, originalInput: InputType, gene: Gene, isoform: IsoFormMapping, toggleOpenGroup: string, isoFormGroupExpanded: string, toggleIsoFormGroup: StringVoidFun,
+export const getNewPrimaryRow = (isoformKey: string, index: number, input: GenomicInput, originalInput: InputType, gene: Gene, isoform: IsoFormMapping, isoFormGroupExpanded: string, toggleIsoFormGroup: StringVoidFun,
                                  annotationExpanded: string, toggleAnnotation: StringVoidFun, hasAltIsoForm: boolean, stdColor: boolean) => {
 
-  const caddAttr = caddScoreAttr(gene.caddScore.toString())
+  const caddAttr = caddScoreAttr(gene.caddScore?.toString())
   const amAttr = amScoreAttr(isoform.amScore?.amClass)
 
   let codon = isoform.refCodon + '/' + isoform.variantCodon;
@@ -252,10 +252,9 @@ export const getNewPrimaryRow = (index: number, input: GenomicInput, originalInp
   }
 
   const positionUrl = ENSEMBL_VIEW_URL + input.chr + ':' + input.pos + '-' + input.pos;
-  const expandedGroup = isoform.accession + '-' + input.pos + '-' + input.alt;
-  const functionalKey = 'functional-' + expandedGroup;
-  const structuralKey = 'structural-' + expandedGroup;
-  const populationKey = 'population-' + expandedGroup;
+  const functionalKey = 'functional-' + isoformKey;
+  const structuralKey = 'structural-' + isoformKey;
+  const populationKey = 'population-' + isoformKey;
 
   let aaChange = aaChangeStr(isoform.refAA, isoform.variantAA)
 
@@ -269,8 +268,7 @@ export const getNewPrimaryRow = (index: number, input: GenomicInput, originalInp
     });
     ensp = ensps;
   }
-
-  return <Fragment key={`${index}-${toggleOpenGroup}-${isoform.accession}`}>
+  return <Fragment key={isoformKey}>
     <tr style={rowBg(index)} title={'Input: ' + input.inputStr}>
       <td style={inputStyle.gen}>
         <Tool tip="Click to see the a summary for this chromosome from Ensembl" pos="up-left">
@@ -305,7 +303,7 @@ export const getNewPrimaryRow = (index: number, input: GenomicInput, originalInp
       <td>
         <Tool className="score-box" style={{ backgroundColor: (stdColor ? caddAttr?.stdColor : caddAttr?.color) }} tip={`${caddAttr?.range} ${caddAttr?.text}`}>
           <a href={CADD_INFO_URL} target="_blank" rel="noopener noreferrer" style={{color: 'white'}}>
-            {formatCaddScore(gene.caddScore.toString())}
+            {formatCaddScore(gene.caddScore?.toString())}
           </a>
         </Tool>
       </td>
@@ -321,11 +319,11 @@ export const getNewPrimaryRow = (index: number, input: GenomicInput, originalInp
             <Spaces/>
             <Tool
               el="button"
-              onClick={() => toggleIsoFormGroup(toggleOpenGroup)}
+              onClick={() => toggleIsoFormGroup(isoformKey)}
               className="button button--toggle-isoforms"
-              tip={isoFormGroupExpanded !== toggleOpenGroup ? "Show more isoforms" : "Hide isoforms"}
+              tip={isoFormGroupExpanded !== isoformKey ? "Show more isoforms" : "Hide isoforms"}
             >
-              {isoFormGroupExpanded !== toggleOpenGroup ?
+              {isoFormGroupExpanded !== isoformKey ?
                 <ChevronDownIcon className="toggle-isoforms"/> : <ChevronUpIcon className="toggle-isoforms"/>}
             </Tool>
           </>}
@@ -367,7 +365,7 @@ export const getNewPrimaryRow = (index: number, input: GenomicInput, originalInp
     {functionalKey === annotationExpanded &&
       <Suspense fallback={<LoaderRow />}>
         <FunctionalDetail
-          caddScore={gene.caddScore.toString()}
+          caddScore={gene.caddScore?.toString()}
           conservScore={isoform.conservScore}
           amScore={isoform.amScore}
           eveScore={isoform.eveScore}

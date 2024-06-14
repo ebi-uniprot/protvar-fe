@@ -2,10 +2,14 @@ import { MappingResponse } from "./MappingResponse";
 
 export interface PagedMappingResponse {
   content: MappingResponse
-  resultId: string
-  pageNo: number
+  id: string
+  page: number
   pageSize: number
-  totalElements: number
+  totalItems: number
   totalPages: number
   last: boolean
+}
+
+export interface IDResponse {
+  id: string
 }

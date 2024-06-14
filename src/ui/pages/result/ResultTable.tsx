@@ -15,7 +15,7 @@ import {getAlternateIsoFormRow} from "../../components/search/AlternateIsoFormRo
 import {getNewPrimaryRow} from "../../components/search/PrimaryRow";
 import {AppContext, AppState} from "../../App";
 
-function ResultTable() {
+function ResultTable(props: {data: PagedMappingResponse | null}) {
   const state: AppState = useContext(AppContext)
   const [isoFormGroupExpanded, setIsoFormGroupExpanded] = useState('')
   const [annotationExpanded, setAnnotationExpanded] = useState('')
@@ -28,7 +28,7 @@ function ResultTable() {
     setAnnotationExpanded(annotationExpanded === key ? '' : key);
   }
 
-  const tableRows = getTableRows(state.response, isoFormGroupExpanded, toggleIsoFormGroup, annotationExpanded, toggleAnnotation, state.stdColor);
+  const tableRows = getTableRows(props.data, isoFormGroupExpanded, toggleIsoFormGroup, annotationExpanded, toggleAnnotation, state.stdColor);
   return <table className="" cellPadding="0" cellSpacing="0" id="resultTable">
     <thead>
     <tr>
@@ -78,17 +78,20 @@ const getTableRows = (data: PagedMappingResponse | null, isoFormGroupExpanded: s
 
   data?.content.messages?.forEach((m, mIdx) => {
     //records.push(msgRow(-1, m))  // index -1 NOT TAKEN INTO ACCOUNT
-    tableRows.push(<NewMsgRow key={'main-'+mIdx} msg={m} />)
+    tableRows.push(<NewMsgRow key={`content-message-${mIdx}`} msg={m} />)
   });
-  const addGenMapping = (index: number, input: GenomicInput, originalInput: InputType) => {
-    input.mappings.forEach(mapping => {
-      mapping.genes.forEach(gene => {
-        gene.isoforms.forEach((isoform, isoformNo) => {
-          const currentGroup = index + '-' + isoform.canonicalAccession + '-' + input.pos + '-' + input.alt;
-          if (isoformNo === 0)
-            tableRows.push(getNewPrimaryRow(index, input, originalInput, gene, isoform, currentGroup, isoFormGroupExpanded, toggleIsoFormGroup, annotationExpanded,
+  let rowCount = 0 // to ensure similar or duplicate inputs do not lead to conflicting key
+  const addGenMapping = (index: number, genIndex: number, input: GenomicInput, originalInput: InputType) => {
+    input.mappings.forEach((mapping, mappingIdx) => {
+      mapping.genes.forEach((gene, geneIdx) => {
+        gene.isoforms.forEach((isoform, isoformIdx) => {
+          //const currentGroup = index + '-' + isoform.canonicalAccession + '-' + input.pos + '-' + input.alt;
+          rowCount++;
+          const isoformKey = `input-${index}-genInput-${genIndex}-mapping-${mappingIdx}-gene-${geneIdx}-isoform-${isoformIdx}-row-${rowCount}`
+          if (isoformIdx === 0)
+            tableRows.push(getNewPrimaryRow(isoformKey, index, input, originalInput, gene, isoform, isoFormGroupExpanded, toggleIsoFormGroup, annotationExpanded,
               toggleAnnotation, gene.isoforms.length > 1, stdColor))
-          else if (currentGroup === isoFormGroupExpanded)
+          else if (isoformKey === isoFormGroupExpanded)
             tableRows.push(getAlternateIsoFormRow(index, input, gene, isoform))
         })
       })
@@ -99,23 +102,23 @@ const getTableRows = (data: PagedMappingResponse | null, isoFormGroupExpanded: s
 
     input.messages.forEach((m,msgIdx) => {
       //records.push(msgRow(index, m, input))
-      tableRows.push(<NewMsgRow key={'input'+inputIndex + '-' + msgIdx} msg={m} input={input} />)
+      tableRows.push(<NewMsgRow key={`input-${inputIndex}-message-${msgIdx}`} msg={m} input={input} />)
     });
 
     if (input.type === INPUT_GEN && "mappings" in input) {
       //records.push(convertGenInputMappings(input, input, index))
-      addGenMapping(inputIndex, input, input)
+      addGenMapping(inputIndex, 0, input, input)
     }
     else if ((input.type === INPUT_PRO || input.type === INPUT_CDNA || input.type === INPUT_ID) && "derivedGenomicInputs" in input) {
       input.derivedGenomicInputs.forEach((gInput: GenomicInput, genIndex: number) => {
         gInput.messages.forEach((m, msgIdx) => {
           //records.push(msgRow(index, m, gInput))
-          tableRows.push(<NewMsgRow key={'input'+inputIndex + '-gen-' + genIndex + '-' + msgIdx} msg={m} />)
+          tableRows.push(<NewMsgRow key={`input-${inputIndex}-genInput-${genIndex}-message-${msgIdx}`} msg={m} />)
         });
         //records.push(convertGenInputMappings(input, gInput, index))
         // IT SEEMS WE MAY NOT BE TAKING THE ORIGINAL AND DERIVED GEN INPUT
         // INTO ACCOUNT SOMEWHERE...
-        addGenMapping(inputIndex, gInput, input)
+        addGenMapping(inputIndex, genIndex, gInput, input)
       })
     }
   });
