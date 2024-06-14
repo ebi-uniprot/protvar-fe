@@ -9,6 +9,7 @@ export const CONTENT_TEXT = {"Content-Type": "text/plain"}
 export const CONTENT_MULTIPART = {"Content-Type": "multipart/form-data"}
 export const DOWNLOAD_STATUS=`${API_URL}/download/status`;
 export const LOCAL_DOWNLOADS='PV_downloads';
+export const LOCAL_RESULTS='PV_results';
 export const DISMISS_BANNER = 'PV_banner';
 
 // TODO resubscribe option - clears the localData

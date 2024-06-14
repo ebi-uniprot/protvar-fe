@@ -16,6 +16,9 @@ import {API_ERROR, RESULT} from "../../../constants/BrowserPaths";
 import {useNavigate} from "react-router-dom";
 import {AxiosResponse} from "axios";
 import {IDResponse} from "../../../types/PagedMappingResponse";
+import {useLocalStorageContext} from "../../../provider/LocalStorageContextProps";
+import {ResultRecord} from "../../components/result/ResultHistory";
+import {LOCAL_RESULTS} from "../../../constants/const";
 
 const SearchVariant = () => {
   const navigate = useNavigate();
@@ -27,6 +30,35 @@ const SearchVariant = () => {
   const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
   const UNSUPPORTED_FILE = 'Unsupported file type';
   const FILE_EXCEEDS_LIMIT = 'File exceeds 10MB limit';
+  const { getValue, setValue } = useLocalStorageContext();
+  const savedRecords = getValue<ResultRecord[]>(LOCAL_RESULTS) || [];
+
+  const updateResultHistory = (id: string) => {
+    const now = new Date().toLocaleString();
+    const existingRecord = savedRecords.find(record => record.id === id);
+
+    let updatedRecords;
+
+    if (existingRecord) {
+      const updatedRecord = {
+        ...existingRecord,
+        lastSubmitted: now,
+        lastViewed: now
+      };
+      updatedRecords = savedRecords.map(record =>
+        record.id === id ? updatedRecord : record
+      );
+    } else {
+      const newRecord: ResultRecord = {
+        id,
+        firstSubmitted: now,
+        lastSubmitted: now,
+        lastViewed: now
+      };
+      updatedRecords = [newRecord, ...savedRecords];
+    }
+    setValue(LOCAL_RESULTS, updatedRecords);
+  };
 
   const viewResult = (event: React.ChangeEvent<HTMLInputElement>) => {
     const target = event.target
@@ -44,7 +76,6 @@ const SearchVariant = () => {
       setForm({...form, file: file})
       setInvalidInput(false);
     }
-
   };
 
   const handleSubmit = () => {
@@ -58,6 +89,7 @@ const SearchVariant = () => {
     if (promise) {
       promise
         .then((response) => {
+          updateResultHistory(response.data.id)
           let url = `${RESULT}/${response.data.id}`
           if (form.assembly !== DEFAULT_ASSEMBLY)
             url += `?assembly=${form.assembly}`

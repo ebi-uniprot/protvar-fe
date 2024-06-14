@@ -1,0 +1,31 @@
+.item-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 4px 4px 12px;
+  position: relative;
+}
+
+.item-options {
+  display: none;
+}
+
+.item:hover .item-options {
+  display: block;
+}
+.item:hover {
+  background-color: lightgrey;
+}
+
+.item-name {
+  flex-grow: 1;
+}
+
+.item-options button {
+  margin-left: 5px;
+}

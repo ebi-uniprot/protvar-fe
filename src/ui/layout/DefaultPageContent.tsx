@@ -1,23 +1,30 @@
 import { NavLink } from 'react-router-dom'
-import { DOWNLOAD, HOME } from '../../constants/BrowserPaths'
-import {useContext, useEffect, useState} from "react";
-import {AppContext, AppState} from "../App";
+import {DOWNLOAD, HOME, RESULT} from '../../constants/BrowserPaths'
+import {useEffect, useState} from "react";
+import ResultHistory, {ResultRecord} from "../components/result/ResultHistory";
+import {LOCAL_RESULTS} from "../../constants/const";
+import {useLocalStorageContext} from "../../provider/LocalStorageContextProps";
 
 const DefaultPageContent = (props: {
   children: JSX.Element
   downloadCount: number
 }) => {
-  const state: AppState = useContext(AppContext)
   const { children, downloadCount } = props
+  const { getValue } = useLocalStorageContext();
+  const savedRecords = getValue<ResultRecord[]>(LOCAL_RESULTS) || [];
   const [enableLink, setEnableLink] = useState(false)
-  const [link, setLink] = useState("/home/result")
+  const [link, setLink] = useState(RESULT)
+  const [resultsCount, setResultsCount] = useState(savedRecords.length)
 
+  // results count not being refreshed when record is deleted from
+  // the sidebar
   useEffect(() => {
-    if (state.response && state.response.resultId) {
-      setLink("/home/result/" + state.response.resultId)
+    if (savedRecords && savedRecords[0]) {
+      setLink(`${RESULT}/${savedRecords[0].id}`)
       setEnableLink(true)
+      setResultsCount(savedRecords.length)
     }
-  }, [state]);
+  }, [savedRecords]);
 
   return (
     <div className="default-page-content">
@@ -29,12 +36,13 @@ const DefaultPageContent = (props: {
             </li>
             <li className="sidebar-menu">
               {enableLink ?
-                <NavLink to={link}>Results</NavLink> :
-                <NavLink to={link} className="disabled">Results</NavLink>
+                <NavLink to={link}>Results <div className="download-count">{resultsCount}</div></NavLink> :
+                <NavLink to={link} className="disabled">Results <div className="download-count">{resultsCount}</div></NavLink>
               }
+              <ResultHistory/>
             </li>
             <li className="sidebar-menu">
-              <NavLink to={DOWNLOAD}>Downloads ({downloadCount})</NavLink>
+              <NavLink to={DOWNLOAD}>Downloads <div className="download-count">{downloadCount}</div></NavLink>
             </li>
           </ul>
         </nav>
