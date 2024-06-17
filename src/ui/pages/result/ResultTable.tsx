@@ -36,7 +36,7 @@ function ResultTable(props: {loading: boolean, data: PagedMappingResponse | null
   if (props.loading && !props.data)
     return <Loader />
   if (!props.loading && !props.data)
-    return <div><h5>No result found</h5> Try another ID or searching for variants again.</div>
+    return <div><h5>No result found</h5> Try another link or searching for variants again.</div>
 
   const tableRows = getTableRows(props.data, isoformGroupExpanded, toggleIsoformGroup, annotationExpanded, toggleAnnotation, state.stdColor);
   return <table className="" cellPadding="0" cellSpacing="0" id="resultTable">

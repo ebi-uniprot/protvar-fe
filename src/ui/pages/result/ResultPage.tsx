@@ -52,7 +52,6 @@ function ResultPageContent(props: ResultPageProps) {
     if (!id) {
       return;
     }
-    //setData(null)
     setLoading(true)
 
     const searchParams = new URLSearchParams(location.search);
@@ -71,6 +70,7 @@ function ResultPageContent(props: ResultPageProps) {
       .then((response) => {
       setData(response.data)
       if (response.data && response.data.content?.inputs) {
+
         viewedRecord(response.data.id, location.pathname)
         //const savedRecords = getValue<ResultRecord[]>(LOCAL_RESULTS) || [];
         //const updatedRecords = savedRecords.map(record =>
