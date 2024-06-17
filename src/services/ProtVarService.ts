@@ -1,10 +1,10 @@
 import axios, {AxiosResponse} from 'axios';
 import {setupCache} from 'axios-cache-interceptor/dist/index.bundle';
 import {
-  DEFAULT_HEADERS,
   API_URL,
   CONTENT_MULTIPART,
   CONTENT_TEXT,
+  DEFAULT_HEADERS,
   DOWNLOAD_STATUS,
   G2P_MAPPING_URI
 } from "../constants/const";
@@ -12,8 +12,8 @@ import {FunctionalResponse} from "../types/FunctionalResponse";
 import {PopulationObservationResponse} from "../types/PopulationObservationResponse";
 import {ProteinStructureResponse} from "../types/ProteinStructureResponse";
 import MappingResponse from "../types/MappingResponse";
-import {DownloadResponse} from "../types/DownloadResponse";
-import {PagedMappingResponse, IDResponse} from "../types/PagedMappingResponse";
+import {DownloadRecord} from "../types/DownloadRecord";
+import {IDResponse, PagedMappingResponse, ResultType} from "../types/PagedMappingResponse";
 
 
 const instance = axios.create({
@@ -81,11 +81,22 @@ export function submitInputFile(file: File, assembly?: string, idOnly: boolean =
 // GET /mapping/input/{id}
 // IN: id
 // OUT: PagedMappingResponse
-export function getResult(id: string, page?: number, pageSize?: number, assembly: string|null = null) {
+export function getResult(type: ResultType, id: string, page?: number, pageSize?: number, assembly: string|null = null) {
+  let url = ''
+  let params = {}
+
+  if (type === ResultType.SEARCH) {
+    url = `${API_URL}/mapping/input/${id}`
+    params = {page, pageSize, assembly}
+  } else {
+    url = `${API_URL}/mapping/protein/${id}`
+    params = {page, pageSize}
+  }
+
   return api.get<PagedMappingResponse>(
-    `${API_URL}/mapping/input/${id}`,
+    url,
     {
-      params: {page, pageSize, assembly},
+      params: params,
       headers: DEFAULT_HEADERS,
     }
   );
@@ -115,7 +126,7 @@ export function getStructureData(url: string) {
 export function downloadFileInput(file: File, assembly: string, email: string, jobName: string, functional: boolean, population: boolean, structure: boolean) {
   const formData = new FormData();
   formData.append('file', file);
-  return api.post<any, FormData, AxiosResponse<DownloadResponse>>(
+  return api.post<any, FormData, AxiosResponse<DownloadRecord>>(
     `${API_URL}/download/fileInput`,
     formData,
     {
@@ -126,7 +137,7 @@ export function downloadFileInput(file: File, assembly: string, email: string, j
 }
 
 export function downloadTextInput(inputArr: string[], assembly: string, email: string, jobName: string, functional: boolean, population: boolean, structure: boolean) {
-  return api.post<any, string[], AxiosResponse<DownloadResponse>>(
+  return api.post<any, string[], AxiosResponse<DownloadRecord>>(
     `${API_URL}/download/textInput`,
     inputArr,
     {
