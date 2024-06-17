@@ -1,6 +1,25 @@
 .item-list {
   list-style-type: none;
   padding: 0;
+  max-height: 150px;
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: darkgrey lightgrey;
+}
+
+/* Works on Chrome, Edge, and Safari */
+.item-list::-webkit-scrollbar {
+  width: 12px;
+}
+
+.item-list::-webkit-scrollbar-track {
+  background: lightgrey;
+}
+
+.item-list::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  border-radius: 20px;
+  border: 3px solid lightgrey;
 }
 
 .item {
@@ -24,6 +43,9 @@
 
 .item-name {
   flex-grow: 1;
+}
+.item-name:hover {
+  cursor: pointer;
 }
 
 .item-options button {

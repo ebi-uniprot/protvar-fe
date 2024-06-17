@@ -2,42 +2,57 @@ import "./ResultHistory.css"
 import {useEffect, useState} from "react";
 import {LOCAL_RESULTS} from "../../../constants/const";
 import {useLocalStorageContext} from "../../../provider/LocalStorageContextProps";
-import {RESULT} from "../../../constants/BrowserPaths";
+import {HOME, RESULT} from "../../../constants/BrowserPaths";
+import {useNavigate, useParams} from "react-router-dom";
+import {ResultRecord} from "../../../types/ResultRecord";
 
-// Maybe group results by Viewed & Submitted
-export interface ResultRecord {
-  id: string  // required
-  firstSubmitted: string // TODO make optional - when shared, user will only have viewed this, not submitted
-  lastSubmitted: string // TODO same for this
-  lastViewed: string // required
-  name?: string
-  numItems?: number
-  params?: string // page, pageSize, assembly
-}
+const sortResultsByLatestDate = (records: ResultRecord[]): ResultRecord[] => {
+  return records.sort((a, b) => {
+    const getLatestDate = (record: ResultRecord) => {
+      const dates = [record.firstSubmitted, record.lastSubmitted, record.lastViewed].filter(Boolean).map(date => new Date(date!));
+      return dates.length ? Math.max(...dates.map(date => date.getTime())) : 0;
+    };
+
+    return getLatestDate(b) - getLatestDate(a);
+  });
+};
+
 const ResultHistory = () => {
+  const {id} = useParams<{ id?: string }>();
+  const navigate = useNavigate();
   const { getValue, setValue } = useLocalStorageContext();
-  const [records, setRecords] = useState<ResultRecord[]>([]);
+  const [results, setResults] = useState<ResultRecord[]>(getValue(LOCAL_RESULTS) || [])
 
   useEffect(() => {
-    const savedRecords = getValue<ResultRecord[]>(LOCAL_RESULTS);
-    if (savedRecords) {
-      setRecords(savedRecords);
-    }
-  }, [getValue]);
+    const handleStorageChange = () => {
+      console.log('Storage changed!');
+      setResults(getValue(LOCAL_RESULTS) || []);
+    };
 
-  const saveRecords = (updatedRecords: ResultRecord[]) => {
-    setRecords(updatedRecords);
+    // Listen for changes in localStorage
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      // Clean up the listener
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, [results, getValue]);
+
+
+  const saveResults = (updatedRecords: ResultRecord[]) => {
+    setResults(updatedRecords);
     setValue(LOCAL_RESULTS, updatedRecords);
   };
 
-  const deleteRecord = (id: string) => {
-    const updatedRecords = records.filter(record => record.id !== id);
-    saveRecords(updatedRecords);
+  const deleteResult = (delId: string) => {
+    const updatedRecords = results.filter(record => record.id !== delId);
+    saveResults(updatedRecords);
+    if (id && id === delId)
+      navigate(HOME)
     // TODO API call DELETE /mapping/input/{id}
   };
 
-  const sortedRecords = [...records].sort((a, b) => new Date(b.lastViewed).getTime() - new Date(a.lastViewed).getTime());
-
+  const sortedRecords = sortResultsByLatestDate(results);
   const shareUrl = `${window.location.origin}${process.env.PUBLIC_URL}${RESULT}`
 
   return (
@@ -46,12 +61,13 @@ const ResultHistory = () => {
           <li key={record.id} className="item">
             <>
               <span title={`Submitted ${record.lastSubmitted || record.firstSubmitted} Viewed ${record.lastViewed}`}
+                    onClick={_=>navigate(record.url)}
                     className="item-name">
                 {`${record.id.slice(0, 6)}...`}
               </span>
               <div className="item-options">
                 <button title="Delete" className="bi bi-x-lg result-op-btn"
-                        onClick={() => deleteRecord(record.id)}></button>
+                        onClick={() => deleteResult(record.id)}></button>
                 <button title="Share" onClick={() => { let url = `${shareUrl}/${record.id}`;
                   navigator.clipboard.writeText(url);
                   alert(`Copy URL: ${url}`)}} className="bi bi-share result-op-btn"></button>
