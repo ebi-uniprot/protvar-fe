@@ -2,7 +2,7 @@
   list-style-type: none;
   padding: 0;
   max-height: 150px;
-  overflow-y: scroll;
+  overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: darkgrey lightgrey;
 }
