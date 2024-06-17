@@ -25,6 +25,7 @@ export const LocalStorageProvider: React.FC<{ children: ReactNode }> = ({ childr
 
   const setValue = <T,>(key: string, value: T): void => {
     localStorage.setItem(key, JSON.stringify(value));
+    window.dispatchEvent(new Event('storage'))
   };
 
   const deleteValue = (key: string): void => {
