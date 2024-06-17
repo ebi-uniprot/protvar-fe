@@ -5,13 +5,13 @@ import APIErrorPage from "./pages/APIErrorPage";
 import AboutPage from "./pages/AboutPage";
 import ReleasePage from "./pages/ReleasePage";
 import ContactPage from "./pages/ContactPage";
-import {ABOUT, API_ERROR, CONTACT, DOWNLOAD, HOME, QUERY, RESULT, HELP, RELEASE} from "../constants/BrowserPaths";
+import {ABOUT, API_ERROR, CONTACT, DOWNLOAD, HELP, HOME, QUERY, RELEASE, RESULT} from "../constants/BrowserPaths";
 import QueryPage from "./pages/query/QueryPage";
 import {Assembly} from "../constants/CommonTypes";
 import {submitInput} from "../services/ProtVarService";
 import DownloadPage from "./pages/download/DownloadPage";
 import HelpPage from "./pages/help/HelpPage";
-import {PagedMappingResponse} from "../types/PagedMappingResponse";
+import {PagedMappingResponse, ResultType} from "../types/PagedMappingResponse";
 import ResultPage from "./pages/result/ResultPage";
 import {PAGE_SIZE} from "../constants/const";
 import {LocalStorageProvider} from "../provider/LocalStorageContextProps";
@@ -79,7 +79,7 @@ export default function App() {
     <LocalStorageProvider>
     <Routes>
       <Route path={HOME} element={<HomePage />} />
-      <Route path={`${RESULT}/:id`} element={<ResultPage />} />
+      <Route path={`${RESULT}/:id`} element={<ResultPage type={ResultType.SEARCH} />} />
       <Route path={QUERY} element={<QueryPage getQueryData={getQueryData} />} />
       <Route path={API_ERROR} element={<APIErrorPage />} />
       <Route path={ABOUT} element={<AboutPage />} />
@@ -87,6 +87,7 @@ export default function App() {
       <Route path={CONTACT} element={<ContactPage />} />
       <Route path={DOWNLOAD} element={<DownloadPage />} />
       <Route path={HELP} element={<HelpPage />} />
+      <Route path="/:id" element={<ResultPage  type={ResultType.PROTEIN} />} />
     </Routes>
       </LocalStorageProvider>
     </AppContext.Provider>);
