@@ -228,7 +228,7 @@ export const aaChangeStr = (ref: string, alt: string) => {
   return ref + '/' + alt
 }
 
-export const getNewPrimaryRow = (isoformKey: string, index: number, input: GenomicInput, originalInput: InputType, gene: Gene, isoform: IsoFormMapping, isoFormGroupExpanded: string, toggleIsoFormGroup: StringVoidFun,
+export const getNewPrimaryRow = (isoformKey: string, isoformGroup: string, isoformGroupExpanded: string, index: number, input: GenomicInput, originalInput: InputType, gene: Gene, isoform: IsoFormMapping, toggleIsoFormGroup: StringVoidFun,
                                  annotationExpanded: string, toggleAnnotation: StringVoidFun, hasAltIsoForm: boolean, stdColor: boolean) => {
 
   const caddAttr = caddScoreAttr(gene.caddScore?.toString())
@@ -289,7 +289,7 @@ export const getNewPrimaryRow = (isoformKey: string, index: number, input: Genom
         <a href={getIdUrl(input.id)} target="_blank" rel="noopener noreferrer">{input.id}</a>
       </Tool></td>
       <td><Tool tip={ALLELE.get(input.ref)}>{input.ref}</Tool></td>
-      <td><Tool tip={ALLELE.get(input.alt)}>{input.alt}</Tool></td>
+      <td><Tool tip={ALLELE.get(gene.altAllele)}>{gene.altAllele}</Tool></td>
       <td>
         <Tool tip="Click here for gene information from Ensembl">
           <a href={ENSEMBL_GENE_URL + gene.geneName} target="_blank" rel="noopener noreferrer">{gene.geneName}</a>
@@ -319,11 +319,11 @@ export const getNewPrimaryRow = (isoformKey: string, index: number, input: Genom
             <Spaces/>
             <Tool
               el="button"
-              onClick={() => toggleIsoFormGroup(isoformKey)}
+              onClick={() => toggleIsoFormGroup(isoformGroup) }
               className="button button--toggle-isoforms"
-              tip={isoFormGroupExpanded !== isoformKey ? "Show more isoforms" : "Hide isoforms"}
+              tip={isoformGroupExpanded !== isoformGroup ? "Show more isoforms" : "Hide isoforms"}
             >
-              {isoFormGroupExpanded !== isoformKey ?
+              {isoformGroupExpanded !== isoformGroup ?
                 <ChevronDownIcon className="toggle-isoforms"/> : <ChevronUpIcon className="toggle-isoforms"/>}
             </Tool>
           </>}

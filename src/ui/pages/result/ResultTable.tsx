@@ -18,11 +18,11 @@ import Loader from "../../elements/Loader";
 
 function ResultTable(props: {loading: boolean, data: PagedMappingResponse | null}) {
   const state: AppState = useContext(AppContext)
-  const [isoFormGroupExpanded, setIsoFormGroupExpanded] = useState('')
+  const [isoformGroupExpanded, setIsoformGroupExpanded] = useState('')
   const [annotationExpanded, setAnnotationExpanded] = useState('')
 
-  function toggleIsoFormGroup(key: string) {
-    setIsoFormGroupExpanded(isoFormGroupExpanded === key ? '' : key);
+  function toggleIsoformGroup(key: string) {
+    setIsoformGroupExpanded(isoformGroupExpanded === key ? '' : key);
   }
 
   function toggleAnnotation(key: string) {
@@ -38,7 +38,7 @@ function ResultTable(props: {loading: boolean, data: PagedMappingResponse | null
   if (!props.loading && !props.data)
     return <div><h5>No result found</h5> Try another ID or searching for variants again.</div>
 
-  const tableRows = getTableRows(props.data, isoFormGroupExpanded, toggleIsoFormGroup, annotationExpanded, toggleAnnotation, state.stdColor);
+  const tableRows = getTableRows(props.data, isoformGroupExpanded, toggleIsoformGroup, annotationExpanded, toggleAnnotation, state.stdColor);
   return <table className="" cellPadding="0" cellSpacing="0" id="resultTable">
     <thead>
     <tr>
@@ -82,7 +82,7 @@ function ResultTable(props: {loading: boolean, data: PagedMappingResponse | null
 }
 
 
-const getTableRows = (data: PagedMappingResponse | null, isoFormGroupExpanded: string, toggleIsoFormGroup: StringVoidFun,
+const getTableRows = (data: PagedMappingResponse | null, isoformGroupExpanded: string, toggleIsoformGroup: StringVoidFun,
                       annotationExpanded: string, toggleAnnotation: StringVoidFun, stdColor: boolean) => {
   const tableRows: Array<JSX.Element> = [];
 
@@ -94,15 +94,17 @@ const getTableRows = (data: PagedMappingResponse | null, isoFormGroupExpanded: s
   const addGenMapping = (index: number, genIndex: number, input: GenomicInput, originalInput: InputType) => {
     input.mappings.forEach((mapping, mappingIdx) => {
       mapping.genes.forEach((gene, geneIdx) => {
+        const isoformGroupKey = `input-${index}-genInput-${genIndex}-mapping-${mappingIdx}-gene-${geneIdx}-isoform`
         gene.isoforms.forEach((isoform, isoformIdx) => {
-          //const currentGroup = index + '-' + isoform.canonicalAccession + '-' + input.pos + '-' + input.alt;
           rowCount++;
-          const isoformKey = `input-${index}-genInput-${genIndex}-mapping-${mappingIdx}-gene-${geneIdx}-isoform-${isoformIdx}-row-${rowCount}`
-          if (isoformIdx === 0)
-            tableRows.push(getNewPrimaryRow(isoformKey, index, input, originalInput, gene, isoform, isoFormGroupExpanded, toggleIsoFormGroup, annotationExpanded,
-              toggleAnnotation, gene.isoforms.length > 1, stdColor))
-          else if (isoformKey === isoFormGroupExpanded)
-            tableRows.push(getAlternateIsoFormRow(index, input, gene, isoform))
+          const isoformKey = `${isoformGroupKey}-${isoformIdx}-row-${rowCount}`
+          if (isoformIdx === 0) {
+            tableRows.push(getNewPrimaryRow(isoformKey, isoformGroupKey, isoformGroupExpanded, index, input, originalInput, gene, isoform,
+              toggleIsoformGroup, annotationExpanded, toggleAnnotation, gene.isoforms.length > 1, stdColor))
+          }
+          else if (isoformGroupKey === isoformGroupExpanded) {
+            tableRows.push(getAlternateIsoFormRow(isoformKey, index, input, gene, isoform))
+          }
         })
       })
     })
