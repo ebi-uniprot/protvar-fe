@@ -1,8 +1,8 @@
 import "./ResultHistory.css"
 import {useEffect, useState} from "react";
 import {LOCAL_RESULTS} from "../../../constants/const";
-import {useLocalStorageContext} from "../../../provider/LocalStorageContextProps";
-import {HOME, RESULT} from "../../../constants/BrowserPaths";
+import {LOCAL_STORAGE_SET, useLocalStorageContext} from "../../../provider/LocalStorageContextProps";
+import {HOME} from "../../../constants/BrowserPaths";
 import {useNavigate, useParams} from "react-router-dom";
 import {ResultRecord} from "../../../types/ResultRecord";
 
@@ -24,17 +24,17 @@ const ResultHistory = () => {
   const [results, setResults] = useState<ResultRecord[]>(getValue(LOCAL_RESULTS) || [])
 
   useEffect(() => {
-    const handleStorageChange = () => {
-      console.log('Storage changed!');
-      setResults(getValue(LOCAL_RESULTS) || []);
+    const handleStorageChange = (e: CustomEvent) => {
+      if (e.detail === LOCAL_RESULTS)
+        setResults(getValue(LOCAL_RESULTS) || []);
     };
 
     // Listen for changes in localStorage
-    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener(LOCAL_STORAGE_SET, handleStorageChange as EventListener);
 
     return () => {
       // Clean up the listener
-      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener(LOCAL_STORAGE_SET, handleStorageChange as EventListener);
     };
   }, [results, getValue]);
 
@@ -53,7 +53,7 @@ const ResultHistory = () => {
   };
 
   const sortedRecords = sortResultsByLatestDate(results);
-  const shareUrl = `${window.location.origin}${process.env.PUBLIC_URL}${RESULT}`
+  const shareUrl = `${window.location.origin}${process.env.PUBLIC_URL}`
 
   return (
     <ul className="item-list">
@@ -68,7 +68,7 @@ const ResultHistory = () => {
               <div className="item-options">
                 <button title="Delete" className="bi bi-x-lg result-op-btn"
                         onClick={() => deleteResult(record.id)}></button>
-                <button title="Share" onClick={() => { let url = `${shareUrl}/${record.id}`;
+                <button title="Share" onClick={() => { let url = `${shareUrl}${record.url}`;
                   navigator.clipboard.writeText(url);
                   alert(`Copy URL: ${url}`)}} className="bi bi-share result-op-btn"></button>
               </div>

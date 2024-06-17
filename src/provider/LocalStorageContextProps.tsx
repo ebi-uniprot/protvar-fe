@@ -16,6 +16,8 @@ export const useLocalStorageContext = () => {
   return context;
 };
 
+export const LOCAL_STORAGE_SET = "localStore"
+
 export const LocalStorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
   const getValue = <T,>(key: string): T | null => {
@@ -25,7 +27,8 @@ export const LocalStorageProvider: React.FC<{ children: ReactNode }> = ({ childr
 
   const setValue = <T,>(key: string, value: T): void => {
     localStorage.setItem(key, JSON.stringify(value));
-    window.dispatchEvent(new Event('storage'))
+    const event = new CustomEvent(LOCAL_STORAGE_SET, { detail: key });
+    window.dispatchEvent(event)
   };
 
   const deleteValue = (key: string): void => {

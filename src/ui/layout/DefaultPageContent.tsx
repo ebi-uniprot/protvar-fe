@@ -3,7 +3,7 @@ import {DOWNLOAD, HOME, RESULT} from '../../constants/BrowserPaths'
 import {useEffect, useState} from "react";
 import ResultHistory from "../components/result/ResultHistory";
 import {LOCAL_DOWNLOADS, LOCAL_RESULTS} from "../../constants/const";
-import {useLocalStorageContext} from "../../provider/LocalStorageContextProps";
+import {LOCAL_STORAGE_SET, useLocalStorageContext} from "../../provider/LocalStorageContextProps";
 import {DownloadRecord} from "../../types/DownloadRecord";
 import {ResultRecord} from "../../types/ResultRecord";
 
@@ -16,20 +16,21 @@ const DefaultPageContent = (props: {
   const [downloads, setDownloads] = useState<DownloadRecord[]>(getValue(LOCAL_DOWNLOADS) || [])
 
   useEffect(() => {
-    const handleStorageChange = () => {
-      console.log('Storage changed!');
-      setResults(getValue(LOCAL_RESULTS) || []);
-      setDownloads(getValue(LOCAL_DOWNLOADS) || [])
+    const handleStorageChange = (e: CustomEvent) => {
+      if (e.detail === LOCAL_RESULTS)
+        setResults(getValue(LOCAL_RESULTS) || []);
+      else if (e.detail === LOCAL_DOWNLOADS)
+        setDownloads(getValue(LOCAL_DOWNLOADS) || [])
     };
 
     // Listen for changes in localStorage
-    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener(LOCAL_STORAGE_SET, handleStorageChange as EventListener);
 
     return () => {
       // Clean up the listener
-      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener(LOCAL_STORAGE_SET, handleStorageChange as EventListener);
     };
-  }, [results, getValue]); // Empty dependency array ensures this effect runs once on mount
+  }, [results, getValue]);
 
   return (
     <div className="default-page-content">
