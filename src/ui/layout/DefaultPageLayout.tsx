@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react'
 import { Link } from 'react-router-dom'
 import {ABOUT, CONTACT, HELP, HOME, RELEASE} from '../../constants/BrowserPaths'
-import { API_URL, LOCAL_DOWNLOADS, DISMISS_BANNER } from '../../constants/const'
+import { API_URL, DISMISS_BANNER } from '../../constants/const'
 
 import DefaultPageContent from './DefaultPageContent'
 
@@ -21,8 +21,6 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
   // to re-enable banner, uncomment state above, and the lines within
   // the handleDismiss function
   //const showBanner = false
-  let localDownloads = JSON.parse(localStorage.getItem(LOCAL_DOWNLOADS) || '[]')
-  let numDownloads = localDownloads.length;
   
   useEffect(() => {
     const win: any = window
@@ -185,7 +183,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
               )}
 
               <div className="default-page-layout">
-                <DefaultPageContent downloadCount={numDownloads}>
+                <DefaultPageContent>
                   {content}
                 </DefaultPageContent>
               </div>

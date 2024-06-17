@@ -1,19 +1,19 @@
 import { NavLink } from 'react-router-dom'
 import {DOWNLOAD, HOME, RESULT} from '../../constants/BrowserPaths'
 import {useEffect, useState} from "react";
-import ResultHistory, {ResultRecord} from "../components/result/ResultHistory";
+import ResultHistory from "../components/result/ResultHistory";
 import {LOCAL_DOWNLOADS, LOCAL_RESULTS} from "../../constants/const";
 import {useLocalStorageContext} from "../../provider/LocalStorageContextProps";
-import {DownloadResponse} from "../../types/DownloadResponse";
+import {DownloadRecord} from "../../types/DownloadRecord";
+import {ResultRecord} from "../../types/ResultRecord";
 
 const DefaultPageContent = (props: {
   children: JSX.Element
-  downloadCount: number
 }) => {
-  const { children, downloadCount } = props
+  const { children } = props
   const { getValue } = useLocalStorageContext();
   const [results, setResults] = useState<ResultRecord[]>(getValue(LOCAL_RESULTS) || [])
-  const [downloads, setDownloads] = useState<DownloadResponse[]>(getValue(LOCAL_DOWNLOADS) || [])
+  const [downloads, setDownloads] = useState<DownloadRecord[]>(getValue(LOCAL_DOWNLOADS) || [])
 
   useEffect(() => {
     const handleStorageChange = () => {
@@ -47,7 +47,7 @@ const DefaultPageContent = (props: {
               <ResultHistory/>
             </li>
             <li className="sidebar-menu">
-              <NavLink to={DOWNLOAD}>Downloads-{downloads.length}  <div className="download-count">{downloadCount}</div></NavLink>
+              <NavLink to={DOWNLOAD}>Downloads <div className="download-count">{downloads.length}</div></NavLink>
             </li>
           </ul>
         </nav>
