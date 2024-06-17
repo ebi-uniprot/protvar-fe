@@ -63,3 +63,34 @@
 .trash-btn:hover {
   cursor: pointer;
 }
+
+.result-op-btn {
+  float: right;
+  font-size: 10px;
+  font-weight: bolder;
+  color: black;
+  padding: 4px;
+  border-radius: 20%;
+  border-bottom-color: lightgrey;
+}
+.result-op-btn:hover {
+  font-weight: bolder;
+  background-color: #e7e7e7;
+  cursor: pointer;
+}
+
+.download-count {
+  float: right;
+  min-width: 24px;
+  text-align: center;
+  display: inline-block;
+  //padding: 0.1rem 0.2rem;
+  //margin-right: 1rem;
+  //margin-bottom: 0.3rem;
+  border: none;
+  border-radius: 0.75rem;
+  font-size: 12px;
+  font-weight: bold;
+  color: white;
+  background-color: #00709b;
+}

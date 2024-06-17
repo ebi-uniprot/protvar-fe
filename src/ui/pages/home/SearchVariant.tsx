@@ -1,11 +1,6 @@
-import React, { useState, useRef } from 'react'
+import React, {useState, useRef} from 'react'
 import Button from '../../elements/form/Button'
-import { FileLoadFun } from '../../../utills/AppHelper'
-import {
-  Assembly,
-  DEFAULT_ASSEMBLY,
-  StringVoidFun,
-} from '../../../constants/CommonTypes'
+import {Assembly, DEFAULT_ASSEMBLY} from '../../../constants/CommonTypes'
 import {
   CDNA_BTN_TITLE,
   CDNA_EXAMPLE,
@@ -15,47 +10,55 @@ import {
   PASTE_BOX, PROTEIN_BTN_TITLE,
   PROTEIN_EXAMPLE
 } from "../../../constants/Example";
+import {Form, initialForm} from "../../../types/FormData";
+import {submitInputFile, submitInputText} from "../../../services/ProtVarService";
+import {API_ERROR, RESULT} from "../../../constants/BrowserPaths";
+import {useNavigate} from "react-router-dom";
+import {AxiosResponse} from "axios";
+import {IDResponse} from "../../../types/PagedMappingResponse";
+import {useLocalStorageContext} from "../../../provider/LocalStorageContextProps";
+import {LOCAL_RESULTS} from "../../../constants/const";
+import {ResultRecord} from "../../../types/ResultRecord";
 
-interface VariantSearchProps {
-  isLoading: boolean
-  assembly: Assembly
-  updateAssembly: (assembly: Assembly) => void
-  fetchPasteResult: StringVoidFun
-  fetchFileResult: FileLoadFun
-}
-
-const SearchVariant = (props: VariantSearchProps) => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [assembly, setAssembly] = useState(props.assembly);
-  const [file, setFile] = useState<File | null>(null);
+const SearchVariant = () => {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [form, setForm] = useState<Form>(initialForm)
   const [invalidInput, setInvalidInput] = useState(false);
   const [invalidMsg, setInvalidMsg] = useState('');
   const uploadInputField = useRef<HTMLInputElement>(null);
   const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
   const UNSUPPORTED_FILE = 'Unsupported file type';
   const FILE_EXCEEDS_LIMIT = 'File exceeds 10MB limit';
+  const { getValue, setValue } = useLocalStorageContext();
+  const savedRecords = getValue<ResultRecord[]>(LOCAL_RESULTS) || [];
 
-  const update = (a: Assembly) => {
-    setAssembly(a); // set assembly in the search variant form
-    props.updateAssembly(a); // set assembly in the top-level
-  }
+  const submittedRecord = (id: string) => {
+    const now = new Date().toLocaleString();
+    const existingRecord = savedRecords.find(record => record.id === id);
 
-  const genomicExamples = () => {
-    setSearchTerm(GENOMIC_EXAMPLE)
-  };
+    let updatedRecords;
 
-  const cDNAExamples = () => {
-    setSearchTerm(CDNA_EXAMPLE)
-  };
-
-  const proteinExamples = () => {
-    setSearchTerm(PROTEIN_EXAMPLE)
-    update(DEFAULT_ASSEMBLY)
-  };
-
-  const idExamples = () => {
-    setSearchTerm(ID_EXAMPLE)
-    update(DEFAULT_ASSEMBLY)
+    if (existingRecord) {
+      const updatedRecord = {
+        ...existingRecord,
+        lastSubmitted: now,
+        //lastViewed: now
+      };
+      updatedRecords = savedRecords.map(record =>
+        record.id === id ? updatedRecord : record
+      );
+    } else {
+      const newRecord: ResultRecord = {
+        id,
+        url: `${RESULT}/${id}`,
+        firstSubmitted: now,
+        //lastSubmitted: now,
+        //lastViewed: now
+      };
+      updatedRecords = [newRecord, ...savedRecords];
+    }
+    setValue(LOCAL_RESULTS, updatedRecords);
   };
 
   const viewResult = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,30 +74,41 @@ const SearchVariant = (props: VariantSearchProps) => {
       setInvalidInput(true);
       setInvalidMsg(FILE_EXCEEDS_LIMIT);
     } else {
-      setFile(file);
+      setForm({...form, file: file})
       setInvalidInput(false);
     }
-    
   };
 
-  const handleSubmit = (e: React.MouseEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    if (file) {
-      props.fetchFileResult(file);
-      // file takes precendence over text search
-      return;
+  const handleSubmit = () => {
+    setLoading(true)
+    var promise: Promise<AxiosResponse<IDResponse>> | undefined = undefined;
+    if (form.file)
+      promise = submitInputFile(form.file, form.assembly)
+    else if (form.text)
+      promise = submitInputText(form.text, form.assembly)
+
+    if (promise) {
+      promise
+        .then((response) => {
+          submittedRecord(response.data.id)
+          let url = `${RESULT}/${response.data.id}`
+          if (form.assembly !== DEFAULT_ASSEMBLY)
+            url += `?assembly=${form.assembly}`
+          navigate(url)
+        })
+        .catch((err) => {
+          navigate(API_ERROR);
+          console.log(err);
+        })
     }
-    if (searchTerm !== '') {
-      props.fetchPasteResult(searchTerm) 
-    }
+    setLoading(false);
   }
 
   const clearFileInput = () => {
-    if ( uploadInputField?.current) {
+    if (uploadInputField?.current) {
       const fileInput = uploadInputField.current;
       fileInput.value = '';
-      setFile(null);
+      setForm({...form, file: null});
     }
   }
 
@@ -114,52 +128,52 @@ const SearchVariant = (props: VariantSearchProps) => {
             <section className="search-card">
               <textarea
                 id="main-textarea-search-field"
-                className={`main-textarea-search-field ${file ? 'disable' : ''}`}
-                value={searchTerm}
+                className={`main-textarea-search-field ${form.file ? 'disable' : ''}`}
+                value={form.text}
                 placeholder={PASTE_BOX}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={(e) => setForm({...form, text: e.target.value})}
               />
               <div className="search-card-selection">
                 <div>
-                <b>Click buttons below to try examples</b><br />
-                <div className="examples-container">
+                  <b>Click buttons below to try examples</b><br/>
+                  <div className="examples-container">
 
-                  <button
-                    onClick={genomicExamples}
-                    className="example-link"
-                    id="genomicExamples"
-                    title={GENOMIC_BTN_TITLE}
-                  >
-                    Genomic
-                  </button>
+                    <button
+                      onClick={_=>setForm({...form, text: GENOMIC_EXAMPLE})}
+                      className="example-link"
+                      id="genomicExamples"
+                      title={GENOMIC_BTN_TITLE}
+                    >
+                      Genomic
+                    </button>
 
-                  <button
-                    onClick={cDNAExamples}
-                    className="example-link"
-                    id="cDNAExamples"
-                    title={CDNA_BTN_TITLE}
-                  >
-                    cDNA
-                  </button>
+                    <button
+                      onClick={_=>setForm({...form, text: CDNA_EXAMPLE})}
+                      className="example-link"
+                      id="cDNAExamples"
+                      title={CDNA_BTN_TITLE}
+                    >
+                      cDNA
+                    </button>
 
-                  <button
-                    onClick={proteinExamples}
-                    className="example-link"
-                    id="proteinExamples"
-                    title={PROTEIN_BTN_TITLE}
-                  >
-                    Protein
-                  </button>
+                    <button
+                      onClick={_=>setForm({file: form.file, text: PROTEIN_EXAMPLE, assembly: DEFAULT_ASSEMBLY})}
+                      className="example-link"
+                      id="proteinExamples"
+                      title={PROTEIN_BTN_TITLE}
+                    >
+                      Protein
+                    </button>
 
-                  <button
-                    onClick={idExamples}
-                    className="example-link"
-                    id="idExamples"
-                    title={ID_BTN_TITLE}
-                  >
-                    Variant ID
-                  </button>
-                </div>
+                    <button
+                      onClick={_=>setForm({file: form.file, text: ID_EXAMPLE, assembly: DEFAULT_ASSEMBLY})}
+                      className="example-link"
+                      id="idExamples"
+                      title={ID_BTN_TITLE}
+                    >
+                      Variant ID
+                    </button>
+                  </div>
                 </div>
 
                 <div className="assembly">
@@ -170,30 +184,30 @@ const SearchVariant = (props: VariantSearchProps) => {
                     <label>
                       <input
                         type="radio"
-                        name="grch"
-                        value="auto"
-                        checked={assembly === Assembly.AUTO}
-                        onChange={() => update(Assembly.AUTO)}
+                        name="assembly"
+                        value={Assembly.AUTO}
+                        checked={form.assembly === Assembly.AUTO}
+                        onChange={e => setForm({...form, assembly: Assembly.AUTO}) }
                       />
                       Auto-detect
                     </label>
                     <label>
                       <input
                         type="radio"
-                        name="grch"
-                        value="grch38"
-                        checked={assembly === Assembly.GRCh38}
-                        onChange={() => update(Assembly.GRCh38)}
+                        name="assembly"
+                        value={Assembly.GRCh38}
+                        checked={form.assembly === Assembly.GRCh38}
+                        onChange={e => setForm({...form, assembly: Assembly.GRCh38}) }
                       />
                       GRCh38
                     </label>
                     <label>
                       <input
                         type="radio"
-                        name="grch"
-                        value="grch37"
-                        checked={assembly === Assembly.GRCh37}
-                        onChange={() => update(Assembly.GRCh37)}
+                        name="assembly"
+                        value={Assembly.GRCh37}
+                        checked={form.assembly === Assembly.GRCh37}
+                        onChange={e => setForm({...form, assembly: Assembly.GRCh37}) }
                       />
                       GRCh37
                     </label>
@@ -214,27 +228,27 @@ const SearchVariant = (props: VariantSearchProps) => {
                       onChange={viewResult}
                     />
                     <Button
-                    onClick={
-                      file
-                        ? clearFileInput
-                        : () => uploadInputField.current?.click()
+                      onClick={
+                        form.file
+                          ? clearFileInput
+                          : () => uploadInputField.current?.click()
+                      }
+                      className={`file-upload ${form.file ? 'clear-file bi bi-x-lg': 'bi bi-file-earmark-fill'}`}
+                    >
+                      {' '}{form.file ? 'Clear file' : 'Upload File'
                     }
-                    className={`file-upload ${file ? 'clear-file bi bi-x-lg': 'bi bi-file-earmark-fill'}`}
-                  >
-                    {' '}{file ? 'Clear file' : 'Upload File'
-                     }
-                  </Button>
+                    </Button>
                     {invalidInput && (
                       <span className="padding-left-1x">
                       <i className="file-warning bi bi-exclamation-triangle-fill"></i>{' '}
                         {invalidMsg}
                       </span>
                     )}
-                    {file?.name && (
+                    {form.file?.name && (
                       <div className='file-name'>
                         <i className="bi bi-check-circle tick-icon"></i>
-                        <span className='name'>{file?.name.substring(0, file.name.lastIndexOf('.'))}</span>
-                        <span className='extension'>{file?.name.substring(file.name.lastIndexOf('.'))}</span>
+                        <span className='name'>{form.file?.name.substring(0, form.file.name.lastIndexOf('.'))}</span>
+                        <span className='extension'>{form.file?.name.substring(form.file.name.lastIndexOf('.'))}</span>
                       </div>
                     )}
                   </div>
@@ -243,11 +257,11 @@ const SearchVariant = (props: VariantSearchProps) => {
                 <div className="search-button-wrapper">
                   <Button
                     type="submit"
-                    onClick={props.isLoading ? () => {} : handleSubmit}
-                    className={`button-primary bi bi-box-arrow-right ${file || searchTerm ? '' : 'disable-submit'}`}
+                    onClick={loading ? () => {} : handleSubmit}
+                    className={`button-primary bi bi-box-arrow-right ${form.file || form.text ? '' : 'disable-submit'}`}
                     id="searchButton"
                   >
-                    {' '}{props.isLoading ? 'Loading...' : 'Submit'}
+                    {' '}{loading ? 'Loading...' : 'Submit'}
                   </Button>
                 </div>
               </div>

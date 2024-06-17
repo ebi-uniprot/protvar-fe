@@ -1,22 +1,11 @@
 import DefaultPageLayout from '../../layout/DefaultPageLayout'
-import { FileLoadFun } from '../../../utills/AppHelper'
-import { Assembly, StringVoidFun } from '../../../constants/CommonTypes'
-import { Link } from 'react-router-dom'
-import { ABOUT, CONTACT } from '../../../constants/BrowserPaths'
+import {Link} from 'react-router-dom'
+import {ABOUT, CONTACT} from '../../../constants/BrowserPaths'
 import {API_URL, TITLE} from '../../../constants/const'
 import SearchVariant from './SearchVariant'
-import { MappingRecord } from '../../../utills/Convertor'
-import {FormData} from '../../../types/FormData'
 import React, {useEffect} from "react";
 
-const HomePageContent = (props: HomePageProps) => {
-  const {
-    loading,
-    formData,
-    updateAssembly,
-    fetchFileResult,
-    fetchPasteResult,
-  } = props
+const HomePageContent = () => {
 
   useEffect(() => {
     document.title = TITLE;
@@ -36,13 +25,7 @@ const HomePageContent = (props: HomePageProps) => {
         </p>
       </div>
       <div className='search-page-layout'>
-        <SearchVariant
-          isLoading={loading}
-          assembly={formData.assembly}
-          updateAssembly={updateAssembly}
-          fetchPasteResult={fetchPasteResult}
-          fetchFileResult={fetchFileResult}
-        />
+        <SearchVariant />
       </div>
       <div style={{display: 'grid', gridTemplateColumns: '60% auto'}}>
         <div style={{paddingTop: '20px'}}>
@@ -84,16 +67,7 @@ const HomePageContent = (props: HomePageProps) => {
   )
 }
 
-interface HomePageProps {
-  loading: boolean
-  formData: FormData
-  updateAssembly: (assembly: Assembly) => void
-  fetchFileResult: FileLoadFun
-  fetchPasteResult: StringVoidFun
-  searchResults: MappingRecord[][][]
-}
-
-const HomePage = (props: HomePageProps) => (
-  <DefaultPageLayout content={<HomePageContent {...props} />} searchResults={props.searchResults} />
+export const HomePage = () => (
+  <DefaultPageLayout content={<HomePageContent />} />
 )
 export default HomePage

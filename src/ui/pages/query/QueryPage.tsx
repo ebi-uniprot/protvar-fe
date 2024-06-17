@@ -1,18 +1,13 @@
-import { useEffect, useState} from 'react'
-import { useLocation } from 'react-router-dom'
-import ResultTable from '../../components/search/ResultTable'
+import {useEffect, useState} from 'react'
+import {useLocation, useSearchParams} from 'react-router-dom'
+import ResultTable from '../result/ResultTable'
 import DefaultPageLayout from '../../layout/DefaultPageLayout'
-import {
-  convertApiMappingToTableRecords,
-  MappingRecord,
-} from '../../../utills/Convertor'
 import DownloadModal from '../../modal/DownloadModal'
-import { mappings } from '../../../services/ProtVarService'
 import LegendModal from '../../modal/LegendModal'
-import {FormData, initialFormData} from "../../../types/FormData";
-import Notify from "../../elements/Notify";
-import Loader from "../../elements/Loader";
+//import Notify from "../../elements/Notify";
 import {TITLE} from "../../../constants/const";
+import {mappings} from "../../../services/ProtVarService";
+import {PagedMappingResponse, toPagedMappingResponse} from "../../../types/PagedMappingResponse";
 
 // basic tests on query params
 const chromosomeRegExp = new RegExp('[a-zA-Z0-9]+')
@@ -86,9 +81,7 @@ const requiredProteinParams = [
   'variant_AA',
 ]
 
-function getInputsFromUrl(location: any): any {
-  const params = new URLSearchParams(location.search)
-
+function parseUrlInput(params: URLSearchParams): any {
   const isGenomicQuery = requiredGenomicParams.reduce(function (acc, p) {
     return acc && params.has(p)
   }, true)
@@ -139,68 +132,60 @@ function getInputsFromUrl(location: any): any {
   }
 
   if (params.has('search')) {
-    let str = params.get('search')
-    let arr = str?.split(",").map(function(item) {
-      return item.trim();
-    }).filter(item => item);
-    if (arr && arr.length > 0) {
-      if (arr.length <= 10) {
-        return arr
-      }
-      else {
-        Notify.err('Maximum inputs (10) exceeded.')
-        return []
-      }
-    }
+    return [params.get('search')]
   }
-  Notify.warn('Invalid search query.')
+  //Notify.warn('Invalid search query.')
   return []
 }
 
 const QueryPageContent = () => {
   const location = useLocation()
-  const [loaded, setLoaded] = useState(false)
-  const [err, setErr] = useState(false)
-
-  const [formData, setFormData] = useState<FormData>(initialFormData);
-  const [searchResults, setSearchResults] = useState<MappingRecord[][][]>([])
+  const [searchParams] = useSearchParams();
+  const [data, setData] = useState<PagedMappingResponse | null>(null)
+  const [loading, setLoading] = useState(true)
+  const input = parseUrlInput(searchParams)
 
   useEffect(() => {
-    const inputs = getInputsFromUrl(location)
-    document.title = inputs + ' - ' + TITLE;
-    if (inputs.length > 0) {
-      formData.userInputs = inputs
-      setFormData(formData)
-      mappings(formData.userInputs)
-        .then((response) => {
-          const records = convertApiMappingToTableRecords(response.data)
-          setSearchResults(records)
-          setLoaded(true)
+    if (input) {
+      document.title = input +' - '+ TITLE
+
+        // use original mappings endpoint (response not paged),
+        // input not cached
+        mappings(input)
+          .then((response) => {
+            if (response.data && response.data.inputs.length > 0) {
+              const mappingResponse = toPagedMappingResponse(response.data)
+              setData(mappingResponse)
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          }).finally(() => {
+            setLoading(false)
         })
-        .catch((err) => {
-          console.log(err)
-          setErr(true)
-        })
-    } else {
-      setErr(true)
     }
-  }, [location, formData])
+  }, [input])
 
-  const result = <>
-      <div className="search-results">
-        <div className="flex justify-content-space-between float-right">
-          <div className="legend-container">
-            <LegendModal />
-            <DownloadModal formData={formData} />
-          </div>
-        </div>
-        <ResultTable mappings={searchResults} />
+  const shareUrl = `${window.location.origin}${process.env.PUBLIC_URL}${location.pathname}${location.search}`
+
+  if (!input) {
+    return <QueryInfoContent />
+  }
+
+  return <div className="search-results">
+    <div className="flex justify-content-space-between float-right">
+      <div className="legend-container">
+        <button title="Share" style={{fontSize: '20px', color: 'gray'}} onClick={() => {
+          navigator.clipboard.writeText(shareUrl);
+          alert(`Copy URL: ${shareUrl}`)
+        }} className="bi bi-share result-op-btn"></button>
+        <LegendModal/>
+        <DownloadModal/>
       </div>
-    </>
 
-  //if (!searchResults || searchResults.length < 1) return <>Nothing!</>;
-
-  return <>{loaded ? result : (err ? <QueryInfoContent /> : <Loader />)}</>
+    </div>
+    <ResultTable loading={loading} data={data}/>
+  </div>
 }
 
 function QueryPage() {

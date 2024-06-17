@@ -11,3 +11,15 @@ export const initialFormData = {
     file: null,
     assembly: DEFAULT_ASSEMBLY
 }
+
+export interface Form {
+    text: string
+    file: File | null
+    assembly: Assembly
+}
+
+export const initialForm = {
+    text: '',
+    file: null,
+    assembly: DEFAULT_ASSEMBLY
+}

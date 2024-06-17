@@ -1,5 +1,5 @@
 
-export interface DownloadResponse {
+export interface DownloadRecord {
     inputType: string
     requested: Date
     downloadId: string

@@ -12,14 +12,6 @@ interface ResultTableProps {
   mappings: Array<Array<Array<MappingRecord>>>
 }
 
-export function getProteinName(record: MappingRecord) {
-  let proteinName = record.proteinName;
-  if (record.proteinName && record.proteinName.length > 20) {
-    proteinName = record.proteinName.substring(0, 20) + '...';
-  }
-  return proteinName
-}
-
 function ResultTable(props: ResultTableProps) {
   const stdColor = useContext(AppContext).stdColor;
   const [isoFormGroupExpanded, setIsoFormGroupExpanded] = useState('')

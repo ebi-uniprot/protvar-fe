@@ -1,13 +1,37 @@
 import { NavLink } from 'react-router-dom'
-import { DOWNLOAD, HOME, SEARCH } from '../../constants/BrowserPaths'
-import { MappingRecord } from '../../utills/Convertor'
+import {DOWNLOAD, HOME, RESULT} from '../../constants/BrowserPaths'
+import {useEffect, useState} from "react";
+import ResultHistory from "../components/result/ResultHistory";
+import {LOCAL_DOWNLOADS, LOCAL_RESULTS} from "../../constants/const";
+import {LOCAL_STORAGE_SET, useLocalStorageContext} from "../../provider/LocalStorageContextProps";
+import {DownloadRecord} from "../../types/DownloadRecord";
+import {ResultRecord} from "../../types/ResultRecord";
 
 const DefaultPageContent = (props: {
   children: JSX.Element
-  downloadCount: number
-  searchResults?: MappingRecord[][][]
 }) => {
-  const { children, downloadCount, searchResults } = props
+  const { children } = props
+  const { getValue } = useLocalStorageContext();
+  const [results, setResults] = useState<ResultRecord[]>(getValue(LOCAL_RESULTS) || [])
+  const [downloads, setDownloads] = useState<DownloadRecord[]>(getValue(LOCAL_DOWNLOADS) || [])
+
+  useEffect(() => {
+    const handleStorageChange = (e: CustomEvent) => {
+      if (e.detail === LOCAL_RESULTS)
+        setResults(getValue(LOCAL_RESULTS) || []);
+      else if (e.detail === LOCAL_DOWNLOADS)
+        setDownloads(getValue(LOCAL_DOWNLOADS) || [])
+    };
+
+    // Listen for changes in localStorage
+    window.addEventListener(LOCAL_STORAGE_SET, handleStorageChange as EventListener);
+
+    return () => {
+      // Clean up the listener
+      window.removeEventListener(LOCAL_STORAGE_SET, handleStorageChange as EventListener);
+    };
+  }, [results, getValue]);
+
   return (
     <div className="default-page-content">
       <div className="sidebar">
@@ -17,13 +41,14 @@ const DefaultPageContent = (props: {
               <NavLink to={HOME}>Search</NavLink>
             </li>
             <li className="sidebar-menu">
-              {searchResults?.length ?
-                <NavLink to={SEARCH}>Results</NavLink> :
-                <NavLink to={SEARCH} className="disabled">Results</NavLink>
+              {results && results.length > 0 ?
+                <NavLink to={`${RESULT}/${results[0].id}`}>Results <div className="download-count">{results.length}</div></NavLink> :
+                <NavLink to={RESULT} className="disabled">Results <div className="download-count">{results.length}</div></NavLink>
               }
+              <ResultHistory/>
             </li>
             <li className="sidebar-menu">
-              <NavLink to={DOWNLOAD}>Downloads ({downloadCount})</NavLink>
+              <NavLink to={DOWNLOAD}>Downloads <div className="download-count">{downloads.length}</div></NavLink>
             </li>
           </ul>
         </nav>

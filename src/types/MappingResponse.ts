@@ -84,7 +84,7 @@ export interface GenomeProteinMapping {
   genes: Array<Gene>;
   //input: string;
 }
-interface Gene {
+export interface Gene {
   ensg: string;
   reverseStrand: boolean;
   geneName: string;
@@ -94,7 +94,7 @@ interface Gene {
   caddScore: number;
 }
 // TODO clean up unused commented properties below
-interface IsoFormMapping {
+export interface IsoFormMapping {
   accession: string;
   canonical: boolean;
   canonicalAccession: string;
