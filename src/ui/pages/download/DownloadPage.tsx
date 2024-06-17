@@ -1,5 +1,5 @@
 import DefaultPageLayout from "../../layout/DefaultPageLayout";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import "./DownloadPage.css";
 import {getDownloadStatus} from "../../../services/ProtVarService";
 import {LOCAL_DOWNLOADS, PV_FTP, TITLE} from "../../../constants/const"
@@ -27,22 +27,30 @@ downloadStatusIcon[-1] = 'download-na';
 function DownloadPageContent() {
   const {getValue, setValue} = useLocalStorageContext();
   const [downloads, setDownloads] = useState<DownloadRecord[]>(() => getValue(LOCAL_DOWNLOADS) || [])
+  const downloadsRef = useRef<DownloadRecord[]>(downloads); // useRef to hold the current downloads state
 
   useEffect(() => {
-      document.title = 'Downloads - ' + TITLE;
-      const ids = downloads.map(d => d.downloadId)
+    downloadsRef.current = downloads;
+  }, [downloads]);
+
+  useEffect(() => {
+    const updateDownloadStatus = () => {
+      const ids = downloadsRef.current.map((d) => d.downloadId);
       getDownloadStatus(ids).then((response) => {
-          const updatedDownloads = downloads.map(d => {
-            if (d.downloadId in response.data) {
-              d.status = response.data[d.downloadId]
-            }
-            return d
-          })
-          setDownloads(updatedDownloads)
-          setValue(LOCAL_DOWNLOADS, updatedDownloads)
-        })
-    }
-    , [downloads, setValue])
+        const updatedDownloads = downloadsRef.current.map((d) => {
+          if (d.downloadId in response.data) {
+            return { ...d, status: response.data[d.downloadId] };
+          }
+          return d;
+        });
+        setDownloads(updatedDownloads);
+        setValue(LOCAL_DOWNLOADS, updatedDownloads);
+      });
+    };
+
+    document.title = "Downloads - " + TITLE;
+    updateDownloadStatus();
+  }, [setValue]);
 
   const handleDelete = (id: string) => {
     const updatedDownloads = downloads.filter((d) => d.downloadId !== id);
