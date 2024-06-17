@@ -17,8 +17,8 @@ import {useNavigate} from "react-router-dom";
 import {AxiosResponse} from "axios";
 import {IDResponse} from "../../../types/PagedMappingResponse";
 import {useLocalStorageContext} from "../../../provider/LocalStorageContextProps";
-import {ResultRecord} from "../../components/result/ResultHistory";
 import {LOCAL_RESULTS} from "../../../constants/const";
+import {ResultRecord} from "../../../types/ResultRecord";
 
 const SearchVariant = () => {
   const navigate = useNavigate();
@@ -33,7 +33,7 @@ const SearchVariant = () => {
   const { getValue, setValue } = useLocalStorageContext();
   const savedRecords = getValue<ResultRecord[]>(LOCAL_RESULTS) || [];
 
-  const updateResultHistory = (id: string) => {
+  const submittedRecord = (id: string) => {
     const now = new Date().toLocaleString();
     const existingRecord = savedRecords.find(record => record.id === id);
 
@@ -43,7 +43,7 @@ const SearchVariant = () => {
       const updatedRecord = {
         ...existingRecord,
         lastSubmitted: now,
-        lastViewed: now
+        //lastViewed: now
       };
       updatedRecords = savedRecords.map(record =>
         record.id === id ? updatedRecord : record
@@ -51,9 +51,10 @@ const SearchVariant = () => {
     } else {
       const newRecord: ResultRecord = {
         id,
+        url: `${RESULT}/${id}`,
         firstSubmitted: now,
-        lastSubmitted: now,
-        lastViewed: now
+        //lastSubmitted: now,
+        //lastViewed: now
       };
       updatedRecords = [newRecord, ...savedRecords];
     }
@@ -89,7 +90,7 @@ const SearchVariant = () => {
     if (promise) {
       promise
         .then((response) => {
-          updateResultHistory(response.data.id)
+          submittedRecord(response.data.id)
           let url = `${RESULT}/${response.data.id}`
           if (form.assembly !== DEFAULT_ASSEMBLY)
             url += `?assembly=${form.assembly}`
