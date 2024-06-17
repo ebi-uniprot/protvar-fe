@@ -8,7 +8,6 @@ import ContactPage from "./pages/ContactPage";
 import {ABOUT, API_ERROR, CONTACT, DOWNLOAD, HELP, HOME, QUERY, RELEASE, RESULT} from "../constants/BrowserPaths";
 import QueryPage from "./pages/query/QueryPage";
 import {Assembly} from "../constants/CommonTypes";
-import {submitInput} from "../services/ProtVarService";
 import DownloadPage from "./pages/download/DownloadPage";
 import HelpPage from "./pages/help/HelpPage";
 import {PagedMappingResponse, ResultType} from "../types/PagedMappingResponse";
@@ -62,25 +61,12 @@ export default function App() {
     updateState
   });
 
-  // TODO - no need to cache this. use a diff singleInput endpoint maybe?
-  const getQueryData = (input: string) => {
-    submitInput(input)
-      .then((response) => {
-        updateState("response", response.data)
-      })
-      .catch((err) => {
-        console.log(err);
-        throw err;
-      })
-  }
-  // <V2
-
   return (<AppContext.Provider value={appState}>
     <LocalStorageProvider>
     <Routes>
       <Route path={HOME} element={<HomePage />} />
       <Route path={`${RESULT}/:id`} element={<ResultPage type={ResultType.SEARCH} />} />
-      <Route path={QUERY} element={<QueryPage getQueryData={getQueryData} />} />
+      <Route path={QUERY} element={<QueryPage />} />
       <Route path={API_ERROR} element={<APIErrorPage />} />
       <Route path={ABOUT} element={<AboutPage />} />
       <Route path={RELEASE} element={<ReleasePage />} />
