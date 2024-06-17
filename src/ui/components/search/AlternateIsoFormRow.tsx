@@ -53,9 +53,9 @@ export function getProteinName(proteinName?: string) {
 }
 
 // V2
-export function getAlternateIsoFormRow(index: number, input: GenomicInput, gene: Gene, isoform: IsoFormMapping) {
+export function getAlternateIsoFormRow(isoformKey: string, index: number, input: GenomicInput, gene: Gene, isoform: IsoFormMapping) {
   let aaChange = aaChangeStr(isoform.refAA, isoform.variantAA)
-  return <tr style={rowBg(index)}>
+  return <tr key={isoformKey} style={rowBg(index)}>
     <td colSpan={GENOMIC_COLS}/>
     <td>
       <CanonicalIcon isCanonical={false}/>
