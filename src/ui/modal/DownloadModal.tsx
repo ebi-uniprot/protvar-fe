@@ -3,10 +3,14 @@ import Button from '../elements/form/Button';
 import Modal from './Modal';
 import { ReactComponent as DownloadIcon } from "../../images/download.svg"
 import useOnClickOutside from '../../hooks/useOnClickOutside';
-import {processDownload} from './DownloadModalHelper'
 import { emailValidate } from '../../utills/Validator';
 import {FormData} from '../../types/FormData'
-import {AppContext} from "../App";
+import {AppContext, AppState} from "../App";
+import {DownloadRecord} from "../../types/DownloadRecord";
+import {LOCAL_DOWNLOADS} from "../../constants/const";
+import Notify from "../elements/Notify";
+import {downloadFileInput, downloadTextInput} from "../../services/ProtVarService";
+import {useLocalStorageContext} from "../../provider/LocalStorageContextProps";
 
 interface DownloadModalProps {
   formData?: FormData
@@ -24,6 +28,41 @@ function DownloadModal(props: DownloadModalProps) {
   const setAllAnnotations = (val: boolean) => setAnnotations({ fun: val, pop: val, str: val })
   const downloadModelDiv = useRef(null)
   useOnClickOutside(downloadModelDiv, useCallback(() => setShowModel(false), []));
+  const { getValue, setValue } = useLocalStorageContext();
+
+  const handleSucc = (downloadRes: DownloadRecord) => {
+    const downloads = getValue<DownloadRecord[]>(LOCAL_DOWNLOADS)  || []
+    const updatedDownloads = [...downloads, downloadRes]
+    setValue(LOCAL_DOWNLOADS, updatedDownloads)
+    Notify.sucs(`Job ${downloadRes.downloadId} submitted. Check the Downloads page. `)
+  }
+
+  const handleErr = () => {
+    Notify.err(`Job ${jobName} failed. Please try again.`)
+  }
+
+  const processDownload = (functional: boolean, population: boolean, structure: boolean,
+    email: string, jobName: string, state: AppState, formData?: FormData) => {
+
+    let file = formData?.file || state.file || null;
+    let assembly = formData?.assembly?.toString() || state.assembly.toString();
+    let userInputs: string[] = [];
+
+    if (!file) {
+      userInputs = formData?.userInputs ||
+        state.textInput.split(/[\n,]/).filter(i => !i.trimStart().startsWith("#"));
+    }
+
+    if (file) {
+      downloadFileInput(file, assembly, email, jobName, functional, population, structure)
+        .then((response) => handleSucc(response.data))
+        .catch(handleErr);
+    } else {
+      downloadTextInput(userInputs, assembly, email, jobName, functional, population, structure)
+        .then((response) => handleSucc(response.data))
+        .catch(handleErr);
+    }
+  }
 
   const handleSubmit = () => {
     const err = emailValidate(email)

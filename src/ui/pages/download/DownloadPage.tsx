@@ -4,8 +4,9 @@ import "./DownloadPage.css";
 import {getDownloadStatus} from "../../../services/ProtVarService";
 import {LOCAL_DOWNLOADS, PV_FTP, TITLE} from "../../../constants/const"
 //import { v4 as uuidv4 } from 'uuid';
-import {DownloadResponse} from "../../../types/DownloadResponse";
+import {DownloadRecord} from "../../../types/DownloadRecord";
 import Notify from "../../elements/Notify";
+import {useLocalStorageContext} from "../../../provider/LocalStorageContextProps";
 
 /*
 function testDownloadRes() : DownloadResponse {
@@ -24,29 +25,38 @@ downloadStatusIcon[0] = 'download-nr';
 downloadStatusIcon[-1] = 'download-na';
 
 function DownloadPageContent() {
-    let localDownloads = JSON.parse(localStorage.getItem(LOCAL_DOWNLOADS) || "[]")
-    const [downloads, setDownloads] = useState<DownloadResponse[]>(localDownloads)
+    const { getValue, setValue } = useLocalStorageContext();
+    const [downloads, setDownloads] = useState<DownloadRecord[]>(getValue(LOCAL_DOWNLOADS) || [])
 
     useEffect(() => {
         document.title = 'Downloads - ' + TITLE;
-        let ds: DownloadResponse[] = JSON.parse(localStorage.getItem(LOCAL_DOWNLOADS) || "[]")
-        const ids = ds.map(d => d.downloadId)
+        const ids = downloads.map(d => d.downloadId)
         getDownloadStatus(ids)
             .then((response) => {
-                const updatedDownloads = ds.map(d => {
+                const updatedDownloads = downloads.map(d => {
                     if (d.downloadId in response.data) {
                         d.status = response.data[d.downloadId]
                     }
                     return d
                 })
-                setDownloads(updatedDownloads)
-            })}
-    , [])
+                //setDownloads(updatedDownloads)
+                setValue(LOCAL_DOWNLOADS, updatedDownloads)
+            })
+          const handleStorageChange = () => {
+              console.log('Storage changed!');
+              setDownloads(getValue(LOCAL_DOWNLOADS) || []);
+          };
 
+          // Listen for changes in localStorage
+          window.addEventListener('storage', handleStorageChange);
 
-    useEffect(() => {
-        localStorage.setItem(LOCAL_DOWNLOADS, JSON.stringify(downloads));
-    }, [downloads])
+          return () => {
+              // Clean up the listener
+              window.removeEventListener('storage', handleStorageChange);
+          };
+
+      }
+    , [downloads, getValue, setValue])
 
     return <div className="container">
 
