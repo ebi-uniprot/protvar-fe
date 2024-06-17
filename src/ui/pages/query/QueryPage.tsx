@@ -1,13 +1,13 @@
-import {useContext, useEffect, useState} from 'react'
-import {useSearchParams} from 'react-router-dom'
+import {useEffect, useState} from 'react'
+import {useLocation, useSearchParams} from 'react-router-dom'
 import ResultTable from '../result/ResultTable'
 import DefaultPageLayout from '../../layout/DefaultPageLayout'
 import DownloadModal from '../../modal/DownloadModal'
 import LegendModal from '../../modal/LegendModal'
 //import Notify from "../../elements/Notify";
-import Loader from "../../elements/Loader";
 import {TITLE} from "../../../constants/const";
-import {AppContext} from "../../App";
+import {mappings} from "../../../services/ProtVarService";
+import {PagedMappingResponse, toPagedMappingResponse} from "../../../types/PagedMappingResponse";
 
 // basic tests on query params
 const chromosomeRegExp = new RegExp('[a-zA-Z0-9]+')
@@ -103,7 +103,7 @@ function parseUrlInput(params: URLSearchParams): any {
       alt &&
       alleleRegExp.test(alt)
     ) {
-      return `${chromo} ${pos} ${ref} ${alt}`
+      return [`${chromo} ${pos} ${ref} ${alt}`]
     }
   }
 
@@ -127,62 +127,69 @@ function parseUrlInput(params: URLSearchParams): any {
       alt &&
       oneletterAARegExp.test(alt)
     ) {
-      return `${acc} ${pos} ${ref} ${alt}`
+      return [`${acc} ${pos} ${ref} ${alt}`]
     }
   }
 
   if (params.has('search')) {
-    return params.get('search')
+    return [params.get('search')]
   }
   //Notify.warn('Invalid search query.')
-  return ""
+  return []
 }
 
-interface QueryPageProps {
-  getQueryData: any
-}
-
-const QueryPageContent = (props: QueryPageProps) => {
-  const state = useContext(AppContext)
+const QueryPageContent = () => {
+  const location = useLocation()
   const [searchParams] = useSearchParams();
-  const { getQueryData } = props
-  const [loaded, setLoaded] = useState(false)
-  const [err, setErr] = useState(false)
+  const [data, setData] = useState<PagedMappingResponse | null>(null)
+  const [loading, setLoading] = useState(true)
+  const input = parseUrlInput(searchParams)
 
   useEffect(() => {
-    const input = parseUrlInput(searchParams)
     if (input) {
       document.title = input +' - '+ TITLE
-      try {
-        getQueryData(input)
-        setLoaded(true)
-      } catch (err) {
-        setErr(true)
-      }
-    } else {
-      setErr(true)
+
+        // use original mappings endpoint (response not paged),
+        // input not cached
+        mappings(input)
+          .then((response) => {
+            if (response.data && response.data.inputs.length > 0) {
+              const mappingResponse = toPagedMappingResponse(response.data)
+              setData(mappingResponse)
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          }).finally(() => {
+            setLoading(false)
+        })
     }
-  }, [state, getQueryData, searchParams])
+  }, [input])
 
-  const result = <>
-      <div className="search-results">
-        <div className="flex justify-content-space-between float-right">
-          <div className="legend-container">
-            <LegendModal />
-            <DownloadModal />
-          </div>
-        </div>
-        <ResultTable />
+  const shareUrl = `${window.location.origin}${process.env.PUBLIC_URL}${location.pathname}${location.search}`
+
+  if (!input) {
+    return <QueryInfoContent />
+  }
+
+  return <div className="search-results">
+    <div className="flex justify-content-space-between float-right">
+      <div className="legend-container">
+        <button title="Share" style={{fontSize: '20px', color: 'gray'}} onClick={() => {
+          navigator.clipboard.writeText(shareUrl);
+          alert(`Copy URL: ${shareUrl}`)
+        }} className="bi bi-share result-op-btn"></button>
+        <LegendModal/>
+        <DownloadModal/>
       </div>
-    </>
 
-  //if (!searchResults || searchResults.length < 1) return <>Nothing!</>;
-
-  return <>{loaded ? result : (err ? <QueryInfoContent /> : <Loader />)}</>
+    </div>
+    <ResultTable loading={loading} data={data}/>
+  </div>
 }
 
-function QueryPage(props: QueryPageProps) {
-  return <DefaultPageLayout content={<QueryPageContent {...props} />} />
+function QueryPage() {
+  return <DefaultPageLayout content={<QueryPageContent />} />
 }
 
 export default QueryPage
