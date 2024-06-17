@@ -14,8 +14,9 @@ import {StringVoidFun} from "../../../constants/CommonTypes";
 import {getAlternateIsoFormRow} from "../../components/search/AlternateIsoFormRow";
 import {getNewPrimaryRow} from "../../components/search/PrimaryRow";
 import {AppContext, AppState} from "../../App";
+import Loader from "../../elements/Loader";
 
-function ResultTable(props: {data: PagedMappingResponse | null}) {
+function ResultTable(props: {loading: boolean, data: PagedMappingResponse | null}) {
   const state: AppState = useContext(AppContext)
   const [isoFormGroupExpanded, setIsoFormGroupExpanded] = useState('')
   const [annotationExpanded, setAnnotationExpanded] = useState('')
@@ -27,6 +28,15 @@ function ResultTable(props: {data: PagedMappingResponse | null}) {
   function toggleAnnotation(key: string) {
     setAnnotationExpanded(annotationExpanded === key ? '' : key);
   }
+
+  // if loading and no data -> show loader
+  // if not loading and no data -> No result found.
+  // if loading and data -> show (curr) data & Prev/Next -> Loading
+  // if not loading and data -> show data
+  if (props.loading && !props.data)
+    return <Loader />
+  if (!props.loading && !props.data)
+    return <div><h5>No result found</h5> Try another ID or searching for variants again.</div>
 
   const tableRows = getTableRows(props.data, isoFormGroupExpanded, toggleIsoFormGroup, annotationExpanded, toggleAnnotation, state.stdColor);
   return <table className="" cellPadding="0" cellSpacing="0" id="resultTable">
