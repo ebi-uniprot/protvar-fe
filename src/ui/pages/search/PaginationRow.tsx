@@ -2,10 +2,9 @@ import Button from '../../elements/form/Button';
 import { Dropdown } from 'react-dropdown-now';
 import 'react-dropdown-now/style.css';
 import { NextPageFun, Page } from "../../../utills/AppHelper";
-import {useNavigate, useSearchParams} from "react-router-dom";
+import {useLocation, useNavigate, useSearchParams} from "react-router-dom";
 import {PAGE_SIZE, PAGE_SIZES} from "../../../constants/const";
 import {PagedMappingResponse} from "../../../types/PagedMappingResponse";
-import {RESULT} from "../../../constants/BrowserPaths";
 
 interface PaginationRowProps {
   page: Page
@@ -63,15 +62,13 @@ function PaginationRow(props: PaginationRowProps) {
 interface NewPaginationRowProps {
   loading: boolean
   data: PagedMappingResponse | null
-  loadData: any
-  pageSize: number
-  setPageSize: any
 }
 export function NewPaginationRow(props: NewPaginationRowProps) {
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchParams] = useSearchParams();
-  const assembly = searchParams.get("assembly")
-  const { loading, data, loadData, pageSize, setPageSize } = props;
+  const pageSize = searchParams.get("pageSize")
+  const { loading, data } = props;
 
   function prevPage() {
     if (data) {
@@ -87,21 +84,21 @@ export function NewPaginationRow(props: NewPaginationRowProps) {
 
   function changePage(p: number) {
     if (data) {
-      loadData(data.id, assembly, p, pageSize);
+      //loadData(data.id, assembly, p, pageSize);
       if (p === 1)
         searchParams.delete("page");
       else
         searchParams.set("page", p.toString());
 
-      const url = `${RESULT}/${data.id}${searchParams.size > 0 ? `?${searchParams.toString()}` : ``}`
+      const url = `${location.pathname}${searchParams.size > 0 ? `?${searchParams.toString()}` : ``}`
       navigate(url);
     }
   }
 
   function changePageSize(newPageSize: any) {
     if (data && newPageSize !== pageSize) {
-      setPageSize(newPageSize);
-      loadData(data.id, assembly, 1, newPageSize);// go back to page 1
+      //setPageSize(newPageSize);
+      //loadData(data.id, assembly, 1, newPageSize);// go back to page 1
       searchParams.delete("page");
 
       if (newPageSize === PAGE_SIZE)
@@ -109,7 +106,7 @@ export function NewPaginationRow(props: NewPaginationRowProps) {
       else
         searchParams.set("pageSize", newPageSize.toString());
 
-      const url = `${RESULT}/${data.id}${searchParams.size > 0 ? `?${searchParams.toString()}` : ``}`
+      const url = `${location.pathname}${searchParams.size > 0 ? `?${searchParams.toString()}` : ``}`
       navigate(url);
     }
   }
@@ -118,7 +115,7 @@ export function NewPaginationRow(props: NewPaginationRowProps) {
     <tbody>
     <tr>
       <td>
-        <Button className={'pagination-button'} onClick={prevPage} loading={loading} disabled={data === null || data.page === 1}>
+        <Button className={'pagination-button'} onClick={prevPage} loading={loading} disabled={loading || data === null || data.page === 1}>
           <i className="bi bi-chevron-compact-left"/> Prev
         </Button>
       </td>
@@ -126,7 +123,7 @@ export function NewPaginationRow(props: NewPaginationRowProps) {
         {data && `${data.page} / ${data.totalPages}`}
       </td>
       <td>
-        <Button className={'pagination-button'} onClick={nextPage} loading={loading} disabled={data === null || data.last}>
+        <Button className={'pagination-button'} onClick={nextPage} loading={loading} disabled={loading || data === null || data.last}>
           Next <i className="bi bi-chevron-compact-right"/>
         </Button>
       </td>
@@ -134,7 +131,7 @@ export function NewPaginationRow(props: NewPaginationRowProps) {
         <Dropdown
           placeholder="Pages"
           options={PAGE_SIZES}
-          value={pageSize}
+          value={data?.pageSize}
           onChange={(option) => changePageSize(option.value)}
           disabled={data === undefined}
         />
