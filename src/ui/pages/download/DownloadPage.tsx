@@ -1,5 +1,5 @@
 import DefaultPageLayout from "../../layout/DefaultPageLayout";
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import "./DownloadPage.css";
 import {getDownloadStatus} from "../../../services/ProtVarService";
 import {LOCAL_DOWNLOADS, PV_FTP, TITLE} from "../../../constants/const"
@@ -26,36 +26,42 @@ downloadStatusIcon[-1] = 'download-na';
 
 function DownloadPageContent() {
   const {getValue, setValue} = useLocalStorageContext();
-  const [downloads, setDownloads] = useState<DownloadRecord[]>(() => getValue(LOCAL_DOWNLOADS) || [])
-  const downloadsRef = useRef<DownloadRecord[]>(downloads); // useRef to hold the current downloads state
+  const [downloads, setDownloads] = useState<DownloadRecord[]>([])
+
 
   useEffect(() => {
-    downloadsRef.current = downloads;
-  }, [downloads]);
-
-  useEffect(() => {
-    const updateDownloadStatus = () => {
-      const ids = downloadsRef.current.map((d) => d.downloadId);
-      getDownloadStatus(ids).then((response) => {
-        const updatedDownloads = downloadsRef.current.map((d) => {
-          if (d.downloadId in response.data) {
-            return { ...d, status: response.data[d.downloadId] };
-          }
-          return d;
-        });
-        setDownloads(updatedDownloads);
-        setValue(LOCAL_DOWNLOADS, updatedDownloads);
-      });
-    };
-
     document.title = "Downloads - " + TITLE;
-    updateDownloadStatus();
-  }, [setValue]);
+    // Retrieve download records from local storage
+    const localDownloads = getValue<DownloadRecord[]>(LOCAL_DOWNLOADS) || []
+    if (localDownloads.length > 0) {
+      // Fetch updated statuses
+      const fetchUpdatedStatuses = () => {
+        const ids = localDownloads.map(d => d.downloadId);
+        getDownloadStatus(ids)
+          .then((response) => {
+            const updatedDownloads = localDownloads.map(d => {
+              if (d.downloadId in response.data) {
+                return {...d, status: response.data[d.downloadId]};
+              }
+              return d;
+            });
+            // Save updated objects to local storage
+            setValue(LOCAL_DOWNLOADS, updatedDownloads);
+            setDownloads(updatedDownloads);
+          }).catch(err => {
+          console.error('Error fetching updated statuses:', err);
+        });
+      }
+      fetchUpdatedStatuses();
+    } else {
+      setDownloads(localDownloads);
+    }
+  }, [getValue, setValue]);
 
   const handleDelete = (id: string) => {
     const updatedDownloads = downloads.filter((d) => d.downloadId !== id);
-    setDownloads(updatedDownloads);
     setValue(LOCAL_DOWNLOADS, updatedDownloads);
+    setDownloads(updatedDownloads);
   }
 
   return <div className="container">
