@@ -1,11 +1,5 @@
 import {TOTAL_COLS} from "../../../constants/SearchResultTable";
-import { MappingRecord } from "../../../utills/Convertor";
 import {ERROR, INFO, InputType, Message, WARN} from "../../../types/MappingResponse";
-
-interface MsgRowProps {
-  record: MappingRecord,
-  currStyle: object
-}
 
 export const WARN_ICON = <><i className="msg-warn bi bi-exclamation-triangle-fill"></i>{' '}</>
 export const ERROR_ICON = <><i className="msg-error bi bi-x-circle-fill"></i>{' '}</>
@@ -22,18 +16,12 @@ const getIcon = (m?: Message) => {
   }
 }
 
-const MsgRow = (props: MsgRowProps) => {
-  const { record, currStyle } = props;
-  return <tr style={currStyle}>
-    <td colSpan={TOTAL_COLS}>
-      {getIcon(record.msg)}
-      <b>{record.input}</b> {record.msg?.text}
-    </td>
-  </tr>
-};
+interface MsgRowProps {
+  msg: Message,
+  input?: InputType
+}
 
-// V2
-export const NewMsgRow = (props: {msg: Message, input?: InputType}) => {
+const MsgRow = (props: MsgRowProps) => {
   return <tr>
     <td colSpan={TOTAL_COLS}>
       {getIcon(props.msg)}
@@ -41,6 +29,5 @@ export const NewMsgRow = (props: {msg: Message, input?: InputType}) => {
     </td>
   </tr>
 };
-// <V2
 
 export default MsgRow;

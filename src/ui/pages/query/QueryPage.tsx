@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react'
 import {useLocation, useSearchParams} from 'react-router-dom'
-import ResultTable from '../result/ResultTable'
+import ResultTable from '../../components/result/ResultTable'
 import DefaultPageLayout from '../../layout/DefaultPageLayout'
 import DownloadModal from '../../modal/DownloadModal'
 import LegendModal from '../../modal/LegendModal'
