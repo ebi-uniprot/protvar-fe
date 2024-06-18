@@ -35,7 +35,9 @@ function SearchResultsPageContent(props: SearchResultPageProps) {
         <PaginationRow page={page} fetchNextPage={fetchNextPage} loading={loading} />
         <div className="legend-container" >
         <LegendModal />
-        <DownloadModal formData={formData} />
+          {
+        //<DownloadModal formData={formData} />
+          }
         </div>
         
       </div>

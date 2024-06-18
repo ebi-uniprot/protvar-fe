@@ -147,6 +147,18 @@ export function downloadTextInput(inputArr: string[], assembly: string, email: s
   );
 }
 
+export function downloadResult(id: string, page: string|null, pageSize: string|null, assembly: string|null,
+                               email: string, jobName: string, functional: boolean, population: boolean, structure: boolean) {
+  return api.post<any, string[], AxiosResponse<DownloadRecord>>(
+    `${API_URL}/download/idInput`,
+    undefined,
+    {
+      params: {id, page, pageSize, assembly, email, jobName, function: functional, population, structure},
+      headers: DEFAULT_HEADERS,
+    }
+  );
+}
+
 export function getDownloadStatus(ids: string[]) {
   return api.post(
     DOWNLOAD_STATUS,
