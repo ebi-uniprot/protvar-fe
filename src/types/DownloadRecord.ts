@@ -1,6 +1,6 @@
 
 export interface DownloadRecord {
-    inputType: string
+    //inputType: string
     requested: Date
     downloadId: string
     url: string

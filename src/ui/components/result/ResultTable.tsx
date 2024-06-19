@@ -9,15 +9,15 @@ import {
   INPUT_ID,
   INPUT_PRO, InputType
 } from "../../../types/MappingResponse";
-import {NewMsgRow} from "../../components/search/MsgRow";
 import {StringVoidFun} from "../../../constants/CommonTypes";
-import {getAlternateIsoFormRow} from "../../components/search/AlternateIsoFormRow";
-import {getNewPrimaryRow} from "../../components/search/PrimaryRow";
-import {AppContext, AppState} from "../../App";
+import {getAlternateIsoFormRow} from "./AlternateIsoFormRow";
+import {getNewPrimaryRow} from "../search/PrimaryRow";
+import {AppContext} from "../../App";
 import Loader from "../../elements/Loader";
+import MsgRow from "./MsgRow";
 
 function ResultTable(props: {loading: boolean, data: PagedMappingResponse | null}) {
-  const state: AppState = useContext(AppContext)
+  const stdColor = useContext(AppContext).stdColor
   const [isoformGroupExpanded, setIsoformGroupExpanded] = useState('')
   const [annotationExpanded, setAnnotationExpanded] = useState('')
 
@@ -38,14 +38,13 @@ function ResultTable(props: {loading: boolean, data: PagedMappingResponse | null
   if (!props.loading && !props.data)
     return <div><h5>No result found</h5> Try another link or searching for variants again.</div>
 
-  const tableRows = getTableRows(props.data, isoformGroupExpanded, toggleIsoformGroup, annotationExpanded, toggleAnnotation, state.stdColor);
+  const tableRows = getTableRows(props.data, isoformGroupExpanded, toggleIsoformGroup, annotationExpanded, toggleAnnotation, stdColor);
   return <table className="" cellPadding="0" cellSpacing="0" id="resultTable">
     <thead>
     <tr>
       <Tool el="th" colSpan={GENOMIC_COLS} tip="Gene and nucleotide level annotations">GENOMIC</Tool>
       <Tool el="th" colSpan={PROTEIN_COLS} tip="Amino acid/protein level annotations">PROTEIN</Tool>
-      <Tool el="th" tip="Three types of annotations; functional, co-located variants and structural"
-            pos="up-right">ANNOTATIONS</Tool>
+      <Tool el="th" tip="Three types of annotations; functional, co-located variants and structural" pos="up-right">ANNOTATIONS</Tool>
     </tr>
     <tr>
       {/* <th className="sticky"><Tool tip="Chromosome" pos="up-left">Chr</Tool></th> */}
@@ -55,23 +54,16 @@ function ResultTable(props: {loading: boolean, data: PagedMappingResponse | null
       <Tool el="th" className="sticky" tip="Reference allele">Ref.</Tool>
       <Tool el="th" className="sticky" tip="Alternative allele">Alt.</Tool>
       <Tool el="th" className="sticky" tip="HGNC short gene name">Gene</Tool>
-      <Tool el="th" className="sticky"
-            tip="Change of the codon containing the variant nucleotide the position of which is capitalised">Codon
-        (strand)</Tool>
-      <Tool el="th" className="sticky"
-            tip="CADD (Combined Annotation Dependent Depletion) phred-like score. Colours are defined in the key at the bottom of the page. Source: PubMed PMID 30371827">CADD</Tool>
+      <Tool el="th" className="sticky" tip="Change of the codon containing the variant nucleotide the position of which is capitalised">Codon (strand)</Tool>
+      <Tool el="th" className="sticky" tip="CADD (Combined Annotation Dependent Depletion) phred-like score. Colours are defined in the legends. Source: PubMed PMID 30371827">CADD</Tool>
       <Tool el="th" className="sticky" tip="The protein isoform the variant is mapped to.
         By default this is the UniProt canonical isoform, however other isoforms are shown if necessary.
-        Alternative isoforms can be shown by expanding the arrow to the right of the isoform"
-            tSize="xlarge">Isoform</Tool>
+        Alternative isoforms can be shown by expanding the arrow to the right of the isoform" tSize="xlarge">Isoform</Tool>
       <Tool el="th" className="sticky" tip="Full protein name from UniProt">Protein name</Tool>
-      <Tool el="th" className="sticky" tip="Position of the amino acid containing the variant in the displayed isoform">AA
-        pos.</Tool>
-      <Tool el="th" className="sticky" tip="Three letter amino acid code for the reference and alternative alleles">AA
-        change</Tool>
+      <Tool el="th" className="sticky" tip="Position of the amino acid containing the variant in the displayed isoform">AA pos.</Tool>
+      <Tool el="th" className="sticky" tip="Three letter amino acid code for the reference and alternative alleles">AA change</Tool>
       <Tool el="th" className="sticky" tip="A description of the consequence of the variant">Consequence(s)</Tool>
-      <Tool el="th" className="sticky"
-            tip="EVE (Evolutionary model of Variant Effects) score. Source: PubMed PMID 34707284">EVE</Tool>
+      <Tool el="th" className="sticky" tip="AlphaMissense prediction. Colours are defined in the legends. Source: PubMed PMID 37733863">AlphaMiss. pred.</Tool>
       <th className="sticky">Click for details</th>
     </tr>
     </thead>
@@ -88,7 +80,7 @@ const getTableRows = (data: PagedMappingResponse | null, isoformGroupExpanded: s
 
   data?.content.messages?.forEach((m, mIdx) => {
     //records.push(msgRow(-1, m))  // index -1 NOT TAKEN INTO ACCOUNT
-    tableRows.push(<NewMsgRow key={`content-message-${mIdx}`} msg={m} />)
+    tableRows.push(<MsgRow key={`content-message-${mIdx}`} msg={m} />)
   });
   let rowCount = 0 // to ensure similar or duplicate inputs do not lead to conflicting key
   const addGenMapping = (index: number, genIndex: number, input: GenomicInput, originalInput: InputType) => {
@@ -114,7 +106,7 @@ const getTableRows = (data: PagedMappingResponse | null, isoformGroupExpanded: s
 
     input.messages.forEach((m,msgIdx) => {
       //records.push(msgRow(index, m, input))
-      tableRows.push(<NewMsgRow key={`input-${inputIndex}-message-${msgIdx}`} msg={m} input={input} />)
+      tableRows.push(<MsgRow key={`input-${inputIndex}-message-${msgIdx}`} msg={m} input={input} />)
     });
 
     if (input.type === INPUT_GEN && "mappings" in input) {
@@ -125,7 +117,7 @@ const getTableRows = (data: PagedMappingResponse | null, isoformGroupExpanded: s
       input.derivedGenomicInputs.forEach((gInput: GenomicInput, genIndex: number) => {
         gInput.messages.forEach((m, msgIdx) => {
           //records.push(msgRow(index, m, gInput))
-          tableRows.push(<NewMsgRow key={`input-${inputIndex}-genInput-${genIndex}-message-${msgIdx}`} msg={m} />)
+          tableRows.push(<MsgRow key={`input-${inputIndex}-genInput-${genIndex}-message-${msgIdx}`} msg={m} />)
         });
         //records.push(convertGenInputMappings(input, gInput, index))
         // IT SEEMS WE MAY NOT BE TAKING THE ORIGINAL AND DERIVED GEN INPUT

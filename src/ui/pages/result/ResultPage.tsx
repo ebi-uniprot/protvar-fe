@@ -1,9 +1,9 @@
 import DefaultPageLayout from "../../layout/DefaultPageLayout";
 import LegendModal from "../../modal/LegendModal";
 import {useLocation, useParams} from "react-router-dom";
-import ResultTable from "./ResultTable";
+import ResultTable from "../../components/result/ResultTable";
 import {useCallback, useEffect, useState} from "react";
-import {NewPaginationRow} from "../search/PaginationRow";
+import PaginationRow from "./PaginationRow";
 import {LOCAL_RESULTS, TITLE} from "../../../constants/const";
 import DownloadModal from "../../modal/DownloadModal";
 import {getResult} from "../../../services/ProtVarService";
@@ -115,7 +115,7 @@ response.data.content.messages?.forEach(message => {
 
   return <div className="search-results">
     <div className="flex justify-content-space-between">
-      <NewPaginationRow loading={loading} data={data} />
+      <PaginationRow loading={loading} data={data} />
       <div className="legend-container">
         <button title="Share" style={{fontSize: '20px', color: 'gray'}} onClick={() => {
           navigator.clipboard.writeText(shareUrl);
@@ -127,7 +127,7 @@ response.data.content.messages?.forEach(message => {
 
     </div>
     <ResultTable loading={loading} data={data}/>
-    <NewPaginationRow loading={loading} data={data} />
+    <PaginationRow loading={loading} data={data} />
   </div>
 }
 

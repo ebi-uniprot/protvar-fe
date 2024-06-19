@@ -8,7 +8,7 @@ import DefaultPageContent from './DefaultPageContent'
 import EMBLEBILogo from '../../images/embl-ebi-logo.svg'
 import openTargetsLogo from '../../images/open-targets-logo.png'
 import SignUp from "./SignUp";
-import {WARN_ICON} from "../components/search/MsgRow";
+import {WARN_ICON} from "../components/result/MsgRow";
 import {CookieConsent} from "react-cookie-consent";
 interface DefaultPageLayoutProps {
   content: JSX.Element

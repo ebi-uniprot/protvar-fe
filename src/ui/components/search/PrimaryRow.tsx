@@ -19,11 +19,11 @@ import {amScoreAttr, formatAMScore} from "../function/prediction/AlphaMissensePr
 import ProteinIcon from '../../../images/proteins.svg';
 import StructureIcon from '../../../images/structures-3d.svg';
 import PopulationIcon from '../../../images/human.svg';
-import LoaderRow from "./LoaderRow";
+import LoaderRow from "../result/LoaderRow";
 import { ReactComponent as ChevronDownIcon } from "../../../images/chevron-down.svg"
 import { ReactComponent as ChevronUpIcon } from "../../../images/chevron-up.svg"
 import { EmptyElement } from "../../../constants/ConstElement";
-import {aaChangeTip, CanonicalIcon, getProteinName} from "./AlternateIsoFormRow";
+import {aaChangeTip, CanonicalIcon, getProteinName} from "../result/AlternateIsoFormRow";
 import {
   INPUT_GEN,
   INPUT_PRO,

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import NoFunctionalDataRow from './NoFunctionalDataRow';
 import FunctionalDataRow from './FunctionalDataRow';
-import LoaderRow from '../search/LoaderRow';
+import LoaderRow from '../result/LoaderRow';
 import {TranslatedSequence} from '../../../utills/Convertor';
 import {getFunctionalData} from "../../../services/ProtVarService";
 import {FunctionalResponse} from "../../../types/FunctionalResponse";

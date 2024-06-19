@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import PopulationDataRow from './PopulationDataRow';
 import NoPopulationDataRow from './NoPopulationDataRow';
-import LoaderRow from '../search/LoaderRow';
+import LoaderRow from '../result/LoaderRow';
 import {getPopulationData} from "../../../services/ProtVarService";
 import {PopulationObservationResponse} from "../../../types/PopulationObservationResponse";
 
