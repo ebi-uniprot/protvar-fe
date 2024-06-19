@@ -150,7 +150,8 @@ export function downloadTextInput(inputArr: string[], assembly: string, email: s
 export function downloadResult(id: string, page: string|null, pageSize: string|null, assembly: string|null,
                                email: string, jobName: string, functional: boolean, population: boolean, structure: boolean) {
   return api.post<any, string, AxiosResponse<DownloadRecord>>(
-    `${API_URL}/download/idInput`, id,
+    `${API_URL}/download/idInput`,
+    id,
     {
       params: {page, pageSize, assembly, email, jobName, function: functional, population, structure},
       headers: CONTENT_TEXT,

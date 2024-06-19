@@ -72,6 +72,9 @@ function DownloadModal() {
     setShowModel(false)
 
     if (values.currPage) {
+      if (page === null)
+        page = "1"; // no page param for first page
+    } else { // all pages
       page = null;
       pageSize = null;
     }
