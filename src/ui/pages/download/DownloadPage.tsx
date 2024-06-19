@@ -1,6 +1,5 @@
 import DefaultPageLayout from "../../layout/DefaultPageLayout";
 import React, {useEffect, useState} from "react";
-import "./DownloadPage.css";
 import {getDownloadStatus} from "../../../services/ProtVarService";
 import {LOCAL_DOWNLOADS, PV_FTP, TITLE} from "../../../constants/const"
 //import { v4 as uuidv4 } from 'uuid';

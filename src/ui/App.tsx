@@ -14,6 +14,7 @@ import {PagedMappingResponse, ResultType} from "../types/PagedMappingResponse";
 import ResultPage from "./pages/result/ResultPage";
 import {PAGE_SIZE} from "../constants/const";
 import {LocalStorageProvider} from "../provider/LocalStorageContextProps";
+import "bootstrap-icons/font/bootstrap-icons.css"
 
 const empty: ReactElement = <></>;
 
