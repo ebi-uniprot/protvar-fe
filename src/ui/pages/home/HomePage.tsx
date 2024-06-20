@@ -4,6 +4,7 @@ import {ABOUT, CONTACT} from '../../../constants/BrowserPaths'
 import {API_URL, TITLE} from '../../../constants/const'
 import SearchVariant from './SearchVariant'
 import React, {useEffect} from "react";
+import BrowseVariant from "./BrowseVariant";
 
 const HomePageContent = () => {
 
@@ -26,6 +27,8 @@ const HomePageContent = () => {
       </div>
       <div className='search-page-layout'>
         <SearchVariant />
+        <br/>
+        <BrowseVariant />
       </div>
       <div style={{display: 'grid', gridTemplateColumns: '60% auto'}}>
         <div style={{paddingTop: '20px'}}>
