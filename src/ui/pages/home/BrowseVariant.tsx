@@ -5,7 +5,7 @@ import {useNavigate} from "react-router-dom";
 
 const UNIPROT_ACC_MIN_LEN = 6
 const UNIPROT_ACC_MAX_LEN = 10
-const UNIPROT_ACC_REGEX = /^[OPQ][0-9][A-Z0-9]{3}[0-9]|[A-NR-Z][0-9]([A-Z][A-Z0-9]{2}[0-9]){1,2}$/
+const UNIPROT_ACC_REGEX = /^[OPQ][0-9][A-Z0-9]{3}[0-9]|[A-NR-Z][0-9]([A-Z][A-Z0-9]{2}[0-9]){1,2}$/i
 
 const BrowseVariant = () => {
   const navigate = useNavigate();
