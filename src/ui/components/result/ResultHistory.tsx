@@ -12,11 +12,13 @@ export const getLatestDate = (record: ResultRecord) => {
   return dates.length ? Math.max(...dates.map(date => date.getTime())) : 0;
 };
 
+/*
 const sortResultsByLatestDate = (records: ResultRecord[]): ResultRecord[] => {
   return records.sort((a, b) => {
     return getLatestDate(b) - getLatestDate(a);
   });
 };
+ */
 
 const ResultHistory = () => {
   const {id} = useParams<{ id?: string }>();
