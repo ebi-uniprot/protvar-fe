@@ -79,7 +79,7 @@
   cursor: pointer;
 }
 
-.download-count {
+.record-count {
   float: right;
   min-width: 24px;
   text-align: center;
@@ -92,5 +92,42 @@
   font-size: 12px;
   font-weight: bold;
   color: white;
-  background-color: #00709b;
+  background-color: lightskyblue;
+
+  &.gray-bg {
+    background-color: lightgrey;
+  }
+}
+
+.page-help {
+
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 20px;
+
+  h5 {
+    color: #333;
+  }
+  p {
+    margin: 10px 0;
+  }
+  ul {
+    margin: 10px 0 20px 20px;
+  }
+  code {
+    background-color: ivory;
+    padding: 2px 4px;
+    border-radius: 4px;
+  }
+
+}
+
+.edit-name {
+  width: 100%;
+  padding: 2px;
+  height: 30px;
+  font-size: 14px;
+  border: none;
+  border-radius: 4px;
+  background-color: #f1f1f1;
 }

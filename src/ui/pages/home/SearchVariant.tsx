@@ -58,7 +58,7 @@ const SearchVariant = () => {
       };
       updatedRecords = [newRecord, ...savedRecords];
     }
-    setValue(LOCAL_RESULTS, updatedRecords);
+    setValue(LOCAL_RESULTS, updatedRecords); // newRecord added at start, so sorted by latestDate
   };
 
   const viewResult = (event: React.ChangeEvent<HTMLInputElement>) => {

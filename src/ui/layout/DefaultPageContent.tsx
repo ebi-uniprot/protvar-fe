@@ -41,14 +41,11 @@ const DefaultPageContent = (props: {
               <NavLink to={HOME}>Search</NavLink>
             </li>
             <li className="sidebar-menu">
-              {results && results.length > 0 ?
-                <NavLink to={`${RESULT}/${results[0].id}`}>Results <div className="download-count">{results.length}</div></NavLink> :
-                <NavLink to={RESULT} className="disabled">Results <div className="download-count">{results.length}</div></NavLink>
-              }
+              <NavLink to={RESULT}>Results <div className={`record-count ${results.length === 0 ? `gray-bg` : ``}`}>{results.length}</div></NavLink>
               <ResultHistory/>
             </li>
             <li className="sidebar-menu">
-              <NavLink to={DOWNLOAD}>Downloads <div className="download-count">{downloads.length}</div></NavLink>
+              <NavLink to={DOWNLOAD}>Downloads <div className={`record-count ${downloads.length === 0 ? `gray-bg` : ``}`}>{downloads.length}</div></NavLink>
             </li>
           </ul>
         </nav>

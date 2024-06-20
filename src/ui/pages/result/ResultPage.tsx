@@ -18,33 +18,26 @@ function ResultPageContent(props: ResultPageProps) {
 
   const [data, setData] = useState<PagedMappingResponse | null>(null)
   const [loading, setLoading] = useState(true)
-  //const [pageSize, setPageSize] = useState(PAGE_SIZE)
   const { getValue, setValue } = useLocalStorageContext();
-
-  // TODO, update to consider user may be viewing this
-  // the first time, after link is shared!
-  /*
-  const viewedRecord = (id: string) => {
-    const updatedRecords = savedRecords.map(record =>
-      record.id === id ? { ...record, lastViewed: new Date().toLocaleString() } : record
-    );
-    setValue(LOCAL_RESULTS, updatedRecords);
-  };*/
 
   const viewedRecord = useCallback((id: string, url: string) => {
     const now = new Date().toLocaleString();
-    const savedRecords = getValue<ResultRecord[]>(LOCAL_RESULTS) || [];
+    let savedRecords = getValue<ResultRecord[]>(LOCAL_RESULTS) || [];
 
-    // map records and update record if matching id is found.
-    const updatedRecords = savedRecords.map(record =>
-      record.id === id ? { ...record, url: url, lastViewed: now } : record
-    );
-    // if no matching record is found (checked using some), add new record
-    // to beginning of array
-    if (!updatedRecords.some(record => record.id === id)) {
-      updatedRecords.unshift({ id, url: url, lastViewed: now });
+    // Find the index of the record to update
+    const index = savedRecords.findIndex(record => record.id === id);
+
+    if (index !== -1) {
+      // Update the record in the array
+      savedRecords[index] = {...savedRecords[index], url: url, lastViewed: now};
+      // Move the updated record to the beginning of the array
+      const [movedRecord] = savedRecords.splice(index, 1);
+      savedRecords.unshift(movedRecord);
+    } else { // if no matching record is found
+      // add new record to beginning of array
+      savedRecords = [{ id, url: url, lastViewed: now }, ...savedRecords]
     }
-    setValue(LOCAL_RESULTS, updatedRecords);
+    setValue(LOCAL_RESULTS, savedRecords);
   }, [getValue, setValue]);
 
   const loadData = useCallback((type: ResultType, location: any, id: string|undefined) => {
@@ -72,11 +65,6 @@ function ResultPageContent(props: ResultPageProps) {
       if (response.data && response.data.content?.inputs) {
 
         viewedRecord(response.data.id, location.pathname)
-        //const savedRecords = getValue<ResultRecord[]>(LOCAL_RESULTS) || [];
-        //const updatedRecords = savedRecords.map(record =>
-        //  record.id === id ? { ...record, lastViewed: new Date().toLocaleString() } : record
-        //);
-        //setValue(LOCAL_RESULTS, updatedRecords);
 
         if (type === ResultType.PROTEIN) {
           document.title = `${id} - ${TITLE}`;

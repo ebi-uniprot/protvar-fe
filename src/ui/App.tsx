@@ -15,6 +15,7 @@ import ResultPage from "./pages/result/ResultPage";
 import {PAGE_SIZE} from "../constants/const";
 import {LocalStorageProvider} from "../provider/LocalStorageContextProps";
 import "bootstrap-icons/font/bootstrap-icons.css"
+import ResultListPage from "./pages/result/ResultListPage";
 
 const empty: ReactElement = <></>;
 
@@ -46,6 +47,8 @@ export const initialState = {
 
 export const AppContext = createContext(initialState)
 
+export const APP_URL =   `${window.location.origin}${process.env.PUBLIC_URL}`
+
 export default function App() {
 
   const updateState = (key: string, value: any) => {
@@ -66,6 +69,7 @@ export default function App() {
     <LocalStorageProvider>
     <Routes>
       <Route path={HOME} element={<HomePage />} />
+      <Route path={`${RESULT}`} element={<ResultListPage />} />
       <Route path={`${RESULT}/:id`} element={<ResultPage type={ResultType.SEARCH} />} />
       <Route path={QUERY} element={<QueryPage />} />
       <Route path={API_ERROR} element={<APIErrorPage />} />
