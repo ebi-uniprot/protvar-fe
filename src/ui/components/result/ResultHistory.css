@@ -1,53 +1,58 @@
-.item-list {
+.map-container {
+  padding: 5px 5px 5px 15px;
+}
+
+.map-group {
+  margin-bottom: 5px;
+}
+
+.map-key {
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.map-items {
   list-style-type: none;
-  padding: 0;
-  max-height: 150px;
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: darkgrey lightgrey;
+  padding-left: 8px;
 }
 
-/* Works on Chrome, Edge, and Safari */
-.item-list::-webkit-scrollbar {
-  width: 12px;
-}
-
-.item-list::-webkit-scrollbar-track {
-  background: lightgrey;
-}
-
-.item-list::-webkit-scrollbar-thumb {
-  background-color: darkgrey;
-  border-radius: 20px;
-  border: 3px solid lightgrey;
-}
-
-.item {
+.map-item {
+  font-size: 12px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 4px 4px 4px 12px;
+  padding: 2px 2px 2px 8px;
   position: relative;
+
+  &.selected {
+    background-color: #014373;
+    color: white;
+    font-weight: bold;
+  }
 }
 
-.item-options {
-  display: none;
-}
-
-.item:hover .item-options {
-  display: block;
-}
-.item:hover {
-  background-color: lightgrey;
-}
-
-.item-name {
+.map-item-name {
   flex-grow: 1;
+  white-space: nowrap;
+  width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-.item-name:hover {
+.map-item-name:hover {
   cursor: pointer;
 }
 
-.item-options button {
+.map-item-options {
+  display: none;
+}
+.map-item-options button {
   margin-left: 5px;
+}
+
+.map-item:hover .map-item-options {
+  display: block;
+}
+.map-item:hover {
+  background-color: lightblue;
 }
