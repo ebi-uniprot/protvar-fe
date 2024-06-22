@@ -6,7 +6,7 @@ import {LOCAL_DOWNLOADS, PV_FTP, TITLE} from "../../../constants/const"
 import {DownloadRecord} from "../../../types/DownloadRecord";
 import Notify from "../../elements/Notify";
 import {useLocalStorageContext} from "../../../provider/LocalStorageContextProps";
-import {getRelativeTimeString} from "../../../utills/DateUtil";
+import {getRelativeTime} from "../../../utills/DateUtil";
 
 /*
 function testDownloadRes() : DownloadResponse {
@@ -124,7 +124,7 @@ function DownloadPageContent() {
                   // string may be messing up when retrieved, and thus getTime or getDate functions do not work
                   // soln: create new Date object
                 }
-                <td>{getRelativeTimeString(new Date(download.requested))}</td>
+                <td>{getRelativeTime(download.requested)}</td>
                 <td>{download.downloadId}</td>
                 <td>
                   {editingIndex === index ? (

@@ -1,7 +1,7 @@
 
 export interface DownloadRecord {
     //inputType: string
-    requested: Date
+    requested: string
     downloadId: string
     url: string
     jobName: string

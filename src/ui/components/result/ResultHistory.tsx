@@ -4,21 +4,9 @@ import {LOCAL_RESULTS} from "../../../constants/const";
 import {LOCAL_STORAGE_SET, useLocalStorageContext} from "../../../provider/LocalStorageContextProps";
 import {HOME} from "../../../constants/BrowserPaths";
 import {useNavigate, useParams} from "react-router-dom";
-import {ResultRecord} from "../../../types/ResultRecord";
+import {lastUpdate, ResultRecord} from "../../../types/ResultRecord";
 import {APP_URL} from "../../App";
-
-export const getLatestDate = (record: ResultRecord) => {
-  const dates = [record.firstSubmitted, record.lastSubmitted, record.lastViewed].filter(Boolean).map(date => new Date(date!));
-  return dates.length ? Math.max(...dates.map(date => date.getTime())) : 0;
-};
-
-/*
-const sortResultsByLatestDate = (records: ResultRecord[]): ResultRecord[] => {
-  return records.sort((a, b) => {
-    return getLatestDate(b) - getLatestDate(a);
-  });
-};
- */
+import {categoriseDate} from "../../../utills/DateUtil";
 
 const ResultHistory = () => {
   const {id} = useParams<{ id?: string }>();
@@ -91,7 +79,7 @@ const ResultHistory = () => {
 function groupByFirstN(records: ResultRecord[], n: number) {
   const map = new Map<string, ResultRecord[]>(); // key=dateCategory
   records.slice(0, n).forEach((record) => {
-    const dateCategory = categoriseDate(getLatestDate(record))
+    const dateCategory = categoriseDate(lastUpdate(record))
     const collection = map.get(dateCategory);
     if (!collection) {
       map.set(dateCategory, [record]);
@@ -100,41 +88,6 @@ function groupByFirstN(records: ResultRecord[], n: number) {
     }
   });
   return map;
-}
-
-function categoriseDate(date: number): string {
-  const now = new Date();
-  const givenDate = new Date(date);
-
-  // Resetting time portion for accurate comparison
-  now.setHours(0, 0, 0, 0);
-  givenDate.setHours(0, 0, 0, 0);
-
-  const msInDay = 24 * 60 * 60 * 1000;
-  const differenceInMs = now.getTime() - givenDate.getTime();
-  const differenceInDays = differenceInMs / msInDay;
-
-  if (differenceInDays < 0) {
-    return "";  // In case the given date is in the future
-  } else if (differenceInDays === 0) {
-    return "Today";
-  } else if (differenceInDays === 1) {
-    return "Yesterday";
-  } else if (differenceInDays <= 7) {
-    return "Previous 7 days";
-  } else if (differenceInDays <= 30) {
-    return "Previous 30 days";
-  } else if (differenceInDays <= 60) {
-    return "Previous 60 days";
-  } else if (differenceInDays <= 90) {
-    return "Previous 90 days";
-  } else if (differenceInDays <= 180) {
-    return "Previous 180 days";
-  } else if (differenceInDays <= 365) {
-    return "Previous year";
-  } else {
-    return "More than a year ago";
-  }
 }
 
 export default ResultHistory;

@@ -21,7 +21,7 @@ function ResultPageContent(props: ResultPageProps) {
   const { getValue, setValue } = useLocalStorageContext();
 
   const viewedRecord = useCallback((id: string, url: string) => {
-    const now = new Date().toLocaleString();
+    const now = new Date().toISOString();
     let savedRecords = getValue<ResultRecord[]>(LOCAL_RESULTS) || [];
 
     // Find the index of the record to update

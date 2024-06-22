@@ -2,10 +2,9 @@ import DefaultPageLayout from "../../layout/DefaultPageLayout";
 import React, {useEffect, useState} from "react";
 import {LOCAL_RESULTS, TITLE} from "../../../constants/const"
 import {useLocalStorageContext} from "../../../provider/LocalStorageContextProps";
-import {getRelativeTimeString} from "../../../utills/DateUtil";
-import {ResultRecord} from "../../../types/ResultRecord";
+import {getRelativeTime} from "../../../utills/DateUtil";
+import {lastUpdate, ResultRecord} from "../../../types/ResultRecord";
 import {NavLink} from "react-router-dom";
-import {getLatestDate} from "../../components/result/ResultHistory";
 import {APP_URL} from "../../App";
 
 
@@ -35,11 +34,6 @@ function ResultListPageContent() {
     const updatedResults = results.filter((_, idx) => idx !== index);
     setValue(LOCAL_RESULTS, updatedResults); // no re-sort needed
     setResults(updatedResults);
-  }
-
-  const getDate = (r: ResultRecord) => {
-    const latest = getLatestDate(r);
-    return latest ? getRelativeTimeString(latest) : "";
   }
 
   return <div className="container">
@@ -90,7 +84,7 @@ function ResultListPageContent() {
                         className="bi bi-pencil"></i></span>
                   )}
                 </td>
-                <td title={`Submitted ${record.lastSubmitted || record.firstSubmitted || `N/A`} Viewed ${record.lastViewed || `N/A`}`}>{getDate(record)}</td>
+                <td title={`Submitted ${record.lastSubmitted || record.firstSubmitted || `N/A`} Viewed ${record.lastViewed || `N/A`}`}>{getRelativeTime(lastUpdate(record))}</td>
                 <td>
                   <button title="Share" onClick={() => {
                     let url = `${APP_URL}${record.url}`;

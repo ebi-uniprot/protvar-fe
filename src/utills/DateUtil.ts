@@ -3,8 +3,11 @@
  * Convert a date to a relative time string, such as
  * "a minute ago", "in 2 hours", "yesterday", "3 months ago", etc.
  * using Intl.RelativeTimeFormat
+ * Note: function not exported, use getRelativeTime instead which
+ * safely convert a string into a JavaScript Date object before calling
+ * getRelativeTimeString
  */
-export function getRelativeTimeString(
+function getRelativeTimeString(
   date: Date | number,
   lang = navigator.language
 ): string {
@@ -30,4 +33,74 @@ export function getRelativeTimeString(
   // Intl.RelativeTimeFormat do its magic
   const rtf = new Intl.RelativeTimeFormat(lang, { numeric: "auto" });
   return rtf.format(Math.floor(deltaSeconds / divisor), units[unitIndex]);
+}
+
+export const getRelativeTime = (date: string | Date | null) => {
+  if (date) {
+    const d = typeof date === "string" ? parseDateString(date) : date;
+    if (d)
+      return getRelativeTimeString(d)
+  }
+  return ""
+}
+
+const parseDateString = (dateString: string | null | undefined): Date | null => {
+  if (!dateString) {
+    return null; // Handle null or empty string
+  }
+
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) {
+    return null; // Handle invalid date strings
+  }
+
+  return date;
+};
+
+export const getLatestDate = (dateStrings: (string | null | undefined)[]): Date | null => {
+  let latestDate: Date | null = null;
+  for (const dateString of dateStrings) {
+    const date = parseDateString(dateString);
+    if (date && (!latestDate || date > latestDate)) {
+      latestDate = date;
+    }
+  }
+  return latestDate;
+};
+
+
+export const categoriseDate = (date: Date|null): string => {
+  if (!date)
+    return "";
+  const now = new Date();
+
+  // Resetting time portion for accurate comparison
+  now.setHours(0, 0, 0, 0);
+  date.setHours(0, 0, 0, 0);
+
+  const msInDay = 24 * 60 * 60 * 1000;
+  const differenceInMs = now.getTime() - date.getTime();
+  const differenceInDays = differenceInMs / msInDay;
+
+  if (differenceInDays < 0) {
+    return "";  // In case the given date is in the future
+  } else if (differenceInDays === 0) {
+    return "Today";
+  } else if (differenceInDays === 1) {
+    return "Yesterday";
+  } else if (differenceInDays <= 7) {
+    return "Previous 7 days";
+  } else if (differenceInDays <= 30) {
+    return "Previous 30 days";
+  } else if (differenceInDays <= 60) {
+    return "Previous 60 days";
+  } else if (differenceInDays <= 90) {
+    return "Previous 90 days";
+  } else if (differenceInDays <= 180) {
+    return "Previous 180 days";
+  } else if (differenceInDays <= 365) {
+    return "Previous year";
+  } else {
+    return "More than a year ago";
+  }
 }
