@@ -19,6 +19,7 @@ import {IDResponse} from "../../../types/PagedMappingResponse";
 import {useLocalStorageContext} from "../../../provider/LocalStorageContextProps";
 import {LOCAL_RESULTS} from "../../../constants/const";
 import {ResultRecord} from "../../../types/ResultRecord";
+import {readFirstLineFromFile} from "../../../utills/FileUtil";
 
 const SearchVariant = () => {
   const navigate = useNavigate();
@@ -36,6 +37,7 @@ const SearchVariant = () => {
   const submittedRecord = async (id: string) => {
     const now = new Date().toISOString();
     const existingRecord = savedRecords.find(record => record.id === id);
+    const inputFirstLine = await getFirstLine();
 
     let updatedRecords;
 
@@ -52,6 +54,7 @@ const SearchVariant = () => {
       const newRecord: ResultRecord = {
         id,
         url: `${RESULT}/${id}`,
+        name: inputFirstLine ? `${inputFirstLine.substring(0,20)}...` : '',
         firstSubmitted: now,
         //lastSubmitted: now,
         //lastViewed: now
@@ -60,6 +63,16 @@ const SearchVariant = () => {
     }
     setValue(LOCAL_RESULTS, updatedRecords); // newRecord added at start, so sorted by latestDate
   };
+
+  async function getFirstLine(): Promise<string> {
+    if (form.file) {
+      return await readFirstLineFromFile(form.file);
+    } else if (form.text) {
+      return form.text.split('\n')[0] || '';
+    } else {
+      return '';
+    }
+  }
 
   const viewResult = (event: React.ChangeEvent<HTMLInputElement>) => {
     const target = event.target
