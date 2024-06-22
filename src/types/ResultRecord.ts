@@ -1,4 +1,6 @@
 // Maybe group results by Viewed & Submitted
+import {getLatestDate} from "../utills/DateUtil";
+
 export interface ResultRecord {
   id: string  // required
   url: string
@@ -8,4 +10,8 @@ export interface ResultRecord {
   name?: string
   numItems?: number
   params?: string // page, pageSize, assembly
+}
+
+export const lastUpdate = (rec: ResultRecord) => {
+  return getLatestDate([rec.firstSubmitted, rec.lastSubmitted, rec.lastViewed]);
 }

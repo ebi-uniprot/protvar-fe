@@ -33,8 +33,8 @@ const SearchVariant = () => {
   const { getValue, setValue } = useLocalStorageContext();
   const savedRecords = getValue<ResultRecord[]>(LOCAL_RESULTS) || [];
 
-  const submittedRecord = (id: string) => {
-    const now = new Date().toLocaleString();
+  const submittedRecord = async (id: string) => {
+    const now = new Date().toISOString();
     const existingRecord = savedRecords.find(record => record.id === id);
 
     let updatedRecords;
