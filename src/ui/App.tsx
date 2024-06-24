@@ -13,9 +13,9 @@ import HelpPage from "./pages/help/HelpPage";
 import {PagedMappingResponse, ResultType} from "../types/PagedMappingResponse";
 import ResultPage from "./pages/result/ResultPage";
 import {PAGE_SIZE} from "../constants/const";
-import {LocalStorageProvider} from "../provider/LocalStorageContextProps";
 import "bootstrap-icons/font/bootstrap-icons.css"
 import ResultListPage from "./pages/result/ResultListPage";
+import {LocalStorageProvider} from "../context/LocalStorageContext";
 
 const empty: ReactElement = <></>;
 

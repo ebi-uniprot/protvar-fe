@@ -5,8 +5,8 @@ import {LOCAL_DOWNLOADS, PV_FTP, TITLE} from "../../../constants/const"
 //import { v4 as uuidv4 } from 'uuid';
 import {DownloadRecord} from "../../../types/DownloadRecord";
 import Notify from "../../elements/Notify";
-import {useLocalStorageContext} from "../../../provider/LocalStorageContextProps";
 import {getRelativeTime} from "../../../utills/DateUtil";
+import useLocalStorage from "../../../hooks/useLocalStorage";
 
 /*
 function testDownloadRes() : DownloadResponse {
@@ -25,7 +25,7 @@ downloadStatusIcon[0] = 'download-nr';
 downloadStatusIcon[-1] = 'download-na';
 
 function DownloadPageContent() {
-  const {getValue, setValue} = useLocalStorageContext();
+  const {getItem, setItem} = useLocalStorage();
   const [downloads, setDownloads] = useState<DownloadRecord[]>([])
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -35,7 +35,7 @@ function DownloadPageContent() {
   useEffect(() => {
     document.title = "Downloads - " + TITLE;
     // Retrieve download records from local storage
-    const localDownloads = getValue<DownloadRecord[]>(LOCAL_DOWNLOADS) || []
+    const localDownloads = getItem<DownloadRecord[]>(LOCAL_DOWNLOADS) || []
     setDownloads(localDownloads)
     if (localDownloads.length > 0) {
       // Fetch updated statuses
@@ -50,7 +50,7 @@ function DownloadPageContent() {
               return d;
             });
             // Save updated objects to local storage
-            setValue(LOCAL_DOWNLOADS, updatedDownloads);
+            setItem(LOCAL_DOWNLOADS, updatedDownloads);
             setDownloads(updatedDownloads);
           }).catch(err => {
           console.error('Error fetching updated statuses:', err);
@@ -59,19 +59,19 @@ function DownloadPageContent() {
       }
       fetchUpdatedStatuses();
     }
-  }, [getValue, setValue]);
+  }, [getItem, setItem]);
 
   const handleNameChange = (index: number|null, newName: string) => {
     const updatedDownloads = downloads.map((d, idx) =>
       idx === index ? { ...d, jobName: newName } : d
     );
-    setValue(LOCAL_DOWNLOADS, updatedDownloads);
+    setItem(LOCAL_DOWNLOADS, updatedDownloads);
     setDownloads(updatedDownloads);
   };
 
   const handleDelete = (index: number) => {
     const updatedDownloads = downloads.filter((_, idx) => idx !== index);
-    setValue(LOCAL_DOWNLOADS, updatedDownloads);
+    setItem(LOCAL_DOWNLOADS, updatedDownloads);
     setDownloads(updatedDownloads);
   }
 

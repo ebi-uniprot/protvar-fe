@@ -1,15 +1,15 @@
 import DefaultPageLayout from "../../layout/DefaultPageLayout";
 import React, {useEffect, useState} from "react";
 import {LOCAL_RESULTS, TITLE} from "../../../constants/const"
-import {useLocalStorageContext} from "../../../provider/LocalStorageContextProps";
 import {getRelativeTime} from "../../../utills/DateUtil";
 import {lastUpdate, ResultRecord} from "../../../types/ResultRecord";
 import {NavLink} from "react-router-dom";
 import {APP_URL} from "../../App";
+import useLocalStorage from "../../../hooks/useLocalStorage";
 
 
 function ResultListPageContent() {
-  const {getValue, setValue} = useLocalStorageContext();
+  const {getItem, setItem} = useLocalStorage();
   const [results, setResults] = useState<ResultRecord[]>([])
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [showHelp, setShowHelp] = useState(false)
@@ -18,21 +18,21 @@ function ResultListPageContent() {
   useEffect(() => {
     document.title = "Results - " + TITLE;
     // Retrieve result records from local storage
-    const localResults = getValue<ResultRecord[]>(LOCAL_RESULTS) || []
+    const localResults = getItem<ResultRecord[]>(LOCAL_RESULTS) || []
     setResults(localResults)
-  }, [getValue, setValue]);
+  }, [getItem, setItem]);
 
   const handleNameChange = (index: number|null, newName: string) => {
     const updatedResults = results.map((r, idx) =>
       idx === index ? { ...r, name: newName } : r
     );
-    setValue(LOCAL_RESULTS, updatedResults); // no sort needed
+    setItem(LOCAL_RESULTS, updatedResults); // no sort needed
     setResults(updatedResults);
   };
 
   const handleDelete = (index: number) => {
     const updatedResults = results.filter((_, idx) => idx !== index);
-    setValue(LOCAL_RESULTS, updatedResults); // no re-sort needed
+    setItem(LOCAL_RESULTS, updatedResults); // no re-sort needed
     setResults(updatedResults);
   }
 

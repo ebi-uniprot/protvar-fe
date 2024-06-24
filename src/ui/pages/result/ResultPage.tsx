@@ -8,9 +8,9 @@ import {LOCAL_RESULTS, TITLE} from "../../../constants/const";
 import DownloadModal from "../../modal/DownloadModal";
 import {getResult} from "../../../services/ProtVarService";
 import {PagedMappingResponse, ResultType} from "../../../types/PagedMappingResponse";
-import {useLocalStorageContext} from "../../../provider/LocalStorageContextProps";
 
 import {ResultRecord} from "../../../types/ResultRecord";
+import useLocalStorage from "../../../hooks/useLocalStorage";
 
 function ResultPageContent(props: ResultPageProps) {
   const location = useLocation()
@@ -18,11 +18,11 @@ function ResultPageContent(props: ResultPageProps) {
 
   const [data, setData] = useState<PagedMappingResponse | null>(null)
   const [loading, setLoading] = useState(true)
-  const { getValue, setValue } = useLocalStorageContext();
+  const { getItem, setItem } = useLocalStorage();
 
   const viewedRecord = useCallback((id: string, url: string) => {
     const now = new Date().toISOString();
-    let savedRecords = getValue<ResultRecord[]>(LOCAL_RESULTS) || [];
+    let savedRecords = getItem<ResultRecord[]>(LOCAL_RESULTS) || [];
 
     // Find the index of the record to update
     const index = savedRecords.findIndex(record => record.id === id);
@@ -37,8 +37,8 @@ function ResultPageContent(props: ResultPageProps) {
       // add new record to beginning of array
       savedRecords = [{ id, url: url, lastViewed: now }, ...savedRecords]
     }
-    setValue(LOCAL_RESULTS, savedRecords);
-  }, [getValue, setValue]);
+    setItem(LOCAL_RESULTS, savedRecords);
+  }, [getItem, setItem]);
 
   const loadData = useCallback((type: ResultType, location: any, id: string|undefined) => {
     document.title = `Result - ${TITLE}`;

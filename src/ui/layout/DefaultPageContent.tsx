@@ -3,33 +3,33 @@ import {DOWNLOAD, HOME, RESULT} from '../../constants/BrowserPaths'
 import {useEffect, useState} from "react";
 import ResultHistory from "../components/result/ResultHistory";
 import {LOCAL_DOWNLOADS, LOCAL_RESULTS} from "../../constants/const";
-import {LOCAL_STORAGE_SET, useLocalStorageContext} from "../../provider/LocalStorageContextProps";
+import useLocalStorage from "../../hooks/useLocalStorage";
+import {SET_ITEM} from "../../context/LocalStorageContext";
 
 const DefaultPageContent = (props: {
   children: JSX.Element
 }) => {
   const { children } = props
-
-  const { getValue } = useLocalStorageContext();
-  const [numResults, setNumResults] = useState<number>((getValue<any[]>(LOCAL_RESULTS) || []).length)
-  const [numDownloads, setNumDownloads] = useState<number | null>((getValue<any[]>(LOCAL_DOWNLOADS) || []).length)
+  const { getItem } = useLocalStorage();
+  const [numResults, setNumResults] = useState<number>((getItem<any[]>(LOCAL_RESULTS) || []).length)
+  const [numDownloads, setNumDownloads] = useState<number | null>((getItem<any[]>(LOCAL_DOWNLOADS) || []).length)
 
   useEffect(() => {
     const handleStorageChange = (e: CustomEvent) => {
       if (e.detail === LOCAL_RESULTS)
-        setNumResults((getValue<any[]>(LOCAL_RESULTS) || []).length);
+        setNumResults((getItem<any[]>(LOCAL_RESULTS) || []).length);
       else if (e.detail === LOCAL_DOWNLOADS)
-        setNumDownloads((getValue<any[]>(LOCAL_DOWNLOADS) || []).length)
+        setNumDownloads((getItem<any[]>(LOCAL_DOWNLOADS) || []).length)
     };
 
     // Listen for changes in localStorage
-    window.addEventListener(LOCAL_STORAGE_SET, handleStorageChange as EventListener);
+    window.addEventListener(SET_ITEM, handleStorageChange as EventListener);
 
     return () => {
       // Clean up the listener
-      window.removeEventListener(LOCAL_STORAGE_SET, handleStorageChange as EventListener);
+      window.removeEventListener(SET_ITEM, handleStorageChange as EventListener);
     };
-  }, [getValue]);
+  }, [getItem]);
 
   return (
     <div className="default-page-content">
