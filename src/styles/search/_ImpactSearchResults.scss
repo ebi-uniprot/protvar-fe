@@ -790,14 +790,21 @@
 .conf-low .conf-high .conf-vhigh {
 	font-size: x-small;
 }
+.conf-vlow {
+	color: #e69138;
+}
 .conf-low {
-	color: #87CEFA;
+	color: #f1c232;
 }
 .conf-high {
-	color: #00BFFF;
+	color: #b6d7a8;
 }
 .conf-vhigh {
-	color: #1E90FF;
+	color: #38761d;
+}
+.pocket-conf {
+	display: inline-block;
+	width: 65px
 }
 
 .show-btn {
