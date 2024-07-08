@@ -2,7 +2,7 @@ import Button from '../../elements/form/Button';
 import { Dropdown } from 'react-dropdown-now';
 import 'react-dropdown-now/style.css';
 import {useLocation, useNavigate, useSearchParams} from "react-router-dom";
-import {PAGE_SIZE, PAGE_SIZES} from "../../../constants/const";
+import {DEFAULT_PAGE, DEFAULT_PAGE_SIZE, PERMITTED_PAGE_SIZES} from "../../../constants/const";
 import {PagedMappingResponse} from "../../../types/PagedMappingResponse";
 
 interface PaginationRowProps {
@@ -32,6 +32,7 @@ function PaginationRow(props: PaginationRowProps) {
     if (data) {
       //loadData(data.id, assembly, p, pageSize);
       if (p === 1)
+      if (p === DEFAULT_PAGE) // page 1
         searchParams.delete("page");
       else
         searchParams.set("page", p.toString());
@@ -47,7 +48,7 @@ function PaginationRow(props: PaginationRowProps) {
       //loadData(data.id, assembly, 1, newPageSize);// go back to page 1
       searchParams.delete("page"); // reset to page 1
 
-      if (newPageSize === PAGE_SIZE)
+      if (newPageSize === DEFAULT_PAGE_SIZE)
         searchParams.delete("pageSize");
       else
         searchParams.set("pageSize", newPageSize.toString());
@@ -76,7 +77,7 @@ function PaginationRow(props: PaginationRowProps) {
       <td>
         <Dropdown
           placeholder="Pages"
-          options={PAGE_SIZES}
+          options={PERMITTED_PAGE_SIZES}
           value={data?.pageSize}
           onChange={(option) => changePageSize(option.value)}
           disabled={loading || data === null}

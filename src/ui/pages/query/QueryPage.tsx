@@ -8,6 +8,7 @@ import LegendModal from '../../modal/LegendModal'
 import {TITLE} from "../../../constants/const";
 import {mappings} from "../../../services/ProtVarService";
 import {PagedMappingResponse, toPagedMappingResponse} from "../../../types/PagedMappingResponse";
+import {APP_URL} from "../../App";
 
 // basic tests on query params
 const chromosomeRegExp = new RegExp('[a-zA-Z0-9]+')
@@ -166,7 +167,7 @@ const QueryPageContent = () => {
     }
   }, [input])
 
-  const shareUrl = `${window.location.origin}${process.env.PUBLIC_URL}${location.pathname}${location.search}`
+  const shareUrl = `${APP_URL}${location.pathname}${location.search}`
 
   if (!input) {
     return <QueryInfoContent />

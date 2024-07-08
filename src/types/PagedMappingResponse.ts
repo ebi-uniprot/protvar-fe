@@ -1,5 +1,5 @@
 import { MappingResponse } from "./MappingResponse";
-import {PAGE_SIZE} from "../constants/const";
+import {DEFAULT_PAGE, DEFAULT_PAGE_SIZE} from "../constants/const";
 
 export enum ResultType {SEARCH, PROTEIN}
 export interface PagedMappingResponse {
@@ -15,8 +15,8 @@ export interface PagedMappingResponse {
 export const toPagedMappingResponse = (mappingResponse: MappingResponse): PagedMappingResponse => {
   return {content: mappingResponse,
     id: "",
-    page: 1,
-    pageSize: PAGE_SIZE,
+    page: DEFAULT_PAGE,
+    pageSize: DEFAULT_PAGE_SIZE,
     totalItems: 1,
     totalPages: 1,
     last: true

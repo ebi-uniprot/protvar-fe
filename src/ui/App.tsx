@@ -12,10 +12,10 @@ import DownloadPage from "./pages/download/DownloadPage";
 import HelpPage from "./pages/help/HelpPage";
 import {PagedMappingResponse, ResultType} from "../types/PagedMappingResponse";
 import ResultPage from "./pages/result/ResultPage";
-import {PAGE_SIZE} from "../constants/const";
 import "bootstrap-icons/font/bootstrap-icons.css"
 import ResultListPage from "./pages/result/ResultListPage";
 import {LocalStorageProvider} from "../context/LocalStorageContext";
+import {DEFAULT_PAGE_SIZE} from "../constants/const";
 
 const empty: ReactElement = <></>;
 
@@ -40,7 +40,7 @@ export const initialState = {
   textInput: "",
   file: null,
   assembly: Assembly.AUTO,
-  pageSize: PAGE_SIZE, // needs to be localStore, not appState
+  pageSize: DEFAULT_PAGE_SIZE, // needs to be localStore, not appState
   response: null,
   updateState: (key: string, value: any) => {}
 }

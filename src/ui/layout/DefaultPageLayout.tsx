@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react'
 import { Link } from 'react-router-dom'
 import {ABOUT, CONTACT, HELP, HOME, RELEASE} from '../../constants/BrowserPaths'
-import { API_URL, DISMISS_BANNER } from '../../constants/const'
+import { API_URL, LOCAL_BANNER } from '../../constants/const'
 
 import DefaultPageContent from './DefaultPageContent'
 
@@ -28,7 +28,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
       win.ebiFrameworkInvokeScripts()
     }
 
-    const bannerDismissed = sessionStorage.getItem(DISMISS_BANNER);
+    const bannerDismissed = sessionStorage.getItem(LOCAL_BANNER);
     if (bannerDismissed) {
       setShowBanner(false);
     }
@@ -37,7 +37,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
   const { content } = props;
 
   const handleDismiss = () => {
-    sessionStorage.setItem(DISMISS_BANNER, 'true');
+    sessionStorage.setItem(LOCAL_BANNER, 'true');
     setShowBanner(false);
   }
 

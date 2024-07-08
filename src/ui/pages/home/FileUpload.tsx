@@ -1,10 +1,9 @@
 import React, { useRef } from 'react'
 import Button from '../../elements/form/Button';
 import { VCF_FORMAT_INFO_URL } from '../../../constants/ExternalUrls';
-import { FileLoadFun } from '../../../utills/AppHelper';
 
 interface FileUploadProps {
-  fetchFileResult: FileLoadFun
+  fetchFileResult: (file: File) => void
   isLoading: boolean
 }
 

@@ -5,8 +5,8 @@ import {
   CONTENT_MULTIPART,
   CONTENT_TEXT,
   DEFAULT_HEADERS,
-  DOWNLOAD_STATUS,
-  G2P_MAPPING_URI
+  API_DOWNLOAD_STATUS,
+  API_MAPPINGS
 } from "../constants/const";
 import {FunctionalResponse} from "../types/FunctionalResponse";
 import {PopulationObservationResponse} from "../types/PopulationObservationResponse";
@@ -26,7 +26,7 @@ const api = setupCache(instance, {})
 // POST /mappings
 export function mappings(inputArr: string[], assembly?: string) {
   return api.post<any, string[], AxiosResponse<MappingResponse>>(
-    G2P_MAPPING_URI,
+    API_MAPPINGS,
     inputArr,
     {
       params: {assembly},
@@ -161,7 +161,7 @@ export function downloadResult(id: string, page: string|null, pageSize: string|n
 
 export function getDownloadStatus(ids: string[]) {
   return api.post(
-    DOWNLOAD_STATUS,
+    API_DOWNLOAD_STATUS,
     ids,
     {
       headers: DEFAULT_HEADERS,
