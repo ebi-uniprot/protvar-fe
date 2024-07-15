@@ -7,9 +7,11 @@ export interface PagedMappingResponse {
   id: string
   page: number
   pageSize: number
+  assembly?: string
   totalItems: number
   totalPages: number
   last: boolean
+  ttl: number
 }
 
 export const toPagedMappingResponse = (mappingResponse: MappingResponse): PagedMappingResponse => {
@@ -19,7 +21,8 @@ export const toPagedMappingResponse = (mappingResponse: MappingResponse): PagedM
     pageSize: DEFAULT_PAGE_SIZE,
     totalItems: 1,
     totalPages: 1,
-    last: true
+    last: true,
+    ttl: 0
   }
 }
 
