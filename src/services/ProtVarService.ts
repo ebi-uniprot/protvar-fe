@@ -12,7 +12,7 @@ import {FunctionalResponse} from "../types/FunctionalResponse";
 import {PopulationObservationResponse} from "../types/PopulationObservationResponse";
 import {ProteinStructureResponse} from "../types/ProteinStructureResponse";
 import MappingResponse from "../types/MappingResponse";
-import {DownloadRecord} from "../types/DownloadRecord";
+import {DownloadResponse} from "../types/DownloadRecord";
 import {IDResponse, PagedMappingResponse, ResultType} from "../types/PagedMappingResponse";
 
 
@@ -126,7 +126,7 @@ export function getStructureData(url: string) {
 export function downloadFileInput(file: File, assembly: string, email: string, jobName: string, functional: boolean, population: boolean, structure: boolean) {
   const formData = new FormData();
   formData.append('file', file);
-  return api.post<any, FormData, AxiosResponse<DownloadRecord>>(
+  return api.post<any, FormData, AxiosResponse<DownloadResponse>>(
     `${API_URL}/download/fileInput`,
     formData,
     {
@@ -137,7 +137,7 @@ export function downloadFileInput(file: File, assembly: string, email: string, j
 }
 
 export function downloadTextInput(inputArr: string[], assembly: string, email: string, jobName: string, functional: boolean, population: boolean, structure: boolean) {
-  return api.post<any, string[], AxiosResponse<DownloadRecord>>(
+  return api.post<any, string[], AxiosResponse<DownloadResponse>>(
     `${API_URL}/download/textInput`,
     inputArr,
     {
@@ -147,13 +147,13 @@ export function downloadTextInput(inputArr: string[], assembly: string, email: s
   );
 }
 
-export function downloadResult(id: string, page: string|null, pageSize: string|null, assembly: string|null,
+export function downloadResult(id: string, protein: boolean, page: string|null, pageSize: string|null, assembly: string|null,
                                email: string, jobName: string, functional: boolean, population: boolean, structure: boolean) {
-  return api.post<any, string, AxiosResponse<DownloadRecord>>(
-    `${API_URL}/download/idInput`,
+  return api.post<any, string, AxiosResponse<DownloadResponse>>(
+    `${API_URL}/download`,
     id,
     {
-      params: {page, pageSize, assembly, email, jobName, function: functional, population, structure},
+      params: {protein, page, pageSize, assembly, email, jobName, function: functional, population, structure},
       headers: CONTENT_TEXT,
     }
   );
