@@ -141,7 +141,7 @@ export function downloadTextInput(inputArr: string[], assembly: string, email: s
   );
 }
 
-export function downloadResult(id: string, type: ResultType, page: string|null, pageSize: string|null, assembly: string|null,
+export function downloadResult(id: string, type: string, page: string|null, pageSize: string|null, assembly: string|null,
                                email: string, jobName: string, functional: boolean, population: boolean, structure: boolean) {
   return api.post<any, string, AxiosResponse<DownloadResponse>>(
     `${API_URL}/download`, id,

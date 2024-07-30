@@ -90,7 +90,7 @@ function DownloadModal(props: DownloadModalProps) {
     const pageSize = page ? searchParams.get('pageSize') : null
     const assembly = searchParams.get('assembly')
 
-    downloadResult(id, props.type, page, pageSize, assembly,
+    downloadResult(id, ResultType[props.type], page, pageSize, assembly,
       form.email, form.jobName, form.fun, form.pop, form.str)
     .then((response) => {
       const downloadResponse = response.data
