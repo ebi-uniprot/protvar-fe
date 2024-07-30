@@ -14,7 +14,7 @@ interface DefaultPageLayoutProps {
   content: JSX.Element
 }
 
-const bannerText = "AlphaMissense prediction has replaced EVE score in the main table. You can now find EVE score under Predictions in the Functional Information section."
+const bannerText = null
 
 function DefaultPageLayout(props: DefaultPageLayoutProps) {
   const [showBanner, setShowBanner ] = useState(bannerText == null ? false : true);
