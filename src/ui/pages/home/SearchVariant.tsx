@@ -2,13 +2,11 @@ import React, {useState, useRef} from 'react'
 import Button from '../../elements/form/Button'
 import {Assembly, DEFAULT_ASSEMBLY} from '../../../constants/CommonTypes'
 import {
+  INPUT_EXAMPLES,
   CDNA_BTN_TITLE,
-  CDNA_EXAMPLE,
   GENOMIC_BTN_TITLE,
-  GENOMIC_EXAMPLE, ID_BTN_TITLE,
-  ID_EXAMPLE,
-  PASTE_BOX, PROTEIN_BTN_TITLE,
-  PROTEIN_EXAMPLE
+  ID_BTN_TITLE,
+  PASTE_BOX, PROTEIN_BTN_TITLE
 } from "../../../constants/Example";
 import {Form, initialForm} from "../../../types/FormData";
 import {submitInputFile, submitInputText} from "../../../services/ProtVarService";
@@ -97,8 +95,14 @@ const SearchVariant = () => {
     var promise: Promise<AxiosResponse<IDResponse>> | undefined = undefined;
     if (form.file)
       promise = submitInputFile(form.file, form.assembly)
-    else if (form.text)
+    else if (form.text) {
+      // input example check that can be used to decide whether
+      // to save in result history or not.
+      //if (INPUT_EXAMPLES.includes(form.text.trim())) {
+      //  alert('Example!')
+      //}
       promise = submitInputText(form.text, form.assembly)
+    }
 
     if (promise) {
       promise
@@ -152,7 +156,7 @@ const SearchVariant = () => {
                   <div className="examples-container">
 
                     <button
-                      onClick={_=>setForm({...form, text: GENOMIC_EXAMPLE})}
+                      onClick={_=>setForm({...form, text: INPUT_EXAMPLES[0]})}
                       className="example-link"
                       id="genomicExamples"
                       title={GENOMIC_BTN_TITLE}
@@ -161,7 +165,7 @@ const SearchVariant = () => {
                     </button>
 
                     <button
-                      onClick={_=>setForm({...form, text: CDNA_EXAMPLE})}
+                      onClick={_=>setForm({...form, text: INPUT_EXAMPLES[1]})}
                       className="example-link"
                       id="cDNAExamples"
                       title={CDNA_BTN_TITLE}
@@ -170,7 +174,7 @@ const SearchVariant = () => {
                     </button>
 
                     <button
-                      onClick={_=>setForm({file: form.file, text: PROTEIN_EXAMPLE, assembly: DEFAULT_ASSEMBLY})}
+                      onClick={_=>setForm({file: form.file, text: INPUT_EXAMPLES[2], assembly: DEFAULT_ASSEMBLY})}
                       className="example-link"
                       id="proteinExamples"
                       title={PROTEIN_BTN_TITLE}
@@ -179,7 +183,7 @@ const SearchVariant = () => {
                     </button>
 
                     <button
-                      onClick={_=>setForm({file: form.file, text: ID_EXAMPLE, assembly: DEFAULT_ASSEMBLY})}
+                      onClick={_=>setForm({file: form.file, text: INPUT_EXAMPLES[3], assembly: DEFAULT_ASSEMBLY})}
                       className="example-link"
                       id="idExamples"
                       title={ID_BTN_TITLE}
