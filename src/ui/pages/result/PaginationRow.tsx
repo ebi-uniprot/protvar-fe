@@ -31,7 +31,7 @@ function PaginationRow(props: PaginationRowProps) {
   function changePage(p: number) {
     if (data) {
       //loadData(data.id, assembly, p, pageSize);
-      if (p === 1)
+      searchParams.delete("annotation"); // reset any expanded annotation
       if (p === DEFAULT_PAGE) // page 1
         searchParams.delete("page");
       else
@@ -46,7 +46,8 @@ function PaginationRow(props: PaginationRowProps) {
     if (data && newPageSize !== pageSize) {
       //setPageSize(newPageSize);
       //loadData(data.id, assembly, 1, newPageSize);// go back to page 1
-      searchParams.delete("page"); // reset to page 1
+      searchParams.delete("page"); // reset page num
+      searchParams.delete("annotation"); // reset any expanded annotation
 
       if (newPageSize === DEFAULT_PAGE_SIZE)
         searchParams.delete("pageSize");
