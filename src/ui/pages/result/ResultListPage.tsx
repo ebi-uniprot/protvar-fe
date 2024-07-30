@@ -58,6 +58,9 @@ function ResultListPageContent() {
             <th scope="col">ID</th>
             <th scope="col">Name</th>
             <th scope="col">Last submitted/viewed</th>
+            {
+            //<th scope="col">Expires</th>
+            }
             <th scope="col">Share</th>
             <th scope="col">Delete</th>
           </tr>
@@ -85,11 +88,14 @@ function ResultListPageContent() {
                   )}
                 </td>
                 <td title={`Submitted ${record.lastSubmitted || record.firstSubmitted || `N/A`} Viewed ${record.lastViewed || `N/A`}`}>{getRelativeTime(lastUpdate(record))}</td>
+                {
+                //<td>in {}</td>
+                }
                 <td>
                   <button title="Share" onClick={() => {
                     let url = `${APP_URL}${record.url}`;
                     navigator.clipboard.writeText(url);
-                    alert(`Copy URL: ${url}`)
+                    alert(`URL copied: ${url}`)
                   }} className="bi bi-share result-op-btn"></button>
                 </td>
                 <td>
@@ -117,7 +123,7 @@ const ResultHelp = () => {
     <p>The generated URL follows this format:</p>
 
     <p>
-      <code>https://www.ebi.ac.uk/ProtVar/result/UUID[?page=PAGE&pageSize=PAGE_SIZE&assembly=ASSEMBLY&annotation=[function|population|structure]-X]</code>
+      <code>https://www.ebi.ac.uk/ProtVar/result/UUID[?page=PAGE&pageSize=PAGE_SIZE&assembly=ASSEMBLY&annotation=[functional|population|structural]-row-X]</code>
     </p>
 
     <p><strong>URL Parameters:</strong></p>
@@ -128,12 +134,12 @@ const ResultHelp = () => {
       <li><code>assembly</code>: Optional parameter specifying the genome assembly version used for the search.</li>
       <li><code>annotation</code>: Optional parameter to open specific annotation section on the result page:
         <ul>
-          <li><code>function</code>: Open the functional annotation.</li>
+          <li><code>functional</code>: Open the functional annotation.</li>
           <li><code>population</code>: Open the population annotation.</li>
-          <li><code>structure</code>: Open structural annotation.</li>
+          <li><code>structural</code>: Open structural annotation.</li>
         </ul>
       </li>
-      <li><code>X</code>: Corresponds to the specific variant on the result page.
+      <li><code>X</code>: Corresponds to the specific variant row on the result page.
       </li>
     </ul>
 
