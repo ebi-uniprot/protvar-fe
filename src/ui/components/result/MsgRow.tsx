@@ -1,9 +1,12 @@
 import {TOTAL_COLS} from "../../../constants/SearchResultTable";
 import {ERROR, INFO, InputType, Message, WARN} from "../../../types/MappingResponse";
+import {rowBg} from "./ResultTable";
 
 export const WARN_ICON = <><i className="msg-warn bi bi-exclamation-triangle-fill"></i>{' '}</>
 export const ERROR_ICON = <><i className="msg-error bi bi-x-circle-fill"></i>{' '}</>
 export const INFO_ICON = <><i className="msg-info bi bi-info-circle-fill"></i>{' '}</>
+
+export const NO_MAPPING: Message = {type: 'ERROR', text: 'No mapping found' }
 
 const getIcon = (m?: Message) => {
   if (m) {
@@ -18,11 +21,12 @@ const getIcon = (m?: Message) => {
 
 interface MsgRowProps {
   msg: Message,
-  input?: InputType
+  input?: InputType // null for request-level messages
+  index?:number     // null for request-level messages
 }
 
 const MsgRow = (props: MsgRowProps) => {
-  return <tr>
+  return <tr style={rowBg(props.index?? -1)} title={props.input ? `Input: ${props.input.inputStr}` : ``}>
     <td colSpan={TOTAL_COLS}>
       {getIcon(props.msg)}
       <b>{props.input && props.input.inputStr}</b> {props.msg.text}

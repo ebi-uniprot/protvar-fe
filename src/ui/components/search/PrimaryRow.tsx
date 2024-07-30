@@ -34,6 +34,7 @@ import {
   IsoFormMapping,
   InputType
 } from "../../../types/MappingResponse";
+import {rowBg} from "../result/ResultTable";
 
 const StructuralDetail = lazy(() => import(/* webpackChunkName: "StructuralDetail" */ "../structure/StructuralDetail"));
 const PopulationDetail = lazy(() => import(/* webpackChunkName: "PopulationDetail" */ "../population/PopulationDetail"));
@@ -219,12 +220,6 @@ function getSignificancesButton(rowKey: string, buttonLabel: string, canonical: 
 }
 
 // V2
-export const rowBg = (index: number) => {
-  const rowColor = {backgroundColor: "#F4F3F3" }
-  const altRowColor = {backgroundColor: "#FFFFFF" }
-  return (index % 2 === 0) ? altRowColor : rowColor;
-}
-
 export const aaChangeStr = (ref: string, alt: string) => {
   return ref + '/' + alt
 }

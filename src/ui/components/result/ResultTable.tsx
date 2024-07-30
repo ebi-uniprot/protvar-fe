@@ -14,10 +14,8 @@ import {getAlternateIsoFormRow} from "./AlternateIsoFormRow";
 import {getNewPrimaryRow} from "../search/PrimaryRow";
 import {AppContext} from "../../App";
 import Loader from "../../elements/Loader";
-import MsgRow from "./MsgRow";
+import MsgRow, {NO_MAPPING} from "./MsgRow";
 import {useLocation, useNavigate, useSearchParams} from "react-router-dom";
-
-const NO_MAPPING: Message = {type: 'ERROR', text: 'No mapping found' }
 
 function ResultTable(props: {loading: boolean, data: PagedMappingResponse | null}) {
   const stdColor = useContext(AppContext).stdColor
@@ -97,14 +95,23 @@ function ResultTable(props: {loading: boolean, data: PagedMappingResponse | null
   </table>
 }
 
+export const rowBg = (index: number) => {
+  const rowColor = {backgroundColor: "#F4F3F3" }
+  const altRowColor = {backgroundColor: "#FFFFFF" }
+  return (index % 2 === 0) ? altRowColor : rowColor;
+}
+
+// Process and convert paged mapping response into table rows
 const getTableRows = (data: PagedMappingResponse | null, isoformGroupExpanded: string, toggleIsoformGroup: StringVoidFun,
                       annotationExpanded: string, toggleAnnotation: StringVoidFun, stdColor: boolean) => {
   const tableRows: Array<JSX.Element> = [];
 
+  // request-level messages
   data?.content.messages?.forEach((m, mIdx) => {
     //records.push(msgRow(-1, m))  // index -1 NOT TAKEN INTO ACCOUNT
     tableRows.push(<MsgRow key={`content-message-${mIdx}`} msg={m} />)
   });
+
   let primaryRow = 0 // ensures similar or duplicate inputs do not lead to conflicting key
   let altRow = 0
   const addGenMapping = (index: number, genIndex: number, input: GenomicInput, originalInput: InputType) => {
