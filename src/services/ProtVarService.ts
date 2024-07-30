@@ -77,7 +77,7 @@ export function submitInputFile(file: File, assembly?: string, idOnly: boolean =
 // GET /mapping/input/{id}
 // IN: id
 // OUT: PagedMappingResponse
-export function getResult(type: ResultType, id: string, page?: number, pageSize?: number, assembly: string|null = null) {
+export function getResult(type: ResultType, id: string, page: number, pageSize: number, assembly: string|null = null) {
   let url = ''
   let params = {}
 
