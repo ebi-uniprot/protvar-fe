@@ -63,7 +63,7 @@ const ResultHistory = () => {
                     <button title="Share" onClick={() => {
                       let url = `${APP_URL}${record.url}`;
                       navigator.clipboard.writeText(url);
-                      alert(`Copy URL: ${url}`)
+                      alert(`URL copied: ${url}`)
                     }} className="bi bi-share result-op-btn"></button>
                   </div>
                 </>
