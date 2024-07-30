@@ -14,7 +14,7 @@ import {getAlternateIsoFormRow} from "./AlternateIsoFormRow";
 import {getNewPrimaryRow} from "../search/PrimaryRow";
 import {AppContext} from "../../App";
 import Loader from "../../elements/Loader";
-import MsgRow, {NO_MAPPING} from "./MsgRow";
+import MsgRow from "./MsgRow";
 import {useLocation, useNavigate, useSearchParams} from "react-router-dom";
 
 function ResultTable(props: {loading: boolean, data: PagedMappingResponse | null}) {
@@ -101,23 +101,40 @@ export const rowBg = (index: number) => {
   return (index % 2 === 0) ? altRowColor : rowColor;
 }
 
+const NO_MAPPING: Message = {type: 'ERROR', text: 'No mapping found' }
+
+const hasNoMapping = (genInput: GenomicInput) => {
+  return genInput.mappings.length === 0 || (genInput.mappings.length === 1 && genInput.mappings[0].genes.length === 0)
+}
+
+const hasNoMessage = (originalInput: CustomInput, genInput: GenomicInput) => {
+  return !(originalInput.messages.length > 0 || genInput.messages.length > 0)
+}
+
 // Process and convert paged mapping response into table rows
 const getTableRows = (data: PagedMappingResponse | null, isoformGroupExpanded: string, toggleIsoformGroup: StringVoidFun,
                       annotationExpanded: string, toggleAnnotation: StringVoidFun, stdColor: boolean) => {
   const tableRows: Array<JSX.Element> = [];
 
-  // request-level messages
-  data?.content.messages?.forEach((m, mIdx) => {
-    //records.push(msgRow(-1, m))  // index -1 NOT TAKEN INTO ACCOUNT
-    tableRows.push(<MsgRow key={`content-message-${mIdx}`} msg={m} />)
+  // top-level messages
+  data?.content.messages?.forEach((message, messageIndex) => {
+    tableRows.push(<MsgRow key={`message-${messageIndex}`} message={message} />)
   });
 
   let primaryRow = 0 // ensures similar or duplicate inputs do not lead to conflicting key
   let altRow = 0
   const addGenMapping = (index: number, genIndex: number, input: GenomicInput, originalInput: CustomInput) => {
+
+    if (hasNoMapping(input)) {
+      if (hasNoMessage(originalInput, input)) {
+        tableRows.push(<MsgRow index={index} key={`input-${index}-${genIndex}-nomapping`} message={NO_MAPPING} input={input}  />)
+        return
+      }
+    }
+
     input.mappings.forEach((mapping, mappingIdx) => {
       mapping.genes.forEach((gene, geneIdx) => {
-        const isoformGroupKey = `input-${index}-genInput-${genIndex}-mapping-${mappingIdx}-gene-${geneIdx}-isoform`
+        const isoformGroupKey = `input-${index}-${genIndex}-mapping-${mappingIdx}-gene-${geneIdx}-isoform`
         gene.isoforms.forEach((isoform, isoformIdx) => {
           if (isoformIdx === 0) {
             primaryRow++;
@@ -135,31 +152,25 @@ const getTableRows = (data: PagedMappingResponse | null, isoformGroupExpanded: s
   }
 
   data?.content.inputs?.forEach((input, inputIndex) => {
-    const numRowsBefore = tableRows.length
-    input.messages.forEach((m,msgIdx) => {
-      //records.push(msgRow(index, m, input))
-      tableRows.push(<MsgRow key={`input-${inputIndex}-message-${msgIdx}`} msg={m} input={input} />)
+
+    // individual input-level messages
+    input.messages.forEach((message,messageIndex) => {
+      tableRows.push(<MsgRow index={inputIndex} key={`input-${inputIndex}-message-${messageIndex}`} message={message} input={input} />)
     });
 
     if (input.type === INPUT_GEN && "mappings" in input) {
-      //records.push(convertGenInputMappings(input, input, index))
       addGenMapping(inputIndex, 0, input, input)
     }
-    else if ((input.type === INPUT_PRO || input.type === INPUT_CDNA || input.type === INPUT_ID) && "derivedGenomicInputs" in input) {
+    else if ((input.type === INPUT_PRO || input.type === INPUT_CDNA || input.type === INPUT_ID)
+      && "derivedGenomicInputs" in input) {
       input.derivedGenomicInputs.forEach((gInput: GenomicInput, genIndex: number) => {
-        gInput.messages.forEach((m, msgIdx) => {
-          //records.push(msgRow(index, m, gInput))
-          tableRows.push(<MsgRow key={`input-${inputIndex}-genInput-${genIndex}-message-${msgIdx}`} msg={m} />)
+        gInput.messages.forEach((message, messageIndex) => {
+          tableRows.push(<MsgRow index={inputIndex} key={`input-${inputIndex}-${genIndex}-message-${messageIndex}`} message={message} input={input} />)
         });
-        //records.push(convertGenInputMappings(input, gInput, index))
         // IT SEEMS WE MAY NOT BE TAKING THE ORIGINAL AND DERIVED GEN INPUT
         // INTO ACCOUNT SOMEWHERE...
         addGenMapping(inputIndex, genIndex, gInput, input)
       })
-    }
-    // if no new row added, assume no mapping is found!
-    if (numRowsBefore === tableRows.length) {
-      tableRows.push(<MsgRow index={inputIndex} key={`input-${inputIndex}-nomapping`} msg={NO_MAPPING} input={input}  />)
     }
   });
   return tableRows;
