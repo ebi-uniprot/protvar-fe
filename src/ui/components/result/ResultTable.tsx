@@ -7,7 +7,7 @@ import {
   INPUT_CDNA,
   INPUT_GEN,
   INPUT_ID,
-  INPUT_PRO, InputType
+  INPUT_PRO, InputType, Message
 } from "../../../types/MappingResponse";
 import {StringVoidFun} from "../../../constants/CommonTypes";
 import {getAlternateIsoFormRow} from "./AlternateIsoFormRow";
@@ -15,18 +15,42 @@ import {getNewPrimaryRow} from "../search/PrimaryRow";
 import {AppContext} from "../../App";
 import Loader from "../../elements/Loader";
 import MsgRow from "./MsgRow";
+import {useLocation, useNavigate, useSearchParams} from "react-router-dom";
+
+const NO_MAPPING: Message = {type: 'ERROR', text: 'No mapping found' }
 
 function ResultTable(props: {loading: boolean, data: PagedMappingResponse | null}) {
   const stdColor = useContext(AppContext).stdColor
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
   const [isoformGroupExpanded, setIsoformGroupExpanded] = useState('')
-  const [annotationExpanded, setAnnotationExpanded] = useState('')
+  const [annotationExpanded, setAnnotationExpanded] = useState(searchParams.get('annotation') ?? '')
+/*
+  const [searchParams] = useSearchParams();
+  const annotation = searchParams.get('annotation') || ''
+  if (annotation) {
+    setAnnotationExpanded(annotation)
+  }
+*/
 
+//  useEffect(() => {
+//    setAnnotationExpanded(annotation ? annotation : '')
+//  }, [annotation])
   function toggleIsoformGroup(key: string) {
     setIsoformGroupExpanded(isoformGroupExpanded === key ? '' : key);
   }
 
   function toggleAnnotation(key: string) {
-    setAnnotationExpanded(annotationExpanded === key ? '' : key);
+    const ann = annotationExpanded === key ? '' : key
+    if (ann)
+      searchParams.set("annotation", ann);
+    else
+      searchParams.delete("annotation");
+    setAnnotationExpanded(ann);
+
+    const url = `${location.pathname}${searchParams.size > 0 ? `?${searchParams.toString()}` : ``}`
+    navigate(url);
   }
 
   // if loading and no data -> show loader
