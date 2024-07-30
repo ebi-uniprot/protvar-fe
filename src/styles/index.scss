@@ -64,6 +64,13 @@
   cursor: pointer;
 }
 
+.red {
+  color: red;
+}
+.green {
+  color: green;
+}
+
 .result-op-btn {
   float: right;
   font-size: 10px;
@@ -74,6 +81,21 @@
   border-bottom-color: lightgrey;
 }
 .result-op-btn:hover {
+  font-weight: bolder;
+  background-color: #e7e7e7;
+  cursor: pointer;
+}
+
+.ann-share-btn {
+  font-size: 16px;
+  font-weight: bolder;
+  color: black;
+  margin-left: 10px;
+  padding: 4px;
+  border-radius: 20%;
+  border-bottom-color: lightgrey;
+}
+.ann-share-btn:hover {
   font-weight: bolder;
   background-color: #e7e7e7;
   cursor: pointer;

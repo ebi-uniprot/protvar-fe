@@ -1,72 +1,97 @@
 import DefaultPageLayout from "../../layout/DefaultPageLayout";
 import LegendModal from "../../modal/LegendModal";
-import {useLocation, useParams} from "react-router-dom";
+import {useLocation, useParams, useSearchParams} from "react-router-dom";
 import ResultTable from "../../components/result/ResultTable";
-import {useCallback, useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import PaginationRow from "./PaginationRow";
-import {LOCAL_RESULTS, TITLE} from "../../../constants/const";
+import {DEFAULT_PAGE, DEFAULT_PAGE_SIZE, LOCAL_RESULTS, PERMITTED_PAGE_SIZES, TITLE} from "../../../constants/const";
 import DownloadModal from "../../modal/DownloadModal";
 import {getResult} from "../../../services/ProtVarService";
 import {PagedMappingResponse, ResultType} from "../../../types/PagedMappingResponse";
-import {useLocalStorageContext} from "../../../provider/LocalStorageContextProps";
 
 import {ResultRecord} from "../../../types/ResultRecord";
+import useLocalStorage from "../../../hooks/useLocalStorage";
+import {APP_URL} from "../../App";
 
 function ResultPageContent(props: ResultPageProps) {
-  const location = useLocation()
+  const location = useLocation();
   const {id} = useParams<{ id?: string }>();
+  const [searchParams] = useSearchParams();
+
+  const page = parseInt(searchParams.get('page') || `${DEFAULT_PAGE}`, 10);
+  const pageSize = parseInt(searchParams.get('pageSize') || `${DEFAULT_PAGE_SIZE}`, 10);
+  const assembly = searchParams.get("assembly")
 
   const [data, setData] = useState<PagedMappingResponse | null>(null)
   const [loading, setLoading] = useState(true)
-  const { getValue, setValue } = useLocalStorageContext();
+  const [error, setError] = useState('')
+  const { getItem, setItem } = useLocalStorage();
 
   const viewedRecord = useCallback((id: string, url: string) => {
     const now = new Date().toISOString();
-    let savedRecords = getValue<ResultRecord[]>(LOCAL_RESULTS) || [];
+    let savedRecords = getItem<ResultRecord[]>(LOCAL_RESULTS) || [];
 
     // Find the index of the record to update
     const index = savedRecords.findIndex(record => record.id === id);
 
     if (index !== -1) {
       // Update the record in the array
-      savedRecords[index] = {...savedRecords[index], url: url, lastViewed: now};
+      // update url to current page view
+      savedRecords[index] = {...savedRecords[index], url, lastViewed: now};
       // Move the updated record to the beginning of the array
       const [movedRecord] = savedRecords.splice(index, 1);
       savedRecords.unshift(movedRecord);
     } else { // if no matching record is found
       // add new record to beginning of array
-      savedRecords = [{ id, url: url, lastViewed: now }, ...savedRecords]
+      savedRecords = [{ id, url, lastViewed: now }, ...savedRecords]
     }
-    setValue(LOCAL_RESULTS, savedRecords);
-  }, [getValue, setValue]);
+    setItem(LOCAL_RESULTS, savedRecords);
+  }, [getItem, setItem]);
 
-  const loadData = useCallback((type: ResultType, location: any, id: string|undefined) => {
+  const loadData = useCallback((type: ResultType, id: string|undefined
+    , page: number, pageSize: number, assembly: string|null) => {
     document.title = `Result - ${TITLE}`;
     if (!id) {
       return;
     }
     setLoading(true)
+    const pageIsValid = !isNaN(page) && page > 0;
+    const pageSizeIsValid = !isNaN(pageSize) && PERMITTED_PAGE_SIZES.includes(pageSize);
 
-    const searchParams = new URLSearchParams(location.search);
-    const page = searchParams.get("page")
-    const pageSize = searchParams.get("pageSize")
-    const assembly = searchParams.get("assembly")
+    if (!pageIsValid) {
+      setError(`Invalid page, using default (page ${DEFAULT_PAGE})`)
+      //Notify.warn('hey')
+      page = DEFAULT_PAGE
+    }
+
+    if (!pageSizeIsValid) {
+      setError(`Invalid page size, using default (page size ${DEFAULT_PAGE_SIZE})`)
+      pageSize = DEFAULT_PAGE_SIZE
+    }
+
 
     // page null or 1, no param
     // pageSize null or PAGE_SIZE, no param
     // assembly null or DEFAULT, no param
 
-    const p: number | undefined = page ? +page : undefined
-    const ps: number | undefined = pageSize ? +pageSize : undefined
-
-    getResult(type, id, p, ps, assembly)
+    getResult(type, id, page, pageSize, assembly)
       .then((response) => {
-      setData(response.data)
-      if (response.data && response.data.content?.inputs) {
+        // checks each level of response obj hierarchy exists and if inputs is non-empty.
+        // if any part of the chain is null or undefined, the entire expr short-circuits
+        // returns false.
 
-        viewedRecord(response.data.id, location.pathname)
+        if (page > (response?.data?.totalPages ?? 0)) {
+          // Handle case where page exceeds totalPages
+          setError('Page number exceeds total pages, no results')
+          //page = response.data.totalPages
+          // navigate to last page?
+        }
 
-        if (type === ResultType.PROTEIN) {
+      if (response?.data?.content?.inputs?.length > 0) {
+        setData(response.data)
+        viewedRecord(response.data.id, location.pathname + location.search)
+
+        if (type === ResultType.PROTEIN_ACC) {
           document.title = `${id} - ${TITLE}`;
         } else {
           const totalItems = response.data.totalItems
@@ -92,28 +117,37 @@ response.data.content.messages?.forEach(message => {
       }).finally(() => {
       setLoading(false)
     })
-  }, [viewedRecord])
+  }, [viewedRecord, location])
 
 
   useEffect(() => {
-    loadData(props.type, location, id);
-  }, [props.type, location, id, loadData])
+    setError('')
+    loadData(props.type, id, page, pageSize, assembly);
+  }, [props.type, id, page, pageSize, assembly, loadData]) // listening for change in id, and searchParams
 
-  const shareUrl = `${window.location.origin}${process.env.PUBLIC_URL}${location.pathname}`
+
+  const shareUrl = `${APP_URL}${location.pathname}`
 
   return <div className="search-results">
     <div className="flex justify-content-space-between">
       <PaginationRow loading={loading} data={data} />
-      <div className="legend-container">
-        <button title="Share" style={{fontSize: '20px', color: 'gray'}} onClick={() => {
-          navigator.clipboard.writeText(shareUrl);
-          alert(`Copy URL: ${shareUrl}`)
-        }} className="bi bi-share result-op-btn"></button>
-        <LegendModal/>
-        <DownloadModal/>
-      </div>
-
+      {data &&
+        <div className="legend-container">
+          <button title="Share" style={{fontSize: '20px', color: 'gray'}} onClick={() => {
+            navigator.clipboard.writeText(shareUrl);
+            alert(`URL copied: ${shareUrl}`)
+          }} className="bi bi-share result-op-btn"></button>
+          <LegendModal/>
+          <DownloadModal type={props.type}/>
+        </div>
+      }
     </div>
+    {error && (
+      <span className="padding-left-1x">
+                      <i className="file-warning bi bi-exclamation-triangle-fill"></i>{' '}
+        {error}
+                      </span>
+    )}
     <ResultTable loading={loading} data={data}/>
     <PaginationRow loading={loading} data={data} />
   </div>

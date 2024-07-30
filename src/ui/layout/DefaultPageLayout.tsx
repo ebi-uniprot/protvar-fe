@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react'
 import { Link } from 'react-router-dom'
 import {ABOUT, CONTACT, HELP, HOME, RELEASE} from '../../constants/BrowserPaths'
-import { API_URL, DISMISS_BANNER } from '../../constants/const'
+import { API_URL, LOCAL_BANNER } from '../../constants/const'
 
 import DefaultPageContent from './DefaultPageContent'
 
@@ -14,7 +14,7 @@ interface DefaultPageLayoutProps {
   content: JSX.Element
 }
 
-const bannerText = "AlphaMissense prediction has replaced EVE score in the main table. You can now find EVE score under Predictions in the Functional Information section."
+const bannerText = null
 
 function DefaultPageLayout(props: DefaultPageLayoutProps) {
   const [showBanner, setShowBanner ] = useState(bannerText == null ? false : true);
@@ -28,7 +28,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
       win.ebiFrameworkInvokeScripts()
     }
 
-    const bannerDismissed = sessionStorage.getItem(DISMISS_BANNER);
+    const bannerDismissed = sessionStorage.getItem(LOCAL_BANNER);
     if (bannerDismissed) {
       setShowBanner(false);
     }
@@ -37,7 +37,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
   const { content } = props;
 
   const handleDismiss = () => {
-    sessionStorage.setItem(DISMISS_BANNER, 'true');
+    sessionStorage.setItem(LOCAL_BANNER, 'true');
     setShowBanner(false);
   }
 

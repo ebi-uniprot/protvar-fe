@@ -2,55 +2,53 @@ import DefaultPageLayout from "../../layout/DefaultPageLayout";
 import React, {useEffect, useState} from "react";
 import {getDownloadStatus} from "../../../services/ProtVarService";
 import {LOCAL_DOWNLOADS, PV_FTP, TITLE} from "../../../constants/const"
-//import { v4 as uuidv4 } from 'uuid';
 import {DownloadRecord} from "../../../types/DownloadRecord";
 import Notify from "../../elements/Notify";
-import {useLocalStorageContext} from "../../../provider/LocalStorageContextProps";
 import {getRelativeTime} from "../../../utills/DateUtil";
+import useLocalStorage from "../../../hooks/useLocalStorage";
+import {humanFileSize} from "../../../utills/Util";
+import {useNavigate} from "react-router-dom";
 
-/*
-function testDownloadRes() : DownloadResponse {
-    const id: string = uuidv4()
-    return {inputType: "FILE", requested: new Date(), downloadId: id, url: `api/download/${id}`, jobName: 'test', status: -1}
-}*/
 
-const downloadStatusText: { [code: number]: string; } = {};
-downloadStatusText[1] = 'Ready';
-downloadStatusText[0] = 'Not Ready';
-downloadStatusText[-1] = 'Not Available';
+interface DownloadTextIcon {
+  text: string
+  icon: string
+}
 
-const downloadStatusIcon: { [code: number]: string; } = {};
-downloadStatusIcon[1] = 'download-ready';
-downloadStatusIcon[0] = 'download-nr';
-downloadStatusIcon[-1] = 'download-na';
+const downloadStatus: { [status: number]: DownloadTextIcon; } = {};
+downloadStatus[-1] = {text: 'Not Available', icon: 'download-na'};
+downloadStatus[0] = {text: 'Not Ready', icon: 'download-nr'};
+downloadStatus[1] = {text: 'Ready', icon: 'download-ready'};
 
 function DownloadPageContent() {
-  const {getValue, setValue} = useLocalStorageContext();
+  const navigate = useNavigate();
+  const {getItem, setItem} = useLocalStorage();
   const [downloads, setDownloads] = useState<DownloadRecord[]>([])
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [showHelp, setShowHelp] = useState(false)
 
-
   useEffect(() => {
     document.title = "Downloads - " + TITLE;
     // Retrieve download records from local storage
-    const localDownloads = getValue<DownloadRecord[]>(LOCAL_DOWNLOADS) || []
+    const localDownloads = getItem<DownloadRecord[]>(LOCAL_DOWNLOADS) || []
     setDownloads(localDownloads)
     if (localDownloads.length > 0) {
       // Fetch updated statuses
       const fetchUpdatedStatuses = () => {
-        const ids = localDownloads.map(d => d.downloadId);
-        getDownloadStatus(ids)
+        const fs = localDownloads.map(d => d.downloadId);
+        getDownloadStatus(fs)
           .then((response) => {
             const updatedDownloads = localDownloads.map(d => {
               if (d.downloadId in response.data) {
-                return {...d, status: response.data[d.downloadId]};
+                return {...d,
+                  status: response.data[d.downloadId].status,
+                  size: response.data[d.downloadId].size};
               }
               return d;
             });
             // Save updated objects to local storage
-            setValue(LOCAL_DOWNLOADS, updatedDownloads);
+            setItem(LOCAL_DOWNLOADS, updatedDownloads);
             setDownloads(updatedDownloads);
           }).catch(err => {
           console.error('Error fetching updated statuses:', err);
@@ -59,19 +57,19 @@ function DownloadPageContent() {
       }
       fetchUpdatedStatuses();
     }
-  }, [getValue, setValue]);
+  }, [getItem, setItem]);
 
-  const handleNameChange = (index: number|null, newName: string) => {
+  const handleNameChange = (index: number, newName: string) => {
     const updatedDownloads = downloads.map((d, idx) =>
       idx === index ? { ...d, jobName: newName } : d
     );
-    setValue(LOCAL_DOWNLOADS, updatedDownloads);
+    setItem(LOCAL_DOWNLOADS, updatedDownloads);
     setDownloads(updatedDownloads);
   };
 
   const handleDelete = (index: number) => {
     const updatedDownloads = downloads.filter((_, idx) => idx !== index);
-    setValue(LOCAL_DOWNLOADS, updatedDownloads);
+    setItem(LOCAL_DOWNLOADS, updatedDownloads);
     setDownloads(updatedDownloads);
   }
 
@@ -106,10 +104,10 @@ function DownloadPageContent() {
           <thead style={{backgroundColor: '#6987C3', color: '#FFFFFF'}}>
           <tr>
             <th scope="col">Requested</th>
-            <th scope="col">ID</th>
             <th scope="col">Job name</th>
+            <th scope="col">Result</th>
+            <th scope="col">Annotations</th>
             <th scope="col">Status</th>
-            <th scope="col">View</th>
             <th scope="col">Download</th>
             <th scope="col">Delete</th>
           </tr>
@@ -125,7 +123,6 @@ function DownloadPageContent() {
                   // soln: create new Date object
                 }
                 <td>{getRelativeTime(download.requested)}</td>
-                <td>{download.downloadId}</td>
                 <td>
                   {editingIndex === index ? (
                     <input
@@ -143,10 +140,24 @@ function DownloadPageContent() {
                   )}
                 </td>
                 <td>
-                  <span className={downloadStatusIcon[download.status]}></span> {downloadStatusText[download.status]}
+                  <span style={{cursor: 'pointer'}}
+                        onClick={_ => download.resultUrl ? navigate(download.resultUrl) : null}>
+                    {download.downloadId.split('-')[0]}
+                    {download.page && <> / {download.page}{download.pageSize && `-${download.pageSize}`}</>}
+                    {download.assembly && download.assembly !== 'AUTO' && ` ${download.assembly}`}
+                    </span>
                 </td>
                 <td>
-                  View in PV
+                  {download.fun ? <i className="bi bi-check green"></i> :
+                    <i className="bi bi-x red"></i>} fun
+                  {download.pop ? <i className="bi bi-check green"></i> :
+                    <i className="bi bi-x red"></i>} pop
+                  {download.str ? <i className="bi bi-check green"></i> :
+                    <i className="bi bi-x red"></i>} str
+                </td>
+                <td>
+                  <span
+                    className={downloadStatus[download.status].icon}></span> {downloadStatus[download.status].text} {download.size && download.size > 0 ? `(${humanFileSize(download.size)})` : ''}
                 </td>
                 <td>
                   <button className="bi bi-download download-btn"
@@ -228,13 +239,13 @@ const DownloadHelp = () => {
 
     <p><strong>Download Status</strong></p>
     <ul>
-      <li><span className={downloadStatusIcon[1]}></span> <em>{downloadStatusText[1]}:</em> The download is prepared and
+      <li><span className={downloadStatus[1].icon}></span> <em>{downloadStatus[1].text}:</em> The download is prepared and
         available for retrieval.
       </li>
-      <li><span className={downloadStatusIcon[0]}></span> <em>{downloadStatusText[0]}:</em> The download is currently
+      <li><span className={downloadStatus[0].icon}></span> <em>{downloadStatus[0].text}:</em> The download is currently
         being prepared and will be available soon.
       </li>
-      <li><span className={downloadStatusIcon[-1]}></span> <em>{downloadStatusText[-1]}:</em> The download cannot be
+      <li><span className={downloadStatus[-1].icon}></span> <em>{downloadStatus[-1].text}:</em> The download cannot be
         prepared due to an error or missing data.
       </li>
     </ul>

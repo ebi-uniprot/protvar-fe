@@ -7,7 +7,8 @@ import LegendModal from '../../modal/LegendModal'
 //import Notify from "../../elements/Notify";
 import {TITLE} from "../../../constants/const";
 import {mappings} from "../../../services/ProtVarService";
-import {PagedMappingResponse, toPagedMappingResponse} from "../../../types/PagedMappingResponse";
+import {PagedMappingResponse, ResultType, toPagedMappingResponse} from "../../../types/PagedMappingResponse";
+import {APP_URL} from "../../App";
 
 // basic tests on query params
 const chromosomeRegExp = new RegExp('[a-zA-Z0-9]+')
@@ -166,7 +167,7 @@ const QueryPageContent = () => {
     }
   }, [input])
 
-  const shareUrl = `${window.location.origin}${process.env.PUBLIC_URL}${location.pathname}${location.search}`
+  const shareUrl = `${APP_URL}${location.pathname}${location.search}`
 
   if (!input) {
     return <QueryInfoContent />
@@ -174,15 +175,16 @@ const QueryPageContent = () => {
 
   return <div className="search-results">
     <div className="flex justify-content-space-between float-right">
-      <div className="legend-container">
-        <button title="Share" style={{fontSize: '20px', color: 'gray'}} onClick={() => {
-          navigator.clipboard.writeText(shareUrl);
-          alert(`Copy URL: ${shareUrl}`)
-        }} className="bi bi-share result-op-btn"></button>
-        <LegendModal/>
-        <DownloadModal/>
-      </div>
-
+      {data &&
+        <div className="legend-container">
+          <button title="Share" style={{fontSize: '20px', color: 'gray'}} onClick={() => {
+            navigator.clipboard.writeText(shareUrl);
+            alert(`URL copied: ${shareUrl}`)
+          }} className="bi bi-share result-op-btn"></button>
+          <LegendModal/>
+          <DownloadModal type={ResultType.CUSTOM_INPUT}/>
+        </div>
+      }
     </div>
     <ResultTable loading={loading} data={data}/>
   </div>

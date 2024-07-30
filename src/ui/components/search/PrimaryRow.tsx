@@ -11,7 +11,6 @@ import {
   UNIPROT_ACCESSION_URL
 } from "../../../constants/ExternalUrls";
 import { ALLELE, CONSEQUENCES } from "../../../constants/SearchResultTable";
-import { MappingRecord, TranslatedSequence } from "../../../utills/Convertor";
 import Spaces from "../../elements/Spaces";
 import Tool from "../../elements/Tool";
 import {caddScoreAttr, formatCaddScore} from "../function/prediction/CaddScorePred";
@@ -32,148 +31,13 @@ import {
   GenomicInput,
   Gene,
   IsoFormMapping,
-  InputType
+  CustomInput, TranslatedSequence
 } from "../../../types/MappingResponse";
+import {rowBg} from "../result/ResultTable";
 
 const StructuralDetail = lazy(() => import(/* webpackChunkName: "StructuralDetail" */ "../structure/StructuralDetail"));
 const PopulationDetail = lazy(() => import(/* webpackChunkName: "PopulationDetail" */ "../population/PopulationDetail"));
 const FunctionalDetail = lazy(() => import(/* webpackChunkName: "FunctionalDetail" */ "../function/FunctionalDetail"));
-
-export const getPrimaryRow = (record: MappingRecord, toggleOpenGroup: string, isoFormGroupExpanded: string, toggleIsoFormGroup: StringVoidFun,
-  annotationExpanded: string, toggleAnnotation: StringVoidFun, hasAltIsoForm: boolean, currStyle: object, stdColor: boolean) => {
-
-  const caddAttr = caddScoreAttr(record.cadd)
-  const amAttr = amScoreAttr(record.amScore?.amClass)
-
-  let strand = record.strand ? '(-)' : '(+)';
-  if (!record.codon) {
-    strand = '';
-  }
-  let inputStyle = {
-    gen: {
-      backgroundColor: record.type === INPUT_GEN ? "#F8EDF0" : ""
-    },
-    pro: {
-      backgroundColor: (record.type === INPUT_PRO || record.type === INPUT_CDNA)? "#F8EDF0" : ""
-    },
-    rs: {
-      backgroundColor: record.type === INPUT_ID ? "#F8EDF0" : ""
-    }
-  }
-
-  const positionUrl = ENSEMBL_VIEW_URL + record.chromosome + ':' + record.position + '-' + record.position;
-  const expandedGroup = record.isoform + '-' + record.position + '-' + record.altAllele;
-  const functionalKey = 'functional-' + expandedGroup;
-  const structuralKey = 'structural-' + expandedGroup;
-  const populationKey = 'population-' + expandedGroup;
-
-  return <Fragment key={`${toggleOpenGroup}-${record.isoform}`}>
-    <tr style={currStyle} title={'Input: ' + record.input} >
-      <td style={inputStyle.gen}>
-        <Tool tip="Click to see the a summary for this chromosome from Ensembl" pos="up-left">
-          <a href={ENSEMBL_CHRM_URL + record.chromosome} target="_blank" rel="noopener noreferrer">
-            {record.chromosome}
-          </a>
-        </Tool>
-      </td>
-      <td style={inputStyle.gen}>
-        <Tool tip="Click to see the region detail for this genomic coordinate from Ensembl" pos="up-left">
-          {record.converted && <span className="h37">37&rarr;38</span>}
-          <a href={positionUrl} target="_blank" rel="noopener noreferrer">
-            {record.position}
-          </a>
-        </Tool>
-      </td>
-      <td style={inputStyle.rs}><Tool tip="Variant ID provided by the user">
-        <a href={getIdUrl(record.id)} target="_blank" rel="noopener noreferrer">{record.id}</a>
-      </Tool></td>
-      <td><Tool tip={ALLELE.get(record.refAllele)}>{record.refAllele}</Tool></td>
-      <td><Tool tip={ALLELE.get(record.altAllele)}>{record.altAllele}</Tool></td>
-      <td>
-        <Tool tip="Click here for gene information from Ensembl">
-          <a href={ENSEMBL_GENE_URL + record.geneName} target="_blank" rel="noopener noreferrer">{record.geneName}</a>
-        </Tool>
-      </td>
-      <td>
-        <div className="flex">
-          {record.codon}<Spaces /><Tool tip={"Codon change in " + (strand === "(+)" ? " positive" : "negative") + "-sense strand gene"}>{strand}</Tool>
-        </div>
-      </td>
-      <td>
-        <Tool className="score-box" style={{ backgroundColor: (stdColor ? caddAttr?.stdColor : caddAttr?.color) }} tip={`${caddAttr?.range} ${caddAttr?.text}`}>
-          <a href={CADD_INFO_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'white' }}>
-            {formatCaddScore(record.cadd)}
-          </a>
-        </Tool>
-      </td>
-      <td style={inputStyle.pro}>
-        <div className="flex">
-          <CanonicalIcon isCanonical={record.canonical} />
-          <Spaces />
-          <Tool tip="Click to see the UniProt page for this accession">
-            <a href={UNIPROT_ACCESSION_URL + record.isoform} target="_blank" rel="noopener noreferrer">{record.isoform}</a>
-          </Tool>
-          {hasAltIsoForm && <>
-            <Spaces />
-            <Tool
-              el="button"
-              onClick={() => toggleIsoFormGroup(toggleOpenGroup)}
-              className="button button--toggle-isoforms"
-              tip={isoFormGroupExpanded !== toggleOpenGroup ? "Show more isoforms" : "Hide isoforms"}
-            >
-              {isoFormGroupExpanded !== toggleOpenGroup ?
-                <ChevronDownIcon className="toggle-isoforms" /> : <ChevronUpIcon className="toggle-isoforms" />}
-            </Tool>
-          </>}
-        </div>
-      </td>
-      <td>
-        <Tool tip={record.proteinName}>{getProteinName(record.proteinName)}</Tool>
-      </td>
-      <td style={inputStyle.pro}><Tool tip="The amino acid position in this isoform">{record.aaPos}</Tool></td>
-      <td><Tool tip={aaChangeTip(record.aaChange)}>{record.aaChange}</Tool></td>
-      <td><Tool tip={CONSEQUENCES.get(record.consequences!)} pos="up-right">{record.consequences}</Tool></td>
-      <td>
-        <Tool className="score-box" style={{ backgroundColor: (stdColor ? amAttr?.stdColor : amAttr?.color) }} tip={`${record.amScore?.amPathogenicity} ${amAttr?.text}`}>
-          <a href={AM_INFO_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'white' }}>
-            {formatAMScore(record.amScore)}
-          </a>
-        </Tool>
-      </td>
-      <td>
-        <div className="flex">
-          {!record.canonical && <><br/><br/></>}
-          {getSignificancesButton(functionalKey, 'FUN', record.canonical, annotationExpanded, toggleAnnotation)}
-          {getSignificancesButton(populationKey, 'POP', record.canonical, annotationExpanded, toggleAnnotation)}
-          {getSignificancesButton(structuralKey, 'STR', record.canonical, annotationExpanded, toggleAnnotation)}
-        </div>
-      </td>
-    </tr>
-
-    {populationKey === annotationExpanded &&
-      <Suspense fallback={<LoaderRow />}>
-        <PopulationDetail populationObservationsUri={record.populationObservationsUri!} variantAA={record.variantAA!} />
-      </Suspense>
-    }
-    {structuralKey === annotationExpanded &&
-      <Suspense fallback={<LoaderRow />}>
-        <StructuralDetail isoFormAccession={record.isoform!} aaPosition={record.aaPos!} variantAA={record.variantAA!} proteinStructureUri={record.proteinStructureUri!}/>
-      </Suspense>
-    }
-    {functionalKey === annotationExpanded &&
-      <Suspense fallback={<LoaderRow />}>
-        <FunctionalDetail
-          caddScore={record.cadd!}
-          conservScore={record.conservScore!}
-          amScore={record.amScore!}
-          eveScore={record.eveScore!}
-          esmScore={record.esmScore!}
-          refAA={record.refAA!} variantAA={record.variantAA!}
-          ensg={record.ensg!} ensp={record.ensp!} referenceFunctionUri={record.referenceFunctionUri!} />
-      </Suspense>
-    }
-  </Fragment>
-};
 
 export const getIdUrl = (id:string) => {
   if (id) {
@@ -217,25 +81,22 @@ function getSignificancesButton(rowKey: string, buttonLabel: string, canonical: 
   );
 }
 
-// V2
-export const rowBg = (index: number) => {
-  const rowColor = {backgroundColor: "#F4F3F3" }
-  const altRowColor = {backgroundColor: "#FFFFFF" }
-  return (index % 2 === 0) ? altRowColor : rowColor;
-}
-
 export const aaChangeStr = (ref: string, alt: string) => {
-  return ref + '/' + alt
+  return `${ref}/${alt}`
 }
 
-export const getNewPrimaryRow = (isoformKey: string, isoformGroup: string, isoformGroupExpanded: string, index: number, input: GenomicInput, originalInput: InputType, gene: Gene, isoform: IsoFormMapping, toggleIsoFormGroup: StringVoidFun,
-                                 annotationExpanded: string, toggleAnnotation: StringVoidFun, hasAltIsoForm: boolean, stdColor: boolean) => {
+export const getNewPrimaryRow = (isoformKey: string, isoformGroup: string, isoformGroupExpanded: string,
+                                 index: number, input: GenomicInput, originalInput: CustomInput,
+                                 gene: Gene, isoform: IsoFormMapping,
+                                 toggleIsoFormGroup: StringVoidFun,
+                                 annotationExpanded: string, toggleAnnotation: StringVoidFun,
+                                 hasAltIsoForm: boolean, stdColor: boolean) => {
 
   const caddAttr = caddScoreAttr(gene.caddScore?.toString())
   const amAttr = amScoreAttr(isoform.amScore?.amClass)
 
-  let codon = isoform.refCodon + '/' + isoform.variantCodon;
   let strand = gene.reverseStrand ? '(-)' : '(+)';
+  let codon = isoform.refCodon + '/' + isoform.variantCodon;
   if (!codon) {
     strand = '';
   }
@@ -354,17 +215,18 @@ export const getNewPrimaryRow = (isoformKey: string, isoformGroup: string, isofo
 
     {populationKey === annotationExpanded &&
       <Suspense fallback={<LoaderRow />}>
-        <PopulationDetail populationObservationsUri={isoform.populationObservationsUri!} variantAA={isoform.variantAA!} />
+        <PopulationDetail annotation={annotationExpanded} populationObservationsUri={isoform.populationObservationsUri!} variantAA={isoform.variantAA!} />
       </Suspense>
     }
     {structuralKey === annotationExpanded &&
       <Suspense fallback={<LoaderRow />}>
-        <StructuralDetail isoFormAccession={isoform.accession!} aaPosition={isoform.isoformPosition!} variantAA={isoform.variantAA!} proteinStructureUri={isoform.proteinStructureUri!}/>
+        <StructuralDetail annotation={annotationExpanded} isoFormAccession={isoform.accession!} aaPosition={isoform.isoformPosition!} variantAA={isoform.variantAA!} proteinStructureUri={isoform.proteinStructureUri!}/>
       </Suspense>
     }
     {functionalKey === annotationExpanded &&
       <Suspense fallback={<LoaderRow />}>
         <FunctionalDetail
+          annotation={annotationExpanded}
           caddScore={gene.caddScore?.toString()}
           conservScore={isoform.conservScore}
           amScore={isoform.amScore}
@@ -377,5 +239,3 @@ export const getNewPrimaryRow = (isoformKey: string, isoformGroup: string, isofo
 
   </Fragment>
 };
-// <V2
-export default getPrimaryRow;

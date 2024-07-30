@@ -97,7 +97,7 @@ export function ModelConfidence() {
                 </div>
                 <div className="flex">
                     <div className="legend-icon button--legends button--legends--confident"></div>
-                    <div className="flex1">Confident (90 &gt; pLDDT &gt; 70)</div>
+                    <div className="flex1">High (90 &gt; pLDDT &gt; 70)</div>
                 </div>
                 <div className="flex">
                     <div className="legend-icon button--legends button--legends--low"></div>

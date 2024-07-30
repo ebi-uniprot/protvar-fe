@@ -1,87 +1,111 @@
-import {useState, useCallback, useRef} from 'react';
+import {useCallback, useRef, useState} from 'react';
 import Button from '../elements/form/Button';
 import Modal from './Modal';
-import { ReactComponent as DownloadIcon } from "../../images/download.svg"
+import {ReactComponent as DownloadIcon} from "../../images/download.svg"
 import useOnClickOutside from '../../hooks/useOnClickOutside';
-import { emailValidate } from '../../utills/Validator';
-import {DownloadRecord} from "../../types/DownloadRecord";
+import {emailValidate} from '../../utills/Validator';
+import {DownloadRecord, recordFromResponse} from "../../types/DownloadRecord";
 import {LOCAL_DOWNLOADS} from "../../constants/const";
 import Notify from "../elements/Notify";
 import {downloadResult} from "../../services/ProtVarService";
-import {useLocalStorageContext} from "../../provider/LocalStorageContextProps";
-import {useParams, useSearchParams} from "react-router-dom";
+import useLocalStorage from "../../hooks/useLocalStorage";
+import {useLocation, useParams, useSearchParams} from "react-router-dom";
+import {ResultType} from "../../types/PagedMappingResponse";
 
-const initialValues = {
-  email: "",
-  jobName: "",
-  annotations: true, // not passed on to api call
-  function: true,
-  population: true,
-  structure: true,
-  currPage: true, // not passed on to api call
-};
+interface DownloadForm {
+  email: string
+  jobName: string
+  fun: boolean
+  pop: boolean
+  str: boolean
+}
 
-function DownloadModal() {
+interface DownloadModalProps {
+  type: ResultType
+}
+
+function DownloadModal(props: DownloadModalProps) {
+  const [showModel, setShowModel] = useState(false)
+  const downloadModelDiv = useRef(null)
+  useOnClickOutside(downloadModelDiv, useCallback(() => setShowModel(false), []));
+  const { getItem, setItem } = useLocalStorage();
+  const [errorMsg, setErrorMsg] = useState("")
+
+  const location = useLocation();
   const {id} = useParams<{ id?: string }>();
   const [searchParams] = useSearchParams();
-  let page = searchParams.get("page")
-  let pageSize = searchParams.get("pageSize")
-  const assembly = searchParams.get("assembly")
+  let initialForm: DownloadForm = {
+    email: "",
+    jobName: "",
+    fun: true,
+    pop: true,
+    str: true
+  }
+  const [form, setForm] = useState<DownloadForm>(initialForm)
+  const [annotations, setAnnotations] = useState<boolean>(true)
+  const [currPage, setCurrPage] = useState<boolean>(true)
 
-  const [values, setValues] = useState(initialValues);
-
-  const updateForm = (name: string, value: any) => {
-    setValues({
-      ...values,
-      [name]: value,
+  const updateForm = (key: string, value: any) => {
+    setForm({
+      ...form,
+      [key]: value,
     });
   };
 
-  const setAllAnnotations = (val: boolean) => {
-    updateForm("function", val)
-    updateForm("population", val)
-    updateForm("structure", val)
+
+  if (!id)
+    return <></>
+  const toggleAnnotations = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setAnnotations(event.target.value === 'withAnnotations')
+    form.fun = form.pop = form.str  = !annotations
+    setForm(form)
   }
 
-  const [showModel, setShowModel] = useState(false)
-  const [errorMsg, setErrorMsg] = useState("")
-
-  const downloadModelDiv = useRef(null)
-  useOnClickOutside(downloadModelDiv, useCallback(() => setShowModel(false), []));
-
-  const { getValue, setValue } = useLocalStorageContext();
-
-  const handleSucc = (downloadRes: DownloadRecord) => {
-    const downloads = getValue<DownloadRecord[]>(LOCAL_DOWNLOADS)  || []
-    const updatedDownloads = [...downloads, downloadRes]
-    setValue(LOCAL_DOWNLOADS, updatedDownloads)
-    Notify.sucs(`Job ${downloadRes.downloadId} submitted. Check the Downloads page. `)
+  const handleSucc = (downloadRec: DownloadRecord) => {
+    const downloads = getItem<DownloadRecord[]>(LOCAL_DOWNLOADS)  || []
+    const updatedDownloads = [...downloads, downloadRec]
+    setItem(LOCAL_DOWNLOADS, updatedDownloads)
+    Notify.sucs(`Job ${downloadRec.downloadId.split('-')[0]} submitted. Check the Downloads page. `)
   }
 
   const handleErr = () => {
-    Notify.err(`Job ${values.jobName} failed. Please try again.`)
+    Notify.err(`Job ${form.jobName} failed. Please try again.`)
   }
 
   const handleSubmit = () => {
-    if (!id) return;
-    const err = emailValidate(values.email)
+    const err = emailValidate(form.email)
     if (err) {
       setErrorMsg(err)
       return
     }
     setShowModel(false)
 
-    if (values.currPage) {
-      if (page === null)
-        page = "1"; // no page param for first page
-    } else { // all pages
-      page = null;
-      pageSize = null;
-    }
+    // logic:
+    // if currPage is selected, use the page search param; if this is not set, use page 1
+    // if currPage is not selected, page is set to null, which is interpreted as all pages
+    const page = currPage ? (searchParams.get('page') ?? "1") : null
 
-    downloadResult(id, page, pageSize, assembly,
-      values.email, values.jobName, values.function, values.population, values.structure)
-      .then((response) => handleSucc(response.data))
+    // if page is null (for all pages), pageSize isn't needed
+    // if page isn't null, use the pageSize set in the search param (which may be null, in which case default 25 is used)
+    const pageSize = page ? searchParams.get('pageSize') : null
+    const assembly = searchParams.get('assembly')
+
+    downloadResult(id, props.type, page, pageSize, assembly,
+      form.email, form.jobName, form.fun, form.pop, form.str)
+    .then((response) => {
+      const downloadResponse = response.data
+      let downloadRecord = recordFromResponse(downloadResponse)
+      // save download request params in DownloadRecord
+      downloadRecord.page = page ?? undefined
+      downloadRecord.pageSize = pageSize ?? undefined
+      downloadRecord.assembly = assembly ?? undefined
+      downloadRecord.fun = form.fun
+      downloadRecord.pop = form.pop
+      downloadRecord.str = form.str
+      downloadRecord.resultUrl = location.pathname + location.search
+      handleSucc(downloadRecord)
+      }
+      )
       .catch(handleErr);
   };
   return <div id="divDownload" ref={downloadModelDiv} className="padding-left-1x">
@@ -107,31 +131,25 @@ function DownloadModal() {
               <td>
                 <ul className="new-select">
                   <li>
-                    <label id="item1">
+                    <label>
                       <input
                         type="radio"
-                        value="true"
                         name="annotations"
-                        checked={values.annotations}
-                        onChange={(e) => {
-                          updateForm(e.target.name, true)
-                          setAllAnnotations(true)
-                        }}
+                        value="withAnnotations"
+                        checked={annotations}
+                        onChange={toggleAnnotations}
                       />
                       Mappings with Annotations
                     </label>
                   </li>
                   <li>
-                    <label id="item2">
+                    <label>
                       <input
                         type="radio"
-                        value="false"
                         name="annotations"
-                        checked={!values.annotations}
-                        onChange={(e) => {
-                          updateForm(e.target.name, false)
-                          setAllAnnotations(false)
-                        }}
+                        value="withoutAnnotations"
+                        checked={!annotations}
+                        onChange={toggleAnnotations}
                       />
                       Mappings only, no annotations
                     </label>
@@ -142,68 +160,73 @@ function DownloadModal() {
               <td>
                 <ul className="new-select">
                   <li>
-                    <label id="item1">Include Annotations</label>
+                    <label>Include Annotations</label>
                   </li>
                   <li>
-                    <input
-                      type="checkbox"
-                      name="function"
-                      checked={values.function}
-                      onChange={(e) => updateForm(e.target.name, !values.function) }
-                      disabled={!values.annotations}
-                    />
-                    <label id="item1">Functional</label>
+                    <label>
+                      <input
+                        type="checkbox"
+                        name="fun"
+                        checked={form.fun}
+                        onChange={(e) => updateForm(e.target.name, !form.fun)}
+                        disabled={!annotations}
+                      />
+                      Functional
+                    </label>
                   </li>
                   <li>
-                    <input
-                      type="checkbox"
-                      name="population"
-                      checked={values.population}
-                      onChange={(e) => updateForm(e.target.name, !values.population)}
-                      disabled={!values.annotations}
-                    />
-                    <label id="item1">Population Observation</label>
+                    <label>
+                      <input
+                        type="checkbox"
+                        name="pop"
+                        checked={form.pop}
+                        onChange={(e) => updateForm(e.target.name, !form.pop)}
+                        disabled={!annotations}
+                      />
+                      Population Observation
+                    </label>
                   </li>
                   <li>
-                    <input
-                      type="checkbox"
-                      name="structure"
-                      checked={values.structure}
-                      onChange={(e) => updateForm(e.target.name, !values.structure)}
-                      disabled={!values.annotations}
-                    />
-                    <label id="item1">Structure</label>
+                    <label>
+                      <input
+                        type="checkbox"
+                        name="str"
+                        checked={form.str}
+                        onChange={(e) => updateForm(e.target.name, !form.str)}
+                        disabled={!annotations}
+                      />
+                      Structure
+                    </label>
                   </li>
                 </ul>
               </td>
               <td>
                 <ul className="new-select">
                   <li>
-                    <label id="item1">
+                    Pages
+                  </li>
+                  <li>
+                    <label>
                       <input
                         type="radio"
-                        value="true"
                         name="currPage"
-                        checked={values.currPage}
-                        onChange={(e) => {
-                          updateForm(e.target.name, true)
-                        }}
+                        value="true"
+                        checked={currPage}
+                        onChange={_ => setCurrPage(true)}
                       />
-                      Current page
+                      Current
                     </label>
                   </li>
                   <li>
-                    <label id="item2">
+                    <label>
                       <input
                         type="radio"
-                        value="false"
                         name="currPage"
-                        checked={!values.currPage}
-                        onChange={(e) => {
-                          updateForm(e.target.name, false)
-                        }}
+                        value="false"
+                        checked={!currPage}
+                        onChange={_ => setCurrPage(false)}
                       />
-                      All pages
+                      All
                     </label>
                   </li>
                 </ul>
@@ -219,7 +242,7 @@ function DownloadModal() {
             </div>
             <input
               type="email"
-              value={values.email}
+              value={form.email}
               name="email"
               onChange={(e) => updateForm(e.target.name, e.target.value)}
             />
@@ -229,7 +252,7 @@ function DownloadModal() {
             <div className="small">(Optional)</div>
             <input
               type="text"
-              value={values.jobName}
+              value={form.jobName}
               name="jobName"
               onChange={(e) => updateForm(e.target.name, e.target.value)}
             />

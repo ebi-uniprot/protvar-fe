@@ -2,13 +2,11 @@ import React, {useState, useRef} from 'react'
 import Button from '../../elements/form/Button'
 import {Assembly, DEFAULT_ASSEMBLY} from '../../../constants/CommonTypes'
 import {
+  INPUT_EXAMPLES,
   CDNA_BTN_TITLE,
-  CDNA_EXAMPLE,
   GENOMIC_BTN_TITLE,
-  GENOMIC_EXAMPLE, ID_BTN_TITLE,
-  ID_EXAMPLE,
-  PASTE_BOX, PROTEIN_BTN_TITLE,
-  PROTEIN_EXAMPLE
+  ID_BTN_TITLE,
+  PASTE_BOX, PROTEIN_BTN_TITLE
 } from "../../../constants/Example";
 import {Form, initialForm} from "../../../types/FormData";
 import {submitInputFile, submitInputText} from "../../../services/ProtVarService";
@@ -16,10 +14,10 @@ import {API_ERROR, RESULT} from "../../../constants/BrowserPaths";
 import {useNavigate} from "react-router-dom";
 import {AxiosResponse} from "axios";
 import {IDResponse} from "../../../types/PagedMappingResponse";
-import {useLocalStorageContext} from "../../../provider/LocalStorageContextProps";
 import {LOCAL_RESULTS} from "../../../constants/const";
 import {ResultRecord} from "../../../types/ResultRecord";
 import {readFirstLineFromFile} from "../../../utills/FileUtil";
+import useLocalStorage from "../../../hooks/useLocalStorage";
 
 const SearchVariant = () => {
   const navigate = useNavigate();
@@ -31,10 +29,10 @@ const SearchVariant = () => {
   const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
   const UNSUPPORTED_FILE = 'Unsupported file type';
   const FILE_EXCEEDS_LIMIT = 'File exceeds 10MB limit';
-  const { getValue, setValue } = useLocalStorageContext();
-  const savedRecords = getValue<ResultRecord[]>(LOCAL_RESULTS) || [];
+  const { getItem, setItem } = useLocalStorage();
+  const savedRecords = getItem<ResultRecord[]>(LOCAL_RESULTS) || [];
 
-  const submittedRecord = async (id: string) => {
+  const submittedRecord = async (id: string, url: string) => {
     const now = new Date().toISOString();
     const existingRecord = savedRecords.find(record => record.id === id);
     const inputFirstLine = await getFirstLine();
@@ -52,8 +50,7 @@ const SearchVariant = () => {
       );
     } else {
       const newRecord: ResultRecord = {
-        id,
-        url: `${RESULT}/${id}`,
+        id, url,
         name: inputFirstLine ? `${inputFirstLine.substring(0,20)}...` : '',
         firstSubmitted: now,
         //lastSubmitted: now,
@@ -61,7 +58,7 @@ const SearchVariant = () => {
       };
       updatedRecords = [newRecord, ...savedRecords];
     }
-    setValue(LOCAL_RESULTS, updatedRecords); // newRecord added at start, so sorted by latestDate
+    setItem(LOCAL_RESULTS, updatedRecords); // newRecord added at start, so sorted by latestDate
   };
 
   async function getFirstLine(): Promise<string> {
@@ -97,16 +94,22 @@ const SearchVariant = () => {
     var promise: Promise<AxiosResponse<IDResponse>> | undefined = undefined;
     if (form.file)
       promise = submitInputFile(form.file, form.assembly)
-    else if (form.text)
+    else if (form.text) {
+      // input example check that can be used to decide whether
+      // to save in result history or not.
+      //if (INPUT_EXAMPLES.includes(form.text.trim())) {
+      //  alert('Example!')
+      //}
       promise = submitInputText(form.text, form.assembly)
+    }
 
     if (promise) {
       promise
         .then((response) => {
-          submittedRecord(response.data.id)
           let url = `${RESULT}/${response.data.id}`
           if (form.assembly !== DEFAULT_ASSEMBLY)
             url += `?assembly=${form.assembly}`
+          submittedRecord(response.data.id, url)
           navigate(url)
         })
         .catch((err) => {
@@ -152,7 +155,7 @@ const SearchVariant = () => {
                   <div className="examples-container">
 
                     <button
-                      onClick={_=>setForm({...form, text: GENOMIC_EXAMPLE})}
+                      onClick={_=>setForm({...form, text: INPUT_EXAMPLES[0]})}
                       className="example-link"
                       id="genomicExamples"
                       title={GENOMIC_BTN_TITLE}
@@ -161,7 +164,7 @@ const SearchVariant = () => {
                     </button>
 
                     <button
-                      onClick={_=>setForm({...form, text: CDNA_EXAMPLE})}
+                      onClick={_=>setForm({...form, text: INPUT_EXAMPLES[1]})}
                       className="example-link"
                       id="cDNAExamples"
                       title={CDNA_BTN_TITLE}
@@ -170,7 +173,7 @@ const SearchVariant = () => {
                     </button>
 
                     <button
-                      onClick={_=>setForm({file: form.file, text: PROTEIN_EXAMPLE, assembly: DEFAULT_ASSEMBLY})}
+                      onClick={_=>setForm({file: form.file, text: INPUT_EXAMPLES[2], assembly: DEFAULT_ASSEMBLY})}
                       className="example-link"
                       id="proteinExamples"
                       title={PROTEIN_BTN_TITLE}
@@ -179,7 +182,7 @@ const SearchVariant = () => {
                     </button>
 
                     <button
-                      onClick={_=>setForm({file: form.file, text: ID_EXAMPLE, assembly: DEFAULT_ASSEMBLY})}
+                      onClick={_=>setForm({file: form.file, text: INPUT_EXAMPLES[3], assembly: DEFAULT_ASSEMBLY})}
                       className="example-link"
                       id="idExamples"
                       title={ID_BTN_TITLE}

@@ -4,8 +4,10 @@ import AssociationDetails from "./common/AssociationDetails";
 import SubmittedVariantDetails from "./SubmittedVariantDetails";
 import PopulationIcon from '../../../images/human.svg';
 import {PopulationObservationResponse, ProteinColocatedVariant} from "../../../types/PopulationObservationResponse";
+import ShareAnnotation from "../common/ShareAnnotation";
 
 interface PopulationDataRowProps {
+  annotation: string
   poApiData: PopulationObservationResponse,
   variantAA: string
 }
@@ -26,7 +28,9 @@ function PopulationDataRow(props: PopulationDataRowProps) {
     <td colSpan={TOTAL_COLS} className="expanded-row">
       <div className="significances-groups">
         <div className="column">
-          <h5><img src={PopulationIcon} className="click-icon" alt="population icon" title="Population observation" /> Population Observation</h5>
+          <h5><img src={PopulationIcon} className="click-icon" alt="population icon" title="Population observation" /> Population Observation
+            <ShareAnnotation annotation={props.annotation} />
+          </h5>
           <table>
             <tbody>
               <tr>

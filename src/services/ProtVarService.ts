@@ -4,15 +4,13 @@ import {
   API_URL,
   CONTENT_MULTIPART,
   CONTENT_TEXT,
-  DEFAULT_HEADERS,
-  DOWNLOAD_STATUS,
-  G2P_MAPPING_URI
+  DEFAULT_HEADERS
 } from "../constants/const";
 import {FunctionalResponse} from "../types/FunctionalResponse";
 import {PopulationObservationResponse} from "../types/PopulationObservationResponse";
 import {ProteinStructureResponse} from "../types/ProteinStructureResponse";
 import MappingResponse from "../types/MappingResponse";
-import {DownloadRecord} from "../types/DownloadRecord";
+import {DownloadResponse} from "../types/DownloadRecord";
 import {IDResponse, PagedMappingResponse, ResultType} from "../types/PagedMappingResponse";
 
 
@@ -26,8 +24,7 @@ const api = setupCache(instance, {})
 // POST /mappings
 export function mappings(inputArr: string[], assembly?: string) {
   return api.post<any, string[], AxiosResponse<MappingResponse>>(
-    G2P_MAPPING_URI,
-    inputArr,
+    `${API_URL}/mappings`, inputArr,
     {
       params: {assembly},
       headers: DEFAULT_HEADERS,
@@ -69,8 +66,7 @@ export function submitInputFile(file: File, assembly?: string, idOnly: boolean =
   const formData = new FormData();
   formData.append('file', file);
   return api.post<any, FormData, AxiosResponse<IDResponse>>(
-    `${API_URL}/mapping/input`,
-    formData,
+    `${API_URL}/mapping/input`, formData,
     {
       params: {assembly, idOnly},
       headers: CONTENT_MULTIPART,
@@ -81,11 +77,11 @@ export function submitInputFile(file: File, assembly?: string, idOnly: boolean =
 // GET /mapping/input/{id}
 // IN: id
 // OUT: PagedMappingResponse
-export function getResult(type: ResultType, id: string, page?: number, pageSize?: number, assembly: string|null = null) {
+export function getResult(type: ResultType, id: string, page: number, pageSize: number, assembly: string|null = null) {
   let url = ''
   let params = {}
 
-  if (type === ResultType.SEARCH) {
+  if (type === ResultType.CUSTOM_INPUT) {
     url = `${API_URL}/mapping/input/${id}`
     params = {page, pageSize, assembly}
   } else {
@@ -126,9 +122,8 @@ export function getStructureData(url: string) {
 export function downloadFileInput(file: File, assembly: string, email: string, jobName: string, functional: boolean, population: boolean, structure: boolean) {
   const formData = new FormData();
   formData.append('file', file);
-  return api.post<any, FormData, AxiosResponse<DownloadRecord>>(
-    `${API_URL}/download/fileInput`,
-    formData,
+  return api.post<any, FormData, AxiosResponse<DownloadResponse>>(
+    `${API_URL}/download/fileInput`, formData,
     {
       params: {email, jobName, function: functional, population, structure, assembly},
       headers: CONTENT_MULTIPART,
@@ -137,9 +132,8 @@ export function downloadFileInput(file: File, assembly: string, email: string, j
 }
 
 export function downloadTextInput(inputArr: string[], assembly: string, email: string, jobName: string, functional: boolean, population: boolean, structure: boolean) {
-  return api.post<any, string[], AxiosResponse<DownloadRecord>>(
-    `${API_URL}/download/textInput`,
-    inputArr,
+  return api.post<any, string[], AxiosResponse<DownloadResponse>>(
+    `${API_URL}/download/textInput`, inputArr,
     {
       params: {email, jobName, function: functional, population, structure, assembly},
       headers: DEFAULT_HEADERS,
@@ -147,13 +141,12 @@ export function downloadTextInput(inputArr: string[], assembly: string, email: s
   );
 }
 
-export function downloadResult(id: string, page: string|null, pageSize: string|null, assembly: string|null,
+export function downloadResult(id: string, type: ResultType, page: string|null, pageSize: string|null, assembly: string|null,
                                email: string, jobName: string, functional: boolean, population: boolean, structure: boolean) {
-  return api.post<any, string, AxiosResponse<DownloadRecord>>(
-    `${API_URL}/download/idInput`,
-    id,
+  return api.post<any, string, AxiosResponse<DownloadResponse>>(
+    `${API_URL}/download`, id,
     {
-      params: {page, pageSize, assembly, email, jobName, function: functional, population, structure},
+      params: {type, page, pageSize, assembly, email, jobName, function: functional, population, structure},
       headers: CONTENT_TEXT,
     }
   );
@@ -161,8 +154,7 @@ export function downloadResult(id: string, page: string|null, pageSize: string|n
 
 export function getDownloadStatus(ids: string[]) {
   return api.post(
-    DOWNLOAD_STATUS,
-    ids,
+    `${API_URL}/download/status`, ids,
     {
       headers: DEFAULT_HEADERS,
     }

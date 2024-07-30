@@ -12,10 +12,10 @@ import DownloadPage from "./pages/download/DownloadPage";
 import HelpPage from "./pages/help/HelpPage";
 import {PagedMappingResponse, ResultType} from "../types/PagedMappingResponse";
 import ResultPage from "./pages/result/ResultPage";
-import {PAGE_SIZE} from "../constants/const";
-import {LocalStorageProvider} from "../provider/LocalStorageContextProps";
 import "bootstrap-icons/font/bootstrap-icons.css"
 import ResultListPage from "./pages/result/ResultListPage";
+import {LocalStorageProvider} from "../context/LocalStorageContext";
+import {DEFAULT_PAGE_SIZE} from "../constants/const";
 
 const empty: ReactElement = <></>;
 
@@ -40,7 +40,7 @@ export const initialState = {
   textInput: "",
   file: null,
   assembly: Assembly.AUTO,
-  pageSize: PAGE_SIZE, // needs to be localStore, not appState
+  pageSize: DEFAULT_PAGE_SIZE, // needs to be localStore, not appState
   response: null,
   updateState: (key: string, value: any) => {}
 }
@@ -70,7 +70,7 @@ export default function App() {
     <Routes>
       <Route path={HOME} element={<HomePage />} />
       <Route path={`${RESULT}`} element={<ResultListPage />} />
-      <Route path={`${RESULT}/:id`} element={<ResultPage type={ResultType.SEARCH} />} />
+      <Route path={`${RESULT}/:id`} element={<ResultPage type={ResultType.CUSTOM_INPUT} />} />
       <Route path={QUERY} element={<QueryPage />} />
       <Route path={API_ERROR} element={<APIErrorPage />} />
       <Route path={ABOUT} element={<AboutPage />} />
@@ -78,7 +78,7 @@ export default function App() {
       <Route path={CONTACT} element={<ContactPage />} />
       <Route path={DOWNLOAD} element={<DownloadPage />} />
       <Route path={HELP} element={<HelpPage />} />
-      <Route path="/:id" element={<ResultPage  type={ResultType.PROTEIN} />} />
+      <Route path="/:id" element={<ResultPage  type={ResultType.PROTEIN_ACC} />} />
     </Routes>
       </LocalStorageProvider>
     </AppContext.Provider>);

@@ -7,12 +7,13 @@ import {PopulationObservationResponse} from "../../../types/PopulationObservatio
 
 
 interface PopulationDetailProps {
+  annotation: string
   populationObservationsUri: string
   variantAA: string
 }
 
 function PopulationDetail(props: PopulationDetailProps) {
-  const { populationObservationsUri } = props;
+  const { annotation, populationObservationsUri, variantAA } = props;
   const [poApiData, setPoApiData] = useState<PopulationObservationResponse>();
 
   useEffect(() => {
@@ -26,7 +27,7 @@ function PopulationDetail(props: PopulationDetailProps) {
   if (!poApiData)
     return <LoaderRow />
   else if (poApiData.proteinColocatedVariant && poApiData.proteinColocatedVariant.length > 0)
-    return <PopulationDataRow poApiData={poApiData} variantAA={props.variantAA} />
+    return <PopulationDataRow annotation={annotation} poApiData={poApiData} variantAA={variantAA} />
   else
     return <NoPopulationDataRow />
 }

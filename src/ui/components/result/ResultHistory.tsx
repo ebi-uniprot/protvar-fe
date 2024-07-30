@@ -1,38 +1,39 @@
 import "./ResultHistory.css"
 import {useEffect, useState} from "react";
 import {LOCAL_RESULTS} from "../../../constants/const";
-import {LOCAL_STORAGE_SET, useLocalStorageContext} from "../../../provider/LocalStorageContextProps";
 import {HOME} from "../../../constants/BrowserPaths";
 import {useNavigate, useParams} from "react-router-dom";
 import {lastUpdate, ResultRecord} from "../../../types/ResultRecord";
 import {APP_URL} from "../../App";
 import {categoriseDate} from "../../../utills/DateUtil";
+import useLocalStorage from "../../../hooks/useLocalStorage";
+import {SET_ITEM} from "../../../context/LocalStorageContext";
 
 const ResultHistory = () => {
   const {id} = useParams<{ id?: string }>();
   const navigate = useNavigate();
-  const { getValue, setValue } = useLocalStorageContext();
-  const [results, setResults] = useState<ResultRecord[]>(getValue(LOCAL_RESULTS) || [])
+  const { getItem, setItem } = useLocalStorage();
+  const [results, setResults] = useState<ResultRecord[]>(getItem(LOCAL_RESULTS) || [])
 
   useEffect(() => {
     const handleStorageChange = (e: CustomEvent) => {
       if (e.detail === LOCAL_RESULTS)
-        setResults(getValue(LOCAL_RESULTS) || []);
+        setResults(getItem(LOCAL_RESULTS) || []);
     };
 
     // Listen for changes in localStorage
-    window.addEventListener(LOCAL_STORAGE_SET, handleStorageChange as EventListener);
+    window.addEventListener(SET_ITEM, handleStorageChange as EventListener);
 
     return () => {
       // Clean up the listener
-      window.removeEventListener(LOCAL_STORAGE_SET, handleStorageChange as EventListener);
+      window.removeEventListener(SET_ITEM, handleStorageChange as EventListener);
     };
-  }, [results, getValue]);
+  }, [results, getItem]);
 
-  const deleteResult = (delId: string) => {
-    const updatedRecords = results.filter(record => record.id !== delId);
+  const deleteResult = (delId: string, index: number) => {
+    const updatedRecords = results.filter((_, i) => i !== index);
     setResults(updatedRecords);
-    setValue(LOCAL_RESULTS, updatedRecords); // no re-sort needed
+    setItem(LOCAL_RESULTS, updatedRecords); // no re-sort needed
     if (id && id === delId)
       navigate(HOME)
     // TODO API call DELETE /mapping/input/{id}
@@ -58,11 +59,11 @@ const ResultHistory = () => {
               </span>
                   <div className="map-item-options">
                     <button title="Delete" className="bi bi-x-lg result-op-btn"
-                            onClick={() => deleteResult(record.id)}></button>
+                            onClick={() => deleteResult(record.id, index)}></button>
                     <button title="Share" onClick={() => {
                       let url = `${APP_URL}${record.url}`;
                       navigator.clipboard.writeText(url);
-                      alert(`Copy URL: ${url}`)
+                      alert(`URL copied: ${url}`)
                     }} className="bi bi-share result-op-btn"></button>
                   </div>
                 </>

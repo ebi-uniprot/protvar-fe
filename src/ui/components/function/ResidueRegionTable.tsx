@@ -7,12 +7,11 @@ import {v1 as uuidv1} from 'uuid';
 import {StringVoidFun} from "../../../constants/CommonTypes";
 import {formatRange} from "../../../utills/Util";
 import {FunctionalResponse, Pocket, P2PInteraction, ProteinFeature} from "../../../types/FunctionalResponse";
-import {TranslatedSequence} from "../../../utills/Convertor";
 import {Prediction, PUBMED_ID} from "./prediction/Prediction";
 import {pubmedRef} from "../common/Common";
 import {Tooltip} from "../common/Tooltip";
 import {Dropdown} from "react-dropdown-now";
-import {AMScore, ConservScore, ESMScore, EVEScore} from "../../../types/MappingResponse";
+import {AMScore, ConservScore, ESMScore, EVEScore, TranslatedSequence} from "../../../types/MappingResponse";
 
 export interface ResidueRegionTableProps {
   functionalData: FunctionalResponse
@@ -154,23 +153,52 @@ interface PocketsProps {
   toggleRow: StringVoidFun
 }
 
-const POCKET_ICONS = [
+const CONFIDENCE_ICONS = [
   <i className="bi bi-caret-up-fill conf-vhigh"></i>,
   <i className="bi bi-caret-up-fill conf-high"></i>,
-  <i className="bi bi-caret-down-fill conf-low"></i>
+  <i className="bi bi-caret-down-fill conf-low"></i>,
+  <i className="bi bi-caret-down-fill conf-vlow"></i>
+]
+
+const CONFIDENCE_LABELS = [
+  'very high confidence',
+  'high confidence',
+  'low confidence',
+  'very low confidence'
 ]
 
 const POCKET_OPTS = [
   {value: -1, label: <>Show all</>},
-  {value: 0, label: <>{POCKET_ICONS[0]} &gt;900 - very high pocket confidence</>},
-  {value: 1, label: <>{POCKET_ICONS[1]} 800-900 - high pocket confidence</>},
-  {value: 2, label: <>{POCKET_ICONS[2]} &lt;800 - low pocket confidence</>}
+  {value: 0, label: <>{CONFIDENCE_ICONS[0]} &gt;900 - {CONFIDENCE_LABELS[0]}</>},
+  {value: 1, label: <>{CONFIDENCE_ICONS[1]} 800-900 - {CONFIDENCE_LABELS[1]}</>},
+  {value: 2, label: <>{CONFIDENCE_ICONS[2]} &lt;800 - {CONFIDENCE_LABELS[2]}</>}
 ]
 
-const getIcon = (score: number) => {
-  if (score > 900) return POCKET_ICONS[0]
-  else if (score >= 800 && score <= 900) return POCKET_ICONS[1]
-  else return POCKET_ICONS[2]
+
+const MODEL_CONF = [
+  <>{CONFIDENCE_ICONS[0]} {CONFIDENCE_LABELS[0]}</>,
+  <>{CONFIDENCE_ICONS[1]} {CONFIDENCE_LABELS[1]}</>,
+  <>{CONFIDENCE_ICONS[2]} {CONFIDENCE_LABELS[2]}</>,
+  <>{CONFIDENCE_ICONS[3]} {CONFIDENCE_LABELS[3]}</>
+]
+
+const getPocketConf = (score: number) => {
+  if (score > 900) return MODEL_CONF[0]
+  else if (score > 800) return MODEL_CONF[1]
+  else return MODEL_CONF[2]
+}
+
+const getModelConf = (score: number) => {
+  if (score > 90) return MODEL_CONF[0]
+  else if (score > 70) return MODEL_CONF[1]
+  else if (score > 50) return MODEL_CONF[2]
+  else return MODEL_CONF[3]
+}
+
+const getInteractionConf = (score: number) => {
+  if (score > 0.50) return MODEL_CONF[0]
+  else if (score > 0.23) return MODEL_CONF[1]
+  else return MODEL_CONF[2]
 }
 
 const Pockets = (props: PocketsProps) => {
@@ -229,24 +257,24 @@ function ShowPocket(pocket: Pocket) {
       tip="The score used to measure the confidence in the pocket. Score range 0-1000. Scores above 800 are high confidence and above 900 are very high confidence.">
       Combined score
     </Tooltip>
-    <div>{getIcon(pocket.score)} {pocket.score?.toFixed(2)}</div>
+    <div><span className="pocket-conf">{pocket.score.toFixed(2)}</span> {getPocketConf(pocket.score)}</div>
 
     <Tooltip tip="The mean pLDDT of all the residues considered to form the pocket from AlphaFold2 model.">
       Pocket pLDDT mean
     </Tooltip>
-    <div>{pocket.meanPlddt?.toFixed(2)}</div>
+    <div><span className="pocket-conf">{pocket.meanPlddt.toFixed(2)}</span> {getModelConf(pocket.meanPlddt)}</div>
 
     <div>Energy per volume</div>
-    <div>{pocket.energyPerVol?.toFixed(2)}</div>
+    <div>{pocket.energyPerVol.toFixed(2)} kcal/mol</div>
 
     <Tooltip
       tip="Ranges from 0-1. 1.0 corresponds to a pocket entirely buried, 0.0 corresponds to a pocket entirely exposed to the solvent.">
       Buriedness
     </Tooltip>
-    <div>{pocket.buriedness?.toFixed(2)}</div>
+    <div>{pocket.buriedness.toFixed(2)}</div>
 
     <Tooltip tip="A measure of pocket compactness">Radius of gyration</Tooltip>
-    <div>{pocket.radGyration?.toFixed(2)}</div>
+    <div>{pocket.radGyration.toFixed(2)} Å</div>
 
     <div>Residues</div>
     <div>{formatRange(pocket.resid)}</div>
@@ -271,12 +299,13 @@ const Interfaces = (props: InterfacesProps) => {
     {(key === props.expandedRowKey) &&
       <div className="struct-pred">
         Proteins which are predicted to interact with {props.accession} where the variant is at the interface:
-        <div className="pred-grid pred-grid-col2">
+        <div className="pred-grid pred-grid-col3">
           <div>Protein</div>
           <Tooltip
             tip="pDockQ is a confidence score based on the pLDDT model confidences and number of contacts at an interface. pDockQ>0.23, 70% are well modeled and for pDockQ>0.5, 80% are well modelled.">
             pDockQ
           </Tooltip>
+          <div></div>
         </div>
         {
           // show all
@@ -305,9 +334,10 @@ function ShowInteractionAcc(acc: string) {
 }*/
 
 function ShowInteraction(accession: string, interaction: P2PInteraction, index: number) {
-  return <div key={`interaction-${index + 1}`} className="pred-grid pred-grid-col2">
+  return <div key={`interaction-${index + 1}`} className="pred-grid pred-grid-col3">
     <div>{accession === interaction.a ? interaction.b : interaction.a}</div>
     <div>{interaction.pdockq.toFixed(3)}</div>
+    <div>{getInteractionConf(interaction.pdockq)}</div>
   </div>
 }
 

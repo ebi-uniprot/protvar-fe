@@ -8,8 +8,6 @@ export interface ResultRecord {
   lastSubmitted?: string // TODO same for this
   lastViewed?: string //
   name?: string
-  numItems?: number
-  params?: string // page, pageSize, assembly
 }
 
 export const lastUpdate = (rec: ResultRecord) => {

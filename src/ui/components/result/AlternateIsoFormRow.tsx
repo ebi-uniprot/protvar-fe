@@ -5,7 +5,8 @@ import Tool from "../../elements/Tool";
 import Spaces from "../../elements/Spaces";
 import { EmptyElement } from "../../../constants/ConstElement";
 import {Gene, GenomicInput, IsoFormMapping} from "../../../types/MappingResponse";
-import {aaChangeStr, rowBg} from "../search/PrimaryRow";
+import {aaChangeStr} from "../search/PrimaryRow";
+import {rowBg} from "./ResultTable";
 
 export function aaChangeTip(change: string | undefined) {
   return "Amino acid change " + fullAminoAcidName(change?.split("/")[0]) + " -> " + fullAminoAcidName(change?.split("/")[1]);

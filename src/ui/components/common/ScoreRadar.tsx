@@ -1,9 +1,10 @@
 import RadarChart from "react-svg-radar-chart";
 import "react-svg-radar-chart/build/css/index.css";
-import {MappingRecord} from "../../../utills/Convertor";
+import {ConservScore} from "../../../types/MappingResponse";
 
 interface ScoreRadarProps {
-  record: MappingRecord
+  caddScore: number
+  conservScore: ConservScore
 }
 // <RadarChart></RadarChart>;
 // Input: X	149498202		C	G
@@ -40,16 +41,11 @@ function ScoreRadar(props: ScoreRadarProps) {
   var data: { [key: string] : number } = {};
   var captions : {[key: string] : string } = {};
 
-  if (props.record.cadd) {
-    const caddScore = Number(props.record.cadd)
-    if (!Number.isNaN(caddScore)) {
-      data["cadd"] = caddScore / 99
-      captions["cadd"] = "CADD"
-    }
-  }
+  data["cadd"] = props.caddScore / 99
+  captions["cadd"] = "CADD"
 
-  if (props.record.conservScore && props.record.conservScore.score) {
-    data["conserv"] = props.record.conservScore.score
+  if (props.conservScore && props.conservScore.score) {
+    data["conserv"] = props.conservScore.score
     captions["conserv"] = "Conservation"
   }
 
