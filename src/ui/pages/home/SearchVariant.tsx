@@ -32,7 +32,7 @@ const SearchVariant = () => {
   const { getItem, setItem } = useLocalStorage();
   const savedRecords = getItem<ResultRecord[]>(LOCAL_RESULTS) || [];
 
-  const submittedRecord = async (id: string) => {
+  const submittedRecord = async (id: string, url: string) => {
     const now = new Date().toISOString();
     const existingRecord = savedRecords.find(record => record.id === id);
     const inputFirstLine = await getFirstLine();
@@ -50,8 +50,7 @@ const SearchVariant = () => {
       );
     } else {
       const newRecord: ResultRecord = {
-        id,
-        url: `${RESULT}/${id}`,
+        id, url,
         name: inputFirstLine ? `${inputFirstLine.substring(0,20)}...` : '',
         firstSubmitted: now,
         //lastSubmitted: now,
@@ -107,10 +106,10 @@ const SearchVariant = () => {
     if (promise) {
       promise
         .then((response) => {
-          submittedRecord(response.data.id)
           let url = `${RESULT}/${response.data.id}`
           if (form.assembly !== DEFAULT_ASSEMBLY)
             url += `?assembly=${form.assembly}`
+          submittedRecord(response.data.id, url)
           navigate(url)
         })
         .catch((err) => {
