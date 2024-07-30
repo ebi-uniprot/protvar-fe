@@ -1,4 +1,3 @@
-import StructureIcon from '../../../images/structures-3d.svg';
 import "./PdbeMolstar.css";
 import "pdbe-molstar/build/pdbe-molstar-component-3.1.2";
 import "pdbe-molstar/build/pdbe-molstar-light-3.1.2.css";
@@ -39,28 +38,12 @@ const PdbeMolstar = (props: PdbeMolstarProps) => {
                                       custom-data-url={modelUrl} custom-data-format="pdb" alphafold-view="false" hide-water="true" />
     }
 
-    return <PageSpecificStructure component={pdbeComponent} pae={pae}/>
-}
-
-interface PageSpecificStructureProps {
-    component: JSX.Element
-    pae: JSX.Element
- }
-
-const PageSpecificStructure = (props: PageSpecificStructureProps) => {
-    return (
-        <td colSpan={10} className="expanded-row structure-data-cell">
-            <div className="significances-groups">
-                <div className="column">
-                    <h5><img src={StructureIcon} className="click-icon" alt="structure icon" title="3D structure" /> Structures</h5>
-                    {props.component}
-                    Click variant to see surrounding residues<br/>
-                    Click white space to zoom out to whole structure
-                    {props.pae}
-                </div>
-            </div>
-        </td>
-    );
+    return <>
+        {pdbeComponent}
+        Click variant to see surrounding residues<br/>
+        Click white space to zoom out to whole structure
+        {pae}
+    </>
 }
 
 export default PdbeMolstar;

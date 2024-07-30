@@ -11,9 +11,12 @@ import {P2PInteraction, Pocket} from "../../../types/FunctionalResponse";
 import {ProteinStructureElement} from "../../../types/ProteinStructureResponse";
 import {AlphafoldResponseElement} from "../../../types/AlphafoldResponse";
 import {WHITE} from "../../../types/Colors";
+import StructureIcon from "../../../images/structures-3d.svg";
+import ShareAnnotation from "../common/ShareAnnotation";
 
 
 interface StructuralDetailProps {
+  annotation: string
   isoFormAccession: string,
   aaPosition: number,
   variantAA: string, // 3 letter
@@ -77,20 +80,31 @@ function StructuralDetail(props: StructuralDetailProps) {
 
   return (
     <tr key={isoFormAccession}>
-      <PdbeMolstar selected={selected} pdbeRef={ref} />
+
+      <td colSpan={10} className="expanded-row structure-data-cell">
+        <div className="significances-groups">
+          <div className="column">
+            <h5><img src={StructureIcon} className="click-icon" alt="structure icon" title="3D structure"/> Structures
+              <ShareAnnotation annotation={props.annotation}/>
+            </h5>
+            <PdbeMolstar selected={selected} pdbeRef={ref}/>
+          </div>
+        </div>
+      </td>
       <td colSpan={5} className="expanded-row structure-data-cell">
         {pdbData.length > 0 && <><br/>
-            <PdbInfoTable isoFormAccession={isoFormAccession} pdbApiData={pdbData}
+          <PdbInfoTable isoFormAccession={isoFormAccession} pdbApiData={pdbData}
                         selectedPdbId={"pdb_id" in selected ? selected.pdb_id : ""}
-                        setSelected={setSelected} pdbeRef={pdbeRef} /></>}
+                        setSelected={setSelected} pdbeRef={pdbeRef}/></>}
         {alphaFoldData.length > 0 && <><br/>
-            <AlphafoldInfoTable isoFormAccession={isoFormAccession} alphaFoldData={alphaFoldData}
+          <AlphafoldInfoTable isoFormAccession={isoFormAccession} alphaFoldData={alphaFoldData}
                               selectedAlphaFoldId={"entryId" in selected ? selected.entryId : ""}
-                              setSelected={setSelected} aaPos={aaPosition} pocketData={pocketData} pdbeRef={pdbeRef} /></>}
+                              setSelected={setSelected} aaPos={aaPosition} pocketData={pocketData}
+                              pdbeRef={pdbeRef}/></>}
         {interactionData.length > 0 && <><br/>
-            <InteractionInfoTable isoFormAccession={isoFormAccession} interactionData={interactionData}
-                            selectedInteraction={"a" in selected && "b" in selected ? (selected.a+"_"+selected.b) : ""}
-                            setSelected={setSelected} aaPos={aaPosition} pdbeRef={pdbeRef} /></>}
+          <InteractionInfoTable isoFormAccession={isoFormAccession} interactionData={interactionData}
+                                selectedInteraction={"a" in selected && "b" in selected ? (selected.a + "_" + selected.b) : ""}
+                                setSelected={setSelected} aaPos={aaPosition} pdbeRef={pdbeRef}/></>}
       </td>
     </tr>
   );
