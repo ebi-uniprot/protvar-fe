@@ -70,7 +70,7 @@ export default function App() {
     <Routes>
       <Route path={HOME} element={<HomePage />} />
       <Route path={`${RESULT}`} element={<ResultListPage />} />
-      <Route path={`${RESULT}/:id`} element={<ResultPage type={ResultType.SEARCH} />} />
+      <Route path={`${RESULT}/:id`} element={<ResultPage type={ResultType.CUSTOM_INPUT} />} />
       <Route path={QUERY} element={<QueryPage />} />
       <Route path={API_ERROR} element={<APIErrorPage />} />
       <Route path={ABOUT} element={<AboutPage />} />
@@ -78,7 +78,7 @@ export default function App() {
       <Route path={CONTACT} element={<ContactPage />} />
       <Route path={DOWNLOAD} element={<DownloadPage />} />
       <Route path={HELP} element={<HelpPage />} />
-      <Route path="/:id" element={<ResultPage  type={ResultType.PROTEIN} />} />
+      <Route path="/:id" element={<ResultPage  type={ResultType.PROTEIN_ACC} />} />
     </Routes>
       </LocalStorageProvider>
     </AppContext.Provider>);
