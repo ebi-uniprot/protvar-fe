@@ -1,5 +1,5 @@
 import {TOTAL_COLS} from "../../../constants/SearchResultTable";
-import {ERROR, INFO, InputType, Message, WARN} from "../../../types/MappingResponse";
+import {ERROR, INFO, CustomInput, Message, WARN} from "../../../types/MappingResponse";
 import {rowBg} from "./ResultTable";
 
 export const WARN_ICON = <><i className="msg-warn bi bi-exclamation-triangle-fill"></i>{' '}</>
@@ -21,7 +21,7 @@ const getIcon = (m?: Message) => {
 
 interface MsgRowProps {
   msg: Message,
-  input?: InputType // null for request-level messages
+  input?: CustomInput // null for request-level messages
   index?:number     // null for request-level messages
 }
 

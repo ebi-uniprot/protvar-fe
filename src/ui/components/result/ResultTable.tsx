@@ -7,7 +7,7 @@ import {
   INPUT_CDNA,
   INPUT_GEN,
   INPUT_ID,
-  INPUT_PRO, InputType, Message
+  INPUT_PRO, CustomInput, Message
 } from "../../../types/MappingResponse";
 import {StringVoidFun} from "../../../constants/CommonTypes";
 import {getAlternateIsoFormRow} from "./AlternateIsoFormRow";
@@ -114,7 +114,7 @@ const getTableRows = (data: PagedMappingResponse | null, isoformGroupExpanded: s
 
   let primaryRow = 0 // ensures similar or duplicate inputs do not lead to conflicting key
   let altRow = 0
-  const addGenMapping = (index: number, genIndex: number, input: GenomicInput, originalInput: InputType) => {
+  const addGenMapping = (index: number, genIndex: number, input: GenomicInput, originalInput: CustomInput) => {
     input.mappings.forEach((mapping, mappingIdx) => {
       mapping.genes.forEach((gene, geneIdx) => {
         const isoformGroupKey = `input-${index}-genInput-${genIndex}-mapping-${mappingIdx}-gene-${geneIdx}-isoform`

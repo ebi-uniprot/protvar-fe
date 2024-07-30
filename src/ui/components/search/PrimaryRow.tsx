@@ -32,7 +32,7 @@ import {
   GenomicInput,
   Gene,
   IsoFormMapping,
-  InputType
+  CustomInput
 } from "../../../types/MappingResponse";
 import {rowBg} from "../result/ResultTable";
 
@@ -224,7 +224,7 @@ export const aaChangeStr = (ref: string, alt: string) => {
   return ref + '/' + alt
 }
 
-export const getNewPrimaryRow = (isoformKey: string, isoformGroup: string, isoformGroupExpanded: string, index: number, input: GenomicInput, originalInput: InputType, gene: Gene, isoform: IsoFormMapping, toggleIsoFormGroup: StringVoidFun,
+export const getNewPrimaryRow = (isoformKey: string, isoformGroup: string, isoformGroupExpanded: string, index: number, input: GenomicInput, originalInput: CustomInput, gene: Gene, isoform: IsoFormMapping, toggleIsoFormGroup: StringVoidFun,
                                  annotationExpanded: string, toggleAnnotation: StringVoidFun, hasAltIsoForm: boolean, stdColor: boolean) => {
 
   const caddAttr = caddScoreAttr(gene.caddScore?.toString())

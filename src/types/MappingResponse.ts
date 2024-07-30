@@ -1,7 +1,7 @@
-export type InputType = GenomicInput|ProteinInput|IDInput|CodingInput
+export type CustomInput = GenomicInput|ProteinInput|IDInput|CodingInput
 
 export interface MappingResponse {
-  inputs: Array<InputType>
+  inputs: Array<CustomInput>
   messages: Array<Message>
 }
 
