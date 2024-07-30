@@ -152,17 +152,18 @@ export const getPrimaryRow = (record: MappingRecord, toggleOpenGroup: string, is
 
     {populationKey === annotationExpanded &&
       <Suspense fallback={<LoaderRow />}>
-        <PopulationDetail populationObservationsUri={record.populationObservationsUri!} variantAA={record.variantAA!} />
+        <PopulationDetail annotation={annotationExpanded} populationObservationsUri={record.populationObservationsUri!} variantAA={record.variantAA!} />
       </Suspense>
     }
     {structuralKey === annotationExpanded &&
       <Suspense fallback={<LoaderRow />}>
-        <StructuralDetail isoFormAccession={record.isoform!} aaPosition={record.aaPos!} variantAA={record.variantAA!} proteinStructureUri={record.proteinStructureUri!}/>
+        <StructuralDetail annotation={annotationExpanded} isoFormAccession={record.isoform!} aaPosition={record.aaPos!} variantAA={record.variantAA!} proteinStructureUri={record.proteinStructureUri!}/>
       </Suspense>
     }
     {functionalKey === annotationExpanded &&
       <Suspense fallback={<LoaderRow />}>
         <FunctionalDetail
+          annotation={annotationExpanded}
           caddScore={record.cadd!}
           conservScore={record.conservScore!}
           amScore={record.amScore!}
@@ -354,17 +355,18 @@ export const getNewPrimaryRow = (isoformKey: string, isoformGroup: string, isofo
 
     {populationKey === annotationExpanded &&
       <Suspense fallback={<LoaderRow />}>
-        <PopulationDetail populationObservationsUri={isoform.populationObservationsUri!} variantAA={isoform.variantAA!} />
+        <PopulationDetail annotation={annotationExpanded} populationObservationsUri={isoform.populationObservationsUri!} variantAA={isoform.variantAA!} />
       </Suspense>
     }
     {structuralKey === annotationExpanded &&
       <Suspense fallback={<LoaderRow />}>
-        <StructuralDetail isoFormAccession={isoform.accession!} aaPosition={isoform.isoformPosition!} variantAA={isoform.variantAA!} proteinStructureUri={isoform.proteinStructureUri!}/>
+        <StructuralDetail annotation={annotationExpanded} isoFormAccession={isoform.accession!} aaPosition={isoform.isoformPosition!} variantAA={isoform.variantAA!} proteinStructureUri={isoform.proteinStructureUri!}/>
       </Suspense>
     }
     {functionalKey === annotationExpanded &&
       <Suspense fallback={<LoaderRow />}>
         <FunctionalDetail
+          annotation={annotationExpanded}
           caddScore={gene.caddScore?.toString()}
           conservScore={isoform.conservScore}
           amScore={isoform.amScore}

@@ -8,7 +8,8 @@ import {FunctionalResponse} from "../../../types/FunctionalResponse";
 import {AMScore, ConservScore, ESMScore, EVEScore} from "../../../types/MappingResponse";
 
 
-interface FunctionalDetailProps {
+export interface FunctionalDetailProps {
+  annotation: string
   referenceFunctionUri: string
   refAA: string
   variantAA: string
