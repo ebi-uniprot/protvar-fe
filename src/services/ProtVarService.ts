@@ -4,9 +4,7 @@ import {
   API_URL,
   CONTENT_MULTIPART,
   CONTENT_TEXT,
-  DEFAULT_HEADERS,
-  API_DOWNLOAD_STATUS,
-  API_MAPPINGS
+  DEFAULT_HEADERS
 } from "../constants/const";
 import {FunctionalResponse} from "../types/FunctionalResponse";
 import {PopulationObservationResponse} from "../types/PopulationObservationResponse";
@@ -26,8 +24,7 @@ const api = setupCache(instance, {})
 // POST /mappings
 export function mappings(inputArr: string[], assembly?: string) {
   return api.post<any, string[], AxiosResponse<MappingResponse>>(
-    API_MAPPINGS,
-    inputArr,
+    `${API_URL}/mappings`, inputArr,
     {
       params: {assembly},
       headers: DEFAULT_HEADERS,
@@ -69,8 +66,7 @@ export function submitInputFile(file: File, assembly?: string, idOnly: boolean =
   const formData = new FormData();
   formData.append('file', file);
   return api.post<any, FormData, AxiosResponse<IDResponse>>(
-    `${API_URL}/mapping/input`,
-    formData,
+    `${API_URL}/mapping/input`, formData,
     {
       params: {assembly, idOnly},
       headers: CONTENT_MULTIPART,
@@ -85,7 +81,7 @@ export function getResult(type: ResultType, id: string, page?: number, pageSize?
   let url = ''
   let params = {}
 
-  if (type === ResultType.SEARCH) {
+  if (type === ResultType.CUSTOM_INPUT) {
     url = `${API_URL}/mapping/input/${id}`
     params = {page, pageSize, assembly}
   } else {
@@ -127,8 +123,7 @@ export function downloadFileInput(file: File, assembly: string, email: string, j
   const formData = new FormData();
   formData.append('file', file);
   return api.post<any, FormData, AxiosResponse<DownloadResponse>>(
-    `${API_URL}/download/fileInput`,
-    formData,
+    `${API_URL}/download/fileInput`, formData,
     {
       params: {email, jobName, function: functional, population, structure, assembly},
       headers: CONTENT_MULTIPART,
@@ -138,8 +133,7 @@ export function downloadFileInput(file: File, assembly: string, email: string, j
 
 export function downloadTextInput(inputArr: string[], assembly: string, email: string, jobName: string, functional: boolean, population: boolean, structure: boolean) {
   return api.post<any, string[], AxiosResponse<DownloadResponse>>(
-    `${API_URL}/download/textInput`,
-    inputArr,
+    `${API_URL}/download/textInput`, inputArr,
     {
       params: {email, jobName, function: functional, population, structure, assembly},
       headers: DEFAULT_HEADERS,
@@ -147,13 +141,12 @@ export function downloadTextInput(inputArr: string[], assembly: string, email: s
   );
 }
 
-export function downloadResult(id: string, protein: boolean, page: string|null, pageSize: string|null, assembly: string|null,
+export function downloadResult(id: string, type: ResultType, page: string|null, pageSize: string|null, assembly: string|null,
                                email: string, jobName: string, functional: boolean, population: boolean, structure: boolean) {
   return api.post<any, string, AxiosResponse<DownloadResponse>>(
-    `${API_URL}/download`,
-    id,
+    `${API_URL}/download`, id,
     {
-      params: {protein, page, pageSize, assembly, email, jobName, function: functional, population, structure},
+      params: {type, page, pageSize, assembly, email, jobName, function: functional, population, structure},
       headers: CONTENT_TEXT,
     }
   );
@@ -161,8 +154,7 @@ export function downloadResult(id: string, protein: boolean, page: string|null, 
 
 export function getDownloadStatus(ids: string[]) {
   return api.post(
-    API_DOWNLOAD_STATUS,
-    ids,
+    `${API_URL}/download/status`, ids,
     {
       headers: DEFAULT_HEADERS,
     }

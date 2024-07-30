@@ -2,8 +2,6 @@ export const TITLE='EMBL-EBI ProtVar - Contextualising human missense variation'
 
 // URLs
 export const API_URL = process.env.REACT_APP_API_BASE_URL;
-export const API_MAPPINGS = `${API_URL}/mappings`;
-export const API_DOWNLOAD_STATUS=`${API_URL}/download/status`;
 export const PV_FTP = 'https://ftp.ebi.ac.uk/pub/databases/ProtVar'
 
 // Results pagination constants
