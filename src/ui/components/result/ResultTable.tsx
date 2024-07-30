@@ -82,20 +82,22 @@ const getTableRows = (data: PagedMappingResponse | null, isoformGroupExpanded: s
     //records.push(msgRow(-1, m))  // index -1 NOT TAKEN INTO ACCOUNT
     tableRows.push(<MsgRow key={`content-message-${mIdx}`} msg={m} />)
   });
-  let rowCount = 0 // to ensure similar or duplicate inputs do not lead to conflicting key
+  let primaryRow = 0 // ensures similar or duplicate inputs do not lead to conflicting key
+  let altRow = 0
   const addGenMapping = (index: number, genIndex: number, input: GenomicInput, originalInput: InputType) => {
     input.mappings.forEach((mapping, mappingIdx) => {
       mapping.genes.forEach((gene, geneIdx) => {
         const isoformGroupKey = `input-${index}-genInput-${genIndex}-mapping-${mappingIdx}-gene-${geneIdx}-isoform`
         gene.isoforms.forEach((isoform, isoformIdx) => {
-          rowCount++;
-          const isoformKey = `${isoformGroupKey}-${isoformIdx}-row-${rowCount}`
           if (isoformIdx === 0) {
-            tableRows.push(getNewPrimaryRow(isoformKey, isoformGroupKey, isoformGroupExpanded, index, input, originalInput, gene, isoform,
+            primaryRow++;
+            altRow = 0; // reset
+            tableRows.push(getNewPrimaryRow(`row-${primaryRow}`, isoformGroupKey, isoformGroupExpanded, index, input, originalInput, gene, isoform,
               toggleIsoformGroup, annotationExpanded, toggleAnnotation, gene.isoforms.length > 1, stdColor))
           }
           else if (isoformGroupKey === isoformGroupExpanded) {
-            tableRows.push(getAlternateIsoFormRow(isoformKey, index, input, gene, isoform))
+            altRow++;
+            tableRows.push(getAlternateIsoFormRow(`row-${primaryRow}-${altRow}`, index, input, gene, isoform))
           }
         })
       })
