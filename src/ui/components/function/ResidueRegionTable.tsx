@@ -7,12 +7,11 @@ import {v1 as uuidv1} from 'uuid';
 import {StringVoidFun} from "../../../constants/CommonTypes";
 import {formatRange} from "../../../utills/Util";
 import {FunctionalResponse, Pocket, P2PInteraction, ProteinFeature} from "../../../types/FunctionalResponse";
-import {TranslatedSequence} from "../../../utills/Convertor";
 import {Prediction, PUBMED_ID} from "./prediction/Prediction";
 import {pubmedRef} from "../common/Common";
 import {Tooltip} from "../common/Tooltip";
 import {Dropdown} from "react-dropdown-now";
-import {AMScore, ConservScore, ESMScore, EVEScore} from "../../../types/MappingResponse";
+import {AMScore, ConservScore, ESMScore, EVEScore, TranslatedSequence} from "../../../types/MappingResponse";
 
 export interface ResidueRegionTableProps {
   functionalData: FunctionalResponse

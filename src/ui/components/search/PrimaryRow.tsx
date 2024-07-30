@@ -11,7 +11,7 @@ import {
   UNIPROT_ACCESSION_URL
 } from "../../../constants/ExternalUrls";
 import { ALLELE, CONSEQUENCES } from "../../../constants/SearchResultTable";
-import { MappingRecord, TranslatedSequence } from "../../../utills/Convertor";
+import { MappingRecord } from "../../../utills/Convertor";
 import Spaces from "../../elements/Spaces";
 import Tool from "../../elements/Tool";
 import {caddScoreAttr, formatCaddScore} from "../function/prediction/CaddScorePred";
@@ -32,7 +32,7 @@ import {
   GenomicInput,
   Gene,
   IsoFormMapping,
-  CustomInput
+  CustomInput, TranslatedSequence
 } from "../../../types/MappingResponse";
 import {rowBg} from "../result/ResultTable";
 
@@ -221,11 +221,15 @@ function getSignificancesButton(rowKey: string, buttonLabel: string, canonical: 
 
 // V2
 export const aaChangeStr = (ref: string, alt: string) => {
-  return ref + '/' + alt
+  return `${ref}/${alt}`
 }
 
-export const getNewPrimaryRow = (isoformKey: string, isoformGroup: string, isoformGroupExpanded: string, index: number, input: GenomicInput, originalInput: CustomInput, gene: Gene, isoform: IsoFormMapping, toggleIsoFormGroup: StringVoidFun,
-                                 annotationExpanded: string, toggleAnnotation: StringVoidFun, hasAltIsoForm: boolean, stdColor: boolean) => {
+export const getNewPrimaryRow = (isoformKey: string, isoformGroup: string, isoformGroupExpanded: string,
+                                 index: number, input: GenomicInput, originalInput: CustomInput,
+                                 gene: Gene, isoform: IsoFormMapping,
+                                 toggleIsoFormGroup: StringVoidFun,
+                                 annotationExpanded: string, toggleAnnotation: StringVoidFun,
+                                 hasAltIsoForm: boolean, stdColor: boolean) => {
 
   const caddAttr = caddScoreAttr(gene.caddScore?.toString())
   const amAttr = amScoreAttr(isoform.amScore?.amClass)
