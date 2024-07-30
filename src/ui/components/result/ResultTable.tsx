@@ -73,7 +73,6 @@ function ResultTable(props: {loading: boolean, data: PagedMappingResponse | null
   </table>
 }
 
-
 const getTableRows = (data: PagedMappingResponse | null, isoformGroupExpanded: string, toggleIsoformGroup: StringVoidFun,
                       annotationExpanded: string, toggleAnnotation: StringVoidFun, stdColor: boolean) => {
   const tableRows: Array<JSX.Element> = [];
@@ -105,7 +104,7 @@ const getTableRows = (data: PagedMappingResponse | null, isoformGroupExpanded: s
   }
 
   data?.content.inputs?.forEach((input, inputIndex) => {
-
+    const numRowsBefore = tableRows.length
     input.messages.forEach((m,msgIdx) => {
       //records.push(msgRow(index, m, input))
       tableRows.push(<MsgRow key={`input-${inputIndex}-message-${msgIdx}`} msg={m} input={input} />)
@@ -126,6 +125,10 @@ const getTableRows = (data: PagedMappingResponse | null, isoformGroupExpanded: s
         // INTO ACCOUNT SOMEWHERE...
         addGenMapping(inputIndex, genIndex, gInput, input)
       })
+    }
+    // if no new row added, assume no mapping is found!
+    if (numRowsBefore === tableRows.length) {
+      tableRows.push(<MsgRow index={inputIndex} key={`input-${inputIndex}-nomapping`} msg={NO_MAPPING} input={input}  />)
     }
   });
   return tableRows;
