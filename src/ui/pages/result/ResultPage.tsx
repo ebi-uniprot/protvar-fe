@@ -18,6 +18,14 @@ function ResultPageContent(props: ResultPageProps) {
   const {id} = useParams<{ id?: string }>();
   const [searchParams] = useSearchParams();
 
+  // components that alter search params:
+  // 1) PaginationRow
+  // 2) ShareAnnotation
+  // ?
+  // change in page,pageSize,assembly - requires reload
+  // change in annotation - toggleAnnotation
+  // maybe map searchParams into an interface for expected params where all fields will be optional?
+
   const page = parseInt(searchParams.get('page') || `${DEFAULT_PAGE}`, 10);
   const pageSize = parseInt(searchParams.get('pageSize') || `${DEFAULT_PAGE_SIZE}`, 10);
   const assembly = searchParams.get("assembly")
