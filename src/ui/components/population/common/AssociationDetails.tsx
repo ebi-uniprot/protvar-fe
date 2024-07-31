@@ -7,6 +7,8 @@ interface AssociationDetailsProps {
   associations: Array<Association>
 }
 function AssociationDetails(props: AssociationDetailsProps) {
+  if (props.associations.length === 0)
+    return <>No association found</>
   return <>{props.associations.map(getAssociation)}</>;
 }
 function getAssociation(association: Association) {
