@@ -3,7 +3,7 @@ import PdbInfoTable from './PdbInfoTable';
 import AlphafoldInfoTable from './AlphafoldInfoTable';
 import PdbeMolstar from "./PdbeMolstar";
 import InteractionInfoTable from "./InteractionInfoTable";
-import LoaderRow from "../result/LoaderRow";
+import LoaderRow from "../../pages/result/LoaderRow";
 import PdbeRef from "./PdbeRef";
 import {getPredictedStructure} from "../../../services/AlphafoldService";
 import {getFunctionalData, getStructureData} from "../../../services/ProtVarService";

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import NoFunctionalDataRow from './NoFunctionalDataRow';
 import FunctionalDataRow from './FunctionalDataRow';
-import LoaderRow from '../result/LoaderRow';
+import LoaderRow from '../../pages/result/LoaderRow';
 import {getFunctionalData} from "../../../services/ProtVarService";
 import {FunctionalResponse} from "../../../types/FunctionalResponse";
 import {AMScore, ConservScore, ESMScore, EVEScore, TranslatedSequence} from "../../../types/MappingResponse";

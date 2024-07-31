@@ -11,7 +11,7 @@ import {
 } from "../../../types/MappingResponse";
 import {StringVoidFun} from "../../../constants/CommonTypes";
 import {getAlternateIsoFormRow} from "./AlternateIsoFormRow";
-import {getNewPrimaryRow} from "../search/PrimaryRow";
+import {getNewPrimaryRow} from "./PrimaryRow";
 import {AppContext} from "../../App";
 import Loader from "../../elements/Loader";
 import MsgRow from "./MsgRow";

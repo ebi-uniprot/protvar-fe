@@ -1,7 +1,7 @@
 import DefaultPageLayout from "../../layout/DefaultPageLayout";
 import LegendModal from "../../modal/LegendModal";
 import {useLocation, useParams, useSearchParams} from "react-router-dom";
-import ResultTable from "../../components/result/ResultTable";
+import ResultTable from "./ResultTable";
 import React, {useCallback, useEffect, useState} from "react";
 import PaginationRow from "./PaginationRow";
 import {DEFAULT_PAGE, DEFAULT_PAGE_SIZE, LOCAL_RESULTS, PERMITTED_PAGE_SIZES, TITLE} from "../../../constants/const";

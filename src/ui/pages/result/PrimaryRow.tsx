@@ -13,16 +13,16 @@ import {
 import { ALLELE, CONSEQUENCES } from "../../../constants/SearchResultTable";
 import Spaces from "../../elements/Spaces";
 import Tool from "../../elements/Tool";
-import {caddScoreAttr, formatCaddScore} from "../function/prediction/CaddScorePred";
-import {amScoreAttr, formatAMScore} from "../function/prediction/AlphaMissensePred";
+import {caddScoreAttr, formatCaddScore} from "../../components/function/prediction/CaddScorePred";
+import {amScoreAttr, formatAMScore} from "../../components/function/prediction/AlphaMissensePred";
 import ProteinIcon from '../../../images/proteins.svg';
 import StructureIcon from '../../../images/structures-3d.svg';
 import PopulationIcon from '../../../images/human.svg';
-import LoaderRow from "../result/LoaderRow";
+import LoaderRow from "./LoaderRow";
 import { ReactComponent as ChevronDownIcon } from "../../../images/chevron-down.svg"
 import { ReactComponent as ChevronUpIcon } from "../../../images/chevron-up.svg"
 import { EmptyElement } from "../../../constants/ConstElement";
-import {aaChangeTip, CanonicalIcon, getProteinName} from "../result/AlternateIsoFormRow";
+import {aaChangeTip, CanonicalIcon, getProteinName} from "./AlternateIsoFormRow";
 import {
   INPUT_GEN,
   INPUT_PRO,
@@ -33,11 +33,11 @@ import {
   IsoFormMapping,
   CustomInput, TranslatedSequence
 } from "../../../types/MappingResponse";
-import {rowBg} from "../result/ResultTable";
+import {rowBg} from "./ResultTable";
 
-const StructuralDetail = lazy(() => import(/* webpackChunkName: "StructuralDetail" */ "../structure/StructuralDetail"));
-const PopulationDetail = lazy(() => import(/* webpackChunkName: "PopulationDetail" */ "../population/PopulationDetail"));
-const FunctionalDetail = lazy(() => import(/* webpackChunkName: "FunctionalDetail" */ "../function/FunctionalDetail"));
+const StructuralDetail = lazy(() => import(/* webpackChunkName: "StructuralDetail" */ "../../components/structure/StructuralDetail"));
+const PopulationDetail = lazy(() => import(/* webpackChunkName: "PopulationDetail" */ "../../components/population/PopulationDetail"));
+const FunctionalDetail = lazy(() => import(/* webpackChunkName: "FunctionalDetail" */ "../../components/function/FunctionalDetail"));
 
 export const getIdUrl = (id:string) => {
   if (id) {

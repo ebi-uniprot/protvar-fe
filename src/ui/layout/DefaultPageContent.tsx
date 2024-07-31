@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import {DOWNLOAD, HOME, RESULT} from '../../constants/BrowserPaths'
 import {useEffect, useState} from "react";
-import ResultHistory from "../components/result/ResultHistory";
+import ResultHistory from "../pages/result/ResultHistory";
 import {LOCAL_DOWNLOADS, LOCAL_RESULTS} from "../../constants/const";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import {SET_ITEM} from "../../context/LocalStorageContext";
