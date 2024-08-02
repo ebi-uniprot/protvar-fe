@@ -1,0 +1,43 @@
+.side-drawer {
+    position: fixed;
+    height: 100%;
+    background: white;
+    top: 0;
+    right: 0;
+    padding: 10px;
+    width: 50%;
+    z-index: 200;
+    box-shadow: 1px 0px 7px rgba(0, 0, 0, 0.5);
+    transform: translateX(100%);
+    /* transform: translateX(0%); */
+    transition: transform 0.3s ease-out;
+    overflow: auto;
+}
+.side-drawer.open {
+    transform: translateX(0);
+    /* transform: translateX(100%); */
+}
+
+.backdrop {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 100;
+    top: 0;
+    right: 0;
+}
+
+.info-close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.info-close:hover,
+.info-close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}

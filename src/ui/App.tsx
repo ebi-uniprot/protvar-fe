@@ -20,6 +20,7 @@ import {DEFAULT_PAGE_SIZE} from "../constants/const";
 const empty: ReactElement = <></>;
 
 export interface AppState {
+  drawer?: JSX.Element
   stdColor: boolean
   showModal: boolean
   modalContent: JSX.Element
@@ -33,6 +34,7 @@ export interface AppState {
 }
 
 export const initialState = {
+  drawer: undefined,
   stdColor: true,
   showModal: false,
   modalContent: empty,

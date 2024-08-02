@@ -10,6 +10,7 @@ import openTargetsLogo from '../../images/open-targets-logo.png'
 import SignUp from "./SignUp";
 import {WARN_ICON} from "../pages/result/MsgRow";
 import {CookieConsent} from "react-cookie-consent";
+import {SlideDrawer} from "../components/drawer/SlideDrawer";
 interface DefaultPageLayoutProps {
   content: JSX.Element
 }
@@ -183,6 +184,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
               )}
 
               <div className="default-page-layout">
+                <SlideDrawer />
                 <DefaultPageContent>
                   {content}
                 </DefaultPageContent>
