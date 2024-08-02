@@ -121,7 +121,7 @@
   }
 }
 
-.page-help {
+.help-section {
 
     font-family: Arial, sans-serif;
     line-height: 1.6;
@@ -152,4 +152,8 @@
   border: none;
   border-radius: 4px;
   background-color: #f1f1f1;
+}
+
+.help-btn:hover {
+  cursor: pointer;
 }
