@@ -3,10 +3,7 @@ import Button from '../../elements/form/Button'
 import {Assembly, DEFAULT_ASSEMBLY} from '../../../constants/CommonTypes'
 import {
   INPUT_EXAMPLES,
-  CDNA_BTN_TITLE,
-  GENOMIC_BTN_TITLE,
-  ID_BTN_TITLE,
-  PASTE_BOX, PROTEIN_BTN_TITLE
+  PASTE_BOX
 } from "../../../constants/Example";
 import {Form, initialForm} from "../../../types/FormData";
 import {submitInputFile, submitInputText} from "../../../services/ProtVarService";
@@ -18,6 +15,7 @@ import {LOCAL_RESULTS} from "../../../constants/const";
 import {ResultRecord} from "../../../types/ResultRecord";
 import {readFirstLineFromFile} from "../../../utills/FileUtil";
 import useLocalStorage from "../../../hooks/useLocalStorage";
+import {InputFormatHelp} from "../../components/help/InputFormatHelp";
 
 const SearchVariant = () => {
   const navigate = useNavigate();
@@ -151,41 +149,38 @@ const SearchVariant = () => {
               />
               <div className="search-card-selection">
                 <div>
+                  <InputFormatHelp /><br/>
                   <b>Click buttons below to try examples</b><br/>
                   <div className="examples-container">
 
                     <button
-                      onClick={_=>setForm({...form, text: INPUT_EXAMPLES[0]})}
+                      onClick={_ => setForm({...form, text: INPUT_EXAMPLES[0]})}
                       className="example-link"
                       id="genomicExamples"
-                      title={GENOMIC_BTN_TITLE}
                     >
                       Genomic
                     </button>
 
                     <button
-                      onClick={_=>setForm({...form, text: INPUT_EXAMPLES[1]})}
+                      onClick={_ => setForm({...form, text: INPUT_EXAMPLES[1]})}
                       className="example-link"
                       id="cDNAExamples"
-                      title={CDNA_BTN_TITLE}
                     >
                       cDNA
                     </button>
 
                     <button
-                      onClick={_=>setForm({file: form.file, text: INPUT_EXAMPLES[2], assembly: DEFAULT_ASSEMBLY})}
+                      onClick={_ => setForm({file: form.file, text: INPUT_EXAMPLES[2], assembly: DEFAULT_ASSEMBLY})}
                       className="example-link"
                       id="proteinExamples"
-                      title={PROTEIN_BTN_TITLE}
                     >
                       Protein
                     </button>
 
                     <button
-                      onClick={_=>setForm({file: form.file, text: INPUT_EXAMPLES[3], assembly: DEFAULT_ASSEMBLY})}
+                      onClick={_ => setForm({file: form.file, text: INPUT_EXAMPLES[3], assembly: DEFAULT_ASSEMBLY})}
                       className="example-link"
                       id="idExamples"
-                      title={ID_BTN_TITLE}
                     >
                       Variant ID
                     </button>
@@ -193,7 +188,8 @@ const SearchVariant = () => {
                 </div>
 
                 <div className="assembly">
-                  <span title="Genome assembly GRCh37 to GRCh38 conversion for genomic inputs (VCF, HGVS g., gnomAD and any other custom genomic formats).">
+                  <span
+                    title="Genome assembly GRCh37 to GRCh38 conversion for genomic inputs (VCF, HGVS g., gnomAD and any other custom genomic formats).">
                     <b>Reference Genome Assembly</b>
                   </span>
                   <div className="assembly-radio-check">
@@ -203,7 +199,7 @@ const SearchVariant = () => {
                         name="assembly"
                         value={Assembly.AUTO}
                         checked={form.assembly === Assembly.AUTO}
-                        onChange={e => setForm({...form, assembly: Assembly.AUTO}) }
+                        onChange={e => setForm({...form, assembly: Assembly.AUTO})}
                       />
                       Auto-detect
                     </label>
@@ -213,7 +209,7 @@ const SearchVariant = () => {
                         name="assembly"
                         value={Assembly.GRCh38}
                         checked={form.assembly === Assembly.GRCh38}
-                        onChange={e => setForm({...form, assembly: Assembly.GRCh38}) }
+                        onChange={e => setForm({...form, assembly: Assembly.GRCh38})}
                       />
                       GRCh38
                     </label>
@@ -223,7 +219,7 @@ const SearchVariant = () => {
                         name="assembly"
                         value={Assembly.GRCh37}
                         checked={form.assembly === Assembly.GRCh37}
-                        onChange={e => setForm({...form, assembly: Assembly.GRCh37}) }
+                        onChange={e => setForm({...form, assembly: Assembly.GRCh37})}
                       />
                       GRCh37
                     </label>
@@ -231,7 +227,7 @@ const SearchVariant = () => {
 
                   <div>
                     <span>
-                      <b>Supported file formats</b><br />
+                      <b>Supported file formats</b><br/>
                     </span>
                     <p className='supported-file-text'>
                       ProtVar accepts any files that are in plain text format (i.e. .txt, .csv)
@@ -239,7 +235,7 @@ const SearchVariant = () => {
                     <input
                       id="myInput"
                       type="file"
-                      style={{ display: 'none' }}
+                      style={{display: 'none'}}
                       ref={uploadInputField}
                       onChange={viewResult}
                     />
@@ -249,7 +245,7 @@ const SearchVariant = () => {
                           ? clearFileInput
                           : () => uploadInputField.current?.click()
                       }
-                      className={`file-upload ${form.file ? 'clear-file bi bi-x-lg': 'bi bi-file-earmark-fill'}`}
+                      className={`file-upload ${form.file ? 'clear-file bi bi-x-lg' : 'bi bi-file-earmark-fill'}`}
                     >
                       {' '}{form.file ? 'Clear file' : 'Upload File'
                     }
@@ -273,7 +269,8 @@ const SearchVariant = () => {
                 <div className="search-button-wrapper">
                   <Button
                     type="submit"
-                    onClick={loading ? () => {} : handleSubmit}
+                    onClick={loading ? () => {
+                    } : handleSubmit}
                     className={`button-primary bi bi-box-arrow-right ${form.file || form.text ? '' : 'disable-submit'}`}
                     id="searchButton"
                   >

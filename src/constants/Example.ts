@@ -32,32 +32,3 @@ COSN190667
 rs864622779
 rs587778656`
 ]
-
-export const GENOMIC_BTN_TITLE =
-  `VCF
-gnomAD
-HGVS g.
-Custom genomic formats including the following
-X 149498202 C G (without variant ID/lenient VCF)
-X 149498202 C/G
-X 149498202 C>G
-  `;
-
-export const CDNA_BTN_TITLE =
-  `HGVS c. (using RefSeq IDs)
-  `;
-
-export const PROTEIN_BTN_TITLE =
-  `HGVS p. (using RefSeq IDs)
-Custom protein inputs including the following
-P22304 A205P
-P07949 asn783thr
-P22309 71 Gly Arg
-P22304 205 A/P
-  `;
-
-export const ID_BTN_TITLE =
-  `DBSNP
-ClinVar
-COSMIC
-  `;
