@@ -62,9 +62,9 @@ function DownloadModal(props: DownloadModalProps) {
   }
 
   const handleSucc = (downloadRec: DownloadRecord) => {
-    const downloads = getItem<DownloadRecord[]>(LOCAL_DOWNLOADS)  || []
-    const updatedDownloads = [...downloads, downloadRec]
-    setItem(LOCAL_DOWNLOADS, updatedDownloads)
+    let downloads = getItem<DownloadRecord[]>(LOCAL_DOWNLOADS)  || []
+    downloads.unshift(downloadRec)
+    setItem(LOCAL_DOWNLOADS, downloads)
     Notify.sucs(`Job ${downloadRec.downloadId.split('-')[0]} submitted. Check the Downloads page. `)
   }
 
