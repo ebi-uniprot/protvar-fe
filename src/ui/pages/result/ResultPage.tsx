@@ -12,6 +12,7 @@ import {PagedMappingResponse, ResultType} from "../../../types/PagedMappingRespo
 import {ResultRecord} from "../../../types/ResultRecord";
 import useLocalStorage from "../../../hooks/useLocalStorage";
 import {APP_URL} from "../../App";
+import Button from "../../elements/form/Button";
 
 function ResultPageContent(props: ResultPageProps) {
   const location = useLocation();
@@ -141,10 +142,14 @@ response.data.content.messages?.forEach(message => {
       <PaginationRow loading={loading} data={data} />
       {data &&
         <div className="legend-container">
-          <button title="Share" style={{fontSize: '20px', color: 'gray'}} onClick={() => {
-            navigator.clipboard.writeText(shareUrl);
-            alert(`URL copied: ${shareUrl}`)
-          }} className="bi bi-share result-op-btn"></button>
+          <Button
+            onClick={() => {
+              navigator.clipboard.writeText(shareUrl);
+              alert(`URL copied: ${shareUrl}`)
+            }}
+            className="bi bi-share view-legend"
+          > Share Results
+          </Button>
           <LegendModal/>
           <DownloadModal type={props.type}/>
         </div>
