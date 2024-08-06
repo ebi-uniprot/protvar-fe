@@ -73,6 +73,13 @@ function DownloadPageContent() {
     setDownloads(updatedDownloads);
   }
 
+  const handleSort = () => {
+    const updatedDownloads = downloads.sort((a, b) =>
+      b.requested.localeCompare(a.requested))
+    setItem(LOCAL_DOWNLOADS, updatedDownloads);
+    setDownloads(updatedDownloads);
+  }
+
   return <div className="container">
 
     <h6>FTP download</h6>
@@ -84,8 +91,7 @@ function DownloadPageContent() {
       site</a>.
     </p>
 
-    <h6>Result download</h6>
-    <DownloadHelp /><br/>
+    <h6>Result download <DownloadHelp /></h6>
 
     {error && <p>{error}</p>}
     {downloads.length === 0 ? (
@@ -95,9 +101,13 @@ function DownloadPageContent() {
         <table className="table download-table">
           <thead style={{backgroundColor: '#6987C3', color: '#FFFFFF'}}>
           <tr>
-            <th scope="col">Requested</th>
+            <th scope="col">
+              Requested <i className="bi bi-arrow-down-up sortarrow" onClick={handleSort}
+                           title="Sort by latest downloads"></i>
+            </th>
             <th scope="col">Job name</th>
-            <th scope="col">Result</th>
+            <th scope="col">Input</th>
+            <th scope="col">Options</th>
             <th scope="col">Annotations</th>
             <th scope="col">Status</th>
             <th scope="col">Download</th>
@@ -135,9 +145,11 @@ function DownloadPageContent() {
                   <span style={{cursor: 'pointer'}}
                         onClick={_ => download.resultUrl ? navigate(download.resultUrl) : null}>
                     {download.downloadId.split('-')[0]}
-                    {download.page && <> / {download.page}{download.pageSize && `-${download.pageSize}`}</>}
-                    {download.assembly && download.assembly !== 'AUTO' && ` ${download.assembly}`}
                     </span>
+                </td>
+                <td>
+                    {download.page && <> p{download.page}{download.pageSize && ` (${download.pageSize})`}</>}
+                    {download.assembly && download.assembly !== 'AUTO' && ` ${download.assembly}`}
                 </td>
                 <td>
                   {download.fun ? <i className="bi bi-check green"></i> :
