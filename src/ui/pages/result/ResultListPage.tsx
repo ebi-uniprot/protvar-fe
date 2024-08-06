@@ -1,8 +1,8 @@
 import DefaultPageLayout from "../../layout/DefaultPageLayout";
 import React, {useEffect, useState} from "react";
 import {LOCAL_RESULTS, TITLE} from "../../../constants/const"
-import {getRelativeTime} from "../../../utills/DateUtil";
-import {lastUpdate, ResultRecord} from "../../../types/ResultRecord";
+import {getRelativeTime, parseDateString} from "../../../utills/DateUtil";
+import {ResultRecord} from "../../../types/ResultRecord";
 import {NavLink} from "react-router-dom";
 import {APP_URL} from "../../App";
 import useLocalStorage from "../../../hooks/useLocalStorage";
@@ -38,10 +38,10 @@ function ResultListPageContent() {
 
   return <div className="container">
 
-    <h6>Search Results</h6>
-    <ResultHelp /><br/>
+    <h6>Search Results <ResultHelp/></h6>
 
-    {results.length === 0 ? (
+  {
+    results.length === 0 ? (
       <p>No result</p>
     ) : (<>
 
@@ -50,12 +50,13 @@ function ResultListPageContent() {
         <table className="table download-table">
           <thead style={{backgroundColor: '#6987C3', color: '#FFFFFF'}}>
           <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Name</th>
-            <th scope="col">Last submitted/viewed</th>
+            <th scope="col">Last Viewed</th>
+            <th scope="col">Submitted</th>
             {
-            //<th scope="col">Expires</th>
+              //<th scope="col">Expires</th>
             }
+            <th scope="col">Name</th>
+            <th scope="col">Input</th>
             <th scope="col">Share</th>
             <th scope="col">Delete</th>
           </tr>
@@ -65,7 +66,20 @@ function ResultListPageContent() {
           {results.map((record, index) => {
             return (
               <tr key={`download-${index}`}>
-                <td><NavLink to={record.url}>{record.id}</NavLink></td>
+                <td>
+                  {getRelativeTime(parseDateString(record.lastViewed))}
+                </td>
+                <td>
+                  {record.lastSubmitted ?
+                    getRelativeTime(parseDateString(record.lastSubmitted)) :
+                    (record.firstSubmitted ?
+                        getRelativeTime(parseDateString(record.firstSubmitted)) : ``
+                    )
+                  }
+                </td>
+                {
+                  //<td>in {}</td>
+                }
                 <td>
                   {editingIndex === index ? (
                     <input
@@ -82,10 +96,7 @@ function ResultListPageContent() {
                         className="bi bi-pencil"></i></span>
                   )}
                 </td>
-                <td title={`Submitted ${record.lastSubmitted || record.firstSubmitted || `N/A`} Viewed ${record.lastViewed || `N/A`}`}>{getRelativeTime(lastUpdate(record))}</td>
-                {
-                //<td>in {}</td>
-                }
+                <td><NavLink to={record.url}>{record.id}</NavLink></td>
                 <td>
                   <button title="Share" onClick={() => {
                     let url = `${APP_URL}${record.url}`;

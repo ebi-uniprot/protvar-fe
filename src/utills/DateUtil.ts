@@ -44,7 +44,7 @@ export const getRelativeTime = (date: string | Date | null) => {
   return ""
 }
 
-const parseDateString = (dateString: string | null | undefined): Date | null => {
+export const parseDateString = (dateString: string | null | undefined): Date | null => {
   if (!dateString) {
     return null; // Handle null or empty string
   }
