@@ -8,8 +8,7 @@ interface HelpBtnProps {
 
 export const HelpBtn = (props: HelpBtnProps) => {
   const state = useContext(AppContext)
-  return <button className="bi bi-info-circle help-btn"
-                 onClick={_ => state.updateState("drawer", props.content)}>{' '}
-    {props.title}
-  </button>
+  return <span onClick={_ => state.updateState("drawer", props.content)}>
+      {props.title} <i className="bi bi-info-circle help-btn"></i>
+  </span>
 }
