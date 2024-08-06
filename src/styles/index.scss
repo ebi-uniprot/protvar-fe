@@ -71,6 +71,13 @@
   color: green;
 }
 
+.sortarrow {
+  color: white;
+}
+.sortarrow:hover {
+  cursor: pointer;
+}
+
 .result-op-btn {
   float: right;
   font-size: 10px;
