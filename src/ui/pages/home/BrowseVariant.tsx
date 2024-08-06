@@ -46,7 +46,7 @@ const BrowseVariant = () => {
         <section className="search-card__actions" style={{backgroundColor: '#9fccaf'}}>
           <span className="search-card-header">
             <p>
-              <b>Browse whole protein</b> - enter a single UniProt accession below
+              <b>Browse ProtVar</b> - enter a single UniProt accession below
             </p>
           </span>
         </section>
@@ -54,11 +54,11 @@ const BrowseVariant = () => {
           <div className="card__content">
             <div className="search-box-container">
               <select className="search-select">
-                <option value="1">Protein (UniProt)</option>
+                <option value="1">Protein (UniProt)</option>{/*
                 <option value="2" disabled={true}>Protein (PDBe)</option>
                 <option value="3" disabled={true}>Gene (HGNC)</option>
                 <option value="4" disabled={true}>Gene (Ensembl ID)</option>
-                <option value="5" disabled={true}>Gene (RefSeq)</option>
+                <option value="5" disabled={true}>Gene (RefSeq)</option>*/}
               </select>
               <input type="text" className="search-input"
                      value={inputValue}
