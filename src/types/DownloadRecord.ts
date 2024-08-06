@@ -1,6 +1,6 @@
 export interface DownloadResponse {
     //inputType: string
-    requested: string
+    requested: string // "requested": "2024-06-20T22:02:31.157133154" in json
     downloadId: string // corresponds to the download file name (without ext): <id>[-fun][-pop][-str][-PAGE][-PAGE_SIZE][-ASSEMBLY]
     jobName: string
     url: string
