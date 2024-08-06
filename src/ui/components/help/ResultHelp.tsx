@@ -2,13 +2,13 @@ import React from "react";
 import {HelpBtn} from "./HelpBtn";
 
 export const ResultHelp = () => {
-  return <HelpBtn title="Help" content={<ResultHelpContent/>} />
+  return <HelpBtn title="" content={<ResultHelpContent/>} />
 }
 
 const ResultHelpContent = () => {
   return <div className="help-section"><h5>Where's My Result?</h5>
 
-    <p>All search results are listed on this page. Recent searches can be quickly accessed from the side navigation.</p>
+    <p>All search results are listed on this page. Recent searches can be quickly accessed from the left side navigation.</p>
 
     <p>Every custom search generates a unique ID, allowing you to share the result, including a specific page of results
       and even specific annotations such as functional, population, or structural information for a specific
@@ -45,7 +45,7 @@ const ResultHelpContent = () => {
       <code>https://www.ebi.ac.uk/ProtVar/ACCESSION</code>
     </p>
 
-    And the same parameters as above.
+    followed by the same parameters as above.
 
     <p><strong>Result Management</strong></p>
     <p>Use <em>edit</em> <i className="bi bi-pencil"></i>, <em>share</em> <i

@@ -4,12 +4,12 @@ import {downloadStatus} from "../../pages/download/DownloadPage";
 
 
 export const DownloadHelp = () => {
-  return <HelpBtn title="Help" content={<DownloadHelpContent/>} />
+  return <HelpBtn title="" content={<DownloadHelpContent/>} />
 }
 
 const DownloadHelpContent = () => {
   return <div className="help-section">
-    <h5>Download Results</h5>
+    <h5>About My Result Download</h5>
 
     <p>1. <strong>Full Input Download</strong></p>
     <ul>
@@ -21,13 +21,13 @@ const DownloadHelpContent = () => {
 
     <p>2. <strong>Partial Download by Page</strong></p>
     <ul>
-      <li>If downloading a specific page or if the default page size has been have changed, the download ID will include
+      <li>If downloading a specific page, or if the default page size has been changed, the download ID will include
         additional information to indicate this.
       </li>
       <li><strong>Example:</strong></li>
       <ul>
-        <li>For page 1 of input <code>XYZ</code>, the download ID will be <code>XYZ-1</code>.</li>
-        <li>For page 1 with a page size of 50, the download ID will be <code>XYZ-1-50</code>.</li>
+        <li>For page one of input <code>XYZ</code>, the download ID will be <code>XYZ-1</code>.</li>
+        <li>For page one with a page size of 50, the download ID will be <code>XYZ-1-50</code>.</li>
       </ul>
     </ul>
 
@@ -56,9 +56,9 @@ const DownloadHelpContent = () => {
     <p>The format for download IDs with options is as
       follows: <code>UUID[-fun][-pop][-str][-<em>page</em>][-<em>pageSize</em>]</code></p>
 
-    <p><strong>Protein Mappings Download</strong></p>
-    <p>The same format applies for protein mappings downloads, but the accession number is used as the ID instead of the
-      randomly generated UUID for custom inputs. The format for protein mappings download IDs
+    <p><strong>Whole Protein Downloads</strong></p>
+    <p>The same format applies for whole protein downloads, but the UniProt accession is used as the ID instead of the
+      randomly generated UUID for custom inputs. The format for whole protein download IDs
       is: <code>ACCESSION[-fun][-pop][-str][-<em>page</em>][-<em>pageSize</em>]</code>.</p>
 
     <p>This ensures that download file names accurately reflect the scope of the data they contain, helping to keep
