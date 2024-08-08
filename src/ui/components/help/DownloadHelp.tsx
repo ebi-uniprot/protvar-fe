@@ -24,11 +24,12 @@ const DownloadHelpContent = () => {
       <li>If downloading a specific page, or if the default page size has been changed, the download ID will include
         additional information to indicate this.
       </li>
-      <li><strong>Example:</strong></li>
-      <ul>
-        <li>For page one of input <code>XYZ</code>, the download ID will be <code>XYZ-1</code>.</li>
-        <li>For page one with a page size of 50, the download ID will be <code>XYZ-1-50</code>.</li>
-      </ul>
+      <li><strong>Example:</strong>
+        <ul>
+          <li>For page one of input <code>XYZ</code>, the download ID will be <code>XYZ-1</code>.</li>
+          <li>For page one with a page size of 50, the download ID will be <code>XYZ-1-50</code>.</li>
+        </ul>
+      </li>
     </ul>
 
     <p><strong>General Format</strong></p>
