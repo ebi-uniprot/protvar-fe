@@ -26,8 +26,10 @@ interface MsgRowProps {
 const MsgRow = (props: MsgRowProps) => {
   return <tr style={rowBg(props.index?? -1)} title={props.input ? `Input: ${props.input.inputStr}` : ``}>
     <td colSpan={TOTAL_COLS}>
-      {getIcon(props.message)}
-      <b>{props.input && props.input.inputStr}</b> {props.message.text}
+      <div style={{wordWrap: "break-word", overflowWrap: "break-word"}}>
+        {getIcon(props.message)}
+        <b>{props.input && props.input.inputStr}</b> {props.message.text}
+      </div>
     </td>
   </tr>
 };
