@@ -1,4 +1,4 @@
-import {Evidence} from "../types/Common";
+import {Evidence} from "./Common";
 
 export interface FunctionalResponse {
     position: number
