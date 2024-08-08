@@ -120,9 +120,9 @@ function DownloadPageContent() {
             return (
               <tr key={`download-${index}`}>
                 {
-                  // it seems becauses the download record is saved in local storage and retrieved, the date
+                  // it seems because the download record is saved in local storage and retrieved, the date
                   // string may be messing up when retrieved, and thus getTime or getDate functions do not work
-                  // soln: create new Date object
+                  // solution: create new Date object
                 }
                 <td>{getRelativeTime(download.requested)}</td>
                 <td>
