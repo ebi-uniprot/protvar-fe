@@ -1,6 +1,6 @@
 import "./PdbeMolstar.css";
-import "pdbe-molstar/build/pdbe-molstar-component-3.1.2";
-import "pdbe-molstar/build/pdbe-molstar-light-3.1.2.css";
+import "pdbe-molstar/build/pdbe-molstar-component";
+import "pdbe-molstar/build/pdbe-molstar-light.css";
 import Loader from "../../elements/Loader";
 import {ProteinStructureElement} from "../../../types/ProteinStructureResponse";
 import {AlphafoldResponseElement} from "../../../types/AlphafoldResponse";
