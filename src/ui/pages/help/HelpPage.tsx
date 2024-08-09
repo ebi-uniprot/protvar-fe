@@ -21,7 +21,7 @@ let sections: HelpSection[] = [
   {title: 'Direct Variant Link', content: ''}
 ]
 
-const markdowns = ['website.md', 'download.md', 'api.md', 'directlink.md'];
+const markdowns = ['pvwebsite.md', 'pvdownload.md', 'pvrestapi.md', 'pvdirectlink.md'];
 const fetchPromises = markdowns.map(url => fetch(url).then(response => response.text()));
 
 
