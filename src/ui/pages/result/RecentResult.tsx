@@ -1,5 +1,5 @@
-import "./ResultHistory.css"
-import {useEffect, useState} from "react";
+import "./RecentResult.css"
+import React, {useEffect, useState} from "react";
 import {LOCAL_RESULTS} from "../../../constants/const";
 import {HOME} from "../../../constants/BrowserPaths";
 import {useNavigate, useParams} from "react-router-dom";
@@ -8,8 +8,9 @@ import {APP_URL} from "../../App";
 import {categoriseDate} from "../../../utills/DateUtil";
 import useLocalStorage from "../../../hooks/useLocalStorage";
 import {SET_ITEM} from "../../../context/LocalStorageContext";
+import {ShareLink} from "../../components/common/ShareLink";
 
-const ResultHistory = () => {
+const RecentResult = () => {
   const {id} = useParams<{ id?: string }>();
   const navigate = useNavigate();
   const { getItem, setItem } = useLocalStorage();
@@ -58,13 +59,9 @@ const ResultHistory = () => {
                 {record.name ? record.name : record.id}
               </span>
                   <div className="map-item-options">
-                    <button title="Delete" className="bi bi-x-lg result-op-btn"
+                    <ShareLink url={`${APP_URL}${record.url}`} />
+                    <button title="Delete" className="bi bi-x-lg icon-btn"
                             onClick={() => deleteResult(record.id, index)}></button>
-                    <button title="Share" onClick={() => {
-                      let url = `${APP_URL}${record.url}`;
-                      navigator.clipboard.writeText(url);
-                      alert(`URL copied: ${url}`)
-                    }} className="bi bi-share result-op-btn"></button>
                   </div>
                 </>
               </li>
@@ -74,7 +71,7 @@ const ResultHistory = () => {
         </div>
       ))}
     </div>
-)
+  )
 }
 
 function groupByFirstN(records: ResultRecord[], n: number) {
@@ -91,4 +88,4 @@ function groupByFirstN(records: ResultRecord[], n: number) {
   return map;
 }
 
-export default ResultHistory;
+export default RecentResult;

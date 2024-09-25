@@ -45,6 +45,7 @@
 
 .map-item-options {
   display: none;
+  font-size: 10px;
 }
 .map-item-options button {
   margin-left: 5px;
