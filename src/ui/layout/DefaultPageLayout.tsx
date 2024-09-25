@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import { Link } from 'react-router-dom'
 import {ABOUT, CONTACT, HELP, HOME, RELEASE} from '../../constants/BrowserPaths'
 import { API_URL, LOCAL_BANNER } from '../../constants/const'
@@ -10,7 +10,7 @@ import openTargetsLogo from '../../images/open-targets-logo.png'
 import SignUp from "./SignUp";
 import {WARN_ICON} from "../pages/result/MsgRow";
 import {CookieConsent} from "react-cookie-consent";
-import {SlideDrawer} from "../components/drawer/SlideDrawer";
+import {SideDrawer} from "../components/drawer/SideDrawer";
 interface DefaultPageLayoutProps {
   content: JSX.Element
 }
@@ -94,69 +94,68 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
               <div className="navbar">
                 <table>
                   <tbody>
-                    <tr className="navbar">
-                      <td className="topnav-logo">
-                        <div className="logo-container">
-                          <Link
-                            className="local-title"
-                            to={HOME}
-                            title="ProtVar homepage"
-                          >
-                            <img
-                              src="ProtVar_logo.png"
-                              alt="ProtVar logo"
-                              width="140px"
-                            />
-                            <span style={{ fontWeight: 'bold', fontSize: '10px', verticalAlign: 'bottom'}}>UI v1.2</span>
-                          </Link>
-                          <Link
-                            className="sub-title"
-                            to={HOME}
-                            title="ProtVar homepage"
-                          >
-                            Contextualising human missense variation
-                          </Link>
-                        </div>
-                      </td>
-                      
-                        <td className="topnav-right local-sub-title">
-                          <Link to={CONTACT} title="ProtVar Contact">
-                            Contact
-                          </Link>
-                        </td>
-                        <td className="topnav-right local-sub-title">
-                          <a href={API_URL} title="ProtVar API" target="_self">
-                            API
-                          </a>
-                        </td>
-                        <td className="topnav-right local-sub-title">
-                          <Link
-                            // Replace with the right link
-                            to={HELP}
-                            title="ProtVar Help"
-                            id="protvarHelp"
-                          >
-                            Help
-                          </Link>
-                        </td>
-                      <td className="topnav-right local-sub-title">
+                  <tr className="navbar">
+                    <td className="topnav-logo">
+                      <div className="logo-container">
                         <Link
-                          to={ABOUT}
-                          title="ProtVar About"
-                          id="protvarAbout"
+                          className="local-title"
+                          to={HOME}
+                          title="ProtVar homepage"
                         >
-                          About
+                          <img
+                            src="ProtVar_logo.png"
+                            alt="ProtVar logo"
+                            width="140px"
+                          />
+                          <span style={{fontWeight: 'bold', fontSize: '10px', verticalAlign: 'bottom'}}>UI v1.2</span>
                         </Link>
-                      </td>
-                      <td className="topnav-right local-sub-title">
                         <Link
-                          to={RELEASE}
-                          title="ProtVar Release"
-                          id="protvarRelease"
-                        >Release</Link>
-                      </td>
-                    
-                    </tr>
+                          className="sub-title"
+                          to={HOME}
+                          title="ProtVar homepage"
+                        >
+                          Contextualising human missense variation
+                        </Link>
+                      </div>
+                    </td>
+
+                    <td className="topnav-right local-sub-title">
+                      <Link to={CONTACT} title="ProtVar Contact">
+                        Contact
+                      </Link>
+                    </td>
+                    <td className="topnav-right local-sub-title">
+                      <a href={API_URL} title="ProtVar API" target="_self">
+                        API
+                      </a>
+                    </td>
+                    <td className="topnav-right local-sub-title">
+                      <Link
+                        to={ABOUT}
+                        title="ProtVar About"
+                        id="protvarAbout"
+                      >
+                        About
+                      </Link>
+                    </td>
+                    <td className="topnav-right local-sub-title">
+                      <Link
+                        to={RELEASE}
+                        title="ProtVar Release"
+                        id="protvarRelease"
+                      >Release</Link>
+                    </td>
+                    <td className="topnav-right local-sub-title">
+                      <Link
+                        // Replace with the right link
+                        to={HELP}
+                        title="ProtVar Help"
+                        id="protvarHelp"
+                      >
+                        Help <i className="bi bi-info-circle help-btn"></i>
+                      </Link>
+                    </td>
+                  </tr>
                   </tbody>
                 </table>
               </div>
