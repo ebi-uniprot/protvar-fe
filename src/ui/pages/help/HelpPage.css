@@ -1,5 +1,30 @@
 .help {
-    margin-bottom: 60px;
+    padding: 0 20px 40px 10px;
+
+    code {
+        background-color: ivory;
+        padding: 2px 4px;
+        border-radius: 4px;
+    }
+
+    img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 90%;
+    }
+    h4, h5, h6 {
+        color: gray;
+    }
+    h4 {
+        font-size: 18px;
+    }
+    h5 {
+        font-size: 17px;
+    }
+    h6 {
+        font-size: 16px;
+    }
 }
 
 /* unvisited link */
@@ -28,28 +53,29 @@
 
 }
 
-
-.collapsible {
-    color: #00709b;
-    cursor: pointer;
-    padding: 10px;
-    width: 100%;
-    text-align: left;
-
-    margin-bottom: 2px;
-    background-color: transparent;
-    border-style: solid;
-    border-width: thin;
-    border-color: #00709b;
-}
-
-.active,
-.collapsible:hover {
+.active {
     background-color: #ccc;
 }
 
-.chevronicon {
-    height: 8px;
-    margin-left: 2px;
-    float: right;
+/* grid styles for table of content */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Flexible grid layout */
+    gap: 16px;
+    padding: 16px;
+}
+
+.grid-item {
+    display: block;
+    padding: 8px;
+    text-align: center;
+    background-color: #f0f0f0;
+    text-decoration: none;
+    color: #333;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.grid-item:hover {
+    background-color: #ddd;
 }
