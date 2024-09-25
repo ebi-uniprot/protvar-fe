@@ -15,9 +15,8 @@ function ReleasePageContent() {
   return <div className="container" style={{padding: '10px'}}>
 
 
-    <h4>ProtVar Release</h4>
-    Upcoming release: June 2024 (UniProt 2024_03)
-
+    <h5>ProtVar Release</h5>
+    Upcoming release: UniProt 2024_03
     <table style={{width: 'auto'}}>
       <thead>
       <tr>

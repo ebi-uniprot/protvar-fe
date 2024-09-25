@@ -26,7 +26,7 @@ function AboutPageContent() {
   }, []);
 
   return <div className="container">
-    <h4>About</h4>
+    <h5>About</h5>
     <div className="text">
 
       <p>
@@ -54,7 +54,7 @@ function AboutPageContent() {
 
       <h5>How to cite ProtVar</h5>
       <p>
-      James D Stephenson, Prabhat Totoo, David F Burke, Jürgen Jänes, Pedro Beltrao, Maria J Martin,
+        James D Stephenson, Prabhat Totoo, David F Burke, Jürgen Jänes, Pedro Beltrao, Maria J Martin,
       ProtVar: mapping and contextualizing human missense variation, <i>Nucleic Acids Research</i>, 2024;&nbsp;
       <a className="ref-link" href="https://doi.org/10.1093/nar/gkae413"
          target="_blank" rel="noreferrer">https://doi.org/10.1093/nar/gkae413</a>
@@ -92,7 +92,7 @@ function AboutPageContent() {
 
       <h5>Development team</h5>
       <p>
-        ProtVar is developed and maintained within the <a
+      ProtVar is developed and maintained within the <a
         href="https://www.ebi.ac.uk/about/teams/protein-function-development/" target="_blank" rel="noreferrer">UniProt
         protein function development</a> team by <br/>
 
@@ -120,7 +120,9 @@ function AboutPageContent() {
       </p>
 
       <h5>Acknowledgements</h5>
-      We would like to thank the following resources for the data used in ProtVar <br/>
+      <p>
+        We would like to thank the following resources for the data used in ProtVar <br/>
+      </p>
 
       <div className="grid-container">
         <div><a href="https://www.uniprot.org/" target="_blank" rel="noreferrer"><img
