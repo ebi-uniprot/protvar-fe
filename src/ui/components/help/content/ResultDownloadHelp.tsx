@@ -1,15 +1,9 @@
 import React from "react";
-import {HelpBtn} from "./HelpBtn";
-import {downloadStatus} from "../../pages/download/DownloadPage";
+import {downloadStatus} from "../../../pages/download/DownloadPage";
 
-
-export const DownloadHelp = () => {
-  return <HelpBtn title="" content={<DownloadHelpContent/>} />
-}
-
-const DownloadHelpContent = () => {
-  return <div className="help-section">
-    <h5>About My Result Download</h5>
+export const ResultDownloadHelp = () => {
+  return <div className="help">
+    <h4 id="result-download">Result Download</h4>
 
     <p>1. <strong>Full Input Download</strong></p>
     <ul>

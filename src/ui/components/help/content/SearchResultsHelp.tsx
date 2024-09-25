@@ -1,14 +1,14 @@
 import React from "react";
-import {HelpBtn} from "./HelpBtn";
 
-export const ResultHelp = () => {
-  return <HelpBtn title="" content={<ResultHelpContent/>} />
-}
+export const SearchResultsHelp = () => {
+  return <div className="help">
+    <h4 id="search-results">Search Results</h4>
 
-const ResultHelpContent = () => {
-  return <div className="help-section"><h5>Where's My Result?</h5>
-
-    <p>All search results are listed on this page. Recent searches can be quickly accessed from the left side navigation.</p>
+    Previous searches can be found on the:
+    <ul>
+      <li>Search history left side navigation, which list most recent searches for quick access.</li>
+      <li>Search results main page, which list all previous searches.</li>
+    </ul>
 
     <p>Every custom search generates a unique ID, allowing you to share the result, including a specific page of results
       and even specific annotations such as functional, population, or structural information for a specific
@@ -39,7 +39,7 @@ const ResultHelpContent = () => {
 
 
     <p><strong>Protein Accession</strong></p>
-    <p>The  URL follows this format:</p>
+    <p>The URL follows this format:</p>
 
     <p>
       <code>https://www.ebi.ac.uk/ProtVar/ACCESSION</code>
