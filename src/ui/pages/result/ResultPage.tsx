@@ -7,17 +7,22 @@ import PaginationRow from "./PaginationRow";
 import {DEFAULT_PAGE, DEFAULT_PAGE_SIZE, LOCAL_RESULTS, PERMITTED_PAGE_SIZES, TITLE} from "../../../constants/const";
 import DownloadModal from "../../modal/DownloadModal";
 import {getResult} from "../../../services/ProtVarService";
-import {PagedMappingResponse, ResultType} from "../../../types/PagedMappingResponse";
+import {InputType, PagedMappingResponse} from "../../../types/PagedMappingResponse";
 
 import {ResultRecord} from "../../../types/ResultRecord";
 import useLocalStorage from "../../../hooks/useLocalStorage";
 import {APP_URL} from "../../App";
-import Button from "../../elements/form/Button";
+import {HelpButton} from "../../components/help/HelpButton";
+import {HelpContent} from "../../components/help/HelpContent";
+import {ShareLink} from "../../components/common/ShareLink";
+import Spaces from "../../elements/Spaces";
 
 function ResultPageContent(props: ResultPageProps) {
   const location = useLocation();
   const {id} = useParams<{ id?: string }>();
   const [searchParams] = useSearchParams();
+  const [title, setTitle] = useState('')
+  const [paginate, setPaginate] = useState(false)
 
   // components that alter search params:
   // 1) PaginationRow
@@ -57,9 +62,9 @@ function ResultPageContent(props: ResultPageProps) {
     setItem(LOCAL_RESULTS, savedRecords);
   }, [getItem, setItem]);
 
-  const loadData = useCallback((type: ResultType, id: string|undefined
+  const loadData = useCallback((inputType: InputType, id: string|undefined
     , page: number, pageSize: number, assembly: string|null) => {
-    document.title = `Result - ${TITLE}`;
+    document.title = `${title} - ${TITLE}`;
     if (!id) {
       return;
     }
@@ -83,7 +88,7 @@ function ResultPageContent(props: ResultPageProps) {
     // pageSize null or PAGE_SIZE, no param
     // assembly null or DEFAULT, no param
 
-    getResult(type, id, page, pageSize, assembly)
+    getResult(inputType, id, page, pageSize, assembly)
       .then((response) => {
         // checks each level of response obj hierarchy exists and if inputs is non-empty.
         // if any part of the chain is null or undefined, the entire expr short-circuits
@@ -100,15 +105,20 @@ function ResultPageContent(props: ResultPageProps) {
         setData(response.data)
         viewedRecord(response.data.id, location.pathname + location.search)
 
-        if (type === ResultType.PROTEIN_ACC) {
-          document.title = `${id} - ${TITLE}`;
+        if (inputType === InputType.PROTEIN_ACCESSION) {
+          setTitle(`${id} (${Math.trunc(response.data.totalItems/3)} AA)`)
         } else {
           const totalItems = response.data.totalItems
           const pageTitle = totalItems === 1 ?
             response.data.content.inputs[0].inputStr :
-            `Result (${totalItems} inputs)`
-          document.title = `${pageTitle} - ${TITLE}`;
+            `${response.data.content.inputs[0].inputStr} ...+${totalItems-1} more `
+          setTitle(pageTitle)
         }
+
+        if (response?.data?.totalPages > 1) {
+          setPaginate(true)
+        }
+        document.title = `${title} - ${TITLE}`;
         /*
 response.data.content.messages?.forEach(message => {
   if (message.type === INFO) {
@@ -131,29 +141,32 @@ response.data.content.messages?.forEach(message => {
 
   useEffect(() => {
     setError('')
-    loadData(props.type, id, page, pageSize, assembly);
-  }, [props.type, id, page, pageSize, assembly, loadData]) // listening for change in id, and searchParams
+    loadData(props.inputType, id, page, pageSize, assembly);
+  }, [props.inputType, id, page, pageSize, assembly, loadData]) // listening for change in id, and searchParams
 
 
-  const shareUrl = `${APP_URL}${location.pathname}`
+  const shareUrl = `${APP_URL}${location.pathname}${location.search}`
 
   return <div className="search-results">
-    <div className="flex justify-content-space-between">
-      <PaginationRow loading={loading} data={data} />
-      {data &&
-        <div className="legend-container">
-          <Button
-            onClick={() => {
-              navigator.clipboard.writeText(shareUrl);
-              alert(`URL copied: ${shareUrl}`)
-            }}
-            className="bi bi-share view-legend"
-          > Share Results
-          </Button>
-          <LegendModal/>
-          <DownloadModal type={props.type}/>
-        </div>
-      }
+    <div>
+      <h5 className="page-header">Result <i className="bi bi-chevron-compact-right"></i> {title}</h5>
+      <span className="help-icon">
+      <HelpButton title="" content={<HelpContent name="result-page" />}/>
+        </span>
+    </div>
+
+    <div style={{display: 'flex', justifyContent: paginate ? 'space-between' : 'flex-end', width: '100%'}}>
+      {paginate && <PaginationRow loading={loading} data={data}/>}
+      <span style={{alignSelf: 'flex-end'}}>
+          {data &&
+            <div className="legend-container">
+              <ShareLink url={shareUrl} linkText="Share Results"/>
+              <Spaces count={2}/>
+              <LegendModal/>
+              <DownloadModal inputType={props.inputType} id={id}/>
+            </div>
+          }
+      </span>
     </div>
     {error && (
       <span className="padding-left-1x">
@@ -162,13 +175,16 @@ response.data.content.messages?.forEach(message => {
                       </span>
     )}
     <ResultTable loading={loading} data={data}/>
-    <PaginationRow loading={loading} data={data} />
+    {paginate &&
+      <PaginationRow loading={loading} data={data}/>
+    }
   </div>
 }
 
 interface ResultPageProps {
-  type: ResultType
+  inputType: InputType
 }
+
 function ResultPage(props: ResultPageProps) {
   return <DefaultPageLayout content={<ResultPageContent {...props} />}/>
 }

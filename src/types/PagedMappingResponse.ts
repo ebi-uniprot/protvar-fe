@@ -1,11 +1,11 @@
 import { MappingResponse } from "./MappingResponse";
 import {DEFAULT_PAGE, DEFAULT_PAGE_SIZE} from "../constants/const";
 
-// Type             Mapping endpoint        Download endpoint   Cache   Response
-// CUSTOM_INPUT     /mapping/input/${id}    /download           Y       PagedMappingResponse
-// PROTEIN_ACC      /mapping/protein/${id}  /download           N       PagedMappingResponse
-// DIRECT_QUERY     /mappings               ?                   N       MappingResponse
-export enum ResultType {CUSTOM_INPUT, PROTEIN_ACC, DIRECT_QUERY}
+// InputType          Mapping endpoint        Download endpoint   Cache   Response
+// ID                 /mapping/input/${id}    /download           Y       PagedMappingResponse
+// PROTEIN_ACCESSION  /mapping/protein/${id}  /download           N       PagedMappingResponse
+// SINGLE_VARIANT     /mappings               ?                   N       MappingResponse
+export enum InputType {ID, PROTEIN_ACCESSION, SINGLE_VARIANT}
 export interface PagedMappingResponse {
   content: MappingResponse
   id: string
