@@ -1,4 +1,4 @@
-##### <a name="api"></a>API
+#### <a id="api"></a>API
 
 ProtVar REST API is a programmatic way to obtain information from ProtVar. You can query:
 
