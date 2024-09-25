@@ -11,7 +11,7 @@ import {PopulationObservationResponse} from "../types/PopulationObservationRespo
 import {ProteinStructureResponse} from "../types/ProteinStructureResponse";
 import MappingResponse from "../types/MappingResponse";
 import {DownloadResponse} from "../types/DownloadRecord";
-import {IDResponse, PagedMappingResponse, ResultType} from "../types/PagedMappingResponse";
+import {IDResponse, InputType, PagedMappingResponse} from "../types/PagedMappingResponse";
 
 
 const instance = axios.create({
@@ -77,11 +77,11 @@ export function submitInputFile(file: File, assembly?: string, idOnly: boolean =
 // GET /mapping/input/{id}
 // IN: id
 // OUT: PagedMappingResponse
-export function getResult(type: ResultType, id: string, page: number, pageSize: number, assembly: string|null = null) {
+export function getResult(inputType: InputType, id: string, page: number, pageSize: number, assembly: string|null = null) {
   let url = ''
   let params = {}
 
-  if (type === ResultType.CUSTOM_INPUT) {
+  if (inputType === InputType.ID) {
     url = `${API_URL}/mapping/input/${id}`
     params = {page, pageSize, assembly}
   } else {
@@ -141,12 +141,12 @@ export function downloadTextInput(inputArr: string[], assembly: string, email: s
   );
 }
 
-export function downloadResult(id: string, type: string, page: string|null, pageSize: string|null, assembly: string|null,
+export function downloadResult(input: string, inputType: string, page: string|null, pageSize: string|null, assembly: string|null,
                                email: string, jobName: string, functional: boolean, population: boolean, structure: boolean) {
   return api.post<any, string, AxiosResponse<DownloadResponse>>(
-    `${API_URL}/download`, id,
+    `${API_URL}/download`, input,
     {
-      params: {type, page, pageSize, assembly, email, jobName, function: functional, population, structure},
+      params: {inputType, page, pageSize, assembly, email, jobName, function: functional, population, structure},
       headers: CONTENT_TEXT,
     }
   );
