@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import {DOWNLOAD, HOME, RESULT} from '../../constants/BrowserPaths'
 import {useEffect, useState} from "react";
-import ResultHistory from "../pages/result/ResultHistory";
+import RecentResult from "../pages/result/RecentResult";
 import {LOCAL_DOWNLOADS, LOCAL_RESULTS} from "../../constants/const";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import {SET_ITEM} from "../../context/LocalStorageContext";
@@ -41,7 +41,7 @@ const DefaultPageContent = (props: {
             </li>
             <li className="sidebar-menu">
               <NavLink to={RESULT}>Results <div className={`record-count ${numResults === 0 ? `gray-bg` : ``}`}>{numResults}</div></NavLink>
-              <ResultHistory/>
+              <RecentResult/>
             </li>
             <li className="sidebar-menu">
               <NavLink to={DOWNLOAD}>Downloads <div className={`record-count ${numDownloads === 0 ? `gray-bg` : ``}`}>{numDownloads}</div></NavLink>

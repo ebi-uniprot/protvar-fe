@@ -183,7 +183,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
               )}
 
               <div className="default-page-layout">
-                <SlideDrawer />
+                <SideDrawer />
                 <DefaultPageContent>
                   {content}
                 </DefaultPageContent>
