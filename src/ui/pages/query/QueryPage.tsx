@@ -1,197 +1,141 @@
-import {useEffect, useState} from 'react'
-import {useLocation, useSearchParams} from 'react-router-dom'
+import React, {useCallback, useEffect, useState} from 'react'
+import {useLocation, useParams, useSearchParams} from 'react-router-dom'
 import ResultTable from '../result/ResultTable'
 import DefaultPageLayout from '../../layout/DefaultPageLayout'
 import DownloadModal from '../../modal/DownloadModal'
 import LegendModal from '../../modal/LegendModal'
-//import Notify from "../../elements/Notify";
 import {TITLE} from "../../../constants/const";
 import {mappings} from "../../../services/ProtVarService";
-import {PagedMappingResponse, ResultType, toPagedMappingResponse} from "../../../types/PagedMappingResponse";
+import {InputType, PagedMappingResponse, toPagedMappingResponse} from "../../../types/PagedMappingResponse";
 import {APP_URL} from "../../App";
+import {HelpButton} from "../../components/help/HelpButton";
+import {HelpContent} from "../../components/help/HelpContent";
+import {ShareLink} from "../../components/common/ShareLink";
+import Spaces from "../../elements/Spaces";
 
-// basic tests on query params
-const chromosomeRegExp = new RegExp('[a-zA-Z0-9]+')
-const positionRegExp = new RegExp('[0-9]+')
-const alleleRegExp = new RegExp('[a-zA-Z]')
-const accessionRegExp = new RegExp('[a-zA-Z][a-zA-Z0-9]+')
-const oneletterAARegExp = new RegExp('[a-zA-Z]')
-//const threeletterAARegExp = new RegExp("[a-zA-Z]{3}");
+const chromosomeRegex = /^chr([1-9]|1[0-9]|2[0-2]|X|Y|MT)$/;
+// Uniprot accession regular expression:
+// https://www.uniprot.org/help/accession_numbers
+const proteinAccessionRegex = /^([OPQ][0-9][A-Z0-9]{3}[0-9]|[A-NR-Z][0-9]([A-Z][A-Z0-9]{2}[0-9]){1,2})$/;
+const positionRegex = /^\d+$/;
 
-const genomicExamples = [
-  '/ProtVar/query?chromosome=19&genomic_position=1010539&reference_allele=G&alternative_allele=C',
-  '/ProtVar/query?chromosome=14&genomic_position=89993420&reference_allele=A&alternative_allele=G',
-  '/ProtVar/query?chromosome=10&genomic_position=87933147&reference_allele=C&alternative_allele=T',
-]
-const proteinExamples = [
-  '/ProtVar/query?accession=Q4ZIN3&protein_position=558&reference_AA=S&variant_AA=R',
-  '/ProtVar/query?accession=Q9NUW8&protein_position=493&reference_AA=H&variant_AA=R',
-  '/ProtVar/query?accession=P60484&protein_position=130&reference_AA=R&variant_AA=T',
-  '/ProtVar/query?accession=P60484&protein_position=130&reference_AA=N&variant_AA=G',
-]
-const searchExamples = [
-  '/ProtVar/query?search=NC_000021.9:g.25905076A>T',
-  '/ProtVar/query?search=rs864622779,P22304 A205P',
-]
+const buildQueryString = (param1: string, param2: string, param3: string | null | undefined, param4: string | null | undefined): string =>
+  `${param1} ${param2}${param3 ? ` ${param3}${param4 ? ` ${param4}` : ''}` : ''}`;
 
-const gExamples = genomicExamples.map((ex, idx) => (
-  <li key={'gEx' + idx}>
-    <a href={ex}>{ex}</a>
-  </li>
-))
-const pExamples = proteinExamples.map((ex, idx) => (
-    <li key={'pEx' + idx}>
-      <a href={ex}>{ex}</a>
-    </li>
-))
-const sExamples = searchExamples.map((ex, idx) => (
-    <li key={'sEx' + idx}>
-      <a href={ex}>{ex}</a>
-    </li>
-))
-
-const QueryInfoContent = () => (
-  <>
-    <h4>Query</h4>
-
-    <p>
-      You can access variant annotations directly using the following URL structures and bypassing the
-      input screen.
-    </p>
-    Using genomic coordinates
-    <ul>{gExamples}</ul>
-    Using protein accession and position
-    <ul>{pExamples}</ul>
-    Using search terms
-    <ul>{sExamples}</ul>
-    The search option supports all the accepted formats and up to a maximum of 10 inputs separated by comma.
-  </>
-)
-
-const requiredGenomicParams = [
-  'chromosome',
-  'genomic_position',
-  'reference_allele',
-  'alternative_allele',
-]
-
-const requiredProteinParams = [
-  'accession',
-  'protein_position',
-  'reference_AA',
-  'variant_AA',
-]
-
-function parseUrlInput(params: URLSearchParams): any {
-  const isGenomicQuery = requiredGenomicParams.reduce(function (acc, p) {
-    return acc && params.has(p)
-  }, true)
-
-  if (isGenomicQuery) {
-    let chromo, pos, ref, alt
-    chromo = params.get('chromosome')
-    pos = params.get('genomic_position')
-    ref = params.get('reference_allele')
-    alt = params.get('alternative_allele')
-
-    if (
-      chromo &&
-      chromosomeRegExp.test(chromo) &&
-      pos &&
-      positionRegExp.test(pos) &&
-      ref &&
-      alleleRegExp.test(ref) &&
-      alt &&
-      alleleRegExp.test(alt)
-    ) {
-      return [`${chromo} ${pos} ${ref} ${alt}`]
-    }
+function splitString(input: string | null): string | undefined {
+  if (input === null) {
+    return undefined;
   }
-
-  const isProteinQuery = requiredProteinParams.reduce(function (acc, p) {
-    return acc && params.has(p)
-  }, true)
-  if (isProteinQuery) {
-    let acc, pos, ref, alt
-    acc = params.get('accession')
-    pos = params.get('protein_position')
-    ref = params.get('reference_AA')
-    alt = params.get('variant_AA')
-
-    if (
-      acc &&
-      accessionRegExp.test(acc) &&
-      pos &&
-      positionRegExp.test(pos) &&
-      ref &&
-      oneletterAARegExp.test(ref) &&
-      alt &&
-      oneletterAARegExp.test(alt)
-    ) {
-      return [`${acc} ${pos} ${ref} ${alt}`]
-    }
-  }
-
-  if (params.has('search')) {
-    return [params.get('search')]
-  }
-  //Notify.warn('Invalid search query.')
-  return []
+  const parts = input.split(/[\n,|]/);
+  return parts.length > 0 ? parts[0] : undefined;
 }
 
-const QueryPageContent = () => {
+const QueryPageContent = (props: QueryPageProps) => {
   const location = useLocation()
   const [searchParams] = useSearchParams();
+  const {param1, param2, param3, param4} = useParams();
+  const [query, setQuery] = useState<string|undefined>()
   const [data, setData] = useState<PagedMappingResponse | null>(null)
   const [loading, setLoading] = useState(true)
-  const input = parseUrlInput(searchParams)
+  const [error, setError] = useState('')
+
+  const loadData = useCallback((queryType: string, searchParams: URLSearchParams, param1?: string, param2?: string, param3?: string, param4?: string) => {
+    setLoading(true)
+    let q;
+    if (queryType === 'search' && searchParams.get('search')) {
+      // free text search
+      q = splitString(searchParams.get('search'))
+    } else if (queryType === 'search' && searchParams.get('chromosome') && searchParams.get('genomic_position')) {
+      // chromosome query with search parameters
+      // for chromosome and protein queries with search parameters, validate on the server-side
+      q = buildQueryString(
+        searchParams.get('chromosome')!,
+        searchParams.get('genomic_position')!,
+        searchParams.get('reference_allele'),
+        searchParams.get('alternative_allele'))
+    } else if (queryType === 'search' && searchParams.get('accession') && searchParams.get('protein_position')) {
+      // protein query with search parameters
+      q = buildQueryString(
+        searchParams.get('accession')!,
+        searchParams.get('protein_position')!,
+        searchParams.get('reference_AA'),
+        searchParams.get('variant_AA'))
+    } else if (queryType === 'chromosome_protein' && chromosomeRegex.test(param1!) && positionRegex.test(param2!)) {
+      // chromosome query
+      // extra check for path params to ensure valid, and chromosome or protein url
+      q = buildQueryString(param1!.substring(3), param2!, param3, param4)
+    } else if (queryType === 'chromosome_protein' && proteinAccessionRegex.test(param1!) && positionRegex.test(param2!)) {
+      // protein query
+      q = buildQueryString(param1!, param2!, param3, param4)
+    }
+
+    const assembly = searchParams.get('assembly');
+    console.log('query', q)
+    if (q) {
+      document.title = `${q} - ${TITLE}`
+      setQuery(q)
+      mappings([q], assembly ?? undefined)
+        .then((response) => {
+          if (response.data && response?.data?.inputs?.length > 0) {
+            const mappingResponse = toPagedMappingResponse(response.data)
+            setData(mappingResponse)
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        }).finally(() => {
+        setLoading(false)
+      })
+    } else {
+      setError('Invalid search query')
+    }
+    setLoading(false)
+  }, []);
+
 
   useEffect(() => {
-    if (input) {
-      document.title = input +' - '+ TITLE
-
-        // use original mappings endpoint (response not paged),
-        // input not cached
-        mappings(input)
-          .then((response) => {
-            if (response.data && response.data.inputs.length > 0) {
-              const mappingResponse = toPagedMappingResponse(response.data)
-              setData(mappingResponse)
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-          }).finally(() => {
-            setLoading(false)
-        })
-    }
-  }, [input])
+    setError('')
+    loadData(props.queryType, searchParams, param1, param2, param3, param4)
+  }, [props.queryType, searchParams, param1, param2, param3, param4, loadData, error]);
 
   const shareUrl = `${APP_URL}${location.pathname}${location.search}`
 
-  if (!input) {
-    return <QueryInfoContent />
-  }
-
   return <div className="search-results">
-    <div className="flex justify-content-space-between float-right">
-      {data &&
-        <div className="legend-container">
-          <button title="Share" style={{fontSize: '20px', color: 'gray'}} onClick={() => {
-            navigator.clipboard.writeText(shareUrl);
-            alert(`URL copied: ${shareUrl}`)
-          }} className="bi bi-share result-op-btn"></button>
-          <LegendModal/>
-          <DownloadModal type={ResultType.CUSTOM_INPUT}/>
-        </div>
-      }
+    <div>
+      <h5 className="page-header">Query <i className="bi bi-chevron-compact-right"></i> {query}</h5>
+      <span className="help-icon">
+    <HelpButton title="" content={<HelpContent name="direct-queries" />}/>
+      </span>
     </div>
+
+    <div style={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
+      <span style={{alignSelf: 'flex-end'}}>
+        {data &&
+          <div className="legend-container">
+            <ShareLink url={shareUrl} linkText="Share Results"/>
+            <Spaces count={2}/>
+            <LegendModal/>
+            <DownloadModal inputType={InputType.SINGLE_VARIANT} query={query}/>
+          </div>
+        }
+      </span>
+    </div>
+    {error && (
+      <span className="padding-left-1x">
+                      <i className="file-warning bi bi-exclamation-triangle-fill"></i>{' '}
+        {error}
+                      </span>
+    )}
     <ResultTable loading={loading} data={data}/>
   </div>
 }
 
-function QueryPage() {
-  return <DefaultPageLayout content={<QueryPageContent />} />
+interface QueryPageProps {
+  queryType: string
+}
+
+function QueryPage(props: QueryPageProps) {
+  return <DefaultPageLayout content={<QueryPageContent {...props} />}/>
 }
 
 export default QueryPage
