@@ -7,7 +7,7 @@ import {
 } from "../../../constants/Example";
 import {Form, initialForm} from "../../../types/FormData";
 import {submitInputFile, submitInputText} from "../../../services/ProtVarService";
-import {API_ERROR, RESULT} from "../../../constants/BrowserPaths";
+import {API_ERROR, QUERY, RESULT} from "../../../constants/BrowserPaths";
 import {useNavigate} from "react-router-dom";
 import {AxiosResponse} from "axios";
 import {IDResponse} from "../../../types/PagedMappingResponse";
@@ -15,7 +15,13 @@ import {LOCAL_RESULTS} from "../../../constants/const";
 import {ResultRecord} from "../../../types/ResultRecord";
 import {readFirstLineFromFile} from "../../../utills/FileUtil";
 import useLocalStorage from "../../../hooks/useLocalStorage";
-import {InputFormatHelp} from "../../components/help/InputFormatHelp";
+import {HelpContent} from "../../components/help/HelpContent";
+import {HelpButton} from "../../components/help/HelpButton";
+
+const isSingleLineInput = (input: string): boolean => {
+  const newlineRegex = /[\n,|]/g;
+  return !newlineRegex.test(input);
+};
 
 const SearchVariant = () => {
   const navigate = useNavigate();
@@ -98,7 +104,17 @@ const SearchVariant = () => {
       //if (INPUT_EXAMPLES.includes(form.text.trim())) {
       //  alert('Example!')
       //}
-      promise = submitInputText(form.text, form.assembly)
+
+      if (isSingleLineInput(form.text)) {
+        let directQuery = `${QUERY}?search=${encodeURIComponent(form.text)}`
+        if (form.assembly && form.assembly === Assembly.GRCh37) {
+          // single input uses GRCh38 by default (auto-detect is ignored), unless GRCh37 is specified.
+          directQuery += `&assembly=${encodeURIComponent(form.assembly)}`
+        }
+        navigate(directQuery)
+      } else {
+        promise = submitInputText(form.text, form.assembly)
+      }
     }
 
     if (promise) {
@@ -133,7 +149,7 @@ const SearchVariant = () => {
           <span className="search-card-header">
             <p>
               <b>Search single nucleotide variants</b> - paste your variants below or
-              upload your file
+              upload your file <HelpButton title="" content={<HelpContent name="search-variants" />} />
             </p>
           </span>
         </section>
@@ -149,7 +165,8 @@ const SearchVariant = () => {
               />
               <div className="search-card-selection">
                 <div>
-                  <InputFormatHelp /><br/>
+                  <HelpButton title="Supported format" content={<HelpContent name="supported-format" />} />
+                  <br/>
                   <b>Click buttons below to try examples</b><br/>
                   <div className="examples-container">
 
@@ -190,7 +207,7 @@ const SearchVariant = () => {
                 <div className="assembly">
                   <span
                     title="Genome assembly GRCh37 to GRCh38 conversion for genomic inputs (VCF, HGVS g., gnomAD and any other custom genomic formats).">
-                    <b>Reference Genome Assembly</b>
+                    <b>Reference Genome Assembly</b> <HelpButton title="" content={<HelpContent name="build-logic" />} />
                   </span>
                   <div className="assembly-radio-check">
                     <label>
