@@ -8,8 +8,10 @@ import {getRelativeTime} from "../../../utills/DateUtil";
 import useLocalStorage from "../../../hooks/useLocalStorage";
 import {humanFileSize} from "../../../utills/Util";
 import {useNavigate} from "react-router-dom";
-import {DownloadHelp} from "../../components/help/DownloadHelp";
-
+import {ResultDownloadHelp} from "../../components/help/content/ResultDownloadHelp";
+import {HelpButton} from "../../components/help/HelpButton";
+import Spaces from "../../elements/Spaces";
+import {ShareLink} from "../../components/common/ShareLink";
 
 interface DownloadTextIcon {
   text: string
@@ -73,6 +75,11 @@ function DownloadPageContent() {
     setDownloads(updatedDownloads);
   }
 
+  const handleDeleteAll = () => {
+    setItem(LOCAL_DOWNLOADS, []);
+    setDownloads([]);
+  }
+
   const handleSort = () => {
     const updatedDownloads = downloads.sort((a, b) =>
       b.requested.localeCompare(a.requested))
@@ -82,22 +89,32 @@ function DownloadPageContent() {
 
   return <div className="container">
 
-    <h6>FTP download</h6>
+    <h5 className="page-header">FTP Download</h5>
     <p>
-      Bulk pre-computed datasets, separated by data type available to download from the <a href={PV_FTP}
-                                                                                           title="ProtVar FTP site"
-                                                                                           target="_self"
-                                                                                           className='ref-link'>FTP
-      site</a>.
+      Bulk pre-computed datasets, separated by data type available to download
+      from the <a href={PV_FTP} title="ProtVar FTP site" target="_self" className='ref-link'>
+      FTP site</a>.
     </p>
 
-    <h6>Result download <DownloadHelp /></h6>
+    <div>
+      <h5 className="page-header">Result Download</h5>
+      <span className="help-icon">
+      <HelpButton title="" content={<ResultDownloadHelp/>}/>
+        </span>
+    </div>
 
     {error && <p>{error}</p>}
     {downloads.length === 0 ? (
       <p>No download</p>
     ) : (<>
-        {downloads.length} download{downloads.length > 1 ? 's' : ''}
+        <div style={{display: "flex", justifyContent: "space-between", padding: "5px"}}>
+          <div>{downloads.length} download{downloads.length > 1 ? 's' : ''}
+            {downloads.length > 1 && <> (
+              <button className="bi bi-trash icon-btn" onClick={_ => handleDeleteAll()}> Delete all</button>
+              )</>}
+          </div>
+        </div>
+
         <table className="table download-table">
           <thead style={{backgroundColor: '#6987C3', color: '#FFFFFF'}}>
           <tr>
@@ -110,8 +127,7 @@ function DownloadPageContent() {
             <th scope="col">Options</th>
             <th scope="col">Annotations</th>
             <th scope="col">Status</th>
-            <th scope="col">Download</th>
-            <th scope="col">Delete</th>
+            <th scope="col">Manage</th>
           </tr>
           </thead>
           <tbody>
@@ -148,8 +164,8 @@ function DownloadPageContent() {
                     </span>
                 </td>
                 <td>
-                    {download.page && <> p{download.page}{download.pageSize && ` (${download.pageSize})`}</>}
-                    {download.assembly && download.assembly !== 'AUTO' && ` ${download.assembly}`}
+                  {download.page && <> p{download.page}{download.pageSize && ` (${download.pageSize})`}</>}
+                  {download.assembly && download.assembly !== 'AUTO' && ` ${download.assembly}`}
                 </td>
                 <td>
                   {download.fun ? <i className="bi bi-check green"></i> :
@@ -164,11 +180,13 @@ function DownloadPageContent() {
                     className={downloadStatus[download.status].icon}></span> {downloadStatus[download.status].text} {download.size && download.size > 0 ? `(${humanFileSize(download.size)})` : ''}
                 </td>
                 <td>
-                  <button className="bi bi-download download-btn"
+                  <button title="Download" className="bi bi-download icon-btn"
                           onClick={() => downloadFile(download.url)} disabled={download.status !== 1}/>
-                </td>
-                <td>
-                  <button className="bi bi-trash trash-btn" onClick={_ => handleDelete(index)}></button>
+                  <Spaces count={2}/>
+                  <ShareLink url={download.url}/>
+                  <Spaces count={2}/>
+                  <button title="Delete" className="bi bi-trash icon-btn"
+                          onClick={_ => handleDelete(index)}></button>
                 </td>
               </tr>
             );

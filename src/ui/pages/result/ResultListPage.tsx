@@ -6,17 +6,18 @@ import {ResultRecord} from "../../../types/ResultRecord";
 import {NavLink} from "react-router-dom";
 import {APP_URL} from "../../App";
 import useLocalStorage from "../../../hooks/useLocalStorage";
-import {ResultHelp} from "../../components/help/ResultHelp";
-
+import {HelpButton} from "../../components/help/HelpButton";
+import {HelpContent} from "../../components/help/HelpContent";
+import Spaces from "../../elements/Spaces";
+import {ShareLink} from "../../components/common/ShareLink";
 
 function ResultListPageContent() {
   const {getItem, setItem} = useLocalStorage();
   const [results, setResults] = useState<ResultRecord[]>([])
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
 
-
   useEffect(() => {
-    document.title = "Results - " + TITLE;
+    document.title = "Search Results - " + TITLE;
     // Retrieve result records from local storage
     const localResults = getItem<ResultRecord[]>(LOCAL_RESULTS) || []
     setResults(localResults)
@@ -36,17 +37,34 @@ function ResultListPageContent() {
     setResults(updatedResults);
   }
 
+  const handleDeleteAll = () => {
+    setItem(LOCAL_RESULTS, []);
+    setResults([]);
+  }
+
+  const shareUrl = "http://www.ebi.ac.uk/ProtVar"
+  const title = "ProtVar results"
+
   return <div className="container">
 
-    <h6>Search Results <ResultHelp/></h6>
-
+    <div>
+      <h5 className="page-header">Search Results</h5>
+      <span className="help-icon">
+      <HelpButton title="" content={<HelpContent name="search-results" />}/>
+        </span>
+    </div>
   {
     results.length === 0 ? (
       <p>No result</p>
     ) : (<>
 
-
-        {results.length} previous search{results.length > 1 ? 'es' : ''}
+        <div style={{display: "flex", justifyContent: "space-between", padding: "5px"}}>
+          <div>{results.length} previous search{results.length > 1 ? 'es' : ''}
+            {results.length > 1 && <> (
+              <button className="bi bi-trash icon-btn" onClick={_ => handleDeleteAll()}> Delete all</button>
+              )</>}
+          </div>
+        </div>
         <table className="table download-table">
           <thead style={{backgroundColor: '#6987C3', color: '#FFFFFF'}}>
           <tr>
@@ -56,9 +74,8 @@ function ResultListPageContent() {
               //<th scope="col">Expires</th>
             }
             <th scope="col">Name</th>
-            <th scope="col">Input</th>
-            <th scope="col">Share</th>
-            <th scope="col">Delete</th>
+            <th scope="col">Input ID</th>
+            <th scope="col">Manage</th>
           </tr>
           </thead>
           <tbody>
@@ -93,19 +110,15 @@ function ResultListPageContent() {
                   ) : (
                     <span onClick={() => setEditingIndex(index)}>{record.name ? record.name : <i>Unnamed</i>}
                       <i
-                        className="bi bi-pencil"></i></span>
+                        className="bi bi-pencil icon-btn"></i></span>
                   )}
                 </td>
                 <td><NavLink to={record.url}>{record.id}</NavLink></td>
                 <td>
-                  <button title="Share" onClick={() => {
-                    let url = `${APP_URL}${record.url}`;
-                    navigator.clipboard.writeText(url);
-                    alert(`URL copied: ${url}`)
-                  }} className="bi bi-share result-op-btn"></button>
-                </td>
-                <td>
-                  <button className="bi bi-trash trash-btn" onClick={_ => handleDelete(index)}></button>
+                  <ShareLink url={`${APP_URL}${record.url}`} />
+                  <Spaces count={2}/>
+                  <button title="Delete" onClick={() => handleDelete(index)}
+                          className="bi bi-trash icon-btn"></button>
                 </td>
               </tr>
             );
