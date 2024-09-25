@@ -9,8 +9,9 @@ import {LOCAL_DOWNLOADS} from "../../constants/const";
 import Notify from "../elements/Notify";
 import {downloadResult} from "../../services/ProtVarService";
 import useLocalStorage from "../../hooks/useLocalStorage";
-import {useLocation, useParams, useSearchParams} from "react-router-dom";
-import {ResultType} from "../../types/PagedMappingResponse";
+import {useLocation, useSearchParams} from "react-router-dom";
+import {InputType} from "../../types/PagedMappingResponse";
+import {Assembly} from "../../constants/CommonTypes";
 
 interface DownloadForm {
   email: string
@@ -21,9 +22,15 @@ interface DownloadForm {
 }
 
 interface DownloadModalProps {
-  type: ResultType
+  inputType: InputType
+  id?: string,
+  query?: string
 }
 
+// could be triggered for
+// - id input                  params: id, page, pageSize, assembly
+// - protien acc               params: same as above except id is accession
+// - single variant search (direct link)   params: search, (TODO: allow assembly)
 function DownloadModal(props: DownloadModalProps) {
   const [showModel, setShowModel] = useState(false)
   const downloadModelDiv = useRef(null)
@@ -32,7 +39,6 @@ function DownloadModal(props: DownloadModalProps) {
   const [errorMsg, setErrorMsg] = useState("")
 
   const location = useLocation();
-  const {id} = useParams<{ id?: string }>();
   const [searchParams] = useSearchParams();
   let initialForm: DownloadForm = {
     email: "",
@@ -53,7 +59,7 @@ function DownloadModal(props: DownloadModalProps) {
   };
 
 
-  if (!id)
+  if (!props.id && !props.query)
     return <></>
   const toggleAnnotations = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAnnotations(event.target.value === 'withAnnotations')
@@ -90,23 +96,35 @@ function DownloadModal(props: DownloadModalProps) {
     const pageSize = page ? searchParams.get('pageSize') : null
     const assembly = searchParams.get('assembly')
 
-    downloadResult(id, ResultType[props.type], page, pageSize, assembly,
-      form.email, form.jobName, form.fun, form.pop, form.str)
-    .then((response) => {
-      const downloadResponse = response.data
-      let downloadRecord = recordFromResponse(downloadResponse)
-      // save download request params in DownloadRecord
-      downloadRecord.page = page ?? undefined
-      downloadRecord.pageSize = pageSize ?? undefined
-      downloadRecord.assembly = assembly ?? undefined
-      downloadRecord.fun = form.fun
-      downloadRecord.pop = form.pop
-      downloadRecord.str = form.str
-      downloadRecord.resultUrl = location.pathname + location.search
-      handleSucc(downloadRecord)
-      }
-      )
-      .catch(handleErr);
+    let promise;
+    if (props.inputType === InputType.SINGLE_VARIANT && props.query) {
+      promise = downloadResult(props.query, InputType[props.inputType], null, null,
+      assembly === Assembly.GRCh37 ? Assembly.GRCh37 : Assembly.GRCh38, // default is 38 (overriding auto)
+        form.email, form.jobName, form.fun, form.pop, form.str)
+    } else if ((props.inputType === InputType.ID || props.inputType === InputType.PROTEIN_ACCESSION)
+      && props.id){
+      promise = downloadResult(props.id, InputType[props.inputType], page, pageSize, assembly,
+        form.email, form.jobName, form.fun, form.pop, form.str)
+    }
+
+    if (promise) {
+        promise
+        .then((response) => {
+            const downloadResponse = response.data
+            let downloadRecord = recordFromResponse(downloadResponse)
+            // save download request params in DownloadRecord
+            downloadRecord.page = page ?? undefined
+            downloadRecord.pageSize = pageSize ?? undefined
+            downloadRecord.assembly = assembly ?? undefined
+            downloadRecord.fun = form.fun
+            downloadRecord.pop = form.pop
+            downloadRecord.str = form.str
+            downloadRecord.resultUrl = location.pathname + location.search
+            handleSucc(downloadRecord)
+          }
+        )
+        .catch(handleErr);
+    }
   };
   return <div id="divDownload" ref={downloadModelDiv} className="padding-left-1x">
     <Button onClick={() => setShowModel(val => !val)} className={'download-button'}>
@@ -115,7 +133,7 @@ function DownloadModal(props: DownloadModalProps) {
     </Button>
     <Modal show={showModel} handleClose={() => setShowModel(false)}>
       <div className="window__header">
-        <span className="window__header__title">Select Options</span>        
+        <span className="window__header__title">Download Options</span>
         <span
             className="modal-close-button"
             onClick={() => setShowModel(false)}
@@ -211,6 +229,7 @@ function DownloadModal(props: DownloadModalProps) {
                         type="radio"
                         name="currPage"
                         value="true"
+                        disabled={props.inputType === InputType.SINGLE_VARIANT}
                         checked={currPage}
                         onChange={_ => setCurrPage(true)}
                       />
@@ -223,6 +242,7 @@ function DownloadModal(props: DownloadModalProps) {
                         type="radio"
                         name="currPage"
                         value="false"
+                        disabled={props.inputType === InputType.SINGLE_VARIANT}
                         checked={!currPage}
                         onChange={_ => setCurrPage(false)}
                       />
