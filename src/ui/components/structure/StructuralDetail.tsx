@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import PdbInfoTable from './PdbInfoTable';
 import AlphafoldInfoTable from './AlphafoldInfoTable';
 import PdbeMolstar from "./PdbeMolstar";
@@ -12,7 +12,10 @@ import {ProteinStructureElement} from "../../../types/ProteinStructureResponse";
 import {AlphafoldResponseElement} from "../../../types/AlphafoldResponse";
 import {WHITE} from "../../../types/Colors";
 import StructureIcon from "../../../images/structures-3d.svg";
-import ShareAnnotation from "../common/ShareAnnotation";
+import {HelpContent} from "../help/HelpContent";
+import {HelpButton} from "../help/HelpButton";
+import Spaces from "../../elements/Spaces";
+import {ShareAnnotationIcon} from "../common/ShareLink";
 
 
 interface StructuralDetailProps {
@@ -84,9 +87,13 @@ function StructuralDetail(props: StructuralDetailProps) {
       <td colSpan={10} className="expanded-row structure-data-cell">
         <div className="significances-groups">
           <div className="column">
-            <h5><img src={StructureIcon} className="click-icon" alt="structure icon" title="3D structure"/> Structures
-              <ShareAnnotation annotation={props.annotation}/>
+            <h5 style={{display: "inline"}}>
+              <img src={StructureIcon} className="click-icon" alt="structure icon"
+                   title="3D structure"/> Structures
             </h5>
+            <HelpButton title="" content={<HelpContent name="structure-annotations" />} />
+            <Spaces count={2} />
+            <ShareAnnotationIcon annotation={props.annotation}/>
             <PdbeMolstar selected={selected} pdbeRef={ref}/>
           </div>
         </div>
