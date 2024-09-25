@@ -54,16 +54,6 @@
   background: linear-gradient(white, red);
 }
 
-.download-btn:hover:disabled {
-  cursor: default;
-}
-.download-btn:hover {
-  cursor: pointer;
-}
-.trash-btn:hover {
-  cursor: pointer;
-}
-
 .red {
   color: red;
 }
@@ -78,34 +68,19 @@
   cursor: pointer;
 }
 
-.result-op-btn {
-  float: right;
-  font-size: 10px;
-  font-weight: bolder;
+.icon-btn {
   color: black;
   padding: 4px;
-  border-radius: 20%;
+  border-radius: 10%;
   border-bottom-color: lightgrey;
-}
-.result-op-btn:hover {
-  font-weight: bolder;
-  background-color: #e7e7e7;
-  cursor: pointer;
 }
 
-.ann-share-btn {
-  font-size: 16px;
-  font-weight: bolder;
-  color: black;
-  margin-left: 10px;
-  padding: 4px;
-  border-radius: 20%;
-  border-bottom-color: lightgrey;
-}
-.ann-share-btn:hover {
-  font-weight: bolder;
+.icon-btn:hover {
   background-color: #e7e7e7;
   cursor: pointer;
+}
+.icon-btn:hover:disabled {
+  cursor: default;
 }
 
 .record-count {
@@ -126,29 +101,6 @@
   &.gray-bg {
     background-color: lightgrey;
   }
-}
-
-.help-section {
-
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
-    margin: 20px;
-
-  h5 {
-    color: #333;
-  }
-  p {
-    margin: 10px 0;
-  }
-  ul {
-    margin: 10px 0 20px 20px;
-  }
-  code {
-    background-color: ivory;
-    padding: 2px 4px;
-    border-radius: 4px;
-  }
-
 }
 
 .edit-name {
