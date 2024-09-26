@@ -7,9 +7,6 @@ export const SideDrawer = () => {
   const state = useContext(AppContext)
   const [width, setWidth] = useState('50%');
 
-  const closeDrawer = () => {
-    state.updateState("drawer", undefined)
-  }
   const handleToggleWidth = () => {
     setWidth(width === '50%' ? '80%' : '50%');
   };
@@ -17,7 +14,7 @@ export const SideDrawer = () => {
   useEffect(() => {
     const handleEsc = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        closeDrawer();
+        state.updateState("drawer", undefined);
       }
     };
     window.addEventListener('keydown', handleEsc);
@@ -25,7 +22,7 @@ export const SideDrawer = () => {
     return () => {
       window.removeEventListener('keydown', handleEsc);
     };
-  }, [closeDrawer]);
+  });
 
   return (
     <div>
@@ -34,7 +31,7 @@ export const SideDrawer = () => {
           <button className={`bi bi-arrow-bar-${width === '50%' ? `left` : `right`}`} onClick={handleToggleWidth}>
             {width === '50%' ? ` Expand` : ` Collapse`}
           </button>
-          <button className="bi bi-x-square" onClick={closeDrawer}> Close</button>
+          <button className="bi bi-x-square" onClick={() => state.updateState("drawer", undefined)}> Close</button>
         </div>
         {state.drawer}
       </div>
