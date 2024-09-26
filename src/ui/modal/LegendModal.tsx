@@ -1,6 +1,5 @@
 import React, {useState, useCallback, useRef, useContext} from 'react'
 import { v1 as uuidv1 } from 'uuid';
-import Button from '../elements/form/Button'
 import Modal from './Modal'
 import useOnClickOutside from '../../hooks/useOnClickOutside'
 import AnnotationLegend from './AnnotationLegend'

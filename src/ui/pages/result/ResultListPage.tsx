@@ -42,9 +42,6 @@ function ResultListPageContent() {
     setResults([]);
   }
 
-  const shareUrl = "http://www.ebi.ac.uk/ProtVar"
-  const title = "ProtVar results"
-
   return <div className="container">
 
     <div>

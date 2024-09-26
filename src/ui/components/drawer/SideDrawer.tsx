@@ -25,7 +25,7 @@ export const SideDrawer = () => {
     return () => {
       window.removeEventListener('keydown', handleEsc);
     };
-  }, []);
+  }, [closeDrawer]);
 
   return (
     <div>

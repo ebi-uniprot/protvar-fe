@@ -136,7 +136,7 @@ response.data.content.messages?.forEach(message => {
       }).finally(() => {
       setLoading(false)
     })
-  }, [viewedRecord, location])
+  }, [viewedRecord, location, title])
 
 
   useEffect(() => {

@@ -16,9 +16,11 @@ interface ShareLinkProps {
   title: string
 }
 
+/*
 enum ShareType {
   Link, Download, Annotation
 }
+*/
 
 export const ShareLink = (props: {url: string, linkText?: string}) => {
   const state = useContext(AppContext)
