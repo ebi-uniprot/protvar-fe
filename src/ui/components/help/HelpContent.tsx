@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {ResultDownloadHelp} from "./content/ResultDownloadHelp";
-import {SearchResultsHelp} from "./content/SearchResultsHelp";
+import {SearchHistoryHelp} from "./content/SearchHistoryHelp";
 import {useMarkdown} from "../../../context/MarkdownContext";
 import {HELP_FILES} from "../../../constants/Help";
 
@@ -44,8 +44,8 @@ export const HelpContent = (props: HelpContentProps) => {
 // Separate component for fallback content
 const NonMarkdownHelp = (props: { name: string }) => {
   switch (props.name) {
-    case 'search-results':
-      return <SearchResultsHelp />;
+    case 'search-history':
+      return <SearchHistoryHelp />;
     case 'result-download':
       return <ResultDownloadHelp />;
     default:

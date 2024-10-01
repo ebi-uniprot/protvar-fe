@@ -1,13 +1,13 @@
 import React from "react";
 
-export const SearchResultsHelp = () => {
+export const SearchHistoryHelp = () => {
   return <div className="help">
-    <h4 id="search-results">Search Results</h4>
+    <h4 id="search-history">Search History</h4>
 
     Previous searches can be found on the:
     <ul>
       <li>Search history left side navigation, which list most recent searches for quick access.</li>
-      <li>Search results main page, which list all previous searches.</li>
+      <li>Search history main page, which list all previous searches.</li>
     </ul>
 
     <p>Every custom search generates a unique ID, allowing you to share the result, including a specific page of results

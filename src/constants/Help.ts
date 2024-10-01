@@ -9,7 +9,7 @@ export const HELP_FILES: HelpFile[] = [
   { name: 'search-variants', md: true, title: 'Search Variants' },
   { name: 'supported-format', md: true, title: 'Supported Format' },
   { name: 'build-logic', md: true, title: 'Build Logic' },
-  { name: 'search-results', md: false, title: 'Search Results' }, // React component
+  { name: 'search-history', md: false, title: 'Search History' }, // React component
   { name: 'result-page', md: true, title: 'Result Page' },
   { name: 'function-annotations', md: true, title: 'Function Annotations' },
   { name: 'population-observations', md: true, title: 'Population Observations' },
