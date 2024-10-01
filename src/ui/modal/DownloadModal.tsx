@@ -1,7 +1,6 @@
 import {useCallback, useRef, useState} from 'react';
 import Button from '../elements/form/Button';
 import Modal from './Modal';
-import {ReactComponent as DownloadIcon} from "../../images/download.svg"
 import useOnClickOutside from '../../hooks/useOnClickOutside';
 import {emailValidate} from '../../utills/Validator';
 import {DownloadRecord, recordFromResponse} from "../../types/DownloadRecord";
@@ -128,8 +127,8 @@ function DownloadModal(props: DownloadModalProps) {
   };
   return <div id="divDownload" ref={downloadModelDiv} className="padding-left-1x">
     <Button onClick={() => setShowModel(val => !val)} className={'download-button'}>
-      <DownloadIcon className="downloadicon" />
-      {' '}Download Results
+      <i className="bi bi-download"></i>
+      <Spaces count={2} />Download Results
     </Button>
     <Modal show={showModel} handleClose={() => setShowModel(false)}>
       <div className="window__header">
