@@ -1,5 +1,5 @@
 .map-container {
-  padding: 5px 5px 5px 15px;
+  padding: 5px 5px 5px 20px;
 }
 
 .map-group {
@@ -10,11 +10,11 @@
   font-size: 12px;
   font-weight: bold;
   margin-bottom: 5px;
+  color: darkgray;
 }
 
 .map-items {
   list-style-type: none;
-  padding-left: 8px;
 }
 
 .map-item {
