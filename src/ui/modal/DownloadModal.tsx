@@ -1,16 +1,18 @@
-import {useCallback, useRef, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import Button from '../elements/form/Button';
 import Modal from './Modal';
 import useOnClickOutside from '../../hooks/useOnClickOutside';
 import {emailValidate} from '../../utills/Validator';
 import {DownloadRecord, recordFromResponse} from "../../types/DownloadRecord";
-import {LOCAL_DOWNLOADS} from "../../constants/const";
+import {LOCAL_DOWNLOADS, LOCAL_RESULTS} from "../../constants/const";
 import Notify from "../elements/Notify";
 import {downloadResult} from "../../services/ProtVarService";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import {useLocation, useSearchParams} from "react-router-dom";
 import {InputType} from "../../types/PagedMappingResponse";
 import {Assembly} from "../../constants/CommonTypes";
+import Spaces from "../elements/Spaces";
+import {ResultRecord} from "../../types/ResultRecord";
 
 interface DownloadForm {
   email: string
@@ -36,6 +38,7 @@ function DownloadModal(props: DownloadModalProps) {
   useOnClickOutside(downloadModelDiv, useCallback(() => setShowModel(false), []));
   const { getItem, setItem } = useLocalStorage();
   const [errorMsg, setErrorMsg] = useState("")
+  const [jobNamePlaceholder, setJobNamePlaceholder] = useState<string>('')
 
   const location = useLocation();
   const [searchParams] = useSearchParams();
@@ -49,6 +52,17 @@ function DownloadModal(props: DownloadModalProps) {
   const [form, setForm] = useState<DownloadForm>(initialForm)
   const [annotations, setAnnotations] = useState<boolean>(true)
   const [currPage, setCurrPage] = useState<boolean>(true)
+
+  useEffect(() => {
+    if (props.id) {
+      // Retrieve result records from local storage
+      const localResults = getItem<ResultRecord[]>(LOCAL_RESULTS) || []
+      const savedRecord = localResults.find((r) => r.id === props.id);
+      if (savedRecord && savedRecord.name) {
+        setJobNamePlaceholder(savedRecord.name)
+      }
+    }
+  }, [getItem]);
 
   const updateForm = (key: string, value: any) => {
     setForm({
@@ -74,7 +88,7 @@ function DownloadModal(props: DownloadModalProps) {
   }
 
   const handleErr = () => {
-    Notify.err(`Job ${form.jobName} failed. Please try again.`)
+    Notify.err(`Job ${form.jobName ? form.jobName : jobNamePlaceholder} failed. Please try again.`)
   }
 
   const handleSubmit = () => {
@@ -96,14 +110,15 @@ function DownloadModal(props: DownloadModalProps) {
     const assembly = searchParams.get('assembly')
 
     let promise;
+    let jname = form.jobName ? form.jobName : jobNamePlaceholder
     if (props.inputType === InputType.SINGLE_VARIANT && props.query) {
       promise = downloadResult(props.query, InputType[props.inputType], null, null,
       assembly === Assembly.GRCh37 ? Assembly.GRCh37 : Assembly.GRCh38, // default is 38 (overriding auto)
-        form.email, form.jobName, form.fun, form.pop, form.str)
+        form.email, jname, form.fun, form.pop, form.str)
     } else if ((props.inputType === InputType.ID || props.inputType === InputType.PROTEIN_ACCESSION)
       && props.id){
       promise = downloadResult(props.id, InputType[props.inputType], page, pageSize, assembly,
-        form.email, form.jobName, form.fun, form.pop, form.str)
+        form.email, jname, form.fun, form.pop, form.str)
     }
 
     if (promise) {
@@ -274,6 +289,7 @@ function DownloadModal(props: DownloadModalProps) {
               value={form.jobName}
               name="jobName"
               onChange={(e) => updateForm(e.target.name, e.target.value)}
+              placeholder={jobNamePlaceholder}
             />
           </label>
         </div>
