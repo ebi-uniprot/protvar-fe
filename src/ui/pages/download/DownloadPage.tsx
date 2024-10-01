@@ -76,8 +76,11 @@ function DownloadPageContent() {
   }
 
   const handleDeleteAll = () => {
-    setItem(LOCAL_DOWNLOADS, []);
-    setDownloads([]);
+    var confirm = window.confirm("Are you sure you want to delete all downloads?");
+    if (confirm) {
+      setItem(LOCAL_DOWNLOADS, []);
+      setDownloads([]);
+    }
   }
 
   const handleSort = () => {

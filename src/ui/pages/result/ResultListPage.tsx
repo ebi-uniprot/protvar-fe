@@ -38,14 +38,17 @@ function ResultListPageContent() {
   }
 
   const handleDeleteAll = () => {
-    setItem(LOCAL_RESULTS, []);
-    setResults([]);
+    var confirm = window.confirm("Are you sure you want to delete all results?");
+    if (confirm) {
+      setItem(LOCAL_RESULTS, []);
+      setResults([]);
+    }
   }
 
   return <div className="container">
 
     <div>
-      <h5 className="page-header">Search Results</h5>
+      <h5 className="page-header">Search History</h5>
       <span className="help-icon">
       <HelpButton title="" content={<HelpContent name="search-results" />}/>
         </span>
