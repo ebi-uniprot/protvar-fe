@@ -52,9 +52,9 @@ const ShareContent = (props: ShareLinkProps) => {
     <p>
       URL copied to clipboard
       <br/>
-      <pre>
+      <code>
       {props.shareUrl}
-    </pre>
+    </code>
     </p>
     <p>Share on<br/>
       <EmailShareButton url={props.shareUrl}
