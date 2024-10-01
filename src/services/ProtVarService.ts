@@ -85,7 +85,7 @@ export function getResult(inputType: InputType, id: string, page: number, pageSi
     url = `${API_URL}/mapping/input/${id}`
     params = {page, pageSize, assembly}
   } else {
-    url = `${API_URL}/mapping/protein/${id}`
+    url = `${API_URL}/mapping/accession/${id}`
     params = {page, pageSize}
   }
 
