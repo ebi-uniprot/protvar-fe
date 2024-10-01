@@ -73,13 +73,13 @@ function ResultPageContent(props: ResultPageProps) {
     const pageSizeIsValid = !isNaN(pageSize) && PERMITTED_PAGE_SIZES.includes(pageSize);
 
     if (!pageIsValid) {
-      setError(`Invalid page, using default (page ${DEFAULT_PAGE})`)
+      setError(`The requested page number is invalid or out of range. Displaying page ${DEFAULT_PAGE} by default.`)
       //Notify.warn('hey')
       page = DEFAULT_PAGE
     }
 
     if (!pageSizeIsValid) {
-      setError(`Invalid page size, using default (page size ${DEFAULT_PAGE_SIZE})`)
+      setError(`The specified page size is invalid. Using the default page size of ${DEFAULT_PAGE_SIZE} instead.`)
       pageSize = DEFAULT_PAGE_SIZE
     }
 
@@ -96,7 +96,7 @@ function ResultPageContent(props: ResultPageProps) {
 
         if (page > (response?.data?.totalPages ?? 0)) {
           // Handle case where page exceeds totalPages
-          setError('Page number exceeds total pages, no results')
+          setError(`The requested page number exceeds the total number of available pages (total pages: ${response?.data?.totalPages}). No results to display.`)
           //page = response.data.totalPages
           // navigate to last page?
         }
@@ -169,10 +169,10 @@ response.data.content.messages?.forEach(message => {
       </span>
     </div>
     {error && (
-      <span className="padding-left-1x">
-                      <i className="file-warning bi bi-exclamation-triangle-fill"></i>{' '}
+      <p>
+        <i className="file-warning bi bi-exclamation-triangle-fill"></i>{' '}
         {error}
-                      </span>
+      </p>
     )}
     <ResultTable loading={loading} data={data}/>
     {paginate &&
