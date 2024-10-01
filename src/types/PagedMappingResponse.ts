@@ -3,7 +3,7 @@ import {DEFAULT_PAGE, DEFAULT_PAGE_SIZE} from "../constants/const";
 
 // InputType          Mapping endpoint        Download endpoint   Cache   Response
 // ID                 /mapping/input/${id}    /download           Y       PagedMappingResponse
-// PROTEIN_ACCESSION  /mapping/protein/${id}  /download           N       PagedMappingResponse
+// PROTEIN_ACCESSION  /mapping/accession/${id}  /download           N       PagedMappingResponse
 // SINGLE_VARIANT     /mappings               ?                   N       MappingResponse
 export enum InputType {ID, PROTEIN_ACCESSION, SINGLE_VARIANT}
 export interface PagedMappingResponse {
