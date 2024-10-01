@@ -76,6 +76,11 @@
     transition: background-color 0.3s ease;
 }
 
+.grid-item-selected {
+    font-weight: bold;
+    background-color: lightblue;
+}
+
 .grid-item:hover {
     background-color: #ddd;
 }

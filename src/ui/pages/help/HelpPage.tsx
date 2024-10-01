@@ -9,31 +9,35 @@ import {HELP_FILES} from "../../../constants/Help";
 
 function HelpPageContent() {
   const location = useLocation();
+  const [id, setId] = useState('')
   const [content, setContent] = useState<JSX.Element | null>(null);
 
   useEffect(() => {
-    document.title = 'Help - ' + TITLE;
+    document.title = `Help - ${TITLE}`
     const hash = location.hash.slice(1); // Remove the '#'
-    const [id] = hash.split(':');
-    setContent(<HelpContent name={id} />);
+    const [section, subsection] = hash.split(':');
+    setId(section)
+    setContent(<HelpContent name={section}/>);
     // Scroll to the subsection if it exists
     setTimeout(() => {
-      document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      if (subsection) {
+        document.getElementById(hash)?.scrollIntoView({behavior: 'smooth', block: 'start'})
+      }
     }, 500);
   }, [location]);
 
   return <div className="container">
       <h5>ProtVar Help</h5>
-      <TableOfContent />
+      <TableOfContent id={id} />
       {content}
     </div>
 }
 
-const TableOfContent = () => {
+const TableOfContent = (props: {id: string}) => {
   return (
     <div className="grid-container">
       {HELP_FILES.map((f) => (
-        <Link key={`help-file-${f.name}`} to={`${HELP}#${f.name}`} className="grid-item">
+        <Link key={`help-file-${f.name}`} to={`${HELP}#${f.name}`} className={`grid-item ${props.id === f.name ? `grid-item-selected` : ``}`}>
           {f.title}
         </Link>
       ))}
