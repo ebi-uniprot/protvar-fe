@@ -18,10 +18,18 @@ import useLocalStorage from "../../../hooks/useLocalStorage";
 import {HelpContent} from "../../components/help/HelpContent";
 import {HelpButton} from "../../components/help/HelpButton";
 
-const isSingleLineInput = (input: string): boolean => {
-  const newlineRegex = /[\n,|]/g;
-  return !newlineRegex.test(input);
-};
+const hasMultipleLines = (str: string): boolean => {
+  return str.includes('\n');
+}
+
+function cleanInput(input: string): string {
+  return input
+    .replace(/[\|,]/g, '\n') // Replace comma and pipe with newline
+    .split('\n') // Split into lines
+    .map(line => line.trim()) // Trim leading and trailing whitespace
+    .filter(line => line !== '')
+    .join('\n'); // Remove empty lines
+}
 
 const SearchVariant = () => {
   const navigate = useNavigate();
@@ -33,13 +41,14 @@ const SearchVariant = () => {
   const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
   const UNSUPPORTED_FILE = 'Unsupported file type';
   const FILE_EXCEEDS_LIMIT = 'File exceeds 10MB limit';
+  const INVALID_INPUT = 'Invalid input';
   const { getItem, setItem } = useLocalStorage();
   const savedRecords = getItem<ResultRecord[]>(LOCAL_RESULTS) || [];
 
   const submittedRecord = async (id: string, url: string) => {
     const now = new Date().toISOString();
     const existingRecord = savedRecords.find(record => record.id === id);
-    const inputFirstLine = await getFirstLine();
+    const firstInput = await getFirstInput();
 
     let updatedRecords;
 
@@ -55,7 +64,7 @@ const SearchVariant = () => {
     } else {
       const newRecord: ResultRecord = {
         id, url,
-        name: inputFirstLine ? `${inputFirstLine.substring(0,20)}...` : '',
+        name: firstInput.replace(/\s+/g, ' '),
         firstSubmitted: now,
         //lastSubmitted: now,
         //lastViewed: now
@@ -65,7 +74,7 @@ const SearchVariant = () => {
     setItem(LOCAL_RESULTS, updatedRecords); // newRecord added at start, so sorted by latestDate
   };
 
-  async function getFirstLine(): Promise<string> {
+  async function getFirstInput(): Promise<string> {
     if (form.file) {
       return await readFirstLineFromFile(form.file);
     } else if (form.text) {
@@ -104,16 +113,22 @@ const SearchVariant = () => {
       //if (INPUT_EXAMPLES.includes(form.text.trim())) {
       //  alert('Example!')
       //}
-
-      if (isSingleLineInput(form.text)) {
-        let directQuery = `${QUERY}?search=${encodeURIComponent(form.text)}`
-        if (form.assembly && form.assembly === Assembly.GRCh37) {
-          // single input uses GRCh38 by default (auto-detect is ignored), unless GRCh37 is specified.
-          directQuery += `&assembly=${encodeURIComponent(form.assembly)}`
+      const cleanText = cleanInput(form.text)
+      if (cleanText) {
+        setForm({...form, text: cleanText})
+        if (hasMultipleLines(cleanText)) {
+          promise = submitInputText(cleanText, form.assembly)
+        } else {
+          let directQuery = `${QUERY}?search=${encodeURIComponent(cleanText)}`
+          if (form.assembly && form.assembly === Assembly.GRCh37) {
+            // single input uses GRCh38 by default (auto-detect is ignored), unless GRCh37 is specified.
+            directQuery += `&assembly=${encodeURIComponent(form.assembly)}`
+          }
+          navigate(directQuery)
         }
-        navigate(directQuery)
-      } else {
-        promise = submitInputText(form.text, form.assembly)
+      } else { // empty after trim
+        setInvalidInput(true);
+        setInvalidMsg(INVALID_INPUT);
       }
     }
 
