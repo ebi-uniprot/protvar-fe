@@ -50,7 +50,7 @@ function ResultListPageContent() {
     <div>
       <h5 className="page-header">Search History</h5>
       <span className="help-icon">
-      <HelpButton title="" content={<HelpContent name="search-results" />}/>
+      <HelpButton title="" content={<HelpContent name="search-history" />}/>
         </span>
     </div>
   {
