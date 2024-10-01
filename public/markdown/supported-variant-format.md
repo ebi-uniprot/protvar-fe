@@ -1,4 +1,4 @@
-#### <a id="supported-format"></a>Supported Format
+#### <a id="supported-variant-format"></a>Supported Variant Format
 
 ProtVar supports the following input formats:
 

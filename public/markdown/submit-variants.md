@@ -1,4 +1,4 @@
-#### <a id="search-variants"></a>Search Variants
+#### <a id="submit-variants"></a>Submit Variants
 
 ![ProtVar Home Page](images/home_page.png)
 - **A** ProtVar retrieves annotations and predictions for human [missense](#further-info:missense) variants.

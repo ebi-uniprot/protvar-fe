@@ -1,4 +1,4 @@
-#### <a id="build-logic"></a>Build Logic
+#### <a id="genomic-assembly-detection"></a>Genomic Assembly Detection
 The steps in the build determination procedure are as follows:
 
 - Extract all of the genomic coordinates from the input

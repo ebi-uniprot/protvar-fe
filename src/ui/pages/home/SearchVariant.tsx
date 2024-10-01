@@ -164,7 +164,7 @@ const SearchVariant = () => {
           <span className="search-card-header">
             <p>
               <b>Search single nucleotide variants</b> - paste your variants below or
-              upload your file <HelpButton title="" content={<HelpContent name="search-variants" />} />
+              upload your file <HelpButton title="" content={<HelpContent name="submit-variants" />} />
             </p>
           </span>
         </section>
@@ -180,7 +180,7 @@ const SearchVariant = () => {
               />
               <div className="search-card-selection">
                 <div>
-                  <HelpButton title="Supported format" content={<HelpContent name="supported-format" />} />
+                  <HelpButton title="Supported variant format" content={<HelpContent name="supported-variant-format" />} />
                   <br/>
                   <b>Click buttons below to try examples</b><br/>
                   <div className="examples-container">
@@ -222,7 +222,7 @@ const SearchVariant = () => {
                 <div className="assembly">
                   <span
                     title="Genome assembly GRCh37 to GRCh38 conversion for genomic inputs (VCF, HGVS g., gnomAD and any other custom genomic formats).">
-                    <b>Reference Genome Assembly</b> <HelpButton title="" content={<HelpContent name="build-logic" />} />
+                    <b>Reference Genome Assembly</b> <HelpButton title="" content={<HelpContent name="genomic-assembly-detection" />} />
                   </span>
                   <div className="assembly-radio-check">
                     <label>

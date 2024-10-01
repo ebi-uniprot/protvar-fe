@@ -6,9 +6,9 @@ interface HelpFile {
 
 // List of help files
 export const HELP_FILES: HelpFile[] = [
-  { name: 'search-variants', md: true, title: 'Search Variants' },
-  { name: 'supported-format', md: true, title: 'Supported Format' },
-  { name: 'build-logic', md: true, title: 'Build Logic' },
+  { name: 'submit-variants', md: true, title: 'Submit Variants' },
+  { name: 'supported-variant-format', md: true, title: 'Supported Variant Format' },
+  { name: 'genomic-assembly-detection', md: true, title: 'Genomic Assembly Detection' },
   { name: 'search-history', md: false, title: 'Search History' }, // React component
   { name: 'result-page', md: true, title: 'Result Page' },
   { name: 'function-annotations', md: true, title: 'Function Annotations' },
