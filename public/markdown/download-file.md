@@ -1,4 +1,4 @@
-#### <a id="download-file"></a>Download File
+#### <a id="download-file"></a>Download File Format
 
 The output file has 41 columns in total. Every column value is double-quoted, for example "User input" and then separated by a comma.
 Columns can contain "N/A" as a value indicating either:

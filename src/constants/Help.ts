@@ -18,7 +18,7 @@ export const HELP_FILES: HelpFile[] = [
   { name: 'download-options', md: true, title: 'Download Options' },
   { name: 'downloads-page', md: true, title: 'Downloads Page' },
   { name: 'further-info', md: true, title: 'Further Information' },
-  { name: 'download-file', md: true, title: 'Download File' },
+  { name: 'download-file', md: true, title: 'Download File Format' },
   { name: 'direct-queries', md: true, title: 'Direct Queries' },
   { name: 'api', md: true, title: 'API' },
 ];
