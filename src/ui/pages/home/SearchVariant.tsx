@@ -24,7 +24,7 @@ const hasMultipleLines = (str: string): boolean => {
 
 function cleanInput(input: string): string {
   return input
-    .replace(/[\|,]/g, '\n') // Replace comma and pipe with newline
+    .replace(/[|,]/g, '\n') // Replace comma and pipe with newline
     .split('\n') // Split into lines
     .map(line => line.trim()) // Trim leading and trailing whitespace
     .filter(line => line !== '')

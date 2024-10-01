@@ -62,7 +62,7 @@ function DownloadModal(props: DownloadModalProps) {
         setJobNamePlaceholder(savedRecord.name)
       }
     }
-  }, [getItem]);
+  }, [props.id, getItem]);
 
   const updateForm = (key: string, value: any) => {
     setForm({
