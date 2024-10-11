@@ -12,6 +12,10 @@ import {HelpButton} from "../../components/help/HelpButton";
 import {HelpContent} from "../../components/help/HelpContent";
 import {ShareLink} from "../../components/common/ShareLink";
 import Spaces from "../../elements/Spaces";
+import Loader from "../../elements/Loader";
+import {NO_DATA, NO_RESULT, UNEXPECTED_ERR} from "../result/ResultPage";
+
+const INVALID_QUERY = 'Invalid search query'
 
 const chromosomeRegex = /^chr([1-9]|1[0-9]|2[0-2]|X|Y|MT)$/;
 // Uniprot accession regular expression:
@@ -34,10 +38,10 @@ const QueryPageContent = (props: QueryPageProps) => {
   const location = useLocation()
   const [searchParams] = useSearchParams();
   const {param1, param2, param3, param4} = useParams();
-  const [query, setQuery] = useState<string|undefined>()
+  const [query, setQuery] = useState<string | undefined>()
   const [data, setData] = useState<PagedMappingResponse | null>(null)
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
+  const [warning, setWarning] = useState('')
 
   const loadData = useCallback((queryType: string, searchParams: URLSearchParams, param1?: string, param2?: string, param3?: string, param4?: string) => {
     setLoading(true)
@@ -70,33 +74,50 @@ const QueryPageContent = (props: QueryPageProps) => {
     }
 
     const assembly = searchParams.get('assembly');
-    console.log('query', q)
+    //console.log('query', q)
     if (q) {
-      document.title = `${q} - ${TITLE}`
       setQuery(q)
       mappings([q], assembly ?? undefined)
         .then((response) => {
-          if (response.data && response?.data?.inputs?.length > 0) {
-            const mappingResponse = toPagedMappingResponse(response.data)
-            setData(mappingResponse)
+          if (response.data) {
+            if (response.data.inputs?.length > 0) {
+              const mappingResponse = toPagedMappingResponse(response.data)
+              if (mappingResponse.content?.inputs?.length > 0) {
+                setData(mappingResponse)
+              } else {
+                setWarning(NO_RESULT)
+              }
+            }
+          } else {
+            setWarning(NO_DATA)
           }
         })
         .catch((err) => {
-          console.log(err);
+          if (err.response) {
+            if (err.response.status === 404) {
+              setWarning(NO_RESULT);
+            } else {
+              setWarning(`Error ${err.response.status}: ${err.response.statusText}`);
+            }
+          } else {
+            setWarning(UNEXPECTED_ERR);
+          }
         }).finally(() => {
         setLoading(false)
       })
     } else {
-      setError('Invalid search query')
+      setWarning(INVALID_QUERY)
     }
     setLoading(false)
   }, []);
 
 
   useEffect(() => {
-    setError('')
+    setWarning('')
     loadData(props.queryType, searchParams, param1, param2, param3, param4)
-  }, [props.queryType, searchParams, param1, param2, param3, param4, loadData, error]);
+  }, [props.queryType, searchParams, param1, param2, param3, param4, loadData]);
+
+  document.title = query ? `${query} | ${TITLE}` : TITLE
 
   const shareUrl = `${APP_URL}${location.pathname}${location.search}`
 
@@ -104,29 +125,28 @@ const QueryPageContent = (props: QueryPageProps) => {
     <div>
       <h5 className="page-header">Query <i className="bi bi-chevron-compact-right"></i> {query}</h5>
       <span className="help-icon">
-    <HelpButton title="" content={<HelpContent name="direct-queries" />}/>
+    <HelpButton title="" content={<HelpContent name="direct-queries"/>}/>
       </span>
     </div>
 
-    <div style={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
+    {data &&
+      <div style={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
       <span style={{alignSelf: 'flex-end'}}>
-        {data &&
-          <div className="legend-container">
-            <ShareLink url={shareUrl} linkText="Share Results"/>
-            <Spaces count={2}/>
-            <LegendModal/>
-            <DownloadModal inputType={InputType.SINGLE_VARIANT} query={query}/>
-          </div>
-        }
+        <div className="legend-container">
+          <ShareLink url={shareUrl} linkText="Share Results"/>
+          <Spaces count={2}/>
+          <LegendModal/>
+          <DownloadModal inputType={InputType.SINGLE_VARIANT} query={query}/>
+        </div>
       </span>
-    </div>
-    {error && (
-      <span className="padding-left-1x">
-                      <i className="file-warning bi bi-exclamation-triangle-fill"></i>{' '}
-        {error}
-                      </span>
-    )}
-    <ResultTable loading={loading} data={data}/>
+      </div>}
+
+    {warning && (<div className="result-warning">
+      <i className="file-warning bi bi-exclamation-triangle-fill"></i>{' '}
+      {warning}
+    </div>)}
+    {!data && loading && <Loader/>}
+    <ResultTable data={data}/>
   </div>
 }
 

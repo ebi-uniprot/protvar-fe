@@ -13,28 +13,17 @@ import {StringVoidFun} from "../../../constants/CommonTypes";
 import {getAlternateIsoFormRow} from "./AlternateIsoFormRow";
 import {getNewPrimaryRow} from "./PrimaryRow";
 import {AppContext} from "../../App";
-import Loader from "../../elements/Loader";
 import MsgRow from "./MsgRow";
 import {useLocation, useNavigate, useSearchParams} from "react-router-dom";
 
-function ResultTable(props: {loading: boolean, data: PagedMappingResponse | null}) {
+function ResultTable(props: {data: PagedMappingResponse | null}) {
   const stdColor = useContext(AppContext).stdColor
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams] = useSearchParams();
   const [isoformGroupExpanded, setIsoformGroupExpanded] = useState('')
   const [annotationExpanded, setAnnotationExpanded] = useState(searchParams.get('annotation') ?? '')
-/*
-  const [searchParams] = useSearchParams();
-  const annotation = searchParams.get('annotation') || ''
-  if (annotation) {
-    setAnnotationExpanded(annotation)
-  }
-*/
 
-//  useEffect(() => {
-//    setAnnotationExpanded(annotation ? annotation : '')
-//  }, [annotation])
   function toggleIsoformGroup(key: string) {
     setIsoformGroupExpanded(isoformGroupExpanded === key ? '' : key);
   }
@@ -51,14 +40,8 @@ function ResultTable(props: {loading: boolean, data: PagedMappingResponse | null
     navigate(url);
   }
 
-  // if loading and no data -> show loader
-  // if not loading and no data -> No result found.
-  // if loading and data -> show (curr) data & Prev/Next -> Loading
-  // if not loading and data -> show data
-  if (props.loading && !props.data)
-    return <Loader />
-  if (!props.loading && !props.data)
-    return <div><h5>No result found</h5> Try another link or searching for variants again.</div>
+  if (!props.data)
+    return null
 
   const tableRows = getTableRows(props.data, isoformGroupExpanded, toggleIsoformGroup, annotationExpanded, toggleAnnotation, stdColor);
   return <table className="" cellPadding="0" cellSpacing="0" id="resultTable">

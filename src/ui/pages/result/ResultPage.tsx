@@ -16,13 +16,20 @@ import {HelpButton} from "../../components/help/HelpButton";
 import {HelpContent} from "../../components/help/HelpContent";
 import {ShareLink} from "../../components/common/ShareLink";
 import Spaces from "../../elements/Spaces";
+import Loader from "../../elements/Loader";
+
+const INVALID_PAGE = `The requested page number is invalid or out of range. Displaying page ${DEFAULT_PAGE} by default.`
+const INVALID_PAGE_SIZE = `The specified page size is invalid. Using the default page size of ${DEFAULT_PAGE_SIZE} instead.`
+const MAX_PAGE_EXCEEDED = `The requested page number exceeds the total number of available pages (total pages: {totalPages}).`
+export const NO_DATA = 'No data'
+export const NO_RESULT = 'No result to display'
+export const UNEXPECTED_ERR = 'An unexpected error occurred'
 
 function ResultPageContent(props: ResultPageProps) {
   const location = useLocation();
   const {id} = useParams<{ id?: string }>();
   const [searchParams] = useSearchParams();
-  const [title, setTitle] = useState('')
-  const [paginate, setPaginate] = useState(false)
+  const [resultTitle, setResultTitle] = useState(id)
 
   // components that alter search params:
   // 1) PaginationRow
@@ -38,8 +45,8 @@ function ResultPageContent(props: ResultPageProps) {
 
   const [data, setData] = useState<PagedMappingResponse | null>(null)
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
-  const { getItem, setItem } = useLocalStorage();
+  const [warning, setWarning] = useState('')
+  const {getItem, setItem} = useLocalStorage();
 
   const viewedRecord = useCallback((id: string, url: string) => {
     const now = new Date().toISOString();
@@ -57,29 +64,31 @@ function ResultPageContent(props: ResultPageProps) {
       savedRecords.unshift(movedRecord);
     } else { // if no matching record is found
       // add new record to beginning of array
-      savedRecords = [{ id, url, lastViewed: now }, ...savedRecords]
+      savedRecords = [{id, url, lastViewed: now}, ...savedRecords]
     }
     setItem(LOCAL_RESULTS, savedRecords);
   }, [getItem, setItem]);
 
-  const loadData = useCallback((inputType: InputType, id: string|undefined
-    , page: number, pageSize: number, assembly: string|null) => {
-    document.title = `${title} - ${TITLE}`;
+  const loadData = useCallback((inputType: InputType, id: string | undefined
+    , page: number, pageSize: number, assembly: string | null) => {
+
     if (!id) {
       return;
     }
     setLoading(true)
+    // for testing, add a delay here
+    //
     const pageIsValid = !isNaN(page) && page > 0;
     const pageSizeIsValid = !isNaN(pageSize) && PERMITTED_PAGE_SIZES.includes(pageSize);
 
     if (!pageIsValid) {
-      setError(`The requested page number is invalid or out of range. Displaying page ${DEFAULT_PAGE} by default.`)
+      setWarning(INVALID_PAGE)
       //Notify.warn('hey')
       page = DEFAULT_PAGE
     }
 
     if (!pageSizeIsValid) {
-      setError(`The specified page size is invalid. Using the default page size of ${DEFAULT_PAGE_SIZE} instead.`)
+      setWarning(INVALID_PAGE_SIZE)
       pageSize = DEFAULT_PAGE_SIZE
     }
 
@@ -90,94 +99,123 @@ function ResultPageContent(props: ResultPageProps) {
 
     getResult(inputType, id, page, pageSize, assembly)
       .then((response) => {
-        // checks each level of response obj hierarchy exists and if inputs is non-empty.
-        // if any part of the chain is null or undefined, the entire expr short-circuits
-        // returns false.
+        if (response.data) {
+          // checks each level of response obj hierarchy exists and if inputs is non-empty.
+          // if any part of the chain is null or undefined, the entire expr short-circuits
+          // returns false.
 
-        if (page > (response?.data?.totalPages ?? 0)) {
-          // Handle case where page exceeds totalPages
-          setError(`The requested page number exceeds the total number of available pages (total pages: ${response?.data?.totalPages}). No results to display.`)
-          //page = response.data.totalPages
-          // navigate to last page?
-        }
+          if (response.data.content?.inputs?.length > 0) {
+            setData(response.data)
+            viewedRecord(response.data.id, location.pathname + location.search)
 
-      if (response?.data?.content?.inputs?.length > 0) {
-        setData(response.data)
-        viewedRecord(response.data.id, location.pathname + location.search)
-
-        if (inputType === InputType.PROTEIN_ACCESSION) {
-          setTitle(`${id} (${Math.trunc(response.data.totalItems/3)} AA)`)
+            if (inputType === InputType.PROTEIN_ACCESSION) {
+              setResultTitle(`${id} (${Math.trunc(response.data.totalItems / 3)} AA)`)
+            } else {
+              const totalItems = response.data.totalItems
+              const firstInputLine = totalItems === 1 ?
+                response.data.content.inputs[0].inputStr :
+                `${response.data.content.inputs[0].inputStr} ...+${totalItems - 1} more `
+              setResultTitle(firstInputLine)
+            }
+          } else {
+            setWarning(NO_RESULT)
+          }
+          // if no result warning has been set, the following will override it
+          const totalPages = response.data.totalPages ?? 0
+          if (page !== DEFAULT_PAGE && page > totalPages) {
+            // Handle case where page exceeds totalPages
+            setWarning(MAX_PAGE_EXCEEDED.replace("{totalPages}", totalPages.toString()))
+            //page = response.data.totalPages
+            // navigate to last page?
+          }
         } else {
-          const totalItems = response.data.totalItems
-          const pageTitle = totalItems === 1 ?
-            response.data.content.inputs[0].inputStr :
-            `${response.data.content.inputs[0].inputStr} ...+${totalItems-1} more `
-          setTitle(pageTitle)
+          setWarning(NO_DATA)
         }
-
-        if (response?.data?.totalPages > 1) {
-          setPaginate(true)
-        }
-        document.title = `${title} - ${TITLE}`;
-        /*
-response.data.content.messages?.forEach(message => {
-  if (message.type === INFO) {
-    Notify.info(message.text)
-  } else if (message.type === WARN) {
-    Notify.warn(message.text)
-  } else if (message.type === ERROR) {
-    Notify.err(message.text)
-  }
-});*/
-      }
-    })
+      })
       .catch((err) => {
-        console.log(err)
+        if (err.response) {
+          if (err.response.status === 404) {
+            setWarning(NO_RESULT);
+          } else {
+            setWarning(`Error ${err.response.status}: ${err.response.statusText}`);
+          }
+        } else {
+          setWarning(UNEXPECTED_ERR);
+        }
       }).finally(() => {
       setLoading(false)
     })
-  }, [viewedRecord, location, title])
+  }, [viewedRecord, location])
 
 
   useEffect(() => {
-    setError('')
+    setWarning('')
     loadData(props.inputType, id, page, pageSize, assembly);
   }, [props.inputType, id, page, pageSize, assembly, loadData]) // listening for change in id, and searchParams
 
+
+  document.title = `${resultTitle} | ${TITLE}`
 
   const shareUrl = `${APP_URL}${location.pathname}${location.search}`
 
   return <div className="search-results">
     <div>
-      <h5 className="page-header">Result <i className="bi bi-chevron-compact-right"></i> {title}</h5>
+      <h5 className="page-header">Result <i className="bi bi-chevron-compact-right"></i> {resultTitle}</h5>
       <span className="help-icon">
-      <HelpButton title="" content={<HelpContent name="result-page" />}/>
+      <HelpButton title="" content={<HelpContent name="result-page"/>}/>
         </span>
     </div>
 
-    <div style={{display: 'flex', justifyContent: paginate ? 'space-between' : 'flex-end', width: '100%'}}>
-      {paginate && <PaginationRow loading={loading} data={data}/>}
-      <span style={{alignSelf: 'flex-end'}}>
-          {data &&
-            <div className="legend-container">
-              <ShareLink url={shareUrl} linkText="Share Results"/>
-              <Spaces count={2}/>
-              <LegendModal/>
-              <DownloadModal inputType={props.inputType} id={id}/>
-            </div>
-          }
-      </span>
-    </div>
-    {error && (
-      <p>
-        <i className="file-warning bi bi-exclamation-triangle-fill"></i>{' '}
-        {error}
-      </p>
-    )}
-    <ResultTable loading={loading} data={data}/>
-    {paginate &&
-      <PaginationRow loading={loading} data={data}/>
+    {
+      /*
+      Page components:
+      if data
+        && totalPages>1 [pagination]
+        [shareResults][viewLegends][downloadResults]
+      if warning
+        [warning]
+      if data (else nothing)
+        [resultTable]
+      if data && totalPages>1
+        [pagination]
+
+      To check: data (null), warning (''), loading (true)
+      Order updated:
+      - warning reset every time on load
+      - loadData
+        -- set loading true
+        -- if page/Size invalid, set warning
+        -- getResult -> set warning if page requested > totalPage and set data if any
+        -- finally set loading false
+
+      1. Warning is always displayed at the top of the table. It remains visible even when the table is hidden,
+          such as when there are no results to display.
+      2. If no data (on first load) and loading, show Loader (not shown when navigating between pages using Next/Prev).
+      3. All other conditions will show an appropriate message (warning) e.g. No data
+       */
     }
+
+    {data &&
+      <div style={{display: 'flex', justifyContent: data.totalPages > 1 ? 'space-between' : 'flex-end', width: '100%'}}>
+        {data.totalPages > 1 && <PaginationRow loading={loading} data={data}/>}
+        <span style={{alignSelf: 'flex-end'}}>
+          <div className="legend-container">
+            <ShareLink url={shareUrl} linkText="Share Results"/>
+            <Spaces count={2}/>
+            <LegendModal/>
+            <DownloadModal inputType={props.inputType} id={id}/>
+          </div>
+      </span>
+      </div>}
+
+    {warning && (<div className="result-warning">
+      <i className="file-warning bi bi-exclamation-triangle-fill"></i>{' '}
+      {warning}
+    </div>)}
+
+    {!data && loading && <Loader/>}
+    <ResultTable data={data}/>
+    {data && data.totalPages > 1 && <PaginationRow loading={loading} data={data}/>}
   </div>
 }
 
