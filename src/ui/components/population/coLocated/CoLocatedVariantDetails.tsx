@@ -7,9 +7,9 @@ interface CoLocatedVariantDetailsProps {
 }
 
 function CoLocatedVariantDetails(props: CoLocatedVariantDetailsProps) {
-  const [expendedCoLocatedKey, setExpendedCoLocatedKey] = useState('');
+  const [expandedCoLocatedKey, setExpandedCoLocatedKey] = useState('');
   const toggleCoLocated = (key: string) => {
-    setExpendedCoLocatedKey(expendedCoLocatedKey === key ? '' : key)
+    setExpandedCoLocatedKey(expandedCoLocatedKey === key ? '' : key)
   }
 
   if (props.coLocatedVariants.length <= 0) {
@@ -20,7 +20,7 @@ function CoLocatedVariantDetails(props: CoLocatedVariantDetailsProps) {
     <>
       The following variants alter the same amino acid (but alter a different nucleotide in the codon)
       <br />
-      <ul><CoLocatedVariantAccordion {...props} expendedCoLocatedKey={expendedCoLocatedKey} toggleCoLocated={toggleCoLocated} /></ul>
+      <ul><CoLocatedVariantAccordion {...props} expandedCoLocatedKey={expandedCoLocatedKey} toggleCoLocated={toggleCoLocated} /></ul>
     </>
   );
 

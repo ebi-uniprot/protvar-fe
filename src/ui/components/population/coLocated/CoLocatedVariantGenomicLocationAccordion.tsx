@@ -8,7 +8,7 @@ import {Association, ProteinColocatedVariant} from "../../../../types/Population
 
 interface CoLocatedVariantGenomicLocationAccordionProps {
   coLocatedVariant: ProteinColocatedVariant
-  expendedGenomicKey: string
+  expandedGenomicKey: string
   toggleGenomic: StringVoidFun
 }
 
@@ -31,7 +31,7 @@ function CoLocatedVariantGenomicLocationAccordion(props: CoLocatedVariantGenomic
           <ChevronDownIcon className="chevronicon" />
         </button>
       </li>
-      {props.expendedGenomicKey === genomicLocation(props) &&
+      {props.expandedGenomicKey === genomicLocation(props) &&
         <CoLocatedVariantGenomicLocationAccordionDetail {...props} />
       }
     </ul>
