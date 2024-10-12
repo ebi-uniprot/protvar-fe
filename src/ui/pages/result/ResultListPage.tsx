@@ -17,7 +17,7 @@ function ResultListPageContent() {
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
 
   useEffect(() => {
-    document.title = "Search History - " + TITLE;
+    document.title = `Search History | ${TITLE}`;
     // Retrieve result records from local storage
     const localResults = getItem<ResultRecord[]>(LOCAL_RESULTS) || []
     setResults(localResults)

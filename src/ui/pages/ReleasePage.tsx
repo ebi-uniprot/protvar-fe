@@ -9,7 +9,7 @@ function ReleasePageContent() {
   //var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
   //var yyyy = today.getFullYear();
   useEffect(() => {
-    document.title = 'Release - ' + TITLE;
+    document.title = `Release | ${TITLE}`;
   }, []);
 
   return <div className="container" style={{padding: '10px'}}>

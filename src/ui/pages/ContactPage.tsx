@@ -4,7 +4,7 @@ import {TITLE} from "../../constants/const";
 
 function ContactPageContent() {
   useEffect(() => {
-  document.title = 'Contact - ' + TITLE;
+  document.title = `Contact | ${TITLE}`;
   }, []);
   return <>
     <div className="container">

@@ -31,7 +31,7 @@ function DownloadPageContent() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    document.title = "Downloads - " + TITLE;
+    document.title = `Downloads | ${TITLE}`;
     // Retrieve download records from local storage
     const localDownloads = getItem<DownloadRecord[]>(LOCAL_DOWNLOADS) || []
     setDownloads(localDownloads)

@@ -13,7 +13,7 @@ function HelpPageContent() {
   const [content, setContent] = useState<JSX.Element | null>(null);
 
   useEffect(() => {
-    document.title = `Help - ${TITLE}`
+    document.title = `Help | ${TITLE}`
     const hash = location.hash.slice(1); // Remove the '#'
     const [section, subsection] = hash.split(':');
     setId(section)

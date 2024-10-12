@@ -9,7 +9,7 @@ import BrowseVariant from "./BrowseVariant";
 const HomePageContent = () => {
 
   useEffect(() => {
-    document.title = TITLE;
+    document.title = `Home | ${TITLE}`;
   }, []);
 
   return (

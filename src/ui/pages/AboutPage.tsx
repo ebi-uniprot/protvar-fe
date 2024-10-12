@@ -22,7 +22,7 @@ function AboutPageContent() {
   //var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
   //var yyyy = today.getFullYear();
   useEffect(() => {
-    document.title = 'About - ' + TITLE;
+    document.title = `About | ${TITLE}`;
   }, []);
 
   return <div className="container">
