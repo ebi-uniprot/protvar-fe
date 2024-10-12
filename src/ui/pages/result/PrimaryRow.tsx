@@ -85,6 +85,14 @@ export const aaChangeStr = (ref: string, alt: string) => {
   return `${ref}/${alt}`
 }
 
+export const getEnsemblChrUrl = (chr: string) => {
+  return ENSEMBL_CHRM_URL + chr;
+}
+
+export const getEnsemblViewUrl = (chr: string, pos: number) => {
+  return ENSEMBL_VIEW_URL + chr + ':' + pos + '-' + pos;
+}
+
 export const getNewPrimaryRow = (isoformKey: string, isoformGroup: string, isoformGroupExpanded: string,
                                  index: number, input: GenomicInput, originalInput: CustomInput,
                                  gene: Gene, isoform: IsoFormMapping,
@@ -112,7 +120,6 @@ export const getNewPrimaryRow = (isoformKey: string, isoformGroup: string, isofo
     }
   }
 
-  const positionUrl = ENSEMBL_VIEW_URL + input.chr + ':' + input.pos + '-' + input.pos;
   const functionalKey = 'functional-' + isoformKey;
   const structuralKey = 'structural-' + isoformKey;
   const populationKey = 'population-' + isoformKey;
@@ -133,7 +140,7 @@ export const getNewPrimaryRow = (isoformKey: string, isoformGroup: string, isofo
     <tr style={rowBg(index)} title={'Input: ' + input.inputStr}>
       <td style={inputStyle.gen}>
         <Tool tip="Click to see the a summary for this chromosome from Ensembl" pos="up-left">
-          <a href={ENSEMBL_CHRM_URL + input.chr} target="_blank" rel="noopener noreferrer">
+          <a href={getEnsemblChrUrl(input.chr)} target="_blank" rel="noopener noreferrer">
             {input.chr}
           </a>
         </Tool>
@@ -141,7 +148,7 @@ export const getNewPrimaryRow = (isoformKey: string, isoformGroup: string, isofo
       <td style={inputStyle.gen}>
         <Tool tip="Click to see the region detail for this genomic coordinate from Ensembl" pos="up-left">
           {input.converted && <span className="h37">37&rarr;38</span>}
-          <a href={positionUrl} target="_blank" rel="noopener noreferrer">
+          <a href={getEnsemblViewUrl(input.chr, input.pos)} target="_blank" rel="noopener noreferrer">
             {input.pos}
           </a>
         </Tool>

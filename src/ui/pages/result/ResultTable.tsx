@@ -110,7 +110,7 @@ const getTableRows = (data: PagedMappingResponse | null, isoformGroupExpanded: s
 
     if (hasNoMapping(input)) {
       if (hasNoMessage(originalInput, input)) {
-        tableRows.push(<MsgRow index={index} key={`input-${index}-${genIndex}-nomapping`} message={NO_MAPPING} input={input}  />)
+        tableRows.push(<MsgRow index={index} key={`input-${index}-${genIndex}-nomapping`} message={NO_MAPPING} originalInput={originalInput} derivedGenomicInput={input} />)
         return
       }
     }
@@ -138,7 +138,7 @@ const getTableRows = (data: PagedMappingResponse | null, isoformGroupExpanded: s
 
     // individual input-level messages
     input.messages.forEach((message,messageIndex) => {
-      tableRows.push(<MsgRow index={inputIndex} key={`input-${inputIndex}-message-${messageIndex}`} message={message} input={input} />)
+      tableRows.push(<MsgRow index={inputIndex} key={`input-${inputIndex}-message-${messageIndex}`} message={message} originalInput={input} />)
     });
 
     if (input.type === INPUT_GEN && "mappings" in input) {
@@ -148,7 +148,7 @@ const getTableRows = (data: PagedMappingResponse | null, isoformGroupExpanded: s
       && "derivedGenomicInputs" in input) {
       input.derivedGenomicInputs.forEach((gInput: GenomicInput, genIndex: number) => {
         gInput.messages.forEach((message, messageIndex) => {
-          tableRows.push(<MsgRow index={inputIndex} key={`input-${inputIndex}-${genIndex}-message-${messageIndex}`} message={message} input={input} />)
+          tableRows.push(<MsgRow index={inputIndex} key={`input-${inputIndex}-${genIndex}-message-${messageIndex}`} message={message} originalInput={input} />)
         });
         // IT SEEMS WE MAY NOT BE TAKING THE ORIGINAL AND DERIVED GEN INPUT
         // INTO ACCOUNT SOMEWHERE...
