@@ -134,6 +134,7 @@ function DownloadModal(props: DownloadModalProps) {
             downloadRecord.pop = form.pop
             downloadRecord.str = form.str
             downloadRecord.resultUrl = location.pathname + location.search
+            downloadRecord.clientRequested = new Date().toISOString()
             handleSucc(downloadRecord)
           }
         )

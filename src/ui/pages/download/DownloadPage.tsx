@@ -85,7 +85,7 @@ function DownloadPageContent() {
 
   const handleSort = () => {
     const updatedDownloads = downloads.sort((a, b) =>
-      b.requested.localeCompare(a.requested))
+      b.requested.localeCompare(a.requested)) // should be fine to sort on server requested time
     setItem(LOCAL_DOWNLOADS, updatedDownloads);
     setDownloads(updatedDownloads);
   }
@@ -143,7 +143,7 @@ function DownloadPageContent() {
                   // string may be messing up when retrieved, and thus getTime or getDate functions do not work
                   // solution: create new Date object
                 }
-                <td>{getRelativeTime(download.requested)}</td>
+                <td>{getRelativeTime(download.clientRequested ?? download.requested)}</td>
                 <td>
                   {editingIndex === index ? (
                     <input

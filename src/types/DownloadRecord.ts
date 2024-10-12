@@ -32,4 +32,6 @@ export interface DownloadRecord extends DownloadResponse {
 
     // new
     resultUrl?: string // to navigate to result from download list
+
+    clientRequested?: string // recently added as this may be different from the server "requested" time attribute
 }
