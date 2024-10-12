@@ -118,6 +118,7 @@ function ResultPageContent(props: ResultPageProps) {
               setResultTitle(firstInputLine)
             }
           } else {
+            setData(null) // clear prev data
             setWarning(NO_RESULT)
           }
           // if no result warning has been set, the following will override it
@@ -129,15 +130,17 @@ function ResultPageContent(props: ResultPageProps) {
             // navigate to last page?
           }
         } else {
+          setData(null) // clear prev data
           setWarning(NO_DATA)
         }
       })
       .catch((err) => {
+        setData(null) // clear prev data
         if (err.response) {
-          if (err.response.status === 404) {
+          if (err.response.status === 404) { // Not found
             setWarning(NO_RESULT);
           } else {
-            setWarning(`Error ${err.response.status}: ${err.response.statusText}`);
+            setWarning(`Error ${err.response.status}: ${err.message}`);
           }
         } else {
           setWarning(UNEXPECTED_ERR);

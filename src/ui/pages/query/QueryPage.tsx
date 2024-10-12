@@ -85,19 +85,22 @@ const QueryPageContent = (props: QueryPageProps) => {
               if (mappingResponse.content?.inputs?.length > 0) {
                 setData(mappingResponse)
               } else {
+                setData(null) // clear prev data
                 setWarning(NO_RESULT)
               }
             }
           } else {
+            setData(null) // clear prev data
             setWarning(NO_DATA)
           }
         })
         .catch((err) => {
+          setData(null) // clear prev data
           if (err.response) {
-            if (err.response.status === 404) {
+            if (err.response.status === 404) { // Not found
               setWarning(NO_RESULT);
             } else {
-              setWarning(`Error ${err.response.status}: ${err.response.statusText}`);
+              setWarning(`Error ${err.response.status}: ${err.message}`);
             }
           } else {
             setWarning(UNEXPECTED_ERR);
