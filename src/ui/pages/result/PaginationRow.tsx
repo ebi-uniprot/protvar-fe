@@ -1,5 +1,5 @@
 import Button from '../../elements/form/Button';
-import { Dropdown } from 'react-dropdown-now';
+import {Dropdown} from 'react-dropdown-now';
 import 'react-dropdown-now/style.css';
 import {useLocation, useNavigate, useSearchParams} from "react-router-dom";
 import {DEFAULT_PAGE, DEFAULT_PAGE_SIZE, PERMITTED_PAGE_SIZES} from "../../../constants/const";
@@ -9,22 +9,35 @@ interface PaginationRowProps {
   loading: boolean
   data: PagedMappingResponse | null
 }
+
 function PaginationRow(props: PaginationRowProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams] = useSearchParams();
   const pageSize = searchParams.get("pageSize")
-  const { loading, data } = props;
+  const {loading, data} = props;
+
+  function firstPage() {
+    if (data) {
+      changePage(1)
+    }
+  }
 
   function prevPage() {
     if (data) {
-      changePage(data.page-1)
+      changePage(data.page - 1)
     }
   }
 
   function nextPage() {
     if (data) {
       changePage(data.page + 1)
+    }
+  }
+
+  function lastPage() {
+    if (data) {
+      changePage(data.totalPages)
     }
   }
 
@@ -63,20 +76,36 @@ function PaginationRow(props: PaginationRowProps) {
     <tbody>
     <tr>
       <td>
-        <Button className={'pagination-button'} onClick={prevPage} loading={loading} disabled={loading || data === null || data.page === 1}>
-          <i className="bi bi-chevron-compact-left"/> Prev
+        <Button className="pagination-button" onClick={firstPage} loading={loading}
+                disabled={loading || data === null || data.page === 1}>
+          &laquo; First
+        </Button>
+      </td>
+      <td>
+        <Button className="pagination-button" onClick={prevPage} loading={loading}
+                disabled={loading || data === null || data.page === 1}>
+          &lsaquo; Prev
         </Button>
       </td>
       <td>
         {data && `${data.page} / ${data.totalPages}`}
       </td>
+
       <td>
-        <Button className={'pagination-button'} onClick={nextPage} loading={loading} disabled={loading || data === null || data.last}>
-          Next <i className="bi bi-chevron-compact-right"/>
+        <Button className="pagination-button" onClick={nextPage} loading={loading}
+                disabled={loading || data === null || data.last}>
+          Next &rsaquo;
+        </Button>
+      </td>
+      <td>
+        <Button className="pagination-button" onClick={lastPage} loading={loading}
+                disabled={loading || data === null || data.last}>
+          Last &raquo;
         </Button>
       </td>
       <td>
         <Dropdown
+          className="pagination-dropdown"
           placeholder="Pages"
           options={PERMITTED_PAGE_SIZES}
           value={data?.pageSize}

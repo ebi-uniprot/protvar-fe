@@ -219,6 +219,11 @@
 		color: #212121;
 		border: none;
 	}
+	.button-new.pagination-button:hover {
+		background-color: #e7e7e7;
+		cursor: pointer;
+		border-radius: 5px;
+	}
 
 	.button-new.pagination-button.button-disabled {
 		pointer-events: unset;;
@@ -233,7 +238,17 @@
 		color: #ffffff;
 		font-weight: bold;
 		border-radius: 5px;
+	}
 
+	.pagination-dropdown {
+		width: auto;
+		border-radius: 5px;
+	}
+	.pagination-dropdown:hover {
+		cursor: pointer;
+	}
+	.pagination-dropdown:active {
+		background-color: #e7e7e7;
 	}
 
 	.button-icon {
