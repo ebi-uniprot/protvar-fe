@@ -119,7 +119,7 @@ const SearchVariant = () => {
         if (hasMultipleLines(cleanText)) {
           promise = submitInputText(cleanText, form.assembly)
         } else {
-          let directQuery = `${QUERY}?search=${encodeURIComponent(cleanText)}`
+          let directQuery = `${QUERY}?search=${encodeURIComponent(cleanText)}&assembly=${form.assembly}`
           if (form.assembly && form.assembly === Assembly.GRCh37) {
             // single input uses GRCh38 by default (auto-detect is ignored), unless GRCh37 is specified.
             directQuery += `&assembly=${encodeURIComponent(form.assembly)}`
