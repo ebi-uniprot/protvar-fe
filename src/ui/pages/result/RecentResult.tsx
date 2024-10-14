@@ -60,7 +60,7 @@ const RecentResult = () => {
               </span>
                   <div className="map-item-options">
                     <ShareLink url={`${APP_URL}${record.url}`} />
-                    <button title="Delete" className="bi bi-x-lg icon-btn"
+                    <button title="Delete" className="bi bi-trash icon-btn"
                             onClick={() => deleteResult(record.id, index)}></button>
                   </div>
                 </>
