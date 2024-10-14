@@ -153,6 +153,7 @@ function ResultPageContent(props: ResultPageProps) {
 
   useEffect(() => {
     setWarning('')
+    setResultTitle(id)
     loadData(props.inputType, id, page, pageSize, assembly);
   }, [props.inputType, id, page, pageSize, assembly, loadData]) // listening for change in id, and searchParams
 
