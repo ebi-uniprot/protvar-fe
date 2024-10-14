@@ -29,6 +29,8 @@ interface DownloadModalProps {
   numPages: number
 }
 
+const NUM_PAGES_LIMIT = 10;
+
 // could be triggered for
 // - id input                  params: id, page, pageSize, assembly
 // - protien acc               params: same as above except id is accession
@@ -94,7 +96,7 @@ function DownloadModal(props: DownloadModalProps) {
 
   const handleSubmit = () => {
 
-    if (!currPage && props.numPages > 20) {
+    if (!currPage && props.numPages > NUM_PAGES_LIMIT) {
       var confirm = window.confirm(`Are you sure you want to download all ${props.numPages} pages?\nThis may take a long time to generate.`);
       if (!confirm) {
         return;
