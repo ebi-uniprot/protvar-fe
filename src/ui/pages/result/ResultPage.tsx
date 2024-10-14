@@ -207,7 +207,7 @@ function ResultPageContent(props: ResultPageProps) {
             <ShareLink url={shareUrl} linkText="Share Results"/>
             <Spaces count={2}/>
             <LegendModal/>
-            <DownloadModal inputType={props.inputType} id={id}/>
+            <DownloadModal inputType={props.inputType} id={id} numPages={(data && data.totalPages) ?? 0}/>
           </div>
       </span>
       </div>}

@@ -139,7 +139,7 @@ const QueryPageContent = (props: QueryPageProps) => {
           <ShareLink url={shareUrl} linkText="Share Results"/>
           <Spaces count={2}/>
           <LegendModal/>
-          <DownloadModal inputType={InputType.SINGLE_VARIANT} query={query}/>
+          <DownloadModal inputType={InputType.SINGLE_VARIANT} query={query} numPages={1} />
         </div>
       </span>
       </div>}

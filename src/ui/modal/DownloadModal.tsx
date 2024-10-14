@@ -26,6 +26,7 @@ interface DownloadModalProps {
   inputType: InputType
   id?: string,
   query?: string
+  numPages: number
 }
 
 // could be triggered for
@@ -51,7 +52,7 @@ function DownloadModal(props: DownloadModalProps) {
   }
   const [form, setForm] = useState<DownloadForm>(initialForm)
   const [annotations, setAnnotations] = useState<boolean>(true)
-  const [currPage, setCurrPage] = useState<boolean>(true)
+  const [currPage, setCurrPage] = useState<boolean>(false)
 
   useEffect(() => {
     if (props.id) {
@@ -92,6 +93,14 @@ function DownloadModal(props: DownloadModalProps) {
   }
 
   const handleSubmit = () => {
+
+    if (!currPage && props.numPages > 20) {
+      var confirm = window.confirm(`Are you sure you want to download all ${props.numPages} pages?\nThis may take a long time to generate.`);
+      if (!confirm) {
+        return;
+      }
+    }
+
     const err = emailValidate(form.email)
     if (err) {
       setErrorMsg(err)
@@ -243,12 +252,12 @@ function DownloadModal(props: DownloadModalProps) {
                       <input
                         type="radio"
                         name="currPage"
-                        value="true"
+                        value="false"
                         disabled={props.inputType === InputType.SINGLE_VARIANT}
-                        checked={currPage}
-                        onChange={_ => setCurrPage(true)}
+                        checked={!currPage}
+                        onChange={_ => setCurrPage(false)}
                       />
-                      Current
+                      All
                     </label>
                   </li>
                   <li>
@@ -256,12 +265,12 @@ function DownloadModal(props: DownloadModalProps) {
                       <input
                         type="radio"
                         name="currPage"
-                        value="false"
+                        value="true"
                         disabled={props.inputType === InputType.SINGLE_VARIANT}
-                        checked={!currPage}
-                        onChange={_ => setCurrPage(false)}
+                        checked={currPage}
+                        onChange={_ => setCurrPage(true)}
                       />
-                      All
+                      Current
                     </label>
                   </li>
                 </ul>
