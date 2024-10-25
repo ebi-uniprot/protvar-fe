@@ -17,6 +17,7 @@ import {readFirstLineFromFile} from "../../../utills/FileUtil";
 import useLocalStorage from "../../../hooks/useLocalStorage";
 import {HelpContent} from "../../components/help/HelpContent";
 import {HelpButton} from "../../components/help/HelpButton";
+import Spaces from "../../elements/Spaces";
 
 const hasMultipleLines = (str: string): boolean => {
   return str.includes('\n');
@@ -236,7 +237,7 @@ const SearchVariant = () => {
                 <div className="assembly">
                   <span
                     title="Genome assembly GRCh37 to GRCh38 conversion for genomic inputs (VCF, HGVS g., gnomAD and any other custom genomic formats).">
-                    <b>Reference Genome Assembly</b> <HelpButton title="" content={<HelpContent name="genomic-assembly-detection" />} />
+                    <b>Reference Genome Assembly</b>
                   </span>
                   <div className="assembly-radio-check">
                     <label>
@@ -248,7 +249,8 @@ const SearchVariant = () => {
                         onChange={e => setForm({...form, assembly: Assembly.AUTO})}
                       />
                       Auto-detect
-                    </label>
+                    </label>&nbsp;<HelpButton title="" content={<HelpContent name="genomic-assembly-detection" />} />
+                    <Spaces count={3} />
                     <label>
                       <input
                         type="radio"
@@ -259,6 +261,7 @@ const SearchVariant = () => {
                       />
                       GRCh38
                     </label>
+                    <Spaces count={3} />
                     <label>
                       <input
                         type="radio"
