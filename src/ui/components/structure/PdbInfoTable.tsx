@@ -1,6 +1,5 @@
 import { PDB_URL_INTERFACE_BY_PROTEIN } from '../../../constants/ExternalUrls';
 import {baseSettings} from './StructuralDetail';
-import { ReactComponent as ExternalLinkIcon } from "../../../images/external-link.svg"
 import PdbeRef from "./PdbeRef";
 import {ProteinStructureElement} from "../../../types/ProteinStructureResponse";
 import { groupBy } from "../../../utills/Util";
