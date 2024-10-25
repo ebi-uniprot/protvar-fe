@@ -3,23 +3,16 @@ import "pdbe-molstar/build/pdbe-molstar-component";
 import "pdbe-molstar/build/pdbe-molstar-light.css";
 import Loader from "../../elements/Loader";
 import {ProteinStructureElement} from "../../../types/ProteinStructureResponse";
-import {AlphafoldResponseElement} from "../../../types/AlphafoldResponse";
 import {P2PInteraction} from "../../../types/FunctionalResponse";
 import {API_URL} from "../../../constants/const";
-import {useEffect, useState} from "react";
-import {PAE} from "./AlphafoldInfoTable";
+import {PredictedStructure} from "./StructuralDetail";
 
 interface PdbeMolstarProps {
-    selected: ProteinStructureElement|AlphafoldResponseElement|P2PInteraction
+    selected: ProteinStructureElement|PredictedStructure|P2PInteraction
     pdbeRef: any
 }
 
 const PdbeMolstar = (props: PdbeMolstarProps) => {
-    const [pae, setPae] = useState(<></>);
-    useEffect(() => {
-        setPae(props.selected && "paeImageUrl" in props.selected ? <PAE paeImg={props.selected.paeImageUrl} /> : <></>)
-    }, [props.selected]);
-
     let pdbeComponent = <Loader />
 
     if ("pdb_id" in props.selected) {
@@ -42,7 +35,6 @@ const PdbeMolstar = (props: PdbeMolstarProps) => {
         {pdbeComponent}
         Click variant to see surrounding residues<br/>
         Click white space to zoom out to whole structure
-        {pae}
     </>
 }
 

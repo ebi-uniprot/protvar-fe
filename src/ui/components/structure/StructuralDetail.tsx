@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import PdbInfoTable from './PdbInfoTable';
-import AlphafoldInfoTable from './AlphafoldInfoTable';
+import PredictedStructureTable from './PredictedStructureTable';
 import PdbeMolstar from "./PdbeMolstar";
 import InteractionInfoTable from "./InteractionInfoTable";
 import LoaderRow from "../../pages/result/LoaderRow";
@@ -16,6 +16,7 @@ import {HelpContent} from "../help/HelpContent";
 import {HelpButton} from "../help/HelpButton";
 import Spaces from "../../elements/Spaces";
 import {ShareAnnotationIcon} from "../common/ShareLink";
+import {ALPHAFILL_URL, hasAlphafillStructure} from "../../../services/AlphafillService";
 
 
 interface StructuralDetailProps {
@@ -38,11 +39,18 @@ export const baseSettings = {
   hideWater: true
 }
 
+export interface AlphaFillStructure {
+  entryId: string
+  cifUrl: string
+}
+
+export type PredictedStructure = AlphafoldResponseElement | AlphaFillStructure
+
 function StructuralDetail(props: StructuralDetailProps) {
-  const { isoFormAccession, aaPosition, variantAA, proteinStructureUri } = props;
+  const {isoFormAccession, aaPosition, variantAA, proteinStructureUri} = props;
   const [pdbData, setPdbData] = useState(new Array<ProteinStructureElement>());
-  const [alphaFoldData, setAlphaFoldData] = useState(new Array<AlphafoldResponseElement>());
-  const [selected, setSelected] = useState<ProteinStructureElement|AlphafoldResponseElement|P2PInteraction>();
+  const [predictedStructureData, setPredictedStructureData] = useState(new Array<PredictedStructure>());
+  const [selected, setSelected] = useState<ProteinStructureElement | PredictedStructure | P2PInteraction>();
   const [interactionData, setInteractionData] = useState(new Array<P2PInteraction>());
   const [pocketData, setPocketData] = useState(new Array<Pocket>());
   const ref = useRef(null);
@@ -51,34 +59,55 @@ function StructuralDetail(props: StructuralDetailProps) {
   useEffect(() => {
     let id = ''
     getStructureData(proteinStructureUri).then(
-        response => {
-          setPdbData(response.data);
-          if (response.data.length > 0) {
-            id = response.data[0].pdb_id
-            setSelected(response.data[0]);
-            //pdbeRef.subscribeOnload(response.data[0].start)
-          }
-          return getPredictedStructure(isoFormAccession);
-        }).then(response => {
-          setAlphaFoldData(response.data);
-          if (response.data.length > 0 && !id) {
-            // if id already set (pdb id), use that, otherwise, use alphaFold id
-            setSelected(response.data[0])
-            //pdbeRef.subscribeOnload(aaPosition)
-          }
-          let functionUrl = '/function/' + isoFormAccession + '/' + aaPosition + (variantAA == null ? '' : ('?variantAA=' + variantAA))
-        return getFunctionalData(functionUrl)
-        }).then(response => {
-          const funcData = response.data
-          setInteractionData(funcData.interactions)
-          setPocketData(funcData.pockets)
-        }).catch(err => {
-          console.log(err);
-        });
+      response => {
+        setPdbData(response.data);
+        if (response.data.length > 0) {
+          id = response.data[0].pdb_id
+          setSelected(response.data[0]);
+          //pdbeRef.subscribeOnload(response.data[0].start)
+        }
+        return getPredictedStructure(isoFormAccession);
+      }).then(response => {
+
+      response.data.forEach(p => {
+        predictedStructureData.push(p)
+      })
+      setPredictedStructureData(predictedStructureData)
+      console.log(predictedStructureData)
+      if (predictedStructureData.length > 0 && !id) {
+        // if id already set (pdb id), use that, otherwise, use alphaFold id
+        id = predictedStructureData[0].entryId
+        setSelected(predictedStructureData[0])
+        //pdbeRef.subscribeOnload(aaPosition)
+      }
+      return hasAlphafillStructure(isoFormAccession)
+    }).then(response => {
+      console.log(predictedStructureData)
+      if (response) {
+        const alphaFillStruc = {
+          entryId: 'AlphaFill-' + isoFormAccession,
+          cifUrl: ALPHAFILL_URL + isoFormAccession
+        }
+        predictedStructureData.push(alphaFillStruc)
+        setPredictedStructureData(predictedStructureData)
+        console.log('id ', id)
+        if (!id) {
+          setSelected(alphaFillStruc)
+        }
+      }
+      let functionUrl = '/function/' + isoFormAccession + '/' + aaPosition + (variantAA == null ? '' : ('?variantAA=' + variantAA))
+      return getFunctionalData(functionUrl)
+    }).then(response => {
+      const funcData = response.data
+      setInteractionData(funcData.interactions)
+      setPocketData(funcData.pockets)
+    }).catch(err => {
+      console.log(err);
+    });
   }, [proteinStructureUri, isoFormAccession, aaPosition, variantAA]);
 
   if (!selected) {
-    return <LoaderRow />
+    return <LoaderRow/>
   }
 
   return (
@@ -91,8 +120,8 @@ function StructuralDetail(props: StructuralDetailProps) {
               <img src={StructureIcon} className="click-icon" alt="structure icon"
                    title="3D structure"/> Structures
             </h5>
-            <HelpButton title="" content={<HelpContent name="structure-annotations" />} />
-            <Spaces count={2} />
+            <HelpButton title="" content={<HelpContent name="structure-annotations"/>}/>
+            <Spaces count={2}/>
             <ShareAnnotationIcon annotation={props.annotation}/>
             <PdbeMolstar selected={selected} pdbeRef={ref}/>
           </div>
@@ -103,11 +132,11 @@ function StructuralDetail(props: StructuralDetailProps) {
           <PdbInfoTable isoFormAccession={isoFormAccession} pdbApiData={pdbData}
                         selectedPdbId={"pdb_id" in selected ? selected.pdb_id : ""}
                         setSelected={setSelected} pdbeRef={pdbeRef}/></>}
-        {alphaFoldData.length > 0 && <><br/>
-          <AlphafoldInfoTable isoFormAccession={isoFormAccession} alphaFoldData={alphaFoldData}
-                              selectedAlphaFoldId={"entryId" in selected ? selected.entryId : ""}
-                              setSelected={setSelected} aaPos={aaPosition} pocketData={pocketData}
-                              pdbeRef={pdbeRef}/></>}
+        {predictedStructureData.length > 0 && <><br/>
+          <PredictedStructureTable isoFormAccession={isoFormAccession} predictedStructureData={predictedStructureData}
+                                   selectedPredictedStructure={"entryId" in selected ? selected.entryId : ""}
+                                   setSelected={setSelected} aaPos={aaPosition} pocketData={pocketData}
+                                   pdbeRef={pdbeRef}/></>}
         {interactionData.length > 0 && <><br/>
           <InteractionInfoTable isoFormAccession={isoFormAccession} interactionData={interactionData}
                                 selectedInteraction={"a" in selected && "b" in selected ? (selected.a + "_" + selected.b) : ""}
