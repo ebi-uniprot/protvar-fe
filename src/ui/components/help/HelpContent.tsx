@@ -3,6 +3,7 @@ import {ResultDownloadHelp} from "./content/ResultDownloadHelp";
 import {SearchHistoryHelp} from "./content/SearchHistoryHelp";
 import {useMarkdown} from "../../../context/MarkdownContext";
 import {HELP_FILES} from "../../../constants/Help";
+import {AlphaFoldHelp} from "./content/AlphaFoldHelp";
 
 interface HelpContentProps {
   name: string
@@ -48,6 +49,8 @@ const NonMarkdownHelp = (props: { name: string }) => {
       return <SearchHistoryHelp />;
     case 'result-download':
       return <ResultDownloadHelp />;
+    case 'alphafold':
+      return <AlphaFoldHelp />;
     default:
       return null;
   }
