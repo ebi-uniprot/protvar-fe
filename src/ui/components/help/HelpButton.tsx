@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React, {useContext, useState} from "react";
 import {AppContext} from "../../App";
 
 interface HelpBtnProps {
@@ -8,7 +8,12 @@ interface HelpBtnProps {
 
 export const HelpButton = (props: HelpBtnProps) => {
   const state = useContext(AppContext)
-  return <span onClick={_ => state.updateState("drawer", props.content)}>
-      {props.title} <i className="bi bi-info-circle help-btn"></i>
+  const [mouseOver, setMouseOver] = useState(false);
+  return <span onClick={_ => state.updateState("drawer", props.content)}
+               onMouseEnter={_ => setMouseOver(true)}
+               onMouseLeave={_ => setMouseOver(false)}
+               className="help-btn">
+    {props.title} <i className={`bi bi-info-circle${mouseOver ? `-fill` : ``}`}
+                     style={{verticalAlign: 'super', fontSize: '13px'}}></i>
   </span>
 }
