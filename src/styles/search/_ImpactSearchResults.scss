@@ -23,55 +23,11 @@
 			display: inline-block;
 		}
 
-		.legend-icon {
-			font-weight: 700;
-			width: 1.7rem;
-			height: 1.7rem;
-			text-align: center;
-			line-height: 1.7rem;
-			display: inline-block;
-			margin-right: 0.8rem;
-		}
-
 		.button-icon {
 			font-size: 40px;
 			transform: scale(.5, 1);
 			color: #00709b;
 			fill: #00709b;
-		}
-
-		.button--legends--high {
-			color: #212121;
-			background-color: rgb(0, 83, 214);
-			color: #333;
-		}
-
-		.button--legends--confident {
-			color: #212121;
-			background-color: rgb(101, 203, 243);
-			color: #333;
-		}
-
-		.button--legends--low {
-			color: #212121;
-			background-color: rgb(255, 219, 19);
-			color: #333;
-		}
-
-		.button--legends--verylow {
-			color: #212121;
-			background-color: rgb(255, 125, 69);
-			color: #333;
-		}
-
-		.button--legends {
-			font-size: 0.8rem;
-			text-transform: none;
-
-			margin-right: 0.5em;
-			padding: 10px;
-			border-style: none;
-			height: 100%;
 		}
 	}
 
@@ -727,45 +683,6 @@
     // color: #fff;
     // background-color: #7778c7;
 	background-color: #898adf85;
-}
-
-.pae {
-	display: grid;
-	grid-template-rows: auto auto;
-	grid-template-columns: 2em auto 1fr;
-}
-
-.pae {
-	img {
-		border: 1px gray solid;
-	}
-}
-
-.pae-img {
-	width: 150px;
-	height: 150px;
-	float: left;
-	padding: 10px;
-}
-.pae-axis {
-	font-size: small;
-	text-align: center;
-}
-
-.pae-y-axis {
-	writing-mode: tb-rl;
-	transform: rotate(-180deg);
-	height: 150px;
-	float:left;
-}
-
-.pae-x-axis {
-	font-size: small;
-	clear: both;
-}
-
-.pae-desc {
-	padding-left: 20px;
 }
 
 .aa-pred{
