@@ -31,6 +31,20 @@ function cleanInput(input: string): string {
     .join('\n'); // Remove empty lines
 }
 
+const EXAMPLE_IDS: { [key: string]: string } = {
+  "97692a4c48b4de89bb2002947cccef1e": "Genomic examples",
+  "da31b23d0a516ec33cfcbdcc18e85aa8": "cDNA examples",
+  "a75a44bf3eed57c99200305f3444b841": "Protein examples",
+  "10b9614b42c9ed78a18d2ad4c5cd9af0": "ID examples"
+}
+
+const getExampleName = (id: string): string | null => {
+  if (id in EXAMPLE_IDS) {
+    return EXAMPLE_IDS[id]
+  }
+  return null
+}
+
 const SearchVariant = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -64,7 +78,7 @@ const SearchVariant = () => {
     } else {
       const newRecord: ResultRecord = {
         id, url,
-        name: firstInput.replace(/\s+/g, ' '),
+        name: getExampleName(id) ?? firstInput.replace(/\s+/g, ' '),
         firstSubmitted: now,
         //lastSubmitted: now,
         //lastViewed: now
