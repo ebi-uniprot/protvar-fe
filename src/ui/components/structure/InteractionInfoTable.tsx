@@ -3,7 +3,9 @@ import {formatRange} from "../../../utills/Util";
 import {API_URL} from "../../../constants/const";
 import PdbeRef from "./PdbeRef";
 import {P2PInteraction} from "../../../types/FunctionalResponse";
-import {ReactComponent as ExternalLinkIcon} from "../../../images/external-link.svg";
+import {HelpContent} from "../help/HelpContent";
+import {HelpButton} from "../help/HelpButton";
+import React from "react";
 
 const customSettings = (customUrl: string) => {
     return {...baseSettings,
@@ -72,7 +74,7 @@ function InteractionInfoTable(props: InteractionInfoTableProps) {
       <table>
         <thead>
           <tr>
-            <th colSpan={3}>Predicted Interacting Structure <a href="https://pubmed.ncbi.nlm.nih.gov/36690744" target="_blank" rel="noreferrer"><ExternalLinkIcon width={12.5}/></a></th>
+            <th colSpan={3}>Predicted Interacting Structure <HelpButton title="" content={<HelpContent name="predictions" />} /></th>
           </tr>
           <tr>
               <th>Chain A</th>

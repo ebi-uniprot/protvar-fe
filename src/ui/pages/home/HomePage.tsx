@@ -36,7 +36,7 @@ const HomePageContent = () => {
           <p>
             James D Stephenson, Prabhat Totoo, David F Burke, Jürgen Jänes, Pedro Beltrao, Maria J Martin,
             ProtVar: mapping and contextualizing human missense variation, <i>Nucleic Acids Research</i>, 2024;&nbsp;
-            <a className="ref-link" href="https://doi.org/10.1093/nar/gkae413"
+            <a className="ref-link ext-link" href="https://doi.org/10.1093/nar/gkae413"
                target="_blank" rel="noreferrer">https://doi.org/10.1093/nar/gkae413</a>
           </p>
 
