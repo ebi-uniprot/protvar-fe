@@ -73,7 +73,6 @@ function StructuralDetail(props: StructuralDetailProps) {
         predictedStructureData.push(p)
       })
       setPredictedStructureData(predictedStructureData)
-      console.log(predictedStructureData)
       if (predictedStructureData.length > 0 && !id) {
         // if id already set (pdb id), use that, otherwise, use alphaFold id
         id = predictedStructureData[0].entryId
@@ -82,7 +81,6 @@ function StructuralDetail(props: StructuralDetailProps) {
       }
       return hasAlphafillStructure(isoFormAccession)
     }).then(response => {
-      console.log(predictedStructureData)
       if (response) {
         const alphaFillStruc = {
           entryId: 'AlphaFill-' + isoFormAccession,
@@ -90,7 +88,6 @@ function StructuralDetail(props: StructuralDetailProps) {
         }
         predictedStructureData.push(alphaFillStruc)
         setPredictedStructureData(predictedStructureData)
-        console.log('id ', id)
         if (!id) {
           setSelected(alphaFillStruc)
         }

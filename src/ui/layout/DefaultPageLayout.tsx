@@ -18,7 +18,7 @@ interface DefaultPageLayoutProps {
 const bannerText = null
 
 function DefaultPageLayout(props: DefaultPageLayoutProps) {
-  const [showBanner, setShowBanner ] = useState(bannerText == null ? false : true);
+  const [showBanner, setShowBanner ] = useState(bannerText != null);
   // to re-enable banner, uncomment state above, and the lines within
   // the handleDismiss function
   //const showBanner = false
@@ -107,7 +107,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                             alt="ProtVar logo"
                             width="140px"
                           />
-                          <span style={{fontWeight: 'bold', fontSize: '10px', verticalAlign: 'bottom'}}>UI v1.2</span>
+                          <span style={{fontWeight: 'bold', fontSize: '10px', verticalAlign: 'bottom'}}>UI v{process.env.REACT_APP_UI_VERSION}</span>
                         </Link>
                         <Link
                           className="sub-title"

@@ -29,13 +29,13 @@ function ReleasePageContent() {
       <tr>
         <td className="small"><a href={process.env.PUBLIC_URL} target="_blank"
                                  rel="noreferrer">UI</a></td>
-        <td className="small">1.2</td>
+        <td className="small">{process.env.REACT_APP_UI_VERSION}</td>
         <td className="small">June 1, 2024</td>
       </tr>
       <tr>
         <td className="small"><a href={API_URL} target="_blank"
                                  rel="noreferrer">API</a></td>
-        <td className="small">1.2</td>
+        <td className="small">{process.env.REACT_APP_API_VERSION}</td>
         <td className="small">May 28, 2024</td>
       </tr>
       <tr>
