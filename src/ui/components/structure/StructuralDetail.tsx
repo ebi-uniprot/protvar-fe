@@ -56,29 +56,17 @@ function StructuralDetail(props: StructuralDetailProps) {
   const ref = useRef(null);
   const [pdbeRef] = useState(new PdbeRef(ref))
 
+  const addPredictedStructures = (newPredictedStructures: PredictedStructure[]) => {
+    setPredictedStructureData(prevItems => [...prevItems, ...newPredictedStructures]);
+  };
+
   useEffect(() => {
-    let id = ''
     getStructureData(proteinStructureUri).then(
       response => {
         setPdbData(response.data);
-        if (response.data.length > 0) {
-          id = response.data[0].pdb_id
-          setSelected(response.data[0]);
-          //pdbeRef.subscribeOnload(response.data[0].start)
-        }
         return getPredictedStructure(isoFormAccession);
       }).then(response => {
-
-      response.data.forEach(p => {
-        predictedStructureData.push(p)
-      })
-      setPredictedStructureData(predictedStructureData)
-      if (predictedStructureData.length > 0 && !id) {
-        // if id already set (pdb id), use that, otherwise, use alphaFold id
-        id = predictedStructureData[0].entryId
-        setSelected(predictedStructureData[0])
-        //pdbeRef.subscribeOnload(aaPosition)
-      }
+      addPredictedStructures(response.data)
       return hasAlphafillStructure(isoFormAccession)
     }).then(response => {
       if (response) {
@@ -86,11 +74,7 @@ function StructuralDetail(props: StructuralDetailProps) {
           entryId: 'AlphaFill-' + isoFormAccession,
           cifUrl: ALPHAFILL_URL + isoFormAccession
         }
-        predictedStructureData.push(alphaFillStruc)
-        setPredictedStructureData(predictedStructureData)
-        if (!id) {
-          setSelected(alphaFillStruc)
-        }
+        addPredictedStructures([alphaFillStruc])
       }
       let functionUrl = '/function/' + isoFormAccession + '/' + aaPosition + (variantAA == null ? '' : ('?variantAA=' + variantAA))
       return getFunctionalData(functionUrl)
@@ -100,8 +84,19 @@ function StructuralDetail(props: StructuralDetailProps) {
       setPocketData(funcData.pockets)
     }).catch(err => {
       console.log(err);
-    });
+    })
   }, [proteinStructureUri, isoFormAccession, aaPosition, variantAA]);
+
+  useEffect(() => {
+    if (!selected) {
+      if (pdbData.length > 0) {
+        setSelected(pdbData[0]);
+        //pdbeRef.subscribeOnload(response.data[0].start)
+      } else if (predictedStructureData.length > 0) {
+        setSelected(predictedStructureData[0])
+      }
+    }
+  }, [pdbData, predictedStructureData, selected]);
 
   if (!selected) {
     return <LoaderRow/>
