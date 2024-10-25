@@ -17,15 +17,6 @@ export type PredAttr = {
   tip?: string,
   range?: string
 }
-export const PUBMED_ID = {
-  CADD: 30371827,
-  CONSERV: 11093265,
-  AM: 37733863,
-  EVE: 34707284,
-  ESM: 33876751,
-  FOLDX: 15980494,
-  INTERFACES: 36690744
-}
 
 export const Prediction = (props: ResidueRegionTableProps) => {
   const state = useContext(AppContext);

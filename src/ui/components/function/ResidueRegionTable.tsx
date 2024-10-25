@@ -1,4 +1,4 @@
-import {useState, Fragment} from "react";
+import React, {useState, Fragment} from "react";
 import {EmptyElement} from "../../../constants/ConstElement";
 import AminoAcidModel from "./AminoAcidModel";
 import Evidences from "./Evidences";
@@ -7,11 +7,11 @@ import {v1 as uuidv1} from 'uuid';
 import {StringVoidFun} from "../../../constants/CommonTypes";
 import {formatRange} from "../../../utills/Util";
 import {FunctionalResponse, Pocket, P2PInteraction, ProteinFeature} from "../../../types/FunctionalResponse";
-import {Prediction, PUBMED_ID} from "./prediction/Prediction";
-import {pubmedRef} from "../common/Common";
-import {Tooltip} from "../common/Tooltip";
+import {Prediction} from "./prediction/Prediction";
 import {Dropdown} from "react-dropdown-now";
 import {AMScore, ConservScore, ESMScore, EVEScore, TranslatedSequence} from "../../../types/MappingResponse";
+import {HelpContent} from "../help/HelpContent";
+import {HelpButton} from "../help/HelpButton";
 
 export interface ResidueRegionTableProps {
   functionalData: FunctionalResponse
@@ -75,6 +75,9 @@ function getResidues(regions: Array<ProteinFeature>, props: ResidueRegionTablePr
       })
     }
     <AminoAcidModel refAA={props.refAA} variantAA={props.variantAA!}/>
+    <strong>
+      <HelpButton title="Predictions" content={<HelpContent name="predictions" />} />
+    </strong>
     <Prediction {...props} />
   </>
 }
@@ -92,7 +95,9 @@ function getRegions(regions: Array<ProteinFeature>, accession: string, pockets: 
       })
     }
     <div>
-      <b>Structure predictions</b>{pubmedRef(PUBMED_ID.INTERFACES)}
+      <strong>
+        <HelpButton title="Structure predictions" content={<HelpContent name="predictions"/>}/>
+      </strong>
     </div>
     <Pockets pockets={pockets} expandedRowKey={expandedRowKey} toggleRow={toggleRow}/>
     <Interfaces accession={accession} interactions={interactions} expandedRowKey={expandedRowKey}
@@ -249,31 +254,22 @@ const Pockets = (props: PocketsProps) => {
 
 function ShowPocket(pocket: Pocket) {
   return <div key={`pocket-${pocket.pocketId}`} className="pred-grid pred-grid-col2">
-    <Tooltip
-      tip="The ID of the pocket to distinguish where there are multiple pockets for the same model.">Pocket</Tooltip>
+    <div>Pocket</div>
     <div>P{pocket.pocketId}</div>
 
-    <Tooltip
-      tip="The score used to measure the confidence in the pocket. Score range 0-1000. Scores above 800 are high confidence and above 900 are very high confidence.">
-      Combined score
-    </Tooltip>
+    <div>Combined score</div>
     <div><span className="pocket-conf">{pocket.score.toFixed(2)}</span> {getPocketConf(pocket.score)}</div>
 
-    <Tooltip tip="The mean pLDDT of all the residues considered to form the pocket from AlphaFold2 model.">
-      Pocket pLDDT mean
-    </Tooltip>
+    <div>Pocket pLDDT mean</div>
     <div><span className="pocket-conf">{pocket.meanPlddt.toFixed(2)}</span> {getModelConf(pocket.meanPlddt)}</div>
 
     <div>Energy per volume</div>
     <div>{pocket.energyPerVol.toFixed(2)} kcal/mol</div>
 
-    <Tooltip
-      tip="Ranges from 0-1. 1.0 corresponds to a pocket entirely buried, 0.0 corresponds to a pocket entirely exposed to the solvent.">
-      Buriedness
-    </Tooltip>
+    <div>Buriedness</div>
     <div>{pocket.buriedness.toFixed(2)}</div>
 
-    <Tooltip tip="A measure of pocket compactness">Radius of gyration</Tooltip>
+    <div>Radius of gyration</div>
     <div>{pocket.radGyration.toFixed(2)} Å</div>
 
     <div>Residues</div>
@@ -301,10 +297,7 @@ const Interfaces = (props: InterfacesProps) => {
         Proteins which are predicted to interact with {props.accession} where the variant is at the interface:
         <div className="pred-grid pred-grid-col3">
           <div>Protein</div>
-          <Tooltip
-            tip="pDockQ is a confidence score based on the pLDDT model confidences and number of contacts at an interface. pDockQ>0.23, 70% are well modeled and for pDockQ>0.5, 80% are well modelled.">
-            pDockQ
-          </Tooltip>
+          <div>pDockQ</div>
           <div></div>
         </div>
         {

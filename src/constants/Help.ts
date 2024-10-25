@@ -14,6 +14,7 @@ export const HELP_FILES: HelpFile[] = [
   { name: 'function-annotations', md: true, title: 'Function Annotations' },
   { name: 'population-observations', md: true, title: 'Population Observations' },
   { name: 'structure-annotations', md: true, title: 'Structure Annotations' },
+  { name: 'predictions', md: true, title: 'Predictions' },
   { name: 'result-download', md: false, title: 'Result Download' }, // React component
   { name: 'download-options', md: true, title: 'Download Options' },
   { name: 'downloads-page', md: true, title: 'Downloads Page' },
