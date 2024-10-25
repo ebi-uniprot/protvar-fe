@@ -28,7 +28,7 @@ export const SideDrawer = () => {
     <div>
       <div className={`side-drawer ${state.drawer ? `open` : ``}`} style={{width}}>
         <div style={{display: "flex", justifyContent: "space-between", paddingBottom: "30px"}}>
-          <button className={`bi bi-arrow-bar-${width === '50%' ? `left` : `right`}`} onClick={handleToggleWidth}>
+          <button className={`bi bi-box-arrow-${width === '50%' ? `left` : `in-right`}`} onClick={handleToggleWidth}>
             {width === '50%' ? ` Expand` : ` Collapse`}
           </button>
           <button className="bi bi-x-square" onClick={() => state.updateState("drawer", undefined)}> Close</button>
