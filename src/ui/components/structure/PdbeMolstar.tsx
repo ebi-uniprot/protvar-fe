@@ -18,7 +18,7 @@ const PdbeMolstar = (props: PdbeMolstarProps) => {
     if ("pdb_id" in props.selected) {
         pdbeComponent = <pdbe-molstar id="pdbeMolstarComponent" ref={props.pdbeRef}
                                       bg-color-r="255" bg-color-g="255" bg-color-b="255" hide-controls="true"
-                                      molecule-id={props.selected.pdb_id} alphafold-view="false" hide-water="true" />
+                                      molecule-id={props.selected.pdb_id} alphafold-view="true" hide-water="true" />
     } else if ("cifUrl" in props.selected) {
         pdbeComponent = <pdbe-molstar id="pdbeMolstarComponent" ref={props.pdbeRef}
                                       bg-color-r="255" bg-color-g="255" bg-color-b="255" hide-controls="true"
@@ -28,7 +28,7 @@ const PdbeMolstar = (props: PdbeMolstarProps) => {
         const modelUrl = API_URL + '/interaction/'+props.selected.a+'/'+props.selected.b+'/model';
         pdbeComponent = <pdbe-molstar id="pdbeMolstarComponent" ref={props.pdbeRef}
                                       bg-color-r="255" bg-color-g="255" bg-color-b="255" hide-controls="true"
-                                      custom-data-url={modelUrl} custom-data-format="pdb" alphafold-view="false" hide-water="true" />
+                                      custom-data-url={modelUrl} custom-data-format="pdb" alphafold-view="true" hide-water="true" />
     }
 
     return <>

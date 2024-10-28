@@ -9,7 +9,7 @@ const pdbSettings = (molId: string) => {
     ...{
       moleculeId: molId
     },
-    alphafoldView: false
+    //alphafoldView: false
   }
 }
 

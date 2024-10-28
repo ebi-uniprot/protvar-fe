@@ -14,7 +14,7 @@ const customSettings = (customUrl: string) => {
                 format: "pdb"
             }
         },
-        alphafoldView: false
+        //alphafoldView: false
     }
 }
 

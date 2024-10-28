@@ -17,7 +17,7 @@ const afSettings = (url: string) => {
         url: url,
         format: "cif"
       },
-      alphafoldView: true
+      //alphafoldView: true
     }
   }
 }
