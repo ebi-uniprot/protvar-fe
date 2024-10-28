@@ -3,28 +3,38 @@ import ProteinFunctionTable from './ProteinFunctionTable';
 import GeneAndTranslatedSequenceTable from './GeneAndTranslatedSequenceTable';
 import ProteinInformationTable from './ProteinInformationTable';
 import ResidueRegionTable from './ResidueRegionTable';
-import {MappingRecord} from '../../../utills/Convertor';
 import ProteinIcon from '../../../images/proteins.svg';
 import {FunctionalResponse} from "../../../types/FunctionalResponse";
+import React from "react";
+import {FunctionalDetailProps} from "./FunctionalDetail";
+import {HelpContent} from "../help/HelpContent";
+import {HelpButton} from "../help/HelpButton";
+import {ShareAnnotationIcon} from "../common/ShareLink";
+import Spaces from "../../elements/Spaces";
 
-interface FunctionalDataRowProps {
+interface FunctionalDataRowProps extends FunctionalDetailProps {
   functionalData: FunctionalResponse
-  record: MappingRecord
 }
 
 function FunctionalDataRow(props: FunctionalDataRowProps) {
-  const { functionalData, record } = props;
+  const { functionalData, ensg, ensp } = props;
 
   return (
     <tr>
       <td colSpan={TOTAL_COLS} className="expanded-row">
         <div className="significances-groups">
           <div className="column">
-            <h5><img src={ProteinIcon} className="click-icon" alt="protein icon" title="Functional information" /> Functional information</h5>
-            <ResidueRegionTable functionalData={functionalData} record={record} />
-            <ProteinFunctionTable comments={functionalData.comments} />
-            <ProteinInformationTable apiData={functionalData} />
-            <GeneAndTranslatedSequenceTable ensg={record.ensg!} ensp={record.ensp!} />
+            <h5 style={{display: "inline"}}>
+              <img src={ProteinIcon} className="click-icon" alt="protein icon"
+                   title="Functional information"/> Functional information
+            </h5>
+            <HelpButton title="" content={<HelpContent name="function-annotations" />} />
+            <Spaces count={2} />
+            <ShareAnnotationIcon annotation={props.annotation} />
+            <ResidueRegionTable {...props} />
+            <ProteinFunctionTable comments={functionalData.comments}/>
+            <ProteinInformationTable apiData={functionalData}/>
+            <GeneAndTranslatedSequenceTable ensg={ensg} ensp={ensp} />
           </div>
         </div>
       </td>

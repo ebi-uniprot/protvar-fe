@@ -56,7 +56,7 @@ function getEvidenceForEachSource(sourceName: string, ids: Array<JSX.Element>) {
 function getEvidence(evidence: IdUrl) {
   return (
     <li key={uuidv1()}>
-      <a href={evidence.sourceUrl} target="_blank" rel="noopener noreferrer">
+      <a href={evidence.sourceUrl} target="_blank" rel="noopener noreferrer" className="ext-link">
         {evidence.id}
       </a>
     </li>

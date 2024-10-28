@@ -22,11 +22,11 @@ function AboutPageContent() {
   //var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
   //var yyyy = today.getFullYear();
   useEffect(() => {
-    document.title = 'About - ' + TITLE;
+    document.title = `About | ${TITLE}`;
   }, []);
 
   return <div className="container">
-    <h4>About</h4>
+    <h5>About</h5>
     <div className="text">
 
       <p>
@@ -36,7 +36,7 @@ function AboutPageContent() {
         and predictions to better understand the potential effects of missense variation on humans.
       </p>
 
-      <p>Watch the <a href="https://www.youtube.com/watch?v=6dsbozAi1lk" target="_blank" rel="noreferrer">ProtVar launch
+      <p>Watch the <a href="https://www.youtube.com/watch?v=6dsbozAi1lk" target="_blank" rel="noreferrer" className="ext-link">ProtVar launch
         webinar</a>.
         <br/>
         <iframe id="ytplayer" title="Launch webinar video" width="360" height="202.5"
@@ -54,9 +54,9 @@ function AboutPageContent() {
 
       <h5>How to cite ProtVar</h5>
       <p>
-      James D Stephenson, Prabhat Totoo, David F Burke, Jürgen Jänes, Pedro Beltrao, Maria J Martin,
+        James D Stephenson, Prabhat Totoo, David F Burke, Jürgen Jänes, Pedro Beltrao, Maria J Martin,
       ProtVar: mapping and contextualizing human missense variation, <i>Nucleic Acids Research</i>, 2024;&nbsp;
-      <a className="ref-link" href="https://doi.org/10.1093/nar/gkae413"
+      <a className="ref-link ext-link" href="https://doi.org/10.1093/nar/gkae413"
          target="_blank" rel="noreferrer">https://doi.org/10.1093/nar/gkae413</a>
       </p>
 
@@ -92,7 +92,7 @@ function AboutPageContent() {
 
       <h5>Development team</h5>
       <p>
-        ProtVar is developed and maintained within the <a
+      ProtVar is developed and maintained within the <a
         href="https://www.ebi.ac.uk/about/teams/protein-function-development/" target="_blank" rel="noreferrer">UniProt
         protein function development</a> team by <br/>
 
@@ -120,7 +120,9 @@ function AboutPageContent() {
       </p>
 
       <h5>Acknowledgements</h5>
-      We would like to thank the following resources for the data used in ProtVar <br/>
+      <p>
+        We would like to thank the following resources for the data used in ProtVar <br/>
+      </p>
 
       <div className="grid-container">
         <div><a href="https://www.uniprot.org/" target="_blank" rel="noreferrer"><img

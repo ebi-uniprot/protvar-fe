@@ -1,18 +1,19 @@
 import { useEffect, useState } from 'react';
 import PopulationDataRow from './PopulationDataRow';
 import NoPopulationDataRow from './NoPopulationDataRow';
-import LoaderRow from '../search/LoaderRow';
+import LoaderRow from '../../pages/result/LoaderRow';
 import {getPopulationData} from "../../../services/ProtVarService";
 import {PopulationObservationResponse} from "../../../types/PopulationObservationResponse";
 
 
 interface PopulationDetailProps {
+  annotation: string
   populationObservationsUri: string
   variantAA: string
 }
 
 function PopulationDetail(props: PopulationDetailProps) {
-  const { populationObservationsUri } = props;
+  const { annotation, populationObservationsUri, variantAA } = props;
   const [poApiData, setPoApiData] = useState<PopulationObservationResponse>();
 
   useEffect(() => {
@@ -26,7 +27,7 @@ function PopulationDetail(props: PopulationDetailProps) {
   if (!poApiData)
     return <LoaderRow />
   else if (poApiData.proteinColocatedVariant && poApiData.proteinColocatedVariant.length > 0)
-    return <PopulationDataRow poApiData={poApiData} variantAA={props.variantAA} />
+    return <PopulationDataRow annotation={annotation} poApiData={poApiData} variantAA={variantAA} />
   else
     return <NoPopulationDataRow />
 }

@@ -1,6 +1,6 @@
 import { ENSEMBL_GENE_RUL } from "../../../constants/ExternalUrls";
 import { v1 as uuidv1 } from 'uuid';
-import { TranslatedSequence } from "../../../utills/Convertor";
+import {TranslatedSequence} from "../../../types/MappingResponse";
 
 interface GeneAndTranslatedSequenceTableProps {
 ensg: string
@@ -14,7 +14,7 @@ function GeneAndTranslatedSequenceTable(props: GeneAndTranslatedSequenceTablePro
     var enspsUrl = ENSEMBL_GENE_RUL + ensps.ensp;
     translatedSequences.push(
       <li key={uuidv1()}>
-        <a href={enspsUrl} target="_blank" rel="noreferrer">
+        <a href={enspsUrl} target="_blank" rel="noreferrer" className="ext-link">
           {ensps.ensp} - {ensps.ensts}
         </a>
       </li>
@@ -28,7 +28,7 @@ function GeneAndTranslatedSequenceTable(props: GeneAndTranslatedSequenceTablePro
       </tr>
       <tr>
         <td>
-          <a href={ensgUrl} target="_blank" rel="noreferrer">
+          <a href={ensgUrl} target="_blank" rel="noreferrer" className="ext-link">
             {ensg}
           </a>
         </td>

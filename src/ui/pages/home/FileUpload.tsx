@@ -1,10 +1,9 @@
 import React, { useRef } from 'react'
 import Button from '../../elements/form/Button';
 import { VCF_FORMAT_INFO_URL } from '../../../constants/ExternalUrls';
-import { FileLoadFun } from '../../../utills/AppHelper';
 
 interface FileUploadProps {
-  fetchFileResult: FileLoadFun
+  fetchFileResult: (file: File) => void
   isLoading: boolean
 }
 
@@ -37,7 +36,7 @@ function FileUpload(props: FileUploadProps) {
                 <b>ProtVar will interpret only the first five fields of the VCF</b><br />
                 #CHROM POS ID REF ALT<br />
                 Missing values can be specified with a dot (‘.’){' '}
-                <a target="_blank" rel="noreferrer" href={VCF_FORMAT_INFO_URL} className="ref-link">more info</a><br /><br />
+                <a target="_blank" rel="noreferrer" href={VCF_FORMAT_INFO_URL} className="ref-link ext-link">more info</a><br /><br />
                 <b>ProtVar also supports HGVS in the following format:</b><br />
                 {"NC_000010.11:g.121479868C>G"}<br />
               </p>

@@ -9,15 +9,14 @@ function ReleasePageContent() {
   //var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
   //var yyyy = today.getFullYear();
   useEffect(() => {
-    document.title = 'Release - ' + TITLE;
+    document.title = `Release | ${TITLE}`;
   }, []);
 
   return <div className="container" style={{padding: '10px'}}>
 
 
-    <h4>ProtVar Release</h4>
-    Upcoming release: June 2024 (UniProt 2024_03)
-
+    <h5>ProtVar Release</h5>
+    Upcoming release: UniProt 2024_03
     <table style={{width: 'auto'}}>
       <thead>
       <tr>
@@ -30,13 +29,13 @@ function ReleasePageContent() {
       <tr>
         <td className="small"><a href={process.env.PUBLIC_URL} target="_blank"
                                  rel="noreferrer">UI</a></td>
-        <td className="small">1.2</td>
+        <td className="small">{process.env.REACT_APP_UI_VERSION}</td>
         <td className="small">June 1, 2024</td>
       </tr>
       <tr>
         <td className="small"><a href={API_URL} target="_blank"
                                  rel="noreferrer">API</a></td>
-        <td className="small">1.2</td>
+        <td className="small">{process.env.REACT_APP_API_VERSION}</td>
         <td className="small">May 28, 2024</td>
       </tr>
       <tr>

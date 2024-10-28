@@ -1,17 +1,17 @@
 import { useState } from 'react'
-import { SUBSCRIPTION_STATUS } from '../../constants/const'
+import {LOCAL_SUBSCRIBED} from '../../constants/const'
 import axios from "axios";
 import Notify from "../elements/Notify";
 import {emailValidate} from "../../utills/Validator";
+import useLocalStorage from "../../hooks/useLocalStorage";
 
 function SignUp() {
   const [email, setEmail] = useState("");
   const form_id = "1ehAvWJrstnYdSfl_j9fT3mJIF7w4pztXrjDKfaFTZ_g"
   const formUrl = "https://docs.google.com/forms/d/" + form_id + "/formResponse"
   const email_field_name = "entry.857245557"
-  const [subscriptionStatus, setSubscriptionStatus] = useState(
-    JSON.parse(localStorage.getItem(SUBSCRIPTION_STATUS) || 'false'),
-  )
+  const { getItem, setItem } = useLocalStorage();
+  const [subscriptionStatus, setSubscriptionStatus] = useState<boolean>(getItem(LOCAL_SUBSCRIBED) || false)
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -25,17 +25,17 @@ function SignUp() {
             axios.post(formUrl, null, {params: params})
                 .then((response) => {
                     if (response.status === 200) {
-                        localStorage.setItem(SUBSCRIPTION_STATUS, 'true')
-                        setSubscriptionStatus('true')
+                        setItem(LOCAL_SUBSCRIBED, true)
+                        setSubscriptionStatus(true)
                     }
                 })
                 .catch((_) => {
-                    // CORS issue prevents subscription. Ignoring it for now
-                    // Notify.warn('Could not subscribe. Try later.')
+                  // CORS issue prevents subscription. Ignoring it for now
+                  // Notify.warn('Could not subscribe. Try later.')
 
-                    // Setting the subscription status anyway for now as we are sure the emails are getting registered as expected.
-                    localStorage.setItem(SUBSCRIPTION_STATUS, 'true')
-                    setSubscriptionStatus('true')
+                  // Setting the subscription status anyway for now as we are sure the emails are getting registered as expected.
+                  setItem(LOCAL_SUBSCRIBED, true)
+                  setSubscriptionStatus(true)
                 });
         }
     }

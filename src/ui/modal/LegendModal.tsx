@@ -1,6 +1,5 @@
-import {useState, useCallback, useRef, useContext} from 'react'
+import React, {useState, useCallback, useRef, useContext} from 'react'
 import { v1 as uuidv1 } from 'uuid';
-import Button from '../elements/form/Button'
 import Modal from './Modal'
 import useOnClickOutside from '../../hooks/useOnClickOutside'
 import AnnotationLegend from './AnnotationLegend'
@@ -12,7 +11,7 @@ import {AppContext} from "../App";
 import {ColourCheckbox} from "./ColourCheckbox";
 
 function LegendModal() {
-  const context = useContext(AppContext)
+  const state = useContext(AppContext)
   const [showModel, setShowModel] = useState(false)
 
   const downloadModelDiv = useRef(null)
@@ -21,20 +20,16 @@ function LegendModal() {
     useCallback(() => setShowModel(false), []),
   )
 
+  return (<>
+      <i className="bi bi-circle-half icon-btn"
+         onClick={() => setShowModel((val) => !val)}
+      > View Legends</i>
 
-  return (
-    <div
-      id="view-legend-container"
-      ref={downloadModelDiv}
-      className="padding-left-1x"
-    >
-      <Button
-        onClick={() => setShowModel((val) => !val)}
-        className={'view-legend'}
-      >
-        View Legends
-      </Button>
-      <Modal show={showModel} handleClose={() => setShowModel(false)}>
+  <div
+    id="view-legend-container"
+    ref={downloadModelDiv}
+  >
+    <Modal show={showModel} handleClose={() => setShowModel(false)}>
         <div className="window__header">
           <span className="window__header__title">Table Legends</span>
           <span
@@ -46,25 +41,27 @@ function LegendModal() {
         </div>
         <div className="legend-modal-content">
           <div className="legend-div">
-            <CaddLegend stdColor={context.stdColor} />
+            <CaddLegend stdColor={state.stdColor}/>
           </div>
           <div className="legend-div">
-            <ConservLegend stdColor={context.stdColor} /><br/>
-            <AlphaMissenseLegend stdColor={context.stdColor} />
+            <ConservLegend stdColor={state.stdColor}/><br/>
+            <AlphaMissenseLegend stdColor={state.stdColor}/>
           </div>
           <div className="legend-div">
-            <EsmLegend stdColor={context.stdColor} /><br/>
-            <EveLegend stdColor={context.stdColor} />
+            <EsmLegend stdColor={state.stdColor}/><br/>
+            <EveLegend stdColor={state.stdColor}/>
           </div>
           <div className="legend-div">
             <AnnotationLegend/>
           </div>
         </div>
         <div className="padding-left-right-1x float-right">
-          <ColourCheckbox stdColor={context.stdColor} toggleStdColor={context.toggleStdColor} />
+          <ColourCheckbox state={state}/>
         </div>
       </Modal>
     </div>
+
+    </>
   )
 }
 

@@ -1,13 +1,8 @@
 import tinygradient from "tinygradient";
 import {ESMScore} from "../../../../types/MappingResponse";
-import {
-  PredAttr,
-  PUBMED_ID
-} from "./Prediction";
+import {PredAttr} from "./Prediction";
 import Spaces from "../../../elements/Spaces";
 import {STD_BENIGN_COLOR, STD_PATHOGENIC_COLOR, STD_UNCERTAIN_COLOR} from "./PredConstants";
-import {pubmedRef} from "../../common/Common";
-import {Tooltip} from "../../common/Tooltip";
 
 const PRECISION: number = 1 // dp
 
@@ -25,10 +20,8 @@ export const ESM_COLOR_GRADIENT = tinygradient(ESM_SCORE_ATTR.map(s => s.color))
 export const EsmPred = (props: { esm?: ESMScore, stdColor: boolean }) => {
   if (props.esm) {
   return <div className="aa-pred">
-    <div>ESM-1b {pubmedRef(PUBMED_ID.ESM)}</div>
-    <Tooltip tip="ESM (Evolutionary Scaled Model) score ranges from 0, least deleterious to -25 most deliterious">
-      {formatEsmScore(props.esm)}
-    </Tooltip>
+    <div>ESM-1b</div>
+    <div>{formatEsmScore(props.esm)}</div>
     <EsmPredIcon {...props}/>
   </div>}
 return <></>
@@ -43,12 +36,12 @@ function EsmPredIcon(props: {esm?: ESMScore, stdColor: boolean }) {
     const esmAttr = esmScoreAttr(props.esm.score)
     const color = props.stdColor ? esmAttr?.stdColor :
       ESM_COLOR_GRADIENT.rgbAt(props.esm.score/ ESM_MAX_SCORE).toHexString()
-    return <Tooltip tip={esmAttr?.tip}>
+    return <div>
       <i className="bi bi-circle-fill" style={{color: color}}></i>
       <Spaces/>{esmAttr && <>
         {esmAttr.text}
       </>}
-    </Tooltip>
+    </div>
   }
   return <></>
 }

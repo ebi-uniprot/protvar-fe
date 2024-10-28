@@ -1,30 +1,27 @@
-import {useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import { Link } from 'react-router-dom'
 import {ABOUT, CONTACT, HELP, HOME, RELEASE} from '../../constants/BrowserPaths'
-import { API_URL, LOCAL_DOWNLOADS, DISMISS_BANNER } from '../../constants/const'
+import { API_URL, LOCAL_BANNER } from '../../constants/const'
 
 import DefaultPageContent from './DefaultPageContent'
 
 import EMBLEBILogo from '../../images/embl-ebi-logo.svg'
 import openTargetsLogo from '../../images/open-targets-logo.png'
 import SignUp from "./SignUp";
-import { MappingRecord } from '../../utills/Convertor'
-import {WARN_ICON} from "../components/search/MsgRow";
+import {WARN_ICON} from "../pages/result/MsgRow";
 import {CookieConsent} from "react-cookie-consent";
+import {SideDrawer} from "../components/drawer/SideDrawer";
 interface DefaultPageLayoutProps {
-  content: JSX.Element,
-  searchResults?: MappingRecord[][][]
+  content: JSX.Element
 }
 
-const bannerText = "AlphaMissense prediction has replaced EVE score in the main table. You can now find EVE score under Predictions in the Functional Information section."
+const bannerText = null
 
 function DefaultPageLayout(props: DefaultPageLayoutProps) {
-  const [showBanner, setShowBanner ] = useState(bannerText == null ? false : true);
+  const [showBanner, setShowBanner ] = useState(bannerText != null);
   // to re-enable banner, uncomment state above, and the lines within
   // the handleDismiss function
   //const showBanner = false
-  let localDownloads = JSON.parse(localStorage.getItem(LOCAL_DOWNLOADS) || '[]')
-  let numDownloads = localDownloads.length;
   
   useEffect(() => {
     const win: any = window
@@ -32,7 +29,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
       win.ebiFrameworkInvokeScripts()
     }
 
-    const bannerDismissed = sessionStorage.getItem(DISMISS_BANNER);
+    const bannerDismissed = sessionStorage.getItem(LOCAL_BANNER);
     if (bannerDismissed) {
       setShowBanner(false);
     }
@@ -41,7 +38,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
   const { content } = props;
 
   const handleDismiss = () => {
-    sessionStorage.setItem(DISMISS_BANNER, 'true');
+    sessionStorage.setItem(LOCAL_BANNER, 'true');
     setShowBanner(false);
   }
 
@@ -97,69 +94,68 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
               <div className="navbar">
                 <table>
                   <tbody>
-                    <tr className="navbar">
-                      <td className="topnav-logo">
-                        <div className="logo-container">
-                          <Link
-                            className="local-title"
-                            to={HOME}
-                            title="ProtVar homepage"
-                          >
-                            <img
-                              src="ProtVar_logo.png"
-                              alt="ProtVar logo"
-                              width="140px"
-                            />
-                            <span style={{ fontWeight: 'bold', fontSize: '10px', verticalAlign: 'bottom'}}>UI v1.2</span>
-                          </Link>
-                          <Link
-                            className="sub-title"
-                            to={HOME}
-                            title="ProtVar homepage"
-                          >
-                            Contextualising human missense variation
-                          </Link>
-                        </div>
-                      </td>
-                      
-                        <td className="topnav-right local-sub-title">
-                          <Link to={CONTACT} title="ProtVar Contact">
-                            Contact
-                          </Link>
-                        </td>
-                        <td className="topnav-right local-sub-title">
-                          <a href={API_URL} title="ProtVar API" target="_self">
-                            API
-                          </a>
-                        </td>
-                        <td className="topnav-right local-sub-title">
-                          <Link
-                            // Replace with the right link
-                            to={HELP}
-                            title="ProtVar Help"
-                            id="protvarHelp"
-                          >
-                            Help
-                          </Link>
-                        </td>
-                      <td className="topnav-right local-sub-title">
+                  <tr className="navbar">
+                    <td className="topnav-logo">
+                      <div className="logo-container">
                         <Link
-                          to={ABOUT}
-                          title="ProtVar About"
-                          id="protvarAbout"
+                          className="local-title"
+                          to={HOME}
+                          title="ProtVar homepage"
                         >
-                          About
+                          <img
+                            src="ProtVar_logo.png"
+                            alt="ProtVar logo"
+                            width="140px"
+                          />
+                          <span style={{fontWeight: 'bold', fontSize: '10px', verticalAlign: 'bottom'}}>UI v{process.env.REACT_APP_UI_VERSION}</span>
                         </Link>
-                      </td>
-                      <td className="topnav-right local-sub-title">
                         <Link
-                          to={RELEASE}
-                          title="ProtVar Release"
-                          id="protvarRelease"
-                        >Release</Link>
-                      </td>
-                    
-                    </tr>
+                          className="sub-title"
+                          to={HOME}
+                          title="ProtVar homepage"
+                        >
+                          Contextualising human missense variation
+                        </Link>
+                      </div>
+                    </td>
+
+                    <td className="topnav-right local-sub-title">
+                      <Link to={CONTACT} title="ProtVar Contact">
+                        Contact
+                      </Link>
+                    </td>
+                    <td className="topnav-right local-sub-title">
+                      <a href={API_URL} title="ProtVar API" target="_self">
+                        API
+                      </a>
+                    </td>
+                    <td className="topnav-right local-sub-title">
+                      <Link
+                        to={ABOUT}
+                        title="ProtVar About"
+                        id="protvarAbout"
+                      >
+                        About
+                      </Link>
+                    </td>
+                    <td className="topnav-right local-sub-title">
+                      <Link
+                        to={RELEASE}
+                        title="ProtVar Release"
+                        id="protvarRelease"
+                      >Release</Link>
+                    </td>
+                    <td className="topnav-right local-sub-title">
+                      <Link
+                        // Replace with the right link
+                        to={HELP}
+                        title="ProtVar Help"
+                        id="protvarHelp"
+                      >
+                        Help <i className="bi bi-info-circle help-btn"></i>
+                      </Link>
+                    </td>
+                  </tr>
                   </tbody>
                 </table>
               </div>
@@ -187,7 +183,8 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
               )}
 
               <div className="default-page-layout">
-                <DefaultPageContent downloadCount={numDownloads} searchResults={props.searchResults}>
+                <SideDrawer />
+                <DefaultPageContent>
                   {content}
                 </DefaultPageContent>
               </div>

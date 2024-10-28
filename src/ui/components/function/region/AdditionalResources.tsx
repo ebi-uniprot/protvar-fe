@@ -8,7 +8,7 @@ function AdditionalResources(props: RegionProteinProps) {
 
 function getWebResource(webResource: Comment) {
   if (webResource.name && webResource.url) {
-    return <a href={webResource.url} target="_blank" rel="noreferrer" key={webResource.url}>
+    return <a href={webResource.url} target="_blank" rel="noreferrer" key={webResource.url} className="ext-link">
       <li>{webResource.name}</li>
     </a>
   }

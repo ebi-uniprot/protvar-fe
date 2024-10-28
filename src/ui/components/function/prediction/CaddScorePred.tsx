@@ -1,7 +1,5 @@
-import {PredAttr, PUBMED_ID} from "./Prediction";
+import {PredAttr} from "./Prediction";
 import {STD_COLOR_GRADIENT} from "./PredConstants";
-import {pubmedRef} from "../../common/Common";
-import {Tooltip} from "../../common/Tooltip";
 import Spaces from "../../../elements/Spaces";
 
 const PRECISION: number = 1 // dp
@@ -20,10 +18,8 @@ export const CADD_SCORE_ATTR: PredAttr[] = [
 export const CaddScorePred = (props: { cadd?: string, stdColor: boolean }) => {
   if (props.cadd) {
   return <div className="aa-pred">
-    <div>CADD {pubmedRef(PUBMED_ID.CADD)}</div>
-  <Tooltip tip="(CADD) Scaled Combined Annotation Dependent Depletion score. Scores are relative to all other possible scores. They are log10 scaled with higher numbers indicating a more deleterious consequence">
-    {formatCaddScore(props.cadd)}
-  </Tooltip>
+    <div>CADD</div>
+  <div>{formatCaddScore(props.cadd)}</div>
   <CADDIcon {...props} />
   </div>}
   return <></>
@@ -36,10 +32,10 @@ export function formatCaddScore(cadd?: string) {
 function CADDIcon(props: { cadd?: string, stdColor: boolean }) {
   let caddAttr = caddScoreAttr(props.cadd)
   if (caddAttr) {
-    return <Tooltip tip={`CADD score ${caddAttr.range}`}>
+    return <div>
       <i className="bi bi-circle-fill" style={{color: (props.stdColor ? caddAttr.stdColor : caddAttr.color)}}></i>
       <Spaces/>{caddAttr.text}
-    </Tooltip>
+    </div>
   }
   return <></>
 }

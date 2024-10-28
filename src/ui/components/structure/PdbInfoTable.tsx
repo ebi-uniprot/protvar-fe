@@ -1,6 +1,5 @@
 import { PDB_URL_INTERFACE_BY_PROTEIN } from '../../../constants/ExternalUrls';
 import {baseSettings} from './StructuralDetail';
-import { ReactComponent as ExternalLinkIcon } from "../../../images/external-link.svg"
 import PdbeRef from "./PdbeRef";
 import {ProteinStructureElement} from "../../../types/ProteinStructureResponse";
 import { groupBy } from "../../../utills/Util";
@@ -10,7 +9,7 @@ const pdbSettings = (molId: string) => {
     ...{
       moleculeId: molId
     },
-    alphafoldView: false
+    //alphafoldView: false
   }
 }
 
@@ -75,7 +74,7 @@ function PdbInfoTable(props: PdbInfoTableProps) {
       <table>
         <thead>
           <tr>
-            <th colSpan={5}>PDBe Experimental Structure <a href={PDB_URL_INTERFACE_BY_PROTEIN + props.isoFormAccession} target="_blank" rel="noreferrer" title="Click for further information from PDBeKB"><ExternalLinkIcon width={12.5}/></a></th>
+            <th colSpan={5}>PDBe Experimental Structure <a href={PDB_URL_INTERFACE_BY_PROTEIN + props.isoFormAccession} target="_blank" rel="noreferrer" title="Click for further information from PDBeKB" className="ext-link"></a></th>
           </tr>
           <tr>
             <th>PDB ID</th>

@@ -4,8 +4,14 @@ import AssociationDetails from "./common/AssociationDetails";
 import SubmittedVariantDetails from "./SubmittedVariantDetails";
 import PopulationIcon from '../../../images/human.svg';
 import {PopulationObservationResponse, ProteinColocatedVariant} from "../../../types/PopulationObservationResponse";
+import {HelpButton} from "../help/HelpButton";
+import {HelpContent} from "../help/HelpContent";
+import React from "react";
+import Spaces from "../../elements/Spaces";
+import {ShareAnnotationIcon} from "../common/ShareLink";
 
 interface PopulationDataRowProps {
+  annotation: string
   poApiData: PopulationObservationResponse,
   variantAA: string
 }
@@ -26,7 +32,13 @@ function PopulationDataRow(props: PopulationDataRowProps) {
     <td colSpan={TOTAL_COLS} className="expanded-row">
       <div className="significances-groups">
         <div className="column">
-          <h5><img src={PopulationIcon} className="click-icon" alt="population icon" title="Population observation" /> Population Observation</h5>
+          <h5 style={{display: "inline"}}>
+            <img src={PopulationIcon} className="click-icon" alt="population icon"
+                 title="Population observation" /> Population Observation
+          </h5>
+          <HelpButton title="" content={<HelpContent name="population-observations" />} />
+          <Spaces count={2} />
+          <ShareAnnotationIcon annotation={props.annotation} />
           <table>
             <tbody>
               <tr>

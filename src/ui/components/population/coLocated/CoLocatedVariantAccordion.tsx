@@ -7,14 +7,13 @@ import {ProteinColocatedVariant} from "../../../../types/PopulationObservationRe
 interface CoLocatedVariantAccordionProps {
   toggleCoLocated: StringVoidFun
   coLocatedVariants: Array<ProteinColocatedVariant>
-  expendedCoLocatedKey: string
+  expandedCoLocatedKey: string
 }
 function CoLocatedVariantAccordion(props: CoLocatedVariantAccordionProps) {
-  const { toggleCoLocated, expendedCoLocatedKey, coLocatedVariants } = props;
-  const [expendedGenomicKey, setExpendedGenomicKey] = useState('');
-
+  const { toggleCoLocated, expandedCoLocatedKey, coLocatedVariants } = props;
+  const [expandedGenomicKey, setExpandedGenomicKey] = useState('');
   const toggleGenomic = (key: string) => {
-    setExpendedGenomicKey(expendedGenomicKey === key ? '' : key)
+    setExpandedGenomicKey(expandedGenomicKey === key ? '' : key)
   }
 
   const coLocatedVariantsMap = new Map();
@@ -27,7 +26,7 @@ function CoLocatedVariantAccordion(props: CoLocatedVariantAccordionProps) {
     coLocatedVariants.push(
       <li key={uuidv1()}>
         <CoLocatedVariantGenomicLocationAccordion coLocatedVariant={variant} toggleGenomic={toggleGenomic}
-          expendedGenomicKey={expendedGenomicKey} />
+          expandedGenomicKey={expandedGenomicKey} />
       </li>);
     coLocatedVariantsMap.set(change, coLocatedVariants);
   });
@@ -42,7 +41,7 @@ function CoLocatedVariantAccordion(props: CoLocatedVariantAccordionProps) {
           </b>
           <ChevronDownIcon className="chevronicon" />
         </button>
-        {change === expendedCoLocatedKey && <ul>{genomicLocations}</ul>}
+        {change === expandedCoLocatedKey && <ul>{genomicLocations}</ul>}
       </li>
     );
   });

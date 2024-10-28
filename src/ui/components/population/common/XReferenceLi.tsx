@@ -4,7 +4,7 @@ interface XReferenceLiProps {
 }
 function XReferenceLi(props: XReferenceLiProps) {
   //if (props.id && (props.id.startsWith('COS') || props.id.startsWith('RCV') || props.id.startsWith('rs')))
-    return <li><a href={props.url} target="_blank" rel="noreferrer">{props.id}</a></li>
+    return <li><a href={props.url} target="_blank" rel="noreferrer" className="ext-link">{props.id}</a></li>
   //else
   //  return <></>;
 }

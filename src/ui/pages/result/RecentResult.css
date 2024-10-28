@@ -1,0 +1,59 @@
+.map-container {
+  padding: 5px 5px 5px 20px;
+}
+
+.map-group {
+  margin-bottom: 5px;
+}
+
+.map-key {
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: darkgray;
+}
+
+.map-items {
+  list-style-type: none;
+}
+
+.map-item {
+  font-size: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2px 2px 2px 8px;
+  position: relative;
+
+  &.selected {
+    background-color: #014373;
+    color: white;
+    font-weight: bold;
+  }
+}
+
+.map-item-name {
+  flex-grow: 1;
+  white-space: nowrap;
+  width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.map-item-name:hover {
+  cursor: pointer;
+}
+
+.map-item-options {
+  display: none;
+  font-size: 10px;
+}
+.map-item-options button {
+  margin-left: 5px;
+}
+
+.map-item:hover .map-item-options {
+  display: block;
+}
+.map-item:hover {
+  background-color: lightblue;
+}

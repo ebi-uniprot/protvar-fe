@@ -50,7 +50,7 @@ function getRHEA(dbReferences: Array<DBReference>) {
       if (reference.type === 'Rhea' && reference.id.includes('RHEA:')) {
         reaIds.push(
           <Fragment key={uuidv1()}>
-            <a href={RHEA_URL + reference.id.split(':')[1]} target="_blank" rel="noreferrer" key={reference.id}>{reference.id}</a>
+            <a href={RHEA_URL + reference.id.split(':')[1]} target="_blank" rel="noreferrer" key={reference.id} className="ext-link">{reference.id}</a>
             <br />
           </Fragment>
         )

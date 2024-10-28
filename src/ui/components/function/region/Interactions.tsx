@@ -55,7 +55,7 @@ function getInteraction(gene: string, interactor: string) {
 			</label>
 			<label>
 				<b>IntAct : </b>
-				<a href={INTACT_URL + interactor} target="_blank" rel="noreferrer">
+				<a href={INTACT_URL + interactor} target="_blank" rel="noreferrer" className="ext-link">
 					{interactor}
 				</a>
 			</label>
