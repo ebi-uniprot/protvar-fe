@@ -56,12 +56,12 @@ kubectl create secret docker-registry "${APP_NAME}-gitlab-registry-to" \
   --docker-server="$CI_REGISTRY" --docker-username="$CI_DEPLOY_USER" --docker-password="$CI_DEPLOY_PASSWORD" \
   -o yaml --dry-run=client | kubectl apply -f -
 
-# Main deployment
-kubectl apply -f deploy/k8s_deploy.yml
-
-# Restart and check rollout status
-kubectl rollout restart "deployment.apps/$APP_NAME"
-kubectl rollout status "deployment.apps/$APP_NAME" || { echo "Deployment failed!"; exit 1; }
+# Helm deployment
+helm upgrade --install \
+  --reset-values \
+  --set imageTag="${imageTag:-latest}" \
+  "${APP_NAME}" \
+  deploy
 
 # Display deployed services
 kubectl get all

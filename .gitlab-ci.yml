@@ -85,7 +85,7 @@ dev-deploy:
     refs:
       - dev
   script:
-    - deploy/deploy.sh ENV=DV APP_NAME=protvar-fe K8S_NAMESPACE=protvar-dev
+    - deploy/deploy.sh ENV=DV APP_NAME=protvar-fe K8S_NAMESPACE=protvar-dev imageTag="${CI_COMMIT_SHORT_SHA}"
       #HX protvar-fe protvar-dev deployment # data-center app_name namespace type-of-deployment
 
 test-deploy:
@@ -94,7 +94,7 @@ test-deploy:
     refs:
       - test
   script:
-    - deploy/deploy.sh ENV=DV APP_NAME=protvar-fe K8S_NAMESPACE=protvar-test # HX protvar-fe protvar-test deployment
+    - deploy/deploy.sh ENV=DV APP_NAME=protvar-fe K8S_NAMESPACE=protvar-test imageTag="${CI_COMMIT_SHORT_SHA}" # HX protvar-fe protvar-test deployment
 
 prod-deploy:
   extends: .kubectl
@@ -102,5 +102,5 @@ prod-deploy:
     refs:
       - main
   script:
-    - deploy/deploy.sh ENV=FB APP_NAME=protvar-fe K8S_NAMESPACE=protvar # HX protvar-fe protvar deployment # fallback app_name namespace type-of-deployment
-    - deploy/deploy.sh ENV=PB APP_NAME=protvar-fe K8S_NAMESPACE=protvar # HL protvar-fe protvar deployment # prod app_name namespace type-of-deployment
+    - deploy/deploy.sh ENV=FB APP_NAME=protvar-fe K8S_NAMESPACE=protvar imageTag="${CI_COMMIT_SHORT_SHA}" # HX protvar-fe protvar deployment # fallback app_name namespace type-of-deployment
+    - deploy/deploy.sh ENV=PB APP_NAME=protvar-fe K8S_NAMESPACE=protvar imageTag="${CI_COMMIT_SHORT_SHA}" # HL protvar-fe protvar deployment # prod app_name namespace type-of-deployment
