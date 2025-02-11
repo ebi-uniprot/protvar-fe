@@ -71,5 +71,7 @@ echo "--- Deployment Successful: ${APP_NAME} on ${K8S_GENERAL} cluster ---"
 NODE_HOST_NAME=$(kubectl get nodes -o=jsonpath='{.items[0].status.addresses[?(@.type=="Hostname")].address}')
 for SERVICE in $(kubectl get services -o=jsonpath='{.items[*].metadata.name}'); do
   NODE_PORT=$(kubectl get services "${SERVICE}" -o=jsonpath='{.spec.ports[0].nodePort}')
-  [[ -n "$NODE_PORT" ]] && echo "Service '${SERVICE}' available at: http://${NODE_HOST_NAME}:${NODE_PORT}"
+  if [[ -n "$NODE_PORT" ]]; then
+    echo "Service '${SERVICE}' available at: http://${NODE_HOST_NAME}:${NODE_PORT}"
+  fi
 done
