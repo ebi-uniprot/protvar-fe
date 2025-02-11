@@ -1,10 +1,4 @@
 variables:
-  URL_DOCKER_IGNORE: "https://gitlab.ebi.ac.uk/api/v4/projects/${COMMON_PROJECT_ID}/repository/files/.dockerignore/raw?ref=master&private_token=${GITLAB_USER_API_TOKEN}"
-  #https://gitlab.ebi.ac.uk/api/v4/projects/3377/repository/files/.dockerignore/raw?ref=master
-  URL_DEPLOY_SH: "https://gitlab.ebi.ac.uk/api/v4/projects/${COMMON_PROJECT_ID}/repository/files/deploy.sh/raw?ref=master&private_token=${GITLAB_USER_API_TOKEN}"
-  #https://gitlab.ebi.ac.uk/api/v4/projects/3377/repository/files/deploy.sh/raw?ref=master
-  URL_WP_CONFIG_TEMPLATE_yml: "https://gitlab.ebi.ac.uk/api/v4/projects/${COMMON_PROJECT_ID}/repository/files/wp-config-template.yml/raw?ref=master&private_token=${GITLAB_USER_API_TOKEN}"
-  #https://gitlab.ebi.ac.uk/api/v4/projects/3377/repository/files/wp-config-template.yml/raw?ref=master
   BE_API: "https://wwwdev.ebi.ac.uk/ProtVar/api"
 stages:
 #  - test
@@ -61,9 +55,6 @@ build_docker_image:
     - dind
   services:
     - docker:dind
-  before_script:
-    - wget -O .dockerignore "${URL_DOCKER_IGNORE}"
-    - echo "--no-cache --no-cookies was not used by wget"
   script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin
     - docker --version
@@ -83,12 +74,10 @@ build_docker_image:
     - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
     - chmod +x ./kubectl
     - mv ./kubectl /usr/local/bin/kubectl
-    - wget -O deploy.sh "${URL_DEPLOY_SH}"
-    - wget -O wp-config-template.yml "${URL_WP_CONFIG_TEMPLATE_yml}"
-    - echo "--no-cache --no-cookies was not used by wget"
-    - if [ ! -f deploy.sh ]; then echo "k8s deployment file is missing"; exit 1; fi
-    - if [ ! -f wp-config-template.yml ]; then echo "k8s config file is missing"; exit 1; fi
-    - chmod +x deploy.sh
+    #- git clone https://oauth2:${GITLAB_USER_API_TOKEN}@gitlab.ebi.ac.uk/uniprot/framework/protvar-deploy.git
+    #- if [ ! -f protvar-deploy/app/protvar-fe/deploy.sh ]; then echo "Deploy script is missing"; exit 1; fi
+    - if [ ! -f deploy/deploy.sh ]; then echo "Deploy script is missing"; exit 1; fi
+    - chmod +x deploy/deploy.sh
 
 dev-deploy:
   extends: .kubectl
@@ -96,7 +85,8 @@ dev-deploy:
     refs:
       - dev
   script:
-    - ./deploy.sh HX protvar-fe protvar-dev deployment # data-center app_name namespace type-of-deployment
+    - deploy/deploy.sh ENV=DV APP_NAME=protvar-fe K8S_NAMESPACE=protvar-dev
+      #HX protvar-fe protvar-dev deployment # data-center app_name namespace type-of-deployment
 
 test-deploy:
   extends: .kubectl
@@ -104,7 +94,7 @@ test-deploy:
     refs:
       - test
   script:
-    - ./deploy.sh HX protvar-fe protvar-test deployment
+    - deploy/deploy.sh ENV=DV APP_NAME=protvar-fe K8S_NAMESPACE=protvar-test # HX protvar-fe protvar-test deployment
 
 prod-deploy:
   extends: .kubectl
@@ -112,5 +102,5 @@ prod-deploy:
     refs:
       - master
   script:
-    - ./deploy.sh HX protvar-fe protvar deployment # fallback app_name namespace type-of-deployment
-    - ./deploy.sh HL protvar-fe protvar deployment # prod app_name namespace type-of-deployment
+    - deploy/deploy.sh ENV=FB APP_NAME=protvar-fe K8S_NAMESPACE=protvar # HX protvar-fe protvar deployment # fallback app_name namespace type-of-deployment
+    - deploy/deploy.sh ENV=PB APP_NAME=protvar-fe K8S_NAMESPACE=protvar # HL protvar-fe protvar deployment # prod app_name namespace type-of-deployment
