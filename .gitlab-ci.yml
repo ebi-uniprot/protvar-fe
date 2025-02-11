@@ -31,7 +31,7 @@ workflow:
 build_static_assets:
   only:
     refs:
-      - master
+      - main
       - dev
       - test
   extends: .js
@@ -46,7 +46,7 @@ build_static_assets:
 build_docker_image:
   only:
     refs:
-      - master
+      - main
       - dev
       - test
   stage: build_docker_image
@@ -100,7 +100,7 @@ prod-deploy:
   extends: .kubectl
   only:
     refs:
-      - master
+      - main
   script:
     - deploy/deploy.sh ENV=FB APP_NAME=protvar-fe K8S_NAMESPACE=protvar # HX protvar-fe protvar deployment # fallback app_name namespace type-of-deployment
     - deploy/deploy.sh ENV=PB APP_NAME=protvar-fe K8S_NAMESPACE=protvar # HL protvar-fe protvar deployment # prod app_name namespace type-of-deployment
