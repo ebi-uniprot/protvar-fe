@@ -74,6 +74,8 @@ build_docker_image:
     - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
     - chmod +x ./kubectl
     - mv ./kubectl /usr/local/bin/kubectl
+    - export VERIFY_CHECKSUM=false
+    - curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
     #- git clone https://oauth2:${GITLAB_USER_API_TOKEN}@gitlab.ebi.ac.uk/uniprot/framework/protvar-deploy.git
     #- if [ ! -f protvar-deploy/app/protvar-fe/deploy.sh ]; then echo "Deploy script is missing"; exit 1; fi
     - if [ ! -f deploy/deploy.sh ]; then echo "Deploy script is missing"; exit 1; fi
