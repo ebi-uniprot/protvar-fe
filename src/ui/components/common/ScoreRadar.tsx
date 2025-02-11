@@ -1,4 +1,4 @@
-import RadarChart from "react-svg-radar-chart";
+//import RadarChart from "react-svg-radar-chart";
 import "react-svg-radar-chart/build/css/index.css";
 import {ConservScore} from "../../../types/MappingResponse";
 
@@ -35,7 +35,6 @@ const captions = {
   eve: "EVE",
   esm: "ESM-1b",
 };
-*/
 function ScoreRadar(props: ScoreRadarProps) {
 
   var data: { [key: string] : number } = {};
@@ -54,3 +53,4 @@ function ScoreRadar(props: ScoreRadarProps) {
 }
 
 export default ScoreRadar;
+*/
