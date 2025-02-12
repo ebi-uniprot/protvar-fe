@@ -1,5 +1,11 @@
+include:
+  - project: uniprot/framework/protvar-deploy
+    ref: master
+    file: /ci-templates/gitlab-ci-template.yml
+
 variables:
   BE_API: "https://wwwdev.ebi.ac.uk/ProtVar/api"
+
 stages:
 #  - test
   - build_static_assets
@@ -49,60 +55,33 @@ build_docker_image:
       - main
       - dev
       - test
+  extends: .build_docker
   stage: build_docker_image
-  image: docker:latest
-  tags:
-    - dind
-  services:
-    - docker:dind
-  script:
-    - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin
-    - docker --version
-    - CONTAINER_IMAGE=${CI_REGISTRY_IMAGE}:latest
-    - echo ${CONTAINER_IMAGE}
-    - docker build -t ${CONTAINER_IMAGE} --no-cache -f deploy/Dockerfile .
-    - docker image ls
-    - docker push ${CONTAINER_IMAGE}
-    - docker rmi ${CONTAINER_IMAGE}
-    - docker logout "$CI_REGISTRY"
-
-.kubectl:
-  image: alpine
-  stage: deploy
-  before_script:
-    - apk add --no-cache curl git bash
-    - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
-    - chmod +x ./kubectl
-    - mv ./kubectl /usr/local/bin/kubectl
-    - export VERIFY_CHECKSUM=false
-    - curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
-    #- git clone https://oauth2:${GITLAB_USER_API_TOKEN}@gitlab.ebi.ac.uk/uniprot/framework/protvar-deploy.git
-    #- if [ ! -f protvar-deploy/app/protvar-fe/deploy.sh ]; then echo "Deploy script is missing"; exit 1; fi
-    - if [ ! -f deploy/deploy.sh ]; then echo "Deploy script is missing"; exit 1; fi
-    - chmod +x deploy/deploy.sh
 
 dev-deploy:
-  extends: .kubectl
   only:
     refs:
       - dev
+  extends: .deploy
+  stage: deploy
   script:
-    - deploy/deploy.sh ENV=DV APP_NAME=protvar-fe K8S_NAMESPACE=protvar-dev imageTag="${CI_COMMIT_SHORT_SHA}"
-      #HX protvar-fe protvar-dev deployment # data-center app_name namespace type-of-deployment
+    - ./protvar-deploy/scripts/deploy.sh ENV=DV APP_NAME=protvar-fe K8S_NAMESPACE=protvar-dev imageTag="${CI_COMMIT_SHORT_SHA}"
 
 test-deploy:
-  extends: .kubectl
   only:
     refs:
       - test
+  extends: .deploy
+  stage: deploy
   script:
-    - deploy/deploy.sh ENV=DV APP_NAME=protvar-fe K8S_NAMESPACE=protvar-test imageTag="${CI_COMMIT_SHORT_SHA}" # HX protvar-fe protvar-test deployment
+    - ./protvar-deploy/scripts/deploy.sh ENV=DV APP_NAME=protvar-fe K8S_NAMESPACE=protvar-test imageTag="${CI_COMMIT_SHORT_SHA}"
 
-prod-deploy:
-  extends: .kubectl
+main-deploy:
   only:
     refs:
       - main
+  extends: .deploy
+  stage: deploy
   script:
-    - deploy/deploy.sh ENV=FB APP_NAME=protvar-fe K8S_NAMESPACE=protvar imageTag="${CI_COMMIT_SHORT_SHA}" # HX protvar-fe protvar deployment # fallback app_name namespace type-of-deployment
-    - deploy/deploy.sh ENV=PB APP_NAME=protvar-fe K8S_NAMESPACE=protvar imageTag="${CI_COMMIT_SHORT_SHA}" # HL protvar-fe protvar deployment # prod app_name namespace type-of-deployment
+    - ./protvar-deploy/scripts/deploy.sh ENV=FB APP_NAME=protvar-fe K8S_NAMESPACE=protvar imageTag="${CI_COMMIT_SHORT_SHA}"
+    - ./protvar-deploy/scripts/deploy.sh ENV=PB APP_NAME=protvar-fe K8S_NAMESPACE=protvar imageTag="${CI_COMMIT_SHORT_SHA}"
