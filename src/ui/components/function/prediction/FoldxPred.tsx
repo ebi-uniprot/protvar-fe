@@ -4,9 +4,14 @@ import {PRECISION, STD_BENIGN_COLOR, STD_PATHOGENIC_COLOR} from "./PredConstants
 
 export const FoldxPred = (props: { foldxs: Array<Foldx> }) => {
   if (props.foldxs && props.foldxs.length > 0) {
+    let fragment = <></>
+    if (props.foldxs[0].numFragments > 1 )
+      fragment = <small>
+        <br/>(using AlphaFold fragment {props.foldxs[0].afId})
+      </small>
     return <div>
       <div className="aa-pred">
-        <div>Stability change ΔΔG</div>
+        <div>Stability change ΔΔG {fragment}</div>
         <div>{formatFoldxScore(props.foldxs[0])}</div>
         <FoldxPredIcon foldx={props.foldxs[0]}/>
       </div>
