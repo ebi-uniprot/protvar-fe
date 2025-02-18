@@ -14,6 +14,7 @@ interface PopulationDataRowProps {
   annotation: string
   poApiData: PopulationObservationResponse,
   variantAA: string
+  alleleFreq: number
 }
 
 function PopulationDataRow(props: PopulationDataRowProps) {
@@ -46,7 +47,7 @@ function PopulationDataRow(props: PopulationDataRowProps) {
                 <th>Co-located Variants at Residue Level</th>
               </tr>
               <tr>
-                <td><SubmittedVariantDetails variants={variant}/></td>
+                <td><SubmittedVariantDetails variants={variant} alleleFreq={props.alleleFreq}/></td>
                 <td><CoLocatedVariantDetails coLocatedVariants={colocatedVariant}/></td>
               </tr>
             </tbody>

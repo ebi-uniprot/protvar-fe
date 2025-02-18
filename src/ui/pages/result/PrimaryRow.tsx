@@ -222,7 +222,7 @@ export const getNewPrimaryRow = (isoformKey: string, isoformGroup: string, isofo
 
     {populationKey === annotationExpanded &&
       <Suspense fallback={<LoaderRow />}>
-        <PopulationDetail annotation={annotationExpanded} populationObservationsUri={isoform.populationObservationsUri!} variantAA={isoform.variantAA!} />
+        <PopulationDetail annotation={annotationExpanded} populationObservationsUri={isoform.populationObservationsUri!} variantAA={isoform.variantAA!} alleleFreq={gene.alleleFreq} />
       </Suspense>
     }
     {structuralKey === annotationExpanded &&

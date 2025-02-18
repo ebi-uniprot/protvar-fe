@@ -4,6 +4,7 @@ import {ProteinColocatedVariant} from "../../../types/PopulationObservationRespo
 
 interface SubmittedVariantDetailsProps {
   variants: Array<ProteinColocatedVariant>
+  alleleFreq: number
 }
 function SubmittedVariantDetails(props: SubmittedVariantDetailsProps) {
   if (props.variants.length <= 0) {
@@ -15,6 +16,9 @@ function SubmittedVariantDetails(props: SubmittedVariantDetailsProps) {
 
   return (
     <ul>
+      {props.alleleFreq && <li>
+        <b>Allele Frequency:</b> {props.alleleFreq}
+      </li>}
       <li>
         <b>Genomic Location:</b> {variant.genomicLocation}
       </li>
@@ -22,7 +26,7 @@ function SubmittedVariantDetails(props: SubmittedVariantDetailsProps) {
         <b>Change:</b> {change}
       </li>
       <XRefDetail xrefs={variant.xrefs} populationFrequencies={variant.populationFrequencies}
-        clinicalSignificances={variant.clinicalSignificances} />
+                  clinicalSignificances={variant.clinicalSignificances}/>
     </ul>
   );
 }

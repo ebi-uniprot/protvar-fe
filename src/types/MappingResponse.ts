@@ -92,6 +92,7 @@ export interface Gene {
   altAllele: string;
   isoforms: Array<IsoFormMapping>;
   caddScore: number;
+  alleleFreq: number;
 }
 // TODO clean up unused commented properties below
 export interface IsoFormMapping {
