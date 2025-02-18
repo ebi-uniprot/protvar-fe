@@ -8,14 +8,28 @@ import DefaultPageContent from './DefaultPageContent'
 import EMBLEBILogo from '../../images/embl-ebi-logo.svg'
 import openTargetsLogo from '../../images/open-targets-logo.png'
 import SignUp from "./SignUp";
-import {WARN_ICON} from "../pages/result/MsgRow";
+import {INFO_ICON} from "../pages/result/MsgRow";
 import {CookieConsent} from "react-cookie-consent";
 import {SideDrawer} from "../components/drawer/SideDrawer";
 interface DefaultPageLayoutProps {
   content: JSX.Element
 }
 
-const bannerText = null
+
+
+const bannerText = <>
+  <ul style={{display: '', fontSize: 'small'}}>
+    <li>Genomic-protein mapping re-run using latest UniProt release (2025_01, Ensembl 113)</li>
+    <li>GRCh37-GRCh38 coverage updated</li>
+    <li>RefSeq-ProtVar mapping updated for HGVS p. and c. lookups</li>
+    <li>CADD predictions updated to v1.7</li>
+    <li>Stability prediction data fix and handling of multiple AlphaFold fragments</li>
+    <li>dbSNP updated to b156 (40M+ new IDs from b155)</li>
+    <li>COSMIC updated to v99 (~200K new IDs from v98)</li>
+    <li>ClinVar updated to 2025-02 (1.2M+ new IDs from 2023-07)</li>
+    <li>gnomAD allele frequency added (12M+ coding variants)</li>
+  </ul>
+</>
 
 function DefaultPageLayout(props: DefaultPageLayoutProps) {
   const [showBanner, setShowBanner ] = useState(bannerText != null);
@@ -80,6 +94,24 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
       </nav>
     </header> */}
 
+      <div className="rel-dropdown">
+        <button className="rel-dropbtn">ProtVar {process.env.REACT_APP_PV} <small>{process.env.REACT_APP_PV_REL}</small></button>
+        <ul className="rel-dropdown-content">
+          <li>UI {process.env.REACT_APP_UI}</li>
+          <li>API {process.env.REACT_APP_API}</li>
+          <li style={{borderBottom: '1px solid lightgray'}}>Data release {process.env.REACT_APP_DATA}</li>
+          <ul>
+          <li>UniProt {process.env.REACT_APP_UNIPROT}</li>
+          <li>Ensembl {process.env.REACT_APP_ENSEMBL}</li>
+          <li>CADD {process.env.REACT_APP_CADD}</li>
+          <li>dbSNP {process.env.REACT_APP_DBSNP}</li>
+          <li>COSMIC {process.env.REACT_APP_COSMIC}</li>
+          <li>ClinVar {process.env.REACT_APP_CLINVAR}</li>
+          <li>gnomAD {process.env.REACT_APP_GNOMAD}</li>
+          </ul>
+        </ul>
+      </div>
+
       <div id="content" className="content">
         <div data-sticky-container>
           <div
@@ -107,7 +139,6 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                             alt="ProtVar logo"
                             width="140px"
                           />
-                          <span style={{fontWeight: 'bold', fontSize: '10px', verticalAlign: 'bottom'}}>UI v{process.env.REACT_APP_UI_VERSION}</span>
                         </Link>
                         <Link
                           className="sub-title"
@@ -176,8 +207,11 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                   </button>
 
                   <div className="banner-content">
-                    { WARN_ICON }
-                    { bannerText }
+                    <div>
+                      <span>{INFO_ICON} ProtVar {process.env.REACT_APP_PV} <small>{process.env.REACT_APP_PV_REL}</small> release</span>
+                      <span>{bannerText}</span>
+                    </div>
+
                   </div>
                 </div>
               )}
