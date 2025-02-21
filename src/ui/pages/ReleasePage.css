@@ -26,3 +26,35 @@
 .stats .content .sub{
   color: #9b9b9b;
 }
+
+
+.release-container {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+.release-tabs {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.release-tabs button {
+  background-color: #f1f1f1;
+  border: 1px solid #ccc;
+  padding: 10px 20px;
+  cursor: pointer;
+  margin-right: 10px;
+  border-radius: 5px;
+}
+
+.release-tabs button.active {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.release-content {
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fafafa;
+}

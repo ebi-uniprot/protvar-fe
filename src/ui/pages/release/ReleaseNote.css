@@ -1,0 +1,33 @@
+.release-note {
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.release-note-header {
+  background-color: #f1f1f1;
+  padding: 10px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.release-note-content {
+  padding: 10px;
+  background-color: #fafafa;
+  border-top: 1px solid #ccc;
+}
+
+.release-note-content ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.release-note-content li {
+  margin-bottom: 5px;
+}
+
+.release-note-content code {
+  background-color: #f5f5f5;
+  padding: 2px 4px;
+  border-radius: 3px;
+}

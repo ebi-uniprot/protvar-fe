@@ -16,23 +16,14 @@ interface DefaultPageLayoutProps {
 }
 
 
-
-const bannerText = <>
-  <ul style={{display: '', fontSize: 'small'}}>
-    <li>Genomic-protein mapping re-run using latest UniProt release (2025_01, Ensembl 113)</li>
-    <li>GRCh37-GRCh38 coverage updated</li>
-    <li>RefSeq-ProtVar mapping updated for HGVS p. and c. lookups</li>
-    <li>CADD predictions updated to v1.7</li>
-    <li>Stability prediction data fix and handling of multiple AlphaFold fragments</li>
-    <li>dbSNP updated to b156 (40M+ new IDs from b155)</li>
-    <li>COSMIC updated to v99 (~200K new IDs from v98)</li>
-    <li>ClinVar updated to 2025-02 (1.2M+ new IDs from 2023-07)</li>
-    <li>gnomAD allele frequency added (52M+ coding variants)</li>
-  </ul>
-</>
+const bannerText = <span>{INFO_ICON} UPDATE: ProtVar {process.env.REACT_APP_PV} <small>{process.env.REACT_APP_PV_REL}</small> see <Link
+    to={RELEASE}
+    title="ProtVar Release"
+    id="protvarRelease"
+  >Release</Link> page</span>
 
 function DefaultPageLayout(props: DefaultPageLayoutProps) {
-  const [showBanner, setShowBanner ] = useState(bannerText != null);
+  const [showBanner, setShowBanner] = useState(bannerText != null);
   // to re-enable banner, uncomment state above, and the lines within
   // the handleDismiss function
   //const showBanner = false
@@ -207,11 +198,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                   </button>
 
                   <div className="banner-content">
-                    <div>
-                      <span>{INFO_ICON} ProtVar {process.env.REACT_APP_PV} <small>{process.env.REACT_APP_PV_REL}</small> release</span>
-                      <span>{bannerText}</span>
-                    </div>
-
+                    {bannerText}
                   </div>
                 </div>
               )}
