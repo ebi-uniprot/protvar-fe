@@ -2,6 +2,7 @@ import DefaultPageLayout from "../layout/DefaultPageLayout";
 import React, {useEffect} from "react";
 import {API_URL, PV_FTP, TITLE} from "../../constants/const";
 import "./ReleasePage.css"
+import Spaces from "../elements/Spaces";
 
 function ReleasePageContent() {
   //var today = new Date();
@@ -14,8 +15,18 @@ function ReleasePageContent() {
 
   return <div className="container" style={{padding: '10px'}}>
 
-
     <h5>ProtVar {process.env.REACT_APP_PV} <small>{process.env.REACT_APP_PV_REL}</small></h5>
+
+    <div className="grid-container">
+      <StatsCard main="Genomic-protein mapping" subt="169,448,264" change={<><br/><i
+        className="bi bi-caret-up-fill up-col"></i> 3M+</>}/> {/*"166,077,832"*/}
+      <StatsCard main="SwissProt proteins mapped" subt="19,198 (>93%)" change={<><br/><i
+        className="bi bi-caret-up-fill up-col"></i> 160</>}/>  {/*"119,038 (>93%)"*/}
+      <StatsCard main="Stability predictions" subt="208,792,558"/>
+      <StatsCard main="Protein-protein interactions" subt="68,756"/> {/*af2complexes_interaction*/}
+      <StatsCard main="Pockets" subt="547,401"/> {/*pocket_v2*/}
+    </div>
+
     Application Versions
     <table style={{width: 'auto'}}>
       <thead>
@@ -169,28 +180,25 @@ function ReleasePageContent() {
       </tbody>
     </table>
 
-    <h5>Statistics</h5>
-
-    <div className="grid-container">
-      <StatsCard main="Genomic-protein mapping" subt="166,077,832"/>
-      <StatsCard main="SwissProt proteins mapped" subt="19,038 (>93%)"/>
-      <StatsCard main="Stability predictions" subt="208,792,558"/>
-      <StatsCard main="Protein-protein interactions" subt="134,527"/>
-      <StatsCard main="Pockets" subt="103,026"/>
-    </div>
   </div>
 }
 
 interface StatsCardProps {
   main: string;
   subt: string;
+  change?: React.ReactNode;
 }
 
 function StatsCard(props: StatsCardProps) {
   return <div className="stats">
     <div className="content">
       <div className="main">{props.main}</div>
-      <div className="sub">{props.subt}</div>
+      <div className="sub">{props.subt}
+        {props.change ?? <>
+          <br/><Spaces count={2} />
+          {props.change}
+        </>}
+      </div>
     </div>
   </div>
 }
