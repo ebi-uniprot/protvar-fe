@@ -160,7 +160,7 @@ const StatsTable: React.FC = () => {
           </tr>
           </tbody>
         </table>
-        *<small>reverted to v1 (from v2) - will be updated in next release</small>
+        *<small>reverted to v1 (from v2) - will be updated in future release</small>
       </section>
     </>
   );

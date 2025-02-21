@@ -16,7 +16,8 @@ function ReleasePageContent() {
 
   const [activeTab, setActiveTab] = useState<'release-notes' | 'statistics'>('statistics');
 
-  return <div className="release-container">
+  return <><h5>Release</h5>
+  <div className="release-container">
     <div className="release-tabs">
       <button
         className={activeTab === 'statistics' ? 'active' : ''}
@@ -36,7 +37,7 @@ function ReleasePageContent() {
       {activeTab === 'statistics' && <Statistics/>}
       {activeTab === 'release-notes' && <ReleaseNotes/>}
     </div>
-  </div>
+  </div></>
 }
 
 function ReleasePage() {
