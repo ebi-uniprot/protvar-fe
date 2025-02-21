@@ -1,5 +1,6 @@
 import XRefDetail from "./common/XRefDetail";
 import {ProteinColocatedVariant} from "../../../types/PopulationObservationResponse";
+import {AlleleFreq} from "./AlleleFreq";
 
 
 interface SubmittedVariantDetailsProps {
@@ -17,7 +18,7 @@ function SubmittedVariantDetails(props: SubmittedVariantDetailsProps) {
   return (
     <ul>
       {props.alleleFreq && <li>
-        <b>Allele Frequency:</b> {props.alleleFreq}
+        <AlleleFreq af={props.alleleFreq} stdColor={false} />
       </li>}
       <li>
         <b>Genomic Location:</b> {variant.genomicLocation}

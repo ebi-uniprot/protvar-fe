@@ -27,7 +27,7 @@ const bannerText = <>
     <li>dbSNP updated to b156 (40M+ new IDs from b155)</li>
     <li>COSMIC updated to v99 (~200K new IDs from v98)</li>
     <li>ClinVar updated to 2025-02 (1.2M+ new IDs from 2023-07)</li>
-    <li>gnomAD allele frequency added (12M+ coding variants)</li>
+    <li>gnomAD allele frequency added (52M+ coding variants)</li>
   </ul>
 </>
 

@@ -6,6 +6,7 @@ import AnnotationLegend from './AnnotationLegend'
 import {CADD_SCORE_ATTR} from "../components/function/prediction/CaddScorePred";
 import {PredAttr} from "../components/function/prediction/Prediction";
 import {AM_SCORE_ATTR} from "../components/function/prediction/AlphaMissensePred";
+import {AF_ATTR} from "../components/population/AlleleFreq";
 import {EVE_SCORE_ATTR} from "../components/function/prediction/EvePred";
 import {AppContext} from "../App";
 import {ColourCheckbox} from "./ColourCheckbox";
@@ -46,6 +47,7 @@ function LegendModal() {
           <div className="legend-div">
             <ConservLegend stdColor={state.stdColor}/><br/>
             <AlphaMissenseLegend stdColor={state.stdColor}/>
+            <AlleleFreqLegend stdColor={false}/>
           </div>
           <div className="legend-div">
             <EsmLegend stdColor={state.stdColor}/><br/>
@@ -138,6 +140,26 @@ function AlphaMissenseLegend(props: CommonLegendProps) {
                   <i className="bi bi-circle-fill" style={{color: (props.stdColor ? sc.stdColor : sc.color)}}></i>
                 </span>
             <div className="flex1">{sc.text}</div>
+          </div>;
+        })
+      }
+    </div>
+    <br/>
+  </div>;
+}
+
+function AlleleFreqLegend(props: CommonLegendProps) {
+  return <div className="search-results-legends" style={{float: "unset"}}>
+    <strong>Allele frequency</strong>
+    <br/>
+    <div className="flex-column">
+      {
+        Object.values(AF_ATTR).map((sc: PredAttr) => {
+          return <div key={uuidv1()} className="flex">
+                <span className="padding-left-right-1x">
+                  <i className="bi bi-circle-fill" style={{color: (props.stdColor ? sc.stdColor : sc.color)}}></i>
+                </span>
+            <div className="flex1">{sc.text} ({sc.range})</div>
           </div>;
         })
       }
