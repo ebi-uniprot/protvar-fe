@@ -15,7 +15,7 @@ export const AF_ATTR: PredAttr[] = [
 export const AlleleFreq = (props: { af: number, stdColor: boolean }) => {
   if (props.af) {
   return <>
-    <b>Allele Frequency:</b> <span title={props.af.toString()}>{props.af.toFixed(PRECISION)} <Spaces/>  <AFIcon {...props} /></span>
+    <b>GnomAD 4.1 exomes allele frequency:</b> <span title={props.af.toString()}>{props.af.toFixed(PRECISION)} <Spaces/>  <AFIcon {...props} /></span>
   </>}
   return <></>
 }

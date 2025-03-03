@@ -2,6 +2,8 @@
 import React from 'react';
 import Spaces from "../../elements/Spaces";
 import StatsTable from "./StatsTable";
+import {StatsDisplayGroup} from "./StatsDisplay";
+import {Stats} from "../../../types/Stats";
 
 const Statistics: React.FC = () => {
   return (
@@ -29,6 +31,10 @@ const Statistics: React.FC = () => {
 
 
       <StatsTable/>
+      {
+      //<StatsDisplay keyName={"mapping_count"} />
+      }
+      <StatsDisplayGroup groupBy={"datasetType" as keyof Stats} />
     </div>
   );
 };
@@ -39,7 +45,7 @@ interface StatsCardProps {
   change?: React.ReactNode;
 }
 
-function StatsCard(props: StatsCardProps) {
+export function StatsCard(props: StatsCardProps) {
   return <div className="stats">
     <div className="content">
       <div className="main">{props.main}</div>

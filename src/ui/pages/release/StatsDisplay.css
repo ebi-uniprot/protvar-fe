@@ -1,0 +1,19 @@
+.stats-container {
+  font-family: Arial, sans-serif;
+}
+
+.stats-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.stats-table th, .stats-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.stats-table th {
+  background-color: #f4f4f4;
+}

@@ -15,6 +15,7 @@ import ResultPage from "./pages/result/ResultPage";
 import "bootstrap-icons/font/bootstrap-icons.css"
 import ResultListPage from "./pages/result/ResultListPage";
 import {LocalStorageProvider} from "../context/LocalStorageContext";
+import {StatsProvider} from "../context/StatsContext";
 import {DEFAULT_PAGE_SIZE} from "../constants/const";
 import NotFoundPage from "./pages/NotFoundPage";
 import {MarkdownProvider} from "../context/MarkdownContext";
@@ -72,6 +73,7 @@ export default function App() {
   return (<AppContext.Provider value={appState}>
     <LocalStorageProvider>
       <MarkdownProvider>
+        <StatsProvider>
         <Routes>
           <Route path={HOME} element={<HomePage />} />
           <Route path={`${RESULT}`} element={<ResultListPage />} />
@@ -98,6 +100,7 @@ export default function App() {
           {/* Catch-all route for anything not matched above */}
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
+        </StatsProvider>
       </MarkdownProvider>
       </LocalStorageProvider>
     </AppContext.Provider>);

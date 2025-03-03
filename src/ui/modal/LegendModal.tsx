@@ -150,7 +150,7 @@ function AlphaMissenseLegend(props: CommonLegendProps) {
 
 function AlleleFreqLegend(props: CommonLegendProps) {
   return <div className="search-results-legends" style={{float: "unset"}}>
-    <strong>Allele frequency</strong>
+    <strong>GnomAD allele frequency</strong>
     <br/>
     <div className="flex-column">
       {

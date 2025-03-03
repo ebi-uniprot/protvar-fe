@@ -8,19 +8,27 @@ import DefaultPageContent from './DefaultPageContent'
 import EMBLEBILogo from '../../images/embl-ebi-logo.svg'
 import openTargetsLogo from '../../images/open-targets-logo.png'
 import SignUp from "./SignUp";
-import {INFO_ICON} from "../pages/result/MsgRow";
 import {CookieConsent} from "react-cookie-consent";
 import {SideDrawer} from "../components/drawer/SideDrawer";
+import {StatsCard} from "../pages/release/Statistics";
+
 interface DefaultPageLayoutProps {
   content: JSX.Element
 }
 
 
-const bannerText = <span>{INFO_ICON} UPDATE: ProtVar {process.env.REACT_APP_PV} <small>{process.env.REACT_APP_PV_REL}</small> see <Link
-    to={RELEASE}
-    title="ProtVar Release"
-    id="protvarRelease"
-  >Release</Link> page</span>
+const bannerText = <div><span className="small">ProtVar {process.env.REACT_APP_PV} ({process.env.REACT_APP_PV_REL}) Released!
+  See the <Link to={RELEASE} title="ProtVar Release" id="protvarRelease">Release</Link> page for highlights.</span>
+  <div className="grid-container" style={{display: "flex", justifyContent: "center"}}>
+    <StatsCard main="Genomic-protein mapping" subt="169,448,264" change={<><br/><i
+      className="bi bi-caret-up-fill up-col"></i> 3M+</>}/> {/*"166,077,832"*/}
+    <StatsCard main="SwissProt proteins mapped" subt="19,198 (>93%)" change={<><br/><i
+      className="bi bi-caret-up-fill up-col"></i> 160</>}/> {/*"119,038 (>93%)"*/}
+    <StatsCard main="Stability predictions" subt="208,792,558"/>
+    <StatsCard main="Protein-protein interactions" subt="68,756"/> {/*af2complexes_interaction*/}
+    <StatsCard main="Pockets" subt="547,401"/> {/*pocket_v2*/}
+  </div>
+</div>
 
 function DefaultPageLayout(props: DefaultPageLayoutProps) {
   const [showBanner, setShowBanner] = useState(bannerText != null);
