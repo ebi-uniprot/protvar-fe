@@ -6,6 +6,7 @@ import {AlleleFreq} from "./AlleleFreq";
 interface SubmittedVariantDetailsProps {
   variants: Array<ProteinColocatedVariant>
   alleleFreq: number
+  gnomadCoord: string
 }
 function SubmittedVariantDetails(props: SubmittedVariantDetailsProps) {
   if (props.variants.length <= 0) {
@@ -18,7 +19,7 @@ function SubmittedVariantDetails(props: SubmittedVariantDetailsProps) {
   return (
     <ul>
       {props.alleleFreq && <li>
-        <AlleleFreq af={props.alleleFreq} stdColor={false} />
+        <AlleleFreq af={props.alleleFreq} gnomadCoord={props.gnomadCoord} stdColor={false} />
       </li>}
       <li>
         <b>Genomic Location:</b> {variant.genomicLocation}

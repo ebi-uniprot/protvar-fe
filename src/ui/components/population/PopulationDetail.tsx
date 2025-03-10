@@ -10,10 +10,11 @@ interface PopulationDetailProps {
   populationObservationsUri: string
   variantAA: string
   alleleFreq: number
+  gnomadCoord: string
 }
 
 function PopulationDetail(props: PopulationDetailProps) {
-  const { annotation, populationObservationsUri, variantAA, alleleFreq } = props;
+  const { annotation, populationObservationsUri, variantAA, alleleFreq, gnomadCoord } = props;
   const [poApiData, setPoApiData] = useState<PopulationObservationResponse>();
 
   useEffect(() => {
@@ -27,6 +28,6 @@ function PopulationDetail(props: PopulationDetailProps) {
   if (!poApiData)
     return <LoaderRow />
   else
-    return <PopulationDataRow annotation={annotation} poApiData={poApiData} variantAA={variantAA} alleleFreq={alleleFreq} />
+    return <PopulationDataRow annotation={annotation} poApiData={poApiData} variantAA={variantAA} alleleFreq={alleleFreq} gnomadCoord={gnomadCoord} />
 }
 export default PopulationDetail;

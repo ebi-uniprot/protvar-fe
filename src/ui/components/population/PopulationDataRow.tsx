@@ -17,6 +17,7 @@ interface PopulationDataRowProps {
   poApiData: PopulationObservationResponse,
   variantAA: string
   alleleFreq: number
+  gnomadCoord: string
 }
 
 function PopulationDataRow(props: PopulationDataRowProps) {
@@ -30,7 +31,7 @@ function PopulationDataRow(props: PopulationDataRowProps) {
     return props.alleleFreq ? (
       <PopulationObservationLayout
         annotation={props.annotation}
-        submittedVariantContent={<AlleleFreq af={props.alleleFreq} stdColor={false}/>}
+        submittedVariantContent={<AlleleFreq af={props.alleleFreq} gnomadCoord={props.gnomadCoord} stdColor={false}/>}
         coLocatedVariantContent={<label><b>No co-located variants to report</b></label>}
       />
     ) : <NoPopulationDataRow/>;
@@ -40,7 +41,7 @@ function PopulationDataRow(props: PopulationDataRowProps) {
   return (
     <PopulationObservationLayout
       annotation={props.annotation}
-      submittedVariantContent={<SubmittedVariantDetails variants={matchingVariants} alleleFreq={props.alleleFreq}/>}
+      submittedVariantContent={<SubmittedVariantDetails variants={matchingVariants} alleleFreq={props.alleleFreq} gnomadCoord={props.gnomadCoord}/>}
       coLocatedVariantContent={<CoLocatedVariantDetails coLocatedVariants={nonMatchingVariants}/>}
       associatedDiseases={hasAssociatedDiseases ?
         <AssociationDetails associations={matchingVariants[0].association}/> : null}
