@@ -28,7 +28,7 @@ const ReleaseNote: React.FC<ReleaseNoteProps> = ({title, children, isDefaultOpen
 const ReleaseNotes: React.FC = () => {
   return (
     <div className="release-notes">
-      <ReleaseNote title={<>ProtVar 1.4 <small>2025_02</small></>} isDefaultOpen={true}>
+      <ReleaseNote title={<>ProtVar 1.4 <small>2025_01</small></>} isDefaultOpen={true}>
         <ul>
           <li>Genomic-protein mapping re-run using UniProt 2025_01 & Ensembl 113</li>
           <li>GRCh37-GRCh38 coverage updated</li>
