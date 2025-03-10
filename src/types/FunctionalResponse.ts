@@ -81,10 +81,13 @@ export interface Pocket {
 export interface Foldx {
     proteinAcc: string
     position: number
+    afId: string
+    afPos: number
     wildType: string
     mutatedType: string
     foldxDdg: number
     plddt: number
+    numFragments: number
 }
 
 export interface P2PInteraction {

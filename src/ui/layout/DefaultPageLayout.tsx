@@ -8,17 +8,22 @@ import DefaultPageContent from './DefaultPageContent'
 import EMBLEBILogo from '../../images/embl-ebi-logo.svg'
 import openTargetsLogo from '../../images/open-targets-logo.png'
 import SignUp from "./SignUp";
-import {WARN_ICON} from "../pages/result/MsgRow";
 import {CookieConsent} from "react-cookie-consent";
 import {SideDrawer} from "../components/drawer/SideDrawer";
+import {StatsGrid} from "../pages/release/Statistics";
+
 interface DefaultPageLayoutProps {
   content: JSX.Element
 }
 
-const bannerText = null
+
+const bannerText = <div><span className="small">ProtVar {process.env.REACT_APP_PV} ({process.env.REACT_APP_UNIPROT}) Released!
+  See the <Link to={RELEASE} title="ProtVar Release" id="protvarRelease">Release</Link> page for highlights.</span>
+  <StatsGrid />
+</div>
 
 function DefaultPageLayout(props: DefaultPageLayoutProps) {
-  const [showBanner, setShowBanner ] = useState(bannerText != null);
+  const [showBanner, setShowBanner] = useState(bannerText != null);
   // to re-enable banner, uncomment state above, and the lines within
   // the handleDismiss function
   //const showBanner = false
@@ -80,6 +85,25 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
       </nav>
     </header> */}
 
+      <div className="rel-dropdown">
+        <button className="rel-dropbtn">ProtVar {process.env.REACT_APP_PV} <small>{process.env.REACT_APP_UNIPROT}</small>
+        </button>
+        <ul className="rel-dropdown-content">
+          <li>UI {process.env.REACT_APP_UI}</li>
+          <li>API {process.env.REACT_APP_API}</li>
+          <li style={{borderBottom: '1px solid lightgray'}}>Data release {process.env.REACT_APP_DATA}</li>
+          <ul>
+          <li>UniProt {process.env.REACT_APP_UNIPROT}</li>
+          <li>Ensembl {process.env.REACT_APP_ENSEMBL}</li>
+          <li>CADD {process.env.REACT_APP_CADD}</li>
+          <li>dbSNP {process.env.REACT_APP_DBSNP}</li>
+          <li>COSMIC {process.env.REACT_APP_COSMIC}</li>
+          <li>ClinVar {process.env.REACT_APP_CLINVAR}</li>
+          <li>gnomAD {process.env.REACT_APP_GNOMAD}</li>
+          </ul>
+        </ul>
+      </div>
+
       <div id="content" className="content">
         <div data-sticky-container>
           <div
@@ -107,7 +131,6 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                             alt="ProtVar logo"
                             width="140px"
                           />
-                          <span style={{fontWeight: 'bold', fontSize: '10px', verticalAlign: 'bottom'}}>UI v{process.env.REACT_APP_UI_VERSION}</span>
                         </Link>
                         <Link
                           className="sub-title"
@@ -176,8 +199,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
                   </button>
 
                   <div className="banner-content">
-                    { WARN_ICON }
-                    { bannerText }
+                    {bannerText}
                   </div>
                 </div>
               )}

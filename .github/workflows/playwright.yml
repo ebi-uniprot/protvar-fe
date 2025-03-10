@@ -1,9 +1,9 @@
 name: Playwright Tests
 on:
   push:
-    branches: [ dev, master ]
+    branches: [ dev, main ]
   pull_request:
-    branches: [ dev, master ]
+    branches: [ dev, main ]
 jobs:
   test:
     timeout-minutes: 60
