@@ -10,24 +10,16 @@ import openTargetsLogo from '../../images/open-targets-logo.png'
 import SignUp from "./SignUp";
 import {CookieConsent} from "react-cookie-consent";
 import {SideDrawer} from "../components/drawer/SideDrawer";
-import {StatsCard} from "../pages/release/Statistics";
+import {StatsGrid} from "../pages/release/Statistics";
 
 interface DefaultPageLayoutProps {
   content: JSX.Element
 }
 
 
-const bannerText = <div><span className="small">ProtVar {process.env.REACT_APP_PV} ({process.env.REACT_APP_PV_REL}) Released!
+const bannerText = <div><span className="small">ProtVar {process.env.REACT_APP_PV} ({process.env.REACT_APP_UNIPROT}) Released!
   See the <Link to={RELEASE} title="ProtVar Release" id="protvarRelease">Release</Link> page for highlights.</span>
-  <div className="grid-container" style={{display: "flex", justifyContent: "center"}}>
-    <StatsCard main="Genomic-protein mapping" subt="169,448,264" change={<><br/><i
-      className="bi bi-caret-up-fill up-col"></i> 3M+</>}/> {/*"166,077,832"*/}
-    <StatsCard main="SwissProt proteins mapped" subt="19,198 (>93%)" change={<><br/><i
-      className="bi bi-caret-up-fill up-col"></i> 160</>}/> {/*"119,038 (>93%)"*/}
-    <StatsCard main="Stability predictions" subt="208,792,558"/>
-    <StatsCard main="Protein-protein interactions" subt="68,756"/> {/*af2complexes_interaction*/}
-    <StatsCard main="Pockets" subt="547,401"/> {/*pocket_v2*/}
-  </div>
+  <StatsGrid />
 </div>
 
 function DefaultPageLayout(props: DefaultPageLayoutProps) {
@@ -94,7 +86,8 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
     </header> */}
 
       <div className="rel-dropdown">
-        <button className="rel-dropbtn">ProtVar {process.env.REACT_APP_PV} <small>{process.env.REACT_APP_PV_REL}</small></button>
+        <button className="rel-dropbtn">ProtVar {process.env.REACT_APP_PV} <small>{process.env.REACT_APP_UNIPROT}</small>
+        </button>
         <ul className="rel-dropdown-content">
           <li>UI {process.env.REACT_APP_UI}</li>
           <li>API {process.env.REACT_APP_API}</li>
