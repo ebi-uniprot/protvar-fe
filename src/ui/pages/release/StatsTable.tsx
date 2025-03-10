@@ -1,169 +1,176 @@
 // StatsTable.tsx
 import React from 'react';
 import "./StatsTable.css"
+import {useStats} from "../../../context/StatsContext";
 
 const StatsTable: React.FC = () => {
+  const { getStat } = useStats();
   return (
-    <>
-      <section className="section">
-        <h6>Application Versions</h6>
-        <table className="stats-table">
-          <thead>
-          <tr>
-            <th>App</th>
-            <th>Version</th>
-            <th>Last Updated</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr>
-            <td><a href={process.env.PUBLIC_URL} target="_blank" rel="noreferrer">UI</a></td>
-            <td>{process.env.REACT_APP_UI}</td>
-            <td>Feb 2025</td>
-          </tr>
-          <tr>
-            <td><a href={process.env.API_URL} target="_blank" rel="noreferrer">API</a></td>
-            <td>{process.env.REACT_APP_API}</td>
-            <td>Feb 2025</td>
-          </tr>
-          <tr>
-            <td><a href={process.env.PV_FTP} target="_blank" rel="noreferrer">FTP</a></td>
-            <td>-</td>
-            <td>Feb 2025</td>
-          </tr>
-          </tbody>
-        </table>
-      </section>
+    <div className="stats-main">
+      <h6>Key Stats for Current Release</h6>
+      <table className="stats-table">
+        <thead>
+        <tr>
+          <th>Source</th>
+          <th>Version</th>
+          <th>Data type</th>
+          <th>Number</th>
+          <th>Last updated</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>UniProt</td>
+          <td>{process.env.REACT_APP_UNIPROT}</td>
+          <td>Canonical sequences</td>
+          <td>{formatNumber(getStat("uniprot_canonical_count")?.value)}</td>
+          <td>{formatDate(getStat("uniprot_canonical_count")?.created)}</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td>Alternative isoforms</td>
+          <td>{formatNumber(getStat("alternative_isoform_count")?.value)}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Ensembl</td>
+          <td>{process.env.REACT_APP_ENSEMBL}</td>
+          <td>Transcript sequences</td>
+          <td>{formatNumber(getStat("ensembl_transcript_count")?.value)}</td>
+          <td>{formatDate(getStat("ensembl_transcript_count")?.created)}</td>
+        </tr>
+        <tr>
+          <td>RefSeq</td>
+          <td></td>
+          <td>Accessions</td>
+          <td>{formatNumber(getStat("refseq_id_count")?.value)}</td>
+          <td>{formatDate(getStat("refseq_id_count")?.created)}</td>
+        </tr>
 
-      <section className="section">
-        <h6>Data Releases</h6>
-        <table className="stats-table">
-          <thead>
-          <tr>
-            <th>Release</th>
-            <th>Data</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr>
-            <td>Data Release 1.0</td>
-            <td>Dec 2023</td>
-          </tr>
-          <tr>
-            <td>Data Release {process.env.REACT_APP_DATA}</td>
-            <td>Feb 2025</td>
-          </tr>
-          </tbody>
-        </table>
-      </section>
+        <tr>
+          <td colSpan={5}></td>
+        </tr>
 
-      <section className="section">
-        <h6>Core Mapping Data</h6>
-        <ul>
-          <li>Affects genomic-protein coordinate mapping, genome assembly conversion, and various ID mappings.</li>
-          <li>
-            Source Versions:
-            <ul>
-              <li>UniProt: {process.env.REACT_APP_UNIPROT}</li>
-              <li>Ensembl: {process.env.REACT_APP_ENSEMBL}</li>
-            </ul>
-          </li>
-        </ul>
-      </section>
+        <tr>
+          <td>dbSNP</td>
+          <td>{process.env.REACT_APP_DBSNP}</td>
+          <td>IDs</td>
+          <td>{formatNumber(getStat("dbsnp_id_count")?.value)}</td>
+          <td>{formatDate(getStat("dbsnp_id_count")?.created)}</td>
+        </tr>
+        <tr>
+          <td>ClinVar</td>
+          <td>{process.env.REACT_APP_CLINVAR}</td>
+          <td>IDs</td>
+          <td>{formatNumber(getStat("clinvar_total_count")?.value)}</td>
+          <td>{formatDate(getStat("clinvar_total_count")?.created)}</td>
+        </tr>
+        <tr>
+          <td>COSMIC</td>
+          <td>{process.env.REACT_APP_COSMIC}</td>
+          <td>IDs</td>
+          <td>{formatNumber(getStat("cosmic_id_count")?.value)}</td>
+          <td>{formatDate(getStat("cosmic_id_count")?.created)}</td>
+        </tr>
+        <tr>
+          <td>gnomAD</td>
+          <td>{process.env.REACT_APP_GNOMAD}</td>
+          <td>Allele frequency</td>
+          <td>{formatNumber(getStat("allele_freq_count")?.value)}</td>
+          <td>{formatDate(getStat("allele_freq_count")?.created)}</td>
+        </tr>
 
-      <section className="section">
-        <h6>Variant Lookup</h6>
-        <p>Supports variant search using known IDs.</p>
-        <table className="stats-table">
-          <thead>
-          <tr>
-            <th>Database</th>
-            <th>Version</th>
-            <th>Last Updated</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr>
-            <td>dbSNP</td>
-            <td>{process.env.REACT_APP_DBSNP}</td>
-            <td>Feb 2025</td>
-          </tr>
-          <tr>
-            <td>ClinVar</td>
-            <td>{process.env.REACT_APP_CLINVAR}</td>
-            <td>Feb 2025</td>
-          </tr>
-          <tr>
-            <td>COSMIC</td>
-            <td>{process.env.REACT_APP_COSMIC}</td>
-            <td>Feb 2025</td>
-          </tr>
-          <tr>
-            <td>gnomAD</td>
-            <td>{process.env.REACT_APP_GNOMAD}</td>
-            <td>Feb 2025</td>
-          </tr>
-          </tbody>
-        </table>
-      </section>
+        <tr>
+          <td colSpan={5}></td>
+        </tr>
 
-      <section className="section">
-        <h6>Scores and Predictions</h6>
-        <table className="stats-table">
-          <thead>
-          <tr>
-            <th>Score/Prediction</th>
-            <th>Version</th>
-            <th>Last Updated</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr>
-            <td>CADD</td>
-            <td>{process.env.REACT_APP_CADD}</td>
-            <td>Feb 2025</td>
-          </tr>
-          <tr>
-            <td>AlphaMissense</td>
-            <td>-</td>
-            <td>May 2024</td>
-          </tr>
-          <tr>
-            <td>EVE</td>
-            <td>-</td>
-            <td>Dec 2022</td>
-          </tr>
-          <tr>
-            <td>ESM-1b</td>
-            <td>-</td>
-            <td>May 2024</td>
-          </tr>
-          <tr>
-            <td>Conservation</td>
-            <td>-</td>
-            <td>-</td>
-          </tr>
-          <tr>
-            <td>Stability</td>
-            <td>-</td>
-            <td>Feb 2025</td>
-          </tr>
-          <tr>
-            <td>Pockets</td>
-            <td>v2</td>
-            <td>May 28, 2024</td>
-          </tr>
-          <tr>
-            <td>Interfaces</td>
-            <td>v1*</td>
-            <td>May 28, 2024</td>
-          </tr>
-          </tbody>
-        </table>
-        *<small>reverted to v1 (from v2) - will be updated in future release</small>
-      </section>
-    </>
+
+        <tr>
+          <td>AlphaMissense</td>
+          <td>May 2024</td>
+          <td>Score</td>
+          <td>{formatNumber(getStat("alphamissense_count")?.value)}</td>
+          <td>{formatDate(getStat("alphamissense_count")?.created)}</td>
+        </tr>
+
+        <tr>
+          <td>EVE</td>
+          <td>Dec 2022</td>
+          <td>Score</td>
+          <td>{formatNumber(getStat("eve_count")?.value)}</td>
+          <td>{formatDate(getStat("eve_count")?.created)}</td>
+        </tr>
+
+        <tr>
+          <td>ESM-1b</td>
+          <td></td>
+          <td>Score</td>
+          <td>{formatNumber(getStat("esm_count")?.value)}</td>
+          <td>{formatDate(getStat("esm_count")?.created)}</td>
+        </tr>
+
+        <tr>
+          <td>Conservation</td>
+          <td></td>
+          <td>Score</td>
+          <td>{formatNumber(getStat("conservation_count")?.value)}</td>
+          <td>{formatDate(getStat("conservation_count")?.created)}</td>
+        </tr>
+
+        <tr>
+          <td colSpan={5}></td>
+        </tr>
+
+        <tr>
+          <td>CADD</td>
+          <td>{process.env.REACT_APP_CADD}</td>
+          <td>Prediction</td>
+          <td>{formatNumber(getStat("coding_cadd")?.value)}</td>
+          <td>{formatDate(getStat("coding_cadd")?.created)}</td>
+        </tr>
+
+        <tr>
+          <td>Stability</td>
+          <td>May 2024</td>
+          <td>Prediction</td>
+          <td>{formatNumber(getStat("foldx_total")?.value)}</td>
+          <td>{formatDate(getStat("foldx_total")?.created)}</td>
+        </tr>
+
+        <tr>
+          <td>Pockets</td>
+          <td>May 2024</td>
+          <td>Prediction</td>
+          <td>{formatNumber(getStat("pocket_total")?.value)}</td>
+          <td>{formatDate(getStat("pocket_total")?.created)}</td>
+        </tr>
+
+        <tr>
+          <td>Interfaces</td>
+          <td>May 2024</td>
+          <td>Prediction</td>
+          <td>{formatNumber(getStat("interaction_total")?.value)}</td>
+          <td>{formatDate(getStat("interaction_total")?.created)}</td>
+        </tr>
+
+        </tbody>
+      </table>
+    </div>
   );
+};
+
+
+// Helper function to format numbers with commas
+export const formatNumber = (number?: number) => {
+  return number ? new Intl.NumberFormat().format(number) : '';
+};
+
+const formatDate = (dateString?: string) => {
+  if (!dateString)
+    return ''
+  const date = new Date(dateString);
+  return new Intl.DateTimeFormat("en-GB", { month: "short", year: "numeric" }).format(date);
 };
 
 export default StatsTable;
