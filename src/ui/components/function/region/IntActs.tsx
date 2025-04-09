@@ -31,7 +31,7 @@ function IntActs(props: IntActsProps) {
 			return (
 				<>
 					<label>
-						<button type="button" className="collapsible" onClick={(e) => toggleProteinRegion(key)}>
+						<button type="button" className="collapsible" onClick={_ => toggleProteinRegion(key)}>
 							<b>Interactions</b>
 							<ChevronDownIcon className="chevronicon" />
 						</button>

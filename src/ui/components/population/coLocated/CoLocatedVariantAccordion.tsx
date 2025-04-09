@@ -35,7 +35,7 @@ function CoLocatedVariantAccordion(props: CoLocatedVariantAccordionProps) {
   coLocatedVariantsMap.forEach((genomicLocations, change) => {
     variantDetails.push(
       <li key={uuidv1()}>
-        <button type="button" className="collapsible" onClick={(e) => toggleCoLocated(change)}>
+        <button type="button" className="collapsible" onClick={_ => toggleCoLocated(change)}>
           <b>
             {change} ({genomicLocations.length})
           </b>

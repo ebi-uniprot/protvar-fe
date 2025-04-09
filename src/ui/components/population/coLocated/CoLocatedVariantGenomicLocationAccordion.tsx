@@ -25,7 +25,7 @@ function CoLocatedVariantGenomicLocationAccordion(props: CoLocatedVariantGenomic
         <button
           type="button"
           className="collapsible"
-          onClick={(e) => props.toggleGenomic(genomicLocation(props))}
+          onClick={_ => props.toggleGenomic(genomicLocation(props))}
         >
           <b>{genomicLocation(props)}</b>
           <ChevronDownIcon className="chevronicon" />

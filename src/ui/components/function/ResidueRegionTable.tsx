@@ -117,7 +117,7 @@ function getFeatureList(feature: Feature, key: string, expandedRowKey: string, t
   }*/
 
   return <Fragment key={key}>
-    <button type="button" className="collapsible" onClick={(e) => toggleRow(key)}>
+    <button type="button" className="collapsible" onClick={_ => toggleRow(key)}>
       <span className="badge" style={{margin: "0 5 0 5"}}>{feature.type.toLowerCase()}</span>{feature.description ?? 'Unnamed'}
       <ChevronDownIcon className="chevronicon"/>
     </button>
@@ -218,7 +218,7 @@ const Pockets = (props: PocketsProps) => {
 
   let key = 'pockets-0'
   return <Fragment key={key}>
-    <button type="button" className="collapsible" onClick={(e) => props.toggleRow(key)}>
+    <button type="button" className="collapsible" onClick={_ => props.toggleRow(key)}>
       Pockets containing variant
       <ChevronDownIcon className="chevronicon"/>
     </button>
@@ -284,7 +284,7 @@ const Interfaces = (props: InterfacesProps) => {
   if (props.interactions.length === 0) return <div className="struct-pred">No P-P interaction predicted at variant position</div>
   let key = 'interfaces-0'
   return <Fragment key={key}>
-    <button type="button" className="collapsible" onClick={(e) => props.toggleRow(key)}>
+    <button type="button" className="collapsible" onClick={_ => props.toggleRow(key)}>
       Protein-protein interfaces containing variant
       <ChevronDownIcon className="chevronicon"/>
     </button>

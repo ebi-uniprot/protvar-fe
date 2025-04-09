@@ -15,7 +15,7 @@ function RegionProteinAccordion(props: RegionProteinAccordionProps) {
 
   return <>
     <label>
-      <button type="button" className="collapsible" onClick={(e) => toggleProteinRegion(title)}>
+      <button type="button" className="collapsible" onClick={_ => toggleProteinRegion(title)}>
         <b>{title}</b>
         <ChevronDownIcon className="chevronicon" />
       </button>
