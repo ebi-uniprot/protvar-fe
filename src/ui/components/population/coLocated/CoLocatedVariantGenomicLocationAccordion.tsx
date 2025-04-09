@@ -4,17 +4,17 @@ import { v1 as uuidv1 } from 'uuid';
 import PopulationFrequencyDetails from "../common/PopulationFrequencyDetails";
 import { StringVoidFun } from "../../../../constants/CommonTypes";
 import { ReactComponent as ChevronDownIcon } from "../../../../images/chevron-down.svg"
-import {Association, ProteinColocatedVariant} from "../../../../types/PopulationObservationResponse";
+import {VariantAssociation, Variant} from "../../../../types/PopulationObservation";
 
 interface CoLocatedVariantGenomicLocationAccordionProps {
-  coLocatedVariant: ProteinColocatedVariant
+  coLocatedVariant: Variant
   expandedGenomicKey: string
   toggleGenomic: StringVoidFun
 }
 
 function genomicLocation(props: CoLocatedVariantGenomicLocationAccordionProps) {
   if (props.coLocatedVariant.genomicLocation)
-    return props.coLocatedVariant.genomicLocation;
+    return props.coLocatedVariant.genomicLocation[0];
   return `No genomic location (${props.coLocatedVariant.xrefs[0].id})`
 }
 
@@ -52,7 +52,7 @@ function CoLocatedVariantGenomicLocationAccordionDetail(props: CoLocatedVariantG
   );
 }
 
-function getAssociationsTag(associations: Array<Association>) {
+function getAssociationsTag(associations: Array<VariantAssociation>) {
   if (associations && associations.length > 0) {
     return (
       <li key={uuidv1()}>

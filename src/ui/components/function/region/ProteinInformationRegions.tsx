@@ -1,39 +1,39 @@
 import { useState } from 'react';
-import {Comment} from "../../../../types/FunctionalResponse";
-import { divideProteinRegions } from "../ProteinHelper";
 import ActivityRegulations, { getActivityRegulation } from './ActivityRegulations';
 import AdditionalResources from './AdditionalResources';
 import CatalyticActivities from "./CatalyticActivities";
-import Interactions from './Interactions';
+import IntActs from './IntActs';
 import RegionProteinAccordion from './RegionProteinAccordion';
 import SubcellularLocations from './SubcellularLocations';
+import {Comment, CommentType} from "../../../../types/Comment";
 
 interface ProteinInformationRegionsProps {
   accession: string
-  comments: Array<Comment>
+  groupedComments: Map<string, Array<Comment>>
 }
 function ProteinInformationRegions(props: ProteinInformationRegionsProps) {
   const [expandedRegionKey, setExpandedRegionKey] = useState('');
   function toggleProteinRegion(key: string) {
     setExpandedRegionKey(expandedRegionKey === key ? '' : key)
   }
-  const { comments, accession } = props;
-  const [catalyticActivities, activityRegulations, subunits, subcellularLocations, ptms,
-    similarities, webResources, domains, interactions] = divideProteinRegions(comments)
+  const { groupedComments, accession } = props;
+
+  const get = (type: string) => groupedComments.get(type) ?? [];
+
   return <>
-    <CatalyticActivities comments={catalyticActivities} expandedRegionKey={expandedRegionKey} toggleProteinRegion={toggleProteinRegion} />
-    <ActivityRegulations comments={activityRegulations} expandedRegionKey={expandedRegionKey} toggleProteinRegion={toggleProteinRegion} />
-    <RegionProteinAccordion comments={subunits} title="Complex" detailComponentGenerator={getActivityRegulation}
+    <CatalyticActivities comments={get(CommentType.CATALYTIC_ACTIVITY)} expandedRegionKey={expandedRegionKey} toggleProteinRegion={toggleProteinRegion} />
+    <ActivityRegulations comments={get(CommentType.ACTIVITY_REGULATION)} expandedRegionKey={expandedRegionKey} toggleProteinRegion={toggleProteinRegion} />
+    <RegionProteinAccordion comments={get(CommentType.SUBUNIT)} title="Complex" detailComponentGenerator={getActivityRegulation}
       expandedRegionKey={expandedRegionKey} toggleProteinRegion={toggleProteinRegion} />
-    <SubcellularLocations comments={subcellularLocations} expandedRegionKey={expandedRegionKey} toggleProteinRegion={toggleProteinRegion} />
-    <RegionProteinAccordion comments={domains} title="Domains" detailComponentGenerator={getActivityRegulation}
+    <SubcellularLocations comments={get(CommentType.SUBCELLULAR_LOCATION)} expandedRegionKey={expandedRegionKey} toggleProteinRegion={toggleProteinRegion} />
+    <RegionProteinAccordion comments={get(CommentType.DOMAIN)} title="Domains" detailComponentGenerator={getActivityRegulation}
       expandedRegionKey={expandedRegionKey} toggleProteinRegion={toggleProteinRegion} />
-    <RegionProteinAccordion comments={ptms} title="PTM's" detailComponentGenerator={getActivityRegulation}
+    <RegionProteinAccordion comments={get(CommentType.PTM)} title="PTM's" detailComponentGenerator={getActivityRegulation}
       expandedRegionKey={expandedRegionKey} toggleProteinRegion={toggleProteinRegion} />
-    <RegionProteinAccordion comments={similarities} title="Family" detailComponentGenerator={getActivityRegulation}
+    <RegionProteinAccordion comments={get(CommentType.SIMILARITY)} title="Family" detailComponentGenerator={getActivityRegulation}
       expandedRegionKey={expandedRegionKey} toggleProteinRegion={toggleProteinRegion} />
-    <AdditionalResources comments={webResources} expandedRegionKey={expandedRegionKey} toggleProteinRegion={toggleProteinRegion} />
-    <Interactions comments={interactions} expandedRegionKey={expandedRegionKey} toggleProteinRegion={toggleProteinRegion} accession={accession} />
+    <AdditionalResources comments={get(CommentType.WEBRESOURCE)} expandedRegionKey={expandedRegionKey} toggleProteinRegion={toggleProteinRegion} />
+    <IntActs comments={get(CommentType.INTERACTION)} expandedRegionKey={expandedRegionKey} toggleProteinRegion={toggleProteinRegion} accession={accession} />
   </>
 }
 

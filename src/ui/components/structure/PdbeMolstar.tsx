@@ -3,12 +3,12 @@ import "pdbe-molstar/build/pdbe-molstar-component";
 import "pdbe-molstar/build/pdbe-molstar-light.css";
 import Loader from "../../elements/Loader";
 import {ProteinStructureElement} from "../../../types/ProteinStructureResponse";
-import {P2PInteraction} from "../../../types/FunctionalResponse";
 import {API_URL} from "../../../constants/const";
 import {PredictedStructure} from "./StructuralDetail";
+import {Interaction} from "../../../types/Prediction";
 
 interface PdbeMolstarProps {
-    selected: ProteinStructureElement|PredictedStructure|P2PInteraction
+    selected: ProteinStructureElement|PredictedStructure|Interaction
     pdbeRef: any
 }
 
@@ -25,7 +25,7 @@ const PdbeMolstar = (props: PdbeMolstarProps) => {
                                       custom-data-url={props.selected.cifUrl} custom-data-format="cif"
                                       alphafold-view="true" hide-water="true" />
     } else if ("a" in props.selected && "b" in props.selected) {
-        const modelUrl = API_URL + '/interaction/'+props.selected.a+'/'+props.selected.b+'/model';
+        const modelUrl = API_URL + '/prediction/interaction/'+props.selected.a+'/'+props.selected.b+'/model';
         pdbeComponent = <pdbe-molstar id="pdbeMolstarComponent" ref={props.pdbeRef}
                                       bg-color-r="255" bg-color-g="255" bg-color-b="255" hide-controls="true"
                                       custom-data-url={modelUrl} custom-data-format="pdb" alphafold-view="true" hide-water="true" />

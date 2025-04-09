@@ -75,7 +75,11 @@
   border-bottom-color: lightgrey;
 }
 
-.icon-btn:hover {
+.icon-btn:disabled {
+  color: lightgrey;
+}
+
+.icon-btn:hover:not([disabled]) {
   background-color: #e7e7e7;
   cursor: pointer;
 }

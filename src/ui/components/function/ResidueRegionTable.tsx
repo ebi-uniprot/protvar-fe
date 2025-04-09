@@ -6,15 +6,16 @@ import {ReactComponent as ChevronDownIcon} from "../../../images/chevron-down.sv
 import {v1 as uuidv1} from 'uuid';
 import {StringVoidFun} from "../../../constants/CommonTypes";
 import {formatRange} from "../../../utills/Util";
-import {FunctionalResponse, Pocket, P2PInteraction, ProteinFeature} from "../../../types/FunctionalResponse";
+import {FunctionalInfo, Feature} from "../../../types/FunctionalInfo";
 import {Prediction} from "./prediction/Prediction";
 import {Dropdown} from "react-dropdown-now";
 import {AMScore, ConservScore, ESMScore, EVEScore, TranslatedSequence} from "../../../types/MappingResponse";
 import {HelpContent} from "../help/HelpContent";
 import {HelpButton} from "../help/HelpButton";
+import {Interaction, Pocket} from "../../../types/Prediction";
 
 export interface ResidueRegionTableProps {
-  functionalData: FunctionalResponse
+  functionalData: FunctionalInfo
   refAA: string
   variantAA: string
   ensg: string
@@ -33,12 +34,12 @@ function ResidueRegionTable(props: ResidueRegionTableProps) {
     setExpandedRowKey(expandedRowKey === key ? '' : key)
   }
 
-  var regions: Array<ProteinFeature> = [];
-  var residues: Array<ProteinFeature> = [];
+  var regions: Array<Feature> = [];
+  var residues: Array<Feature> = [];
   if (props.functionalData.features && props.functionalData.features.length > 0) {
     props.functionalData.features.forEach((feature) => {
       if (feature.category !== 'VARIANTS') {
-        if (feature.begin === feature.end)
+        if (Number(feature.begin) === Number(feature.end))
           residues.push(feature);
         else
           regions.push(feature);
@@ -62,7 +63,7 @@ function ResidueRegionTable(props: ResidueRegionTableProps) {
   return EmptyElement
 }
 
-function getResidues(regions: Array<ProteinFeature>, props: ResidueRegionTableProps, expandedRowKey: string, toggleRow: StringVoidFun) {
+function getResidues(regions: Array<Feature>, props: ResidueRegionTableProps, expandedRowKey: string, toggleRow: StringVoidFun) {
   return <>
     <b>Annotations from UniProt</b>
     {regions.length === 0 && <div>
@@ -82,7 +83,7 @@ function getResidues(regions: Array<ProteinFeature>, props: ResidueRegionTablePr
   </>
 }
 
-function getRegions(regions: Array<ProteinFeature>, accession: string, pockets: Array<Pocket>, interactions: Array<P2PInteraction>, expandedRowKey: string, toggleRow: StringVoidFun) {
+function getRegions(regions: Array<Feature>, accession: string, pockets: Array<Pocket>, interactions: Array<Interaction>, expandedRowKey: string, toggleRow: StringVoidFun) {
   return (<>
     <b>Annotations from UniProt</b>
     {regions.length === 0 && <div>
@@ -105,7 +106,7 @@ function getRegions(regions: Array<ProteinFeature>, accession: string, pockets: 
   </>);
 }
 
-function getFeatureList(feature: ProteinFeature, key: string, expandedRowKey: string, toggleRow: StringVoidFun) {
+function getFeatureList(feature: Feature, key: string, expandedRowKey: string, toggleRow: StringVoidFun) {
   /*let category = '';
   if (getKeyValue(feature.type)(FEATURES)) {
     category = getKeyValue(feature.type)(FEATURES);
@@ -114,22 +115,17 @@ function getFeatureList(feature: ProteinFeature, key: string, expandedRowKey: st
   if (feature.description) {
     category = category + '-' + feature.description;
   }*/
-  let featureDesc = feature.typeDescription ? feature.typeDescription + (feature.description ? '-' + feature.description : '')
-    : (feature.description ? feature.description : '')
-  if (!featureDesc) {
-    featureDesc = 'Unnamed'
-  }
 
   return <Fragment key={key}>
     <button type="button" className="collapsible" onClick={(e) => toggleRow(key)}>
-      {featureDesc}
+      <span className="badge" style={{margin: "0 5 0 5"}}>{feature.type.toLowerCase()}</span>{feature.description ?? 'Unnamed'}
       <ChevronDownIcon className="chevronicon"/>
     </button>
     {getFeatureDetail(key, feature, expandedRowKey)}
   </Fragment>
 }
 
-function getFeatureDetail(rowKey: string, feature: ProteinFeature, expandedRowKey: string) {
+function getFeatureDetail(rowKey: string, feature: Feature, expandedRowKey: string) {
   if (rowKey === expandedRowKey) {
     return (
       <>
@@ -145,8 +141,8 @@ function getFeatureDetail(rowKey: string, feature: ProteinFeature, expandedRowKe
   }
 }
 
-function getPositionLabel(begin: number, end: number) {
-  if (begin === end)
+function getPositionLabel(begin: string, end: string) {
+  if (Number(begin) === Number(end))
     return <><b>Position :</b> {begin}</>
   else
     return <><b>Range : </b> {begin} - {end}</>
@@ -279,7 +275,7 @@ function ShowPocket(pocket: Pocket) {
 
 interface InterfacesProps {
   accession: string
-  interactions: Array<P2PInteraction>
+  interactions: Array<Interaction>
   expandedRowKey: string
   toggleRow: StringVoidFun
 }
@@ -318,7 +314,7 @@ const Interfaces = (props: InterfacesProps) => {
 
 /*
 function ShowInteractionAcc(acc: string) {
-  return function(interaction: P2PInteraction, index: number) {
+  return function(interaction: Interaction, index: number) {
     return <div key={`interaction-${index + 1}`} className="pred-grid pred-grid-col2">
       <div>{acc === interaction.a ? interaction.b : interaction.a}</div>
       <div>{interaction.pdockq.toFixed(3)}</div>
@@ -326,7 +322,7 @@ function ShowInteractionAcc(acc: string) {
   }
 }*/
 
-function ShowInteraction(accession: string, interaction: P2PInteraction, index: number) {
+function ShowInteraction(accession: string, interaction: Interaction, index: number) {
   return <div key={`interaction-${index + 1}`} className="pred-grid pred-grid-col3">
     <div>{accession === interaction.a ? interaction.b : interaction.a}</div>
     <div>{interaction.pdockq.toFixed(3)}</div>

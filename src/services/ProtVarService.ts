@@ -6,8 +6,8 @@ import {
   CONTENT_TEXT,
   DEFAULT_HEADERS
 } from "../constants/const";
-import {FunctionalResponse} from "../types/FunctionalResponse";
-import {PopulationObservationResponse} from "../types/PopulationObservationResponse";
+import {FunctionalInfo} from "../types/FunctionalInfo";
+import {PopulationObservation} from "../types/PopulationObservation";
 import {ProteinStructureResponse} from "../types/ProteinStructureResponse";
 import MappingResponse from "../types/MappingResponse";
 import {DownloadResponse} from "../types/DownloadRecord";
@@ -100,7 +100,7 @@ export function getResult(inputType: InputType, id: string, page: number, pageSi
 
 // Annotation
 export function getFunctionalData(url: string) {
-  return api.get<FunctionalResponse>(url).then(
+  return api.get<FunctionalInfo>(url).then(
     response => {
       if (response.data.interactions && response.data.interactions.length > 1) {
         response.data.interactions.sort((a, b) => b.pdockq - a.pdockq);
@@ -111,7 +111,7 @@ export function getFunctionalData(url: string) {
 }
 
 export function getPopulationData(url: string) {
-  return api.get<PopulationObservationResponse>(url);
+  return api.get<PopulationObservation>(url);
 }
 
 export function getStructureData(url: string) {

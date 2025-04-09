@@ -1,13 +1,11 @@
 import { v1 as uuidv1 } from 'uuid';
-import {PopulationFrequency} from "../../../../types/PopulationObservationResponse";
+import {PopulationFrequency} from "../../../../types/PopulationObservation";
 interface PopulationFrequencyDetailsProps {
   populationFrequencies: Array<PopulationFrequency>
 }
 function PopulationFrequencyDetails(props: PopulationFrequencyDetailsProps) {
+  if (!props.populationFrequencies?.length) return <></>;
   const frequencies = props.populationFrequencies.map(getPopFrequency);
-  if (frequencies.length <= 0)
-    return <></>
-
   return (
     <li key={uuidv1()}>
       <b>Population Freuencies:</b> {frequencies}

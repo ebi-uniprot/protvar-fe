@@ -7,7 +7,6 @@ import LoaderRow from "../../pages/result/LoaderRow";
 import PdbeRef from "./PdbeRef";
 import {getPredictedStructure} from "../../../services/AlphafoldService";
 import {getFunctionalData, getStructureData} from "../../../services/ProtVarService";
-import {P2PInteraction, Pocket} from "../../../types/FunctionalResponse";
 import {ProteinStructureElement} from "../../../types/ProteinStructureResponse";
 import {AlphafoldResponseElement} from "../../../types/AlphafoldResponse";
 import {WHITE} from "../../../types/Colors";
@@ -17,6 +16,7 @@ import {HelpButton} from "../help/HelpButton";
 import Spaces from "../../elements/Spaces";
 import {ShareAnnotationIcon} from "../common/ShareLink";
 import {ALPHAFILL_URL, hasAlphafillStructure} from "../../../services/AlphafillService";
+import {Interaction, Pocket} from "../../../types/Prediction";
 
 
 interface StructuralDetailProps {
@@ -50,8 +50,8 @@ function StructuralDetail(props: StructuralDetailProps) {
   const {isoFormAccession, aaPosition, variantAA, proteinStructureUri} = props;
   const [pdbData, setPdbData] = useState(new Array<ProteinStructureElement>());
   const [predictedStructureData, setPredictedStructureData] = useState(new Array<PredictedStructure>());
-  const [selected, setSelected] = useState<ProteinStructureElement | PredictedStructure | P2PInteraction>();
-  const [interactionData, setInteractionData] = useState(new Array<P2PInteraction>());
+  const [selected, setSelected] = useState<ProteinStructureElement | PredictedStructure | Interaction>();
+  const [interactionData, setInteractionData] = useState(new Array<Interaction>());
   const [pocketData, setPocketData] = useState(new Array<Pocket>());
   const ref = useRef(null);
   const [pdbeRef] = useState(new PdbeRef(ref))

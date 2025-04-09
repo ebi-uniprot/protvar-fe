@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import PopulationDataRow from './PopulationDataRow';
 import LoaderRow from '../../pages/result/LoaderRow';
 import {getPopulationData} from "../../../services/ProtVarService";
-import {PopulationObservationResponse} from "../../../types/PopulationObservationResponse";
+import {PopulationObservation} from "../../../types/PopulationObservation";
 
 
 interface PopulationDetailProps {
@@ -15,7 +15,7 @@ interface PopulationDetailProps {
 
 function PopulationDetail(props: PopulationDetailProps) {
   const { annotation, populationObservationsUri, variantAA, alleleFreq, gnomadCoord } = props;
-  const [poApiData, setPoApiData] = useState<PopulationObservationResponse>();
+  const [poApiData, setPoApiData] = useState<PopulationObservation>();
 
   useEffect(() => {
     getPopulationData(populationObservationsUri).then(

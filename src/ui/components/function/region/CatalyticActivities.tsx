@@ -1,17 +1,18 @@
-import { Fragment } from "react"
-import { v1 as uuidv1 } from 'uuid';
 import RegionProteinProps from "./RegionProteinProps";
 import Evidences from "../Evidences";
-import {Comment, DBReference, Reaction} from "../../../../types/FunctionalResponse";
+import { v1 as uuidv1 } from 'uuid';
 import { RHEA_URL } from "../../../../constants/ExternalUrls";
 import RegionProteinAccordion from "./RegionProteinAccordion";
+import {CatalyticActivityComment, Comment, Reaction} from "../../../../types/Comment";
+import {DbReference} from "../../../../types/Common";
+import {Fragment} from "react";
 
 function CatalyticActivities(props: RegionProteinProps) {
   return <RegionProteinAccordion title="Catalytic Activity" detailComponentGenerator={getCatalyticActivity} {...props}/>
 }
 
-function getCatalyticActivity(region: Comment) {
-  var reaction = region.reaction;
+function getCatalyticActivity(comment: Comment) {
+  const reaction = (comment as CatalyticActivityComment).reaction;
   return (
     <Fragment key={uuidv1()}>
       <ul>
@@ -28,13 +29,13 @@ function catalyticActivityDetails(reaction: Reaction) {
   return (
     <div>
       <ul>
-        <li>{getRHEA(reaction.dbReferences)} </li>
+        <li>{getRHEA(reaction.dbReferences ?? [])} </li>
       </ul>
 
       {evidencesFlag &&
         <ul>
           <li>
-            <Evidences evidences={reaction.evidences} />
+            <Evidences evidences={reaction.evidences ?? []} />
           </li>
         </ul>
       }
@@ -43,7 +44,7 @@ function catalyticActivityDetails(reaction: Reaction) {
   );
 }
 
-function getRHEA(dbReferences: Array<DBReference>) {
+function getRHEA(dbReferences: Array<DbReference>) {
   const reaIds: Array<JSX.Element> = []
   if (dbReferences) {
     dbReferences.forEach((reference) => {

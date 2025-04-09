@@ -1,20 +1,20 @@
 import { Fragment } from "react"
 import Evidences from "../../function/Evidences";
 import { v1 as uuidv1 } from 'uuid';
-import {Association} from "../../../../types/PopulationObservationResponse";
+import {VariantAssociation} from "../../../../types/PopulationObservation";
 
 interface AssociationDetailsProps {
-  associations: Array<Association>
+  associations: Array<VariantAssociation>
 }
 function AssociationDetails(props: AssociationDetailsProps) {
   if (props.associations.length === 0)
     return <>No association found</>
   return <>{props.associations.map(getAssociation)}</>;
 }
-function getAssociation(association: Association) {
+function getAssociation(association: VariantAssociation) {
   let name = association.name;
   if (association.description)
-    name = name + '-' + association.description;
+    name = name + '-' + association.description.replace(/α/g, "Alpha");
   return (
     <Fragment key={uuidv1()}>
       <ul>

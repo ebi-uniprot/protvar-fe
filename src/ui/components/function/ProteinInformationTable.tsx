@@ -1,9 +1,12 @@
 import LabelValueLi from "./LabelValueLi";
 import ProteinInformationRegions from "./region/ProteinInformationRegions";
-import {FunctionalResponse, GeneName} from "../../../types/FunctionalResponse";
+import {FunctionalInfo, Gene} from "../../../types/FunctionalInfo";
+import {v1 as uuidv1} from "uuid";
+import {Comment} from "../../../types/Comment";
 
 interface ProteinInformationTableProps {
-  apiData: FunctionalResponse
+  apiData: FunctionalInfo
+  groupedComments: Map<string, Array<Comment>>
 }
 
 function ProteinInformationTable(props: ProteinInformationTableProps) {
@@ -22,7 +25,7 @@ function ProteinInformationTable(props: ProteinInformationTableProps) {
                   <ul style={{ listStyleType: 'none' }}>
                     <LabelValueLi label="Recommended name" value={data.name} />
                     <LabelValueLi label="Alternative name" value={data.alternativeNames} />
-                    {displayGeneNameAndSynonym(data.geneNames)}
+                    {displayGeneNameAndSynonym(data.gene)}
                     <LabelValueLi label="UniProtKB entry name" value={data.id} />
                     <LabelValueLi label="Protein evidence" value={data.proteinExistence} />
                     <LabelValueLi label="Entry last updated" value={data.lastUpdated} />
@@ -31,7 +34,7 @@ function ProteinInformationTable(props: ProteinInformationTableProps) {
                   </ul>
                 </td>
                 <td className="protein-table-cell">
-                  <ProteinInformationRegions comments={data.comments} accession={data.accession} />
+                  <ProteinInformationRegions groupedComments={props.groupedComments} accession={data.accession} />
                 </td>
               </tr>
             </tbody>
@@ -42,20 +45,20 @@ function ProteinInformationTable(props: ProteinInformationTableProps) {
   </table>
 }
 
-function displayGeneNameAndSynonym(geneNames: Array<GeneName>) {
+function displayGeneNameAndSynonym(gene: Array<Gene>) {
   const genes: Array<JSX.Element> = [];
-  if (geneNames && geneNames.length > 0) {
+  if (gene && gene.length > 0) {
 
-    geneNames.forEach((geneName) => {
+    gene.forEach((g) => {
       genes.push(
-        <li key={geneName.geneName}>
-          <b>Gene Name :</b> {geneName.geneName}
+        <li key={uuidv1()}>
+          <b>Gene Name :</b> {g.name.value}
         </li>
       );
-      if (geneName.synonyms) {
+      if (g.synonyms) {
         genes.push(
-          <li key={geneName.synonyms}>
-            <b>Synonyms: </b> {geneName.synonyms}
+          <li key={uuidv1()}>
+            <b>Synonyms: </b> {g.synonyms.map(s => s.value).join(",")}
           </li>
         );
       }

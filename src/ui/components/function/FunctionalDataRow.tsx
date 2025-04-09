@@ -4,20 +4,29 @@ import GeneAndTranslatedSequenceTable from './GeneAndTranslatedSequenceTable';
 import ProteinInformationTable from './ProteinInformationTable';
 import ResidueRegionTable from './ResidueRegionTable';
 import ProteinIcon from '../../../images/proteins.svg';
-import {FunctionalResponse} from "../../../types/FunctionalResponse";
+import {FunctionalInfo} from "../../../types/FunctionalInfo";
 import React from "react";
 import {FunctionalDetailProps} from "./FunctionalDetail";
 import {HelpContent} from "../help/HelpContent";
 import {HelpButton} from "../help/HelpButton";
 import {ShareAnnotationIcon} from "../common/ShareLink";
 import Spaces from "../../elements/Spaces";
+import {Comment, CommentType} from "../../../types/Comment";
 
 interface FunctionalDataRowProps extends FunctionalDetailProps {
-  functionalData: FunctionalResponse
+  functionalData: FunctionalInfo
 }
 
 function FunctionalDataRow(props: FunctionalDataRowProps) {
   const { functionalData, ensg, ensp } = props;
+
+  const grouped = new Map<string, Array<Comment>>();
+  functionalData.comments?.forEach((comment) => {
+    if (!grouped.has(comment.type)) {
+      grouped.set(comment.type, []);
+    }
+    grouped.get(comment.type)!.push(comment);
+  });
 
   return (
     <tr>
@@ -32,8 +41,8 @@ function FunctionalDataRow(props: FunctionalDataRowProps) {
             <Spaces count={2} />
             <ShareAnnotationIcon annotation={props.annotation} />
             <ResidueRegionTable {...props} />
-            <ProteinFunctionTable comments={functionalData.comments}/>
-            <ProteinInformationTable apiData={functionalData}/>
+            <ProteinFunctionTable functionComments={grouped.get(CommentType.FUNCTION) ?? []}/>
+            <ProteinInformationTable apiData={functionalData} groupedComments={grouped}/>
             <GeneAndTranslatedSequenceTable ensg={ensg} ensp={ensp} />
           </div>
         </div>

@@ -1,18 +1,19 @@
 import RegionProteinProps from "./RegionProteinProps";
-import {Comment} from "../../../../types/FunctionalResponse";
 import RegionProteinAccordion from "./RegionProteinAccordion";
-import { getActivityRegulation } from "./ActivityRegulations";
+import {getActivityRegulation} from "./ActivityRegulations";
 import { v1 as uuidv1 } from 'uuid';
 import { EmptyElement } from "../../../../constants/ConstElement";
+import {Comment, SubcellLocationComment} from "../../../../types/Comment";
 
 function SubcellularLocations(props: RegionProteinProps) {
   return <RegionProteinAccordion title="Subcellular Location" detailComponentGenerator={getSubcellularLocation} {...props} />
 }
 
 function getSubcellularLocation(comment: Comment) {
+  const locations = (comment as SubcellLocationComment).locations;
   var locationList: Array<JSX.Element> = [];
   var topologyList: Array<JSX.Element> = [];
-  comment.locations.forEach((location) => {
+  locations.forEach((location) => {
     if (location.location)
       locationList.push(<li key={uuidv1()}>{location.location.value}</li>);
     if (location.topology)

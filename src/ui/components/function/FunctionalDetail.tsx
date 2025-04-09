@@ -3,7 +3,7 @@ import NoFunctionalDataRow from './NoFunctionalDataRow';
 import FunctionalDataRow from './FunctionalDataRow';
 import LoaderRow from '../../pages/result/LoaderRow';
 import {getFunctionalData} from "../../../services/ProtVarService";
-import {FunctionalResponse} from "../../../types/FunctionalResponse";
+import {FunctionalInfo} from "../../../types/FunctionalInfo";
 import {AMScore, ConservScore, ESMScore, EVEScore, TranslatedSequence} from "../../../types/MappingResponse";
 
 
@@ -23,7 +23,7 @@ export interface FunctionalDetailProps {
 
 function FunctionalDetail(props: FunctionalDetailProps) {
   const { referenceFunctionUri } = props;
-  const [apiData, setApiData] = useState<FunctionalResponse>()
+  const [apiData, setApiData] = useState<FunctionalInfo>()
   useEffect(() => {
     getFunctionalData(referenceFunctionUri).then(
         response => {

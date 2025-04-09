@@ -2,10 +2,10 @@ import {baseSettings} from './StructuralDetail';
 import {formatRange} from "../../../utills/Util";
 import {API_URL} from "../../../constants/const";
 import PdbeRef from "./PdbeRef";
-import {P2PInteraction} from "../../../types/FunctionalResponse";
 import {HelpContent} from "../help/HelpContent";
 import {HelpButton} from "../help/HelpButton";
 import React from "react";
+import {Interaction} from "../../../types/Prediction";
 
 const customSettings = (customUrl: string) => {
     return {...baseSettings,
@@ -20,7 +20,7 @@ const customSettings = (customUrl: string) => {
 
 interface InteractionInfoTableProps {
   isoFormAccession: string,
-  interactionData: Array<P2PInteraction>
+  interactionData: Array<Interaction>
   selectedInteraction: string
   setSelected: any
   aaPos: number
@@ -39,7 +39,7 @@ function InteractionInfoTable(props: InteractionInfoTableProps) {
 
     const aResids = 'Residues: ' + formatRange(i.aresidues);
     const bResids = 'Residues: ' + formatRange(i.bresidues);
-    const modelUrl = API_URL + '/interaction/'+i.a+'/'+i.b+'/model';
+    const modelUrl = API_URL + '/prediction/interaction/'+i.a+'/'+i.b+'/model';
 
     const clicked = () => {
       props.setSelected(i)

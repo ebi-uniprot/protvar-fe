@@ -3,11 +3,11 @@ import {ALPHAFOLD_URL_INTERFACE_BY_PROTEIN} from '../../../constants/ExternalUrl
 import {formatRange} from "../../../utills/Util";
 import PdbeRef from "./PdbeRef";
 import {baseSettings, PredictedStructure} from "./StructuralDetail";
-import {Pocket} from "../../../types/FunctionalResponse";
 import {HelpButton} from "../help/HelpButton";
 import {AFLegendShortText, AlphaFoldHelp} from "../help/content/AlphaFoldHelp";
 import {PAEImg} from "./PAEImg";
 import {HelpContent} from "../help/HelpContent";
+import {Pocket} from "../../../types/Prediction";
 
 const afSettings = (url: string) => {
   return {

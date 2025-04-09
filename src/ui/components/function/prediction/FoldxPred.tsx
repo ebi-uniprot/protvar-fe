@@ -1,6 +1,6 @@
-import {Foldx} from "../../../../types/FunctionalResponse";
 import Spaces from "../../../elements/Spaces";
 import {PRECISION, STD_BENIGN_COLOR, STD_PATHOGENIC_COLOR} from "./PredConstants";
+import {Foldx} from "../../../../types/Prediction";
 
 export const FoldxPred = (props: { foldxs: Array<Foldx> }) => {
   if (props.foldxs && props.foldxs.length > 0) {

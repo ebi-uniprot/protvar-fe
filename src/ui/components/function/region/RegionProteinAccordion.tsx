@@ -1,7 +1,7 @@
-import {Comment} from "../../../../types/FunctionalResponse";
 import { ReactComponent as ChevronDownIcon } from "../../../../images/chevron-down.svg"
 import RegionProteinProps from "./RegionProteinProps";
 import { EmptyElement } from '../../../../constants/ConstElement';
+import {Comment} from "../../../../types/Comment";
 
 interface RegionProteinAccordionProps extends RegionProteinProps {
   title: string

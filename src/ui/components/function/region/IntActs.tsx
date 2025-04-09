@@ -2,23 +2,24 @@ import RegionProteinProps from "./RegionProteinProps";
 import { EmptyElement } from "../../../../constants/ConstElement";
 import { INTACT_URL } from "../../../../constants/ExternalUrls";
 import { ReactComponent as ChevronDownIcon } from "../../../../images/chevron-down.svg"
-import {Interaction} from "../../../../types/FunctionalResponse";
+import {IntAct, IntActComment} from "../../../../types/Comment";
 
-interface InteractionsProps extends RegionProteinProps {
+interface IntActsProps extends RegionProteinProps {
 	accession: string
 }
 
-function Interactions(props: InteractionsProps) {
+function IntActs(props: IntActsProps) {
 	const { expandedRegionKey, comments, toggleProteinRegion, accession } = props;
+	const intActComments = comments.map(c => c as IntActComment)
 
-	if (comments.length > 0 && comments[0].interactions && comments[0].interactions.length > 0) {
+	if (intActComments.length > 0 && intActComments[0].interactions && intActComments[0].interactions.length > 0) {
 		var gene: string = "";
 		var interactor = '';
 		var key = 'interactions-' + accession;
-		comments[0].interactions.forEach((interaction: Interaction) => {
-			if (interaction.accession1 === accession) {
-				interactor = interaction.interactor1;
-				var geneInteractor = interaction.accession2 + '(' + interaction.gene + ')';
+		intActComments[0].interactions.forEach((intAct: IntAct) => {
+			if (intAct.accession1 === accession) {
+				interactor = intAct.interactor1;
+				var geneInteractor = intAct.accession2 + '(' + intAct.gene + ')';
 				if (gene === "") {
 					gene = geneInteractor;
 				} else {
@@ -63,4 +64,4 @@ function getInteraction(gene: string, interactor: string) {
 	);
 }
 
-export default Interactions;
+export default IntActs;

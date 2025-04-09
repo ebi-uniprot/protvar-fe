@@ -186,7 +186,7 @@ function DownloadPageContent() {
                   <button title="Download" className="bi bi-download icon-btn"
                           onClick={() => downloadFile(download.url)} disabled={download.status !== 1}/>
                   <Spaces count={2}/>
-                  <ShareLink url={download.url}/>
+                  <ShareLink url={download.url} disabled={download.status !== 1} />
                   <Spaces count={2}/>
                   <button title="Delete" className="bi bi-trash icon-btn"
                           onClick={_ => handleDelete(index)}></button>
