@@ -1,29 +1,15 @@
-import { Fragment } from "react"
 import Evidences from "./Evidences";
-import {Comment} from "../../../types/FunctionalResponse";
-import { v1 as uuidv1 } from 'uuid';
+import {Comment} from "../../../types/Comment";
+import {Evidence} from "../../../types/Common";
+import {v1 as uuidv1} from "uuid";
+import {ExpandableText} from "../common/ExpandableText";
 
 interface ProteinFunctionTableProps {
-  comments: Array<Comment>
+  functionComments: Array<Comment>
 }
 function ProteinFunctionTable(props: ProteinFunctionTableProps) {
-  var functionText = '';
-  var functionEvidences: Array<JSX.Element> = [];
-
-  if (props.comments) {
-    props.comments.forEach((comment) => {
-      if (comment.type === 'FUNCTION' && comment.text.length > 0) {
-        functionText = comment.text[0].value;
-        if (comment.text[0].evidences)
-          functionEvidences.push(
-            <Fragment key={uuidv1()}>
-              <br />
-              <Evidences evidences={comment.text[0].evidences} />
-            </Fragment>
-          );
-      }
-    });
-  }
+  if (!props.functionComments)
+    return null;
 
   return <table>
     <thead>
@@ -32,13 +18,28 @@ function ProteinFunctionTable(props: ProteinFunctionTableProps) {
       </tr>
     </thead>
     <tbody>
-      <tr>
+    {props.functionComments.map(comment => {
+      let functionText = ''
+      let evidences: Evidence[] = []
+      if ('text' in comment && Array.isArray(comment.text)) {
+        functionText = comment.text[0].value;
+        evidences = comment.text[0].evidences ?? [];
+      }
+      return <tr key={uuidv1()}>
         <td>
-          {functionText}
-          {functionEvidences}
+          <ExpandableText text={functionText} />
+          {evidences.length > 0 && (
+            <>
+              <br/>
+              <Evidences evidences={evidences}/>
+            </>
+          )}
         </td>
+
       </tr>
+    })}
     </tbody>
   </table>
 }
+
 export default ProteinFunctionTable;

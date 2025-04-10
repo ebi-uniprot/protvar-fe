@@ -26,9 +26,9 @@ const HomePageContent = () => {
         </p>
       </div>
       <div className='search-page-layout'>
-        <SearchVariant />
+        <SearchVariant/>
         <br/>
-        <BrowseVariant />
+        <BrowseVariant/>
       </div>
       <div style={{display: 'grid', gridTemplateColumns: '60% auto'}}>
         <div style={{paddingTop: '20px'}}>

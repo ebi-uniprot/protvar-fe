@@ -1,10 +1,10 @@
 import XRefDetail from "./common/XRefDetail";
-import {ProteinColocatedVariant} from "../../../types/PopulationObservationResponse";
+import {Variant} from "../../../types/PopulationObservation";
 import {AlleleFreq} from "./AlleleFreq";
-
+import React from "react";
 
 interface SubmittedVariantDetailsProps {
-  variants: Array<ProteinColocatedVariant>
+  variants: Array<Variant>
   alleleFreq: number
   gnomadCoord: string
 }
@@ -18,15 +18,15 @@ function SubmittedVariantDetails(props: SubmittedVariantDetailsProps) {
 
   return (
     <ul>
-      {props.alleleFreq && <li>
-        <AlleleFreq af={props.alleleFreq} gnomadCoord={props.gnomadCoord} stdColor={false} />
-      </li>}
-      <li>
-        <b>Genomic Location:</b> {variant.genomicLocation}
-      </li>
       <li>
         <b>Change:</b> {change}
       </li>
+      <li>
+        <b>Genomic Location:</b> {variant.genomicLocation?.[0]}
+      </li>
+      {props.alleleFreq && <li>
+        <AlleleFreq af={props.alleleFreq} gnomadCoord={props.gnomadCoord} stdColor={false}/>
+      </li>}
       <XRefDetail xrefs={variant.xrefs} populationFrequencies={variant.populationFrequencies}
                   clinicalSignificances={variant.clinicalSignificances}/>
     </ul>

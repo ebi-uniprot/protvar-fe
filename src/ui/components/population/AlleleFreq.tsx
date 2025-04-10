@@ -30,7 +30,7 @@ function AFIcon(props: { af: number, stdColor: boolean }) {
   if (attr) {
     return <>
     <i className="bi bi-circle-fill" style={{color: (props.stdColor ? attr.stdColor : attr.color)}}></i>
-      <Spaces/> ({attr.text})
+      <Spaces/> <span className="badge">{attr.text}</span>
     </>
   }
   return <></>

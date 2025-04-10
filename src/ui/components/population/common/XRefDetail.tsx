@@ -1,84 +1,60 @@
-//import { ClinicalSignificance, PopulationFrequency, Xref } from "../PopulationDetail";
-import { v1 as uuidv1 } from 'uuid';
-import XReferenceLi from "./XReferenceLi";
-import {ClinicalSignificance, PopulationFrequency, Xref} from "../../../../types/PopulationObservationResponse";
+import {v1 as uuidv1} from 'uuid';
+import {ClinicalSignificance, PopulationFrequency} from "../../../../types/PopulationObservation";
+import React from "react";
+import {DbReferenceObject} from "../../../../types/Common";
 
 interface XRefDetailProps {
-  xrefs: Array<Xref>,
-  populationFrequencies: Array<PopulationFrequency>,
-  clinicalSignificances: Array<ClinicalSignificance>
+  xrefs: DbReferenceObject[];
+  populationFrequencies: PopulationFrequency[];
+  clinicalSignificances: ClinicalSignificance[];
 }
-function XRefDetail(props: XRefDetailProps) {
-  const { xrefs, populationFrequencies, clinicalSignificances } = props;
-  if (!xrefs || xrefs.length <= 0) {
-    return <></>
-  }
+
+function XRefDetail({xrefs, populationFrequencies, clinicalSignificances}: XRefDetailProps) {
+  if (!xrefs?.length) return null;
+
+  const popFreqMap = new Map<string, PopulationFrequency>(
+    (populationFrequencies || []).map(freq => [freq.sourceName, freq])
+  );  //<li key={uuidv1()}><b>{freq.populationName}</b>-{freq.frequency}</li>
+
+  const significanceMap = new Map<string, ClinicalSignificance>(
+    (clinicalSignificances || []).flatMap(significance =>
+      (significance.sources || []).map(source => [source, significance])
+    )
+  ); // <li key={uuidv1()}><b>{significance.type}</b></li>
+
+  const xrefGroups = new Map<string, JSX.Element[]>();
+  xrefs.forEach(({name, id, url}) => {
+    if (!xrefGroups.has(name)) xrefGroups.set(name, []);
+    xrefGroups.get(name)!.push(<XReferenceItem key={uuidv1()} id={id} url={url}/>);
+  });
 
   return (
     <li key={uuidv1()}>
-      <b>Identifiers</b>
-
-      {getReferences(xrefs, populationFrequencies, clinicalSignificances)}
-    </li>
-  );
-}
-
-function getReferences(xrefs: Array<Xref>, populationFrequencies: Array<PopulationFrequency>, clinicalSignificances: Array<ClinicalSignificance>) {
-  const popFreqMap = new Map<string, JSX.Element>();
-  if (populationFrequencies !== undefined && populationFrequencies.length > 0) {
-    populationFrequencies.forEach((freq) => {
-      let val = (
-        <li key={uuidv1()}>
-          <b>{freq.populationName}</b>-{freq.frequency}
-        </li>
-      );
-      popFreqMap.set(freq.sourceName, val);
-    });
-  }
-
-  const significanceMap = new Map<string, JSX.Element>();
-  if (clinicalSignificances !== undefined && clinicalSignificances.length > 0) {
-    clinicalSignificances.forEach((significance) => {
-      let type = (
-        <li key={uuidv1()}>
-          <b>{significance.type}</b>
-        </li>
-      );
-      significance.sources.forEach((source) => {
-        significanceMap.set(source, type);
-      });
-    });
-  }
-  let xrefList: Array<JSX.Element> = [];
-  if (xrefs !== undefined && xrefs.length > 0) {
-    const xrefMap = new Map<string, Array<JSX.Element>>();
-    xrefs.forEach((xref) => {
-      if (!xrefMap.get(xref.name)) {
-        xrefMap.set(xref.name, [])
-      }
-      xrefMap.get(xref.name)!.push(<XReferenceLi id={xref.id} url={xref.url} key={uuidv1()}/>);
-    });
-
-    xrefMap.forEach((xRefIdsLis, xrefName) => {
-      const populationFreq = popFreqMap.get(xrefName);
-      const significance = significanceMap.get(xrefName);
-      xrefList.push(getReferenceForEachSource(xrefName, xRefIdsLis, populationFreq, significance));
-    })
-  }
-  return <ul>{xrefList}</ul>;
-}
-
-function getReferenceForEachSource(sourceName: string, xRefIdsLis: Array<JSX.Element>,
-  populationFreq: JSX.Element | undefined, significance: JSX.Element | undefined) {
-  return (
-    <li key={uuidv1()}>
-      <b>{sourceName} :</b>
-      <ul className="flatList">
-        {xRefIdsLis}
-        {populationFreq}
-        {significance}
+      <b>Cross-References</b>
+      <ul>
+        {Array.from(xrefGroups.entries()).map(([sourceName, xRefIds]) => (
+          <li key={uuidv1()}>
+            <b>{sourceName}</b>
+            <ul className="flatList">
+              {xRefIds}
+              {significanceMap.get(sourceName) && <span className="badge">{significanceMap.get(sourceName)?.type.toLowerCase()}</span>}
+            </ul>
+            {popFreqMap.get(sourceName) &&
+              <><b>{popFreqMap.get(sourceName)?.populationName}</b> - {popFreqMap.get(sourceName)?.frequency}</>}
+          </li>
+        ))}
       </ul>
     </li>
   );
 }
+
+function XReferenceItem({id, url}: { id: string; url: string }) {
+  return (<li>
+      <a href={url} target="_blank" rel="noreferrer" className="ext-link">
+        {id}
+      </a>
+    </li>
+  );
+}
+
 export default XRefDetail;
