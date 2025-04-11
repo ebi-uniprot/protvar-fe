@@ -1,0 +1,25 @@
+.stat-card {
+  font-size: 0.85rem;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.stat-card .card-body {
+  padding: 0.5rem;
+}
+
+.stat-card .card-title {
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+}
+
+.stat-card .card-text {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.stat-card .card-footer {
+  font-size: 0.75rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}

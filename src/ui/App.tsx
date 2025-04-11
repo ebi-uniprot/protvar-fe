@@ -19,6 +19,7 @@ import {StatsProvider} from "../context/StatsContext";
 import {DEFAULT_PAGE_SIZE} from "../constants/const";
 import NotFoundPage from "./pages/NotFoundPage";
 import {MarkdownProvider} from "../context/MarkdownContext";
+import {DownloadsPagev2, HomePagev2, SearchResultsPagev2} from "./pages/v2/NewHomePage";
 
 const empty: ReactElement = <></>;
 
@@ -76,6 +77,9 @@ export default function App() {
         <StatsProvider>
         <Routes>
           <Route path={HOME} element={<HomePage />} />
+          <Route path="/v2" element={<HomePagev2 />} />
+          <Route path="/v2/search-results" element={<SearchResultsPagev2 />} />
+          <Route path="/v2/downloads" element={<DownloadsPagev2 />} />
           <Route path={`${RESULT}`} element={<ResultListPage />} />
           <Route path={`${RESULT}/:id`} element={<ResultPage inputType={InputType.ID} />} />
           <Route path={QUERY} element={<QueryPage queryType="search" />} />

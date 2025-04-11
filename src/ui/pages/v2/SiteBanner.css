@@ -1,0 +1,14 @@
+.site-banner-restore-btn {
+  position: absolute;
+  top: 0.75rem;
+  right: 1rem;
+  z-index: 1050;
+}
+
+.site-banner-restore-btn button {
+  border: 1px solid #ccc;
+  opacity: 0.6;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  height: 35px;
+}
