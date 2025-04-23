@@ -4,7 +4,7 @@ import { fullAminoAcidName } from "../../../utills/Util";
 import Tool from "../../elements/Tool";
 import Spaces from "../../elements/Spaces";
 import { EmptyElement } from "../../../constants/ConstElement";
-import {Gene, GenomicInput, IsoFormMapping} from "../../../types/MappingResponse";
+import {Gene, GenomicInput, Isoform} from "../../../types/MappingResponse";
 import {aaChangeStr} from "./PrimaryRow";
 import {rowBg} from "./ResultTable";
 
@@ -30,7 +30,7 @@ export function getProteinName(proteinName?: string) {
   }}>{proteinName}</div>
 }
 
-export function getAlternateIsoFormRow(isoformKey: string, index: number, input: GenomicInput, gene: Gene, isoform: IsoFormMapping) {
+export function getAlternateIsoFormRow(isoformKey: string, index: number, input: GenomicInput, gene: Gene, isoform: Isoform) {
   let aaChange = aaChangeStr(isoform.refAA, isoform.variantAA)
   return <tr key={isoformKey} style={rowBg(index)}>
     <td colSpan={GENOMIC_COLS}/>

@@ -86,10 +86,6 @@ export const rowBg = (index: number) => {
 
 const NO_MAPPING: Message = {type: 'ERROR', text: 'No mapping found' }
 
-const hasNoMapping = (genInput: GenomicInput) => {
-  return genInput.mappings.length === 0 || (genInput.mappings.length === 1 && genInput.mappings[0].genes.length === 0)
-}
-
 const hasNoMessage = (originalInput: CustomInput, genInput: GenomicInput) => {
   return !(originalInput.messages.length > 0 || genInput.messages.length > 0)
 }
@@ -108,28 +104,26 @@ const getTableRows = (data: PagedMappingResponse | null, isoformGroupExpanded: s
   let altRow = 0
   const addGenMapping = (index: number, genIndex: number, input: GenomicInput, originalInput: CustomInput) => {
 
-    if (hasNoMapping(input)) {
+    if (input.genes.length === 0) {
       if (hasNoMessage(originalInput, input)) {
         tableRows.push(<MsgRow index={index} key={`input-${index}-${genIndex}-nomapping`} message={NO_MAPPING} originalInput={originalInput} derivedGenomicInput={input} />)
         return
       }
     }
 
-    input.mappings.forEach((mapping, mappingIdx) => {
-      mapping.genes.forEach((gene, geneIdx) => {
-        const isoformGroupKey = `input-${index}-${genIndex}-mapping-${mappingIdx}-gene-${geneIdx}-isoform`
-        gene.isoforms.forEach((isoform, isoformIdx) => {
-          if (isoformIdx === 0) {
-            primaryRow++;
-            altRow = 0; // reset
-            tableRows.push(getNewPrimaryRow(`row-${primaryRow}`, isoformGroupKey, isoformGroupExpanded, index, input, originalInput, gene, isoform,
-              toggleIsoformGroup, annotationExpanded, toggleAnnotation, gene.isoforms.length > 1, stdColor))
-          }
-          else if (isoformGroupKey === isoformGroupExpanded) {
-            altRow++;
-            tableRows.push(getAlternateIsoFormRow(`row-${primaryRow}-${altRow}`, index, input, gene, isoform))
-          }
-        })
+    input.genes.forEach((gene, geneIdx) => {
+      const isoformGroupKey = `input-${index}-${genIndex}-gene-${geneIdx}-isoform`
+      gene.isoforms.forEach((isoform, isoformIdx) => {
+        if (isoformIdx === 0) {
+          primaryRow++;
+          altRow = 0; // reset
+          tableRows.push(getNewPrimaryRow(`row-${primaryRow}`, isoformGroupKey, isoformGroupExpanded, index, input, originalInput, gene, isoform,
+            toggleIsoformGroup, annotationExpanded, toggleAnnotation, gene.isoforms.length > 1, stdColor))
+        }
+        else if (isoformGroupKey === isoformGroupExpanded) {
+          altRow++;
+          tableRows.push(getAlternateIsoFormRow(`row-${primaryRow}-${altRow}`, index, input, gene, isoform))
+        }
       })
     })
   }
@@ -141,7 +135,7 @@ const getTableRows = (data: PagedMappingResponse | null, isoformGroupExpanded: s
       tableRows.push(<MsgRow index={inputIndex} key={`input-${inputIndex}-message-${messageIndex}`} message={message} originalInput={input} />)
     });
 
-    if (input.type === INPUT_GEN && "mappings" in input) {
+    if (input.type === INPUT_GEN && "genes" in input) {
       addGenMapping(inputIndex, 0, input, input)
     }
     else if ((input.type === INPUT_PRO || input.type === INPUT_CDNA || input.type === INPUT_ID)
