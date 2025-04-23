@@ -39,7 +39,7 @@ export interface GenomicInput extends UserInput {
   alt:string
   id:string
   converted:boolean
-  mappings:Array<GenomeProteinMapping>
+  genes: Array<Gene>
 }
 
 export interface ProteinInput extends UserInput {
@@ -74,42 +74,32 @@ export interface CodingInput extends UserInput {
   derivedGenomicInputs:Array<GenomicInput>
 }
 
-export interface GenomeProteinMapping {
-  //chromosome: string;
-  //geneCoordinateStart: number;
-  //geneCoordinateEnd: number;
-  //id: string;
-  //userAllele: string;
-  //variantAllele: string;
-  genes: Array<Gene>;
-  //input: string;
-}
 export interface Gene {
   ensg: string;
   reverseStrand: boolean;
   geneName: string;
   refAllele: string;
   altAllele: string;
-  isoforms: Array<IsoFormMapping>;
+  isoforms: Array<Isoform>;
   caddScore: number;
   alleleFreq: number;
 }
 // TODO clean up unused commented properties below
-export interface IsoFormMapping {
+export interface Isoform {
   accession: string;
   canonical: boolean;
   canonicalAccession: string;
   isoformPosition: number;
   refCodon: string;
 //  userCodon: string;
-  cdsPosition: number;
+  codonPosition: number;
   refAA: string;
 //  userAA: string;
   variantAA: string;
   variantCodon: string;
   consequences: string;
   proteinName: string;
-  translatedSequences: Array<Ensp>;
+  transcripts: Array<Transcript>;
 //  populationObservations: any;
   populationObservationsUri: string;
 //  referenceFunction: any;
@@ -124,12 +114,10 @@ export interface IsoFormMapping {
   eveScore: EVEScore;
   esmScore: ESMScore;
 }
-interface Ensp {
-  ensp: string;
-  transcripts: Array<Transcript>;
-}
+
 interface Transcript {
   enst: string;
+  ensp: string;
   ense: string;
 }
 

@@ -30,7 +30,7 @@ import {
   INPUT_CDNA,
   GenomicInput,
   Gene,
-  IsoFormMapping,
+  Isoform,
   CustomInput, TranslatedSequence
 } from "../../../types/MappingResponse";
 import {rowBg} from "./ResultTable";
@@ -95,7 +95,7 @@ export const getEnsemblViewUrl = (chr: string, pos: number) => {
 
 export const getNewPrimaryRow = (isoformKey: string, isoformGroup: string, isoformGroupExpanded: string,
                                  index: number, input: GenomicInput, originalInput: CustomInput,
-                                 gene: Gene, isoform: IsoFormMapping,
+                                 gene: Gene, isoform: Isoform,
                                  toggleIsoFormGroup: StringVoidFun,
                                  annotationExpanded: string, toggleAnnotation: StringVoidFun,
                                  hasAltIsoForm: boolean, stdColor: boolean) => {
@@ -127,16 +127,20 @@ export const getNewPrimaryRow = (isoformKey: string, isoformGroup: string, isofo
 
   let aaChange = aaChangeStr(isoform.refAA, isoform.variantAA)
 
-  let ensp: Array<TranslatedSequence> = [];
-  if (isoform.translatedSequences !== undefined && isoform.translatedSequences.length > 0) {
-    var ensps: Array<TranslatedSequence> = [];
-    isoform.translatedSequences.forEach((translatedSeq) => {
-      var ensts: Array<string> = [];
-      translatedSeq.transcripts.forEach((transcript) => ensts.push(transcript.enst));
-      ensps.push({ensp: translatedSeq.ensp, ensts: ensts.join()});
-    });
-    ensp = ensps;
-  }
+  const enspMap = new Map<string, string[]>();
+
+  isoform.transcripts?.forEach(({ ensp, enst }) => {
+    if (!enspMap.has(ensp)) {
+      enspMap.set(ensp, []);
+    }
+    enspMap.get(ensp)!.push(enst);
+  });
+
+  const ensp = Array.from(enspMap.entries()).map(([ensp, ensts]) => ({
+    ensp,
+    ensts: ensts.join(','),
+  }));
+
   return <Fragment key={isoformKey}>
     <tr style={rowBg(index)} title={'Input: ' + input.inputStr}>
       <td style={inputStyle.gen}>
