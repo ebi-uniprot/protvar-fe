@@ -31,7 +31,7 @@ import {
   GenomicInput,
   Gene,
   Isoform,
-  CustomInput, TranslatedSequence
+  CustomInput
 } from "../../../types/MappingResponse";
 import {rowBg} from "./ResultTable";
 
