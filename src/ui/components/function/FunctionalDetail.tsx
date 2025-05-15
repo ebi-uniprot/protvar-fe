@@ -4,7 +4,7 @@ import FunctionalDataRow from './FunctionalDataRow';
 import LoaderRow from '../../pages/result/LoaderRow';
 import {getFunctionalData} from "../../../services/ProtVarService";
 import {FunctionalInfo} from "../../../types/FunctionalInfo";
-import {AMScore, ConservScore, ESMScore, EVEScore, TranslatedSequence} from "../../../types/MappingResponse";
+import {AmScore, ConservScore, EsmScore, EveScore, TranslatedSequence} from "../../../types/MappingResponse";
 
 
 export interface FunctionalDetailProps {
@@ -16,9 +16,9 @@ export interface FunctionalDetailProps {
   ensp: Array<TranslatedSequence>
   caddScore: string
   conservScore: ConservScore
-  amScore: AMScore
-  eveScore: EVEScore
-  esmScore: ESMScore
+  amScore: AmScore
+  eveScore: EveScore
+  esmScore: EsmScore
 }
 
 function FunctionalDetail(props: FunctionalDetailProps) {

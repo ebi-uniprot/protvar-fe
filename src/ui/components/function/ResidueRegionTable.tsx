@@ -9,7 +9,7 @@ import {formatRange} from "../../../utills/Util";
 import {FunctionalInfo, Feature} from "../../../types/FunctionalInfo";
 import {Prediction} from "./prediction/Prediction";
 import {Dropdown} from "react-dropdown-now";
-import {AMScore, ConservScore, ESMScore, EVEScore, TranslatedSequence} from "../../../types/MappingResponse";
+import {AmScore, ConservScore, EsmScore, EveScore, TranslatedSequence} from "../../../types/MappingResponse";
 import {HelpContent} from "../help/HelpContent";
 import {HelpButton} from "../help/HelpButton";
 import {Interaction, Pocket} from "../../../types/Prediction";
@@ -22,9 +22,9 @@ export interface ResidueRegionTableProps {
   ensp: Array<TranslatedSequence>
   caddScore: string
   conservScore: ConservScore
-  amScore: AMScore
-  eveScore: EVEScore
-  esmScore: ESMScore
+  amScore: AmScore
+  eveScore: EveScore
+  esmScore: EsmScore
 }
 
 function ResidueRegionTable(props: ResidueRegionTableProps) {

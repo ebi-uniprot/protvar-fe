@@ -1,4 +1,4 @@
-import {EVEScore} from "../../../../types/MappingResponse";
+import {EveScore} from "../../../../types/MappingResponse";
 import {PredAttr} from "./Prediction";
 import Spaces from "../../../elements/Spaces";
 import {PRECISION, STD_BENIGN_COLOR, STD_PATHOGENIC_COLOR, STD_UNCERTAIN_COLOR} from "./PredConstants";
@@ -9,7 +9,7 @@ export const EVE_SCORE_ATTR: {[key: string]: PredAttr} = {
   PATHOGENIC: { color: 'red', stdColor: STD_PATHOGENIC_COLOR, text: 'pathogenic' }
 }
 
-export const EvePred = (props: { eve?: EVEScore, stdColor: boolean }) => {
+export const EvePred = (props: { eve?: EveScore, stdColor: boolean }) => {
   if (props.eve) {
   return <div className="aa-pred">
     <div>EVE</div>
@@ -19,11 +19,11 @@ export const EvePred = (props: { eve?: EVEScore, stdColor: boolean }) => {
   return <></>
 }
 
-export function formatEveScore(eve?: EVEScore) {
+export function formatEveScore(eve?: EveScore) {
   return eve ? eve.score.toFixed(PRECISION) : "";
 }
 
-function EvePredIcon(props: { eve?: EVEScore, stdColor: boolean }) {
+function EvePredIcon(props: { eve?: EveScore, stdColor: boolean }) {
   if (props.eve) {
     let cls = props.eve.eveClass as keyof PredAttr
     return <div>

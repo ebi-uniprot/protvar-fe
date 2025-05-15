@@ -110,9 +110,9 @@ export interface Isoform {
 //  proteinStructure: Array<any>;
   proteinStructureUri: string;
   conservScore: ConservScore;
-  amScore: AMScore;
-  eveScore: EVEScore;
-  esmScore: ESMScore;
+  amScore: AmScore;
+  eveScore: EveScore;
+  esmScore: EsmScore;
 }
 
 interface Transcript {
@@ -130,16 +130,16 @@ export interface ConservScore {
   score:number
 }
 
-export interface EVEScore {
+export interface EveScore {
   score:number
   eveClass:string
 }
 
-export interface ESMScore {
+export interface EsmScore {
   score:number
 }
 
-export interface AMScore {
+export interface AmScore {
   amPathogenicity:number
   amClass:string
 }

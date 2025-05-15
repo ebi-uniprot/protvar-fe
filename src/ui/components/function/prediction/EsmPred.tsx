@@ -1,5 +1,5 @@
 import tinygradient from "tinygradient";
-import {ESMScore} from "../../../../types/MappingResponse";
+import {EsmScore} from "../../../../types/MappingResponse";
 import {PredAttr} from "./Prediction";
 import Spaces from "../../../elements/Spaces";
 import {STD_BENIGN_COLOR, STD_PATHOGENIC_COLOR, STD_UNCERTAIN_COLOR} from "./PredConstants";
@@ -17,7 +17,7 @@ export const ESM_MAX_SCORE = -25
 
 export const ESM_COLOR_GRADIENT = tinygradient(ESM_SCORE_ATTR.map(s => s.color));
 
-export const EsmPred = (props: { esm?: ESMScore, stdColor: boolean }) => {
+export const EsmPred = (props: { esm?: EsmScore, stdColor: boolean }) => {
   if (props.esm) {
   return <div className="aa-pred">
     <div>ESM-1b</div>
@@ -27,11 +27,11 @@ export const EsmPred = (props: { esm?: ESMScore, stdColor: boolean }) => {
 return <></>
 }
 
-export function formatEsmScore(esm?: ESMScore) {
+export function formatEsmScore(esm?: EsmScore) {
   return esm ? esm.score.toFixed(PRECISION) : "";
 }
 
-function EsmPredIcon(props: {esm?: ESMScore, stdColor: boolean }) {
+function EsmPredIcon(props: {esm?: EsmScore, stdColor: boolean }) {
   if (props.esm) {
     const esmAttr = esmScoreAttr(props.esm.score)
     const color = props.stdColor ? esmAttr?.stdColor :

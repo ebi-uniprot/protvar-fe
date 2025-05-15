@@ -1,4 +1,4 @@
-import {AMScore} from "../../../../types/MappingResponse";
+import {AmScore} from "../../../../types/MappingResponse";
 import {PredAttr} from "./Prediction";
 import Spaces from "../../../elements/Spaces";
 import {PRECISION, STD_BENIGN_COLOR, STD_PATHOGENIC_COLOR, STD_UNCERTAIN_COLOR} from "./PredConstants";
@@ -9,7 +9,7 @@ export const AM_SCORE_ATTR: {[key: string]: PredAttr} = {
   PATHOGENIC: { color: '#ed1e24', stdColor: STD_PATHOGENIC_COLOR, text: 'pathogenic' }
 }
 
-export const AlphaMissensePred = (props: { am?: AMScore, stdColor: boolean }) => {
+export const AlphaMissensePred = (props: { am?: AmScore, stdColor: boolean }) => {
   if (props.am) {
     return <div className="aa-pred">
       <div>AlphaMissense</div>
@@ -20,11 +20,11 @@ export const AlphaMissensePred = (props: { am?: AMScore, stdColor: boolean }) =>
   return <></>
 }
 
-export function formatAMScore(amScore?: AMScore) {
+export function formatAMScore(amScore?: AmScore) {
   return amScore ? amScore.amPathogenicity.toFixed(PRECISION) : "";
 }
 
-function AlphaMissensePredIcon(props: { am?: AMScore, stdColor: boolean }) {
+function AlphaMissensePredIcon(props: { am?: AmScore, stdColor: boolean }) {
   if (props.am) {
     let cls = props.am.amClass as keyof PredAttr
     return <div>
