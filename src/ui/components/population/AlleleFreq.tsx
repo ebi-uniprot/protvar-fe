@@ -23,11 +23,11 @@ export const AlleleFreq = (props: { gnomadFreq: GnomadFreq, gnomadCoord: string,
   return (
     <>
       <strong>GnomAD allele frequency:</strong>{' '}
-      <span title={gnomadFreq.af.toString()}>
-        {showAcAn && `(${gnomadFreq.ac}/${gnomadFreq.an}) `}
+      <span title={`Alternate allele frequency ${gnomadFreq.af.toString()}`}>
         <a href={GNOMAD_URL(gnomadCoord)} target="_blank" rel="noopener noreferrer">
           {gnomadFreq.af.toFixed(PRECISION)}
         </a>
+        {showAcAn && <span title="Alternate allele count / Total number of alleles"> ({gnomadFreq.ac}/{gnomadFreq.an})</span>}
         <Spaces /> <AFIcon af={gnomadFreq.af} stdColor={stdColor} />
       </span>
     </>

@@ -1,3 +1,4 @@
+import '../../styles/index.scss';
 import React, {useEffect, useState} from 'react'
 import { Link } from 'react-router-dom'
 import {ABOUT, CONTACT, HELP, HOME, RELEASE} from '../../constants/BrowserPaths'
