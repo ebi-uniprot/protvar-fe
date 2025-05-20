@@ -2,10 +2,11 @@ import XRefDetail from "./common/XRefDetail";
 import {Variant} from "../../../types/PopulationObservation";
 import {AlleleFreq} from "./AlleleFreq";
 import React from "react";
+import {GnomadFreq} from "../../../types/MappingResponse";
 
 interface SubmittedVariantDetailsProps {
   variants: Array<Variant>
-  alleleFreq: number
+  gnomadFreq: GnomadFreq
   gnomadCoord: string
 }
 function SubmittedVariantDetails(props: SubmittedVariantDetailsProps) {
@@ -24,8 +25,8 @@ function SubmittedVariantDetails(props: SubmittedVariantDetailsProps) {
       <li>
         <b>Genomic Location:</b> {variant.genomicLocation?.[0]}
       </li>
-      {props.alleleFreq && <li>
-        <AlleleFreq af={props.alleleFreq} gnomadCoord={props.gnomadCoord} stdColor={false}/>
+      {props.gnomadFreq && <li>
+        <AlleleFreq gnomadFreq={props.gnomadFreq} gnomadCoord={props.gnomadCoord} stdColor={false}/>
       </li>}
       <XRefDetail xrefs={variant.xrefs} populationFrequencies={variant.populationFrequencies}
                   clinicalSignificances={variant.clinicalSignificances}/>

@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import PdbInfoTable from './PdbInfoTable';
+import PdbeStructureTable from './PdbeStructureTable';
 import PredictedStructureTable from './PredictedStructureTable';
 import PdbeMolstar from "./PdbeMolstar";
 import InteractionInfoTable from "./InteractionInfoTable";
@@ -7,7 +7,7 @@ import LoaderRow from "../../pages/result/LoaderRow";
 import PdbeRef from "./PdbeRef";
 import {getPredictedStructure} from "../../../services/AlphafoldService";
 import {getFunctionalData, getStructureData} from "../../../services/ProtVarService";
-import {ProteinStructureElement} from "../../../types/ProteinStructureResponse";
+import {PdbeStructure} from "../../../types/PdbeStructure";
 import {AlphafoldResponseElement} from "../../../types/AlphafoldResponse";
 import {WHITE} from "../../../types/Colors";
 import StructureIcon from "../../../images/structures-3d.svg";
@@ -48,9 +48,9 @@ export type PredictedStructure = AlphafoldResponseElement | AlphaFillStructure
 
 function StructuralDetail(props: StructuralDetailProps) {
   const {isoFormAccession, aaPosition, variantAA, proteinStructureUri} = props;
-  const [pdbData, setPdbData] = useState(new Array<ProteinStructureElement>());
+  const [pdbeData, setPdbeData] = useState(new Array<PdbeStructure>());
   const [predictedStructureData, setPredictedStructureData] = useState(new Array<PredictedStructure>());
-  const [selected, setSelected] = useState<ProteinStructureElement | PredictedStructure | Interaction>();
+  const [selected, setSelected] = useState<PdbeStructure | PredictedStructure | Interaction>();
   const [interactionData, setInteractionData] = useState(new Array<Interaction>());
   const [pocketData, setPocketData] = useState(new Array<Pocket>());
   const ref = useRef(null);
@@ -63,7 +63,7 @@ function StructuralDetail(props: StructuralDetailProps) {
   useEffect(() => {
     getStructureData(proteinStructureUri).then(
       response => {
-        setPdbData(response.data);
+        setPdbeData(response.data);
         return getPredictedStructure(isoFormAccession);
       }).then(response => {
       addPredictedStructures(response.data)
@@ -89,14 +89,14 @@ function StructuralDetail(props: StructuralDetailProps) {
 
   useEffect(() => {
     if (!selected) {
-      if (pdbData.length > 0) {
-        setSelected(pdbData[0]);
+      if (pdbeData.length > 0) {
+        setSelected(pdbeData[0]);
         //pdbeRef.subscribeOnload(response.data[0].start)
       } else if (predictedStructureData.length > 0) {
         setSelected(predictedStructureData[0])
       }
     }
-  }, [pdbData, predictedStructureData, selected]);
+  }, [pdbeData, predictedStructureData, selected]);
 
   if (!selected) {
     return <LoaderRow/>
@@ -120,10 +120,10 @@ function StructuralDetail(props: StructuralDetailProps) {
         </div>
       </td>
       <td colSpan={5} className="expanded-row structure-data-cell">
-        {pdbData.length > 0 && <><br/>
-          <PdbInfoTable isoFormAccession={isoFormAccession} pdbApiData={pdbData}
-                        selectedPdbId={"pdb_id" in selected ? selected.pdb_id : ""}
-                        setSelected={setSelected} pdbeRef={pdbeRef}/></>}
+        {pdbeData.length > 0 && <><br/>
+          <PdbeStructureTable isoFormAccession={isoFormAccession} pdbeData={pdbeData}
+                              selectedPdbId={"pdbId" in selected ? selected.pdbId : ""}
+                              setSelected={setSelected} pdbeRef={pdbeRef}/></>}
         {predictedStructureData.length > 0 && <><br/>
           <PredictedStructureTable isoFormAccession={isoFormAccession} predictedStructureData={predictedStructureData}
                                    selectedPredictedStructure={"entryId" in selected ? selected.entryId : ""}

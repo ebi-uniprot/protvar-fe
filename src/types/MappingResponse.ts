@@ -82,8 +82,15 @@ export interface Gene {
   altAllele: string;
   isoforms: Array<Isoform>;
   caddScore: number;
-  alleleFreq: number;
+  gnomadFreq: GnomadFreq;
 }
+
+export interface GnomadFreq {
+  ac: number;
+  an: number;
+  af: number;
+}
+
 // TODO clean up unused commented properties below
 export interface Isoform {
   accession: string;

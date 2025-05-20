@@ -1,7 +1,7 @@
 import { PDB_URL_INTERFACE_BY_PROTEIN } from '../../../constants/ExternalUrls';
 import {baseSettings} from './StructuralDetail';
 import PdbeRef from "./PdbeRef";
-import {ProteinStructureElement} from "../../../types/ProteinStructureResponse";
+import {PdbeStructure} from "../../../types/PdbeStructure";
 import { groupBy } from "../../../utills/Util";
 
 const pdbSettings = (molId: string) => {
@@ -13,32 +13,32 @@ const pdbSettings = (molId: string) => {
   }
 }
 
-interface PdbInfoTableProps {
+interface PdbeStructureTableProps {
   isoFormAccession: string,
-  pdbApiData: Array<ProteinStructureElement>,
+  pdbeData: Array<PdbeStructure>,
   selectedPdbId: string,
   setSelected: any,
   pdbeRef: PdbeRef
 }
 
-function PdbInfoTable(props: PdbInfoTableProps) {
+function PdbeStructureTable(props: PdbeStructureTableProps) {
   const rows: Array<JSX.Element> = [];
-  const pdbeGroups = groupBy(props.pdbApiData, "pdb_id")
+  const pdbeGroups = groupBy(props.pdbeData, "pdbId")
   let options = <></>
 
   for (let id in pdbeGroups) {
-    let chainGroup = pdbeGroups[id].sort((a,b) => a.chain_id.localeCompare(b.chain_id));
+    let chainGroup = pdbeGroups[id].sort((a,b) => a.chainId.localeCompare(b.chainId));
     const isRowSelected = props.selectedPdbId === id
     const rowClass = isRowSelected ? 'clickable-row active' : 'clickable-row';
-    const chains = chainGroup.map(c => c.chain_id).join(", ")
+    const chains = chainGroup.map(c => c.chainId).join(", ")
     const firstChain = chainGroup[0]
 
-    const tooltip = chainGroup.map(c => c.pdb_id + '\t' + c.chain_id + '\t' + c.start + '\t' + c.resolution + '\t' + c.experimental_method).join('\n')
+    const tooltip = chainGroup.map(c => c.pdbId + '\t' + c.chainId + '\t' + c.start + '\t' + c.resolution + '\t' + c.experimentalMethod).join('\n')
 
     const clicked = () => {
       props.setSelected(firstChain)
       props.pdbeRef.update(pdbSettings(id)).then(() =>
-          props.pdbeRef.subscribeOnload(firstChain.start, firstChain.chain_id)
+          props.pdbeRef.subscribeOnload(firstChain.start, firstChain.chainId)
       );
     }
 
@@ -47,22 +47,22 @@ function PdbInfoTable(props: PdbInfoTableProps) {
       <td className="small">{chains}</td>
       <td className="small">{firstChain.start}</td>
       <td className="small">{firstChain.resolution}</td>
-      <td className="small">{firstChain.experimental_method}</td>
+      <td className="small">{firstChain.experimentalMethod}</td>
     </tr>
 
     if (isRowSelected) {
       let chainNum = 0;
       const highlightChainBtn = chainGroup.map(c => {
-        const k = 'highlightBtn-'+id+'-'+c.chain_id
+        const k = 'highlightBtn-'+id+'-'+c.chainId
         chainNum++
-        let highlightText = chainNum === 1 ? 'Highlight chain ' + c.chain_id : c.chain_id
-        return <button key={k} className="button-new" onClick={() => props.pdbeRef.highlightChain(c.start, c.chain_id)}>{highlightText}</button>
+        let highlightText = chainNum === 1 ? 'Highlight chain ' + c.chainId : c.chainId
+        return <button key={k} className="button-new" onClick={() => props.pdbeRef.highlightChain(c.start, c.chainId)}>{highlightText}</button>
       })
 
       options = <div className="small">
-          <button className="button-new" onClick={() => props.pdbeRef.zoomToVariant(firstChain.start, firstChain.chain_id)}>Zoom to variant</button>
+          <button className="button-new" onClick={() => props.pdbeRef.zoomToVariant(firstChain.start, firstChain.chainId)}>Zoom to variant</button>
           {highlightChainBtn}
-          <button className="button-new" onClick={() => props.pdbeRef.resetDefault(firstChain.start, firstChain.chain_id)}>Reset</button>
+          <button className="button-new" onClick={() => props.pdbeRef.resetDefault(firstChain.start, firstChain.chainId)}>Reset</button>
       </div>
     }
 
@@ -91,4 +91,4 @@ function PdbInfoTable(props: PdbInfoTableProps) {
   </div>
 }
 
-export default PdbInfoTable;
+export default PdbeStructureTable;

@@ -8,7 +8,7 @@ import {
 } from "../constants/const";
 import {FunctionalInfo} from "../types/FunctionalInfo";
 import {PopulationObservation} from "../types/PopulationObservation";
-import {ProteinStructureResponse} from "../types/ProteinStructureResponse";
+import {PdbeStructure} from "../types/PdbeStructure";
 import MappingResponse from "../types/MappingResponse";
 import {DownloadResponse} from "../types/DownloadRecord";
 import {IDResponse, InputType, PagedMappingResponse} from "../types/PagedMappingResponse";
@@ -115,7 +115,7 @@ export function getPopulationData(url: string) {
 }
 
 export function getStructureData(url: string) {
-  return api.get<ProteinStructureResponse>(url);
+  return api.get<PdbeStructure[]>(url);
 }
 
 // Download

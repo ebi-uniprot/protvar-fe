@@ -2,23 +2,23 @@ import "./PdbeMolstar.css";
 import "pdbe-molstar/build/pdbe-molstar-component";
 import "pdbe-molstar/build/pdbe-molstar-light.css";
 import Loader from "../../elements/Loader";
-import {ProteinStructureElement} from "../../../types/ProteinStructureResponse";
+import {PdbeStructure} from "../../../types/PdbeStructure";
 import {API_URL} from "../../../constants/const";
 import {PredictedStructure} from "./StructuralDetail";
 import {Interaction} from "../../../types/Prediction";
 
 interface PdbeMolstarProps {
-    selected: ProteinStructureElement|PredictedStructure|Interaction
+    selected: PdbeStructure|PredictedStructure|Interaction
     pdbeRef: any
 }
 
 const PdbeMolstar = (props: PdbeMolstarProps) => {
     let pdbeComponent = <Loader />
 
-    if ("pdb_id" in props.selected) {
+    if ("pdbId" in props.selected) {
         pdbeComponent = <pdbe-molstar id="pdbeMolstarComponent" ref={props.pdbeRef}
                                       bg-color-r="255" bg-color-g="255" bg-color-b="255" hide-controls="true"
-                                      molecule-id={props.selected.pdb_id} alphafold-view="true" hide-water="true" />
+                                      molecule-id={props.selected.pdbId} alphafold-view="true" hide-water="true" />
     } else if ("cifUrl" in props.selected) {
         pdbeComponent = <pdbe-molstar id="pdbeMolstarComponent" ref={props.pdbeRef}
                                       bg-color-r="255" bg-color-g="255" bg-color-b="255" hide-controls="true"

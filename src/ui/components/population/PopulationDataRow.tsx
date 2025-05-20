@@ -11,12 +11,13 @@ import Spaces from "../../elements/Spaces";
 import {ShareAnnotationIcon} from "../common/ShareLink";
 import NoPopulationDataRow from "./NoPopulationDataRow";
 import {AlleleFreq} from "./AlleleFreq";
+import {GnomadFreq} from "../../../types/MappingResponse";
 
 interface PopulationDataRowProps {
   annotation: string
   poApiData: PopulationObservation,
   variantAA: string
-  alleleFreq: number
+  gnomadFreq: GnomadFreq
   gnomadCoord: string
 }
 
@@ -29,10 +30,10 @@ function PopulationDataRow(props: PopulationDataRowProps) {
 
   // If no protein variants are found but allele frequency is available, display allele frequency only
   if (proteinVariants.length === 0) {
-    return props.alleleFreq ? (
+    return props.gnomadFreq ? (
       <PopulationObservationLayout
         annotation={props.annotation}
-        submittedVariantContent={<AlleleFreq af={props.alleleFreq} gnomadCoord={props.gnomadCoord} stdColor={false}/>}
+        submittedVariantContent={<AlleleFreq gnomadFreq={props.gnomadFreq} gnomadCoord={props.gnomadCoord} stdColor={false}/>}
         coLocatedVariantContent={<label><b>No co-located variants to report</b></label>}
       />
     ) : <NoPopulationDataRow/>;
@@ -42,7 +43,7 @@ function PopulationDataRow(props: PopulationDataRowProps) {
   return (
     <PopulationObservationLayout
       annotation={props.annotation}
-      submittedVariantContent={<SubmittedVariantDetails variants={matchingVariants} alleleFreq={props.alleleFreq} gnomadCoord={props.gnomadCoord}/>}
+      submittedVariantContent={<SubmittedVariantDetails variants={matchingVariants} gnomadFreq={props.gnomadFreq} gnomadCoord={props.gnomadCoord}/>}
       coLocatedVariantContent={<CoLocatedVariantDetails coLocatedVariants={nonMatchingVariants}/>}
       associatedDiseases={hasAssociatedDiseases ?
         <AssociationDetails associations={matchingVariants[0].association}/> : null}

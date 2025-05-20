@@ -2,6 +2,7 @@ import {PredAttr} from "../function/prediction/Prediction";
 import {STD_COLOR_GRADIENT_REVERSE} from "../function/prediction/PredConstants";
 import Spaces from "../../elements/Spaces";
 import React from "react";
+import {GnomadFreq} from "../../../types/MappingResponse";
 
 const PRECISION: number = 5 // dp
 
@@ -15,15 +16,23 @@ export const AF_ATTR: PredAttr[] = [
   {color: '#7FBC5C', stdColor: STD_COLOR_GRADIENT_REVERSE.rgbAt(1).toHexString(), text: 'common', range: 'AF ≥ 5%' }
 ]
 
-export const AlleleFreq = (props: { af: number, gnomadCoord: string, stdColor: boolean }) => {
-  if (props.af) {
-    return <>
-      <b>GnomAD 4.1 exomes allele frequency:</b> <span title={props.af.toString()}><a href={GNOMAD_URL(props.gnomadCoord)} target="_blank" rel="noopener noreferrer">{props.af.toFixed(PRECISION)}</a>
-      <Spaces/>  <AFIcon {...props} /></span>
+export const AlleleFreq = (props: { gnomadFreq: GnomadFreq, gnomadCoord: string, stdColor: boolean }) => {
+  const { gnomadFreq, gnomadCoord, stdColor } = props;
+  if (!gnomadFreq) return <></>;
+  const showAcAn = gnomadFreq.ac !== undefined && gnomadFreq.an !== undefined;
+  return (
+    <>
+      <strong>GnomAD allele frequency:</strong>{' '}
+      <span title={gnomadFreq.af.toString()}>
+        {showAcAn && `(${gnomadFreq.ac}/${gnomadFreq.an}) `}
+        <a href={GNOMAD_URL(gnomadCoord)} target="_blank" rel="noopener noreferrer">
+          {gnomadFreq.af.toFixed(PRECISION)}
+        </a>
+        <Spaces /> <AFIcon af={gnomadFreq.af} stdColor={stdColor} />
+      </span>
     </>
-  }
-  return <></>
-}
+  );
+};
 
 function AFIcon(props: { af: number, stdColor: boolean }) {
   let attr = afAttr(props.af)

@@ -3,18 +3,19 @@ import PopulationDataRow from './PopulationDataRow';
 import LoaderRow from '../../pages/result/LoaderRow';
 import {getPopulationData} from "../../../services/ProtVarService";
 import {PopulationObservation} from "../../../types/PopulationObservation";
+import {GnomadFreq} from "../../../types/MappingResponse";
 
 
 interface PopulationDetailProps {
   annotation: string
   populationObservationsUri: string
   variantAA: string
-  alleleFreq: number
+  gnomadFreq: GnomadFreq
   gnomadCoord: string
 }
 
 function PopulationDetail(props: PopulationDetailProps) {
-  const { annotation, populationObservationsUri, variantAA, alleleFreq, gnomadCoord } = props;
+  const { annotation, populationObservationsUri, variantAA, gnomadFreq, gnomadCoord } = props;
   const [poApiData, setPoApiData] = useState<PopulationObservation>();
 
   useEffect(() => {
@@ -28,6 +29,6 @@ function PopulationDetail(props: PopulationDetailProps) {
   if (!poApiData)
     return <LoaderRow />
   else
-    return <PopulationDataRow annotation={annotation} poApiData={poApiData} variantAA={variantAA} alleleFreq={alleleFreq} gnomadCoord={gnomadCoord} />
+    return <PopulationDataRow annotation={annotation} poApiData={poApiData} variantAA={variantAA} gnomadFreq={gnomadFreq} gnomadCoord={gnomadCoord} />
 }
 export default PopulationDetail;
