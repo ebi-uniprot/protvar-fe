@@ -1,8 +1,8 @@
 import '../../styles/index.scss';
 import React, {useEffect, useState} from 'react'
-import { Link } from 'react-router-dom'
+import {Link} from 'react-router-dom'
 import {ABOUT, CONTACT, HELP, HOME, RELEASE} from '../../constants/BrowserPaths'
-import { API_URL, LOCAL_BANNER } from '../../constants/const'
+import {API_URL, LOCAL_BANNER} from '../../constants/const'
 
 import DefaultPageContent from './DefaultPageContent'
 
@@ -28,7 +28,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
   // to re-enable banner, uncomment state above, and the lines within
   // the handleDismiss function
   //const showBanner = false
-  
+
   useEffect(() => {
     const win: any = window
     if (win.ebiFrameworkInvokeScripts) {
@@ -41,7 +41,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
     }
   }, [])
 
-  const { content } = props;
+  const {content} = props;
 
   const handleDismiss = () => {
     sessionStorage.setItem(LOCAL_BANNER, 'true');
@@ -94,13 +94,13 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
           <li>API {process.env.REACT_APP_API}</li>
           <li style={{borderBottom: '1px solid lightgray'}}>Data release {process.env.REACT_APP_DATA}</li>
           <ul>
-          <li>UniProt {process.env.REACT_APP_UNIPROT}</li>
-          <li>Ensembl {process.env.REACT_APP_ENSEMBL}</li>
-          <li>CADD {process.env.REACT_APP_CADD}</li>
-          <li>dbSNP {process.env.REACT_APP_DBSNP}</li>
-          <li>COSMIC {process.env.REACT_APP_COSMIC}</li>
-          <li>ClinVar {process.env.REACT_APP_CLINVAR}</li>
-          <li>gnomAD {process.env.REACT_APP_GNOMAD}</li>
+            <li>UniProt {process.env.REACT_APP_UNIPROT}</li>
+            <li>Ensembl {process.env.REACT_APP_ENSEMBL}</li>
+            <li>CADD {process.env.REACT_APP_CADD}</li>
+            <li>dbSNP {process.env.REACT_APP_DBSNP}</li>
+            <li>COSMIC {process.env.REACT_APP_COSMIC}</li>
+            <li>ClinVar {process.env.REACT_APP_CLINVAR}</li>
+            <li>gnomAD {process.env.REACT_APP_GNOMAD}</li>
           </ul>
         </ul>
       </div>
@@ -206,7 +206,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
               )}
 
               <div className="default-page-layout">
-                <SideDrawer />
+                <SideDrawer/>
                 <DefaultPageContent>
                   {content}
                 </DefaultPageContent>
@@ -218,35 +218,35 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
 
       <footer id="footer-target">
         <div className="custom-pv-footer row">
-        <a href="https://www.embl.de/" target="_blank" rel="noreferrer">
-          <img
-            src={EMBLEBILogo}
-            loading="lazy"
-            alt=""
-            width="130"
-            height="50"
-            className='collaborator-img'
-          />
+          <a href="https://www.embl.de/" target="_blank" rel="noreferrer">
+            <img
+              src={EMBLEBILogo}
+              loading="lazy"
+              alt=""
+              width="130"
+              height="50"
+              className='collaborator-img'
+            />
           </a>
           <a href="https://www.opentargets.org/" target="_blank" rel="noreferrer">
-          <img
-            src={openTargetsLogo}
-            loading="lazy"
-            alt=""
-            width="130"
-            height="50"
-            className='collaborator-img'
-          />
+            <img
+              src={openTargetsLogo}
+              loading="lazy"
+              alt=""
+              width="130"
+              height="50"
+              className='collaborator-img'
+            />
           </a>
           <a className="twitter-follow-button" data-size="large" data-show-screen-name="false"
              href="https://twitter.com/EBIProtVar">
             Follow @EBIProtVar</a>
-          <SignUp />
+          <SignUp/>
         </div>
         <div id="global-footer" className="global-footer">
           {/* Below expanded footer content is commented for now. Restore it back if there are any concerns */}
           {/* <nav id="global-nav-expanded" className="global-nav-expanded row" /> */}
-          <section id="ebi-footer-meta" className="ebi-footer-meta row" />
+          <section id="ebi-footer-meta" className="ebi-footer-meta row"/>
         </div>
         <CookieConsent
           location="bottom"
