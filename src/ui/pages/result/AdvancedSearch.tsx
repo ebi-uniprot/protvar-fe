@@ -50,8 +50,7 @@ const AdvancedSearch: React.FC = () => {
   // Update filters when URL changes
   useEffect(() => {
     setFilters(extractFilters(searchParams));
-    setIsExpanded(isAnyFilterSpecified);
-  }, [searchParams, isAnyFilterSpecified]);
+  }, [searchParams]);
 
   const handleCheckboxChange = (key: "cadd" | "am", value: string) => {
     setFilters((prev) => {
