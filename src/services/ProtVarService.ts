@@ -1,3 +1,4 @@
+import qs from 'qs';
 import axios, {AxiosResponse} from 'axios';
 import {setupCache} from 'axios-cache-interceptor/dist/index.bundle';
 import {
@@ -12,10 +13,13 @@ import {PdbeStructure} from "../types/PdbeStructure";
 import MappingResponse from "../types/MappingResponse";
 import {DownloadResponse} from "../types/DownloadRecord";
 import {IDResponse, InputType, PagedMappingResponse} from "../types/PagedMappingResponse";
+import {SearchFilterParams} from "../ui/pages/result/AdvancedSearch";
 
 
 const instance = axios.create({
-  baseURL: API_URL
+  baseURL: API_URL,
+  paramsSerializer: (params) =>
+    qs.stringify(params, { arrayFormat: 'repeat' }) // cadd=low&cadd=high
 });
 
 const api = setupCache(instance, {})
@@ -77,16 +81,21 @@ export function submitInputFile(file: File, assembly?: string, idOnly: boolean =
 // GET /mapping/input/{id}
 // IN: id
 // OUT: PagedMappingResponse
-export function getResult(inputType: InputType, id: string, page: number, pageSize: number, assembly: string|null = null) {
+export function getResult(inputType: InputType, id: string, page: number, pageSize: number, assembly: string|null = null, filters?: SearchFilterParams) {
   let url = ''
-  let params = {}
+  let params: Record<string, any> = {
+    page,
+    pageSize,
+    ...(filters || {})
+  };
 
   if (inputType === InputType.ID) {
     url = `${API_URL}/mapping/input/${id}`
-    params = {page, pageSize, assembly}
+    if (assembly) {
+      params.assembly = assembly;
+    }
   } else {
     url = `${API_URL}/mapping/accession/${id}`
-    params = {page, pageSize}
   }
 
   return api.get<PagedMappingResponse>(

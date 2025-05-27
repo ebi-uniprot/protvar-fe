@@ -2,7 +2,7 @@ import DefaultPageLayout from "../../layout/DefaultPageLayout";
 import LegendModal from "../../modal/LegendModal";
 import {useLocation, useParams, useSearchParams} from "react-router-dom";
 import ResultTable from "./ResultTable";
-import React, {useCallback, useEffect, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 import PaginationRow from "./PaginationRow";
 import {DEFAULT_PAGE, DEFAULT_PAGE_SIZE, LOCAL_RESULTS, PERMITTED_PAGE_SIZES, TITLE} from "../../../constants/const";
 import DownloadModal from "../../modal/DownloadModal";
@@ -17,6 +17,8 @@ import {HelpContent} from "../../components/help/HelpContent";
 import {ShareLink} from "../../components/common/ShareLink";
 import Spaces from "../../elements/Spaces";
 import Loader from "../../elements/Loader";
+import AdvancedSearch, {SearchFilterParams} from "./AdvancedSearch";
+import {extractFilters} from "./SearchFiltersUtils";
 
 const INVALID_PAGE = `The requested page number is invalid or out of range. Displaying page ${DEFAULT_PAGE} by default.`
 const INVALID_PAGE_SIZE = `The specified page size is invalid. Using the default page size of ${DEFAULT_PAGE_SIZE} instead.`
@@ -42,6 +44,7 @@ function ResultPageContent(props: ResultPageProps) {
   const page = parseInt(searchParams.get('page') || `${DEFAULT_PAGE}`, 10);
   const pageSize = parseInt(searchParams.get('pageSize') || `${DEFAULT_PAGE_SIZE}`, 10);
   const assembly = searchParams.get("assembly")
+  const filters = useMemo(() => extractFilters(searchParams), [searchParams]);
 
   const [data, setData] = useState<PagedMappingResponse | null>(null)
   const [loading, setLoading] = useState(true)
@@ -70,8 +73,7 @@ function ResultPageContent(props: ResultPageProps) {
   }, [getItem, setItem]);
 
   const loadData = useCallback((inputType: InputType, id: string | undefined
-    , page: number, pageSize: number, assembly: string | null) => {
-
+    , page: number, pageSize: number, assembly: string | null, filters?: SearchFilterParams) => {
     if (!id) {
       return;
     }
@@ -96,8 +98,7 @@ function ResultPageContent(props: ResultPageProps) {
     // page null or 1, no param
     // pageSize null or PAGE_SIZE, no param
     // assembly null or DEFAULT, no param
-
-    getResult(inputType, id, page, pageSize, assembly)
+    getResult(inputType, id, page, pageSize, assembly, filters)
       .then((response) => {
         if (response.data) {
           // checks each level of response obj hierarchy exists and if inputs is non-empty.
@@ -154,8 +155,8 @@ function ResultPageContent(props: ResultPageProps) {
   useEffect(() => {
     setWarning('')
     setResultTitle(id)
-    loadData(props.inputType, id, page, pageSize, assembly);
-  }, [props.inputType, id, page, pageSize, assembly, loadData]) // listening for change in id, and searchParams
+    loadData(props.inputType, id, page, pageSize, assembly, filters);
+  }, [props.inputType, id, page, pageSize, assembly, filters, loadData]) // listening for change in id, and searchParams
 
 
   document.title = `${resultTitle} | ${TITLE}`
@@ -218,6 +219,7 @@ function ResultPageContent(props: ResultPageProps) {
     </div>)}
 
     {!data && loading && <Loader/>}
+    {props.inputType === InputType.PROTEIN_ACCESSION && <AdvancedSearch />}
     <ResultTable data={data}/>
     {data && data.totalPages > 1 && <PaginationRow loading={loading} data={data}/>}
   </div>
