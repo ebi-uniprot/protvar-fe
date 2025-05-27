@@ -38,7 +38,7 @@ function normalizeFilterValues(selected: string[], valid: string[]) {
 const AdvancedSearch: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [filters, setFilters] = useState<SearchFilterParams>(extractFilters(searchParams));
 
   const isAnyFilterSpecified = filters.cadd.length > 0 ||
@@ -51,7 +51,7 @@ const AdvancedSearch: React.FC = () => {
   useEffect(() => {
     setFilters(extractFilters(searchParams));
     setIsExpanded(isAnyFilterSpecified);
-  }, [searchParams]);
+  }, [searchParams, isAnyFilterSpecified]);
 
   const handleCheckboxChange = (key: "cadd" | "am", value: string) => {
     setFilters((prev) => {
