@@ -14,7 +14,7 @@ import {SideDrawer} from "../components/drawer/SideDrawer";
 import {StatsGrid} from "../pages/release/Statistics";
 
 interface DefaultPageLayoutProps {
-  content: JSX.Element
+  content: React.JSX.Element
 }
 
 

@@ -5,7 +5,7 @@ import { RHEA_URL } from "../../../../constants/ExternalUrls";
 import RegionProteinAccordion from "./RegionProteinAccordion";
 import {CatalyticActivityComment, Comment, Reaction} from "../../../../types/Comment";
 import {DbReference} from "../../../../types/Common";
-import {Fragment} from "react";
+import React, {Fragment} from "react";
 
 function CatalyticActivities(props: RegionProteinProps) {
   return <RegionProteinAccordion title="Catalytic Activity" detailComponentGenerator={getCatalyticActivity} {...props}/>
@@ -45,7 +45,7 @@ function catalyticActivityDetails(reaction: Reaction) {
 }
 
 function getRHEA(dbReferences: Array<DbReference>) {
-  const reaIds: Array<JSX.Element> = []
+  const reaIds: Array<React.JSX.Element> = []
   if (dbReferences) {
     dbReferences.forEach((reference) => {
       if (reference.type === 'Rhea' && reference.id.includes('RHEA:')) {

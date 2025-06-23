@@ -33,9 +33,9 @@ interface PredictedStructureTableProps {
 }
 
 function PredictedStructureTable(props: PredictedStructureTableProps) {
-  const rows: Array<JSX.Element> = [];
+  const rows: Array<React.JSX.Element> = [];
   let options = <></>
-  let modelConfAndPAE: JSX.Element | null = null
+  let modelConfAndPAE: React.JSX.Element | null = null
 
   props.predictedStructureData.forEach(predStruc => {
 
@@ -50,8 +50,8 @@ function PredictedStructureTable(props: PredictedStructureTableProps) {
       );
     }
 
-    let pocketsList: Array<JSX.Element> = [];
-    let pocketsBtn: Array<JSX.Element> = [];
+    let pocketsList: Array<React.JSX.Element> = [];
+    let pocketsBtn: Array<React.JSX.Element> = [];
 
     props.pocketData.forEach((pocket, idx, array) => {
       const p = 'P' + pocket.pocketId

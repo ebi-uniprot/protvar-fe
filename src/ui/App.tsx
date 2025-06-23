@@ -23,10 +23,10 @@ import {MarkdownProvider} from "../context/MarkdownContext";
 const empty: ReactElement = <></>;
 
 export interface AppState {
-  drawer?: JSX.Element
+  drawer?: React.JSX.Element
   stdColor: boolean
   showModal: boolean
-  modalContent: JSX.Element
+  modalContent: React.JSX.Element
   // V2
   textInput: string
   file: File | null

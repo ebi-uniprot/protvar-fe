@@ -1,4 +1,4 @@
-import { Fragment } from "react"
+import React, { Fragment } from "react"
 import { v1 as uuidv1 } from 'uuid';
 import {Evidence} from "../../../types/Common";
 
@@ -15,7 +15,7 @@ const Evidences = (props: EvidencesProps) => {
   const { evidences } = props;
   let evidenceList: Array<IdUrl> = [];
   let evidenceMap = new Map();
-  let evidenceListToRet: Array<JSX.Element> = [];
+  let evidenceListToRet: Array<React.JSX.Element> = [];
 
   if (evidences && evidences.length > 0) {
     evidences.forEach((evidence) => {
@@ -44,7 +44,7 @@ const Evidences = (props: EvidencesProps) => {
   return <>{evidenceListToRet}</>;
 }
 
-function getEvidenceForEachSource(sourceName: string, ids: Array<JSX.Element>) {
+function getEvidenceForEachSource(sourceName: string, ids: Array<React.JSX.Element>) {
   return (
     <Fragment key={uuidv1()}>
       <b>{sourceName} :</b>

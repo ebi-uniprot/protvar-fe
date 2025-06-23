@@ -3,6 +3,7 @@ import {baseSettings} from './StructuralDetail';
 import PdbeRef from "./PdbeRef";
 import {PdbeStructure} from "../../../types/PdbeStructure";
 import { groupBy } from "../../../utills/Util";
+import React from "react";
 
 const pdbSettings = (molId: string) => {
   return {...baseSettings,
@@ -22,7 +23,7 @@ interface PdbeStructureTableProps {
 }
 
 function PdbeStructureTable(props: PdbeStructureTableProps) {
-  const rows: Array<JSX.Element> = [];
+  const rows: Array<React.JSX.Element> = [];
   const pdbeGroups = groupBy(props.pdbeData, "pdbId")
   let options = <></>
 

@@ -2,10 +2,11 @@ import { ReactComponent as ChevronDownIcon } from "../../../../images/chevron-do
 import RegionProteinProps from "./RegionProteinProps";
 import { EmptyElement } from '../../../../constants/ConstElement';
 import {Comment} from "../../../../types/Comment";
+import React from "react";
 
 interface RegionProteinAccordionProps extends RegionProteinProps {
   title: string
-  detailComponentGenerator: (comment: Comment) => JSX.Element
+  detailComponentGenerator: (comment: Comment) => React.JSX.Element
 }
 function RegionProteinAccordion(props: RegionProteinAccordionProps) {
   const { expandedRegionKey, comments, toggleProteinRegion, detailComponentGenerator, title } = props;

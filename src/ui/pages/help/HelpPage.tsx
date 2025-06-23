@@ -10,7 +10,7 @@ import {HELP_FILES} from "../../../constants/Help";
 function HelpPageContent() {
   const location = useLocation();
   const [id, setId] = useState('')
-  const [content, setContent] = useState<JSX.Element | null>(null);
+  const [content, setContent] = useState<React.JSX.Element | null>(null);
 
   useEffect(() => {
     document.title = `Help | ${TITLE}`

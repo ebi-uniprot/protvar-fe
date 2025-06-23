@@ -1,6 +1,7 @@
 import { ENSEMBL_GENE_RUL } from "../../../constants/ExternalUrls";
 import { v1 as uuidv1 } from 'uuid';
 import {TranslatedSequence} from "../../../types/MappingResponse";
+import React from "react";
 
 interface GeneAndTranslatedSequenceTableProps {
 ensg: string
@@ -9,7 +10,7 @@ ensp: Array<TranslatedSequence>
 function GeneAndTranslatedSequenceTable(props: GeneAndTranslatedSequenceTableProps) {
   const {ensg, ensp} = props;
   const ensgUrl = ENSEMBL_GENE_RUL + ensg;
-  var translatedSequences: Array<JSX.Element> = [];
+  var translatedSequences: Array<React.JSX.Element> = [];
   ensp.forEach((ensps) => {
     var enspsUrl = ENSEMBL_GENE_RUL + ensps.ensp;
     translatedSequences.push(

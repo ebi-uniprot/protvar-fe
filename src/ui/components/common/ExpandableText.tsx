@@ -9,9 +9,9 @@ export const ExpandableText: React.FC<ExpandableTextProps> = ({ text, charLimit 
   const [expanded, setExpanded] = useState(false);
 
   // Convert PubMed references to links
-  const convertPubMedLinks = (input: string): (string | JSX.Element)[] => {
+  const convertPubMedLinks = (input: string): (string | React.JSX.Element)[] => {
     const regex = /PubMed:(\d+)/g;
-    const parts: (string | JSX.Element)[] = [];
+    const parts: (string | React.JSX.Element)[] = [];
     let lastIndex = 0;
     let match;
 

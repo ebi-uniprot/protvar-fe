@@ -1,6 +1,6 @@
 import {GENOMIC_COLS, PROTEIN_COLS} from "../../../constants/SearchResultTable";
 import Tool from "../../elements/Tool";
-import {useContext, useState} from "react";
+import React, {useContext, useState} from "react";
 import {PagedMappingResponse} from "../../../types/PagedMappingResponse";
 import {
   GenomicInput,
@@ -93,7 +93,7 @@ const hasNoMessage = (originalInput: CustomInput, genInput: GenomicInput) => {
 // Process and convert paged mapping response into table rows
 const getTableRows = (data: PagedMappingResponse | null, isoformGroupExpanded: string, toggleIsoformGroup: StringVoidFun,
                       annotationExpanded: string, toggleAnnotation: StringVoidFun, stdColor: boolean) => {
-  const tableRows: Array<JSX.Element> = [];
+  const tableRows: Array<React.JSX.Element> = [];
 
   // top-level messages
   data?.content.messages?.forEach((message, messageIndex) => {

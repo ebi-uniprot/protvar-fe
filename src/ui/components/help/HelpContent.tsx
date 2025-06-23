@@ -13,7 +13,7 @@ interface HelpContentProps {
 export const HelpContent = (props: HelpContentProps) => {
   // Markdown help
   const { getMarkdownContent } = useMarkdown(); // Use the context to get the content
-  const [content, setContent] = useState<JSX.Element | null>(null);
+  const [content, setContent] = useState<React.JSX.Element | null>(null);
   const [loading, setLoading] = useState<boolean>(true); // Start loading by default
 
   useEffect(() => {

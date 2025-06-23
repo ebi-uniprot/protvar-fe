@@ -3,6 +3,7 @@ import ProteinInformationRegions from "./region/ProteinInformationRegions";
 import {FunctionalInfo, Gene} from "../../../types/FunctionalInfo";
 import {v1 as uuidv1} from "uuid";
 import {Comment} from "../../../types/Comment";
+import React from "react";
 
 interface ProteinInformationTableProps {
   apiData: FunctionalInfo
@@ -46,7 +47,7 @@ function ProteinInformationTable(props: ProteinInformationTableProps) {
 }
 
 function displayGeneNameAndSynonym(gene: Array<Gene>) {
-  const genes: Array<JSX.Element> = [];
+  const genes: Array<React.JSX.Element> = [];
   if (gene && gene.length > 0) {
 
     gene.forEach((g) => {

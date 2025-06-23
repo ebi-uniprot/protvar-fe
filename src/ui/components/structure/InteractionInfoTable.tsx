@@ -28,7 +28,7 @@ interface InteractionInfoTableProps {
 }
 
 function InteractionInfoTable(props: InteractionInfoTableProps) {
-  const rows: Array<JSX.Element> = [];
+  const rows: Array<React.JSX.Element> = [];
   let options = <></>
 
   props.interactionData.sort((a, b) => b.pdockq - a.pdockq).forEach((i) => {

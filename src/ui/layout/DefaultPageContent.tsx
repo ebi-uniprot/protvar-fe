@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom'
 import {DOWNLOAD, HOME, RESULT} from '../../constants/BrowserPaths'
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import RecentResult from "../pages/result/RecentResult";
 import {LOCAL_DOWNLOADS, LOCAL_RESULTS} from "../../constants/const";
 import useLocalStorage from "../../hooks/useLocalStorage";
@@ -8,7 +8,7 @@ import {SET_ITEM} from "../../context/LocalStorageContext";
 import Spaces from "../elements/Spaces";
 
 const DefaultPageContent = (props: {
-  children: JSX.Element
+  children: React.JSX.Element
 }) => {
   const { children } = props
   const { getItem } = useLocalStorage();

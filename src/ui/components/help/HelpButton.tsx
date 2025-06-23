@@ -3,7 +3,7 @@ import {AppContext} from "../../App";
 
 interface HelpBtnProps {
   title: string
-  content: JSX.Element
+  content: React.JSX.Element
 }
 
 export const HelpButton = (props: HelpBtnProps) => {

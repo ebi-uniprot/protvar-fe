@@ -6,13 +6,13 @@ import {HELP} from "../constants/BrowserPaths";
 
 // Define the interface for your markdown map
 interface MarkdownMap {
-  [key: string]: JSX.Element | null; // Update to allow null values initially
+  [key: string]: React.JSX.Element | null; // Update to allow null values initially
 }
 
 // Define the shape of the context
 interface MarkdownContextType {
   markdownMap: MarkdownMap;
-  getMarkdownContent: (fileName: string) => Promise<JSX.Element | null>; // Update to return a Promise
+  getMarkdownContent: (fileName: string) => Promise<React.JSX.Element | null>; // Update to return a Promise
 }
 
 // Create the context with an empty default value
@@ -41,7 +41,7 @@ export const MarkdownProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   }
 
   // Function to retrieve markdown content
-  const getMarkdownContent = async (fileName: string): Promise<JSX.Element | null> => {
+  const getMarkdownContent = async (fileName: string): Promise<React.JSX.Element | null> => {
     // Check if the markdown file is already loaded
     if (markdownMap[fileName]) {
       return markdownMap[fileName]; // Return the cached content

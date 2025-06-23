@@ -1,4 +1,4 @@
-import {useContext} from "react";
+import React, {useContext} from "react";
 import "./InfoPop.css"
 import {AppContext} from "../../App";
 
@@ -7,7 +7,7 @@ function ExampleInfoPop(props: {}) {
   const toggleModal = () => {
     state.updateState("showModal", state.showModal ? false : true);
   }
-  const setModalContent = (newContent: JSX.Element) => {
+  const setModalContent = (newContent: React.JSX.Element) => {
     state.updateState("modalContent", newContent);
   }
 

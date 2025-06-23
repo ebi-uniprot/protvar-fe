@@ -22,7 +22,7 @@ function XRefDetail({xrefs, populationFrequencies, clinicalSignificances}: XRefD
     )
   ); // <li key={uuidv1()}><b>{significance.type}</b></li>
 
-  const xrefGroups = new Map<string, JSX.Element[]>();
+  const xrefGroups = new Map<string, React.JSX.Element[]>();
   xrefs.forEach(({name, id, url}) => {
     if (!xrefGroups.has(name)) xrefGroups.set(name, []);
     xrefGroups.get(name)!.push(<XReferenceItem key={uuidv1()} id={id} url={url}/>);

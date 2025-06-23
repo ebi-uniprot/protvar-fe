@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { ReactComponent as ChevronDownIcon } from "../../../../images/chevron-down.svg"
 import { v1 as uuidv1 } from 'uuid';
 import { StringVoidFun } from '../../../../constants/CommonTypes';
@@ -31,7 +31,7 @@ function CoLocatedVariantAccordion(props: CoLocatedVariantAccordionProps) {
     coLocatedVariantsMap.set(change, coLocatedVariants);
   });
 
-  const variantDetails: Array<JSX.Element> = [];
+  const variantDetails: Array<React.JSX.Element> = [];
   coLocatedVariantsMap.forEach((genomicLocations, change) => {
     variantDetails.push(
       <li key={uuidv1()}>
