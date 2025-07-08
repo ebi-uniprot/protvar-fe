@@ -3,107 +3,114 @@ import CoLocatedVariantDetails from "./coLocated/CoLocatedVariantDetails";
 import AssociationDetails from "./common/AssociationDetails";
 import SubmittedVariantDetails from "./SubmittedVariantDetails";
 import PopulationIcon from '../../../images/human.svg';
-import {PopulationObservation} from "../../../types/PopulationObservation";
+import {AlleleFreq, PopulationObservation} from "../../../types/PopulationObservation";
 import {HelpButton} from "../help/HelpButton";
 import {HelpContent} from "../help/HelpContent";
 import React from "react";
 import Spaces from "../../elements/Spaces";
 import {ShareAnnotationIcon} from "../common/ShareLink";
 import NoPopulationDataRow from "./NoPopulationDataRow";
-import {AlleleFreq} from "./AlleleFreq";
-import {GnomadFreq} from "../../../types/MappingResponse";
+import {PopulationAlleleFreq} from "./PopulationAlleleFreq";
 
 interface PopulationDataRowProps {
   annotation: string
   poApiData: PopulationObservation,
   variantAA: string
-  gnomadFreq: GnomadFreq
-  gnomadCoord: string
+  genomicVariant: string
 }
 
 function PopulationDataRow(props: PopulationDataRowProps) {
 
   const proteinVariants = props.poApiData.variants || [];
-  const matchingVariants = proteinVariants.filter(variant => variant.alternativeSequence === props.variantAA);
-  const nonMatchingVariants = proteinVariants.filter(variant => variant.alternativeSequence !== props.variantAA);
-
+  const submittedVariants = proteinVariants.filter(variant => variant.alternativeSequence === props.variantAA);
+  const colocatedVariants = proteinVariants.filter(variant => variant.alternativeSequence !== props.variantAA);
+  const { freqMap } = props.poApiData;
 
   // If no protein variants are found but allele frequency is available, display allele frequency only
-  if (proteinVariants.length === 0) {
-    return props.gnomadFreq ? (
-      <PopulationObservationLayout
-        annotation={props.annotation}
-        submittedVariantContent={<AlleleFreq gnomadFreq={props.gnomadFreq} gnomadCoord={props.gnomadCoord} stdColor={false}/>}
-        coLocatedVariantContent={<label><b>No co-located variants to report</b></label>}
-      />
-    ) : <NoPopulationDataRow/>;
+  if (proteinVariants.length === 0 &&
+    (!freqMap || Object.keys(freqMap).length === 0)) {
+    return <NoPopulationDataRow/>;
   }
 
-  const hasAssociatedDiseases = matchingVariants.length > 0 && matchingVariants[0].association;
-  return (
-    <PopulationObservationLayout
-      annotation={props.annotation}
-      submittedVariantContent={<SubmittedVariantDetails variants={matchingVariants} gnomadFreq={props.gnomadFreq} gnomadCoord={props.gnomadCoord}/>}
-      coLocatedVariantContent={<CoLocatedVariantDetails coLocatedVariants={nonMatchingVariants}/>}
-      associatedDiseases={hasAssociatedDiseases ?
-        <AssociationDetails associations={matchingVariants[0].association}/> : null}
-    />
-  );
-}
-
-
-interface PopulationObservationLayoutProps {
-  annotation: string;
-  submittedVariantContent: React.ReactNode;
-  coLocatedVariantContent: React.ReactNode;
-  associatedDiseases?: React.ReactNode;
-}
-
-function PopulationObservationLayout({
-                                       annotation,
-                                       submittedVariantContent,
-                                       coLocatedVariantContent,
-                                       associatedDiseases
-                                     }: PopulationObservationLayoutProps) {
   return <tr>
-        <td colSpan={TOTAL_COLS} className="expanded-row">
-          <div className="significances-groups">
-            <div className="column">
-              <h5 style={{display: "inline"}}>
-                <img src={PopulationIcon} className="click-icon" alt="population icon"
-                     title="Population observation"/> Population Observation
-              </h5>
-              <HelpButton title="" content={<HelpContent name="population-observations"/>}/>
-              <Spaces count={2}/>
-              <ShareAnnotationIcon annotation={annotation}/>
-              <table>
-                <tbody>
-                <tr>
-                  <th>Submitted Variant Details</th>
-                  <th>Co-located Variants at Residue Level</th>
-                </tr>
-                <tr>
-                  <td style={{verticalAlign: "top"}}>{submittedVariantContent}</td>
-                  <td>{coLocatedVariantContent}</td>
-                </tr>
-                </tbody>
-              </table>
-              {associatedDiseases ? (
-                <table>
-                  <tbody>
-                  <tr>
-                    <th>Associated Diseases from UniProt</th>
-                  </tr>
-                  <tr>
-                    <td>{associatedDiseases}</td>
-                  </tr>
-                  </tbody>
-                </table>
-              ) : null}
-            </div>
-          </div>
+    <td colSpan={TOTAL_COLS} className="expanded-row">
+      <div className="significances-groups">
+        <div className="column">
+          <h5 style={{display: "inline"}}>
+            <img src={PopulationIcon} className="click-icon" alt="population icon"
+                 title="Population observation"/> Population Observation
+          </h5>
+          <HelpButton title="" content={<HelpContent name="population-observations"/>}/>
+          <Spaces count={2}/>
+          <ShareAnnotationIcon annotation={props.annotation}/>
+          <table>
+            <tbody>
+            <tr>
+              <th>Submitted Variant Details</th>
+              <th>Co-located Variants at Residue Level</th>
+            </tr>
+            {freqMap && Object.keys(freqMap).length > 0 &&
+              <AlleleFreqRow freqMap={freqMap} genomicVariant={props.genomicVariant} />
+            }
+            <tr>
+              <td style={{verticalAlign: "top"}}><SubmittedVariantDetails variants={submittedVariants} /></td>
+              <td><CoLocatedVariantDetails coLocatedVariants={colocatedVariants}/></td>
+            </tr>
+            </tbody>
+          </table>
+          {submittedVariants.length > 0 && submittedVariants[0].association &&
+            <table>
+              <tbody>
+              <tr>
+                <th>Associated Diseases from UniProt</th>
+              </tr>
+              <tr>
+                <td><AssociationDetails associations={submittedVariants[0].association}/></td>
+              </tr>
+              </tbody>
+            </table>}
+        </div>
+      </div>
+    </td>
+  </tr>
+}
+
+interface AlleleFreqRowProps {
+  freqMap: { [key: string]: AlleleFreq };
+  genomicVariant: string
+}
+function AlleleFreqRow(props: AlleleFreqRowProps) {
+  const {freqMap, genomicVariant} = props
+  const parts = props.genomicVariant.split("-");
+  const isValid = parts.length === 4;
+
+  if (!isValid) {
+    return (
+      <tr>
+        <td>
+          <PopulationAlleleFreq freqMap={freqMap} genomicVariant={props.genomicVariant} stdColor={false}/>
         </td>
-    </tr>
+        <td></td>
+      </tr>
+    );
+  }
+
+  const alt = parts[3];
+  const mainFreqMap = {...(freqMap[alt] ? {[alt]: freqMap[alt]} : {})};
+  const otherFreqMap = Object.fromEntries(
+    Object.entries(freqMap).filter(([allele]) => allele !== alt)
+  );
+
+  return <tr>
+    <td>
+      <PopulationAlleleFreq freqMap={mainFreqMap} genomicVariant={props.genomicVariant} stdColor={false} />
+    </td>
+    <td>
+      {Object.keys(otherFreqMap).length > 0 && (
+        <PopulationAlleleFreq freqMap={otherFreqMap} genomicVariant={props.genomicVariant} stdColor={false} />
+      )}
+    </td>
+  </tr>
 }
 
 export default PopulationDataRow;

@@ -6,11 +6,11 @@ import {
   PASTE_BOX
 } from "../../../constants/Example";
 import {Form, initialForm} from "../../../types/FormData";
-import {submitInputFile, submitInputText} from "../../../services/ProtVarService";
+import {uploadFile, uploadText} from "../../../services/ProtVarService";
 import {API_ERROR, QUERY, RESULT} from "../../../constants/BrowserPaths";
 import {useNavigate} from "react-router-dom";
 import {AxiosResponse} from "axios";
-import {IDResponse} from "../../../types/PagedMappingResponse";
+import {InputUploadResponse} from "../../../types/PagedMappingResponse";
 import {LOCAL_RESULTS} from "../../../constants/const";
 import {ResultRecord} from "../../../types/ResultRecord";
 import {readFirstLineFromFile} from "../../../utills/FileUtil";
@@ -119,9 +119,9 @@ const SearchVariant = () => {
 
   const handleSubmit = () => {
     setLoading(true)
-    var promise: Promise<AxiosResponse<IDResponse>> | undefined = undefined;
+    let promise: Promise<AxiosResponse<InputUploadResponse>> | undefined;
     if (form.file)
-      promise = submitInputFile(form.file, form.assembly)
+      promise = uploadFile(form.file, form.assembly)
     else if (form.text) {
       // input example check that can be used to decide whether
       // to save in result history or not.
@@ -130,38 +130,50 @@ const SearchVariant = () => {
       //}
       const cleanText = cleanInput(form.text)
       if (cleanText) {
-        setForm({...form, text: cleanText})
+        setForm(prev => ({...prev, text: cleanText}));
         if (hasMultipleLines(cleanText)) {
-          promise = submitInputText(cleanText, form.assembly)
+          promise = uploadText(cleanText, form.assembly)
         } else {
-          let directQuery = `${QUERY}?search=${encodeURIComponent(cleanText)}&assembly=${form.assembly}`
-          if (form.assembly && form.assembly === Assembly.GRCh37) {
+          let directQuery = `${QUERY}?search=${encodeURIComponent(cleanText)}`;
+          if (form.assembly === Assembly.GRCh37) {
             // single input uses GRCh38 by default (auto-detect is ignored), unless GRCh37 is specified.
-            directQuery += `&assembly=${encodeURIComponent(form.assembly)}`
+            directQuery += `&assembly=${encodeURIComponent(form.assembly)}`;
           }
-          navigate(directQuery)
+          navigate(directQuery);
+          setLoading(false); // stop spinner if we navigate immediately
+          return;
         }
       } else { // empty after trim
         setInvalidInput(true);
         setInvalidMsg(INVALID_INPUT);
+        setLoading(false);
+        return;
       }
     }
 
     if (promise) {
       promise
         .then((response) => {
-          let url = `${RESULT}/${response.data.id}`
-          if (form.assembly !== DEFAULT_ASSEMBLY)
+          let url = `${RESULT}/${response.data.inputId}`
+          if (form.assembly !== DEFAULT_ASSEMBLY) {
             url += `?assembly=${form.assembly}`
-          submittedRecord(response.data.id, url)
+          }
+          submittedRecord(response.data.inputId, url)
           navigate(url)
         })
         .catch((err) => {
-          navigate(API_ERROR);
-          console.log(err);
+          if (err?.response?.status === 400) { // uploadFile api endpoint badRequest response
+            setInvalidInput(true);
+            setInvalidMsg('File upload error.');
+          } else {
+            navigate(API_ERROR);
+            console.error(err);
+          }
         })
+        .finally(() => setLoading(false));
+    } else {
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   const clearFileInput = () => {
@@ -236,7 +248,7 @@ const SearchVariant = () => {
 
                 <div className="assembly">
                   <span
-                    title="Genome assembly GRCh37 to GRCh38 conversion for genomic inputs (VCF, HGVS g., gnomAD and any other custom genomic formats).">
+                    title="Genome assembly GRCh37 to GRCh38 conversion for genomic inputs (VCF, HGVS g., gnomAD and any other supported internal genomic formats).">
                     <b>Reference Genome Assembly</b>
                   </span>
                   <div className="assembly-radio-check">

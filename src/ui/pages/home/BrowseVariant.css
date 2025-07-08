@@ -9,8 +9,8 @@
 .search-box-container {
     display: grid;
     grid-template-columns: auto 1fr auto; /* Three columns: auto, 1fr (flexible), auto */
-//gap: 10px; /* Gap between grid items */
-//width: 100%; /* Ensure the container takes full width */
+/*gap: 10px;*/ /* Gap between grid items */
+/*width: 100%;*/ /* Ensure the container takes full width */
     margin: 10px;
     height: 60px;
     border-radius: 15px;
@@ -22,17 +22,16 @@
 
 /* Style for the search select */
 .search-select {
-    padding: 8px;
-    border: none; /* Remove borders */
-    background: transparent; /* Make the background transparent */
-
-
+    padding: 8px 20px 8px 12px; /* extra right padding for the arrow */
+    border: 1px solid #ccc; /* light border to indicate it's interactive */
+    border-radius: 6px;
+    font-size: 14px;
 }
 
 /* Style for the search input */
 .search-input {
     padding: 8px;
-    border: none; /* Remove borders */
+    border-radius: 6px;
     background: transparent; /* Make the background transparent */
     width: auto; /* Allow input to adjust its width based on content */
 }

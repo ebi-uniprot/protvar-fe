@@ -9,7 +9,7 @@ import {formatRange} from "../../../utills/Util";
 import {FunctionalInfo, Feature} from "../../../types/FunctionalInfo";
 import {Prediction} from "./prediction/Prediction";
 import {Dropdown} from "react-dropdown-now";
-import {AmScore, ConservScore, EsmScore, EveScore, TranslatedSequence} from "../../../types/MappingResponse";
+import {AmScore, TranslatedSequence} from "../../../types/MappingResponse";
 import {HelpContent} from "../help/HelpContent";
 import {HelpButton} from "../help/HelpButton";
 import {Interaction, Pocket} from "../../../types/Prediction";
@@ -21,10 +21,7 @@ export interface ResidueRegionTableProps {
   ensg: string
   ensp: Array<TranslatedSequence>
   caddScore: string
-  conservScore: ConservScore
   amScore: AmScore
-  eveScore: EveScore
-  esmScore: EsmScore
 }
 
 function ResidueRegionTable(props: ResidueRegionTableProps) {
@@ -281,7 +278,7 @@ interface InterfacesProps {
 }
 
 const Interfaces = (props: InterfacesProps) => {
-  if (props.interactions.length === 0) return <div className="struct-pred">No P-P interaction predicted at variant position</div>
+  if (!props.interactions || props.interactions.length === 0) return <div className="struct-pred">No P-P interaction predicted at variant position</div>
   let key = 'interfaces-0'
   return <Fragment key={key}>
     <button type="button" className="collapsible" onClick={_ => props.toggleRow(key)}>

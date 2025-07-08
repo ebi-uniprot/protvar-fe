@@ -5,8 +5,8 @@ import DefaultPageLayout from '../../layout/DefaultPageLayout'
 import DownloadModal from '../../modal/DownloadModal'
 import LegendModal from '../../modal/LegendModal'
 import {TITLE} from "../../../constants/const";
-import {mappings} from "../../../services/ProtVarService";
-import {InputType, PagedMappingResponse, toPagedMappingResponse} from "../../../types/PagedMappingResponse";
+import {singleVariant} from "../../../services/ProtVarService";
+import {PagedMappingResponse} from "../../../types/PagedMappingResponse";
 import {APP_URL} from "../../App";
 import {HelpButton} from "../../components/help/HelpButton";
 import {HelpContent} from "../../components/help/HelpContent";
@@ -14,6 +14,7 @@ import {ShareLink} from "../../components/common/ShareLink";
 import Spaces from "../../elements/Spaces";
 import Loader from "../../elements/Loader";
 import {NO_DATA, NO_RESULT, UNEXPECTED_ERR} from "../result/ResultPage";
+import {InputType} from "../../../types/InputType";
 
 const INVALID_QUERY = 'Invalid search query'
 
@@ -77,13 +78,12 @@ const QueryPageContent = (props: QueryPageProps) => {
     //console.log('query', q)
     if (q) {
       setQuery(q)
-      mappings([q], assembly ?? undefined)
+      singleVariant(q, assembly ?? undefined)
         .then((response) => {
           if (response.data) {
-            if (response.data.inputs?.length > 0) {
-              const mappingResponse = toPagedMappingResponse(response.data)
-              if (mappingResponse.content?.inputs?.length > 0) {
-                setData(mappingResponse)
+            if (response.data.content?.inputs?.length > 0) {
+              if (response.data.content?.inputs?.length > 0) {
+                setData(response.data)
               } else {
                 setData(null) // clear prev data
                 setWarning(NO_RESULT)
@@ -139,7 +139,7 @@ const QueryPageContent = (props: QueryPageProps) => {
           <ShareLink url={shareUrl} linkText="Share Results"/>
           <Spaces count={2}/>
           <LegendModal/>
-          <DownloadModal inputType={InputType.SINGLE_VARIANT} query={query} numPages={1} />
+          <DownloadModal input={query!} type={InputType.SINGLE_VARIANT} numPages={1} />
         </div>
       </span>
       </div>}

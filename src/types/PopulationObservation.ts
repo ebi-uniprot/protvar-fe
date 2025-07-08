@@ -1,7 +1,19 @@
 import {DbReferenceObject, Evidence} from "./Common";
 
 export interface PopulationObservation {
-    variants: Array<Variant>
+    accession: string,
+    position: number,
+    chromosome: string,
+    genomicPosition: number,
+    altBase: string,
+    variants: Array<Variant>,
+    freqMap: { [key: string]: AlleleFreq };
+}
+
+export interface AlleleFreq {
+    ac: number;
+    an: number;
+    af: number;
 }
 
 export interface Variant {

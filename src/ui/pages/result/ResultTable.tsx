@@ -7,7 +7,7 @@ import {
   INPUT_CDNA,
   INPUT_GEN,
   INPUT_ID,
-  INPUT_PRO, CustomInput, Message
+  INPUT_PRO, UserInput, Message
 } from "../../../types/MappingResponse";
 import {StringVoidFun} from "../../../constants/CommonTypes";
 import {getAlternateIsoFormRow} from "./AlternateIsoFormRow";
@@ -86,7 +86,7 @@ export const rowBg = (index: number) => {
 
 const NO_MAPPING: Message = {type: 'ERROR', text: 'No mapping found' }
 
-const hasNoMessage = (originalInput: CustomInput, genInput: GenomicInput) => {
+const hasNoMessage = (originalInput: UserInput, genInput: GenomicInput) => {
   return !(originalInput.messages.length > 0 || genInput.messages.length > 0)
 }
 
@@ -102,7 +102,7 @@ const getTableRows = (data: PagedMappingResponse | null, isoformGroupExpanded: s
 
   let primaryRow = 0 // ensures similar or duplicate inputs do not lead to conflicting key
   let altRow = 0
-  const addGenMapping = (index: number, genIndex: number, input: GenomicInput, originalInput: CustomInput) => {
+  const addGenMapping = (index: number, genIndex: number, input: GenomicInput, originalInput: UserInput) => {
 
     if (input.genes.length === 0) {
       if (hasNoMessage(originalInput, input)) {

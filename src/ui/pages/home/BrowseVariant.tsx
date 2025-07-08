@@ -1,35 +1,63 @@
 import React, {useState} from 'react'
 import "./BrowseVariant.css"
 import {useNavigate} from "react-router-dom";
+import {resolve, normalize} from "../../../utills/InputTypeResolver";
+import {InputType} from "../../../types/InputType";
 
-
-const UNIPROT_ACC_MIN_LEN = 6
-const UNIPROT_ACC_MAX_LEN = 10
-const UNIPROT_ACC_REGEX = /^([OPQ][0-9][A-Z0-9]{3}[0-9]|[A-NR-Z][0-9]([A-Z][A-Z0-9]{2}[0-9]){1,2})(?:-[1-9]|[1-9][0-9])?$/i
+const inputExamples: Record<string, string> = {
+  [InputType.UNIPROT]: 'e.g. P22304',
+  [InputType.ENSEMBL]: 'e.g. ENSG00000139618',
+  [InputType.GENE]: 'e.g. BRCA2',
+  [InputType.PDB]: 'e.g. 6ioz',
+  [InputType.REFSEQ]: 'e.g. NM_000059.4',
+  [InputType.INPUT_ID]: 'e.g. genomic input examples',
+};
 
 const BrowseVariant = () => {
   const navigate = useNavigate();
-  const [inputValue, setInputValue] = useState('')
+  const [input, setInput] = useState('')
+  const [selectedType, setSelectedType] = useState('')
   const [error, setError] = useState('')
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
+    setInput(e.target.value);
     setError(''); // Clear error message when user starts typing
   };
 
-  const handleSubmit = () => {
-    const trimmedValue = inputValue.trim();
+  const handleSelectedTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedType(e.target.value);
+    setError('');
+  };
 
-    // Check if the trimmed value matches the regex pattern
-    if (trimmedValue === '') {
-      setError('The input value is empty');
-    } else if (trimmedValue.length < UNIPROT_ACC_MIN_LEN
-      || trimmedValue.length > UNIPROT_ACC_MAX_LEN
-      || !UNIPROT_ACC_REGEX.test(trimmedValue)) {
-      setError("Not valid UniProt accession")
-    } else {
-      navigate(trimmedValue.toUpperCase())
+  const handleSubmit = () => {
+    const trimmedInput = input.trim();
+    if (!trimmedInput) {
+      setError('Input value cannot be empty.');
+      return;
     }
+
+    const detectedType = resolve(trimmedInput);
+
+    // If user explicitly selected a type, validate input against that type's regex
+    if (selectedType) {
+      // Backend and client should agree on these type strings or add a mapping if different
+      if (!detectedType) {
+        setError(`Input does not match any supported type.`);
+        return;
+      }
+      // If user picked UniProt but detectedType isn't UNIPROT, error out
+      if (selectedType !== detectedType) {
+        setError(`Input does not match the selected type ${selectedType}.`);
+        return;
+      }
+    }
+
+    // Navigate and pass type param only if specified
+    const effectiveType = selectedType || detectedType;
+    const normalized = normalize(trimmedInput, effectiveType || '');
+    const typeParam = effectiveType ? `?type=${effectiveType.toLowerCase()}` : '';
+    //navigate(`/search?input=${normalized}&type=${effectiveType.toLowerCase()}`);
+    navigate(`${normalized}${typeParam}`);
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -38,7 +66,7 @@ const BrowseVariant = () => {
     }
   }
 
-  const submitDisabled = inputValue.trim() ? false : true;
+  const submitDisabled = input.trim() ? false : true;
 
   return (
     <div id="search" className="card-table search">
@@ -46,25 +74,27 @@ const BrowseVariant = () => {
         <section className="search-card__actions" style={{backgroundColor: '#9fccaf'}}>
           <span className="search-card-header">
             <p>
-              <b>Browse ProtVar</b> - enter a single UniProt accession below
+              <b>Browse ProtVar</b> - enter input (type optional)
             </p>
           </span>
         </section>
         <section className="card--has-hover top-row" role="button">
           <div className="card__content">
             <div className="search-box-container">
-              <select className="search-select">
-                <option value="1">Protein (UniProt)</option>{/*
-                <option value="2" disabled={true}>Protein (PDBe)</option>
-                <option value="3" disabled={true}>Gene (HGNC)</option>
-                <option value="4" disabled={true}>Gene (Ensembl ID)</option>
-                <option value="5" disabled={true}>Gene (RefSeq)</option>*/}
+              <select className="search-select" value={selectedType} onChange={handleSelectedTypeChange}>
+                <option value="">Input type (auto-detect)</option>
+                <option value={InputType.UNIPROT}>UniProt Accession</option>
+                <option value={InputType.ENSEMBL}>Ensembl ID</option>
+                <option value={InputType.GENE}>Gene Symbol</option>
+                <option value={InputType.PDB}>PDB ID</option>
+                <option value={InputType.REFSEQ}>RefSeq ID</option>
+                <option value={InputType.INPUT_ID}>Input ID</option>
               </select>
               <input type="text" className="search-input"
-                     value={inputValue}
+                     value={input}
                      onChange={handleInputChange}
                      onKeyDown={handleKeyDown}
-                     placeholder="Search..."/>
+                     placeholder={selectedType ? inputExamples[selectedType] : "Search..."}/>
               <button className="search-button btn btn-primary"
                       disabled={submitDisabled}
                       onClick={handleSubmit}>
@@ -81,7 +111,6 @@ const BrowseVariant = () => {
           </div>
         </section>
       </div>
-
 
     </div>
   )

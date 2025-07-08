@@ -3,17 +3,19 @@ import axios, {AxiosResponse} from 'axios';
 import {setupCache} from 'axios-cache-interceptor/dist/index.bundle';
 import {
   API_URL,
-  CONTENT_MULTIPART,
-  CONTENT_TEXT,
   DEFAULT_HEADERS
 } from "../constants/const";
 import {FunctionalInfo} from "../types/FunctionalInfo";
 import {PopulationObservation} from "../types/PopulationObservation";
 import {PdbeStructure} from "../types/PdbeStructure";
-import MappingResponse from "../types/MappingResponse";
 import {DownloadResponse} from "../types/DownloadRecord";
-import {IDResponse, InputType, PagedMappingResponse} from "../types/PagedMappingResponse";
-import {SearchFilterParams} from "../ui/pages/result/AdvancedSearch";
+import {InputUploadResponse, PagedMappingResponse} from "../types/PagedMappingResponse";
+import {DownloadRequest} from "../types/DownloadRequest";
+import {MappingRequest} from "../types/MappingRequest";
+
+export const APP_JSON = {"Content-Type": "application/json"}
+export const TEXT_PLAIN = {"Content-Type": "text/plain"}
+export const MULTIPART_FORMDATA = {"Content-Type": "multipart/form-data"}
 
 
 const instance = axios.create({
@@ -24,85 +26,67 @@ const instance = axios.create({
 
 const api = setupCache(instance, {})
 
-// Coordinate Mapping
-// POST /mappings
-export function mappings(inputArr: string[], assembly?: string) {
-  return api.post<any, string[], AxiosResponse<MappingResponse>>(
-    `${API_URL}/mappings`, inputArr,
+// Input Upload
+export function uploadText(text: string, assembly?: string) {
+  return api.post<InputUploadResponse>(
+    `${API_URL}/input/text`, text,
     {
       params: {assembly},
-      headers: DEFAULT_HEADERS,
+      headers: TEXT_PLAIN
     }
   );
 }
 
-// POST /mapping/input
-// IN: text
-// OUT: PagedMappingResponse
-// See getResult
-export function submitInput(text: string, assembly?: string) {
-  return api.post<PagedMappingResponse>(
-    `${API_URL}/mapping/input`, text,
-    {
-      params: {assembly}, // idOnly defaults to false i.e. PagedMappingResponse is returned
-      headers: CONTENT_TEXT
-    }
-  );
-}
-
-// POST /mapping/input
-// IN: text
-// OUT: IDResponse
-export function submitInputText(text: string, assembly?: string, idOnly: boolean = true) {
-  return api.post<IDResponse>(
-    `${API_URL}/mapping/input`, text,
-    {
-      params: {assembly, idOnly},
-      headers: CONTENT_TEXT
-    }
-  );
-}
-
-// POST /mapping/input
-// IN: file
-// OUT: IDResponse
-export function submitInputFile(file: File, assembly?: string, idOnly: boolean = true) {
+export function uploadFile(file: File, assembly?: string) {
   const formData = new FormData();
   formData.append('file', file);
-  return api.post<any, FormData, AxiosResponse<IDResponse>>(
-    `${API_URL}/mapping/input`, formData,
+  return api.post<any, FormData, AxiosResponse<InputUploadResponse>>(
+    `${API_URL}/input/file`, formData,
     {
-      params: {assembly, idOnly},
-      headers: CONTENT_MULTIPART,
+      params: {assembly},
+      headers: MULTIPART_FORMDATA
     }
   );
 }
 
-// GET /mapping/input/{id}
-// IN: id
-// OUT: PagedMappingResponse
-export function getResult(inputType: InputType, id: string, page: number, pageSize: number, assembly: string|null = null, filters?: SearchFilterParams) {
-  let url = ''
-  let params: Record<string, any> = {
-    page,
-    pageSize,
-    ...(filters || {})
-  };
+// Mapping
 
-  if (inputType === InputType.ID) {
-    url = `${API_URL}/mapping/input/${id}`
-    if (assembly) {
-      params.assembly = assembly;
-    }
-  } else {
-    url = `${API_URL}/mapping/accession/${id}`
-  }
-
+// GET /mapping/single
+// Single variant mapping (used in QueryPage/direct link)
+export function singleVariant(input: string, assembly?: string) {
   return api.get<PagedMappingResponse>(
-    url,
+    `${API_URL}/mapping/single`,
     {
-      params: params,
-      headers: DEFAULT_HEADERS,
+      params: {input, assembly},
+      headers: APP_JSON,
+    }
+  );
+}
+
+// GET /mapping/{inputId}
+// Used on page redirect after inputText/File upload
+// Used for URL /result/:inputId
+export function inputIdMapping(inputId: string,
+                               page?: number,
+                               pageSize?: number,
+                               assembly?: string) {
+  return api.get<PagedMappingResponse>(
+    `${API_URL}/mapping/${inputId}`,
+    {
+      params: {page, pageSize, assembly},
+      headers: APP_JSON,
+    }
+  );
+}
+
+// POST  /mapping (json or form)
+// OUT: PagedMappingResponse
+export function getMapping(request: MappingRequest) {
+  return api.post<PagedMappingResponse>(
+    `${API_URL}/mapping`,
+    request, // send the MappingRequest as the JSON body
+    {
+      headers: APP_JSON,
     }
   );
 }
@@ -128,40 +112,17 @@ export function getStructureData(url: string) {
 }
 
 // Download
-export function downloadFileInput(file: File, assembly: string, email: string, jobName: string, functional: boolean, population: boolean, structure: boolean) {
-  const formData = new FormData();
-  formData.append('file', file);
-  return api.post<any, FormData, AxiosResponse<DownloadResponse>>(
-    `${API_URL}/download/fileInput`, formData,
+export function downloadPost(request: DownloadRequest) {
+  return api.post<any, DownloadRequest, AxiosResponse<DownloadResponse>>(
+    `${API_URL}/download`,
+    request,
     {
-      params: {email, jobName, function: functional, population, structure, assembly},
-      headers: CONTENT_MULTIPART,
+      headers: { 'Content-Type': 'application/json' },
     }
   );
 }
 
-export function downloadTextInput(inputArr: string[], assembly: string, email: string, jobName: string, functional: boolean, population: boolean, structure: boolean) {
-  return api.post<any, string[], AxiosResponse<DownloadResponse>>(
-    `${API_URL}/download/textInput`, inputArr,
-    {
-      params: {email, jobName, function: functional, population, structure, assembly},
-      headers: DEFAULT_HEADERS,
-    }
-  );
-}
-
-export function downloadResult(input: string, inputType: string, page: string|null, pageSize: string|null, assembly: string|null,
-                               email: string, jobName: string, functional: boolean, population: boolean, structure: boolean) {
-  return api.post<any, string, AxiosResponse<DownloadResponse>>(
-    `${API_URL}/download`, input,
-    {
-      params: {inputType, page, pageSize, assembly, email, jobName, function: functional, population, structure},
-      headers: CONTENT_TEXT,
-    }
-  );
-}
-
-export function getDownloadStatus(ids: string[]) {
+export function downloadStatus(ids: string[]) {
   return api.post(
     `${API_URL}/download/status`, ids,
     {

@@ -36,7 +36,8 @@
 .download,
 .download-ready,
 .download-nr,
-.download-na {
+.download-na,
+.download-unk {
   width: 15px;
   height: 15px;
   -moz-border-radius: 50px;
@@ -52,6 +53,9 @@
 }
 .download-na {
   background: linear-gradient(white, red);
+}
+.download-unk {
+  background: linear-gradient(white, lightgrey);
 }
 
 .red {

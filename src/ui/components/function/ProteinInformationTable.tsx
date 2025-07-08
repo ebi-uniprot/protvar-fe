@@ -27,7 +27,7 @@ function ProteinInformationTable(props: ProteinInformationTableProps) {
                     <LabelValueLi label="Recommended name" value={data.name} />
                     <LabelValueLi label="Alternative name" value={data.alternativeNames} />
                     {displayGeneNameAndSynonym(data.gene)}
-                    <LabelValueLi label="UniProtKB entry name" value={data.id} />
+                    <LabelValueLi label="UniProtKB entry name" value={data.entryId} />
                     <LabelValueLi label="Protein evidence" value={data.proteinExistence} />
                     <LabelValueLi label="Entry last updated" value={data.lastUpdated} />
                     <LabelValueLi label="Sequence modified" value={data.sequence.modified} />

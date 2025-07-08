@@ -6,7 +6,7 @@ import AnnotationLegend from './AnnotationLegend'
 import {CADD_SCORE_ATTR} from "../components/function/prediction/CaddScorePred";
 import {PredAttr} from "../components/function/prediction/Prediction";
 import {AM_SCORE_ATTR} from "../components/function/prediction/AlphaMissensePred";
-import {AF_ATTR} from "../components/population/AlleleFreq";
+import {AF_ATTR} from "../components/population/PopulationAlleleFreq";
 import {EVE_SCORE_ATTR} from "../components/function/prediction/EvePred";
 import {AppContext} from "../App";
 import {ColourCheckbox} from "./ColourCheckbox";

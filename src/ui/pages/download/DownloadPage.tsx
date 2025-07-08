@@ -1,6 +1,6 @@
 import DefaultPageLayout from "../../layout/DefaultPageLayout";
 import React, {useEffect, useState} from "react";
-import {getDownloadStatus} from "../../../services/ProtVarService";
+import {downloadStatus} from "../../../services/ProtVarService";
 import {LOCAL_DOWNLOADS, PV_FTP, TITLE} from "../../../constants/const"
 import {DownloadRecord} from "../../../types/DownloadRecord";
 import Notify from "../../elements/Notify";
@@ -13,15 +13,20 @@ import {HelpButton} from "../../components/help/HelpButton";
 import Spaces from "../../elements/Spaces";
 import {ShareLink} from "../../components/common/ShareLink";
 
-interface DownloadTextIcon {
+interface StatusTextIcon {
   text: string
   icon: string
 }
 
-export const downloadStatus: { [status: number]: DownloadTextIcon; } = {};
-downloadStatus[-1] = {text: 'Not Available', icon: 'download-na'};
-downloadStatus[0] = {text: 'Not Ready', icon: 'download-nr'};
-downloadStatus[1] = {text: 'Ready', icon: 'download-ready'};
+export const statusMap: Record<number, StatusTextIcon> = {
+  [-1]: {text: 'Not Available', icon: 'download-na'},
+  [0]: {text: 'Not Ready', icon: 'download-nr'},
+  [1]: {text: 'Ready', icon: 'download-ready'}
+};
+
+export function getStatus(status: number): StatusTextIcon {
+  return statusMap[status] ?? { text: "Unknown", icon: "download-unk" };
+}
 
 function DownloadPageContent() {
   const navigate = useNavigate();
@@ -39,7 +44,7 @@ function DownloadPageContent() {
       // Fetch updated statuses
       const fetchUpdatedStatuses = () => {
         const fs = localDownloads.map(d => d.downloadId);
-        getDownloadStatus(fs)
+        downloadStatus(fs)
           .then((response) => {
             const updatedDownloads = localDownloads.map(d => {
               if (d.downloadId in response.data) {
@@ -136,6 +141,7 @@ function DownloadPageContent() {
           <tbody>
 
           {downloads.map((download, index) => {
+            const statusInfo = getStatus(download.status);
             return (
               <tr key={`download-${index}`}>
                 {
@@ -180,7 +186,7 @@ function DownloadPageContent() {
                 </td>
                 <td>
                   <span
-                    className={downloadStatus[download.status].icon}></span> {downloadStatus[download.status].text} {download.size && download.size > 0 ? `(${humanFileSize(download.size)})` : ''}
+                    className={statusInfo.icon}></span> {statusInfo.text} {download.size && download.size > 0 ? `(${humanFileSize(download.size)})` : ''}
                 </td>
                 <td>
                   <button title="Download" className="bi bi-download icon-btn"

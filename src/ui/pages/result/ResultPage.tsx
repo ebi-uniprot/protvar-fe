@@ -6,8 +6,8 @@ import React, {useCallback, useEffect, useMemo, useState} from "react";
 import PaginationRow from "./PaginationRow";
 import {DEFAULT_PAGE, DEFAULT_PAGE_SIZE, LOCAL_RESULTS, PERMITTED_PAGE_SIZES, TITLE} from "../../../constants/const";
 import DownloadModal from "../../modal/DownloadModal";
-import {getResult} from "../../../services/ProtVarService";
-import {InputType, PagedMappingResponse} from "../../../types/PagedMappingResponse";
+import {getMapping} from "../../../services/ProtVarService";
+import {PagedMappingResponse} from "../../../types/PagedMappingResponse";
 
 import {ResultRecord} from "../../../types/ResultRecord";
 import useLocalStorage from "../../../hooks/useLocalStorage";
@@ -19,6 +19,9 @@ import Spaces from "../../elements/Spaces";
 import Loader from "../../elements/Loader";
 import AdvancedSearch, {SearchFilterParams} from "./AdvancedSearch";
 import {extractFilters} from "./SearchFiltersUtils";
+import {fromString, normalize, resolve} from "../../../utills/InputTypeResolver";
+import {InputType} from "../../../types/InputType";
+import {MappingRequest} from "../../../types/MappingRequest";
 
 const INVALID_PAGE = `The requested page number is invalid or out of range. Displaying page ${DEFAULT_PAGE} by default.`
 const INVALID_PAGE_SIZE = `The specified page size is invalid. Using the default page size of ${DEFAULT_PAGE_SIZE} instead.`
@@ -27,11 +30,12 @@ export const NO_DATA = 'No data'
 export const NO_RESULT = 'No result to display'
 export const UNEXPECTED_ERR = 'An unexpected error occurred'
 
-function ResultPageContent(props: ResultPageProps) {
+function ResultPageContent() {
   const location = useLocation();
-  const {id} = useParams<{ id?: string }>();
+  const { input } = useParams();
   const [searchParams] = useSearchParams();
-  const [resultTitle, setResultTitle] = useState(id)
+  const [inputType, setInputType] = useState<InputType | null>(null);
+  const [resultTitle, setResultTitle] = useState(input)
 
   // components that alter search params:
   // 1) PaginationRow
@@ -51,12 +55,12 @@ function ResultPageContent(props: ResultPageProps) {
   const [warning, setWarning] = useState('')
   const {getItem, setItem} = useLocalStorage();
 
-  const viewedRecord = useCallback((id: string, url: string) => {
+  const viewedRecord = useCallback((input: string, url: string) => {
     const now = new Date().toISOString();
     let savedRecords = getItem<ResultRecord[]>(LOCAL_RESULTS) || [];
 
     // Find the index of the record to update
-    const index = savedRecords.findIndex(record => record.id === id);
+    const index = savedRecords.findIndex(record => record.id === input);
 
     if (index !== -1) {
       // Update the record in the array
@@ -67,19 +71,22 @@ function ResultPageContent(props: ResultPageProps) {
       savedRecords.unshift(movedRecord);
     } else { // if no matching record is found
       // add new record to beginning of array
-      savedRecords = [{id, url, lastViewed: now}, ...savedRecords]
+      savedRecords = [{id: input, url, lastViewed: now}, ...savedRecords]
     }
     setItem(LOCAL_RESULTS, savedRecords);
   }, [getItem, setItem]);
 
-  const loadData = useCallback((inputType: InputType, id: string | undefined
-    , page: number, pageSize: number, assembly: string | null, filters?: SearchFilterParams) => {
-    if (!id) {
-      return;
-    }
+  const loadData = useCallback((
+    type: InputType | null,
+    input: string,
+    page: number,
+    pageSize: number,
+    assembly: string | null,
+    filters?: SearchFilterParams
+  ) => {
     setLoading(true)
     // for testing, add a delay here
-    //
+
     const pageIsValid = !isNaN(page) && page > 0;
     const pageSizeIsValid = !isNaN(pageSize) && PERMITTED_PAGE_SIZES.includes(pageSize);
 
@@ -98,7 +105,20 @@ function ResultPageContent(props: ResultPageProps) {
     // page null or 1, no param
     // pageSize null or PAGE_SIZE, no param
     // assembly null or DEFAULT, no param
-    getResult(inputType, id, page, pageSize, assembly, filters)
+    const request: MappingRequest = {
+      input,
+      type,
+      page,
+      pageSize,
+      assembly: assembly || undefined,
+      cadd: filters?.cadd ?? [],
+      am: filters?.am ?? [],
+      known: filters?.known,
+      sort: filters?.sort,
+      order: filters?.order,
+    };
+
+    getMapping(request)
       .then((response) => {
         if (response.data) {
           // checks each level of response obj hierarchy exists and if inputs is non-empty.
@@ -107,16 +127,16 @@ function ResultPageContent(props: ResultPageProps) {
 
           if (response.data.content?.inputs?.length > 0) {
             setData(response.data)
-            viewedRecord(response.data.id, location.pathname + location.search)
+            viewedRecord(response.data.input, location.pathname + location.search)
 
-            if (inputType === InputType.PROTEIN_ACCESSION) {
-              setResultTitle(`${id} (${Math.trunc(response.data.totalItems / 3)} AA)`)
-            } else {
+            if (type && type === InputType.INPUT_ID) {
               const totalItems = response.data.totalItems
               const firstInputLine = totalItems === 1 ?
                 response.data.content.inputs[0].inputStr :
                 `${response.data.content.inputs[0].inputStr} ...+${totalItems - 1} more `
               setResultTitle(firstInputLine)
+            } else {
+              setResultTitle(`${input} (${response.data.totalItems} variants)`)
             }
           } else {
             setData(null) // clear prev data
@@ -151,12 +171,42 @@ function ResultPageContent(props: ResultPageProps) {
     })
   }, [viewedRecord, location])
 
-
   useEffect(() => {
-    setWarning('')
-    setResultTitle(id)
-    loadData(props.inputType, id, page, pageSize, assembly, filters);
-  }, [props.inputType, id, page, pageSize, assembly, filters, loadData]) // listening for change in id, and searchParams
+    setWarning("");
+    if (!input) return;
+
+    const trimmedInput = input.trim();
+    const typeStr = searchParams.get('type');
+    const parsedType = typeStr ? fromString(typeStr) : null;
+
+    // Infer type
+    const detectedType = resolve(trimmedInput);
+
+    let finalType: InputType | null = null;
+
+    if (parsedType) {
+      if (detectedType && parsedType !== detectedType) {
+        setWarning(`Type mismatch: URL says "${parsedType}" but input looks like "${detectedType}". Using detected type.`);
+        finalType = detectedType;
+      } else {
+        finalType = parsedType;
+      }
+    } else {
+      finalType = detectedType;
+    }
+
+    if (!finalType) {
+      setWarning("Could not determine input type.");
+      return;
+    }
+
+    setInputType(finalType);
+
+    const normalized = normalize(trimmedInput, finalType);
+    setResultTitle(normalized);
+
+    loadData(finalType, input, page, pageSize, assembly, filters);
+  }, [input, searchParams, page, pageSize, assembly, filters, loadData]) // listening for change in input, and searchParams
 
 
   document.title = `${resultTitle} | ${TITLE}`
@@ -208,7 +258,7 @@ function ResultPageContent(props: ResultPageProps) {
             <ShareLink url={shareUrl} linkText="Share Results"/>
             <Spaces count={2}/>
             <LegendModal/>
-            <DownloadModal inputType={props.inputType} id={id} numPages={(data && data.totalPages) ?? 0}/>
+            <DownloadModal input={input!} type={inputType!} numPages={(data && data.totalPages) ?? 0}/>
           </div>
       </span>
       </div>}
@@ -219,18 +269,14 @@ function ResultPageContent(props: ResultPageProps) {
     </div>)}
 
     {!data && loading && <Loader/>}
-    {props.inputType === InputType.PROTEIN_ACCESSION && <AdvancedSearch />}
+    {inputType !== InputType.INPUT_ID && inputType !== InputType.SINGLE_VARIANT && <AdvancedSearch />}
     <ResultTable data={data}/>
     {data && data.totalPages > 1 && <PaginationRow loading={loading} data={data}/>}
   </div>
 }
 
-interface ResultPageProps {
-  inputType: InputType
-}
-
-function ResultPage(props: ResultPageProps) {
-  return <DefaultPageLayout content={<ResultPageContent {...props} />}/>
+function ResultPage() {
+  return <DefaultPageLayout content={<ResultPageContent />}/>
 }
 
 export default ResultPage;

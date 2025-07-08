@@ -31,7 +31,7 @@ import {
   GenomicInput,
   Gene,
   Isoform,
-  CustomInput
+  UserInput
 } from "../../../types/MappingResponse";
 import {rowBg} from "./ResultTable";
 
@@ -94,7 +94,7 @@ export const getEnsemblViewUrl = (chr: string, pos: number) => {
 }
 
 export const getNewPrimaryRow = (isoformKey: string, isoformGroup: string, isoformGroupExpanded: string,
-                                 index: number, input: GenomicInput, originalInput: CustomInput,
+                                 index: number, input: GenomicInput, originalInput: UserInput,
                                  gene: Gene, isoform: Isoform,
                                  toggleIsoFormGroup: StringVoidFun,
                                  annotationExpanded: string, toggleAnnotation: StringVoidFun,
@@ -102,7 +102,7 @@ export const getNewPrimaryRow = (isoformKey: string, isoformGroup: string, isofo
 
   const caddAttr = caddScoreAttr(gene.caddScore?.toString())
   const amAttr = amScoreAttr(isoform.amScore?.amClass)
-  const gnomadCoord = `${input.chr}-${input.pos}-${input.ref}-${input.alt}`
+  const genomicVariant = `${input.chr}-${input.pos}-${input.ref}-${input.alt}`
 
   let strand = gene.reverseStrand ? '(-)' : '(+)';
   let codon = isoform.refCodon + '/' + isoform.variantCodon;
@@ -227,7 +227,7 @@ export const getNewPrimaryRow = (isoformKey: string, isoformGroup: string, isofo
 
     {populationKey === annotationExpanded &&
       <Suspense fallback={<LoaderRow />}>
-        <PopulationDetail annotation={annotationExpanded} populationObservationsUri={isoform.populationObservationsUri!} variantAA={isoform.variantAA!} gnomadFreq={gene.gnomadFreq} gnomadCoord={gnomadCoord} />
+        <PopulationDetail annotation={annotationExpanded} populationObservationsUri={isoform.populationObservationsUri!} variantAA={isoform.variantAA!} genomicVariant={genomicVariant} />
       </Suspense>
     }
     {structuralKey === annotationExpanded &&
@@ -240,10 +240,7 @@ export const getNewPrimaryRow = (isoformKey: string, isoformGroup: string, isofo
         <FunctionalDetail
           annotation={annotationExpanded}
           caddScore={gene.caddScore?.toString()}
-          conservScore={isoform.conservScore}
           amScore={isoform.amScore}
-          eveScore={isoform.eveScore}
-          esmScore={isoform.esmScore}
           refAA={isoform.refAA!} variantAA={isoform.variantAA!}
           ensg={gene.ensg!} ensp={ensp!} referenceFunctionUri={isoform.referenceFunctionUri!} />
       </Suspense>

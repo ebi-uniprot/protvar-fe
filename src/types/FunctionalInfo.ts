@@ -1,10 +1,11 @@
 import {Evidence, EvidencedString} from "./Common";
 import {Foldx, Interaction, Pocket} from "./Prediction";
 import {Comment} from "./Comment";
+import {ConservScore, EsmScore, EveScore} from "./MappingResponse";
 
 export interface FunctionalInfo {
     accession: string
-    id: string
+    entryId: string
     proteinExistence: string
     gene: Array<Gene>
     comments: Array<Comment>
@@ -22,6 +23,11 @@ export interface FunctionalInfo {
     pockets: Array<Pocket>
     foldxs: Array<Foldx>
     interactions: Array<Interaction>
+
+    // Scores
+    conservScore: ConservScore;
+    eveScore: EveScore;
+    esmScore: EsmScore;
 }
 
 export interface Gene {

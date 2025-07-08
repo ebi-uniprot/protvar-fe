@@ -1,7 +1,8 @@
-export type CustomInput = GenomicInput|ProteinInput|IDInput|CodingInput
+// todo align with new backend model when in place (use VariantInput)
+export type UserInput = GenomicInput|ProteinInput|IDInput|CodingInput
 
 export interface MappingResponse {
-  inputs: Array<CustomInput>
+  inputs: Array<UserInput>
   messages: Array<Message>
 }
 
@@ -19,11 +20,11 @@ export const INFO = 'INFO'
 export const WARN = 'WARN'
 export const ERROR = 'ERROR'
 
-export interface UserInput {
-  inputStr: string
-  messages: Array<Message>
+export interface BaseInput {
   type: string
   format: string
+  inputStr: string
+  messages: Array<Message>
   //valid: boolean
 }
 
@@ -32,17 +33,17 @@ export interface Message {
   text: string
 }
 
-export interface GenomicInput extends UserInput {
+export interface GenomicInput extends BaseInput {
   chr:string
   pos:number
   ref:string
   alt:string
-  id:string
+  id:string // TODO perhaps change to variantId to avoid ambiguity
   converted:boolean
   genes: Array<Gene>
 }
 
-export interface ProteinInput extends UserInput {
+export interface ProteinInput extends BaseInput {
   acc:string
   pos:number
   ref:string
@@ -50,13 +51,13 @@ export interface ProteinInput extends UserInput {
   derivedGenomicInputs:Array<GenomicInput>
 }
 
-export interface IDInput extends UserInput {
-  id:string
+export interface IDInput extends BaseInput {
+  id:string // TODO not needed, is 'inputStr'/'raw' in new model
   derivedGenomicInputs:Array<GenomicInput>
 }
 
 // for HGVSc input
-export interface CodingInput extends UserInput {
+export interface CodingInput extends BaseInput {
   acc:string
   pos:number
   ref:string
@@ -82,13 +83,6 @@ export interface Gene {
   altAllele: string;
   isoforms: Array<Isoform>;
   caddScore: number;
-  gnomadFreq: GnomadFreq;
-}
-
-export interface GnomadFreq {
-  ac: number;
-  an: number;
-  af: number;
 }
 
 // TODO clean up unused commented properties below
@@ -98,28 +92,17 @@ export interface Isoform {
   canonicalAccession: string;
   isoformPosition: number;
   refCodon: string;
-//  userCodon: string;
   codonPosition: number;
   refAA: string;
-//  userAA: string;
   variantAA: string;
   variantCodon: string;
   consequences: string;
   proteinName: string;
   transcripts: Array<Transcript>;
-//  populationObservations: any;
   populationObservationsUri: string;
-//  referenceFunction: any;
   referenceFunctionUri: string;
-//  experimentalEvidence: Array<any>;
-//  evolutionalInference: any;
-//  evolutionalInferenceUri: string;
-//  proteinStructure: Array<any>;
   proteinStructureUri: string;
-  conservScore: ConservScore;
   amScore: AmScore;
-  eveScore: EveScore;
-  esmScore: EsmScore;
 }
 
 interface Transcript {
@@ -150,5 +133,3 @@ export interface AmScore {
   amPathogenicity:number
   amClass:string
 }
-
-export default MappingResponse;

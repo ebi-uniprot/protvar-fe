@@ -2,7 +2,7 @@ import {ALLELE, TOTAL_COLS} from "../../../constants/SearchResultTable";
 import {
   ERROR,
   INFO,
-  CustomInput,
+  UserInput,
   Message,
   WARN,
   GenomicInput,
@@ -30,7 +30,7 @@ const getIcon = (m?: Message) => {
 
 interface MsgRowProps {
   message: Message,
-  originalInput?: CustomInput
+  originalInput?: UserInput
   derivedGenomicInput?: GenomicInput // null for request-level messages
   index?: number     // null for request-level messages
 }

@@ -2,35 +2,20 @@ import React, {useEffect, useState} from "react";
 import {useLocation, useNavigate, useSearchParams} from "react-router-dom";
 import "./AdvancedSearch.css";
 import {extractFilters} from "./SearchFiltersUtils";
+import {ALPHAMISSENSE_CATEGORIES, CADD_CATEGORIES, VALID_AM_VALUES, VALID_CADD_VALUES} from "./filterConstants";
 
 export interface SearchFilterParams {
   cadd: string[];
   am: string[];
+  known?: boolean; // only set to true if explicitly enabled
   sort?: string;  // Optional
   order?: "asc" | "desc";  // Optional
 }
 
-// TODO move to separate component and reuse elsewhere:
-export const CADD_CATEGORIES = [
-  { label: "Likely Benign (<15.0)", value: "likely_benign" },
-  { label: "Potentially Deleterious (15.0-19.9)", value: "potentially_deleterious" },
-  { label: "Quite Likely Deleterious (20.0-24.9)", value: "quite_likely_deleterious" },
-  { label: "Probably Deleterious (25.0-29.9)", value: "probably_deleterious" },
-  { label: "Highly Likely Deleterious (>29.9)", value: "highly_likely_deleterious" },
-];
-
-export const ALPHAMISSENSE_CATEGORIES = [
-  { label: "Benign", value: "benign" },
-  { label: "Ambiguous", value: "ambiguous" },
-  { label: "Pathogenic", value: "pathogenic" },
-];
-
-const validCaddValues = CADD_CATEGORIES.map(c => c.value);
-const validAmValues = ALPHAMISSENSE_CATEGORIES.map(c => c.value);
-
 function normalizeFilterValues(selected: string[], valid: string[]) {
   const validSet = new Set(valid);
-  return selected.filter(v => validSet.has(v));
+  return selected.map(v => v.toLowerCase())
+    .filter(v => validSet.has(v));
 }
 
 // ResultPage: Genomic|Protein view toggle (default: depends on users input-num of gen/prot inputs on page: gen>prot->gen view)
@@ -41,10 +26,11 @@ const AdvancedSearch: React.FC = () => {
   const [searchParams] = useSearchParams();
   const [filters, setFilters] = useState<SearchFilterParams>(extractFilters(searchParams));
 
-  const isAnyFilterSpecified = filters.cadd.length > 0 ||
-      filters.am.length > 0 ||
-      filters.sort !== undefined ||
-      filters.order !== undefined;
+  const isAnyFilterSpecified =
+    filters.cadd.length > 0 ||
+    filters.am.length > 0 ||
+    filters.sort !== undefined ||
+    filters.order !== undefined;
   const [isExpanded, setIsExpanded] = useState(isAnyFilterSpecified);
 
   // Update filters when URL changes
@@ -53,12 +39,13 @@ const AdvancedSearch: React.FC = () => {
   }, [searchParams]);
 
   const handleCheckboxChange = (key: "cadd" | "am", value: string) => {
+    const lowerValue = value.toLowerCase();
     setFilters((prev) => {
-      const updatedCategories = prev[key].includes(value)
-        ? prev[key].filter((v) => v !== value) // Remove if already selected
-        : [...prev[key], value]; // Add if not selected
-
-      return { ...prev, [key]: updatedCategories };
+      const currentValues = prev[key].map(v => v.toLowerCase());
+      const updated = currentValues.includes(lowerValue)
+        ? currentValues.filter((v) => v !== lowerValue) // Remove if already selected
+        : [...currentValues, lowerValue]; // Add if not selected
+      return { ...prev, [key]: updated };
     });
   };
   const handleSortChange = (field: "sort" | "order", value: string) => {
@@ -68,30 +55,33 @@ const AdvancedSearch: React.FC = () => {
     }));
   };
 
-  const normalizedCadd = normalizeFilterValues(filters.cadd, validCaddValues);
-  const normalizedAm = normalizeFilterValues(filters.am, validAmValues);
+  const normalizedCadd = normalizeFilterValues(filters.cadd, VALID_CADD_VALUES);
+  const normalizedAm = normalizeFilterValues(filters.am, VALID_AM_VALUES);
 
-  const allCaddSelected = normalizedCadd.length === validCaddValues.length;
-  const allAmSelected = normalizedAm.length === validAmValues.length;
+  const allCaddSelected = normalizedCadd.length === VALID_CADD_VALUES.length;
+  const allAmSelected = normalizedAm.length === VALID_AM_VALUES.length;
 
   // Apply filters and update the URL
   const applyFilters = () => {
-    ["page", "annotation", "cadd", "am", "sort", "order"].forEach(key => searchParams.delete(key));
+    ["page", "annotation", "cadd", "am", "sort", "order"].forEach((key) =>
+      searchParams.delete(key)
+    );
 
     //filters.cadd.forEach((val) => searchParams.append("cadd", val));
     //filters.am.forEach((val) => searchParams.append("am", val));
     if (!allCaddSelected)  normalizedCadd.forEach((val) => searchParams.append("cadd", val));
     if (!allAmSelected)  normalizedAm.forEach((val) => searchParams.append("am", val));
+    filters.known === true ? searchParams.set("known", "true") : searchParams.delete("known");
     if (filters.sort) searchParams.set("sort", filters.sort);
     if (filters.order) searchParams.set("order", filters.order);
-    navigate(`${location.pathname}${searchParams.size > 0 ? `?${searchParams.toString()}` : ``}`);
+    navigate(`${location.pathname}${searchParams.size > 0 ? `?${searchParams}` : ``}`);
   };
 
   const isCaddSelected = (value: string) =>
-    normalizedCadd.length === 0 || normalizedCadd.includes(value);
+    normalizedCadd.length === 0 || normalizedCadd.includes(value.toLowerCase());
 
   const isAmSelected = (value: string) =>
-    normalizedAm.length === 0 || normalizedAm.includes(value);
+    normalizedAm.length === 0 || normalizedAm.includes(value.toLowerCase());
 
   return (
     <div className="advanced-search">
@@ -104,8 +94,9 @@ const AdvancedSearch: React.FC = () => {
       {/* Search panel */}
       {isExpanded && (
         <div className="search-panel">
-          {/* CADD Score */}
           <div className="filter-row">
+
+            {/* CADD Score */}
             <div className="filter-group">
               <label>CADD Score</label>
               <div className="button-group">
@@ -182,6 +173,26 @@ const AdvancedSearch: React.FC = () => {
                 </div>
               </div>
             )}
+
+
+            {/* Known Variants Filter */}
+            <div className="filter-group" style={{ width: '100%', marginTop: '1rem' }}>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={filters.known === true}
+                  onChange={(e) =>
+                    setFilters((prev) => ({
+                      ...prev,
+                      known: e.target.checked ? true : undefined, // omit if not checked
+                    }))}
+                />
+                {' '}Show only known variants{' '}<span style={{fontWeight: 'normal', fontSize: '0.9em', color: '#666'}}>
+                  (default: potential included)
+                  </span>
+              </label>
+            </div>
+
           </div>
 
           {/* Apply Filters Button */}

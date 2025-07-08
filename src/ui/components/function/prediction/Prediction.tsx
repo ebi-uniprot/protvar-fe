@@ -25,17 +25,17 @@ export const Prediction = (props: ResidueRegionTableProps) => {
   let foldxs_ = oneLetterVariantAA ? foldxs.filter(foldx => foldx.mutatedType.toLowerCase() === oneLetterVariantAA) : foldxs
 
   return <><br/>
-    <ConservPred conserv={props.conservScore} stdColor={state.stdColor} />
+    <ConservPred conserv={props.functionalData.conservScore} stdColor={state.stdColor} />
     <b>Structure predictions</b><br/>
     <FoldxPred foldxs={foldxs_}/>
     <b>Pathogenicity predictions</b><br/>
-    {(!props.caddScore && !props.amScore && !props.eveScore && !props.esmScore) &&
+    {(!props.caddScore && !props.amScore && !props.functionalData.eveScore && !props.functionalData.esmScore) &&
       <div>No predictions available for this variant</div>
     }
     <CaddScorePred cadd={props.caddScore} stdColor={state.stdColor}/>
     <AlphaMissensePred am={props.amScore} stdColor={state.stdColor}/>
-    <EvePred eve={props.eveScore} stdColor={state.stdColor}/>
-    <EsmPred esm={props.esmScore} stdColor={state.stdColor}/>
+    <EvePred eve={props.functionalData.eveScore} stdColor={state.stdColor}/>
+    <EsmPred esm={props.functionalData.esmScore} stdColor={state.stdColor}/>
     <ColourCheckbox state={state} />
   </>
 }

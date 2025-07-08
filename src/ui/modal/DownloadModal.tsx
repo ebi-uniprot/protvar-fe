@@ -6,13 +6,14 @@ import {emailValidate} from '../../utills/Validator';
 import {DownloadRecord, recordFromResponse} from "../../types/DownloadRecord";
 import {LOCAL_DOWNLOADS, LOCAL_RESULTS} from "../../constants/const";
 import Notify from "../elements/Notify";
-import {downloadResult} from "../../services/ProtVarService";
+import {downloadPost} from "../../services/ProtVarService";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import {useLocation, useSearchParams} from "react-router-dom";
-import {InputType} from "../../types/PagedMappingResponse";
 import {Assembly} from "../../constants/CommonTypes";
 import Spaces from "../elements/Spaces";
 import {ResultRecord} from "../../types/ResultRecord";
+import {DownloadRequest} from "../../types/DownloadRequest";
+import {InputType} from "../../types/InputType";
 
 interface DownloadForm {
   email: string
@@ -23,18 +24,13 @@ interface DownloadForm {
 }
 
 interface DownloadModalProps {
-  inputType: InputType
-  id?: string,
-  query?: string
-  numPages: number
+  numPages: number;
+  input: string;
+  type: InputType;
 }
 
 const NUM_PAGES_LIMIT = 10;
 
-// could be triggered for
-// - id input                  params: id, page, pageSize, assembly
-// - protien acc               params: same as above except id is accession
-// - single variant search (direct link)   params: search, (TODO: allow assembly)
 function DownloadModal(props: DownloadModalProps) {
   const [showModel, setShowModel] = useState(false)
   const downloadModelDiv = useRef(null)
@@ -57,15 +53,13 @@ function DownloadModal(props: DownloadModalProps) {
   const [currPage, setCurrPage] = useState<boolean>(false)
 
   useEffect(() => {
-    if (props.id) {
-      // Retrieve result records from local storage
-      const localResults = getItem<ResultRecord[]>(LOCAL_RESULTS) || []
-      const savedRecord = localResults.find((r) => r.id === props.id);
-      if (savedRecord && savedRecord.name) {
-        setJobNamePlaceholder(savedRecord.name)
-      }
+    // Retrieve result records from local storage
+    const localResults = getItem<ResultRecord[]>(LOCAL_RESULTS) || []
+    const savedRecord = localResults.find((r) => r.id === props.input);
+    if (savedRecord && savedRecord.name) {
+      setJobNamePlaceholder(savedRecord.name)
     }
-  }, [props.id, getItem]);
+  }, [props.input, getItem]);
 
   const updateForm = (key: string, value: any) => {
     setForm({
@@ -74,9 +68,6 @@ function DownloadModal(props: DownloadModalProps) {
     });
   };
 
-
-  if (!props.id && !props.query)
-    return <></>
   const toggleAnnotations = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAnnotations(event.target.value === 'withAnnotations')
     form.fun = form.pop = form.str  = !annotations
@@ -120,37 +111,40 @@ function DownloadModal(props: DownloadModalProps) {
     const pageSize = page ? searchParams.get('pageSize') : null
     const assembly = searchParams.get('assembly')
 
-    let promise;
-    let jname = form.jobName ? form.jobName : jobNamePlaceholder
-    if (props.inputType === InputType.SINGLE_VARIANT && props.query) {
-      promise = downloadResult(props.query, InputType[props.inputType], null, null,
-      assembly === Assembly.GRCh37 ? Assembly.GRCh37 : Assembly.GRCh38, // default is 38 (overriding auto)
-        form.email, jname, form.fun, form.pop, form.str)
-    } else if ((props.inputType === InputType.ID || props.inputType === InputType.PROTEIN_ACCESSION)
-      && props.id){
-      promise = downloadResult(props.id, InputType[props.inputType], page, pageSize, assembly,
-        form.email, jname, form.fun, form.pop, form.str)
-    }
+    let jobName = form.jobName ? form.jobName : jobNamePlaceholder
+    const request: DownloadRequest = {
+      input: props.input,
+      type: props.type,
+      email: form.email,
+      jobName: jobName,
+      function: form.fun ?? false,
+      population: form.pop ?? false,
+      structure: form.str ?? false,
+      page: page ? parseInt(page) : null,
+      pageSize: pageSize ? parseInt(pageSize) : null,
+      assembly: props.type === InputType.SINGLE_VARIANT
+                ? assembly === Assembly.GRCh37 ? Assembly.GRCh37 : Assembly.GRCh38 // default is 38 (overriding auto)
+                : assembly ?? null,
+      full: !currPage,
+    };
 
-    if (promise) {
-        promise
-        .then((response) => {
-            const downloadResponse = response.data
-            let downloadRecord = recordFromResponse(downloadResponse)
-            // save download request params in DownloadRecord
-            downloadRecord.page = page ?? undefined
-            downloadRecord.pageSize = pageSize ?? undefined
-            downloadRecord.assembly = assembly ?? undefined
-            downloadRecord.fun = form.fun
-            downloadRecord.pop = form.pop
-            downloadRecord.str = form.str
-            downloadRecord.resultUrl = location.pathname + location.search
-            downloadRecord.clientRequested = new Date().toISOString()
-            handleSucc(downloadRecord)
-          }
-        )
-        .catch(handleErr);
-    }
+    downloadPost(request)
+      .then((response) => {
+          const downloadResponse = response.data
+          let downloadRecord = recordFromResponse(downloadResponse)
+          // save download request params in DownloadRecord
+          downloadRecord.page = page ?? undefined
+          downloadRecord.pageSize = pageSize ?? undefined
+          downloadRecord.assembly = assembly ?? undefined
+          downloadRecord.fun = form.fun
+          downloadRecord.pop = form.pop
+          downloadRecord.str = form.str
+          downloadRecord.resultUrl = location.pathname + location.search
+          downloadRecord.clientRequested = new Date().toISOString()
+          handleSucc(downloadRecord)
+        }
+      )
+      .catch(handleErr);
   };
   return <div id="divDownload" ref={downloadModelDiv} className="padding-left-1x">
     <Button onClick={() => setShowModel(val => !val)} className={'download-button'}>
@@ -255,7 +249,7 @@ function DownloadModal(props: DownloadModalProps) {
                         type="radio"
                         name="currPage"
                         value="false"
-                        disabled={props.inputType === InputType.SINGLE_VARIANT}
+                        disabled={'query' in props}
                         checked={!currPage}
                         onChange={_ => setCurrPage(false)}
                       />
@@ -268,7 +262,7 @@ function DownloadModal(props: DownloadModalProps) {
                         type="radio"
                         name="currPage"
                         value="true"
-                        disabled={props.inputType === InputType.SINGLE_VARIANT}
+                        disabled={'query' in props}
                         checked={currPage}
                         onChange={_ => setCurrPage(true)}
                       />
