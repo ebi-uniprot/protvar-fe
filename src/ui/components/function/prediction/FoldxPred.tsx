@@ -1,16 +1,22 @@
 import Spaces from "../../../elements/Spaces";
 import {PRECISION, STD_BENIGN_COLOR, STD_PATHOGENIC_COLOR} from "./PredConstants";
 import {Foldx} from "../../../../types/Prediction";
+import {aminoAcid3to1Letter} from "../../../../utills/Util";
 
-export const FoldxPred = (props: { foldxs: Array<Foldx> }) => {
-  if (props.foldxs && props.foldxs.length > 0) {
+export const FoldxPred = (props: { foldxs: Array<Foldx>, variantAA: string }) => {
+  const variantAA = aminoAcid3to1Letter(props.variantAA);
+  const filteredFoldxs = props.variantAA
+    ? props.foldxs.filter(fx => fx.mutatedType.toLowerCase() === variantAA)
+    : props.foldxs;
+
+  if (filteredFoldxs && filteredFoldxs.length > 0) {
     return <div>
       <div className="aa-pred">
-        <div>Stability change ΔΔG {props.foldxs[0].numFragments > 1 && <small>
-          <br/>(using AlphaFold fragment {props.foldxs[0].afId})
+        <div>Stability change ΔΔG {filteredFoldxs[0].numFragments > 1 && <small>
+          <br/>(using AlphaFold fragment {filteredFoldxs[0].afId})
         </small>}</div>
-        <div>{formatFoldxScore(props.foldxs[0])}</div>
-        <FoldxPredIcon foldx={props.foldxs[0]}/>
+        <div>{formatFoldxScore(filteredFoldxs[0])}</div>
+        <FoldxPredIcon foldx={filteredFoldxs[0]}/>
       </div>
     </div>
   }

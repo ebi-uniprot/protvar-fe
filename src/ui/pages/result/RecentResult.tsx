@@ -11,7 +11,8 @@ import {SET_ITEM} from "../../../context/LocalStorageContext";
 import {ShareLink} from "../../components/common/ShareLink";
 
 const RecentResult = () => {
-  const {id} = useParams<{ id?: string }>();
+  //const {id} = useParams<{ id?: string }>();
+  const {input} = useParams();
   const navigate = useNavigate();
   const { getItem, setItem } = useLocalStorage();
   const [results, setResults] = useState<ResultRecord[]>(getItem(LOCAL_RESULTS) || [])
@@ -35,7 +36,7 @@ const RecentResult = () => {
     const updatedRecords = results.filter((_, i) => i !== index);
     setResults(updatedRecords);
     setItem(LOCAL_RESULTS, updatedRecords); // no re-sort needed
-    if (id && id === delId)
+    if (input && input === delId)
       navigate(HOME)
     // TODO API call DELETE /mapping/input/{id}
   };
@@ -51,7 +52,7 @@ const RecentResult = () => {
           <h3 className="map-key">{key}</h3>
           <ul className="map-items">
             {value.map((record, index) => (
-              <li key={record.id} className={`map-item ${record.id === id ? `selected` : ``}`}>
+              <li key={record.id} className={`map-item ${record.id === input ? `selected` : ``}`}>
                 <>
               <span title={`Submitted ${record.lastSubmitted || record.firstSubmitted} Viewed ${record.lastViewed}`}
                     onClick={_ => navigate(record.url)}

@@ -51,11 +51,11 @@ export function uploadFile(file: File, assembly?: string) {
 
 // Mapping
 
-// GET /mapping/single
+// GET /mapping
 // Single variant mapping (used in QueryPage/direct link)
 export function singleVariant(input: string, assembly?: string) {
   return api.get<PagedMappingResponse>(
-    `${API_URL}/mapping/single`,
+    `${API_URL}/mapping`,
     {
       params: {input, assembly},
       headers: APP_JSON,

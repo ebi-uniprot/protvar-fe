@@ -8,7 +8,6 @@ import {AppContext} from "../../../App";
 import {CaddScorePred} from "./CaddScorePred";
 import {ColourCheckbox} from "../../../modal/ColourCheckbox";
 import {ResidueRegionTableProps} from "../ResidueRegionTable";
-import {aminoAcid3to1Letter} from "../../../../utills/Util";
 
 export type PredAttr = {
   text: string,
@@ -20,14 +19,10 @@ export type PredAttr = {
 
 export const Prediction = (props: ResidueRegionTableProps) => {
   const state = useContext(AppContext);
-  const oneLetterVariantAA = aminoAcid3to1Letter(props.variantAA);
-  const foldxs = props.functionalData.foldxs
-  let foldxs_ = oneLetterVariantAA ? foldxs.filter(foldx => foldx.mutatedType.toLowerCase() === oneLetterVariantAA) : foldxs
-
   return <><br/>
     <ConservPred conserv={props.functionalData.conservScore} stdColor={state.stdColor} />
     <b>Structure predictions</b><br/>
-    <FoldxPred foldxs={foldxs_}/>
+    <FoldxPred foldxs={props.functionalData.foldxs} variantAA={props.variantAA}/>
     <b>Pathogenicity predictions</b><br/>
     {(!props.caddScore && !props.amScore && !props.functionalData.eveScore && !props.functionalData.esmScore) &&
       <div>No predictions available for this variant</div>

@@ -1,78 +1,46 @@
-// todo align with new backend model when in place (use VariantInput)
-export type UserInput = GenomicInput|ProteinInput|IDInput|CodingInput
+// Types matching the Java model for `Type`, `Format`, etc.
+export type Type = "GENOMIC" | "CODING" | "PROTEIN" | "ID" | "INVALID";
+export type Format =
+  // Genomic
+  | "VCF" | "HGVS_GEN" | "GNOMAD" | "INTERNAL_GENOMIC"
+  // Coding
+  | "HGVS_CODING"
+  // Protein
+  | "HGVS_PROT" | "INTERNAL_PROTEIN"
+  // ID
+  | "DBSNP" | "CLINVAR" | "COSMIC";
+export type MessageType = "INFO" | "WARN" | "ERROR";
 
-export interface MappingResponse {
-  inputs: Array<UserInput>
-  messages: Array<Message>
+// Base interface for all user inputs
+export interface UserInput {
+  type: Type;
+  format: Format;
+  inputStr: string;
+  parsedFields: Record<string, any>;
+  messages: Message[];
+  derivedGenomicVariants: GenomicVariant[];
+  // Genomic fields only
+  id?:string
+  converted?:boolean
 }
 
-export interface Message {
-  type: string
-  text: string
-}
-
-export const INPUT_GEN = 'GENOMIC'
-export const INPUT_PRO = 'PROTEIN'
-export const INPUT_CDNA = 'CODING'
-export const INPUT_ID = 'ID'
-
-export const INFO = 'INFO'
-export const WARN = 'WARN'
-export const ERROR = 'ERROR'
-
-export interface BaseInput {
-  type: string
-  format: string
-  inputStr: string
-  messages: Array<Message>
-  //valid: boolean
-}
-
-export interface Message {
-  type: string
-  text: string
-}
-
-export interface GenomicInput extends BaseInput {
+export interface GenomicVariant {
   chr:string
   pos:number
   ref:string
   alt:string
-  id:string // TODO perhaps change to variantId to avoid ambiguity
-  converted:boolean
-  genes: Array<Gene>
+  genes: Gene[]
 }
 
-export interface ProteinInput extends BaseInput {
-  acc:string
-  pos:number
-  ref:string
-  alt:string
-  derivedGenomicInputs:Array<GenomicInput>
+
+export interface MappingResponse {
+  inputs: UserInput[]
+  messages: Message[]
 }
 
-export interface IDInput extends BaseInput {
-  id:string // TODO not needed, is 'inputStr'/'raw' in new model
-  derivedGenomicInputs:Array<GenomicInput>
-}
-
-// for HGVSc input
-export interface CodingInput extends BaseInput {
-  acc:string
-  pos:number
-  ref:string
-  alt:string
-
-  gene:string
-  protRef:string
-  protAlt:string
-  protPos:number
-
-  derivedUniprotAcc:string
-  derivedProtPos:number
-  derivedCodonPos:number
-
-  derivedGenomicInputs:Array<GenomicInput>
+export interface Message {
+  type: MessageType
+  text: string
 }
 
 export interface Gene {
@@ -81,7 +49,7 @@ export interface Gene {
   geneName: string;
   refAllele: string;
   altAllele: string;
-  isoforms: Array<Isoform>;
+  isoforms: Isoform[];
   caddScore: number;
 }
 
