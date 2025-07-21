@@ -269,7 +269,7 @@ function ResultPageContent() {
     </div>)}
 
     {!data && loading && <Loader/>}
-    {inputType !== InputType.INPUT_ID && inputType !== InputType.SINGLE_VARIANT && <AdvancedSearch />}
+    {inputType !== InputType.INPUT_ID && inputType !== InputType.SINGLE_VARIANT && <AdvancedSearch loading={loading}/>}
     <ResultTable data={data}/>
     {data && data.totalPages > 1 && <PaginationRow loading={loading} data={data}/>}
   </div>

@@ -87,6 +87,10 @@
 .apply-button:hover {
     background-color: #098d28;
 }
+.apply-button:disabled {
+    pointer-events: none;
+    background-color: #cccccc;
+}
 
 .tick {
     color: greenyellow;

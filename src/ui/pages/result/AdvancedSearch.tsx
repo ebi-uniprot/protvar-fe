@@ -20,7 +20,14 @@ function normalizeFilterValues(selected: string[], valid: string[]) {
 
 // ResultPage: Genomic|Protein view toggle (default: depends on users input-num of gen/prot inputs on page: gen>prot->gen view)
 
-const AdvancedSearch: React.FC = () => {
+
+interface AdvancedSearchProps {
+  loading: boolean
+}
+
+const AdvancedSearch = ({
+                                    loading
+                                  }: AdvancedSearchProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams] = useSearchParams();
@@ -197,8 +204,8 @@ const AdvancedSearch: React.FC = () => {
 
           {/* Apply Filters Button */}
           <div className="filter-actions">
-            <button className="apply-button" onClick={applyFilters}>
-              Update Results
+            <button className="apply-button" onClick={applyFilters} disabled={loading}>
+              {loading ? `Loading...` : `Update Results`}
             </button>
           </div>
         </div>
