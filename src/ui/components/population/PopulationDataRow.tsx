@@ -81,14 +81,14 @@ interface AlleleFreqRowProps {
 }
 function AlleleFreqRow(props: AlleleFreqRowProps) {
   const {freqMap, genomicVariant} = props
-  const parts = props.genomicVariant.split("-");
+  const parts = genomicVariant.split("-");
   const isValid = parts.length === 4;
 
   if (!isValid) {
     return (
       <tr>
         <td>
-          <PopulationAlleleFreq freqMap={freqMap} genomicVariant={props.genomicVariant} stdColor={false}/>
+          <PopulationAlleleFreq freqMap={freqMap} genomicVariant={genomicVariant} stdColor={false}/>
         </td>
         <td></td>
       </tr>
@@ -103,11 +103,11 @@ function AlleleFreqRow(props: AlleleFreqRowProps) {
 
   return <tr>
     <td>
-      <PopulationAlleleFreq freqMap={mainFreqMap} genomicVariant={props.genomicVariant} stdColor={false} />
+      <PopulationAlleleFreq freqMap={mainFreqMap} genomicVariant={genomicVariant} stdColor={false} />
     </td>
     <td>
       {Object.keys(otherFreqMap).length > 0 && (
-        <PopulationAlleleFreq freqMap={otherFreqMap} genomicVariant={props.genomicVariant} stdColor={false} />
+        <PopulationAlleleFreq freqMap={otherFreqMap} genomicVariant={genomicVariant} stdColor={false} />
       )}
     </td>
   </tr>
