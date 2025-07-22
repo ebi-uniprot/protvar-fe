@@ -248,3 +248,8 @@ export const getIdValue = (userInput?: UserInput) => {
   if (userInput?.type === "GENOMIC" && 'id' in userInput) return userInput.id;
   return null;
 };
+/*
+export const hasIdValue = (userInput?: UserInput) => {
+  if (!userInput) return false;
+  return (userInput?.type === "ID" || (userInput?.type === "GENOMIC" && 'id' in userInput));
+};*/

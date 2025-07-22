@@ -20,8 +20,8 @@ interface StatusTextIcon {
 
 export const statusMap: Record<number, StatusTextIcon> = {
   [-1]: {text: 'Not Available', icon: 'download-na'},
-  [0]: {text: 'Not Ready', icon: 'download-nr'},
-  [1]: {text: 'Ready', icon: 'download-ready'}
+  0: {text: 'Not Ready', icon: 'download-nr'},
+  1: {text: 'Ready', icon: 'download-ready'}
 };
 
 export function getStatus(status: number): StatusTextIcon {

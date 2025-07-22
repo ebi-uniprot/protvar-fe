@@ -71,12 +71,12 @@ const MsgRow = ({
                 </a>
               </Tool>
             </td>
-            <td>{userInput?.type == "ID" && <Tool tip="Variant ID provided by the user">
+            <td><Tool tip="Variant ID provided by the user">
               { idValue && <a href={getIdUrl(idValue)} target="_blank" rel="noopener noreferrer">
                 {idValue}
               </a>
               }
-            </Tool>}</td>
+            </Tool></td>
             <td><Tool tip={ALLELE.get(genomicVariant.ref)}>{genomicVariant.ref}</Tool></td>
             <td><Tool tip={ALLELE.get(genomicVariant.alt)}>{genomicVariant.alt}</Tool></td>
             <td colSpan={10}>
