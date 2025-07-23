@@ -103,24 +103,24 @@ const getTableRows = (data: PagedMappingResponse | null, isoformGroupExpanded: s
   let primaryRow = 0 // ensures similar or duplicate inputs do not lead to conflicting key
   let altRow = 0
 
-  data?.content.inputs?.forEach((userInput, inputIndex) => {
+  data?.content.inputs?.forEach((input, inputIndex) => {
 
     // each user input messages
-    userInput.messages.forEach((message, messageIndex) => {
+    input.messages.forEach((message, messageIndex) => {
       tableRows.push(<MsgRow key={`input-${inputIndex}-message-${messageIndex}`} index={inputIndex} message={message}
-                             userInput={userInput}/>)
+                             input={input}/>)
     });
 
-    userInput.derivedGenomicVariants.forEach((genomicVariant: GenomicVariant, genIndex: number) => {
+    input.derivedGenomicVariants.forEach((genomicVariant: GenomicVariant, genIndex: number) => {
       /*gInput.messages.forEach((message, messageIndex) => {
-        tableRows.push(<MsgRow index={inputIndex} key={`input-${inputIndex}-${genIndex}-message-${messageIndex}`} message={message} userInput={input} />)
+        tableRows.push(<MsgRow index={inputIndex} key={`input-${inputIndex}-${genIndex}-message-${messageIndex}`} message={message} input={input} />)
       });*/
       // IT SEEMS WE MAY NOT BE TAKING THE ORIGINAL AND DERIVED GEN INPUT
       // INTO ACCOUNT SOMEWHERE...
 
-      if (genomicVariant.genes.length === 0 && userInput.messages.length === 0) { // no message
+      if (genomicVariant.genes.length === 0 && input.messages.length === 0) { // no message
         tableRows.push(<MsgRow key={`input-${inputIndex}-${genIndex}-nomapping`} index={inputIndex} message={NO_MAPPING}
-                               userInput={userInput} genomicVariant={genomicVariant}/>)
+                               input={input} genomicVariant={genomicVariant}/>)
         return
       }
 
@@ -130,7 +130,7 @@ const getTableRows = (data: PagedMappingResponse | null, isoformGroupExpanded: s
           if (isoformIdx === 0) {
             primaryRow++;
             altRow = 0; // reset
-            tableRows.push(getNewPrimaryRow(`row-${primaryRow}`, isoformGroupKey, isoformGroupExpanded, inputIndex, genomicVariant, userInput, gene, isoform,
+            tableRows.push(getNewPrimaryRow(`row-${primaryRow}`, isoformGroupKey, isoformGroupExpanded, inputIndex, genomicVariant, input, gene, isoform,
               toggleIsoformGroup, annotationExpanded, toggleAnnotation, gene.isoforms.length > 1, stdColor))
           } else if (isoformGroupKey === isoformGroupExpanded) {
             altRow++;

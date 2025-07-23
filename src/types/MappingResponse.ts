@@ -1,21 +1,23 @@
 // Types matching the Java model for `Type`, `Format`, etc.
-export type Type = "GENOMIC" | "CODING" | "PROTEIN" | "ID" | "INVALID";
-export type Format =
-  // Genomic
-  | "VCF" | "HGVS_GEN" | "GNOMAD" | "INTERNAL_GENOMIC"
-  // Coding
-  | "HGVS_CODING"
-  // Protein
-  | "HGVS_PROT" | "INTERNAL_PROTEIN"
-  // ID
-  | "DBSNP" | "CLINVAR" | "COSMIC";
+export type VariantType = "GENOMIC" | "CODING_DNA" | "PROTEIN" | "VARIANT_ID" | "INVALID";
+export type VariantFormat =
+  // HGVS formats
+  "HGVS_GENOMIC" | "HGVS_CODING" | "HGVS_PROTEIN" |
+  // Internal formats
+  "INTERNAL_GENOMIC" | "INTERNAL_PROTEIN" |
+  // External formats
+  "VCF" | "GNOMAD" |
+  // ID-based formats
+  "DBSNP" | "CLINVAR" | "COSMIC" |
+  "INVALID";
 export type MessageType = "INFO" | "WARN" | "ERROR";
 
 // Base interface for all user inputs
-export interface UserInput {
-  type: Type;
-  format: Format;
+export interface VariantInput {
+  index: number;
   inputStr: string;
+  format: VariantFormat;
+  type: VariantType;
   messages: Message[];
   derivedGenomicVariants: GenomicVariant[];
   // Genomic fields only
@@ -33,7 +35,7 @@ export interface GenomicVariant {
 
 
 export interface MappingResponse {
-  inputs: UserInput[]
+  inputs: VariantInput[]
   messages: Message[]
 }
 

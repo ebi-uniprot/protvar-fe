@@ -26,7 +26,7 @@ import {aaChangeTip, CanonicalIcon, getProteinName} from "./AlternateIsoFormRow"
 import {
   Gene,
   Isoform,
-  UserInput, GenomicVariant
+  VariantInput, GenomicVariant
 } from "../../../types/MappingResponse";
 import {rowBg} from "./ResultTable";
 
@@ -89,7 +89,7 @@ export const getEnsemblViewUrl = (chr: string, pos: number) => {
 }
 
 export const getNewPrimaryRow = (isoformKey: string, isoformGroup: string, isoformGroupExpanded: string,
-                                 index: number, genomicVariant: GenomicVariant, userInput: UserInput,
+                                 index: number, genomicVariant: GenomicVariant, input: VariantInput,
                                  gene: Gene, isoform: Isoform,
                                  toggleIsoFormGroup: StringVoidFun,
                                  annotationExpanded: string, toggleAnnotation: StringVoidFun,
@@ -106,9 +106,9 @@ export const getNewPrimaryRow = (isoformKey: string, isoformGroup: string, isofo
   }
 
   const highlightColor = "#F8EDF0";
-  const genomicStyle = { backgroundColor: userInput.type === "GENOMIC" ? highlightColor : "" };
-  const proteinStyle = { backgroundColor: (userInput.type === "PROTEIN" || userInput.type === "CODING") ? highlightColor : "" };
-  const idStyle = { backgroundColor: userInput.type === "ID" ? highlightColor : "" };
+  const genomicStyle = { backgroundColor: input.type === "GENOMIC" ? highlightColor : "" };
+  const proteinStyle = { backgroundColor: (input.type === "PROTEIN" || input.type === "CODING_DNA") ? highlightColor : "" };
+  const idStyle = { backgroundColor: input.type === "VARIANT_ID" ? highlightColor : "" };
 
   const functionalKey = 'functional-' + isoformKey;
   const structuralKey = 'structural-' + isoformKey;
@@ -130,10 +130,10 @@ export const getNewPrimaryRow = (isoformKey: string, isoformGroup: string, isofo
     ensts: ensts.join(','),
   }));
 
-  const idValue = getIdValue(userInput);
+  const idValue = getIdValue(input);
 
   return <Fragment key={isoformKey}>
-    <tr style={rowBg(index)} title={'Input: ' + userInput.inputStr}>
+    <tr style={rowBg(index)} title={'Input: ' + input.inputStr}>
       <td style={genomicStyle}>
         <Tool tip="Click to see the a summary for this chromosome from Ensembl" pos="up-left">
           <a href={getEnsemblChrUrl(genomicVariant.chromosome)} target="_blank" rel="noopener noreferrer">
@@ -143,7 +143,7 @@ export const getNewPrimaryRow = (isoformKey: string, isoformGroup: string, isofo
       </td>
       <td style={genomicStyle}>
         <Tool tip="Click to see the region detail for this genomic coordinate from Ensembl" pos="up-left">
-          {(userInput.type === "GENOMIC" && 'isLiftedFrom37' in userInput && userInput.isLiftedFrom37) && <span className="h37">37&rarr;38</span>}
+          {(input.type === "GENOMIC" && 'isLiftedFrom37' in input && input.isLiftedFrom37) && <span className="h37">37&rarr;38</span>}
           <a href={getEnsemblViewUrl(genomicVariant.chromosome, genomicVariant.position)} target="_blank" rel="noopener noreferrer">
             {genomicVariant.position}
           </a>
@@ -243,13 +243,13 @@ export const getNewPrimaryRow = (isoformKey: string, isoformGroup: string, isofo
   </Fragment>
 };
 
-export const getIdValue = (userInput?: UserInput) => {
-  if (userInput?.type === "ID") return userInput.inputStr;
-  if (userInput?.type === "GENOMIC" && 'id' in userInput) return userInput.id;
+export const getIdValue = (input?: VariantInput) => {
+  if (input?.type === "VARIANT_ID") return input.inputStr;
+  if (input?.type === "GENOMIC" && 'id' in input) return input.id;
   return null;
 };
 /*
-export const hasIdValue = (userInput?: UserInput) => {
-  if (!userInput) return false;
-  return (userInput?.type === "ID" || (userInput?.type === "GENOMIC" && 'id' in userInput));
+export const hasIdValue = (input?: VariantInput) => {
+  if (!input) return false;
+  return (input?.type === "VARIANT_ID" || (input?.type === "GENOMIC" && 'id' in input));
 };*/

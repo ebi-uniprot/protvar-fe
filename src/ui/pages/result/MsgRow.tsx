@@ -1,6 +1,6 @@
 import {ALLELE, TOTAL_COLS} from "../../../constants/SearchResultTable";
 import {
-  UserInput,
+  VariantInput,
   Message,
   GenomicVariant
 } from "../../../types/MappingResponse";
@@ -25,31 +25,22 @@ const getIcon = (m?: Message) => {
 
 interface MsgRowProps {
   message: Message,
-  userInput?: UserInput
+  input?: VariantInput
   genomicVariant?: GenomicVariant // null for request-level messages
   index?: number     // null for request-level messages
 }
 
 const MsgRow = ({
                   message,
-                  userInput,
+                  input,
                   genomicVariant,
                   index
                 }: MsgRowProps) => {
-  // IDInput: id
-  // ProteinInput: acc,pos
-  // CodingInput: gene,derivedUniprotAcc,derivedProtPos
-
-  // if derived genomic input, and chr or pos determined
-  //const isDerivedGenomicInput = derivedGenomicInput && userInput &&
-    //(userInput.type === INPUT_PRO || userInput.type === INPUT_CDNA || userInput.type === INPUT_ID) &&
-  //  (derivedGenomicInput.chr || derivedGenomicInput.pos);
-
-  const inputStr = userInput?.inputStr ?? '';
-  const rowTitle = userInput ? `Input: ${inputStr}` : '';
+  const inputStr = input?.inputStr ?? '';
+  const rowTitle = input ? `Input: ${inputStr}` : '';
   const rowStyle = {wordWrap: "break-word", overflowWrap: "break-word"} as React.CSSProperties;
 
-  const idValue = getIdValue(userInput);
+  const idValue = getIdValue(input);
 
   return (
     <tr style={rowBg(index ?? -1)} title={rowTitle}>
