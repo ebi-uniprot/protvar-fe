@@ -14,7 +14,7 @@ export type MessageType = "INFO" | "WARN" | "ERROR";
 
 // Base interface for all user inputs
 export interface VariantInput {
-  index: number;
+  originalIndex: number;
   inputStr: string;
   format: VariantFormat;
   type: VariantType;
