@@ -16,19 +16,18 @@ export interface UserInput {
   type: Type;
   format: Format;
   inputStr: string;
-  parsedFields: Record<string, any>;
   messages: Message[];
   derivedGenomicVariants: GenomicVariant[];
   // Genomic fields only
-  id?:string
-  converted?:boolean
+  id?:string // VCF ID field
+  isLiftedFrom37?:boolean // CrossMapped 37->38
 }
 
 export interface GenomicVariant {
-  chr:string
-  pos:number
-  ref:string
-  alt:string
+  chromosome:string
+  position:number
+  refBase:string
+  altBase:string
   genes: Gene[]
 }
 

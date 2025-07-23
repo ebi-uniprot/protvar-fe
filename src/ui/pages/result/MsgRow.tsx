@@ -58,16 +58,16 @@ const MsgRow = ({
           <>
             <td>
               <Tool tip="Click to see the a summary for this chromosome from Ensembl" pos="up-left">
-                <a href={getEnsemblChrUrl(genomicVariant.chr)} target="_blank" rel="noopener noreferrer">
-                  {genomicVariant.chr}
+                <a href={getEnsemblChrUrl(genomicVariant.chromosome)} target="_blank" rel="noopener noreferrer">
+                  {genomicVariant.chromosome}
                 </a>
               </Tool>
             </td>
             <td>
               <Tool tip="Click to see the region detail for this genomic coordinate from Ensembl" pos="up-left">
-                <a href={getEnsemblViewUrl(genomicVariant.chr, genomicVariant.pos)} target="_blank"
+                <a href={getEnsemblViewUrl(genomicVariant.chromosome, genomicVariant.position)} target="_blank"
                    rel="noopener noreferrer">
-                  {genomicVariant.pos}
+                  {genomicVariant.position}
                 </a>
               </Tool>
             </td>
@@ -77,8 +77,8 @@ const MsgRow = ({
               </a>
               }
             </Tool></td>
-            <td><Tool tip={ALLELE.get(genomicVariant.ref)}>{genomicVariant.ref}</Tool></td>
-            <td><Tool tip={ALLELE.get(genomicVariant.alt)}>{genomicVariant.alt}</Tool></td>
+            <td><Tool tip={ALLELE.get(genomicVariant.refBase)}>{genomicVariant.refBase}</Tool></td>
+            <td><Tool tip={ALLELE.get(genomicVariant.altBase)}>{genomicVariant.altBase}</Tool></td>
             <td colSpan={10}>
               <div style={rowStyle}>
                 {getIcon(message)}

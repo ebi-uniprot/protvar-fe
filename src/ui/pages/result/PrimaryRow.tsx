@@ -97,7 +97,7 @@ export const getNewPrimaryRow = (isoformKey: string, isoformGroup: string, isofo
 
   const caddAttr = caddScoreAttr(gene.caddScore?.toString())
   const amAttr = amScoreAttr(isoform.amScore?.amClass)
-  const genomicVariantStr = `${genomicVariant.chr}-${genomicVariant.pos}-${genomicVariant.ref}-${genomicVariant.alt}`
+  const genomicVariantStr = `${genomicVariant.chromosome}-${genomicVariant.position}-${genomicVariant.refBase}-${genomicVariant.altBase}`
 
   let strand = gene.reverseStrand ? '(-)' : '(+)';
   let codon = isoform.refCodon + '/' + isoform.variantCodon;
@@ -136,16 +136,16 @@ export const getNewPrimaryRow = (isoformKey: string, isoformGroup: string, isofo
     <tr style={rowBg(index)} title={'Input: ' + userInput.inputStr}>
       <td style={genomicStyle}>
         <Tool tip="Click to see the a summary for this chromosome from Ensembl" pos="up-left">
-          <a href={getEnsemblChrUrl(genomicVariant.chr)} target="_blank" rel="noopener noreferrer">
-            {genomicVariant.chr}
+          <a href={getEnsemblChrUrl(genomicVariant.chromosome)} target="_blank" rel="noopener noreferrer">
+            {genomicVariant.chromosome}
           </a>
         </Tool>
       </td>
       <td style={genomicStyle}>
         <Tool tip="Click to see the region detail for this genomic coordinate from Ensembl" pos="up-left">
-          {(userInput.type === "GENOMIC" && 'converted' in userInput && userInput.converted) && <span className="h37">37&rarr;38</span>}
-          <a href={getEnsemblViewUrl(genomicVariant.chr, genomicVariant.pos)} target="_blank" rel="noopener noreferrer">
-            {genomicVariant.pos}
+          {(userInput.type === "GENOMIC" && 'isLiftedFrom37' in userInput && userInput.isLiftedFrom37) && <span className="h37">37&rarr;38</span>}
+          <a href={getEnsemblViewUrl(genomicVariant.chromosome, genomicVariant.position)} target="_blank" rel="noopener noreferrer">
+            {genomicVariant.position}
           </a>
         </Tool>
       </td>
@@ -155,7 +155,7 @@ export const getNewPrimaryRow = (isoformKey: string, isoformGroup: string, isofo
         </a>
       }
       </Tool></td>
-      <td><Tool tip={ALLELE.get(genomicVariant.ref)}>{genomicVariant.ref}</Tool></td>
+      <td><Tool tip={ALLELE.get(genomicVariant.refBase)}>{genomicVariant.refBase}</Tool></td>
       <td><Tool tip={ALLELE.get(gene.altAllele)}>{gene.altAllele}</Tool></td>
       <td>
         <Tool tip="Click here for gene information from Ensembl">
