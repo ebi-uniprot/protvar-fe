@@ -1,9 +1,9 @@
-export enum InputType { // need to align with backend
+export enum InputType { // need to align with backend // to rename to SearchType? QueryType?
   INPUT_ID = "INPUT_ID",
   ENSEMBL = "ENSEMBL",
   UNIPROT = "UNIPROT",
   PDB = "PDB",
   REFSEQ = "REFSEQ",
   GENE = "GENE",
-  SINGLE_VARIANT = "SINGLE_VARIANT"
+  VARIANT = "VARIANT"
 }

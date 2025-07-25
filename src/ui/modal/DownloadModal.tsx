@@ -122,7 +122,7 @@ function DownloadModal(props: DownloadModalProps) {
       structure: form.str ?? false,
       page: page ? parseInt(page) : null,
       pageSize: pageSize ? parseInt(pageSize) : null,
-      assembly: props.type === InputType.SINGLE_VARIANT
+      assembly: props.type === InputType.VARIANT
                 ? assembly === Assembly.GRCh37 ? Assembly.GRCh37 : Assembly.GRCh38 // default is 38 (overriding auto)
                 : assembly ?? null,
       full: !currPage,
