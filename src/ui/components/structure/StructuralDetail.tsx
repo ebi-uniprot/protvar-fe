@@ -120,16 +120,16 @@ function StructuralDetail(props: StructuralDetailProps) {
         </div>
       </td>
       <td colSpan={5} className="expanded-row structure-data-cell">
-        {pdbeData.length > 0 && <><br/>
+        {pdbeData?.length > 0 && <><br/>
           <PdbeStructureTable isoFormAccession={isoFormAccession} pdbeData={pdbeData}
                               selectedPdbId={"pdbId" in selected ? selected.pdbId : ""}
                               setSelected={setSelected} pdbeRef={pdbeRef}/></>}
-        {predictedStructureData.length > 0 && <><br/>
+        {predictedStructureData?.length > 0 && <><br/>
           <PredictedStructureTable isoFormAccession={isoFormAccession} predictedStructureData={predictedStructureData}
                                    selectedPredictedStructure={"entryId" in selected ? selected.entryId : ""}
                                    setSelected={setSelected} aaPos={aaPosition} pocketData={pocketData}
                                    pdbeRef={pdbeRef}/></>}
-        {interactionData.length > 0 && <><br/>
+        {interactionData?.length > 0 && <><br/>
           <InteractionInfoTable isoFormAccession={isoFormAccession} interactionData={interactionData}
                                 selectedInteraction={"a" in selected && "b" in selected ? (selected.a + "_" + selected.b) : ""}
                                 setSelected={setSelected} aaPos={aaPosition} pdbeRef={pdbeRef}/></>}

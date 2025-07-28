@@ -2,12 +2,22 @@ import React, {useEffect, useState} from "react";
 import {useLocation, useNavigate, useSearchParams} from "react-router-dom";
 import "./AdvancedSearch.css";
 import {extractFilters} from "./SearchFiltersUtils";
-import {ALPHAMISSENSE_CATEGORIES, CADD_CATEGORIES, VALID_AM_VALUES, VALID_CADD_VALUES} from "./filterConstants";
+import {
+  ALPHAMISSENSE_CATEGORIES,
+  CADD_CATEGORIES,
+  STABILITY_CATEGORIES,
+  VALID_AM_VALUES,
+  VALID_CADD_VALUES,
+  VALID_STABILITY_VALUES
+} from "./filterConstants";
 
 export interface SearchFilterParams {
   cadd: string[];
   am: string[];
+  stability: string[];
   known?: boolean; // only set to true if explicitly enabled
+  pocket?: boolean;
+  interact?: boolean;
   sort?: string;  // Optional
   order?: "asc" | "desc";  // Optional
 }
@@ -36,6 +46,10 @@ const AdvancedSearch = ({
   const isAnyFilterSpecified =
     filters.cadd.length > 0 ||
     filters.am.length > 0 ||
+    filters.known !== undefined ||
+    filters.pocket !== undefined ||
+    filters.interact !== undefined ||
+    filters.stability.length > 0 ||
     filters.sort !== undefined ||
     filters.order !== undefined;
   const [isExpanded, setIsExpanded] = useState(isAnyFilterSpecified);
@@ -45,7 +59,7 @@ const AdvancedSearch = ({
     setFilters(extractFilters(searchParams));
   }, [searchParams]);
 
-  const handleCheckboxChange = (key: "cadd" | "am", value: string) => {
+  const handleCheckboxChange = (key: "cadd" | "am" | "stability", value: string) => {
     const lowerValue = value.toLowerCase();
     setFilters((prev) => {
       const currentValues = prev[key].map(v => v.toLowerCase());
@@ -64,13 +78,14 @@ const AdvancedSearch = ({
 
   const normalizedCadd = normalizeFilterValues(filters.cadd, VALID_CADD_VALUES);
   const normalizedAm = normalizeFilterValues(filters.am, VALID_AM_VALUES);
+  const normalizedStability = normalizeFilterValues(filters.stability, VALID_STABILITY_VALUES);
 
   const allCaddSelected = normalizedCadd.length === VALID_CADD_VALUES.length;
   const allAmSelected = normalizedAm.length === VALID_AM_VALUES.length;
 
   // Apply filters and update the URL
   const applyFilters = () => {
-    ["page", "annotation", "cadd", "am", "sort", "order"].forEach((key) =>
+    ["page", "annotation", "cadd", "am", "stability", "sort", "order"].forEach((key) =>
       searchParams.delete(key)
     );
 
@@ -79,6 +94,9 @@ const AdvancedSearch = ({
     if (!allCaddSelected)  normalizedCadd.forEach((val) => searchParams.append("cadd", val));
     if (!allAmSelected)  normalizedAm.forEach((val) => searchParams.append("am", val));
     filters.known === true ? searchParams.set("known", "true") : searchParams.delete("known");
+    filters.pocket === true ? searchParams.set("pocket", "true") : searchParams.delete("pocket");
+    filters.interact === true ? searchParams.set("interact", "true") : searchParams.delete("interact");
+    normalizedStability.forEach((val) => searchParams.append("stability", val)); // diff from cadd/am where all stability categories will still limit results based available prediction
     if (filters.sort) searchParams.set("sort", filters.sort);
     if (filters.order) searchParams.set("order", filters.order);
     navigate(`${location.pathname}${searchParams.size > 0 ? `?${searchParams}` : ``}`);
@@ -89,6 +107,9 @@ const AdvancedSearch = ({
 
   const isAmSelected = (value: string) =>
     normalizedAm.length === 0 || normalizedAm.includes(value.toLowerCase());
+
+  const isStabilitySelected = (value: string) =>
+    normalizedStability.includes(value.toLowerCase());
 
   return (
     <div className="advanced-search">
@@ -183,7 +204,7 @@ const AdvancedSearch = ({
 
 
             {/* Known Variants Filter */}
-            <div className="filter-group" style={{ width: '100%', marginTop: '1rem' }}>
+            <div className="filter-group" style={{width: '100%', marginTop: '1rem'}}>
               <label>
                 <input
                   type="checkbox"
@@ -194,10 +215,67 @@ const AdvancedSearch = ({
                       known: e.target.checked ? true : undefined, // omit if not checked
                     }))}
                 />
-                {' '}Show only known variants{' '}<span style={{fontWeight: 'normal', fontSize: '0.9em', color: '#666'}}>
+                {' '}Show only known variants{' '}<span
+                style={{fontWeight: 'normal', fontSize: '0.9em', color: '#666'}}>
                   (default: potential included)
                   </span>
               </label>
+            </div>
+
+
+            {/* Predicted Pocket Filter */}
+            <div className="filter-group" style={{width: '100%', marginTop: '1rem'}}>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={filters.pocket === true}
+                  onChange={(e) =>
+                    setFilters((prev) => ({
+                      ...prev,
+                      pocket: e.target.checked ? true : undefined, // omit if not checked
+                    }))}
+                />
+                {' '}Show only variants in predicted pockets{' '}<span
+                style={{fontWeight: 'normal', fontSize: '0.9em', color: '#666'}}>
+                  </span>
+              </label>
+            </div>
+
+            {/* Predicted Interaction Filter */}
+            <div className="filter-group" style={{width: '100%', marginTop: '1rem'}}>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={filters.interact === true}
+                  onChange={(e) =>
+                    setFilters((prev) => ({
+                      ...prev,
+                      interact: e.target.checked ? true : undefined, // omit if not checked
+                    }))}
+                />
+                {' '}Show only variants in P-P interaction{' '}<span
+                style={{fontWeight: 'normal', fontSize: '0.9em', color: '#666'}}>
+                  </span>
+              </label>
+            </div>
+
+            { /* Stability change */ }
+            <div className="filter-group">
+              <label>Stability</label>
+              <div className="button-group compact">
+                {STABILITY_CATEGORIES.map(cat => (
+                  <button
+                    key={cat.value}
+                    className={`filter-button ${isStabilitySelected(cat.value) ? "selected" : ""}`}
+                    onClick={() => handleCheckboxChange("stability", cat.value)}
+                  >
+                    {isStabilitySelected(cat.value)
+                      ? <i className="bi-check-lg tick"></i>
+                      : <i className="bi-x-lg cross"></i>}
+                    {' '}{cat.label}
+                  </button>
+                ))}
+              </div>
             </div>
 
           </div>

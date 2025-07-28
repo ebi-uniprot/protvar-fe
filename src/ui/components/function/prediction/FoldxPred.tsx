@@ -6,7 +6,7 @@ import {aminoAcid3to1Letter} from "../../../../utills/Util";
 export const FoldxPred = (props: { foldxs: Array<Foldx>, variantAA: string }) => {
   const variantAA = aminoAcid3to1Letter(props.variantAA);
   const filteredFoldxs = props.variantAA
-    ? props.foldxs.filter(fx => fx.mutatedType.toLowerCase() === variantAA)
+    ? props.foldxs?.filter(fx => fx.mutatedType.toLowerCase() === variantAA)
     : props.foldxs;
 
   if (filteredFoldxs && filteredFoldxs.length > 0) {

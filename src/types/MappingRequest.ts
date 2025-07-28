@@ -10,7 +10,10 @@ export interface MappingRequest {
   assembly?: string | null; //'AUTO' | 'GRCh37' | 'GRCh38';
   cadd?: string[];
   am?: string[];
+  stability?: string[];
   known?: boolean;
+  pocket?: boolean;
+  interact?: boolean;
   sort?: string;
   order?: 'asc' | 'desc';
 }

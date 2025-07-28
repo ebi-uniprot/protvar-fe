@@ -35,7 +35,7 @@ const BrowseVariant = () => {
       setError('Input value cannot be empty.');
       return;
     }
-
+/*
     const detectedType = resolve(trimmedInput);
 
     // If user explicitly selected a type, validate input against that type's regex
@@ -58,6 +58,9 @@ const BrowseVariant = () => {
     const typeParam = effectiveType ? `?type=${effectiveType.toLowerCase()}` : '';
     //navigate(`/search?input=${normalized}&type=${effectiveType.toLowerCase()}`);
     navigate(`${normalized}${typeParam}`);
+    */
+    const typeParam = selectedType ? `?type=${selectedType.toLowerCase()}` : '';
+    navigate(`${trimmedInput}${typeParam}`);
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -83,11 +86,12 @@ const BrowseVariant = () => {
             <div className="search-box-container">
               <select className="search-select" value={selectedType} onChange={handleSelectedTypeChange}>
                 <option value="">Input type (auto-detect)</option>
-                <option value={InputType.UNIPROT}>UniProt Accession</option>
-                <option value={InputType.ENSEMBL}>Ensembl ID</option>
                 <option value={InputType.GENE}>Gene Symbol</option>
-                <option value={InputType.PDB}>PDB ID</option>
+                <option value={InputType.VARIANT}>Variant</option>
                 <option value={InputType.REFSEQ}>RefSeq ID</option>
+                <option value={InputType.ENSEMBL}>Ensembl ID</option>
+                <option value={InputType.UNIPROT}>UniProt ID</option>
+                <option value={InputType.PDB}>PDB ID</option>
                 <option value={InputType.INPUT_ID}>Input ID</option>
               </select>
               <input type="text" className="search-input"

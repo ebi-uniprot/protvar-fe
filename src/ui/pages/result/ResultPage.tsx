@@ -113,7 +113,10 @@ function ResultPageContent() {
       assembly: assembly || undefined,
       cadd: filters?.cadd ?? [],
       am: filters?.am ?? [],
+      stability: filters?.stability ?? [],
       known: filters?.known,
+      pocket: filters?.pocket,
+      interact: filters?.interact,
       sort: filters?.sort,
       order: filters?.order,
     };

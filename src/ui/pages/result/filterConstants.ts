@@ -2,6 +2,7 @@
 
 import {CaddCategory} from "../../../types/CaddCategory";
 import {AmClass} from "../../../types/AmClass";
+import {StabilityChange} from "../../../types/StabilityChange";
 
 export const CADD_CATEGORIES = [
   { label: "Likely Benign (<15.0)", value: CaddCategory.LIKELY_BENIGN },
@@ -17,5 +18,11 @@ export const ALPHAMISSENSE_CATEGORIES = [
   { label: "Pathogenic", value: AmClass.PATHOGENIC },
 ];
 
+export const STABILITY_CATEGORIES = [
+  { label: "Likely to be destabilising", value: StabilityChange.LIKELY_DESTABILISING },
+  { label: "Unlikely to be destabilising", value: StabilityChange.UNLIKELY_DESTABILISING }
+];
+
 export const VALID_CADD_VALUES = Object.values(CaddCategory).map((v) => v.toLowerCase());
 export const VALID_AM_VALUES = Object.values(AmClass).map((v) => v.toLowerCase());
+export const VALID_STABILITY_VALUES = Object.values(StabilityChange).map((v) => v.toLowerCase());
