@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import "./BrowseVariant.css"
 import {useNavigate} from "react-router-dom";
-import {resolve, normalize} from "../../../utills/InputTypeResolver";
+//import {resolve, normalize} from "../../../utills/InputTypeResolver";
 import {InputType} from "../../../types/InputType";
 
 const inputExamples: Record<string, string> = {
