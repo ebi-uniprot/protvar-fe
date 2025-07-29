@@ -14,7 +14,6 @@ import {ShareLink} from "../../components/common/ShareLink";
 import Spaces from "../../elements/Spaces";
 import Loader from "../../elements/Loader";
 import {NO_DATA, NO_RESULT, UNEXPECTED_ERR} from "../result/ResultPage";
-import {InputType} from "../../../types/InputType";
 
 const INVALID_QUERY = 'Invalid search query'
 
@@ -139,7 +138,7 @@ const QueryPageContent = (props: QueryPageProps) => {
           <ShareLink url={shareUrl} linkText="Share Results"/>
           <Spaces count={2}/>
           <LegendModal/>
-          <DownloadModal input={query!} type={InputType.VARIANT} numPages={1} />
+          <DownloadModal input={query!} type="variant" numPages={1} />
         </div>
       </span>
       </div>}

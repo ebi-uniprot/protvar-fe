@@ -1,4 +1,4 @@
-import {InputType} from "../types/InputType";
+import {INPUT_TYPES, InputType} from "../types/InputType";
 
 export function resolve(input: string): InputType | null {
   const trimmed = input.trim();
@@ -10,29 +10,29 @@ export function resolve(input: string): InputType | null {
   const inputIdRegex = /^[a-f0-9]{32}$/;
   const geneRegex = /^[A-Za-z0-9\-_]{2,}$/;
 
-  if (ensemblRegex.test(trimmed)) return InputType.ENSEMBL;
-  if (uniprotRegex.test(trimmed)) return InputType.UNIPROT;
-  if (pdbRegex.test(trimmed)) return InputType.PDB;
-  if (refseqRegex.test(trimmed)) return InputType.REFSEQ;
-  if (inputIdRegex.test(trimmed)) return InputType.INPUT_ID;
-  if (geneRegex.test(trimmed)) return InputType.GENE;
+  if (ensemblRegex.test(trimmed)) return 'ensembl';
+  if (uniprotRegex.test(trimmed)) return 'uniprot';
+  if (pdbRegex.test(trimmed)) return 'pdb';
+  if (refseqRegex.test(trimmed)) return 'refseq';
+  if (inputIdRegex.test(trimmed)) return 'input_id';
+  if (geneRegex.test(trimmed)) return 'gene';
 
   return null;
 }
 
 export function isValid(value: string): value is InputType {
-  const upper = value.toUpperCase();
-  return Object.values(InputType).includes(upper as InputType);
+  return INPUT_TYPES.includes(value as InputType);
 }
 
 export function fromString(value: string): InputType | null {
-  return isValid(value) ? (value.toUpperCase() as InputType) : null;
+  const lowercase = value.toLowerCase();
+  return isValid(lowercase) ? lowercase : null;
 }
 
-export function normalize(input: string, type: string | InputType): string {
+export function normalize(input: string, type: InputType): string {
   const trimmed = input.trim();
 
-  if (type === InputType.PDB || type === InputType.INPUT_ID) {
+  if (type === 'pdb' || type === 'input_id') {
     return trimmed; // Preserve case
   }
 

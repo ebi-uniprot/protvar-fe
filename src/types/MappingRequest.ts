@@ -4,7 +4,7 @@ import {InputType} from "./InputType";
 
 export interface MappingRequest {
   input: string;
-  type?: InputType | null;
+  type?: InputType;
   page?: number | null;
   pageSize?: number | null;
   assembly?: string | null; //'AUTO' | 'GRCh37' | 'GRCh38';

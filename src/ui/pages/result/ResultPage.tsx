@@ -2,7 +2,7 @@ import DefaultPageLayout from "../../layout/DefaultPageLayout";
 import LegendModal from "../../modal/LegendModal";
 import {useLocation, useParams, useSearchParams} from "react-router-dom";
 import ResultTable from "./ResultTable";
-import React, {useCallback, useEffect, useMemo, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import PaginationRow from "./PaginationRow";
 import {DEFAULT_PAGE, DEFAULT_PAGE_SIZE, LOCAL_RESULTS, PERMITTED_PAGE_SIZES, TITLE} from "../../../constants/const";
 import DownloadModal from "../../modal/DownloadModal";
@@ -19,7 +19,7 @@ import Spaces from "../../elements/Spaces";
 import Loader from "../../elements/Loader";
 import AdvancedSearch, {SearchFilterParams} from "./AdvancedSearch";
 import {extractFilters} from "./SearchFiltersUtils";
-import {fromString, normalize, resolve} from "../../../utills/InputTypeResolver";
+import {fromString/*, normalize, resolve*/} from "../../../utills/InputTypeResolver";
 import {InputType} from "../../../types/InputType";
 import {MappingRequest} from "../../../types/MappingRequest";
 
@@ -33,7 +33,7 @@ export const UNEXPECTED_ERR = 'An unexpected error occurred'
 function ResultPageContent() {
   const location = useLocation();
   const { input } = useParams();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [inputType, setInputType] = useState<InputType | null>(null);
   const [resultTitle, setResultTitle] = useState(input)
 
@@ -76,8 +76,10 @@ function ResultPageContent() {
     setItem(LOCAL_RESULTS, savedRecords);
   }, [getItem, setItem]);
 
+  const updatingTypeParam = useRef(false);
+
   const loadData = useCallback((
-    type: InputType | null,
+    providedType: InputType | null,
     input: string,
     page: number,
     pageSize: number,
@@ -92,7 +94,6 @@ function ResultPageContent() {
 
     if (!pageIsValid) {
       setWarning(INVALID_PAGE)
-      //Notify.warn('hey')
       page = DEFAULT_PAGE
     }
 
@@ -107,10 +108,10 @@ function ResultPageContent() {
     // assembly null or DEFAULT, no param
     const request: MappingRequest = {
       input,
-      type,
+      type: providedType ?? undefined,  // Send user's type hint to backend
       page,
       pageSize,
-      assembly: assembly || undefined,
+      assembly: assembly ?? undefined,
       cadd: filters?.cadd ?? [],
       am: filters?.am ?? [],
       stability: filters?.stability ?? [],
@@ -130,9 +131,22 @@ function ResultPageContent() {
 
           if (response.data.content?.inputs?.length > 0) {
             setData(response.data)
+            setInputType(response.data.type); // Backend returns resolved type
+
+            // Only update URL if backend resolved a different type than what user provided
+            const resolvedType = response.data.type;
+            if (resolvedType && resolvedType !== providedType) {
+              updatingTypeParam.current = true; // Flag that we're updating
+              setSearchParams(prev => {
+                const newParams = new URLSearchParams(prev);
+                newParams.set('type', resolvedType);
+                return newParams;
+              });
+            }
+
             viewedRecord(response.data.input, location.pathname + location.search)
 
-            if (type && type === InputType.INPUT_ID) {
+            if (response.data.type === 'input_id') {
               const totalItems = response.data.totalItems
               const firstInputLine = totalItems === 1 ?
                 response.data.content.inputs[0].inputStr :
@@ -161,7 +175,10 @@ function ResultPageContent() {
       .catch((err) => {
         setData(null) // clear prev data
         if (err.response) {
-          if (err.response.status === 404) { // Not found
+          if (err.response?.status === 400) {
+            // Backend returns descriptive error for type mismatches
+            setWarning(err.response.data || 'Invalid input or type mismatch');
+          } else if (err.response.status === 404) { // Not found
             setWarning(NO_RESULT);
           } else {
             setWarning(`Error ${err.response.status}: ${err.message}`);
@@ -172,16 +189,22 @@ function ResultPageContent() {
       }).finally(() => {
       setLoading(false)
     })
-  }, [viewedRecord, location])
+  }, [viewedRecord, location, setSearchParams])
 
   useEffect(() => {
+    // Skip if we just updated the type parameter ourselves
+    if (updatingTypeParam.current) {
+      updatingTypeParam.current = false;
+      return;
+    }
+
     setWarning("");
     if (!input) return;
 
     const trimmedInput = input.trim();
-    const typeStr = searchParams.get('type');
-    const parsedType = typeStr ? fromString(typeStr) : null;
-
+    const type = searchParams.get('type');
+    const providedType = type ? fromString(type) : null;
+/*
     // Infer type
     const detectedType = resolve(trimmedInput);
 
@@ -207,8 +230,10 @@ function ResultPageContent() {
 
     const normalized = normalize(trimmedInput, finalType);
     setResultTitle(normalized);
-
     loadData(finalType, input, page, pageSize, assembly, filters);
+*/
+    setResultTitle(trimmedInput);
+    loadData(providedType, trimmedInput, page, pageSize, assembly, filters);
   }, [input, searchParams, page, pageSize, assembly, filters, loadData]) // listening for change in input, and searchParams
 
 
@@ -272,7 +297,7 @@ function ResultPageContent() {
     </div>)}
 
     {!data && loading && <Loader/>}
-    {inputType !== InputType.INPUT_ID && inputType !== InputType.VARIANT && <AdvancedSearch loading={loading}/>}
+    {inputType !== 'input_id' && inputType !== 'variant' && <AdvancedSearch loading={loading}/>}
     <ResultTable data={data}/>
     {data && data.totalPages > 1 && <PaginationRow loading={loading} data={data}/>}
   </div>

@@ -2,21 +2,12 @@ import React, {useState} from 'react'
 import "./BrowseVariant.css"
 import {useNavigate} from "react-router-dom";
 //import {resolve, normalize} from "../../../utills/InputTypeResolver";
-import {InputType} from "../../../types/InputType";
-
-const inputExamples: Record<string, string> = {
-  [InputType.UNIPROT]: 'e.g. P22304',
-  [InputType.ENSEMBL]: 'e.g. ENSG00000139618',
-  [InputType.GENE]: 'e.g. BRCA2',
-  [InputType.PDB]: 'e.g. 6ioz',
-  [InputType.REFSEQ]: 'e.g. NM_000059.4',
-  [InputType.INPUT_ID]: 'e.g. genomic input examples',
-};
+import {InputType, INPUT_TYPE_LABELS, INPUT_TYPE_EXAMPLES} from "../../../types/InputType";
 
 const BrowseVariant = () => {
   const navigate = useNavigate();
   const [input, setInput] = useState('')
-  const [selectedType, setSelectedType] = useState('')
+  const [selectedType, setSelectedType] = useState<InputType | ''>('') // Empty string for auto-detect
   const [error, setError] = useState('')
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,7 +16,7 @@ const BrowseVariant = () => {
   };
 
   const handleSelectedTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedType(e.target.value);
+    setSelectedType(e.target.value as InputType | '');
     setError('');
   };
 
@@ -59,7 +50,9 @@ const BrowseVariant = () => {
     //navigate(`/search?input=${normalized}&type=${effectiveType.toLowerCase()}`);
     navigate(`${normalized}${typeParam}`);
     */
-    const typeParam = selectedType ? `?type=${selectedType.toLowerCase()}` : '';
+    // Simply navigate with input and optional type hint
+    // Let the backend resolve and validate
+    const typeParam = selectedType ? `?type=${selectedType}` : '';
     navigate(`${trimmedInput}${typeParam}`);
   }
 
@@ -86,19 +79,19 @@ const BrowseVariant = () => {
             <div className="search-box-container">
               <select className="search-select" value={selectedType} onChange={handleSelectedTypeChange}>
                 <option value="">Input type (auto-detect)</option>
-                <option value={InputType.GENE}>Gene Symbol</option>
-                <option value={InputType.VARIANT}>Variant</option>
-                <option value={InputType.REFSEQ}>RefSeq ID</option>
-                <option value={InputType.ENSEMBL}>Ensembl ID</option>
-                <option value={InputType.UNIPROT}>UniProt ID</option>
-                <option value={InputType.PDB}>PDB ID</option>
-                <option value={InputType.INPUT_ID}>Input ID</option>
+                <option value="gene">{INPUT_TYPE_LABELS.gene}</option>
+                <option value="variant">{INPUT_TYPE_LABELS.variant}</option>
+                <option value="refseq">{INPUT_TYPE_LABELS.refseq}</option>
+                <option value="ensembl">{INPUT_TYPE_LABELS.ensembl}</option>
+                <option value="uniprot">{INPUT_TYPE_LABELS.uniprot}</option>
+                <option value="pdb">{INPUT_TYPE_LABELS.pdb}</option>
+                <option value="input_id">{INPUT_TYPE_LABELS.input_id}</option>
               </select>
               <input type="text" className="search-input"
                      value={input}
                      onChange={handleInputChange}
                      onKeyDown={handleKeyDown}
-                     placeholder={selectedType ? inputExamples[selectedType] : "Search..."}/>
+                     placeholder={selectedType ? INPUT_TYPE_EXAMPLES[selectedType] : "Search..."}/>
               <button className="search-button btn btn-primary"
                       disabled={submitDisabled}
                       onClick={handleSubmit}>
