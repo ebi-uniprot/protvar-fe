@@ -1,0 +1,96 @@
+/* Simple Navbar */
+.navbar {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    width: 100%;
+    padding: 1rem 0;
+}
+
+/* Brand section */
+.navbar-brand {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.brand-link {
+    color: white;
+    text-decoration: none;
+}
+
+.brand-link:hover {
+    opacity: 0.9;
+    border-bottom: none;
+}
+
+.brand-logo {
+    max-width: 140px;
+    height: auto;
+}
+
+.brand-tagline {
+    font-size: 14px;
+    color: #ccc;
+    text-decoration: none;
+    margin-top: 8px;
+    padding-left: 3rem;
+}
+
+.brand-tagline:hover {
+    color: white;
+    border-bottom: none;
+}
+
+/* Navigation links */
+.navbar-nav {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.nav-link {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    padding: 0.5rem 0 0 0.2rem;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #ccc;
+    border-bottom: none;
+}
+
+/* Mobile responsive */
+@media screen and (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .navbar-brand {
+        text-align: center;
+    }
+
+    .brand-tagline {
+        padding-left: 0;
+    }
+
+    .navbar-nav {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1.5rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .navbar-nav {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .nav-link {
+        padding: 0.75rem 0;
+    }
+}

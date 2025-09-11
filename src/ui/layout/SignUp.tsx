@@ -4,6 +4,7 @@ import axios from "axios";
 import Notify from "../elements/Notify";
 import {emailValidate} from "../../utills/Validator";
 import useLocalStorage from "../../hooks/useLocalStorage";
+import "./SignUp.css";
 
 function SignUp() {
   const [email, setEmail] = useState("");

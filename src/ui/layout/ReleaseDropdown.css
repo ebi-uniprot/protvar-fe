@@ -1,0 +1,61 @@
+/* Release Dropdown */
+.release-dropdown {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 12px;
+}
+
+.release-dropdown-btn {
+    border-radius: 0 0 0 5px;
+    background-color: #4CAF50;
+    color: white;
+    padding: 8px;
+    border: none;
+    cursor: pointer;
+    animation: release-anim 1s linear 1s;
+}
+
+@keyframes release-anim {
+    50% {
+        background-color: lightgrey;
+    }
+}
+
+.release-dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    background-color: #f1f1f1;
+    min-width: max-content;
+    white-space: nowrap;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.release-dropdown-content li {
+    text-align: left;
+    padding: 2px 4px;
+    color: black;
+    display: block;
+}
+
+.release-dropdown-content li:hover {
+    background-color: #ddd;
+}
+
+.release-dropdown-content .data-release-header {
+    border-bottom: 1px solid lightgray;
+    font-weight: bold;
+}
+
+.release-dropdown-content .data-item {
+    padding-left: 8px;
+    font-size: 11px;
+}
+
+.release-dropdown:hover .release-dropdown-content {
+    display: block;
+}

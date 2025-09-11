@@ -120,7 +120,10 @@
   border-radius: 4px;
   background-color: #f1f1f1;
 }
-
-.help-btn:hover {
+.help-icon {
+  vertical-align: top;
+  margin-left: 4px;
+}
+.help-icon:hover {
   cursor: pointer;
 }

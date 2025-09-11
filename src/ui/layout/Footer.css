@@ -1,0 +1,129 @@
+/* Footer component - clean, simplified styles */
+
+/* Main content section */
+.footer-content-section {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+    padding: 2rem;
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.citation-container h5,
+.twitter-container h5 {
+    color: #014371;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.citation-text {
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.footer-links {
+    font-size: 13px;
+    color: #666;
+    margin: 0;
+}
+
+.ref-link {
+    color: #014371;
+    text-decoration: underline;
+}
+
+.ref-link:hover {
+    color: #012d5a;
+}
+
+.twitter-content {
+    background: white;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Partners section */
+.pv-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    background-color: white;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.partner-logos {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.collaborator-img {
+    transition: opacity 0.3s ease;
+    width: 140px;
+}
+
+.partner-logos a:hover .collaborator-img {
+    opacity: 0.8;
+}
+
+.social-signup-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+/* Cookie notice */
+.cookie-notice {
+    color: white;
+}
+
+.cookie-notice a {
+    color: #87ceeb;
+    text-decoration: underline;
+}
+
+.cookie-notice a:hover {
+    color: white;
+}
+
+/* Mobile responsive */
+@media screen and (max-width: 768px) {
+    .footer-content-section {
+        grid-template-columns: 1fr;
+        padding: 1.5rem 1rem;
+    }
+
+    .pv-footer {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1.5rem 1rem;
+        text-align: center;
+    }
+
+    .partner-logos {
+        justify-content: center;
+    }
+
+    .social-signup-section {
+        align-items: center;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .footer-content-section {
+        padding: 1rem;
+    }
+
+    .collaborator-img {
+        width: 120px;
+    }
+}

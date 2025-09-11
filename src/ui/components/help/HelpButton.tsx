@@ -12,7 +12,7 @@ export const HelpButton = (props: HelpBtnProps) => {
   return <span onClick={_ => state.updateState("drawer", props.content)}
                onMouseEnter={_ => setMouseOver(true)}
                onMouseLeave={_ => setMouseOver(false)}
-               className="help-btn">
+               className="help-icon">
     {props.title} <i className={`bi bi-info-circle${mouseOver ? `-fill` : ``}`}
                      style={{verticalAlign: 'super', fontSize: '13px'}}></i>
   </span>

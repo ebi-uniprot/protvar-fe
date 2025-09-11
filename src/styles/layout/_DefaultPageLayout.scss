@@ -15,213 +15,12 @@
 }
 
 
-/* The container <div> - needed to position the dropdown content */
-.rel-dropdown {
-  position: absolute;
-  top: 0; right: 0;
-  font-size: 12px;
-}
-
-/* Dropdown Button */
-.rel-dropbtn {
-  border-radius: 0 0 0 5px;
-  background-color: #4CAF50; //#f4511e
-  color: white;
-  padding: 8px;
-  animation: rel-anim 1s linear 1s;
-}
-
-@keyframes rel-anim {
-  50% {background-color: lightgrey;}
-}
-
-/* Dropdown Content (Hidden by Default) */
-.rel-dropdown-content {
-  display: none;
-  position: absolute;
-  right: 0; /* Aligns dropdown to the right */
-  list-style-type: none;
-  margin: 0;
-  background-color: #f1f1f1;
-  min-width: max-content; /* Ensures it takes the width of the longest item */
-  white-space: nowrap; /* Prevents wrapping */
-}
-
-/* Links inside the dropdown */
-.rel-dropdown-content li {
-  text-align: left; /* Aligns text to the left */
-  padding: 2px 4px; /* Adds padding for better readability */
-  color: black;
-  display: block;
-}
-
-/* Change color of dropdown links on hover */
-.rel-dropdown-content li:hover {background-color: #ddd;}
-
-/* Show the dropdown menu on hover */
-.rel-dropdown:hover .rel-dropdown-content {display: block;}
-
-
-.navbar {
-  display: flex;
-  align-items: flex-end;
-  flex-wrap: wrap;
-  width: 100%;
-  // background-color: linear-gradient(45deg, #014371, rgba(1, 67, 113, 0.7), #014371, #014371);
-  overflow: auto;
-  table {
-    margin-bottom: 0;
-    tbody {
-      background-color: transparent;
-      td {
-        padding-bottom: 0;
-      }
-    }
-  }
-}
-
-.logo-container {
-  display: flex;
-  flex-direction: column;
-  .sub-title {
-    font-size: 14px;
-    color: #666;
-    padding: 0.5rem 0 0 3rem;
-  }
-}
-
-/* Navbar links */
-.navbar a {
-  color: white;
-  text-decoration: none;
-  font-size: 16px;
-}
-
 /* Navbar links on mouse-over */
 .navbar a:hover {
   border-bottom: none;
 }
 a {
   border-bottom-style: none;
-}
-/* Current/active navbar link */
-// .active {
-// 	background-color: #04aa6d;
-// }
-
-.topnav-logo {
-  flex-grow: 1;
-}
-
-.topnav-right {
-  float: right;
-  padding-top: 30px;
-
-  table {
-    margin-bottom: 0rem;
-    tbody {
-      border: 0;
-      background-color: transparent;
-    }
-    td {
-      padding: 0;
-    }
-  }
-
-  button {
-    background-color: transparent;
-    padding-top: 1em;
-    padding-right: 1em;
-    padding-bottom: 1em;
-    padding-left: 1em;
-    margin-bottom: 0.2rem;
-    cursor: pointer;
-  }
-  .modal__backdrop {
-    background-color: transparent;
-  }
-  .modal__content {
-    border-color: #00709b;
-    button {
-      background-color: transparent;
-      padding-top: 0.5em;
-      padding-left: 1em;
-      border-width: thin;
-      border-color: #00709b;
-      cursor: pointer;
-      color: #00709b;
-    }
-  }
-  .window__header {
-    width: 100%;
-    height: 2rem;
-    background-color: #5caecd;
-    color: #fff;
-    font-weight: 700;
-    padding: 0 0.5rem;
-    display: flex;
-    line-height: 2rem;
-    justify-content: center;
-    align-items: center;
-  }
-
-  p {
-    color: black;
-  }
-
-  .window__content {
-    color: black;
-  }
-
-  /* Style inputs with type="text", select elements and textareas */
-  input[type="text"],
-  select,
-  textarea {
-    width: 100%; /* Full width */
-    padding: 12px; /* Some padding */
-    border: 1px solid #ccc; /* Gray border */
-    border-radius: 4px; /* Rounded borders */
-    box-sizing: border-box; /* Make sure that padding and width stays in place */
-    margin-top: 6px; /* Add a top margin */
-    margin-bottom: 16px; /* Bottom margin */
-    resize: vertical; /* Allow the user to vertically resize the textarea (not horizontally) */
-  }
-
-  /* Style the submit button with a specific background color etc */
-  input[type="submit"] {
-    background-color: #5caecd;
-    color: white;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-
-  /* When moving the mouse over the submit button, add a darker green color */
-  input[type="submit"]:hover {
-    background-color: #5caecd;
-  }
-
-  /* Add a background color and some padding around the form */
-  .container {
-    border-radius: 5px;
-    background-color: #fbfeff;
-    // border-style: dotted;
-    // border-color: #5caecd;
-    // border-width: thin;
-    padding: 20px;
-  }
-
-  .window__footer {
-    background-color: #deeff5;
-  }
-}
-
-.local-title {
-  color: $white-colour;
-  text-shadow: 1px 1px 0 $black-colour;
-  font-family: $primary-font-family;
-  font-size: 2.5rem;
 }
 
 .page-content {
@@ -233,10 +32,6 @@ a {
   width: 100%;
   padding: 20px;
   transition: margin-left 0.3s ease;
-}
-
-.local-sub-title {
-  padding: 30px 15px 0 15px;
 }
 
 /* Add responsiveness - will automatically display the navbar vertically instead of horizontally on screens less than 500 pixels */
@@ -292,15 +87,6 @@ a {
     padding-top: 0;
   }
 
-  .local-title {
-    a {
-      color: $white-colour;
-      text-shadow: 1px 1px 0 $black-colour;
-      font-family: $primary-font-family;
-      font-size: 2.5rem;
-    }
-  }
-
   .main-content-area {
     max-width: 90vw;
     margin: 0 auto;
@@ -308,10 +94,10 @@ a {
   }
 
   .card {
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
     background-color: #fbfeff;
     border-radius: 5px;
-    margin: 0rem;
+    margin: 0;
     width: 100%;
     height: 100%;
     position: relative;
@@ -454,9 +240,6 @@ a {
     content: "\e086";
   }
 }
-div#local-title {
-  margin-bottom: 0.5rem;
-}
 
 .padding-top-1x {
   padding-top: 1rem;
@@ -532,36 +315,6 @@ span.space:before {
   padding: 1rem;
 }
 
-.custom-pv-footer {
-  display: flex;
-  align-items: flex-start;
-  
-  .collaborator-img {
-    margin-left: 1rem;
-    margin-right: 2rem;
-  }
-
-  & .newsletter-form {
-    margin-left: auto;
-    padding: 0 1rem;
-
-    .subscription-input {
-      display: flex;
-
-      .email-input {
-        flex: 1;
-      }
-      .subscribe-button {
-        border-radius: 4px;
-        background-color: #CDD9E4;
-        color: #240F16;
-        margin-left: 0.5rem;
-        font-weight: 400;
-      }
-    }
-  }
-}
-
 .h37 {
   border-radius: 10px;
   padding:2px;
@@ -590,7 +343,4 @@ span.space:before {
 
 .page-header {
   display: inline;
-}
-.help-icon {
-  vertical-align: top;
 }

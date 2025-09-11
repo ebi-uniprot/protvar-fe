@@ -30,42 +30,6 @@ const HomePageContent = () => {
         <br/>
         <BrowseVariant/>
       </div>
-      <div style={{display: 'grid', gridTemplateColumns: '60% auto'}}>
-        <div style={{paddingTop: '20px'}}>
-          <h5>How to cite ProtVar</h5>
-          <p>
-            James D Stephenson, Prabhat Totoo, David F Burke, Jürgen Jänes, Pedro Beltrao, Maria J Martin,
-            ProtVar: mapping and contextualizing human missense variation, <i>Nucleic Acids Research</i>, 2024;&nbsp;
-            <a className="ref-link ext-link" href="https://doi.org/10.1093/nar/gkae413"
-               target="_blank" rel="noreferrer">https://doi.org/10.1093/nar/gkae413</a>
-          </p>
-
-          <p>
-            Further information can be found in the{' '}
-            <Link to={ABOUT} title="About ProtVar's" className="ref-link">
-              ABOUT
-            </Link>{' '}
-            section. Please{' '}
-            <Link to={CONTACT} title="Contact us" className="ref-link">
-              CONTACT
-            </Link>{' '}
-            us with specific queries or suggestions.
-          </p>
-
-          <p>
-            This site is licensed under a <a
-            className="ref-link" href="https://creativecommons.org/licenses/by/4.0/"
-            target="_blank" rel="noreferrer">Creative Commons</a> license and uses cookie to improve user's experience.
-          </p>
-        </div>
-
-        <div className='twitter-content' style={{paddingTop: '20px', paddingBottom: '50px'}}>
-          <a className="twitter-timeline" data-width="400" data-height="300" data-theme="light"
-             data-chrome="noheader nofooter noborders transparent"
-             href="https://twitter.com/EBIProtVar?ref_src=twsrc%5Etfw">Tweets by EBIProtVar</a>
-        </div>
-
-      </div>
     </>
   )
 }
