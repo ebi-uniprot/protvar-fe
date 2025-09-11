@@ -224,52 +224,15 @@ a {
   font-size: 2.5rem;
 }
 
-.default-page-content {
-  display: flex;
+.page-content {
+  position: relative;
+  min-height: 100vh;
 }
 
-.sidebar {
-  background: #ffffff;
-  width: 15%;
-  height: fit-content;
-  box-shadow: -2px 2px 2px rgba(0, 0, 0, 0.25);
-  border-radius: 2px 0px 0px 2px;
-
-  ul {
-    margin: 0;
-  }
-}
-
-.sidebar-menu {
-  list-style: none;
-}
-
-nav .sidebar-menu a {
-  display: block;
-  padding: 10px;
-}
-
-nav .sidebar-menu .active {
-  background-color: #014373;
-  color: #ffffff;
-  font-weight: bold;
-  border-bottom-style: none;
-}
-
-nav .sidebar-menu .disabled {
-  background-color: #d4d2d247;
-  pointer-events: none;
-}
-
-nav .sidebar-menu .active.disabled {
-  background-color: #014373;
-  pointer-events: none;
-}
-
-.sidebar-content {
-  width: 85%;
-  margin-left: 1px;
-  padding-left: 0.5rem;
+.main-content {
+  width: 100%;
+  padding: 20px;
+  transition: margin-left 0.3s ease;
 }
 
 .local-sub-title {
@@ -283,27 +246,30 @@ nav .sidebar-menu .active.disabled {
     display: block;
   }
 
-  .default-page-content {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .sidebar {
-    background: #ffffff;
-    width: 100%;
-    ul {
-      display: flex;
-    }
-  }
-
-  .sidebar-content {
-    padding-top: 0.5rem;
-  }
-
   .search-card {
     padding: 0 1rem 0 1rem;
     display: flex;
     flex-direction: column;
+  }
+}
+
+/* Adjust main content when sidebar is open on larger screens */
+@media screen and (min-width: 769px) {
+  .main-content {
+    margin-left: 0; /* Always full width since sidebar is overlay */
+  }
+}
+
+/* Mobile responsiveness */
+@media screen and (max-width: 768px) {
+  .main-content {
+    padding: 15px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .main-content {
+    padding: 10px;
   }
 }
 
