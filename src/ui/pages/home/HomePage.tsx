@@ -1,6 +1,4 @@
 import DefaultPageLayout from '../../layout/DefaultPageLayout'
-import {Link} from 'react-router-dom'
-import {ABOUT, CONTACT} from '../../../constants/BrowserPaths'
 import {API_URL, TITLE} from '../../../constants/const'
 import SearchVariant from './SearchVariant'
 import React, {useEffect} from "react";
