@@ -174,7 +174,7 @@ function DownloadPageContent() {
                 </td>
                 <td>
                   {download.page && <> p{download.page}{download.pageSize && ` (${download.pageSize})`}</>}
-                  {download.assembly && download.assembly !== 'AUTO' && ` ${download.assembly}`}
+                  {(download.assembly?.toLowerCase() || '') !== 'auto' && ` ${download.assembly}`}
                 </td>
                 <td>
                   {download.fun ? <i className="bi bi-check green"></i> :

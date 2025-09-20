@@ -7,7 +7,7 @@ export interface MappingRequest {
   type?: InputType;
   page?: number | null;
   pageSize?: number | null;
-  assembly?: string | null; //'AUTO' | 'GRCh37' | 'GRCh38';
+  assembly?: string | null; //'auto' | 'grch38' | 'grch37'
   cadd?: string[];
   am?: string[];
   stability?: string[];

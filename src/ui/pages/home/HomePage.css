@@ -1,0 +1,24 @@
+.api-button,
+.api-button:visited {
+    background-color: #014373; /* ProtVar theme color */
+    color: white;
+    padding: 12px 24px;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.2s;
+}
+
+
+.api-button:hover {
+    background-color: #012f52; /* Slightly darker shade */
+}
+
+
+.api-button i {
+    font-size: 18px;
+}

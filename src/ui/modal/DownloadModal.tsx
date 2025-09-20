@@ -9,7 +9,6 @@ import Notify from "../elements/Notify";
 import {downloadPost} from "../../services/ProtVarService";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import {useLocation, useSearchParams} from "react-router-dom";
-import {Assembly} from "../../constants/CommonTypes";
 import Spaces from "../elements/Spaces";
 import {ResultRecord} from "../../types/ResultRecord";
 import {DownloadRequest} from "../../types/DownloadRequest";
@@ -123,8 +122,8 @@ function DownloadModal(props: DownloadModalProps) {
       page: page ? parseInt(page) : null,
       pageSize: pageSize ? parseInt(pageSize) : null,
       assembly: props.type === 'variant'
-                ? assembly === Assembly.GRCh37 ? Assembly.GRCh37 : Assembly.GRCh38 // default is 38 (overriding auto)
-                : assembly ?? null,
+        ? (assembly === 'grch37' ? 'grch37' : 'grch38') // default to 38
+        : assembly ?? null,
       full: !currPage,
     };
 

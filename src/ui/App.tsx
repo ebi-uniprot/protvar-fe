@@ -28,9 +28,9 @@ export interface AppState {
   showModal: boolean
   modalContent: React.JSX.Element
   // V2
-  textInput: string
-  file: File | null
-  assembly: Assembly
+  //textInput: string
+  //file: File | null
+  //assembly: GenomeAssembly
   pageSize: number
   response: PagedMappingResponse | null
   updateState: (key: string, value: any) => void
@@ -42,9 +42,9 @@ export const initialState = {
   showModal: false,
   modalContent: empty,
   // V2
-  textInput: "",
-  file: null,
-  assembly: Assembly.AUTO,
+  //textInput: '',
+  //file: null,
+  //assembly: 'auto',
   pageSize: DEFAULT_PAGE_SIZE, // needs to be localStore, not appState
   response: null,
   updateState: (key: string, value: any) => {}

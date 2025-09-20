@@ -1,8 +1,8 @@
 import DefaultPageLayout from '../../layout/DefaultPageLayout'
 import {API_URL, TITLE} from '../../../constants/const'
-import SearchVariant from './SearchVariant'
+import SearchPage from "./SearchPage";
 import React, {useEffect} from "react";
-import BrowseVariant from "./BrowseVariant";
+import './HomePage.css'
 
 const HomePageContent = () => {
 
@@ -13,21 +13,24 @@ const HomePageContent = () => {
   return (
     <>
       <div>
-        <p>
-          ProtVar (<strong>Prot</strong>ein <strong>Var</strong>iation) is a
-          resource to investigate SNV missense variation (not InDels) in humans by presenting
-          annotations which may be relevant to interpretation.
-          <br/>
-          Variants can be submitted below in genomic or protein formats,
-          uploaded or accessed via our <a href={API_URL}
-                                          title="ProtVar API" target="_self" className='ref-link'>API</a>.
+        <p style={{fontSize: '1rem'}}>
+          ProtVar (<strong>Prot</strong>ein <strong>Var</strong>iation) helps you explore human missense
+          single‑nucleotide variants (SNVs)
+          by bringing together annotations to support variant interpretation. {/*It does not cover insertions
+          or deletions (indels).*/}
         </p>
+
+        <a href={API_URL} style={{justifyContent: 'center', display: 'flex', alignItems: 'center'}}
+           title="ProtVar API" target="_self" className="api-button">
+          <i className="bi bi-box"></i>
+          API Docs
+        </a>
+
+
       </div>
-      <div className='search-page-layout'>
-        <SearchVariant/>
-        <br/>
-        <BrowseVariant/>
-      </div>
+
+      <SearchPage/>
+
     </>
   )
 }
