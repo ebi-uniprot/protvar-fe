@@ -22,20 +22,29 @@ const Navbar: React.FC = () => {
       </div>
 
       <div className="navbar-nav">
-        <Link to={CONTACT} title="ProtVar Contact" className="nav-link">
-          Contact
-        </Link>
-        <a href={API_URL} title="ProtVar API" target="_self" className="nav-link">
-          API
-        </a>
-        <Link to={ABOUT} title="ProtVar About" id="protvarAbout" className="nav-link">
+        <Link to={ABOUT} title="ProtVar About" id="protvarAbout" className="nav-button">
+          <i className="bi bi-info-square"></i>
           About
         </Link>
-        <Link to={RELEASE} title="ProtVar Release" id="protvarRelease" className="nav-link">
+
+        <Link to={HELP} title="ProtVar Help" id="protvarHelp" className="nav-button">
+          <i className="bi bi-question-circle"></i>
+          Help
+        </Link>
+
+        <a href={API_URL} title="ProtVar API" target="_self" className="nav-button">
+          <i className="bi bi-box"></i>
+          API Docs
+        </a>
+
+        <Link to={RELEASE} title="ProtVar Release" id="protvarRelease" className="nav-button">
+          <i className="bi bi-tag"></i>
           Release
         </Link>
-        <Link to={HELP} title="ProtVar Help" id="protvarHelp" className="nav-link">
-          Help <i className="bi bi-info-circle help-icon"></i>
+
+        <Link to={CONTACT} title="ProtVar Contact" className="nav-button">
+          <i className="bi bi-envelope"></i>
+          Contact
         </Link>
       </div>
     </nav>

@@ -1,8 +1,7 @@
 import DefaultPageLayout from '../../layout/DefaultPageLayout'
-import {API_URL, TITLE} from '../../../constants/const'
+import {TITLE} from '../../../constants/const'
 import SearchPage from "./SearchPage";
 import React, {useEffect} from "react";
-import './HomePage.css'
 
 const HomePageContent = () => {
 
@@ -19,14 +18,6 @@ const HomePageContent = () => {
           by bringing together annotations to support variant interpretation. {/*It does not cover insertions
           or deletions (indels).*/}
         </p>
-
-        <a href={API_URL} style={{justifyContent: 'center', display: 'flex', alignItems: 'center'}}
-           title="ProtVar API" target="_self" className="api-button">
-          <i className="bi bi-box"></i>
-          API Docs
-        </a>
-
-
       </div>
 
       <SearchPage/>
