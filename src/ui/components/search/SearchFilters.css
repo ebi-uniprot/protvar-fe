@@ -271,7 +271,7 @@
 }
 
 /* High contrast mode support */
-@media (prefers-contrast: high) {
+@media (prefers-contrast: more) {
     .filter-button {
         border-width: 2px;
     }
