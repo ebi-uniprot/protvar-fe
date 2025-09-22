@@ -57,12 +57,12 @@
 }
 
 .mode-tab .variants {
-    background: #014373; /*#3b82f6;*/
+    background: #014373;
     color: white;
 }
 
 .mode-tab .browse {
-    background: #9fccaf; /*#3b82f6;*/
+    background: #014373;
     color: white;
 }
 
@@ -72,7 +72,7 @@
 }
 
 .mode-tab.active {
-    background: #9fccaf; /* Green theme from original components */
+    background: #014373; /* ProtVar blue theme */
     color: white;
 }
 
@@ -131,7 +131,7 @@
 }
 
 .method-btn.active {
-    background: #9fccaf; /* Green theme */
+    background: #014373; /* ProtVar blue theme */
     color: white;
 }
 
@@ -156,8 +156,8 @@
 
 .assembly-select:focus {
     outline: none;
-    border-color: #ccc;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    border-color: #4a90b8; /* Lighter shade of ProtVar blue */
+    box-shadow: 0 0 0 3px rgba(1, 67, 115, 0.1);
 }
 
 /* File Upload Styles */
@@ -250,8 +250,8 @@
 
 .input-field:focus {
     outline: none;
-    border-color: #ccc;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    border-color: #4a90b8; /* Lighter shade of ProtVar blue */
+    box-shadow: 0 0 0 3px rgba(1, 67, 115, 0.1);
 }
 
 .input-field.textarea {
@@ -393,14 +393,14 @@
 }
 
 .btn-primary {
-    background: #9fccaf; /* Green theme */
+    background: #014373; /* ProtVar blue theme */
     color: white;
 }
 
 .btn-primary:hover:not(:disabled) {
-    background: #8bb89e;
+    background: #012d5a; /* Darker shade of ProtVar blue */
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(159, 204, 175, 0.3);
+    box-shadow: 0 4px 12px rgba(1, 67, 115, 0.3);
 }
 
 .btn-primary:disabled,
@@ -452,7 +452,7 @@
 }
 
 .example-tag:hover {
-    background: #9fccaf; /* Green theme */
+    background: #014373; /* ProtVar blue theme */
     color: white;
     transform: translateY(-1px);
 }
@@ -492,8 +492,8 @@
 }
 
 .filter-chip {
-    background: #dbeafe;
-    color: #1e40af;
+    background: rgba(1, 67, 115, 0.1); /* Light ProtVar blue background */
+    color: #014373; /* ProtVar blue text */
     padding: 0.25rem 0.75rem;
     border-radius: 16px;
     font-size: 0.875rem;
@@ -505,7 +505,7 @@
 .filter-chip .remove {
     cursor: pointer;
     font-weight: bold;
-    color: #1e40af;
+    color: #014373;
     transition: color 0.2s ease;
 }
 
