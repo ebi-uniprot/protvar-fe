@@ -1,6 +1,6 @@
 import DefaultPageLayout from "../../layout/DefaultPageLayout";
 import LegendModal from "../../modal/LegendModal";
-import {useLocation, useParams, useSearchParams} from "react-router-dom";
+import {useLocation, useNavigate, useParams, useSearchParams} from "react-router-dom";
 import ResultTable from "./ResultTable";
 import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import PaginationRow from "./PaginationRow";
@@ -17,11 +17,19 @@ import {HelpContent} from "../../components/help/HelpContent";
 import {ShareLink} from "../../components/common/ShareLink";
 import Spaces from "../../elements/Spaces";
 import Loader from "../../elements/Loader";
-import AdvancedSearch, {SearchFilterParams} from "./AdvancedSearch";
-import {extractFilters} from "./SearchFiltersUtils";
+import {
+  extractFilters,
+  mapUiCaddToBackend,
+  mapUiStabilityToBackend,
+  normalizeFilterValues
+} from "../../components/search/filterUtils";
 import {fromString/*, normalize, resolve*/} from "../../../utills/InputTypeResolver";
 import {InputType} from "../../../types/InputType";
 import {MappingRequest} from "../../../types/MappingRequest";
+import SearchFilters, {
+  SearchFilterParams
+} from "../../components/search/SearchFilters";
+import {VALID_AM_VALUES, VALID_CADD_VALUES} from "../../components/search/filterConstants";
 
 const INVALID_PAGE = `The requested page number is invalid or out of range. Displaying page ${DEFAULT_PAGE} by default.`
 const INVALID_PAGE_SIZE = `The specified page size is invalid. Using the default page size of ${DEFAULT_PAGE_SIZE} instead.`
@@ -31,6 +39,7 @@ export const NO_RESULT = 'No result to display'
 export const UNEXPECTED_ERR = 'An unexpected error occurred'
 
 function ResultPageContent() {
+  const navigate = useNavigate();
   const location = useLocation();
   const { input } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -49,6 +58,8 @@ function ResultPageContent() {
   const pageSize = parseInt(searchParams.get('pageSize') || `${DEFAULT_PAGE_SIZE}`, 10);
   const assembly = searchParams.get("assembly")
   const filters = useMemo(() => extractFilters(searchParams), [searchParams]);
+  // Add local state for immediate UI feedback
+  const [localFilters, setLocalFilters] = useState<SearchFilterParams>(filters);
 
   const [data, setData] = useState<PagedMappingResponse | null>(null)
   const [loading, setLoading] = useState(true)
@@ -102,6 +113,11 @@ function ResultPageContent() {
       pageSize = DEFAULT_PAGE_SIZE
     }
 
+    // Map UI categories to backend categories
+    const backendCaddCategories = filters?.cadd ?
+      mapUiCaddToBackend(filters.cadd) : [];
+    const backendStabilityCategories = filters?.stability ?
+      mapUiStabilityToBackend(filters.stability) : [];
 
     // page null or 1, no param
     // pageSize null or PAGE_SIZE, no param
@@ -112,9 +128,9 @@ function ResultPageContent() {
       page,
       pageSize,
       assembly: assembly ?? undefined,
-      cadd: filters?.cadd ?? [],
+      cadd: backendCaddCategories.length > 0 ? backendCaddCategories : undefined,
       am: filters?.am ?? [],
-      stability: filters?.stability ?? [],
+      stability: backendStabilityCategories.length > 0 ? backendStabilityCategories : undefined,
       known: filters?.known,
       pocket: filters?.pocket,
       interact: filters?.interact,
@@ -236,6 +252,42 @@ function ResultPageContent() {
     loadData(providedType, trimmedInput, page, pageSize, assembly, filters);
   }, [input, searchParams, page, pageSize, assembly, filters, loadData]) // listening for change in input, and searchParams
 
+  // Update local filters when URL changes
+  useEffect(() => {
+    setLocalFilters(extractFilters(searchParams));
+  }, [searchParams]);
+
+  const handleApplyFilters = () => {
+    const newSearchParams = new URLSearchParams(searchParams);
+
+    // Clear existing filter params
+    ["page", "annotation", "cadd", "am", "stability", "sort", "order", "known", "pocket", "interact"]
+      .forEach(key => newSearchParams.delete(key));
+
+    // Apply new filters
+    const normalizedCadd = normalizeFilterValues(localFilters.cadd, VALID_CADD_VALUES);
+    const normalizedAm = normalizeFilterValues(localFilters.am, VALID_AM_VALUES);
+
+    // Only add params if not all selected (to keep URLs clean)
+    if (normalizedCadd.length > 0 && normalizedCadd.length < 3) {
+      normalizedCadd.forEach(val => newSearchParams.append("cadd", val));
+    }
+    if (normalizedAm.length > 0 && normalizedAm.length < 3) {
+      normalizedAm.forEach(val => newSearchParams.append("am", val));
+    }
+
+    // diff from cadd/am where all stability categories will still limit results based available prediction
+    localFilters.stability.forEach(val => newSearchParams.append("stability", val));
+
+    if (localFilters.known === true) newSearchParams.set("known", "true");
+    if (localFilters.pocket === true) newSearchParams.set("pocket", "true");
+    if (localFilters.interact === true) newSearchParams.set("interact", "true");
+    if (localFilters.sort) newSearchParams.set("sort", localFilters.sort);
+    if (localFilters.order) newSearchParams.set("order", localFilters.order);
+
+    const queryString = newSearchParams.toString();
+    navigate(`${location.pathname}${queryString ? `?${queryString}` : ''}`);
+  };
 
   document.title = `${resultTitle} | ${TITLE}`
 
@@ -297,7 +349,16 @@ function ResultPageContent() {
     </div>)}
 
     {!data && loading && <Loader/>}
-    {inputType !== 'input_id' && inputType !== 'variant' && <AdvancedSearch loading={loading}/>}
+    {inputType !== 'input_id' && inputType !== 'variant' && (
+      <SearchFilters
+        filters={localFilters}
+        onFiltersChange={setLocalFilters}
+        onApply={handleApplyFilters}
+        loading={loading}
+        showSorting={true} // Show sorting on results page
+      />
+    )}
+
     <ResultTable data={data}/>
     {data && data.totalPages > 1 && <PaginationRow loading={loading} data={data}/>}
   </div>

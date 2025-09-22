@@ -10,17 +10,11 @@ import {LOCAL_RESULTS} from "../../../constants/const";
 import {uploadFile, uploadText} from "../../../services/ProtVarService";
 import {API_ERROR, QUERY, RESULT} from "../../../constants/BrowserPaths";
 import {readFirstLineFromFile} from "../../../utills/FileUtil";
-
-interface FilterState {
-  potential: boolean;
-  known: boolean;
-  caddScore: number;
-  pathogenic: boolean;
-  ambiguous: boolean;
-  benign: boolean;
-  clinvar: boolean;
-  conflicting: boolean;
-}
+import SearchFilters, {
+  SearchFilterParams
+} from '../../components/search/SearchFilters';
+import {normalizeFilterValues} from "../../components/search/filterUtils";
+import {VALID_AM_VALUES, VALID_CADD_VALUES} from "../../components/search/filterConstants";
 
 interface ExampleData {
   label: string;
@@ -28,7 +22,6 @@ interface ExampleData {
 }
 
 type SearchMode = 'variants' | 'browse'; // | 'search';
-// TODO: replace hg38/hg37 with grch38/grch37
 export type GenomeAssembly = 'auto' | 'grch38' | 'grch37';
 
 const EXAMPLES: Record<SearchMode, ExampleData[]> = {
@@ -72,7 +65,6 @@ const SearchPage: React.FC = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [activeMode, setActiveMode] = useState<SearchMode>('variants');
-  const [filtersExpanded, setFiltersExpanded] = useState(false);
   const [variantInput, setVariantInput] = useState('');
   const [browseInput, setBrowseInput] = useState('');
   //const [searchInput, setSearchInput] = useState('');
@@ -84,24 +76,19 @@ const SearchPage: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { getItem, setItem } = useLocalStorage();
 
-  const [filters, setFilters] = useState<FilterState>({
-    potential: true,
-    known: true,
-    caddScore: 15,
-    pathogenic: false,
-    ambiguous: false,
-    benign: false,
-    clinvar: false,
-    conflicting: false
+  const [searchFilters, setSearchFilters] = useState<SearchFilterParams>({
+    cadd: [],
+    am: [],
+    stability: [],
+    known: undefined,
+    pocket: undefined,
+    interact: undefined,
+    // No sort/order for search page
   });
 
   const handleModeChange = (mode: SearchMode) => {
     setActiveMode(mode);
     setError('');
-  };
-
-  const handleFilterChange = (key: keyof FilterState, value: boolean | number) => {
-    setFilters(prev => ({ ...prev, [key]: value }));
   };
 
   const cleanInput = (input: string): string => {
@@ -310,7 +297,37 @@ const SearchPage: React.FC = () => {
     const typeParam = selectedType ? `?type=${selectedType}` : '';
     navigate(`${trimmedInput}${typeParam}`);
     */
-    navigate(trimmedInput)
+
+    // Create URL search params with the current filter values
+    const params = new URLSearchParams();
+
+    // Add filter parameters that match the ResultPage format
+    const normalizedCadd = normalizeFilterValues(searchFilters.cadd, VALID_CADD_VALUES);
+    const normalizedAm = normalizeFilterValues(searchFilters.am, VALID_AM_VALUES);
+
+    // Only add CADD params if not all categories are selected (keeps URL clean)
+    if (normalizedCadd.length > 0 && normalizedCadd.length < 3) {
+      normalizedCadd.forEach(val => params.append("cadd", val));
+    }
+
+    // Only add AlphaMissense params if not all categories are selected
+    if (normalizedAm.length > 0 && normalizedAm.length < 3) {
+      normalizedAm.forEach(val => params.append("am", val));
+    }
+
+    // Add stability params (all stability filters are meaningful)
+    searchFilters.stability.forEach(val => params.append("stability", val));
+
+    // Add boolean filters
+    if (searchFilters.known === true) params.set("known", "true");
+    if (searchFilters.pocket === true) params.set("pocket", "true");
+    if (searchFilters.interact === true) params.set("interact", "true");
+
+    // Note: We don't add sort/order from SearchPage since sorting is only for ResultsPage
+
+    // Build the final URL
+    const queryString = params.toString();
+    navigate(`${trimmedInput}${queryString ? `?${queryString}` : ''}`);
   };
 
   const handleClear = () => {
@@ -321,15 +338,13 @@ const SearchPage: React.FC = () => {
     setResultsVisible(false);
     setError('');
     setLoading(false);
-    setFilters({
-      potential: true,
-      known: true,
-      caddScore: 15,
-      pathogenic: false,
-      ambiguous: false,
-      benign: false,
-      clinvar: false,
-      conflicting: false
+    setSearchFilters({
+      cadd: [],
+      am: [],
+      stability: [],
+      known: undefined,
+      pocket: undefined,
+      interact: undefined,
     });
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
@@ -351,17 +366,17 @@ const SearchPage: React.FC = () => {
     }
     return true;
   };
-
+/*
   const getActiveFilters = () => {
     const active = [];
-    if (filters.caddScore > 0) active.push(`CADD ≥ ${filters.caddScore}`);
-    if (filters.potential && !filters.known) active.push('Potential variants only');
-    if (!filters.potential && filters.known) active.push('Known variants only');
-    if (filters.pathogenic) active.push('Pathogenic');
-    if (filters.clinvar) active.push('ClinVar annotated');
+    if (filters_.caddScore > 0) active.push(`CADD ≥ ${filters_.caddScore}`);
+    if (filters_.potential && !filters_.known) active.push('Potential variants only');
+    if (!filters_.potential && filters_.known) active.push('Known variants only');
+    if (filters_.pathogenic) active.push('Pathogenic');
+    if (filters_.clinvar) active.push('ClinVar annotated');
     return active;
   };
-
+*/
   return (
     <div className="search-container">
       {/* Header */}
@@ -518,115 +533,13 @@ const SearchPage: React.FC = () => {
           </div>
         )*/}
 
-        {/* Advanced Filters Toggle - Only for Browse Mode */}
-        {activeMode === 'browse' && (<>
-        <div
-          className={`filters-toggle ${filtersExpanded ? 'expanded' : ''}`}
-          onClick={() => setFiltersExpanded(!filtersExpanded)}
-        >
-          <span className="toggle-text">Advanced Filters</span>
-          <span className="chevron"><i className="bi bi-chevron-down"></i></span>
-        </div>
-
-        {/* Filters Panel */}
-        <div className={`filters-panel ${filtersExpanded ? 'expanded' : ''}`}>
-          <div className="filters-grid">
-            <div className="filter-group">
-              <h4>Variant Type</h4>
-              <div className="filter-item">
-                <input
-                  type="checkbox"
-                  id="potential"
-                  checked={filters.potential}
-                  onChange={(e) => handleFilterChange('potential', e.target.checked)}
-                />
-                <label htmlFor="potential">Potential variants</label>
-              </div>
-              <div className="filter-item">
-                <input
-                  type="checkbox"
-                  id="known"
-                  checked={filters.known}
-                  onChange={(e) => handleFilterChange('known', e.target.checked)}
-                />
-                <label htmlFor="known">Known variants</label>
-              </div>
-            </div>
-
-            <div className="filter-group">
-              <h4>CADD Score</h4>
-              <div className="filter-item">
-                <span>0</span>
-                <input
-                  type="range"
-                  id="cadd"
-                  min="0"
-                  max="50"
-                  value={filters.caddScore}
-                  onChange={(e) => handleFilterChange('caddScore', parseInt(e.target.value))}
-                />
-                <span>50</span>
-              </div>
-              <div className="range-values">
-                <span>Minimum: {filters.caddScore}</span>
-              </div>
-            </div>
-
-            <div className="filter-group">
-              <h4>AlphaMissense</h4>
-              <div className="filter-item">
-                <input
-                  type="checkbox"
-                  id="pathogenic"
-                  checked={filters.pathogenic}
-                  onChange={(e) => handleFilterChange('pathogenic', e.target.checked)}
-                />
-                <label htmlFor="pathogenic">Pathogenic</label>
-              </div>
-              <div className="filter-item">
-                <input
-                  type="checkbox"
-                  id="ambiguous"
-                  checked={filters.ambiguous}
-                  onChange={(e) => handleFilterChange('ambiguous', e.target.checked)}
-                />
-                <label htmlFor="ambiguous">Ambiguous</label>
-              </div>
-              <div className="filter-item">
-                <input
-                  type="checkbox"
-                  id="benign"
-                  checked={filters.benign}
-                  onChange={(e) => handleFilterChange('benign', e.target.checked)}
-                />
-                <label htmlFor="benign">Benign</label>
-              </div>
-            </div>
-
-            <div className="filter-group">
-              <h4>Clinical Significance</h4>
-              <div className="filter-item">
-                <input
-                  type="checkbox"
-                  id="clinvar"
-                  checked={filters.clinvar}
-                  onChange={(e) => handleFilterChange('clinvar', e.target.checked)}
-                />
-                <label htmlFor="clinvar">ClinVar annotated</label>
-              </div>
-              <div className="filter-item">
-                <input
-                  type="checkbox"
-                  id="conflicting"
-                  checked={filters.conflicting}
-                  onChange={(e) => handleFilterChange('conflicting', e.target.checked)}
-                />
-                <label htmlFor="conflicting">Conflicting interpretations</label>
-              </div>
-            </div>
-          </div>
-        </div>
-        </>)
+        {/* Search Filters Toggle - Only for Browse Mode */}
+        {activeMode === 'browse' && (
+          <SearchFilters
+            filters={searchFilters}
+            onFiltersChange={setSearchFilters}
+            showSorting={false} // No sorting on search page
+          />)
       }
 
         {/* Error Display */}
@@ -676,7 +589,7 @@ const SearchPage: React.FC = () => {
               <div className="results-count">Found 1,247 variants</div>
             </div>
             <div className="active-filters">
-              {getActiveFilters().map((filter, index) => (
+              {/*getActiveFilters()*/[].map((filter, index) => (
                 <div key={index} className="filter-chip">
                   {filter} <span className="remove">×</span>
                 </div>
