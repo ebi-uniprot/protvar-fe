@@ -2,10 +2,10 @@ import '../../styles/index.scss';
 import React, {useEffect, useState} from 'react'
 import {LOCAL_BANNER} from '../../constants/const'
 import DefaultPageContent from './DefaultPageContent'
-import {SideDrawer} from "../components/drawer/SideDrawer";
-import ReleaseDropdown from "./ReleaseDropdown";
-import Navbar from "./Navbar";
-import Footer from "./Footer";
+import {SideDrawer} from "./Drawer/SideDrawer";
+import Navbar from "./Header/Navbar";
+import Footer from "./Footer/Footer";
+import VersionInfo from "./VersionInfo";
 
 interface DefaultPageLayoutProps {
   content: React.JSX.Element
@@ -76,7 +76,7 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
         </ul>
       </nav>
     </header> */}
-      <ReleaseDropdown />
+      <VersionInfo />
 
       <div id="content" className="content">
         <div data-sticky-container>

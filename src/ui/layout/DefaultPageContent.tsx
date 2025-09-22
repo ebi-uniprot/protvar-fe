@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {LOCAL_DOWNLOADS, LOCAL_RESULTS} from "../../constants/const";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import {SET_ITEM} from "../../context/LocalStorageContext";
-import CollapsibleSidebar from "./CollapsibleSidebar";
+import CollapsibleSidebar from "./Sidebar/CollapsibleSidebar";
 
 const DefaultPageContent = (props: {
   children: React.JSX.Element

@@ -7,7 +7,6 @@ import ReleasePage from "./pages/ReleasePage";
 import ContactPage from "./pages/ContactPage";
 import {ABOUT, API_ERROR, CONTACT, DOWNLOAD, HELP, HOME, QUERY, RELEASE, RESULT} from "../constants/BrowserPaths";
 import QueryPage from "./pages/query/QueryPage";
-import {Assembly} from "../constants/CommonTypes";
 import DownloadPage from "./pages/download/DownloadPage";
 import HelpPage from "./pages/help/HelpPage";
 import {PagedMappingResponse} from "../types/PagedMappingResponse";

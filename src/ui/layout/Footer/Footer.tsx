@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { CookieConsent } from "react-cookie-consent";
-import { CONTACT } from '../../constants/BrowserPaths';
-import SignUp from "./SignUp";
-import EMBLEBILogo from '../../images/embl-ebi-logo.svg';
-import openTargetsLogo from '../../images/open-targets-logo.png';
+import { CONTACT } from '../../../constants/BrowserPaths';
+import SignUp from "../SignUp";
+import EMBLEBILogo from '../../../images/embl-ebi-logo.svg';
+import openTargetsLogo from '../../../images/open-targets-logo.png';
 import './Footer.css';
 
 const Footer: React.FC = () => {

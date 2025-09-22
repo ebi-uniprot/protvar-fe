@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ABOUT, CONTACT, HELP, HOME, RELEASE } from '../../constants/BrowserPaths';
-import { API_URL } from '../../constants/const';
+import { ABOUT, CONTACT, HELP, HOME, RELEASE } from '../../../constants/BrowserPaths';
+import { API_URL } from '../../../constants/const';
 import './Navbar.css';
 
 const Navbar: React.FC = () => {

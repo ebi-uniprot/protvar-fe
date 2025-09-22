@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { DOWNLOAD, HOME, RESULT } from '../../constants/BrowserPaths';
-import RecentResult from '../pages/result/RecentResult';
-import Spaces from '../elements/Spaces';
+import { DOWNLOAD, HOME, RESULT } from '../../../constants/BrowserPaths';
+import RecentResult from '../../pages/result/RecentResult';
+import Spaces from '../../elements/Spaces';
 import './CollapsibleSidebar.css';
 
 interface CollapsibleSidebarProps {
