@@ -3,7 +3,6 @@ import "./SideDrawer.css";
 import {AppContext} from "../../App";
 
 export const SideDrawer = () => {
-
   const state = useContext(AppContext)
   const [width, setWidth] = useState('50%');
 
@@ -25,19 +24,38 @@ export const SideDrawer = () => {
   });
 
   return (
-    <div>
-      <div className={`side-drawer ${state.drawer ? `open` : ``}`} style={{width}}>
-        <div style={{display: "flex", justifyContent: "space-between", paddingBottom: "30px"}}>
-          <button className={`bi bi-box-arrow-${width === '50%' ? `left` : `in-right`}`} onClick={handleToggleWidth}>
-            {width === '50%' ? ` Expand` : ` Collapse`}
+    <>
+      {/* Overlay */}
+      {state.drawer && (
+        <div className="drawer-overlay" onClick={() => state.updateState("drawer", undefined)}></div>
+      )}
+
+      {/* Drawer */}
+      <div className={`side-drawer ${state.drawer ? 'open' : ''}`} style={{width}}>
+        <div className="drawer-header">
+          <button
+            className="drawer-control-btn"
+            onClick={handleToggleWidth}
+            title={width === '50%' ? 'Expand drawer' : 'Collapse drawer'}
+          >
+            <i className={`bi bi-${width === '50%' ? 'arrows-angle-expand' : 'arrows-angle-contract'}`}></i>
+            <span>{width === '50%' ? 'Expand' : 'Collapse'}</span>
           </button>
-          <button className="bi bi-x-square" onClick={() => state.updateState("drawer", undefined)}> Close</button>
+          <button
+            className="drawer-close-btn"
+            onClick={() => state.updateState("drawer", undefined)}
+            title="Close drawer"
+          >
+            <i className="bi bi-x-lg"></i>
+            <span>Close</span>
+          </button>
         </div>
-        {state.drawer}
+
+        <div className="drawer-content">
+          {state.drawer}
+        </div>
       </div>
-      {state.drawer &&
-        <div className="backdrop" onClick={_ => state.updateState("drawer", undefined)}></div>}
-    </div>
+    </>
   );
 };
 

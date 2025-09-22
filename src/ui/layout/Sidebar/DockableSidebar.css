@@ -23,7 +23,7 @@
     font-size: 16px;
 }
 
-/* Sidebar Overlay for mobile */
+/* Sidebar Overlay for overlay mode */
 .sidebar-overlay {
     position: fixed;
     top: 0;
@@ -42,27 +42,97 @@
     }
 }
 
-/* Sidebar */
+/* Sidebar Base Styles */
 .sidebar {
     position: fixed;
     top: 0;
-    left: -300px; /* Hidden by default */
     width: 300px;
     height: 100vh;
     background: #ffffff;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
     border-radius: 0 2px 2px 0;
-    transition: left 0.3s ease;
+    transition: all 0.3s ease;
     z-index: 1000;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
 }
 
-.sidebar.open {
-    left: 0; /* Show when open */
+/* Sidebar States */
+.sidebar.closed {
+    left: -300px;
 }
 
+.sidebar.overlay {
+    left: 0;
+}
+
+.sidebar.docked {
+    left: 0;
+    position: fixed;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+    border-right: 1px solid #e0e0e0;
+    z-index: 100; /* Lower z-index when docked */
+}
+
+/* Sidebar Header */
+.sidebar-header {
+    padding: 10px 15px;
+    border-bottom: 1px solid #f0f0f0;
+    background-color: #f8f9fa;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.sidebar-controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.sidebar-control-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    background-color: transparent;
+    color: #333;
+}
+
+.dock-btn:hover {
+    background-color: #28a745;
+    color: white;
+    transform: translateY(-1px);
+}
+
+.undock-btn:hover {
+    background-color: #ffc107;
+    color: #333;
+    transform: translateY(-1px);
+}
+
+.close-btn:hover {
+    background-color: #dc3545;
+    color: white;
+    transform: translateY(-1px);
+}
+
+.sidebar-control-btn i {
+    font-size: 14px;
+}
+
+/* Navigation Styles */
 .sidebar-nav {
-    padding-top: 60px; /* Space for toggle button */
+    flex: 1;
+    padding-top: 10px;
 }
 
 .sidebar-menu-list {
@@ -120,10 +190,20 @@
     background-color: #ccc;
 }
 
+/* Docked Mode Adjustments */
+.sidebar.docked .sidebar-header {
+    background-color: #fff;
+    border-bottom: 1px solid #e0e0e0;
+}
+
 /* Responsive Design */
 @media screen and (max-width: 768px) {
     .sidebar {
         width: 280px;
+    }
+
+    .sidebar.docked {
+        width: 100vw; /* Full width on mobile when docked */
     }
 
     .sidebar-toggle {
@@ -131,10 +211,25 @@
         left: 15px;
         padding: 6px 10px;
     }
+
+    .sidebar-control-btn span {
+        display: none; /* Hide text on mobile */
+    }
 }
 
 @media screen and (max-width: 480px) {
-    .sidebar {
+    .sidebar,
+    .sidebar.docked {
         width: 100vw;
+    }
+
+    .sidebar-header {
+        padding: 8px 12px;
+        min-height: 45px;
+    }
+
+    .sidebar-control-btn {
+        padding: 4px 8px;
+        font-size: 11px;
     }
 }
