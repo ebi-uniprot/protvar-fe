@@ -1,5 +1,5 @@
 // filterConstants.ts
-import {CaddCategory} from "../../../types/CaddCategory";
+//import {CaddCategory} from "../../../types/CaddCategory";
 import {AmClass} from "../../../types/AmClass";
 
 // Backend categories (what API expects)
@@ -18,6 +18,8 @@ export const CADD_CATEGORIES = [
   { value: 'high', label: '> 25' }      // Maps to PROBABLY + HIGHLY_LIKELY
 ];
 
+export const VALID_CADD_VALUES = CADD_CATEGORIES.map(cat => cat.value);
+
 // Backend and UI AlphaMissense values are the same
 export const ALPHAMISSENSE_CATEGORIES = [
   { value: AmClass.BENIGN, label: 'Benign' },
@@ -25,14 +27,12 @@ export const ALPHAMISSENSE_CATEGORIES = [
   { value: AmClass.PATHOGENIC, label: 'Pathogenic' }
 ];
 
+export const VALID_AM_VALUES = ALPHAMISSENSE_CATEGORIES.map(cat => cat.value);
+
 // UI stability categories
 export const STABILITY_CATEGORIES = [
   { value: 'destabilizing', label: 'Likely Destabilizing' }, // Maps to LIKELY_DESTABILISING
   { value: 'stable', label: 'Unlikely to Destabilize' }      // Maps to UNLIKELY_DESTABILISING
 ];
 
-export const VALID_CADD_VALUES = ['low', 'medium', 'high'];
-export const VALID_AM_VALUES = [AmClass.BENIGN, AmClass.AMBIGUOUS, AmClass.PATHOGENIC];
-export const VALID_STABILITY_VALUES = ['destabilizing', 'stable'];
-
-
+export const VALID_STABILITY_VALUES = STABILITY_CATEGORIES.map(cat => cat.value);

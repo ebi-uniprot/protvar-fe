@@ -13,8 +13,7 @@ import {readFirstLineFromFile} from "../../../utills/FileUtil";
 import SearchFilters, {
   SearchFilterParams
 } from '../../components/search/SearchFilters';
-import {normalizeFilterValues} from "../../components/search/filterUtils";
-import {VALID_AM_VALUES, VALID_CADD_VALUES} from "../../components/search/filterConstants";
+import {buildFilterParams} from "../../components/search/filterUtils";
 
 interface ExampleData {
   label: string;
@@ -299,31 +298,10 @@ const SearchPage: React.FC = () => {
     */
 
     // Create URL search params with the current filter values
-    const params = new URLSearchParams();
-
-    // Add filter parameters that match the ResultPage format
-    const normalizedCadd = normalizeFilterValues(searchFilters.cadd, VALID_CADD_VALUES);
-    const normalizedAm = normalizeFilterValues(searchFilters.am, VALID_AM_VALUES);
-
-    // Only add CADD params if not all categories are selected (keeps URL clean)
-    if (normalizedCadd.length > 0 && normalizedCadd.length < 3) {
-      normalizedCadd.forEach(val => params.append("cadd", val));
-    }
-
-    // Only add AlphaMissense params if not all categories are selected
-    if (normalizedAm.length > 0 && normalizedAm.length < 3) {
-      normalizedAm.forEach(val => params.append("am", val));
-    }
-
-    // Add stability params (all stability filters are meaningful)
-    searchFilters.stability.forEach(val => params.append("stability", val));
-
-    // Add boolean filters
-    if (searchFilters.known === true) params.set("known", "true");
-    if (searchFilters.pocket === true) params.set("pocket", "true");
-    if (searchFilters.interact === true) params.set("interact", "true");
-
     // Note: We don't add sort/order from SearchPage since sorting is only for ResultsPage
+
+    // Use shared utility to build filter params
+    const params = buildFilterParams(searchFilters);
 
     // Build the final URL
     const queryString = params.toString();

@@ -18,10 +18,10 @@ import {ShareLink} from "../../components/common/ShareLink";
 import Spaces from "../../elements/Spaces";
 import Loader from "../../elements/Loader";
 import {
+  buildFilterParams,
   extractFilters,
   mapUiCaddToBackend,
-  mapUiStabilityToBackend,
-  normalizeFilterValues
+  mapUiStabilityToBackend
 } from "../../components/search/filterUtils";
 import {fromString/*, normalize, resolve*/} from "../../../utills/InputTypeResolver";
 import {InputType} from "../../../types/InputType";
@@ -29,7 +29,6 @@ import {MappingRequest} from "../../../types/MappingRequest";
 import SearchFilters, {
   SearchFilterParams
 } from "../../components/search/SearchFilters";
-import {VALID_AM_VALUES, VALID_CADD_VALUES} from "../../components/search/filterConstants";
 
 const INVALID_PAGE = `The requested page number is invalid or out of range. Displaying page ${DEFAULT_PAGE} by default.`
 const INVALID_PAGE_SIZE = `The specified page size is invalid. Using the default page size of ${DEFAULT_PAGE_SIZE} instead.`
@@ -264,26 +263,13 @@ function ResultPageContent() {
     ["page", "annotation", "cadd", "am", "stability", "sort", "order", "known", "pocket", "interact"]
       .forEach(key => newSearchParams.delete(key));
 
-    // Apply new filters
-    const normalizedCadd = normalizeFilterValues(localFilters.cadd, VALID_CADD_VALUES);
-    const normalizedAm = normalizeFilterValues(localFilters.am, VALID_AM_VALUES);
+    // Use shared utility to build filter params
+    const filterParams = buildFilterParams(localFilters);
 
-    // Only add params if not all selected (to keep URLs clean)
-    if (normalizedCadd.length > 0 && normalizedCadd.length < 3) {
-      normalizedCadd.forEach(val => newSearchParams.append("cadd", val));
-    }
-    if (normalizedAm.length > 0 && normalizedAm.length < 3) {
-      normalizedAm.forEach(val => newSearchParams.append("am", val));
-    }
-
-    // diff from cadd/am where all stability categories will still limit results based available prediction
-    localFilters.stability.forEach(val => newSearchParams.append("stability", val));
-
-    if (localFilters.known === true) newSearchParams.set("known", "true");
-    if (localFilters.pocket === true) newSearchParams.set("pocket", "true");
-    if (localFilters.interact === true) newSearchParams.set("interact", "true");
-    if (localFilters.sort) newSearchParams.set("sort", localFilters.sort);
-    if (localFilters.order) newSearchParams.set("order", localFilters.order);
+    // Append all filter params to the cleared search params
+    filterParams.forEach((value, key) => {
+      newSearchParams.append(key, value);
+    });
 
     const queryString = newSearchParams.toString();
     navigate(`${location.pathname}${queryString ? `?${queryString}` : ''}`);

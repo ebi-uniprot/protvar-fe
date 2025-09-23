@@ -1,13 +1,9 @@
-// Simplified SearchFilters.tsx - Explicit selection only
+// Simple SearchFilters.tsx fix - just return what user selects
 import React, { useState, useEffect } from 'react';
 import './SearchFilters.css';
-import {normalizeFilterValues} from "./filterUtils";
 import {
   CADD_CATEGORIES,
   ALPHAMISSENSE_CATEGORIES,
-  VALID_AM_VALUES,
-  VALID_CADD_VALUES,
-  VALID_STABILITY_VALUES,
   STABILITY_CATEGORIES
 } from "./filterConstants";
 
@@ -64,6 +60,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
       ? currentValues.filter(v => v !== lowerValue)
       : [...currentValues, lowerValue];
 
+    // Simply return whatever the user has selected - that's it!
     onFiltersChange({ ...filters, [key]: updated });
   };
 
@@ -89,19 +86,14 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
     }
   };
 
-  const normalizedCadd = normalizeFilterValues(filters.cadd, VALID_CADD_VALUES);
-  const normalizedAm = normalizeFilterValues(filters.am, VALID_AM_VALUES);
-  const normalizedStability = normalizeFilterValues(filters.stability, VALID_STABILITY_VALUES);
-
-  // Simple selection logic - selected only if explicitly in the array
   const isCaddSelected = (value: string) =>
-    normalizedCadd.includes(value.toLowerCase());
+    filters.cadd.includes(value.toLowerCase());
 
   const isAmSelected = (value: string) =>
-    normalizedAm.includes(value.toLowerCase());
+    filters.am.includes(value.toLowerCase());
 
   const isStabilitySelected = (value: string) =>
-    normalizedStability.includes(value.toLowerCase());
+    filters.stability.includes(value.toLowerCase());
 
   return (
     <div className={`search-filters ${className}`}>

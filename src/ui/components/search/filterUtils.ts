@@ -25,6 +25,29 @@ export const extractFilters = (searchParams: URLSearchParams): SearchFilterParam
   order: (searchParams.get("order") as "asc" | "desc") || undefined,
 });
 
+export const buildFilterParams = (filters: SearchFilterParams): URLSearchParams => {
+  const params = new URLSearchParams();
+
+  const normalizedCadd = normalizeFilterValues(filters.cadd, VALID_CADD_VALUES);
+  const normalizedAm = normalizeFilterValues(filters.am, VALID_AM_VALUES);
+  const normalizedStability = normalizeFilterValues(filters.stability, VALID_STABILITY_VALUES);
+
+  // Send whatever the user selected
+  normalizedCadd.forEach(val => params.append("cadd", val));
+  normalizedAm.forEach(val => params.append("am", val));
+  normalizedStability.forEach(val => params.append("stability", val));
+
+  // Add boolean filters
+  if (filters.known === true) params.set("known", "true");
+  if (filters.pocket === true) params.set("pocket", "true");
+  if (filters.interact === true) params.set("interact", "true");
+
+  if (filters.sort) params.set("sort", filters.sort);
+  if (filters.order) params.set("order", filters.order);
+
+  return params;
+};
+
 // Mapping function: UI categories -> Backend categories
 export const mapUiCaddToBackend = (uiCategories: string[]): string[] => {
   const backendCategories: string[] = [];
