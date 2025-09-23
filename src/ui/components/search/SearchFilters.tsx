@@ -1,4 +1,4 @@
-// SearchFilters.tsx
+// Simplified SearchFilters.tsx - Explicit selection only
 import React, { useState, useEffect } from 'react';
 import './SearchFilters.css';
 import {normalizeFilterValues} from "./filterUtils";
@@ -7,7 +7,8 @@ import {
   ALPHAMISSENSE_CATEGORIES,
   VALID_AM_VALUES,
   VALID_CADD_VALUES,
-  VALID_STABILITY_VALUES, STABILITY_CATEGORIES
+  VALID_STABILITY_VALUES,
+  STABILITY_CATEGORIES
 } from "./filterConstants";
 
 export interface SearchFilterParams {
@@ -16,9 +17,9 @@ export interface SearchFilterParams {
   stability: string[];
   known?: boolean;
   pocket?: boolean;
-  interact?: boolean; // Only set to true if explicitly enabled
-  sort?: string;  // Optional; Only for results page
-  order?: "asc" | "desc";  // Optional; Only for results page
+  interact?: boolean;
+  sort?: string;
+  order?: "asc" | "desc";
 }
 
 interface SearchFiltersProps {
@@ -26,18 +27,18 @@ interface SearchFiltersProps {
   onFiltersChange: (filters: SearchFilterParams) => void;
   loading?: boolean;
   onApply?: () => void;
-  showSorting?: boolean; // Only show on results page
+  showSorting?: boolean;
   className?: string;
 }
 
 const SearchFilters: React.FC<SearchFiltersProps> = ({
-                                                                     filters,
-                                                                     onFiltersChange,
-                                                                     loading = false,
-                                                                     onApply,
-                                                                     showSorting = false,
-                                                                     className = ''
-                                                                   }) => {
+                                                       filters,
+                                                       onFiltersChange,
+                                                       loading = false,
+                                                       onApply,
+                                                       showSorting = false,
+                                                       className = ''
+                                                     }) => {
   // Auto-expand if any filters are active
   const isAnyFilterActive =
     filters.cadd.length > 0 ||
@@ -50,7 +51,6 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
 
   const [isExpanded, setIsExpanded] = useState(isAnyFilterActive);
 
-  // Update expansion state when filters change
   useEffect(() => {
     if (isAnyFilterActive) {
       setIsExpanded(true);
@@ -61,8 +61,8 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
     const lowerValue = value.toLowerCase();
     const currentValues = filters[key].map(v => v.toLowerCase());
     const updated = currentValues.includes(lowerValue)
-      ? currentValues.filter(v => v !== lowerValue) // Remove if already selected
-      : [...currentValues, lowerValue]; // Add if not selected
+      ? currentValues.filter(v => v !== lowerValue)
+      : [...currentValues, lowerValue];
 
     onFiltersChange({ ...filters, [key]: updated });
   };
@@ -93,11 +93,12 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
   const normalizedAm = normalizeFilterValues(filters.am, VALID_AM_VALUES);
   const normalizedStability = normalizeFilterValues(filters.stability, VALID_STABILITY_VALUES);
 
+  // Simple selection logic - selected only if explicitly in the array
   const isCaddSelected = (value: string) =>
-    normalizedCadd.length === 0 || normalizedCadd.includes(value.toLowerCase());
+    normalizedCadd.includes(value.toLowerCase());
 
   const isAmSelected = (value: string) =>
-    normalizedAm.length === 0 || normalizedAm.includes(value.toLowerCase());
+    normalizedAm.includes(value.toLowerCase());
 
   const isStabilitySelected = (value: string) =>
     normalizedStability.includes(value.toLowerCase());
@@ -127,7 +128,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                   >
                     {isCaddSelected(cat.value)
                       ? <i className="bi-check-lg tick"></i>
-                      : <i className="bi-x-lg cross"></i>}
+                      : <i className="bi-plus-lg plus"></i>}
                     {' '}{cat.label}
                   </button>
                 ))}
@@ -146,7 +147,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                   >
                     {isAmSelected(cat.value)
                       ? <i className="bi-check-lg tick"></i>
-                      : <i className="bi-x-lg cross"></i>}
+                      : <i className="bi-plus-lg plus"></i>}
                     {' '}{cat.label}
                   </button>
                 ))}
@@ -202,7 +203,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                   >
                     {isStabilitySelected(cat.value)
                       ? <i className="bi-check-lg tick"></i>
-                      : <i className="bi-x-lg cross"></i>}
+                      : <i className="bi-plus-lg plus"></i>}
                     {' '}{cat.label}
                   </button>
                 ))}
