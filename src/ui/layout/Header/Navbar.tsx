@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ABOUT, CONTACT, HELP, HOME, RELEASE } from '../../../constants/BrowserPaths';
 import { API_URL } from '../../../constants/const';
 import './Navbar.css';
+import SearchBox from "../../components/search/SearchBox";
 
 const Navbar: React.FC = () => {
   return (
@@ -21,31 +22,35 @@ const Navbar: React.FC = () => {
         </Link>
       </div>
 
-      <div className="navbar-nav">
-        <Link to={ABOUT} title="ProtVar About" id="protvarAbout" className="nav-button">
-          <i className="bi bi-info-square"></i>
-          About
-        </Link>
+      <div className="navbar-right">
+        <SearchBox placeholder="Search ProtVar..." />
 
-        <Link to={HELP} title="ProtVar Help" id="protvarHelp" className="nav-button">
-          <i className="bi bi-question-circle"></i>
-          Help
-        </Link>
+        <div className="navbar-links">
+          <Link to={ABOUT} title="ProtVar About" id="protvarAbout" className="nav-button">
+            <i className="bi bi-info-square"></i>
+            About
+          </Link>
 
-        <a href={API_URL} title="ProtVar API" target="_self" className="nav-button">
-          <i className="bi bi-box"></i>
-          API Docs
-        </a>
+          <Link to={HELP} title="ProtVar Help" id="protvarHelp" className="nav-button">
+            <i className="bi bi-question-circle"></i>
+            Help
+          </Link>
 
-        <Link to={RELEASE} title="ProtVar Release" id="protvarRelease" className="nav-button">
-          <i className="bi bi-tag"></i>
-          Release
-        </Link>
+          <a href={API_URL} title="ProtVar API" target="_blank" rel="noopener noreferrer" className="nav-button">
+            <i className="bi bi-box"></i>
+            API Docs
+          </a>
 
-        <Link to={CONTACT} title="ProtVar Contact" className="nav-button">
-          <i className="bi bi-envelope"></i>
-          Contact
-        </Link>
+          <Link to={RELEASE} title="ProtVar Release" id="protvarRelease" className="nav-button">
+            <i className="bi bi-tag"></i>
+            Release
+          </Link>
+
+          <Link to={CONTACT} title="ProtVar Contact" className="nav-button">
+            <i className="bi bi-envelope"></i>
+            Contact
+          </Link>
+        </div>
       </div>
     </nav>
   );
