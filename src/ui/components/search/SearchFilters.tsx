@@ -206,39 +206,53 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
 
           {/* Boolean Filters */}
           <div className="boolean-filters">
-            <div className="filter-group" style={{width: '100%', marginTop: '1rem'}}>
-              <label>
-                <input
-                  type="checkbox"
-                  checked={filters.known === true}
-                  onChange={(e) => handleBooleanChange('known', e.target.checked)}
-                />
-                {' '}Show only known variants{' '}
-                <span style={{fontWeight: 'normal', fontSize: '0.9em', color: '#666'}}>
-                  (default: potential included)
+            <div className="switch-filter">
+              <label className="switch-label">
+                <div className="switch-container">
+                  <input
+                    type="checkbox"
+                    className="switch-input"
+                    checked={filters.known !== true}
+                    onChange={(e) => handleBooleanChange('known', !e.target.checked)}
+                  />
+                  <span className="switch-slider"></span>
+                </div>
+                <span className="switch-text">
+                  {filters.known !== true
+                    ? "Include known + potential variants"
+                    : "Known variants only"
+                  }
                 </span>
               </label>
             </div>
 
-            <div className="filter-group" style={{width: '100%', marginTop: '1rem'}}>
-              <label>
-                <input
-                  type="checkbox"
-                  checked={filters.pocket === true}
-                  onChange={(e) => handleBooleanChange('pocket', e.target.checked)}
-                />
-                {' '}Show only variants in predicted pockets
+            <div className="switch-filter">
+              <label className="switch-label">
+                <div className="switch-container">
+                  <input
+                    type="checkbox"
+                    className="switch-input"
+                    checked={filters.pocket === true}
+                    onChange={(e) => handleBooleanChange('pocket', e.target.checked)}
+                  />
+                  <span className="switch-slider"></span>
+                </div>
+                <span className="switch-text">Variants in predicted pockets only</span>
               </label>
             </div>
 
-            <div className="filter-group" style={{width: '100%', marginTop: '1rem'}}>
-              <label>
-                <input
-                  type="checkbox"
-                  checked={filters.interact === true}
-                  onChange={(e) => handleBooleanChange('interact', e.target.checked)}
-                />
-                {' '}Show only variants in P-P interaction
+            <div className="switch-filter">
+              <label className="switch-label">
+                <div className="switch-container">
+                  <input
+                    type="checkbox"
+                    className="switch-input"
+                    checked={filters.interact === true}
+                    onChange={(e) => handleBooleanChange('interact', e.target.checked)}
+                  />
+                  <span className="switch-slider"></span>
+                </div>
+                <span className="switch-text">Variants in protein interactions only</span>
               </label>
             </div>
           </div>
