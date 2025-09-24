@@ -34,13 +34,13 @@
     font-size: 1.1rem;
 }
 
-/* Search Mode Tabs */
+/* Search Mode Tabs - Updated for better distinction */
 .search-modes {
     display: flex;
-    background: white;
+    background: #e2e8f0;
     border-radius: 12px 12px 0 0;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     margin-bottom: 0;
+    padding: 0.25rem;
 }
 
 .mode-tab {
@@ -53,27 +53,20 @@
     color: #64748b;
     font-weight: 500;
     transition: all 0.2s ease;
-    border-radius: 12px 12px 0 0;
+    border-radius: 8px;
+    margin: 0 0.125rem;
+    position: relative;
 }
 
-.mode-tab .variants {
-    background: #014373;
-    color: white;
-}
-
-.mode-tab .browse {
-    background: #014373;
-    color: white;
-}
-
-.mode-tab:hover:not(.disabled) {
-    background: #f1f5f9;
+.mode-tab:hover:not(.disabled):not(.active) {
+    background: rgba(255, 255, 255, 0.8);
     color: #334155;
 }
 
 .mode-tab.active {
-    background: #014373; /* ProtVar blue theme */
+    background: linear-gradient(135deg, #4a90b8 0%, #014373 100%);
     color: white;
+    box-shadow: 0 2px 8px rgba(1, 67, 115, 0.3);
 }
 
 .mode-tab.disabled {
@@ -131,7 +124,7 @@
 }
 
 .method-btn.active {
-    background: #014373; /* ProtVar blue theme */
+    background: #014373;
     color: white;
 }
 
@@ -156,7 +149,7 @@
 
 .assembly-select:focus {
     outline: none;
-    border-color: #4a90b8; /* Lighter shade of ProtVar blue */
+    border-color: #4a90b8;
     box-shadow: 0 0 0 3px rgba(1, 67, 115, 0.1);
 }
 
@@ -250,7 +243,7 @@
 
 .input-field:focus {
     outline: none;
-    border-color: #4a90b8; /* Lighter shade of ProtVar blue */
+    border-color: #4a90b8;
     box-shadow: 0 0 0 3px rgba(1, 67, 115, 0.1);
 }
 
@@ -314,12 +307,12 @@
 }
 
 .btn-primary {
-    background: #014373; /* ProtVar blue theme */
+    background: #014373;
     color: white;
 }
 
 .btn-primary:hover:not(:disabled) {
-    background: #012d5a; /* Darker shade of ProtVar blue */
+    background: #012d5a;
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(1, 67, 115, 0.3);
 }
@@ -373,7 +366,7 @@
 }
 
 .example-tag:hover {
-    background: #014373; /* ProtVar blue theme */
+    background: #014373;
     color: white;
     transform: translateY(-1px);
 }
@@ -413,8 +406,8 @@
 }
 
 .filter-chip {
-    background: rgba(1, 67, 115, 0.1); /* Light ProtVar blue background */
-    color: #014373; /* ProtVar blue text */
+    background: rgba(1, 67, 115, 0.1);
+    color: #014373;
     padding: 0.25rem 0.75rem;
     border-radius: 16px;
     font-size: 0.875rem;
@@ -446,14 +439,12 @@
 
     .search-modes {
         flex-direction: column;
+        padding: 0.25rem;
     }
 
     .mode-tab {
-        border-radius: 0;
-    }
-
-    .mode-tab:first-child {
-        border-radius: 12px 12px 0 0;
+        border-radius: 6px;
+        margin: 0.125rem 0;
     }
 
     .variant-input-options {

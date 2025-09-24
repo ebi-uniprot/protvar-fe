@@ -11,7 +11,7 @@ const Navbar: React.FC = () => {
       <div className="navbar-brand">
         <Link to={HOME} title="ProtVar homepage" className="brand-link">
           <img
-            src="ProtVar_logo.png"
+            src={"ProtVar_logo.png"}
             alt="ProtVar logo"
             width="140"
             className="brand-logo"

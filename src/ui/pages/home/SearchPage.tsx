@@ -20,11 +20,11 @@ interface ExampleData {
   value: string;
 }
 
-type SearchMode = 'variants' | 'browse'; // | 'search';
+type SearchMode = 'variant' | 'browse' | 'text'; // browse=id(identifier) input
 export type GenomeAssembly = 'auto' | 'grch38' | 'grch37';
 
 const EXAMPLES: Record<SearchMode, ExampleData[]> = {
-  variants: [
+  variant: [
     { label: 'VCF / Genomic', value: 'X\t149498202\t.\tC\tG\n10-43118436-A-C\n14 89993420 A/G' },
     { label: 'HGVS Genomic', value: 'NC_000002.12:g.233760498G>A\nNC_000011.10:g.5248232A>T' },
     { label: 'HGVS cDNA', value: 'NM_000202.8:c.1327C>T\nNM_020975.6(RET):c.3105G>A\nNM_000463.3(IDS):c.1124C>T' },
@@ -38,14 +38,14 @@ const EXAMPLES: Record<SearchMode, ExampleData[]> = {
     { label: 'Ensembl Gene', value: 'ENSG00000012048' },
     { label: 'RefSeq ID', value: 'NM_007294.4' },
     { label: 'PDB ID', value: '1JNX' }
-  ],/*
-  search: [
+  ],
+  text: [
     { label: 'Disease Terms', value: 'sickle cell anemia' },
     { label: 'Phenotypes', value: 'intellectual disability' },
     { label: 'Pathways', value: 'DNA repair pathway' },
     { label: 'Drug Response', value: 'warfarin sensitivity' },
     { label: 'Functional Impact', value: 'loss of function' }
-  ]*/
+  ]
 };
 
 const findExampleLabel = (input: string): string | null =>
@@ -63,10 +63,10 @@ const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const SearchPage: React.FC = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [activeMode, setActiveMode] = useState<SearchMode>('variants');
+  const [activeMode, setActiveMode] = useState<SearchMode>('variant');
   const [variantInput, setVariantInput] = useState('');
   const [browseInput, setBrowseInput] = useState('');
-  //const [searchInput, setSearchInput] = useState('');
+  const [textInput, setTextInput] = useState('');
   const [genomeAssembly, setGenomeAssembly] = useState<GenomeAssembly>('auto');
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [resultsVisible, setResultsVisible] = useState(false);
@@ -132,22 +132,22 @@ const SearchPage: React.FC = () => {
 
   const handleExampleClick = (example: ExampleData) => {
     switch (activeMode) {
-      case 'variants':
+      case 'variant':
         setVariantInput(example.value);
         setUploadedFile(null); // Clear file if text example is used
         break;
       case 'browse':
         setBrowseInput(example.value);
-        break;/*
-      case 'search':
-        setSearchInput(example.value);
-        break;*/
+        break;
+      case 'text':
+        setTextInput(example.value);
+        break;
     }
     setError('');
   };
 
   const handleSearch = () => {
-    if (activeMode === 'variants') {
+    if (activeMode === 'variant') {
       handleVariantSearch();
     } else if (activeMode === 'browse') {
       handleBrowseSearch();
@@ -311,7 +311,7 @@ const SearchPage: React.FC = () => {
   const handleClear = () => {
     setVariantInput('');
     setBrowseInput('');
-    //setSearchInput('');
+    setTextInput('');
     setUploadedFile(null);
     setResultsVisible(false);
     setError('');
@@ -337,7 +337,7 @@ const SearchPage: React.FC = () => {
   };
 
   const isSubmitDisabled = () => {
-    if (activeMode === 'variants') {
+    if (activeMode === 'variant') {
       return !variantInput.trim() && !uploadedFile;
     } else if (activeMode === 'browse') {
       return !browseInput.trim();
@@ -365,23 +365,22 @@ const SearchPage: React.FC = () => {
       {/* Search Mode Tabs */}
       <div className="search-modes">
         <button
-          className={`mode-tab variants ${activeMode === 'variants' ? 'active' : ''}`}
-          onClick={() => handleModeChange('variants')}
+          className={`mode-tab ${activeMode === 'variant' ? 'active' : ''}`}
+          onClick={() => handleModeChange('variant')}
         >
           <span className="icon"><i className="bi bi-list-ul"></i></span>
           Variant List
         </button>
         <button
-          className={`mode-tab browse ${activeMode === 'browse' ? 'active' : ''}`}
+          className={`mode-tab ${activeMode === 'browse' ? 'active' : ''}`}
           onClick={() => handleModeChange('browse')}
         >
           <span className="icon"><i className="bi bi-search"></i></span>
           Browse by ID
         </button>
         <button
-          //className={`mode-tab ${activeMode === 'search' ? 'active' : ''}`}
-          //onClick={() => handleModeChange('search')}
-          className="mode-tab disabled" disabled title="Coming soon"
+          className={`mode-tab ${activeMode === 'text' ? 'active' : ''}`}
+          onClick={() => handleModeChange('text')}
         >
           <span className="icon"><i className="bi bi-chat"></i></span>
           Text Search
@@ -391,7 +390,7 @@ const SearchPage: React.FC = () => {
       {/* Search Panel */}
       <div className="search-panel">
         {/* Variant List Mode */}
-        {activeMode === 'variants' && (
+        {activeMode === 'variant' && (
           <div className="search-content">
             <div className="variant-input-options">
               <div className="input-method-toggle">
@@ -493,7 +492,7 @@ const SearchPage: React.FC = () => {
         )}
 
         {/* Text Search Mode */}
-        {/*activeMode === 'search' && (
+        {activeMode === 'text' && (
           <div className="search-content">
             <div className="input-group">
               <label className="input-label">Search variants by disease, phenotype, or annotation</label>
@@ -501,15 +500,15 @@ const SearchPage: React.FC = () => {
                 type="text"
                 className="input-field"
                 placeholder="sickle cell anemia"
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
+                value={textInput}
+                onChange={(e) => setTextInput(e.target.value)}
               />
               <div className="input-help">
                 Search through variant annotations, disease associations, and functional descriptions
               </div>
             </div>
           </div>
-        )*/}
+        )}
 
         {/* Search Filters Toggle - Only for Browse Mode */}
         {activeMode === 'browse' && (
@@ -533,8 +532,9 @@ const SearchPage: React.FC = () => {
           <button className={`btn btn-primary ${isSubmitDisabled() ? 'disabled' : ''}`}
                   onClick={handleSearch}
                   disabled={isSubmitDisabled() || loading}
+                  title={activeMode === 'text' ? 'Coming soon' : ''}
           >
-            {activeMode === 'variants' ? 'Submit' : 'Search'}
+            {activeMode === 'variant' ? 'Submit' : 'Search'}
           </button>
           <button className="btn btn-secondary" onClick={handleClear}>
             Clear All
