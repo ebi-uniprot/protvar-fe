@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { CookieConsent } from "react-cookie-consent";
 import { CONTACT } from '../../../constants/BrowserPaths';
 import SignUp from "../SignUp";
+import CitationCarousel from './CitationCarousel';
 import EMBLEBILogo from '../../../images/embl-ebi-logo.svg';
 import openTargetsLogo from '../../../images/open-targets-logo.png';
 import './Footer.css';
@@ -21,15 +22,23 @@ const Footer: React.FC = () => {
                target="_blank" rel="noreferrer">https://doi.org/10.1093/nar/gkae413</a>
           </p>
 
-          <p className="footer-links">
-            Please{' '}
-            <Link to={CONTACT} title="Contact us" className="ref-link">
-              contact us
-            </Link>{' '}
-            with queries or suggestions. Licensed under{' '}
-            <a className="ref-link" href="https://creativecommons.org/licenses/by/4.0/"
-               target="_blank" rel="noreferrer">Creative Commons</a>.
-          </p>
+          {/* Citation Carousel */}
+          <CitationCarousel />
+
+          <div className="footer-links">
+            <p>
+              Please{' '}
+              <Link to={CONTACT} title="Contact us" className="ref-link">
+                contact us
+              </Link>{' '}
+              with queries or suggestions.
+            </p>
+            <p>
+              Licensed under{' '}
+              <a className="ref-link" href="https://creativecommons.org/licenses/by/4.0/"
+                 target="_blank" rel="noreferrer">Creative Commons Attribution 4.0</a>.
+            </p>
+          </div>
         </div>
 
         <div className="twitter-container">

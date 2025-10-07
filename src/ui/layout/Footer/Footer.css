@@ -28,9 +28,18 @@
 }
 
 .footer-links {
+    margin-top: 1rem;
+}
+
+.footer-links p {
     font-size: 13px;
     color: #666;
-    margin: 0;
+    margin: 0.5rem 0;
+    line-height: 1.5;
+}
+
+.footer-links p:first-child {
+    margin-top: 0;
 }
 
 .ref-link {
