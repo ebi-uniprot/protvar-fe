@@ -102,3 +102,12 @@ export interface AmScore {
   amPathogenicity:number
   amClass:string
 }
+
+export interface PopEveScore {
+  gapFreq: number,
+  popeve: number,
+  poppedEve: number,
+  poppedEsm1v: number,
+  eve: number,
+  esm1v: number
+}

@@ -8,6 +8,7 @@ import {AppContext} from "../../../App";
 import {CaddScorePred} from "./CaddScorePred";
 import {ColourCheckbox} from "../../../modal/ColourCheckbox";
 import {ResidueRegionTableProps} from "../ResidueRegionTable";
+import {PopEvePred} from "./PopEvePred";
 
 export type PredAttr = {
   text: string,
@@ -24,13 +25,14 @@ export const Prediction = (props: ResidueRegionTableProps) => {
     <b>Structure predictions</b><br/>
     <FoldxPred foldxs={props.functionalData.foldxs} variantAA={props.variantAA}/>
     <b>Pathogenicity predictions</b><br/>
-    {(!props.caddScore && !props.amScore && !props.functionalData.eveScore && !props.functionalData.esmScore) &&
+    {(!props.caddScore && !props.amScore && !props.functionalData.eveScore && !props.functionalData.esmScore && !props.functionalData.popEveScore) &&
       <div>No predictions available for this variant</div>
     }
     <CaddScorePred cadd={props.caddScore} stdColor={state.stdColor}/>
     <AlphaMissensePred am={props.amScore} stdColor={state.stdColor}/>
     <EvePred eve={props.functionalData.eveScore} stdColor={state.stdColor}/>
     <EsmPred esm={props.functionalData.esmScore} stdColor={state.stdColor}/>
+    <PopEvePred popeve={props.functionalData.popEveScore} stdColor={state.stdColor}/>
     <ColourCheckbox state={state} />
   </>
 }
