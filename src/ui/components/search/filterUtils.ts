@@ -13,6 +13,13 @@ const parseBooleanParam = (searchParams: URLSearchParams, key: string): boolean 
   return ["true", "1"].includes(searchParams.get(key) || "") ? true : undefined;
 };
 
+const parseNumberParam = (searchParams: URLSearchParams, key: string): number | undefined => {
+  const value = searchParams.get(key);
+  if (value === null) return undefined;
+  const parsed = Number(value);
+  return isNaN(parsed) ? undefined : parsed;
+};
+
 // Extract filters from URL
 export const extractFilters = (searchParams: URLSearchParams): SearchFilterParams => ({
   cadd: normalizeFilterValues(searchParams.getAll("cadd"), VALID_CADD_VALUES),
@@ -23,6 +30,9 @@ export const extractFilters = (searchParams: URLSearchParams): SearchFilterParam
   interact: parseBooleanParam(searchParams, "interact"),
   sort: searchParams.get("sort") || undefined,
   order: (searchParams.get("order") as "asc" | "desc") || undefined,
+  // Range parameters
+  eve_min: parseNumberParam(searchParams, "eve_min"),
+  eve_max: parseNumberParam(searchParams, "eve_max"),
 });
 
 export const buildFilterParams = (filters: SearchFilterParams): URLSearchParams => {
@@ -44,6 +54,14 @@ export const buildFilterParams = (filters: SearchFilterParams): URLSearchParams 
 
   if (filters.sort) params.set("sort", filters.sort);
   if (filters.order) params.set("order", filters.order);
+
+  // Add range parameters
+  if (filters.eve_min !== undefined) {
+    params.set("eve_min", filters.eve_min.toString());
+  }
+  if (filters.eve_max !== undefined) {
+    params.set("eve_max", filters.eve_max.toString());
+  }
 
   return params;
 };

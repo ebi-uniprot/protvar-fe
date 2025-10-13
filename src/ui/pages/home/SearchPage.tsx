@@ -60,6 +60,19 @@ NC_000011.10:g.5248232A>T`;
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
+const DEFAULT_FILTERS = {
+  cadd: [],
+  am: [],
+  stability: [],
+  known: undefined,
+  pocket: undefined,
+  interact: undefined,
+  // No sort/order for search page,
+  // Range parameters
+  eve_min: undefined,
+  eve_max: undefined,
+}
+
 const SearchPage: React.FC = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -75,15 +88,7 @@ const SearchPage: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { getItem, setItem } = useLocalStorage();
 
-  const [searchFilters, setSearchFilters] = useState<SearchFilterParams>({
-    cadd: [],
-    am: [],
-    stability: [],
-    known: undefined,
-    pocket: undefined,
-    interact: undefined,
-    // No sort/order for search page
-  });
+  const [searchFilters, setSearchFilters] = useState<SearchFilterParams>(DEFAULT_FILTERS);
 
   const handleModeChange = (mode: SearchMode) => {
     setActiveMode(mode);
@@ -316,14 +321,7 @@ const SearchPage: React.FC = () => {
     setResultsVisible(false);
     setError('');
     setLoading(false);
-    setSearchFilters({
-      cadd: [],
-      am: [],
-      stability: [],
-      known: undefined,
-      pocket: undefined,
-      interact: undefined,
-    });
+    setSearchFilters(DEFAULT_FILTERS);
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }

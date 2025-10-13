@@ -37,6 +37,18 @@ export const NO_DATA = 'No data'
 export const NO_RESULT = 'No result to display'
 export const UNEXPECTED_ERR = 'An unexpected error occurred'
 
+const FILTER_PARAMS_LIST = [
+  'cadd',
+  'am',
+  'known',
+  'pocket',
+  'interact',
+  'sort',
+  'order',
+  'eve_min',
+  'eve_max',
+]
+
 function ResultPageContent() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -135,6 +147,9 @@ function ResultPageContent() {
       interact: filters?.interact,
       sort: filters?.sort,
       order: filters?.order,
+      // Add range parameters to the request
+      eve_min: filters?.eve_min,
+      eve_max: filters?.eve_max,
     };
 
     getMapping(request)
@@ -260,8 +275,7 @@ function ResultPageContent() {
     const newSearchParams = new URLSearchParams(searchParams);
 
     // Clear existing filter params
-    ["page", "annotation", "cadd", "am", "stability", "sort", "order", "known", "pocket", "interact"]
-      .forEach(key => newSearchParams.delete(key));
+    FILTER_PARAMS_LIST.forEach(key => newSearchParams.delete(key));
 
     // Use shared utility to build filter params
     const filterParams = buildFilterParams(localFilters);

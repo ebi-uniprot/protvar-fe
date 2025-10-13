@@ -6,6 +6,7 @@ import {
   ALPHAMISSENSE_CATEGORIES,
   STABILITY_CATEGORIES
 } from "./filterConstants";
+import RangeSlider from "./RangeSlider";
 
 export interface SearchFilterParams {
   cadd: string[];
@@ -16,6 +17,9 @@ export interface SearchFilterParams {
   interact?: boolean;
   sort?: string;
   order?: "asc" | "desc";
+  // Range parameters
+  eve_min?: number;
+  eve_max?: number;
 }
 
 interface SearchFiltersProps {
@@ -26,6 +30,8 @@ interface SearchFiltersProps {
   showSorting?: boolean;
   className?: string;
 }
+
+const SORT_FIELDS = ["cadd", "am", "eve"]
 
 const SearchFilters: React.FC<SearchFiltersProps> = ({
                                                        filters,
@@ -43,7 +49,9 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
     filters.known !== undefined ||
     filters.pocket !== undefined ||
     filters.interact !== undefined ||
-    filters.sort !== undefined;
+    filters.sort !== undefined ||
+    filters.eve_min !== undefined ||
+    filters.eve_max !== undefined;
 
   const [isExpanded, setIsExpanded] = useState(isAnyFilterActive);
 
@@ -84,6 +92,17 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
         order: (value as "asc" | "desc") || undefined
       });
     }
+  };
+
+  const handleRangeChange = (paramName: string, low: number | null, high: number | null) => {
+    const minKey = `${paramName}_min` as keyof SearchFilterParams;
+    const maxKey = `${paramName}_max` as keyof SearchFilterParams;
+
+    onFiltersChange({
+      ...filters,
+      [minKey]: low ?? undefined,
+      [maxKey]: high ?? undefined
+    });
   };
 
   const isCaddSelected = (value: string) =>
@@ -146,19 +165,50 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
               </div>
             </div>
 
+            {/* Stability */}
+            <div className="filter-group">
+              <label>Stability</label>
+              <div className="button-group compact">
+                {STABILITY_CATEGORIES.map(cat => (
+                  <button
+                    key={cat.value}
+                    className={`filter-button ${isStabilitySelected(cat.value) ? "selected" : ""}`}
+                    onClick={() => handleCheckboxChange("stability", cat.value)}
+                  >
+                    {isStabilitySelected(cat.value)
+                      ? <i className="bi-check-lg tick"></i>
+                      : <i className="bi-plus-lg plus"></i>}
+                    {' '}{cat.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* EVE Score Range */}
+            <RangeSlider
+              label="EVE Score"
+              paramName="eve"
+              min={0}
+              max={1}
+              step={0.01}
+              onRangeChange={handleRangeChange}
+              initialLow={filters.eve_min}
+              initialHigh={filters.eve_max}
+            />
+
             {/* Sorting - Only show if showSorting is true (results page) */}
             {showSorting && (
               <>
                 <div className="filter-group">
                   <label>Sort By</label>
                   <div className="button-group compact">
-                    {["cadd", "am"].map(field => (
+                    {SORT_FIELDS.map(field => (
                       <button
                         key={field}
                         className={`filter-button ${filters.sort === field ? "selected" : ""}`}
                         onClick={() => handleSortChange("sort", filters.sort === field ? "" : field)}
                       >
-                        {field === "cadd" ? "CADD" : "AlphaMissense"}
+                        {field === "cadd" ? "CADD" : field === "am" ? "AlphaMissense" : "EVE"}
                       </button>
                     ))}
                   </div>
@@ -182,25 +232,6 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                 )}
               </>
             )}
-
-            {/* Stability */}
-            <div className="filter-group">
-              <label>Stability</label>
-              <div className="button-group compact">
-                {STABILITY_CATEGORIES.map(cat => (
-                  <button
-                    key={cat.value}
-                    className={`filter-button ${isStabilitySelected(cat.value) ? "selected" : ""}`}
-                    onClick={() => handleCheckboxChange("stability", cat.value)}
-                  >
-                    {isStabilitySelected(cat.value)
-                      ? <i className="bi-check-lg tick"></i>
-                      : <i className="bi-plus-lg plus"></i>}
-                    {' '}{cat.label}
-                  </button>
-                ))}
-              </div>
-            </div>
 
           </div>
 
