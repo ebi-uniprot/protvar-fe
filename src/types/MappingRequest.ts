@@ -17,6 +17,6 @@ export interface MappingRequest {
   sort?: string;
   order?: 'asc' | 'desc';
   // Range parameters - add more as needed
-  eve_min?: number;
-  eve_max?: number;
+  eveMin?: number;
+  eveMax?: number;
 }

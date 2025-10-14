@@ -148,8 +148,8 @@ function ResultPageContent() {
       sort: filters?.sort,
       order: filters?.order,
       // Add range parameters to the request
-      eve_min: filters?.eve_min,
-      eve_max: filters?.eve_max,
+      eveMin: filters?.eve_min,
+      eveMax: filters?.eve_max,
     };
 
     getMapping(request)
