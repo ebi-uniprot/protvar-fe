@@ -148,7 +148,7 @@ function getFeatureDetail(rowKey: string, feature: Feature, expandedRowKey: stri
       <>
         <ul style={{listStyleType: 'none', display: 'inline-block'}}>
           <li key={uuidv1()}>
-            {getPositionLabel(feature.begin, feature.end)}
+            {getPositionLabel(feature.begin, feature.end, feature.type)}
             <br/>
             <Evidences evidences={feature.evidences}/>
           </li>
@@ -158,11 +158,16 @@ function getFeatureDetail(rowKey: string, feature: Feature, expandedRowKey: stri
   }
 }
 
-function getPositionLabel(begin: string, end: string) {
-  if (Number(begin) === Number(end))
+function getPositionLabel(begin: string, end: string, type: string) {
+  if (Number(begin) === Number(end)) {
     return <><b>Position :</b> {begin}</>
-  else
+  } else if (type === 'DISULFID') {
+    // TODO: TEMPORARY FIX - Display disulfide bonds in C-S-S-C notation
+    // This should be handled by the API once the backend filtering is implemented
+    return <><b>Disulfide bond : </b>C{begin}-S-S-C{end}</>
+  } else {
     return <><b>Range : </b> {begin} - {end}</>
+  }
 }
 
 interface PocketsProps {
