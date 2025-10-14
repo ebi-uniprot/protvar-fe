@@ -20,7 +20,7 @@ workflow:
     - when: always # Run the pipeline in other cases
 
 .js:
-  image: node:16.15.1
+  image: node:18.20
   before_script:
     - node --version
     - npm --version
