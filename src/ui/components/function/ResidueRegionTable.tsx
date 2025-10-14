@@ -36,7 +36,9 @@ function ResidueRegionTable(props: ResidueRegionTableProps) {
   if (props.functionalData.features && props.functionalData.features.length > 0) {
     props.functionalData.features.forEach((feature) => {
       if (feature.category !== 'VARIANTS') {
-        if (Number(feature.begin) === Number(feature.end))
+        const begin = Number(feature.begin);
+        const end = Number(feature.end);
+        if (begin === end)
           residues.push(feature);
         else {
           const position = props.functionalData.position;
@@ -48,10 +50,10 @@ function ResidueRegionTable(props: ResidueRegionTableProps) {
 
           if (feature.type === 'DISULFID') {
             // For DISULFID, position must match start OR end exactly
-            shouldInclude = (position === feature.begin || position === feature.end);
+            shouldInclude = (position === begin || position === end);
           } else {
             // For other regions, position must be within range
-            shouldInclude = (position >= feature.begin && position <= feature.end);
+            shouldInclude = (position >= begin && position <= end);
           }
 
           if (shouldInclude) {

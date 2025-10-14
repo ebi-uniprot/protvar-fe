@@ -13,7 +13,7 @@ export interface FunctionalInfo {
     //dbReferences: Array<DBReference> // not used
     sequence: Sequence
 
-    //position: number // not used
+    position: number
     //type: string // not used
     name: string
     alternativeNames: string
