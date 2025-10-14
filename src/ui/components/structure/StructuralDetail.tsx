@@ -40,7 +40,7 @@ export const baseSettings = {
 }
 
 export interface AlphaFillStructure {
-  entryId: string
+  modelEntityId: string
   cifUrl: string
 }
 
@@ -66,12 +66,14 @@ function StructuralDetail(props: StructuralDetailProps) {
         setPdbData(response.data);
         return getPredictedStructure(isoFormAccession);
       }).then(response => {
-      addPredictedStructures(response.data)
+      // Filter to only include structures matching the queried accession
+      const filteredData = response.data.filter(item => item.uniprotAccession === isoFormAccession);
+      addPredictedStructures(filteredData)
       return hasAlphafillStructure(isoFormAccession)
     }).then(response => {
       if (response) {
         const alphaFillStruc = {
-          entryId: 'AlphaFill-' + isoFormAccession,
+          modelEntityId: 'AlphaFill-' + isoFormAccession,
           cifUrl: ALPHAFILL_URL + isoFormAccession
         }
         addPredictedStructures([alphaFillStruc])
@@ -126,7 +128,7 @@ function StructuralDetail(props: StructuralDetailProps) {
                         setSelected={setSelected} pdbeRef={pdbeRef}/></>}
         {predictedStructureData.length > 0 && <><br/>
           <PredictedStructureTable isoFormAccession={isoFormAccession} predictedStructureData={predictedStructureData}
-                                   selectedPredictedStructure={"entryId" in selected ? selected.entryId : ""}
+                                   selectedPredictedStructure={"modelEntityId" in selected ? selected.modelEntityId : ""}
                                    setSelected={setSelected} aaPos={aaPosition} pocketData={pocketData}
                                    pdbeRef={pdbeRef}/></>}
         {interactionData.length > 0 && <><br/>
