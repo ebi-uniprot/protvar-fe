@@ -1,5 +1,5 @@
 include:
-  - project: uniprot/framework/protvar-deploy
+  - project: uniprot/variation/protvar-deploy
     ref: master
     file: /ci-templates/gitlab-ci-template.yml
 
