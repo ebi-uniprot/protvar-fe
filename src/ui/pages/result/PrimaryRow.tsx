@@ -102,6 +102,7 @@ export const getNewPrimaryRow = (isoformKey: string, isoformGroup: string, isofo
 
   const caddAttr = caddScoreAttr(gene.caddScore?.toString())
   const amAttr = amScoreAttr(isoform.amScore?.amClass)
+  const gnomadCoord = `${input.chr}-${input.pos}-${input.ref}-${input.alt}`
 
   let strand = gene.reverseStrand ? '(-)' : '(+)';
   let codon = isoform.refCodon + '/' + isoform.variantCodon;
@@ -222,7 +223,7 @@ export const getNewPrimaryRow = (isoformKey: string, isoformGroup: string, isofo
 
     {populationKey === annotationExpanded &&
       <Suspense fallback={<LoaderRow />}>
-        <PopulationDetail annotation={annotationExpanded} populationObservationsUri={isoform.populationObservationsUri!} variantAA={isoform.variantAA!} />
+        <PopulationDetail annotation={annotationExpanded} populationObservationsUri={isoform.populationObservationsUri!} variantAA={isoform.variantAA!} alleleFreq={gene.alleleFreq} gnomadCoord={gnomadCoord} />
       </Suspense>
     }
     {structuralKey === annotationExpanded &&

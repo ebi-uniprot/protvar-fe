@@ -60,7 +60,7 @@ function ResultTable(props: {data: PagedMappingResponse | null}) {
       <Tool el="th" className="sticky" tip="Alternative allele">Alt.</Tool>
       <Tool el="th" className="sticky" tip="HGNC short gene name">Gene</Tool>
       <Tool el="th" className="sticky" tip="Change of the codon containing the variant nucleotide the position of which is capitalised">Codon (strand)</Tool>
-      <Tool el="th" className="sticky" tip="CADD (Combined Annotation Dependent Depletion) phred-like score. Colours are defined in the legends. Source: PubMed PMID 30371827">CADD</Tool>
+      <Tool el="th" className="sticky" tip="CADD (Combined Annotation Dependent Depletion) phred-like score. Colours are defined in the legends. Source: PubMed PMID 30371827">CADD v1.7</Tool>
       <Tool el="th" className="sticky" tip="The protein isoform the variant is mapped to.
         By default this is the UniProt canonical isoform, however other isoforms are shown if necessary.
         Alternative isoforms can be shown by expanding the arrow to the right of the isoform" tSize="xlarge">Isoform</Tool>

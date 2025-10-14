@@ -6,7 +6,9 @@ export const FoldxPred = (props: { foldxs: Array<Foldx> }) => {
   if (props.foldxs && props.foldxs.length > 0) {
     return <div>
       <div className="aa-pred">
-        <div>Stability change ΔΔG</div>
+        <div>Stability change ΔΔG {props.foldxs[0].numFragments > 1 && <small>
+          <br/>(using AlphaFold fragment {props.foldxs[0].afId})
+        </small>}</div>
         <div>{formatFoldxScore(props.foldxs[0])}</div>
         <FoldxPredIcon foldx={props.foldxs[0]}/>
       </div>
