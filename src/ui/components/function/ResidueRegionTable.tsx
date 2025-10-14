@@ -40,8 +40,26 @@ function ResidueRegionTable(props: ResidueRegionTableProps) {
       if (feature.category !== 'VARIANTS') {
         if (feature.begin === feature.end)
           residues.push(feature);
-        else
-          regions.push(feature);
+        else {
+          const position = props.functionalData.position;
+          // Regions - apply filtering logic here
+          // TODO: TEMPORARY FIX - This filtering logic should be implemented on the API side.
+          // Once the backend is updated to handle DISULFID filtering correctly,
+          // this frontend filtering can be removed.
+          let shouldInclude = false;
+
+          if (feature.type === 'DISULFID') {
+            // For DISULFID, position must match start OR end exactly
+            shouldInclude = (position === feature.begin || position === feature.end);
+          } else {
+            // For other regions, position must be within range
+            shouldInclude = (position >= feature.begin && position <= feature.end);
+          }
+
+          if (shouldInclude) {
+            regions.push(feature);
+          }
+        }
       }
     });
     return <table>
