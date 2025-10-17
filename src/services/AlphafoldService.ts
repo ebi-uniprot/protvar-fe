@@ -11,11 +11,5 @@ const instance = axios.create({
 const api = setupCache(instance, {})
 
 export function getPredictedStructure(url: string) {
-  return api.get<AlphafoldResponse>(url).then(response => {
-    // Ensure data is always an array
-    if (!Array.isArray(response.data)) {
-      return { ...response, data: [] };
-    }
-    return response;
-  });
+  return api.get<AlphafoldResponse>(url);
 }
