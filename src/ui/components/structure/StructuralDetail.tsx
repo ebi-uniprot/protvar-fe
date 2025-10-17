@@ -60,33 +60,71 @@ function StructuralDetail(props: StructuralDetailProps) {
     setPredictedStructureData(prevItems => [...prevItems, ...newPredictedStructures]);
   };
 
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
-    getStructureData(proteinStructureUri).then(
-      response => {
+    getStructureData(proteinStructureUri)
+      .then(response => {
+        console.log('PDB structures found:', response.data.length);
         setPdbeData(response.data);
         return getPredictedStructure(isoFormAccession);
-      }).then(response => {
-      // Filter to only include structures matching the queried accession
-      const filteredData = response.data.filter(item => item.uniprotAccession === isoFormAccession);
-      addPredictedStructures(filteredData)
-      return hasAlphafillStructure(isoFormAccession)
-    }).then(response => {
-      if (response) {
-        const alphaFillStruc = {
-          modelEntityId: 'AlphaFill-' + isoFormAccession,
-          cifUrl: ALPHAFILL_URL + isoFormAccession
+      })
+      .then(response => {
+        // Filter to only include structures matching the queried accession
+        const dataArray = Array.isArray(response.data) ? response.data : [];
+        const filteredData = dataArray.filter(item => item.uniprotAccession === isoFormAccession);
+        console.log('AlphaFold structures found:', filteredData.length);
+        addPredictedStructures(filteredData);
+        return filteredData.length > 0;
+      })
+      .catch(error => {
+        if (error.response?.status === 404) {
+          console.log('No AlphaFold structure (404)');
+          return false;
         }
-        addPredictedStructures([alphaFillStruc])
-      }
-      let functionUrl = '/function/' + isoFormAccession + '/' + aaPosition + (variantAA == null ? '' : ('?variantAA=' + variantAA))
-      return getFunctionalData(functionUrl)
-    }).then(response => {
-      const funcData = response.data
-      setInteractionData(funcData.interactions)
-      setPocketData(funcData.pockets)
-    }).catch(err => {
-      console.log(err);
-    })
+        throw error;
+      })
+      .then((hasAlphaFold) => {
+        console.log('Has AlphaFold:', hasAlphaFold);
+        return hasAlphafillStructure(isoFormAccession)
+          .then(hasAlphaFill => {
+            console.log('Has AlphaFill:', hasAlphaFill);
+            if (hasAlphaFill) {
+              const alphaFillStruc = {
+                modelEntityId: 'AlphaFill-' + isoFormAccession,
+                cifUrl: ALPHAFILL_URL + isoFormAccession
+              };
+              addPredictedStructures([alphaFillStruc]);
+            }
+            return hasAlphaFold || hasAlphaFill;
+          });
+      })
+      .then((hasPredictedStructures) => {
+        console.log('Has any predicted structures:', hasPredictedStructures);
+        // Only fetch functional data if we have predicted structures
+        if (hasPredictedStructures) {
+          let functionUrl = '/function/' + isoFormAccession + '/' + aaPosition +
+            (variantAA == null ? '' : ('?variantAA=' + variantAA));
+          return getFunctionalData(functionUrl);
+        } else {
+          console.log('No predicted structures - skipping functional data');
+          return null;
+        }
+      })
+      .then(response => {
+        if (response) {
+          const funcData = response.data;
+          console.log('Functional data - interactions:', funcData.interactions.length, 'pockets:', funcData.pockets.length);
+          setInteractionData(funcData.interactions);
+          setPocketData(funcData.pockets);
+        }
+      })
+      .catch(err => {
+        console.error('Error fetching structure data:', err);
+      })
+      .finally(() => {
+        setIsLoading(false); // Always stop loading
+      })
   }, [proteinStructureUri, isoFormAccession, aaPosition, variantAA]);
 
   useEffect(() => {
@@ -100,8 +138,13 @@ function StructuralDetail(props: StructuralDetailProps) {
     }
   }, [pdbeData, predictedStructureData, selected]);
 
-  if (!selected) {
+// Then update your render logic:
+  if (isLoading) {
     return <LoaderRow/>
+  }
+
+  if (!selected) {
+    return <NoStructureDataRow/>;
   }
 
   return (
@@ -138,6 +181,19 @@ function StructuralDetail(props: StructuralDetailProps) {
       </td>
     </tr>
   );
+}
+
+function NoStructureDataRow() {
+  return <tr>
+    <td colSpan={15} className="expanded-row">
+      {' '}
+      <div className="significances-groups">
+        <div className="column">
+          <b>No structural data available for this protein</b>
+        </div>
+      </div>
+    </td>
+  </tr>
 }
 
 export default StructuralDetail;
