@@ -17,7 +17,6 @@ import {HelpButton} from "../help/HelpButton";
 import Spaces from "../../elements/Spaces";
 import {ShareAnnotationIcon} from "../common/ShareLink";
 import {ALPHAFILL_URL, hasAlphafillStructure} from "../../../services/AlphafillService";
-import {TOTAL_COLS} from "../../../constants/SearchResultTable";
 
 
 interface StructuralDetailProps {
