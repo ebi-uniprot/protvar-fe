@@ -8,15 +8,16 @@ export interface MappingRequest {
   page?: number | null;
   pageSize?: number | null;
   assembly?: string | null; //'auto' | 'grch38' | 'grch37'
+  known?: boolean;
   cadd?: string[];
   am?: string[];
-  stability?: string[];
-  known?: boolean;
-  pocket?: boolean;
+  popeve?: string[];  // NEW: popEVE categories
   interact?: boolean;
+  pocket?: boolean;
+  stability?: string[];
   sort?: string;
   order?: 'asc' | 'desc';
-  // Range parameters - add more as needed
-  eveMin?: number;
-  eveMax?: number;
+  // COMMENTED OUT - EVE range parameters
+  // eveMin?: number;
+  // eveMax?: number;
 }

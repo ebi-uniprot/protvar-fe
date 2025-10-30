@@ -1,6 +1,6 @@
 import {ConservPred} from "./ConservPred";
 import {AlphaMissensePred} from "./AlphaMissensePred";
-import {EvePred} from "./EvePred";
+//import {EvePred} from "./EvePred";
 import {EsmPred} from "./EsmPred";
 import {FoldxPred} from "./FoldxPred";
 import {useContext} from "react";
@@ -30,9 +30,9 @@ export const Prediction = (props: ResidueRegionTableProps) => {
     }
     <CaddScorePred cadd={props.caddScore} stdColor={state.stdColor}/>
     <AlphaMissensePred am={props.amScore} stdColor={state.stdColor}/>
-    <EvePred eve={props.functionalData.eveScore} stdColor={state.stdColor}/>
-    <EsmPred esm={props.functionalData.esmScore} stdColor={state.stdColor}/>
+    {/*<EvePred eve={props.functionalData.eveScore} stdColor={state.stdColor}/>*/}
     <PopEvePred popeve={props.functionalData.popEveScore} stdColor={state.stdColor}/>
+    <EsmPred esm={props.functionalData.esmScore} stdColor={state.stdColor}/>
     <ColourCheckbox state={state} />
   </>
 }

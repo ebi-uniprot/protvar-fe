@@ -1,8 +1,9 @@
 // filterUtils.ts
-import {VALID_CADD_VALUES, VALID_AM_VALUES, VALID_STABILITY_VALUES} from "./filterConstants";
+import {VALID_CADD_VALUES, VALID_AM_VALUES, VALID_POPEVE_VALUES, VALID_STABILITY_VALUES} from "./filterConstants";
 import {SearchFilterParams} from "./SearchFilters";
 import {CaddCategory} from "../../../types/CaddCategory";
 import {StabilityChange} from "../../../types/StabilityChange";
+import {PopEveClass} from "../../../types/PopEveClass";
 
 export const normalizeFilterValues = (selected: string[], valid: string[]) => {
   const validSet = new Set(valid);
@@ -13,6 +14,7 @@ const parseBooleanParam = (searchParams: URLSearchParams, key: string): boolean 
   return ["true", "1"].includes(searchParams.get(key) || "") ? true : undefined;
 };
 
+// eslint-disable-next-line
 const parseNumberParam = (searchParams: URLSearchParams, key: string): number | undefined => {
   const value = searchParams.get(key);
   if (value === null) return undefined;
@@ -22,17 +24,18 @@ const parseNumberParam = (searchParams: URLSearchParams, key: string): number | 
 
 // Extract filters from URL
 export const extractFilters = (searchParams: URLSearchParams): SearchFilterParams => ({
+  known: parseBooleanParam(searchParams, "known"),
   cadd: normalizeFilterValues(searchParams.getAll("cadd"), VALID_CADD_VALUES),
   am: normalizeFilterValues(searchParams.getAll("am"), VALID_AM_VALUES),
-  stability: normalizeFilterValues(searchParams.getAll("stability"), VALID_STABILITY_VALUES),
-  known: parseBooleanParam(searchParams, "known"),
-  pocket: parseBooleanParam(searchParams, "pocket"),
+  popeve: normalizeFilterValues(searchParams.getAll("popeve"), VALID_POPEVE_VALUES),
   interact: parseBooleanParam(searchParams, "interact"),
+  pocket: parseBooleanParam(searchParams, "pocket"),
+  stability: normalizeFilterValues(searchParams.getAll("stability"), VALID_STABILITY_VALUES),
   sort: searchParams.get("sort") || undefined,
   order: (searchParams.get("order") as "asc" | "desc") || undefined,
-  // Range parameters
-  eve_min: parseNumberParam(searchParams, "eve_min"),
-  eve_max: parseNumberParam(searchParams, "eve_max"),
+  // COMMENTED OUT - EVE range parameters
+  // eve_min: parseNumberParam(searchParams, "eve_min"),
+  // eve_max: parseNumberParam(searchParams, "eve_max"),
 });
 
 export const buildFilterParams = (filters: SearchFilterParams): URLSearchParams => {
@@ -40,11 +43,13 @@ export const buildFilterParams = (filters: SearchFilterParams): URLSearchParams 
 
   const normalizedCadd = normalizeFilterValues(filters.cadd, VALID_CADD_VALUES);
   const normalizedAm = normalizeFilterValues(filters.am, VALID_AM_VALUES);
+  const normalizedPopeve = normalizeFilterValues(filters.popeve, VALID_POPEVE_VALUES);
   const normalizedStability = normalizeFilterValues(filters.stability, VALID_STABILITY_VALUES);
 
   // Send whatever the user selected
   normalizedCadd.forEach(val => params.append("cadd", val));
   normalizedAm.forEach(val => params.append("am", val));
+  normalizedPopeve.forEach(val => params.append("popeve", val));  // NEW: Add popEVE params
   normalizedStability.forEach(val => params.append("stability", val));
 
   // Add boolean filters
@@ -55,14 +60,15 @@ export const buildFilterParams = (filters: SearchFilterParams): URLSearchParams 
   if (filters.sort) params.set("sort", filters.sort);
   if (filters.order) params.set("order", filters.order);
 
-  // Add range parameters
+  // COMMENTED OUT - EVE range parameters
+  /*
   if (filters.eve_min !== undefined) {
     params.set("eve_min", filters.eve_min.toString());
   }
   if (filters.eve_max !== undefined) {
     params.set("eve_max", filters.eve_max.toString());
   }
-
+  */
   return params;
 };
 
@@ -89,6 +95,28 @@ export const mapUiCaddToBackend = (uiCategories: string[]): string[] => {
         break;
       default:
         console.warn(`Unknown UI CADD category: ${uiCategory}`);
+    }
+  });
+
+  return backendCategories;
+};
+
+export const mapUiPopeveToBackend = (uiCategories: string[]): string[] => {
+  const backendCategories: string[] = [];
+
+  uiCategories.forEach(uiCategory => {
+    switch (uiCategory.toLowerCase()) {
+      case 'severe':
+        backendCategories.push(PopEveClass.SEVERE);
+        break;
+      case 'moderate':
+        backendCategories.push(PopEveClass.MODERATELY_DELETERIOUS);
+        break;
+      case 'unlikely':
+        backendCategories.push(PopEveClass.UNLIKELY_DELETERIOUS);
+        break;
+      default:
+        console.warn(`Unknown UI popEVE category: ${uiCategory}`);
     }
   });
 

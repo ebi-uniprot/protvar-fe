@@ -61,16 +61,17 @@ NC_000011.10:g.5248232A>T`;
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
 const DEFAULT_FILTERS = {
+  known: undefined,
   cadd: [],
   am: [],
-  stability: [],
-  known: undefined,
-  pocket: undefined,
+  popeve: [],
   interact: undefined,
+  pocket: undefined,
+  stability: [],
   // No sort/order for search page,
-  // Range parameters
-  eve_min: undefined,
-  eve_max: undefined,
+  // COMMENTED OUT - EVE range parameters
+  // eve_min: undefined,
+  // eve_max: undefined,
 }
 
 const SearchPage: React.FC = () => {

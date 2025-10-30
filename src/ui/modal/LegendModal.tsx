@@ -7,7 +7,8 @@ import {CADD_SCORE_ATTR} from "../components/function/prediction/CaddScorePred";
 import {PredAttr} from "../components/function/prediction/Prediction";
 import {AM_SCORE_ATTR} from "../components/function/prediction/AlphaMissensePred";
 import {AF_ATTR} from "../components/population/PopulationAlleleFreq";
-import {EVE_SCORE_ATTR} from "../components/function/prediction/EvePred";
+//import {EVE_SCORE_ATTR} from "../components/function/prediction/EvePred";
+import {POPEVE_SCORE_ATTR} from "../components/function/prediction/PopEvePred";
 import {AppContext} from "../App";
 import {ColourCheckbox} from "./ColourCheckbox";
 
@@ -51,7 +52,8 @@ function LegendModal() {
           </div>
           <div className="legend-div">
             <EsmLegend stdColor={state.stdColor}/><br/>
-            <EveLegend stdColor={state.stdColor}/>
+            {/*<EveLegend stdColor={state.stdColor}/>*/}
+            <PopEveLegend stdColor={state.stdColor}/>
           </div>
           <div className="legend-div">
             <AnnotationLegend/>
@@ -167,7 +169,8 @@ function AlleleFreqLegend(props: CommonLegendProps) {
     <br/>
   </div>;
 }
-
+// eslint-disable-next-line
+{/*
 function EveLegend(props: CommonLegendProps) {
   return (
     <div className="search-results-legends" style={{ float: "unset" }}>
@@ -184,6 +187,31 @@ function EveLegend(props: CommonLegendProps) {
             </div>;
           })
         }
+      </div>
+      <br/>
+    </div>
+  );
+}
+*/}
+function PopEveLegend(props: CommonLegendProps) {
+  return (
+    <div className="search-results-legends" style={{ float: "unset" }}>
+      <strong>popEVE score</strong>
+      <br />
+      <div className="flex-column">
+        {
+          Object.values(POPEVE_SCORE_ATTR).map((sc: PredAttr) => {
+            return <div key={uuidv1()} className="flex">
+              <span className="padding-left-right-1x">
+                <i className="bi bi-circle-fill" style={{color: (props.stdColor ? sc.stdColor : sc.color)}}></i>
+              </span>
+              <div className="flex1">{sc.text} ({sc.range})</div>
+            </div>;
+          })
+        }
+      </div>
+      <div style={{ fontSize: '0.9em', fontStyle: 'italic', marginTop: '0.5em' }}>
+        Low confidence when gap freq &gt; 0.5
       </div>
       <br/>
     </div>

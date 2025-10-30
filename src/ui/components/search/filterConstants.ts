@@ -36,3 +36,11 @@ export const STABILITY_CATEGORIES = [
 ];
 
 export const VALID_STABILITY_VALUES = STABILITY_CATEGORIES.map(cat => cat.value);
+
+export const VALID_POPEVE_VALUES = ['severe', 'moderate', 'unlikely'];
+
+export const POPEVE_CATEGORIES = [
+  { value: 'severe', label: 'Severe' },
+  { value: 'moderate', label: 'Moderately Deleterious' },
+  { value: 'unlikely', label: 'Unlikely Deleterious' }
+];

@@ -20,7 +20,7 @@ import Loader from "../../elements/Loader";
 import {
   buildFilterParams,
   extractFilters,
-  mapUiCaddToBackend,
+  mapUiCaddToBackend, mapUiPopeveToBackend,
   mapUiStabilityToBackend
 } from "../../components/search/filterUtils";
 import {fromString/*, normalize, resolve*/} from "../../../utills/InputTypeResolver";
@@ -38,15 +38,18 @@ export const NO_RESULT = 'No result to display'
 export const UNEXPECTED_ERR = 'An unexpected error occurred'
 
 const FILTER_PARAMS_LIST = [
+  'known',
   'cadd',
   'am',
-  'known',
-  'pocket',
+  'popeve',  // CHANGED: from 'eve_min', 'eve_max' to 'popeve'
   'interact',
+  'pocket',
+  'stability',
   'sort',
   'order',
-  'eve_min',
-  'eve_max',
+  // COMMENTED OUT - EVE range parameters
+  // 'eve_min',
+  // 'eve_max',
 ]
 
 function ResultPageContent() {
@@ -127,6 +130,8 @@ function ResultPageContent() {
     // Map UI categories to backend categories
     const backendCaddCategories = filters?.cadd ?
       mapUiCaddToBackend(filters.cadd) : [];
+    const backendPopeveCategories = filters?.popeve ?
+      mapUiPopeveToBackend(filters.popeve) : [];  // NEW: Map popEVE
     const backendStabilityCategories = filters?.stability ?
       mapUiStabilityToBackend(filters.stability) : [];
 
@@ -139,17 +144,18 @@ function ResultPageContent() {
       page,
       pageSize,
       assembly: assembly ?? undefined,
+      known: filters?.known,
       cadd: backendCaddCategories.length > 0 ? backendCaddCategories : undefined,
       am: filters?.am ?? [],
-      stability: backendStabilityCategories.length > 0 ? backendStabilityCategories : undefined,
-      known: filters?.known,
-      pocket: filters?.pocket,
+      popeve: backendPopeveCategories.length > 0 ? backendPopeveCategories : undefined,
       interact: filters?.interact,
+      pocket: filters?.pocket,
+      stability: backendStabilityCategories.length > 0 ? backendStabilityCategories : undefined,
       sort: filters?.sort,
       order: filters?.order,
-      // Add range parameters to the request
-      eveMin: filters?.eve_min,
-      eveMax: filters?.eve_max,
+      // COMMENTED OUT - EVE range parameters
+      // eveMin: filters?.eve_min,
+      // eveMax: filters?.eve_max,
     };
 
     getMapping(request)

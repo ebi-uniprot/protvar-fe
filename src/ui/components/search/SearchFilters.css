@@ -1,4 +1,4 @@
-/* SearchFilters.css - Clean explicit selection */
+/* SearchFilters.css - Clean explicit selection with sections */
 
 .search-filters {
     border: 1px solid #e2e8f0;
@@ -46,13 +46,41 @@
     border-radius: 0 0 8px 8px;
 }
 
+/* Filter Sections */
+.filter-section {
+    padding-bottom: 1.25rem;
+    margin-bottom: 1.25rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.filter-section:last-of-type {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+.section-title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 1rem 0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.structural-switches {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
 /* Filter Layout */
 .filter-row {
     display: flex;
     flex-wrap: wrap;
     gap: 1.5rem;
     align-items: flex-start;
-    margin-bottom: 1rem;
 }
 
 .filter-group {
@@ -136,16 +164,7 @@
     color: #374151;
 }
 
-/* Boolean Filters Section - Switch Style */
-.boolean-filters {
-    border-top: 1px solid #e2e8f0;
-    padding-top: 1rem;
-    margin-top: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-}
-
+/* Switch Style Filters */
 .switch-filter {
     display: flex;
     align-items: center;
@@ -290,6 +309,20 @@
         justify-content: center;
     }
 
+    .filter-section {
+        padding-bottom: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .section-title {
+        font-size: 0.8rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .structural-switches {
+        margin-top: 0.75rem;
+    }
+
     .filter-actions {
         justify-content: stretch;
     }
@@ -330,6 +363,16 @@
 
     .filter-panel {
         padding: 1rem;
+    }
+
+    .filter-section {
+        padding-bottom: 0.75rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .section-title {
+        font-size: 0.75rem;
+        margin-bottom: 0.5rem;
     }
 
     .filter-button {
