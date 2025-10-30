@@ -5,23 +5,42 @@ import {
   CADD_CATEGORIES,
   ALPHAMISSENSE_CATEGORIES,
   POPEVE_CATEGORIES,
-  STABILITY_CATEGORIES
+  STABILITY_CATEGORIES,
+  ALLELE_FREQ_CATEGORIES
 } from "./filterConstants";
-//import RangeSlider from "./RangeSlider";
+import RangeSlider from "./RangeSlider";
 
 export interface SearchFilterParams {
-  known?: boolean;
-  cadd: string[];
-  am: string[];
-  popeve: string[];  // NEW: Added popEVE categories
+  // Variant Type
+  variant?: 'known' | 'potential';  // Radio button (default: 'known')
+
+  // Functional
+  ptm?: boolean;
+  mutagen?: boolean;
+  consMin?: number;
+  consMax?: number;
+  domain?: boolean;
+
+  // Population
+  disease?: boolean;
+  freq: string[];
+
+  // Structural
+  expModel?: boolean;
   interact?: boolean;
   pocket?: boolean;
   stability: string[];
+
+  // Consequence
+  cadd: string[];
+  am: string[];
+  popeve: string[];
+  esmMin?: number;
+  esmMax?: number;
+
+  // Sorting
   sort?: string;
   order?: "asc" | "desc";
-  // COMMENTED OUT - EVE range parameters
-  // eve_min?: number;
-  // eve_max?: number;
 }
 
 interface SearchFiltersProps {
@@ -33,7 +52,7 @@ interface SearchFiltersProps {
   className?: string;
 }
 
-const SORT_FIELDS = ["cadd", "am", "popeve"]  // Changed from "eve" to "popeve"
+const SORT_FIELDS = ["cadd", "am", "popeve", "esm1b"]
 
 const SearchFilters: React.FC<SearchFiltersProps> = ({
                                                        filters,
@@ -45,17 +64,24 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                                                      }) => {
   // Auto-expand if any filters are active
   const isAnyFilterActive =
-    filters.known !== undefined ||
-    filters.cadd.length > 0 ||
-    filters.am.length > 0 ||
-    filters.popeve.length > 0 ||  // NEW: Check popEVE
+    filters.variant !== undefined ||
+    filters.ptm !== undefined ||
+    filters.mutagen !== undefined ||
+    filters.consMin !== undefined ||
+    filters.consMax !== undefined ||
+    filters.domain !== undefined ||
+    filters.disease !== undefined ||
+    filters.freq.length > 0 ||
+    filters.expModel !== undefined ||
     filters.interact !== undefined ||
     filters.pocket !== undefined ||
     filters.stability.length > 0 ||
+    filters.cadd.length > 0 ||
+    filters.am.length > 0 ||
+    filters.popeve.length > 0 ||
+    filters.esmMin !== undefined ||
+    filters.esmMax !== undefined ||
     filters.sort !== undefined;
-  // COMMENTED OUT - EVE range check
-  // filters.eve_min !== undefined ||
-  // filters.eve_max !== undefined;
 
   const [isExpanded, setIsExpanded] = useState(isAnyFilterActive);
 
@@ -65,7 +91,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
     }
   }, [isAnyFilterActive]);
 
-  const handleCheckboxChange = (key: "cadd" | "am" | "popeve" | "stability", value: string) => {
+  const handleCheckboxChange = (key: "cadd" | "am" | "popeve" | "stability" | "freq", value: string) => {
     const lowerValue = value.toLowerCase();
     const currentValues = filters[key].map(v => v.toLowerCase());
     const updated = currentValues.includes(lowerValue)
@@ -75,10 +101,33 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
     onFiltersChange({ ...filters, [key]: updated });
   };
 
-  const handleBooleanChange = (key: 'known' | 'interact' | 'pocket', checked: boolean) => {
+  const handleBooleanChange = (key: keyof SearchFilterParams, checked: boolean) => {
     onFiltersChange({
       ...filters,
       [key]: checked ? true : undefined
+    });
+  };
+
+  const handleVariantChange = (value: 'known' | 'potential') => {
+    onFiltersChange({
+      ...filters,
+      variant: value
+    });
+  };
+
+  const handleConservationChange = (low: number | undefined, high: number | undefined) => {
+    onFiltersChange({
+      ...filters,
+      consMin: low,
+      consMax: high
+    });
+  };
+
+  const handleEsm1bChange = (low: number | undefined, high: number | undefined) => {
+    onFiltersChange({
+      ...filters,
+      esmMin: low,
+      esmMax: high
     });
   };
 
@@ -96,31 +145,12 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
       });
     }
   };
-  // COMMENTED OUT - EVE range handler
-  /*
-  const handleRangeChange = (paramName: string, low: number | null, high: number | null) => {
-    const minKey = `${paramName}_min` as keyof SearchFilterParams;
-    const maxKey = `${paramName}_max` as keyof SearchFilterParams;
 
-    onFiltersChange({
-      ...filters,
-      [minKey]: low ?? undefined,
-      [maxKey]: high ?? undefined
-    });
-  };
-  */
-
-  const isCaddSelected = (value: string) =>
-    filters.cadd.includes(value.toLowerCase());
-
-  const isAmSelected = (value: string) =>
-    filters.am.includes(value.toLowerCase());
-
-  const isPopEveSelected = (value: string) =>
-    filters.popeve.includes(value.toLowerCase());
-
-  const isStabilitySelected = (value: string) =>
-    filters.stability.includes(value.toLowerCase());
+  const isCaddSelected = (value: string) => filters.cadd.includes(value.toLowerCase());
+  const isAmSelected = (value: string) => filters.am.includes(value.toLowerCase());
+  const isPopEveSelected = (value: string) => filters.popeve.includes(value.toLowerCase());
+  const isStabilitySelected = (value: string) => filters.stability.includes(value.toLowerCase());
+  const isFreqSelected = (value: string) => filters.freq.includes(value.toLowerCase());
 
   return (
     <div className={`search-filters ${className}`}>
@@ -134,30 +164,178 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
       {isExpanded && (
         <div className="filter-panel">
 
-          {/* 1. Variant Type Filter - Known/Potential */}
+          {/* 1. Variant Type - Radio Buttons */}
           <div className="filter-section">
-            <div className="switch-filter">
-              <label className="switch-label">
-                <div className="switch-container">
-                  <input
-                    type="checkbox"
-                    className="switch-input"
-                    checked={filters.known !== true}
-                    onChange={(e) => handleBooleanChange('known', !e.target.checked)}
-                  />
-                  <span className="switch-slider"></span>
-                </div>
-                <span className="switch-text">
-                  {filters.known !== true
-                    ? "Include known + potential variants"
-                    : "Known variants only"
-                  }
-                </span>
+            <h4 className="section-title">Variant Type</h4>
+            <div className="radio-group">
+              <label className="radio-label">
+                <input
+                  type="radio"
+                  name="variant"
+                  value="known"
+                  checked={filters.variant === 'known' || filters.variant === undefined}
+                  onChange={() => handleVariantChange('known')}
+                />
+                <span>Known variants</span>
+              </label>
+              <label className="radio-label">
+                <input
+                  type="radio"
+                  name="variant"
+                  value="potential"
+                  checked={filters.variant === 'potential'}
+                  onChange={() => handleVariantChange('potential')}
+                />
+                <span>Potential variants</span>
               </label>
             </div>
           </div>
 
-          {/* 2. Consequence */}
+          {/* 2. Functional */}
+          <div className="filter-section">
+            <h4 className="section-title">Functional</h4>
+
+            <div className="checkbox-group">
+              <label className="checkbox-label">
+                <input
+                  disabled={true}
+                  title={"COMING SOON"}
+                  type="checkbox"
+                  checked={filters.ptm === true}
+                  onChange={(e) => handleBooleanChange('ptm', e.target.checked)}
+                />
+                <span>PTM (Post-Translational Modification)</span>
+              </label>
+
+              <label className="checkbox-label">
+                <input
+                  disabled={true}
+                  title={"COMING SOON"}
+                  type="checkbox"
+                  checked={filters.mutagen === true}
+                  onChange={(e) => handleBooleanChange('mutagen', e.target.checked)}
+                />
+                <span>Mutagenesis</span>
+              </label>
+
+              <label className="checkbox-label">
+                <input
+                  disabled={true}
+                  title={"COMING SOON"}
+                  type="checkbox"
+                  checked={filters.domain === true}
+                  onChange={(e) => handleBooleanChange('domain', e.target.checked)}
+                />
+                <span>Functional Domain</span>
+              </label>
+            </div>
+
+            <div className="filter-row" style={{marginTop: '1rem'}}>
+              <RangeSlider
+                label="Conservation"
+                min={0}
+                max={1}
+                step={0.01}
+                initialLow={filters.consMin}
+                initialHigh={filters.consMax}
+                onChange={handleConservationChange}
+              />
+            </div>
+          </div>
+
+          {/* 3. Population */}
+          <div className="filter-section">
+            <h4 className="section-title">Population</h4>
+
+            <div className="checkbox-group">
+              <label className="checkbox-label">
+                <input
+                  disabled={true}
+                  title={"COMING SOON"}
+                  type="checkbox"
+                  checked={filters.disease === true}
+                  onChange={(e) => handleBooleanChange('disease', e.target.checked)}
+                />
+                <span>Disease Association</span>
+              </label>
+            </div>
+
+            <div className="filter-row" style={{marginTop: '1rem'}}>
+              <div className="filter-group">
+                <label>Allele Frequency</label>
+                <div className="button-group compact">
+                  {ALLELE_FREQ_CATEGORIES.map(cat => (
+                    <button
+                      key={cat.value}
+                      className={`filter-button ${isFreqSelected(cat.value) ? "selected" : ""}`}
+                      onClick={() => handleCheckboxChange("freq", cat.value)}
+                    >
+                      {isFreqSelected(cat.value)
+                        ? <i className="bi-check-lg tick"></i>
+                        : <i className="bi-plus-lg plus"></i>}
+                      {' '}{cat.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 4. Structural */}
+          <div className="filter-section">
+            <h4 className="section-title">Structural</h4>
+
+            <div className="checkbox-group">
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={filters.expModel === true}
+                  onChange={(e) => handleBooleanChange('expModel', e.target.checked)}
+                />
+                <span>Experimental Model</span>
+              </label>
+
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={filters.interact === true}
+                  onChange={(e) => handleBooleanChange('interact', e.target.checked)}
+                />
+                <span>Protein-Protein Interface</span>
+              </label>
+
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={filters.pocket === true}
+                  onChange={(e) => handleBooleanChange('pocket', e.target.checked)}
+                />
+                <span>Predicted Pocket</span>
+              </label>
+            </div>
+
+            <div className="filter-row" style={{marginTop: '1rem'}}>
+              <div className="filter-group">
+                <label>Stability</label>
+                <div className="button-group compact">
+                  {STABILITY_CATEGORIES.map(cat => (
+                    <button
+                      key={cat.value}
+                      className={`filter-button ${isStabilitySelected(cat.value) ? "selected" : ""}`}
+                      onClick={() => handleCheckboxChange("stability", cat.value)}
+                    >
+                      {isStabilitySelected(cat.value)
+                        ? <i className="bi-check-lg tick"></i>
+                        : <i className="bi-plus-lg plus"></i>}
+                      {' '}{cat.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 5. Consequence */}
           <div className="filter-section">
             <h4 className="section-title">Consequence</h4>
             <div className="filter-row">
@@ -199,9 +377,9 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                 </div>
               </div>
 
-              {/* NEW: popEVE Score Categories */}
+              {/* popEVE */}
               <div className="filter-group">
-                <label>popEVE Score</label>
+                <label>popEVE</label>
                 <div className="button-group compact">
                   {POPEVE_CATEGORIES.map(cat => (
                     <button
@@ -218,81 +396,20 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                 </div>
               </div>
 
-              {/* COMMENTED OUT - EVE Score Range */}
-              {/*
+              {/* ESM1b */}
               <RangeSlider
-                label="EVE Score"
-                paramName="eve"
-                min={0}
-                max={1}
-                step={0.01}
-                onRangeChange={handleRangeChange}
-                initialLow={filters.eve_min}
-                initialHigh={filters.eve_max}
+                label="ESM1b"
+                min={-25}
+                max={0}
+                step={0.1}
+                initialLow={filters.esmMin}
+                initialHigh={filters.esmMax}
+                onChange={handleEsm1bChange}
               />
-              */}
             </div>
           </div>
 
-          {/* 3. Structural */}
-          <div className="filter-section">
-            <h4 className="section-title">Structural</h4>
-            <div className="filter-row">
-              {/* Stability */}
-              <div className="filter-group">
-                <label>Stability</label>
-                <div className="button-group compact">
-                  {STABILITY_CATEGORIES.map(cat => (
-                    <button
-                      key={cat.value}
-                      className={`filter-button ${isStabilitySelected(cat.value) ? "selected" : ""}`}
-                      onClick={() => handleCheckboxChange("stability", cat.value)}
-                    >
-                      {isStabilitySelected(cat.value)
-                        ? <i className="bi-check-lg tick"></i>
-                        : <i className="bi-plus-lg plus"></i>}
-                      {' '}{cat.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Pocket and Interaction filters */}
-            <div className="structural-switches">
-              <div className="switch-filter">
-                <label className="switch-label">
-                  <div className="switch-container">
-                    <input
-                      type="checkbox"
-                      className="switch-input"
-                      checked={filters.pocket === true}
-                      onChange={(e) => handleBooleanChange('pocket', e.target.checked)}
-                    />
-                    <span className="switch-slider"></span>
-                  </div>
-                  <span className="switch-text">Variants in predicted pockets only</span>
-                </label>
-              </div>
-
-              <div className="switch-filter">
-                <label className="switch-label">
-                  <div className="switch-container">
-                    <input
-                      type="checkbox"
-                      className="switch-input"
-                      checked={filters.interact === true}
-                      onChange={(e) => handleBooleanChange('interact', e.target.checked)}
-                    />
-                    <span className="switch-slider"></span>
-                  </div>
-                  <span className="switch-text">Variants in protein interactions only</span>
-                </label>
-              </div>
-            </div>
-          </div>
-
-          {/* 4. Sorting - Only show if showSorting is true (results page) */}
+          {/* 6. Sorting */}
           {showSorting && (
             <div className="filter-section">
               <h4 className="section-title">Sort Results</h4>
@@ -306,7 +423,9 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                         className={`filter-button ${filters.sort === field ? "selected" : ""}`}
                         onClick={() => handleSortChange("sort", filters.sort === field ? "" : field)}
                       >
-                        {field === "cadd" ? "CADD" : field === "am" ? "AlphaMissense" : "popEVE"}
+                        {field === "cadd" ? "CADD" :
+                          field === "am" ? "AlphaMissense" :
+                            field === "popeve" ? "popEVE" : "ESM1b"}
                       </button>
                     ))}
                   </div>
@@ -332,7 +451,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
             </div>
           )}
 
-          {/* Apply Filters Button - Only show if onApply is provided (results page) */}
+          {/* Apply Filters Button */}
           {onApply && (
             <div className="filter-actions">
               <button className="apply-button" onClick={onApply} disabled={loading}>

@@ -10,6 +10,7 @@ import {LOCAL_RESULTS} from "../../../constants/const";
 import {uploadFile, uploadText} from "../../../services/ProtVarService";
 import {API_ERROR, QUERY, RESULT} from "../../../constants/BrowserPaths";
 import {readFirstLineFromFile} from "../../../utills/FileUtil";
+import { DEFAULT_SEARCH_FILTERS } from '../../components/search/defaultFilters';
 import SearchFilters, {
   SearchFilterParams
 } from '../../components/search/SearchFilters';
@@ -60,20 +61,6 @@ NC_000011.10:g.5248232A>T`;
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
-const DEFAULT_FILTERS = {
-  known: undefined,
-  cadd: [],
-  am: [],
-  popeve: [],
-  interact: undefined,
-  pocket: undefined,
-  stability: [],
-  // No sort/order for search page,
-  // COMMENTED OUT - EVE range parameters
-  // eve_min: undefined,
-  // eve_max: undefined,
-}
-
 const SearchPage: React.FC = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -89,7 +76,7 @@ const SearchPage: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { getItem, setItem } = useLocalStorage();
 
-  const [searchFilters, setSearchFilters] = useState<SearchFilterParams>(DEFAULT_FILTERS);
+  const [searchFilters, setSearchFilters] = useState<SearchFilterParams>(DEFAULT_SEARCH_FILTERS);
 
   const handleModeChange = (mode: SearchMode) => {
     setActiveMode(mode);
@@ -322,7 +309,7 @@ const SearchPage: React.FC = () => {
     setResultsVisible(false);
     setError('');
     setLoading(false);
-    setSearchFilters(DEFAULT_FILTERS);
+    setSearchFilters(DEFAULT_SEARCH_FILTERS);
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -513,7 +500,7 @@ const SearchPage: React.FC = () => {
         {activeMode === 'browse' && (
           <SearchFilters
             filters={searchFilters}
-            onFiltersChange={setSearchFilters}
+            onFiltersChange={setSearchFilters} // todo: reset page to 1!
             showSorting={false} // No sorting on search page
           />)
       }

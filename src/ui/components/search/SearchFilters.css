@@ -1,4 +1,4 @@
-/* SearchFilters.css - Clean explicit selection with sections */
+/* SearchFilters.css - Compact version */
 
 .search-filters {
     border: 1px solid #e2e8f0;
@@ -15,7 +15,7 @@
     cursor: pointer;
     text-align: left;
     width: 100%;
-    padding: 1rem;
+    padding: 0.75rem 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -41,15 +41,15 @@
 /* Filter Panel */
 .filter-panel {
     border-top: 1px solid #e2e8f0;
-    padding: 1.5rem;
+    padding: 1rem;
     background: white;
     border-radius: 0 0 8px 8px;
 }
 
 /* Filter Sections */
 .filter-section {
-    padding-bottom: 1.25rem;
-    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    margin-bottom: 0.75rem;
     border-bottom: 1px solid #e2e8f0;
 }
 
@@ -60,26 +60,19 @@
 }
 
 .section-title {
-    font-size: 0.875rem;
+    font-size: 0.8rem;
     font-weight: 700;
     color: #1e293b;
-    margin: 0 0 1rem 0;
+    margin: 0 0 0.75rem 0;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-}
-
-.structural-switches {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    margin-top: 1rem;
 }
 
 /* Filter Layout */
 .filter-row {
     display: flex;
     flex-wrap: wrap;
-    gap: 1.5rem;
+    gap: 1rem;
     align-items: flex-start;
 }
 
@@ -88,12 +81,13 @@
     flex-direction: column;
     min-width: 180px;
     flex: 1;
+    max-width: 300px;
 }
 
 .filter-group > label {
     font-weight: 600;
-    font-size: 0.875rem;
-    margin-bottom: 0.75rem;
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
     color: #374151;
 }
 
@@ -101,7 +95,7 @@
 .button-group {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: 0.375rem;
 }
 
 .button-group.compact {
@@ -113,8 +107,8 @@
     display: flex;
     align-items: center;
     gap: 0.25rem;
-    font-size: 0.8rem;
-    padding: 0.375rem 0.75rem;
+    font-size: 0.75rem;
+    padding: 0.3rem 0.65rem;
     background-color: #f1f5f9;
     border: 1px solid #e2e8f0;
     border-radius: 16px;
@@ -146,13 +140,13 @@
 /* Icons in buttons */
 .tick {
     color: #14b8a6;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: bold;
 }
 
 .plus {
     color: #64748b;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: bold;
 }
 
@@ -164,99 +158,79 @@
     color: #374151;
 }
 
-/* Switch Style Filters */
-.switch-filter {
+/* Radio Button Group */
+.radio-group {
     display: flex;
-    align-items: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
 }
 
-.switch-label {
+.radio-label {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    width: 100%;
-    cursor: pointer;
+    gap: 0.4rem;
+    cursor: default;
     font-weight: 500;
-    font-size: 0.875rem;
+    font-size: 0.8rem;
     color: #374151;
     margin: 0;
+    line-height: 1;
 }
 
-.switch-text {
-    flex: 1;
-}
-
-.switch-container {
-    position: relative;
-    display: inline-block;
-    width: 44px;
-    height: 24px;
+.radio-label input[type="radio"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: #014373;
+    margin: 0;
     flex-shrink: 0;
 }
 
-.switch-input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-    position: absolute;
-}
-
-.switch-slider {
-    position: absolute;
+.radio-label span {
+    user-select: none;
+    line-height: 1.2;
     cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #f1f5f9;
-    transition: 0.3s ease;
-    border-radius: 24px;
-    border: 1px solid #e2e8f0;
 }
 
-.switch-slider:before {
-    position: absolute;
-    content: "";
-    height: 18px;
-    width: 18px;
-    left: 2px;
-    bottom: 2px;
-    background-color: white;
-    transition: 0.3s ease;
-    border-radius: 50%;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+/* Checkbox Group */
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
-.switch-input:checked + .switch-slider {
-    background-color: rgba(1, 67, 115, 0.2);
-    border-color: rgba(1, 67, 115, 0.4);
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    cursor: default;
+    font-weight: 500;
+    font-size: 0.8rem;
+    color: #374151;
+    margin: 0;
+    line-height: 1;
 }
 
-.switch-input:checked + .switch-slider:before {
-    transform: translateX(20px);
-    background-color: #014373;
+.checkbox-label input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: #014373;
+    margin: 0;
+    flex-shrink: 0;
 }
 
-.switch-input:focus + .switch-slider {
-    outline: 2px solid #4a90b8;
-    outline-offset: 2px;
-}
-
-.switch-slider:hover {
-    background-color: #e2e8f0;
-    border-color: #cbd5e1;
-}
-
-.switch-input:checked + .switch-slider:hover {
-    background-color: rgba(1, 67, 115, 0.25);
-    border-color: rgba(1, 67, 115, 0.5);
+.checkbox-label span {
+    user-select: none;
+    line-height: 1.2;
+    cursor: pointer;
 }
 
 /* Apply Button */
 .filter-actions {
     border-top: 1px solid #e2e8f0;
-    padding-top: 1rem;
-    margin-top: 1rem;
+    padding-top: 0.75rem;
+    margin-top: 0.75rem;
     display: flex;
     justify-content: flex-end;
 }
@@ -265,12 +239,12 @@
     background: #014373;
     color: white;
     border: none;
-    padding: 0.75rem 1.5rem;
+    padding: 0.65rem 1.25rem;
     border-radius: 6px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
-    font-size: 0.875rem;
+    font-size: 0.8rem;
 }
 
 .apply-button:hover:not(:disabled) {
@@ -287,16 +261,27 @@
     box-shadow: none;
 }
 
+/* Focus states for accessibility */
+.filter-button:focus,
+.apply-button:focus,
+.filter-header:focus,
+.radio-label input[type="radio"]:focus,
+.checkbox-label input[type="checkbox"]:focus {
+    outline: 2px solid #4a90b8;
+    outline-offset: 2px;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .filter-row {
         flex-direction: column;
-        gap: 1rem;
+        gap: 0.75rem;
     }
 
     .filter-group {
         min-width: unset;
         width: 100%;
+        max-width: none;
     }
 
     .button-group {
@@ -305,64 +290,8 @@
 
     .filter-button {
         flex: 1;
-        min-width: calc(50% - 0.25rem);
+        min-width: calc(50% - 0.2rem);
         justify-content: center;
-    }
-
-    .filter-section {
-        padding-bottom: 1rem;
-        margin-bottom: 1rem;
-    }
-
-    .section-title {
-        font-size: 0.8rem;
-        margin-bottom: 0.75rem;
-    }
-
-    .structural-switches {
-        margin-top: 0.75rem;
-    }
-
-    .filter-actions {
-        justify-content: stretch;
-    }
-
-    .apply-button {
-        width: 100%;
-    }
-
-    .filter-header {
-        font-size: 0.9rem;
-    }
-
-    .switch-label {
-        font-size: 0.8rem;
-    }
-
-    .switch-container {
-        width: 40px;
-        height: 22px;
-    }
-
-    .switch-slider:before {
-        height: 16px;
-        width: 16px;
-        left: 2px;
-        bottom: 2px;
-    }
-
-    .switch-input:checked + .switch-slider:before {
-        transform: translateX(18px);
-    }
-}
-
-@media (max-width: 480px) {
-    .search-filters {
-        margin-bottom: 1rem;
-    }
-
-    .filter-panel {
-        padding: 1rem;
     }
 
     .filter-section {
@@ -375,33 +304,72 @@
         margin-bottom: 0.5rem;
     }
 
-    .filter-button {
-        font-size: 0.75rem;
-        padding: 0.4rem 0.6rem;
-        min-width: calc(50% - 0.125rem);
+    .filter-actions {
+        justify-content: stretch;
     }
 
-    .switch-label {
-        font-size: 0.8rem;
+    .apply-button {
+        width: 100%;
+    }
+
+    .filter-header {
+        font-size: 0.85rem;
+        padding: 0.65rem 0.85rem;
+    }
+
+    .radio-group {
+        gap: 1rem;
+    }
+
+    .checkbox-group {
+        gap: 0.4rem;
+    }
+
+    .radio-label,
+    .checkbox-label {
+        font-size: 0.75rem;
+    }
+
+    .radio-label input[type="radio"],
+    .checkbox-label input[type="checkbox"] {
+        width: 15px;
+        height: 15px;
     }
 }
 
-/* Focus states for accessibility */
-.filter-button:focus,
-.apply-button:focus,
-.filter-header:focus {
-    outline: 2px solid #4a90b8;
-    outline-offset: 2px;
+@media (max-width: 480px) {
+    .search-filters {
+        margin-bottom: 1rem;
+    }
+
+    .filter-panel {
+        padding: 0.85rem;
+    }
+
+    .filter-section {
+        padding-bottom: 0.6rem;
+        margin-bottom: 0.6rem;
+    }
+
+    .section-title {
+        font-size: 0.7rem;
+        margin-bottom: 0.4rem;
+    }
+
+    .filter-button {
+        font-size: 0.7rem;
+        padding: 0.35rem 0.55rem;
+    }
 }
 
 /* High contrast mode support */
 @media (prefers-contrast: more) {
     .filter-button {
-        border-width: 3px;
+        border-width: 2px;
     }
 
     .filter-button.selected {
-        border-width: 3px;
+        border-width: 2px;
     }
 }
 

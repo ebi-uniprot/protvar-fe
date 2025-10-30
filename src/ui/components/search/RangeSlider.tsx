@@ -4,68 +4,64 @@ import './RangeSlider.css';
 
 interface RangeSliderProps {
   label: string;
-  paramName: string;
-  min?: number;
-  max?: number;
+  min: number;
+  max: number;
   step?: number;
-  onRangeChange: (paramName: string, low: number | null, high: number | null) => void;
-  initialLow?: number | null;
-  initialHigh?: number | null;
+  initialLow?: number;
+  initialHigh?: number;
+  onChange: (low: number | undefined, high: number | undefined) => void;
 }
 
 const RangeSlider: React.FC<RangeSliderProps> = ({
-                                                   label,
-                                                   paramName,
-                                                   min = 0,
-                                                   max = 100,
-                                                   step,
-                                                   onRangeChange,
-                                                   initialLow = null,
-                                                   initialHigh = null
-                                                 }) => {
-  // Auto-calculate step if not provided
-  const rangeStep = step ?? (max - min <= 2 ? 0.01 : 1);
-
-  const [isActive, setIsActive] = useState(initialLow !== null || initialHigh !== null);
+                                                                       label,
+                                                                       min,
+                                                                       max,
+                                                                       step = 0.01,
+                                                                       initialLow,
+                                                                       initialHigh,
+                                                                       onChange
+                                                                     }) => {
   const [lowValue, setLowValue] = useState(initialLow ?? min);
   const [highValue, setHighValue] = useState(initialHigh ?? max);
+  const [isActive, setIsActive] = useState(
+    initialLow !== undefined || initialHigh !== undefined
+  );
 
   const handleReset = () => {
-    setIsActive(false);
     setLowValue(min);
     setHighValue(max);
-    onRangeChange(paramName, null, null);
-  };
-
-  const handleApply = () => {
-    setIsActive(true);
-    onRangeChange(paramName, lowValue, highValue);
+    setIsActive(false);
+    onChange(undefined, undefined);
   };
 
   const handleLowChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Math.max(min, Math.min(Number(e.target.value), highValue));
-    setLowValue(Number(value.toFixed(rangeStep < 1 ? 2 : 0)));
+    setLowValue(value);
+    setIsActive(true);
+    onChange(value === min ? undefined : value, highValue === max ? undefined : highValue);
   };
 
   const handleHighChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Math.min(max, Math.max(Number(e.target.value), lowValue));
-    setHighValue(Number(value.toFixed(rangeStep < 1 ? 2 : 0)));
+    setHighValue(value);
+    setIsActive(true);
+    onChange(lowValue === min ? undefined : lowValue, value === max ? undefined : value);
   };
 
   const lowPercent = ((lowValue - min) / (max - min)) * 100;
   const highPercent = ((highValue - min) / (max - min)) * 100;
 
   const formatValue = (value: number) => {
-    return rangeStep < 1 ? value.toFixed(2) : value.toString();
+    return step < 1 ? value.toFixed(2) : value.toString();
   };
 
   return (
     <div className="range-slider">
       <div className="range-slider__header">
         <label className="range-slider__label">{label}</label>
-        {isActive && (
-          <button onClick={handleReset} className="range-slider__clear">
-            Clear
+        {isActive && (lowValue !== min || highValue !== max) && (
+          <button onClick={handleReset} className="range-slider__reset">
+            Reset
           </button>
         )}
       </div>
@@ -85,7 +81,7 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
           type="range"
           min={min}
           max={max}
-          step={rangeStep}
+          step={step}
           value={lowValue}
           onChange={handleLowChange}
           className="range-slider__input"
@@ -94,7 +90,7 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
           type="range"
           min={min}
           max={max}
-          step={rangeStep}
+          step={step}
           value={highValue}
           onChange={handleHighChange}
           className="range-slider__input"
@@ -102,43 +98,10 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
       </div>
 
       <div className="range-slider__values">
-        <div className="range-slider__value-box">
-          <span className="range-slider__value-label">Min</span>
-          <input
-            type="number"
-            min={min}
-            max={highValue}
-            step={rangeStep}
-            value={lowValue}
-            onChange={handleLowChange}
-            className="range-slider__value-input"
-          />
-        </div>
-        <div className="range-slider__value-box">
-          <span className="range-slider__value-label">Max</span>
-          <input
-            type="number"
-            min={lowValue}
-            max={max}
-            step={rangeStep}
-            value={highValue}
-            onChange={handleHighChange}
-            className="range-slider__value-input"
-          />
-        </div>
+        <span className="range-slider__value">{formatValue(lowValue)}</span>
+        <span className="range-slider__separator">—</span>
+        <span className="range-slider__value">{formatValue(highValue)}</span>
       </div>
-
-      {!isActive && (lowValue !== min || highValue !== max) && (
-        <button onClick={handleApply} className="range-slider__apply">
-          Apply Range
-        </button>
-      )}
-
-      {isActive && (
-        <div className="range-slider__active">
-          Range: {formatValue(lowValue)} - {formatValue(highValue)}
-        </div>
-      )}
     </div>
   );
 };

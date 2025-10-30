@@ -17,11 +17,12 @@ import {HelpContent} from "../../components/help/HelpContent";
 import {ShareLink} from "../../components/common/ShareLink";
 import Spaces from "../../elements/Spaces";
 import Loader from "../../elements/Loader";
+import { FILTER_PARAM_KEYS } from "../../components/search/filterParams";
 import {
-  buildFilterParams,
   extractFilters,
+  buildFilterParams,
   mapUiCaddToBackend, mapUiPopeveToBackend,
-  mapUiStabilityToBackend
+  mapUiStabilityToBackend, mapUiAlleleFreqToBackend
 } from "../../components/search/filterUtils";
 import {fromString/*, normalize, resolve*/} from "../../../utills/InputTypeResolver";
 import {InputType} from "../../../types/InputType";
@@ -36,21 +37,6 @@ const MAX_PAGE_EXCEEDED = `The requested page number exceeds the total number of
 export const NO_DATA = 'No data'
 export const NO_RESULT = 'No result to display'
 export const UNEXPECTED_ERR = 'An unexpected error occurred'
-
-const FILTER_PARAMS_LIST = [
-  'known',
-  'cadd',
-  'am',
-  'popeve',  // CHANGED: from 'eve_min', 'eve_max' to 'popeve'
-  'interact',
-  'pocket',
-  'stability',
-  'sort',
-  'order',
-  // COMMENTED OUT - EVE range parameters
-  // 'eve_min',
-  // 'eve_max',
-]
 
 function ResultPageContent() {
   const navigate = useNavigate();
@@ -134,6 +120,12 @@ function ResultPageContent() {
       mapUiPopeveToBackend(filters.popeve) : [];  // NEW: Map popEVE
     const backendStabilityCategories = filters?.stability ?
       mapUiStabilityToBackend(filters.stability) : [];
+    const backendAlleleFreqCategories = filters?.freq ?
+      mapUiAlleleFreqToBackend(filters.freq) : [];
+
+    // Determine 'known' boolean from variantType
+    // Default is 'known' (true), unless explicitly set to 'potential' (undefined/false)
+    const knownVariants = filters?.variant !== 'potential' ? true : undefined;
 
     // page null or 1, no param
     // pageSize null or PAGE_SIZE, no param
@@ -144,18 +136,36 @@ function ResultPageContent() {
       page,
       pageSize,
       assembly: assembly ?? undefined,
-      known: filters?.known,
-      cadd: backendCaddCategories.length > 0 ? backendCaddCategories : undefined,
-      am: filters?.am ?? [],
-      popeve: backendPopeveCategories.length > 0 ? backendPopeveCategories : undefined,
+      // Variant Type (mapped to existing 'known' backend field)
+      known: knownVariants,
+
+      // Functional (not yet implemented in backend - will be added later)
+      ptm: filters?.ptm,
+      mutagenesis: filters?.mutagen,
+      conservationMin: filters?.consMin,
+      conservationMax: filters?.consMax,
+      functionalDomain: filters?.domain,
+
+      // Population (not yet implemented in backend - will be added later)
+      diseaseAssociation: filters?.disease,
+      alleleFreq: backendAlleleFreqCategories.length > 0 ? backendAlleleFreqCategories : undefined,
+
+      // Structural
+      experimentalModel: filters?.expModel,
       interact: filters?.interact,
       pocket: filters?.pocket,
       stability: backendStabilityCategories.length > 0 ? backendStabilityCategories : undefined,
+
+      // Consequence
+      cadd: backendCaddCategories.length > 0 ? backendCaddCategories : undefined,
+      am: filters?.am ?? [],
+      popeve: backendPopeveCategories.length > 0 ? backendPopeveCategories : undefined,
+      esm1bMin: filters?.esmMin,
+      esm1bMax: filters?.esmMax,
+
+      // Sorting
       sort: filters?.sort,
       order: filters?.order,
-      // COMMENTED OUT - EVE range parameters
-      // eveMin: filters?.eve_min,
-      // eveMax: filters?.eve_max,
     };
 
     getMapping(request)
@@ -280,8 +290,8 @@ function ResultPageContent() {
   const handleApplyFilters = () => {
     const newSearchParams = new URLSearchParams(searchParams);
 
-    // Clear existing filter params
-    FILTER_PARAMS_LIST.forEach(key => newSearchParams.delete(key));
+    // Clear existing filter params using the centralized list
+    FILTER_PARAM_KEYS.forEach(key => newSearchParams.delete(key));
 
     // Use shared utility to build filter params
     const filterParams = buildFilterParams(localFilters);
@@ -358,7 +368,7 @@ function ResultPageContent() {
     {inputType !== 'input_id' && inputType !== 'variant' && (
       <SearchFilters
         filters={localFilters}
-        onFiltersChange={setLocalFilters}
+        onFiltersChange={setLocalFilters} // todo: reset page to 1!
         onApply={handleApplyFilters}
         loading={loading}
         showSorting={true} // Show sorting on results page

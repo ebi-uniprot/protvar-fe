@@ -44,3 +44,12 @@ export const POPEVE_CATEGORIES = [
   { value: 'moderate', label: 'Moderately Deleterious' },
   { value: 'unlikely', label: 'Unlikely Deleterious' }
 ];
+
+export const VALID_ALLELE_FREQ_VALUES = ['very_rare', 'rare', 'low', 'common'];
+
+export const ALLELE_FREQ_CATEGORIES = [
+  { value: 'very_rare', label: 'Very Rare' },
+  { value: 'rare', label: 'Rare' },
+  { value: 'low', label: 'Low' },
+  { value: 'common', label: 'Common' }
+];
