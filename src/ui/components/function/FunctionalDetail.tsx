@@ -4,7 +4,7 @@ import FunctionalDataRow from './FunctionalDataRow';
 import LoaderRow from '../../pages/result/LoaderRow';
 import {getFunctionalData} from "../../../services/ProtVarService";
 import {FunctionalInfo} from "../../../types/FunctionalInfo";
-import {AmScore, ConservScore, EsmScore, EveScore, TranslatedSequence} from "../../../types/MappingResponse";
+import {AmScore, TranslatedSequence} from "../../../types/MappingResponse";
 
 
 export interface FunctionalDetailProps {
@@ -15,10 +15,7 @@ export interface FunctionalDetailProps {
   ensg: string
   ensp: Array<TranslatedSequence>
   caddScore: string
-  conservScore: ConservScore
   amScore: AmScore
-  eveScore: EveScore
-  esmScore: EsmScore
 }
 
 function FunctionalDetail(props: FunctionalDetailProps) {
@@ -33,7 +30,7 @@ function FunctionalDetail(props: FunctionalDetailProps) {
   }, [referenceFunctionUri]);
   if (!apiData)
     return <LoaderRow />
-  else if (apiData.id)
+  else if (apiData.entryId)
     return <FunctionalDataRow functionalData={apiData} {...props} />
   else
     return <NoFunctionalDataRow />;

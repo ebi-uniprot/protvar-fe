@@ -1,5 +1,5 @@
 import React from "react";
-import {downloadStatus} from "../../../pages/download/DownloadPage";
+import {statusMap} from "../../../pages/download/DownloadPage";
 
 export const ResultDownloadHelp = () => {
   return <div className="help">
@@ -27,11 +27,11 @@ export const ResultDownloadHelp = () => {
     </ul>
 
     <p><strong>General Format</strong></p>
-    <p>The format for download IDs is as follows: <code>UUID[-<em>page</em>][-<em>pageSize</em>]</code></p>
+    <p>The format for download IDs is as follows: <code>prefix[-<em>page</em>][-<em>pageSize</em>]</code></p>
 
     <p><strong>Components:</strong></p>
     <ul>
-      <li><code>UUID</code>: The unique identifier for the input.</li>
+      <li><code>prefix</code>: This can be a 32-character user-input ID or a other input such as a UniProt accession, gene symbol, etc.</li>
       <li><code>page</code> (optional): Indicates the specific page number being downloaded.</li>
       <li><code>pageSize</code> (optional): Indicates the number of results per page if it differs from the default.</li>
     </ul>
@@ -48,12 +48,13 @@ export const ResultDownloadHelp = () => {
     </ul>
 
     <p><strong>General Format with Annotations</strong></p>
-    <p>The format for download IDs with options is as
-      follows: <code>UUID[-fun][-pop][-str][-<em>page</em>][-<em>pageSize</em>]</code></p>
+    <p>The format for download IDs that include annotation options is as follows:
+      <code>PREFIX[-fun][-pop][-str][-<em>page</em>][-<em>pageSize</em>]</code>
+    </p>
 
     <p><strong>Whole Protein Downloads</strong></p>
-    <p>The same format applies for whole protein downloads, but the UniProt accession is used as the ID instead of the
-      randomly generated UUID for custom inputs. The format for whole protein download IDs
+    <p>The same format applies for whole protein downloads, but the UniProt accession is used as the prefix instead of the
+      user input ID. The format for whole protein download IDs
       is: <code>ACCESSION[-fun][-pop][-str][-<em>page</em>][-<em>pageSize</em>]</code>.</p>
 
     <p>This ensures that download file names accurately reflect the scope of the data they contain, helping to keep
@@ -65,13 +66,13 @@ export const ResultDownloadHelp = () => {
 
     <p><strong>Download Status</strong></p>
     <ul>
-      <li><span className={downloadStatus[1].icon}></span> <em>{downloadStatus[1].text}:</em> The download is prepared and
+      <li><span className={statusMap[1].icon}></span> <em>{statusMap[1].text}:</em> The download is prepared and
         available for retrieval.
       </li>
-      <li><span className={downloadStatus[0].icon}></span> <em>{downloadStatus[0].text}:</em> The download is currently
+      <li><span className={statusMap[0].icon}></span> <em>{statusMap[0].text}:</em> The download is currently
         being prepared and will be available soon.
       </li>
-      <li><span className={downloadStatus[-1].icon}></span> <em>{downloadStatus[-1].text}:</em> The download cannot be
+      <li><span className={statusMap[-1].icon}></span> <em>{statusMap[-1].text}:</em> The download cannot be
         prepared due to an error or missing data.
       </li>
     </ul>

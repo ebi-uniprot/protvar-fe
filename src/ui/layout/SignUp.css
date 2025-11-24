@@ -1,0 +1,19 @@
+.newsletter-form {
+    margin-left: auto;
+    padding: 0 1rem;
+
+    .subscription-input {
+        display: flex;
+
+        .email-input {
+            flex: 1;
+        }
+        .subscribe-button {
+            border-radius: 4px;
+            background-color: #CDD9E4;
+            color: #240F16;
+            margin-left: 0.5rem;
+            font-weight: 400;
+        }
+    }
+}

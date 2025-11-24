@@ -39,7 +39,7 @@ function PredictedStructureTable(props: PredictedStructureTableProps) {
 
   props.predictedStructureData.forEach(predStruc => {
 
-    const rowId = predStruc.entryId
+    const rowId = predStruc.modelEntityId
     const isRowSelected = props.selectedPredictedStructure === rowId;
     const rowClass = isRowSelected ? 'clickable-row active' : 'clickable-row';
 
@@ -63,8 +63,8 @@ function PredictedStructureTable(props: PredictedStructureTableProps) {
                               onClick={() => props.pdbeRef.highlightPocket(props.aaPos, pocket.resid)}>{highlightText}</button>)
     });
 
-    const row = <tr className={rowClass} onClick={clicked} key={predStruc.entryId}>
-      <td className="small">{predStruc.entryId}</td>
+    const row = <tr className={rowClass} onClick={clicked} key={predStruc.modelEntityId}>
+      <td className="small">{predStruc.modelEntityId}</td>
       <td className="small">{props.aaPos}</td>
       <td className="small">{props.pocketData.length === 0 ? '-' : pocketsList}</td>
     </tr>

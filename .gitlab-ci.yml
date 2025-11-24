@@ -1,5 +1,5 @@
 include:
-  - project: uniprot/framework/protvar-deploy
+  - project: uniprot/variation/protvar-deploy
     ref: master
     file: /ci-templates/gitlab-ci-template.yml
 
@@ -14,13 +14,15 @@ stages:
 
 workflow:
   rules:
+    #- if: $CI_COMMIT_BRANCH == "dev"
+    #  when: never # temporarily skip dev pipeline
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
       variables:
         BE_API: "https://www.ebi.ac.uk/ProtVar/api"
     - when: always # Run the pipeline in other cases
 
 .js:
-  image: node:16.15.1
+  image: node:18.20
   before_script:
     - node --version
     - npm --version

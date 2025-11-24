@@ -7,10 +7,9 @@ import ReleasePage from "./pages/ReleasePage";
 import ContactPage from "./pages/ContactPage";
 import {ABOUT, API_ERROR, CONTACT, DOWNLOAD, HELP, HOME, QUERY, RELEASE, RESULT} from "../constants/BrowserPaths";
 import QueryPage from "./pages/query/QueryPage";
-import {Assembly} from "../constants/CommonTypes";
 import DownloadPage from "./pages/download/DownloadPage";
 import HelpPage from "./pages/help/HelpPage";
-import {InputType, PagedMappingResponse} from "../types/PagedMappingResponse";
+import {PagedMappingResponse} from "../types/PagedMappingResponse";
 import ResultPage from "./pages/result/ResultPage";
 import "bootstrap-icons/font/bootstrap-icons.css"
 import ResultListPage from "./pages/result/ResultListPage";
@@ -28,9 +27,9 @@ export interface AppState {
   showModal: boolean
   modalContent: React.JSX.Element
   // V2
-  textInput: string
-  file: File | null
-  assembly: Assembly
+  //textInput: string
+  //file: File | null
+  //assembly: GenomeAssembly
   pageSize: number
   response: PagedMappingResponse | null
   updateState: (key: string, value: any) => void
@@ -42,9 +41,9 @@ export const initialState = {
   showModal: false,
   modalContent: empty,
   // V2
-  textInput: "",
-  file: null,
-  assembly: Assembly.AUTO,
+  //textInput: '',
+  //file: null,
+  //assembly: 'auto',
   pageSize: DEFAULT_PAGE_SIZE, // needs to be localStore, not appState
   response: null,
   updateState: (key: string, value: any) => {}
@@ -77,7 +76,8 @@ export default function App() {
         <Routes>
           <Route path={HOME} element={<HomePage />} />
           <Route path={`${RESULT}`} element={<ResultListPage />} />
-          <Route path={`${RESULT}/:id`} element={<ResultPage inputType={InputType.ID} />} />
+          {/* Route for user inputId - result/{inputId} */}
+          <Route path={`${RESULT}/:input`} element={<ResultPage />} />
           <Route path={QUERY} element={<QueryPage queryType="search" />} />
           <Route path={API_ERROR} element={<APIErrorPage />} />
           <Route path={ABOUT} element={<AboutPage />} />
@@ -94,8 +94,8 @@ export default function App() {
             path="/:param1/:param2/:param3?/:param4?"
             element={<QueryPage queryType="chromosome_protein" />}
           />
-          {/* Route for protein accession */}
-          <Route path="/:id" element={<ResultPage  inputType={InputType.PROTEIN_ACCESSION} />} />
+          {/* Route for other input types */}
+          <Route path="/:input" element={<ResultPage />} />
 
           {/* Catch-all route for anything not matched above */}
           <Route path="*" element={<NotFoundPage />} />

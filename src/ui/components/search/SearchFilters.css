@@ -1,0 +1,390 @@
+/* SearchFilters.css - Compact version */
+
+.search-filters {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background: #f8fafc;
+    margin-bottom: 1.5rem;
+}
+
+/* Toggle Header */
+.filter-header {
+    background: none;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: left;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #374151;
+    transition: background-color 0.2s ease;
+}
+
+.filter-header:hover {
+    background: #f1f5f9;
+}
+
+.filter-header span {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.filter-header i[class*="chevron"] {
+    color: #64748b;
+    transition: transform 0.2s ease;
+}
+
+/* Filter Panel */
+.filter-panel {
+    border-top: 1px solid #e2e8f0;
+    padding: 1rem;
+    background: white;
+    border-radius: 0 0 8px 8px;
+}
+
+/* Filter Sections */
+.filter-section {
+    padding-bottom: 0.75rem;
+    margin-bottom: 0.75rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.filter-section:last-of-type {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+.section-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 0.75rem 0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Filter Layout */
+.filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: flex-start;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    min-width: 180px;
+    flex: 1;
+    max-width: 300px;
+}
+
+.filter-group > label {
+    font-weight: 600;
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+    color: #374151;
+}
+
+/* Button Groups */
+.button-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+}
+
+.button-group.compact {
+    gap: 0.25rem;
+}
+
+/* Filter Buttons - Chip/tag style */
+.filter-button {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.75rem;
+    padding: 0.3rem 0.65rem;
+    background-color: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    cursor: pointer;
+    color: #64748b;
+    transition: all 0.2s ease;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.filter-button:hover {
+    background-color: #e2e8f0;
+    border-color: #cbd5e1;
+    color: #374151;
+}
+
+.filter-button.selected {
+    background-color: rgba(1, 67, 115, 0.2);
+    color: #014373;
+    border-color: rgba(1, 67, 115, 0.4);
+    font-weight: 600;
+}
+
+.filter-button.selected:hover {
+    background-color: rgba(1, 67, 115, 0.25);
+    border-color: rgba(1, 67, 115, 0.5);
+}
+
+/* Icons in buttons */
+.tick {
+    color: #14b8a6;
+    font-size: 0.7rem;
+    font-weight: bold;
+}
+
+.plus {
+    color: #64748b;
+    font-size: 0.7rem;
+    font-weight: bold;
+}
+
+.filter-button.selected .tick {
+    color: #014373;
+}
+
+.filter-button:hover .plus {
+    color: #374151;
+}
+
+/* Radio Button Group */
+.radio-group {
+    display: flex;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+}
+
+.radio-label {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    cursor: default;
+    font-weight: 500;
+    font-size: 0.8rem;
+    color: #374151;
+    margin: 0;
+    line-height: 1;
+}
+
+.radio-label input[type="radio"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: #014373;
+    margin: 0;
+    flex-shrink: 0;
+}
+
+.radio-label span {
+    user-select: none;
+    line-height: 1.2;
+    cursor: pointer;
+}
+
+/* Checkbox Group */
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    cursor: default;
+    font-weight: 500;
+    font-size: 0.8rem;
+    color: #374151;
+    margin: 0;
+    line-height: 1;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: #014373;
+    margin: 0;
+    flex-shrink: 0;
+}
+
+.checkbox-label span {
+    user-select: none;
+    line-height: 1.2;
+    cursor: pointer;
+}
+
+/* Apply Button */
+.filter-actions {
+    border-top: 1px solid #e2e8f0;
+    padding-top: 0.75rem;
+    margin-top: 0.75rem;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.apply-button {
+    background: #014373;
+    color: white;
+    border: none;
+    padding: 0.65rem 1.25rem;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.8rem;
+}
+
+.apply-button:hover:not(:disabled) {
+    background: #012d5a;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(1, 67, 115, 0.3);
+}
+
+.apply-button:disabled {
+    background: #cbd5e1;
+    cursor: not-allowed;
+    opacity: 0.6;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Focus states for accessibility */
+.filter-button:focus,
+.apply-button:focus,
+.filter-header:focus,
+.radio-label input[type="radio"]:focus,
+.checkbox-label input[type="checkbox"]:focus {
+    outline: 2px solid #4a90b8;
+    outline-offset: 2px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .filter-row {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .filter-group {
+        min-width: unset;
+        width: 100%;
+        max-width: none;
+    }
+
+    .button-group {
+        justify-content: flex-start;
+    }
+
+    .filter-button {
+        flex: 1;
+        min-width: calc(50% - 0.2rem);
+        justify-content: center;
+    }
+
+    .filter-section {
+        padding-bottom: 0.75rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .section-title {
+        font-size: 0.75rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .filter-actions {
+        justify-content: stretch;
+    }
+
+    .apply-button {
+        width: 100%;
+    }
+
+    .filter-header {
+        font-size: 0.85rem;
+        padding: 0.65rem 0.85rem;
+    }
+
+    .radio-group {
+        gap: 1rem;
+    }
+
+    .checkbox-group {
+        gap: 0.4rem;
+    }
+
+    .radio-label,
+    .checkbox-label {
+        font-size: 0.75rem;
+    }
+
+    .radio-label input[type="radio"],
+    .checkbox-label input[type="checkbox"] {
+        width: 15px;
+        height: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .search-filters {
+        margin-bottom: 1rem;
+    }
+
+    .filter-panel {
+        padding: 0.85rem;
+    }
+
+    .filter-section {
+        padding-bottom: 0.6rem;
+        margin-bottom: 0.6rem;
+    }
+
+    .section-title {
+        font-size: 0.7rem;
+        margin-bottom: 0.4rem;
+    }
+
+    .filter-button {
+        font-size: 0.7rem;
+        padding: 0.35rem 0.55rem;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: more) {
+    .filter-button {
+        border-width: 2px;
+    }
+
+    .filter-button.selected {
+        border-width: 2px;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .filter-button,
+    .apply-button,
+    .filter-header,
+    .filter-header i[class*="chevron"] {
+        transition: none;
+    }
+
+    .filter-button:hover,
+    .filter-button.selected:hover,
+    .apply-button:hover:not(:disabled) {
+        transform: none;
+    }
+}

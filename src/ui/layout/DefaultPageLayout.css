@@ -1,0 +1,53 @@
+/* Add this to your main layout CSS file */
+
+/* Layout adjustments for docked sidebar */
+.layout-with-docked-sidebar {
+    margin-left: 300px;
+    transition: margin-left 0.3s ease;
+}
+
+.layout-without-docked-sidebar {
+    margin-left: 0;
+    transition: margin-left 0.3s ease;
+}
+
+/* Page content adjustments */
+.page-content.with-docked-sidebar {
+    /* Additional adjustments if needed when sidebar is docked */
+    min-height: calc(100vh - 200px); /* Adjust based on your header/footer height */
+}
+
+/* Masthead/navbar adjustments when docked */
+.layout-with-docked-sidebar .masthead {
+    margin-left: 0; /* Masthead spans full width */
+    position: relative;
+}
+
+/* Ensure footer behaves correctly with docked sidebar */
+.layout-with-docked-sidebar + footer,
+.layout-with-docked-sidebar ~ footer {
+    margin-left: 300px;
+    transition: margin-left 0.3s ease;
+}
+
+/* Mobile responsive adjustments */
+@media screen and (max-width: 768px) {
+    .layout-with-docked-sidebar {
+        margin-left: 0;
+    }
+
+    .layout-with-docked-sidebar + footer,
+    .layout-with-docked-sidebar ~ footer {
+        margin-left: 0;
+    }
+}
+
+/* Smooth transitions for all layout changes */
+.default-page-layout {
+    transition: all 0.3s ease;
+}
+
+/* Prevent content jump during transitions */
+.main-content {
+    transition: padding 0.3s ease;
+}

@@ -9,7 +9,7 @@ import {formatRange} from "../../../utills/Util";
 import {FunctionalInfo, Feature} from "../../../types/FunctionalInfo";
 import {Prediction} from "./prediction/Prediction";
 import {Dropdown} from "react-dropdown-now";
-import {AmScore, ConservScore, EsmScore, EveScore, TranslatedSequence} from "../../../types/MappingResponse";
+import {AmScore, TranslatedSequence} from "../../../types/MappingResponse";
 import {HelpContent} from "../help/HelpContent";
 import {HelpButton} from "../help/HelpButton";
 import {Interaction, Pocket} from "../../../types/Prediction";
@@ -21,10 +21,7 @@ export interface ResidueRegionTableProps {
   ensg: string
   ensp: Array<TranslatedSequence>
   caddScore: string
-  conservScore: ConservScore
   amScore: AmScore
-  eveScore: EveScore
-  esmScore: EsmScore
 }
 
 function ResidueRegionTable(props: ResidueRegionTableProps) {
@@ -39,10 +36,30 @@ function ResidueRegionTable(props: ResidueRegionTableProps) {
   if (props.functionalData.features && props.functionalData.features.length > 0) {
     props.functionalData.features.forEach((feature) => {
       if (feature.category !== 'VARIANTS') {
-        if (Number(feature.begin) === Number(feature.end))
+        const begin = Number(feature.begin);
+        const end = Number(feature.end);
+        if (begin === end)
           residues.push(feature);
-        else
-          regions.push(feature);
+        else {
+          const position = props.functionalData.position;
+          // Regions - apply filtering logic here
+          // TODO: TEMPORARY FIX - This filtering logic should be implemented on the API side.
+          // Once the backend is updated to handle DISULFID filtering correctly,
+          // this frontend filtering can be removed.
+          let shouldInclude = false;
+
+          if (feature.type === 'DISULFID') {
+            // For DISULFID, position must match start OR end exactly
+            shouldInclude = (position === begin || position === end);
+          } else {
+            // For other regions, position must be within range
+            shouldInclude = (position >= begin && position <= end);
+          }
+
+          if (shouldInclude) {
+            regions.push(feature);
+          }
+        }
       }
     });
     return <table>
@@ -131,7 +148,7 @@ function getFeatureDetail(rowKey: string, feature: Feature, expandedRowKey: stri
       <>
         <ul style={{listStyleType: 'none', display: 'inline-block'}}>
           <li key={uuidv1()}>
-            {getPositionLabel(feature.begin, feature.end)}
+            {getPositionLabel(feature.begin, feature.end, feature.type)}
             <br/>
             <Evidences evidences={feature.evidences}/>
           </li>
@@ -141,11 +158,16 @@ function getFeatureDetail(rowKey: string, feature: Feature, expandedRowKey: stri
   }
 }
 
-function getPositionLabel(begin: string, end: string) {
-  if (Number(begin) === Number(end))
+function getPositionLabel(begin: string, end: string, type: string) {
+  if (Number(begin) === Number(end)) {
     return <><b>Position :</b> {begin}</>
-  else
+  } else if (type === 'DISULFID') {
+    // TODO: TEMPORARY FIX - Display disulfide bonds in C-S-S-C notation
+    // This should be handled by the API once the backend filtering is implemented
+    return <><b>Disulfide bond : </b>C{begin}-S-S-C{end}</>
+  } else {
     return <><b>Range : </b> {begin} - {end}</>
+  }
 }
 
 interface PocketsProps {
@@ -281,7 +303,7 @@ interface InterfacesProps {
 }
 
 const Interfaces = (props: InterfacesProps) => {
-  if (props.interactions.length === 0) return <div className="struct-pred">No P-P interaction predicted at variant position</div>
+  if (!props.interactions || props.interactions.length === 0) return <div className="struct-pred">No P-P interaction predicted at variant position</div>
   let key = 'interfaces-0'
   return <Fragment key={key}>
     <button type="button" className="collapsible" onClick={_ => props.toggleRow(key)}>

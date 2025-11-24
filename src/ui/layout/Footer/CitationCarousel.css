@@ -1,0 +1,98 @@
+/* CitationCarousel.css */
+
+.citation-carousel {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #dee2e6;
+}
+
+.citation-carousel h5 {
+    color: #014371;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+
+.carousel-content {
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.carousel-citation-link {
+    text-decoration: none;
+    display: block;
+    transition: opacity 0.2s ease;
+}
+
+.carousel-citation-link:hover {
+    opacity: 0.85;
+}
+
+.carousel-citation-link:hover .carousel-citation-text {
+    color: #012d5a;
+}
+
+.carousel-citation-text {
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+    color: #333;
+    transition: color 0.2s ease;
+}
+
+.carousel-citation-link .carousel-citation-text {
+    cursor: pointer;
+}
+
+.carousel-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    padding-top: 0.5rem;
+}
+
+.carousel-dots {
+    display: flex;
+    gap: 6px;
+}
+
+.carousel-dot {
+    height: 6px;
+    border-radius: 3px;
+    border: none;
+    background-color: #cdd9e3;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 6px;
+    padding: 0;
+}
+
+.carousel-dot:hover {
+    background-color: #014371;
+    opacity: 0.7;
+}
+
+.carousel-dot.active {
+    width: 24px;
+    background-color: #014371;
+}
+
+.carousel-counter {
+    font-size: 11px;
+    color: #666;
+    font-weight: 500;
+}
+
+/* Mobile responsive */
+@media screen and (max-width: 768px) {
+    .carousel-content {
+        min-height: 130px;
+    }
+
+    .carousel-citation-text {
+        font-size: 12px;
+    }
+}

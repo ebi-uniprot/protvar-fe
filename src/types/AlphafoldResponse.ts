@@ -1,16 +1,16 @@
 export type AlphafoldResponse = Array<AlphafoldResponseElement>
 
 export interface AlphafoldResponseElement {
-    entryId: string,
+    modelEntityId: string,
     gene: string,
     uniprotAccession: string,
     uniprotId: string,
     uniprotDescription: string,
     taxId: number,
     organismScientificName: string,
-    uniprotStart: number,
-    uniprotEnd: number,
-    uniprotSequence: string,
+    sequenceStart: number,
+    sequenceEnd: number,
+    sequence: string,
     modelCreatedDate: string,
     latestVersion: number,
     allVersions: Array<number>,

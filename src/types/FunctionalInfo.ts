@@ -1,10 +1,11 @@
 import {Evidence, EvidencedString} from "./Common";
 import {Foldx, Interaction, Pocket} from "./Prediction";
 import {Comment} from "./Comment";
+import {ConservScore, EsmScore, EveScore, PopEveScore} from "./MappingResponse";
 
 export interface FunctionalInfo {
     accession: string
-    id: string
+    entryId: string
     proteinExistence: string
     gene: Array<Gene>
     comments: Array<Comment>
@@ -12,7 +13,7 @@ export interface FunctionalInfo {
     //dbReferences: Array<DBReference> // not used
     sequence: Sequence
 
-    //position: number // not used
+    position: number
     //type: string // not used
     name: string
     alternativeNames: string
@@ -22,6 +23,12 @@ export interface FunctionalInfo {
     pockets: Array<Pocket>
     foldxs: Array<Foldx>
     interactions: Array<Interaction>
+
+    // Scores
+    conservScore: ConservScore;
+    eveScore: EveScore;
+    esmScore: EsmScore;
+    popEveScore: PopEveScore;
 }
 
 export interface Gene {

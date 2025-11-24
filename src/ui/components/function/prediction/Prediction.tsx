@@ -1,6 +1,6 @@
 import {ConservPred} from "./ConservPred";
 import {AlphaMissensePred} from "./AlphaMissensePred";
-import {EvePred} from "./EvePred";
+//import {EvePred} from "./EvePred";
 import {EsmPred} from "./EsmPred";
 import {FoldxPred} from "./FoldxPred";
 import {useContext} from "react";
@@ -8,7 +8,7 @@ import {AppContext} from "../../../App";
 import {CaddScorePred} from "./CaddScorePred";
 import {ColourCheckbox} from "../../../modal/ColourCheckbox";
 import {ResidueRegionTableProps} from "../ResidueRegionTable";
-import {aminoAcid3to1Letter} from "../../../../utills/Util";
+import {PopEvePred} from "./PopEvePred";
 
 export type PredAttr = {
   text: string,
@@ -20,22 +20,19 @@ export type PredAttr = {
 
 export const Prediction = (props: ResidueRegionTableProps) => {
   const state = useContext(AppContext);
-  const oneLetterVariantAA = aminoAcid3to1Letter(props.variantAA);
-  const foldxs = props.functionalData.foldxs
-  let foldxs_ = oneLetterVariantAA ? foldxs.filter(foldx => foldx.mutatedType.toLowerCase() === oneLetterVariantAA) : foldxs
-
   return <><br/>
-    <ConservPred conserv={props.conservScore} stdColor={state.stdColor} />
+    <ConservPred conserv={props.functionalData.conservScore} stdColor={state.stdColor} />
     <b>Structure predictions</b><br/>
-    <FoldxPred foldxs={foldxs_}/>
+    <FoldxPred foldxs={props.functionalData.foldxs} variantAA={props.variantAA}/>
     <b>Pathogenicity predictions</b><br/>
-    {(!props.caddScore && !props.amScore && !props.eveScore && !props.esmScore) &&
+    {(!props.caddScore && !props.amScore && !props.functionalData.eveScore && !props.functionalData.esmScore && !props.functionalData.popEveScore) &&
       <div>No predictions available for this variant</div>
     }
     <CaddScorePred cadd={props.caddScore} stdColor={state.stdColor}/>
     <AlphaMissensePred am={props.amScore} stdColor={state.stdColor}/>
-    <EvePred eve={props.eveScore} stdColor={state.stdColor}/>
-    <EsmPred esm={props.esmScore} stdColor={state.stdColor}/>
+    {/*<EvePred eve={props.functionalData.eveScore} stdColor={state.stdColor}/>*/}
+    <PopEvePred popeve={props.functionalData.popEveScore} stdColor={state.stdColor}/>
+    <EsmPred esm={props.functionalData.esmScore} stdColor={state.stdColor}/>
     <ColourCheckbox state={state} />
   </>
 }
