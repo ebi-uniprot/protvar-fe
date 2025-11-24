@@ -1,12 +1,15 @@
 import React from 'react';
 import './VersionInfo.css';
 
+const isBeta = process.env.REACT_APP_GIT_BRANCH === "beta";
+
 const VersionInfo: React.FC = () => {
   return (
     <div className="version-info">
       <button className="version-trigger">
-        <span>ProtVar {process.env.REACT_APP_PV}</span>
-        <small>{process.env.REACT_APP_UNIPROT}</small>
+        <span>ProtVar {process.env.REACT_APP_PV}
+          {isBeta && <span className="beta-badge">beta</span>}
+        </span>
       </button>
       <div className="version-panel">
         <div>UI {process.env.REACT_APP_UI}</div>

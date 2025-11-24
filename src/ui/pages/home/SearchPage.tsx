@@ -49,6 +49,8 @@ const EXAMPLES: Record<SearchMode, ExampleData[]> = {
   ]
 };
 
+const branch = process.env.REACT_APP_GIT_BRANCH;
+
 const findExampleLabel = (input: string): string | null =>
   Object.values(EXAMPLES)
     .flat()
@@ -364,13 +366,14 @@ const SearchPage: React.FC = () => {
           <span className="icon"><i className="bi bi-search"></i></span>
           Browse by ID
         </button>
+        {branch !== "beta" &&
         <button
           className={`mode-tab ${activeMode === 'text' ? 'active' : ''}`}
           onClick={() => handleModeChange('text')}
         >
           <span className="icon"><i className="bi bi-chat"></i></span>
           Text Search
-        </button>
+        </button>}
       </div>
 
       {/* Search Panel */}
@@ -478,7 +481,7 @@ const SearchPage: React.FC = () => {
         )}
 
         {/* Text Search Mode */}
-        {activeMode === 'text' && (
+        {activeMode === 'text' && branch !== "beta" && (
           <div className="search-content">
             <div className="input-group">
               <label className="input-label">Search variants by disease, phenotype, or annotation</label>

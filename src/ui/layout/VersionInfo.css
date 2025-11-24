@@ -69,6 +69,16 @@
     margin: 4px 0 2px 0;
 }
 
+.beta-badge {
+    background: #F0B429;
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 5px;
+    border-radius: 10px;
+    margin-left: 4px;
+}
+
 /* Mobile responsiveness */
 @media (max-width: 768px) {
     .version-info {

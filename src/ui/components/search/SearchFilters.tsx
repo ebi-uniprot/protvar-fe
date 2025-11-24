@@ -54,6 +54,8 @@ interface SearchFiltersProps {
 
 const SORT_FIELDS = ["cadd", "am", "popeve", "esm1b"]
 
+const branch = process.env.REACT_APP_GIT_BRANCH;
+
 const SearchFilters: React.FC<SearchFiltersProps> = ({
                                                        filters,
                                                        onFiltersChange,
@@ -195,6 +197,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
           <div className="filter-section">
             <h4 className="section-title">Functional</h4>
 
+            {branch !== "beta" &&
             <div className="checkbox-group">
               <label className="checkbox-label">
                 <input
@@ -228,7 +231,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                 />
                 <span>Functional Domain</span>
               </label>
-            </div>
+            </div>}
 
             <div className="filter-row" style={{marginTop: '1rem'}}>
               <RangeSlider
@@ -244,6 +247,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
           </div>
 
           {/* 3. Population */}
+          {branch !== "beta" &&
           <div className="filter-section">
             <h4 className="section-title">Population</h4>
 
@@ -279,7 +283,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                 </div>
               </div>
             </div>
-          </div>
+          </div>}
 
           {/* 4. Structural */}
           <div className="filter-section">

@@ -14,7 +14,17 @@ interface DefaultPageLayoutProps {
   content: React.JSX.Element
 }
 
-const bannerText = null
+const bannerText = (
+  <>
+    This version of ProtVar is in active development. Whilst it allows you
+    to take advantage of our latest features, it may also be unstable. Please
+    email{" "}
+    <a href="mailto:protvar@ebi.ac.uk">protvar@ebi.ac.uk</a> with any problems
+    or suggestions, and use the{" "}
+    <a href="https://www.ebi.ac.uk/ProtVar/">stable ProtVar version</a> if you
+    can’t retrieve what you need from this one.
+  </>
+);
 
 function DefaultPageLayout(props: DefaultPageLayoutProps) {
   const [showBanner, setShowBanner] = useState(bannerText != null);

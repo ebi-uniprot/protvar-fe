@@ -3,6 +3,7 @@ include:
     ref: master
     file: /ci-templates/gitlab-ci-template.yml
 
+# Default
 variables:
   BE_API: "https://wwwdev.ebi.ac.uk/ProtVar/api"
 
@@ -14,12 +15,16 @@ stages:
 
 workflow:
   rules:
-    #- if: $CI_COMMIT_BRANCH == "dev"
-    #  when: never # temporarily skip dev pipeline
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: '$CI_COMMIT_BRANCH == "main"'
       variables:
         BE_API: "https://www.ebi.ac.uk/ProtVar/api"
-    - when: always # Run the pipeline in other cases
+    #- if: '$CI_COMMIT_BRANCH == "beta"'
+    #  variables:
+    #    BE_API: "https://wwwint.ebi.ac.uk/ProtVar/api"
+    - if: '$CI_COMMIT_BRANCH == "dev"'
+      variables:
+        BE_API: "https://wwwdev.ebi.ac.uk/ProtVar/api"
+    - when: always
 
 .js:
   image: node:18.20
@@ -27,8 +32,6 @@ workflow:
     - node --version
     - npm --version
     - yarn --version
-    - pwd
-    - ls
     - yarn install
 
 #test:
@@ -38,14 +41,12 @@ workflow:
 
 build_static_assets:
   only:
-    refs:
-      - main
-      - dev
-      - beta
+    refs: [main, dev, beta]
   extends: .js
   stage: build_static_assets
   script:
-    - echo "REACT_APP_API_BASE_URL=${BE_API}" > .env.local
+    - echo "REACT_APP_GIT_BRANCH=${CI_COMMIT_BRANCH}" >> .env.local
+    - echo "REACT_APP_API_BASE_URL=${BE_API}" >> .env.local
     - yarn build
   artifacts:
     paths:
@@ -53,17 +54,13 @@ build_static_assets:
 
 build_docker_image:
   only:
-    refs:
-      - main
-      - dev
-      - beta
+    refs: [main, dev, beta]
   extends: .build_docker
   stage: build_docker_image
 
 dev-deploy:
   only:
-    refs:
-      - dev
+    refs: [dev]
   extends: .deploy
   stage: deploy
   script:
@@ -71,8 +68,7 @@ dev-deploy:
 
 beta-deploy:
   only:
-    refs:
-      - beta
+    refs: [beta]
   extends: .deploy
   stage: deploy
   script:
@@ -80,8 +76,7 @@ beta-deploy:
 
 main-deploy:
   only:
-    refs:
-      - main
+    refs: [main]
   extends: .deploy
   stage: deploy
   script:
