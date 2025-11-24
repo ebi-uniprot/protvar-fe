@@ -18,9 +18,9 @@ workflow:
     - if: '$CI_COMMIT_BRANCH == "main"'
       variables:
         BE_API: "https://www.ebi.ac.uk/ProtVar/api"
-    #- if: '$CI_COMMIT_BRANCH == "beta"'
-    #  variables:
-    #    BE_API: "https://wwwint.ebi.ac.uk/ProtVar/api"
+    - if: '$CI_COMMIT_BRANCH == "beta"'
+      variables:
+        BE_API: "https://wwwint.ebi.ac.uk/ProtVar/api"
     - if: '$CI_COMMIT_BRANCH == "dev"'
       variables:
         BE_API: "https://wwwdev.ebi.ac.uk/ProtVar/api"
