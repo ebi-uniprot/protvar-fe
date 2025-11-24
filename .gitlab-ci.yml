@@ -41,7 +41,7 @@ build_static_assets:
     refs:
       - main
       - dev
-      - test
+      - beta
   extends: .js
   stage: build_static_assets
   script:
@@ -56,7 +56,7 @@ build_docker_image:
     refs:
       - main
       - dev
-      - test
+      - beta
   extends: .build_docker
   stage: build_docker_image
 
@@ -69,14 +69,14 @@ dev-deploy:
   script:
     - ./protvar-deploy/scripts/deploy.sh ENV=DV APP_NAME=protvar-fe K8S_NAMESPACE=protvar-dev imageTag="${CI_COMMIT_SHORT_SHA}"
 
-test-deploy:
+beta-deploy:
   only:
     refs:
-      - test
+      - beta
   extends: .deploy
   stage: deploy
   script:
-    - ./protvar-deploy/scripts/deploy.sh ENV=DV APP_NAME=protvar-fe K8S_NAMESPACE=protvar-test imageTag="${CI_COMMIT_SHORT_SHA}"
+    - ./protvar-deploy/scripts/deploy.sh ENV=DV APP_NAME=protvar-fe K8S_NAMESPACE=protvar-beta imageTag="${CI_COMMIT_SHORT_SHA}"
 
 main-deploy:
   only:
