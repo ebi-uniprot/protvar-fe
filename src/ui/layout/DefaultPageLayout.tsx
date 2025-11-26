@@ -18,7 +18,7 @@ interface DefaultPageLayoutProps {
 
 
 const bannerText = <div>
-  <span className="small">ProtVar 1.4 {process.env.REACT_APP_PV} ({process.env.REACT_APP_UNIPROT}) statistics —
+  <span className="small">ProtVar {process.env.REACT_APP_PV} ({process.env.REACT_APP_UNIPROT}) statistics —
     see the <Link to={RELEASE} title="ProtVar Release" id="protvarRelease">Release</Link> page for key highlights.</span>
   <StatsGrid />
   <span className="small"><i
