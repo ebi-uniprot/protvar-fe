@@ -18,7 +18,7 @@ workflow:
     - if: '$CI_COMMIT_BRANCH == "main"'
       variables:
         BE_API: "https://www.ebi.ac.uk/ProtVar/api"
-    - if: '$CI_COMMIT_BRANCH == "beta"'
+    - if: '$CI_COMMIT_BRANCH == "int"'
       variables:
         BE_API: "https://wwwint.ebi.ac.uk/ProtVar/api"
     - if: '$CI_COMMIT_BRANCH == "dev"'
@@ -41,7 +41,7 @@ workflow:
 
 build_static_assets:
   only:
-    refs: [main, dev, beta]
+    refs: [main, dev, int]
   extends: .js
   stage: build_static_assets
   script:
@@ -54,7 +54,7 @@ build_static_assets:
 
 build_docker_image:
   only:
-    refs: [main, dev, beta]
+    refs: [main, dev, int]
   extends: .build_docker
   stage: build_docker_image
 
@@ -66,13 +66,13 @@ dev-deploy:
   script:
     - ./protvar-deploy/scripts/deploy.sh ENV=DV APP_NAME=protvar-fe K8S_NAMESPACE=protvar-dev imageTag="${CI_COMMIT_SHORT_SHA}"
 
-beta-deploy:
+int-deploy:
   only:
-    refs: [beta]
+    refs: [int]
   extends: .deploy
   stage: deploy
   script:
-    - ./protvar-deploy/scripts/deploy.sh ENV=DV APP_NAME=protvar-fe K8S_NAMESPACE=protvar-beta imageTag="${CI_COMMIT_SHORT_SHA}"
+    - ./protvar-deploy/scripts/deploy.sh ENV=DV APP_NAME=protvar-fe K8S_NAMESPACE=protvar-int imageTag="${CI_COMMIT_SHORT_SHA}"
 
 main-deploy:
   only:

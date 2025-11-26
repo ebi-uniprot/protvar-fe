@@ -366,7 +366,7 @@ const SearchPage: React.FC = () => {
           <span className="icon"><i className="bi bi-search"></i></span>
           Browse by ID
         </button>
-        {branch !== "beta" &&
+        {branch !== "dev" &&
         <button
           className={`mode-tab ${activeMode === 'text' ? 'active' : ''}`}
           onClick={() => handleModeChange('text')}
@@ -481,7 +481,7 @@ const SearchPage: React.FC = () => {
         )}
 
         {/* Text Search Mode */}
-        {activeMode === 'text' && branch !== "beta" && (
+        {activeMode === 'text' && branch !== "dev" && (
           <div className="search-content">
             <div className="input-group">
               <label className="input-label">Search variants by disease, phenotype, or annotation</label>

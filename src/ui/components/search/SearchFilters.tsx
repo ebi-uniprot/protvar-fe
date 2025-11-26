@@ -197,7 +197,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
           <div className="filter-section">
             <h4 className="section-title">Functional</h4>
 
-            {branch !== "beta" &&
+            {branch !== "dev" &&
             <div className="checkbox-group">
               <label className="checkbox-label">
                 <input
@@ -247,7 +247,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
           </div>
 
           {/* 3. Population */}
-          {branch !== "beta" &&
+          {branch !== "dev" &&
           <div className="filter-section">
             <h4 className="section-title">Population</h4>
 
