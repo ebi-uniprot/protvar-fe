@@ -8,6 +8,7 @@ import {DEFAULT_PAGE, DEFAULT_PAGE_SIZE, LOCAL_RESULTS, PERMITTED_PAGE_SIZES, TI
 import DownloadModal from "../../modal/DownloadModal";
 import {getMapping} from "../../../services/ProtVarService";
 import {PagedMappingResponse} from "../../../types/PagedMappingResponse";
+import "./ResultPage.css";
 
 import {ResultRecord} from "../../../types/ResultRecord";
 import useLocalStorage from "../../../hooks/useLocalStorage";
@@ -45,6 +46,7 @@ function ResultPageContent() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [inputType, setInputType] = useState<InputType | null>(null);
   const [resultTitle, setResultTitle] = useState(input)
+  const [titleFlash, setTitleFlash] = useState(false);
 
   // components that alter search params:
   // 1) PaginationRow
@@ -65,6 +67,7 @@ function ResultPageContent() {
   const [loading, setLoading] = useState(true)
   const [warning, setWarning] = useState('')
   const {getItem, setItem} = useLocalStorage();
+  const resultsTopRef = useRef<HTMLDivElement>(null);
 
   const viewedRecord = useCallback((input: string, url: string) => {
     const now = new Date().toISOString();
@@ -200,6 +203,9 @@ function ResultPageContent() {
               setResultTitle(firstInputLine)
             } else {
               setResultTitle(`${input} (${response.data.totalItems} variants)`)
+              // Trigger flash animation
+              setTitleFlash(true);
+              setTimeout(() => setTitleFlash(false), 600);
             }
           } else {
             setData(null) // clear prev data
@@ -303,6 +309,11 @@ function ResultPageContent() {
 
     const queryString = newSearchParams.toString();
     navigate(`${location.pathname}${queryString ? `?${queryString}` : ''}`);
+
+    // Scroll to the top of the results section after navigation
+    setTimeout(() => {
+      resultsTopRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
   };
 
   document.title = `${resultTitle} | ${TITLE}`
@@ -310,8 +321,10 @@ function ResultPageContent() {
   const shareUrl = `${APP_URL}${location.pathname}${location.search}`
 
   return <div className="search-results">
-    <div>
-      <h5 className="page-header">Result <i className="bi bi-chevron-compact-right"></i> {resultTitle}</h5>
+    <div ref={resultsTopRef}>
+      <h5 className="page-header">
+        <span className={titleFlash ? 'title-sparkle' : ''}>Result <i className="bi bi-chevron-compact-right"></i> {resultTitle}</span>
+      </h5>
       <span className="help-icon">
       <HelpButton title="" content={<HelpContent name="result-page"/>}/>
         </span>
@@ -377,6 +390,7 @@ function ResultPageContent() {
 
     <ResultTable data={data}/>
     {data && data.totalPages > 1 && <PaginationRow loading={loading} data={data}/>}
+
   </div>
 }
 

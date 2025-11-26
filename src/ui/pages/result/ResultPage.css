@@ -1,0 +1,24 @@
+/* Sparkle/flash effect for "Result" text when filters are applied */
+.title-sparkle {
+    display: inline-block;
+    animation: textSparkle 0.6s ease-in-out;
+}
+
+@keyframes textSparkle {
+    0%, 100% {
+        text-shadow: none;
+        transform: scale(1);
+    }
+    25% {
+        text-shadow: 0 0 8px rgba(100, 150, 255, 0.4), 0 0 12px rgba(100, 150, 255, 0.3);
+        transform: scale(1.01);
+    }
+    50% {
+        text-shadow: 0 0 10px rgba(100, 150, 255, 0.5), 0 0 18px rgba(100, 150, 255, 0.4), 0 0 25px rgba(100, 150, 255, 0.2);
+        transform: scale(1.02);
+    }
+    75% {
+        text-shadow: 0 0 8px rgba(100, 150, 255, 0.4), 0 0 12px rgba(100, 150, 255, 0.3);
+        transform: scale(1.01);
+    }
+}
