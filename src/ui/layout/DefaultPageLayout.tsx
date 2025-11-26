@@ -17,11 +17,11 @@ interface DefaultPageLayoutProps {
 }
 
 
-const bannerText = <div><span className="small">ProtVar {process.env.REACT_APP_PV} ({process.env.REACT_APP_UNIPROT}) Released!
-  See the <Link to={RELEASE} title="ProtVar Release" id="protvarRelease">Release</Link> page for highlights.</span>
+const bannerText = <div>
+  <span className="small">ProtVar 1.4 {process.env.REACT_APP_PV} ({process.env.REACT_APP_UNIPROT}) statistics —
+    see the <Link to={RELEASE} title="ProtVar Release" id="protvarRelease">Release</Link> page for key highlights.</span>
   <StatsGrid />
-  <br/>
-  <i
+  <span className="small"><i
     className="bi bi-stars"
     style={{
       display: 'inline-block',
@@ -30,8 +30,7 @@ const bannerText = <div><span className="small">ProtVar {process.env.REACT_APP_P
       fontSize: '1.2em'
     }}
   ></i> We are actively developing ProtVar2 with many new features and new data, such as popEVE, to further enhance the contextualisation of missense variation.
-  If you would like early access to new features, a direct channel to our development team and to influence the final product please visit our
-  <a href="https://wwwdev.ebi.ac.uk/ProtVar/">beta</a> site.
+  If you would like early access to new features, a direct channel to our development team and to influence the final product please visit our <a href="https://wwwdev.ebi.ac.uk/ProtVar/">beta</a> site.</span>
 </div>
 
 function DefaultPageLayout(props: DefaultPageLayoutProps) {
