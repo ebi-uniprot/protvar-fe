@@ -593,10 +593,11 @@ const SearchPage: React.FC = () => {
 
         {/* Action Buttons */}
         <div className="action-buttons">
-          <button className={`btn btn-primary ${isSubmitDisabled() ? 'disabled' : ''}`}
-                  onClick={handleSearch}
-                  disabled={isSubmitDisabled() || loading}
-                  title={activeMode === 'text' ? 'Coming soon' : ''}
+          <button
+            className={`btn btn-primary ${isSubmitDisabled() ? 'disabled' : ''}`}
+            onClick={handleSearch}
+            disabled={isSubmitDisabled() || loading}
+            title={activeMode === 'text' ? 'Coming soon' : ''}
           >
             {activeMode === 'variant' ? 'Submit' : 'Search'}
           </button>
