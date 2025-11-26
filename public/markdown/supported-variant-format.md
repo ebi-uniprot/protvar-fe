@@ -1,6 +1,11 @@
 #### <a id="supported-variant-format"></a>Supported Variant Format
 
-ProtVar supports the following input formats:
+ProtVar supports the following variant formats:
+
+- **Genomic:** VCF, coordinates, HGVS genomic
+- **Protein:** UniProt variants, HGVS protein
+- **Transcript:** HGVS coding/cDNA
+- **Variant IDs:** dbSNP, ClinVar, COSMIC
 
 ##### Genomic
 

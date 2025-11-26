@@ -19,6 +19,7 @@ import {buildFilterParams} from "../../components/search/filterUtils";
 interface ExampleData {
   label: string;
   value: string;
+  tip?: string;
 }
 
 type SearchMode = 'variant' | 'browse' | 'text'; // browse=id(identifier) input
@@ -26,12 +27,49 @@ export type GenomeAssembly = 'auto' | 'grch38' | 'grch37';
 
 const EXAMPLES: Record<SearchMode, ExampleData[]> = {
   variant: [
-    { label: 'VCF / Genomic', value: 'X\t149498202\t.\tC\tG\n10-43118436-A-C\n14 89993420 A/G' },
-    { label: 'HGVS Genomic', value: 'NC_000002.12:g.233760498G>A\nNC_000011.10:g.5248232A>T' },
-    { label: 'HGVS cDNA', value: 'NM_000202.8:c.1327C>T\nNM_020975.6(RET):c.3105G>A\nNM_000463.3(IDS):c.1124C>T' },
-    { label: 'UniProt Variants', value: 'P22304 A205P\nP07949 asn783thr\nP22309 71 Gly Arg' },
-    { label: 'HGVS Protein', value: 'NP_001305738.1:p.Pro267Ser' },
-    { label: 'Variant IDs', value: 'rs864622779\nVCV002573141\nCOSV64777467' },
+    {
+      label: 'VCF / Genomic',
+      value: 'X\t149498202\t.\tC\tG\n' +
+        '10-43118436-A-C\n' +
+        'chr12 25245350 C T\n' +
+        '14 89993420 A/G'
+    },
+    {
+      label: 'HGVS Genomic',
+      value: 'NC_000002.12:g.233760498G>A\n' +
+        'NC_000010.11:g.43100674C>G\n' +
+        'NC_000023.11:g.149483072G>A\n' +
+        'NC_000012.11:g.25398284C>T'
+    },
+    {
+      label: 'HGVS cDNA',
+      value: 'NM_000202.8:c.1327C>T\n' +
+        'NM_020975.6(RET):c.3105G>A (p.Glu1035Glu)\n' +
+        'NM_000463.3(IDS):c.1124C>T\n' +
+        'NM_018319.4:c.1478A>G p.(His493Arg)'
+    },
+    {
+      label: 'UniProt Variants',
+      value: 'P22304 A205P\n' +
+        'P07949 asn783thr\n' +
+        'P22309 71 Gly Arg'
+    },
+    {
+      label: 'HGVS Protein',
+      value: 'NP_001305738.1:p.Pro267Ser'
+    },
+    {
+      label: 'Variant IDs',
+      value: 'rs864622779\n' +
+        'VCV002573141\n' +
+        'COSV64777467',
+      tip: 'dbSNP, ClinVar, COSMIC'
+    },
+    // TODO: add 37-38 examples, following aren't working despite 100% 37 matches
+    //X 153009152 6a C T
+    // 9 133759718 12a T A
+    // 15 35085619 21a T C
+    // 1 236906323 27a C T
   ],
   browse: [
     { label: 'UniProt ID', value: 'P68871' },
@@ -367,13 +405,13 @@ const SearchPage: React.FC = () => {
           Browse by ID
         </button>
         {branch !== "dev" &&
-        <button
-          className={`mode-tab ${activeMode === 'text' ? 'active' : ''}`}
-          onClick={() => handleModeChange('text')}
-        >
-          <span className="icon"><i className="bi bi-chat"></i></span>
-          Text Search
-        </button>}
+          <button
+            className={`mode-tab ${activeMode === 'text' ? 'active' : ''}`}
+            onClick={() => handleModeChange('text')}
+          >
+            <span className="icon"><i className="bi bi-chat"></i></span>
+            Text Search
+          </button>}
       </div>
 
       {/* Search Panel */}
@@ -381,7 +419,7 @@ const SearchPage: React.FC = () => {
         {/* Variant List Mode */}
         {activeMode === 'variant' && (
           <div className="search-content">
-            <div className="variant-input-options">
+            <div className="variant-controls-row">
               <div className="input-method-toggle">
                 <button
                   className={`method-btn ${!uploadedFile ? 'active' : ''}`}
@@ -397,8 +435,11 @@ const SearchPage: React.FC = () => {
                 </button>
               </div>
 
-              <div className="genome-assembly-selector">
-                <label className="input-label"><HelpButton title="" content={<HelpContent name="genomic-assembly-detection" />} /> Genome Assembly</label>
+              <div className="genome-assembly-inline">
+                <span className="assembly-label">
+                  Genome Assembly
+                  <HelpButton title="" content={<HelpContent name="genomic-assembly-detection" />} />
+                </span>
                 <select
                   className="assembly-select"
                   value={genomeAssembly}
@@ -426,7 +467,7 @@ const SearchPage: React.FC = () => {
                   </button>
                 </div>
                 <div className="file-help">
-                  ProtVar accepts plain text files (.txt, .tsv, .csv, .vcf) up to 10MB
+                  Accepts .txt, .tsv, .csv, .vcf files up to 10MB
                 </div>
               </div>
             ) : (
@@ -438,14 +479,23 @@ const SearchPage: React.FC = () => {
                   value={variantInput}
                   onChange={(e) => setVariantInput(e.target.value)}
                 />
-                <div className="input-help">
-                  <span><HelpButton title="" content={<HelpContent name="supported-variant-format" />} /> Supported formats:</span>
-                    <ul>
-                      <li><strong>Genomic:</strong> VCF, coordinates, HGVS genomic</li>
-                      <li><strong>Transcript:</strong> HGVS coding/cDNA</li>
-                      <li><strong>Protein:</strong> UniProt variants, HGVS protein</li>
-                      <li><strong>Variant IDs:</strong> dbSNP, ClinVar, COSMIC</li>
-                    </ul>
+                <div className="examples">
+                  <h6>
+                    Try these examples
+                    <HelpButton title="" content={<HelpContent name="supported-variant-format" />} />
+                  </h6>
+                  <div className="example-tags">
+                    {EXAMPLES[activeMode].map((example, index) => (
+                      <span
+                        key={index}
+                        className="example-tag"
+                        onClick={() => handleExampleClick(example)}
+                        title={example.tip}
+                      >
+                        {example.label}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
             )}
@@ -464,7 +514,7 @@ const SearchPage: React.FC = () => {
         {activeMode === 'browse' && (
           <div className="search-content">
             <div className="input-group">
-              <label className="input-label">Browse all variants for a protein or gene</label>
+              <label className="input-label">Browse all variants for a protein, gene, or identifier</label>
               <input
                 type="text"
                 className="input-field"
@@ -473,8 +523,19 @@ const SearchPage: React.FC = () => {
                 onChange={(e) => setBrowseInput(e.target.value)}
                 onKeyDown={handleKeyDown}
               />
-              <div className="input-help">
-                Enter UniProt ID, Gene Symbol, RefSeq ID, Ensembl ID, or PDB ID
+              <div className="examples">
+                <h6>Try these examples</h6>
+                <div className="example-tags">
+                  {EXAMPLES[activeMode].map((example, index) => (
+                    <span
+                      key={index}
+                      className="example-tag"
+                      onClick={() => handleExampleClick(example)}
+                    >
+                      {example.label}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -492,8 +553,22 @@ const SearchPage: React.FC = () => {
                 value={textInput}
                 onChange={(e) => setTextInput(e.target.value)}
               />
-              <div className="input-help">
-                Search through variant annotations, disease associations, and functional descriptions
+              {
+                //Search through variant annotations, disease associations, and functional descriptions
+              }
+              <div className="examples">
+                <h6>Try these examples</h6>
+                <div className="example-tags">
+                  {EXAMPLES[activeMode].map((example, index) => (
+                    <span
+                      key={index}
+                      className="example-tag"
+                      onClick={() => handleExampleClick(example)}
+                    >
+                      {example.label}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -528,22 +603,6 @@ const SearchPage: React.FC = () => {
           <button className="btn btn-secondary" onClick={handleClear}>
             Clear All
           </button>
-        </div>
-      </div>
-
-      {/* Example Queries */}
-      <div className="examples">
-        <h3>Try these examples</h3>
-        <div className="example-tags">
-          {EXAMPLES[activeMode].map((example, index) => (
-            <span
-              key={index}
-              className="example-tag"
-              onClick={() => handleExampleClick(example)}
-            >
-              {example.label}
-            </span>
-          ))}
         </div>
       </div>
 
