@@ -12,7 +12,7 @@
     "@types/react-svg-radar-chart": "1.2.6",
     "@types/uuid": "9.0.8",
     "axios": "1.6.0",
-    "axios-cache-interceptor": "1.0.1",
+    "axios-cache-interceptor": "1.11.1",
     "balloon-css": "^1.2.0",
     "bootstrap-icons": "^1.11.3",
     "compression-webpack-plugin": "10.0.0",
