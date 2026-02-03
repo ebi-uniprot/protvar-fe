@@ -24,7 +24,7 @@ export const Missense3dPred = (props: Missense3dPredProps) => {
 
   return (
     <div className="aa-pred">
-      <div>Missense3D prediction <a href={m3dUrl} target="_blank" rel="noreferrer" className="ext-link"></a></div>
+      <div>Missense3D prediction <a href={m3dUrl} target="_blank" rel="noreferrer" className="ext-link" aria-label="View in Missense3D (opens in new tab)"></a></div>
       <div style={{color: predColor}}>{props.m3dPred.prediction}</div>
       <div title={isTruncated ? formattedText : undefined}>
         {displayText}
