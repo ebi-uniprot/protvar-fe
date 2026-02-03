@@ -1,5 +1,4 @@
 import React, {useState, Fragment} from "react";
-import {EmptyElement} from "../../../constants/ConstElement";
 import AminoAcidModel from "./AminoAcidModel";
 import Evidences from "./Evidences";
 import {ReactComponent as ChevronDownIcon} from "../../../images/chevron-down.svg"
