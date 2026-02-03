@@ -34,6 +34,8 @@ function ResidueRegionTable(props: ResidueRegionTableProps) {
 
   var regions: Array<Feature> = [];
   var residues: Array<Feature> = [];
+
+  // Process features if they exist
   if (props.functionalData.features && props.functionalData.features.length > 0) {
     props.functionalData.features.forEach((feature) => {
       if (feature.category !== 'VARIANTS') {
@@ -63,22 +65,25 @@ function ResidueRegionTable(props: ResidueRegionTableProps) {
         }
       }
     });
-    return <table>
-      <tbody>
-      <tr>
-        <th>Variant Residue Position</th>
-        <th>Region Containing Variant Position</th>
-      </tr>
-      <tr>
-        <td
-          style={{verticalAlign: 'top'}}>{getResidues(residues, props, expandedRowKey, toggleRow)}</td>
-        <td
-          style={{verticalAlign: 'top'}}>{getRegions(regions, props.functionalData.accession, props.functionalData.pockets, props.functionalData.interactions, expandedRowKey, toggleRow)}</td>
-      </tr>
-      </tbody>
-    </table>
   }
-  return EmptyElement
+
+  // Always return the table
+  return <table>
+    <tbody>
+    <tr>
+      <th>Variant Residue Position</th>
+      <th>Region Containing Variant Position</th>
+    </tr>
+    <tr>
+      <td style={{verticalAlign: 'top'}}>
+        {getResidues(residues, props, expandedRowKey, toggleRow)}
+      </td>
+      <td style={{verticalAlign: 'top'}}>
+        {getRegions(regions, props.functionalData.accession, props.functionalData.pockets, props.functionalData.interactions, expandedRowKey, toggleRow)}
+      </td>
+    </tr>
+    </tbody>
+  </table>
 }
 
 function getResidues(regions: Array<Feature>, props: ResidueRegionTableProps, expandedRowKey: string, toggleRow: StringVoidFun) {
