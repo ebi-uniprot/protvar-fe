@@ -4,27 +4,14 @@ include:
     file: /ci-templates/gitlab-ci-template.yml
 
 variables:
-  BE_API: "https://www.ebi.ac.uk/ProtVar/api"  # Production as default
+  BE_API: "https://www.ebi.ac.uk/ProtVar/api"  # Default
 
 stages:
-#  - test
   - build_static_assets
   - build_docker_image
   - deploy
 
-workflow:
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "main"'
-      when: always
-    - if: '$CI_COMMIT_BRANCH == "dev"'
-      variables:
-        BE_API: "https://wwwdev.ebi.ac.uk/ProtVar/api"
-      when: always
-    - if: '$CI_COMMIT_BRANCH == "int"'
-      variables:
-        BE_API: "https://wwwint.ebi.ac.uk/ProtVar/api"
-      when: always
-    # No catch-all "when: always" - pipeline will NOT run on other branches
+# Remove workflow section completely
 
 .js:
   image: dockerhub.ebi.ac.uk/uniprot/variation/protvar-deploy/cached/node-18.20
@@ -34,16 +21,16 @@ workflow:
     - yarn --version
     - yarn install
 
-#test:
-#  stage: test
-#  script:
-#    - echo "skipping test for now";
-
 build_static_assets:
   only:
     refs: [main, dev, int]
   extends: .js
   stage: build_static_assets
+  variables:
+    BE_API: >-
+      ${CI_COMMIT_BRANCH == "dev" ? "https://wwwdev.ebi.ac.uk/ProtVar/api" : 
+       CI_COMMIT_BRANCH == "int" ? "https://wwwint.ebi.ac.uk/ProtVar/api" : 
+       "https://www.ebi.ac.uk/ProtVar/api"}
   script:
     - echo "REACT_APP_GIT_BRANCH=${CI_COMMIT_BRANCH}" >> .env.local
     - echo "REACT_APP_API_BASE_URL=${BE_API}" >> .env.local
