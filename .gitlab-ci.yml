@@ -1,6 +1,6 @@
 include:
   - project: uniprot/variation/protvar-deploy
-    ref: master
+    ref: main
     file: /ci-templates/gitlab-ci-template.yml
 
 # Default
@@ -18,16 +18,16 @@ workflow:
     - if: '$CI_COMMIT_BRANCH == "main"'
       variables:
         BE_API: "https://www.ebi.ac.uk/ProtVar/api"
-    - if: '$CI_COMMIT_BRANCH == "int"'
-      variables:
-        BE_API: "https://wwwint.ebi.ac.uk/ProtVar/api"
     - if: '$CI_COMMIT_BRANCH == "dev"'
       variables:
         BE_API: "https://wwwdev.ebi.ac.uk/ProtVar/api"
+    - if: '$CI_COMMIT_BRANCH == "int"'
+      variables:
+        BE_API: "https://wwwint.ebi.ac.uk/ProtVar/api"
     - when: always
 
 .js:
-  image: node:18.20
+  image: dockerhub.ebi.ac.uk/uniprot/variation/protvar-deploy/cached/node-18.20
   before_script:
     - node --version
     - npm --version
@@ -58,21 +58,21 @@ build_docker_image:
   extends: .build_docker
   stage: build_docker_image
 
-dev-deploy:
-  only:
-    refs: [dev]
-  extends: .deploy
-  stage: deploy
-  script:
-    - ./protvar-deploy/scripts/deploy.sh ENV=DV APP_NAME=protvar-fe K8S_NAMESPACE=protvar-dev imageTag="${CI_COMMIT_SHORT_SHA}"
-
 int-deploy:
   only:
     refs: [int]
   extends: .deploy
   stage: deploy
   script:
-    - ./protvar-deploy/scripts/deploy.sh ENV=DV APP_NAME=protvar-fe K8S_NAMESPACE=protvar-int imageTag="${CI_COMMIT_SHORT_SHA}"
+    - ./protvar-deploy/scripts/deploy.sh "int" "protvar-fe" "${CI_COMMIT_SHORT_SHA}"
+
+dev-deploy:
+  only:
+    refs: [dev]
+  extends: .deploy
+  stage: deploy
+  script:
+    - ./protvar-deploy/scripts/deploy.sh "dev" "protvar-fe" "${CI_COMMIT_SHORT_SHA}"
 
 main-deploy:
   only:
@@ -80,5 +80,4 @@ main-deploy:
   extends: .deploy
   stage: deploy
   script:
-    - ./protvar-deploy/scripts/deploy.sh ENV=FB APP_NAME=protvar-fe K8S_NAMESPACE=protvar imageTag="${CI_COMMIT_SHORT_SHA}"
-    - ./protvar-deploy/scripts/deploy.sh ENV=PB APP_NAME=protvar-fe K8S_NAMESPACE=protvar imageTag="${CI_COMMIT_SHORT_SHA}"
+    - ./protvar-deploy/scripts/deploy.sh "pub" "protvar-fe" "${CI_COMMIT_SHORT_SHA}"

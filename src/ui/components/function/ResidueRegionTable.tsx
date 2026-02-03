@@ -5,7 +5,7 @@ import Evidences from "./Evidences";
 import {ReactComponent as ChevronDownIcon} from "../../../images/chevron-down.svg"
 import {v1 as uuidv1} from 'uuid';
 import {StringVoidFun} from "../../../constants/CommonTypes";
-import {formatRange} from "../../../utills/Util";
+import {aminoAcid3to1Letter, formatRange} from "../../../utills/Util";
 import {FunctionalInfo, Feature} from "../../../types/FunctionalInfo";
 import {Prediction} from "./prediction/Prediction";
 import {Dropdown} from "react-dropdown-now";
@@ -13,6 +13,7 @@ import {AmScore, TranslatedSequence} from "../../../types/MappingResponse";
 import {HelpContent} from "../help/HelpContent";
 import {HelpButton} from "../help/HelpButton";
 import {Interaction, Pocket} from "../../../types/Prediction";
+import {Missense3dPred} from "./prediction/Missense3dPred";
 
 export interface ResidueRegionTableProps {
   functionalData: FunctionalInfo
@@ -81,6 +82,10 @@ function ResidueRegionTable(props: ResidueRegionTableProps) {
 }
 
 function getResidues(regions: Array<Feature>, props: ResidueRegionTableProps, expandedRowKey: string, toggleRow: StringVoidFun) {
+  const variantId = props.functionalData.m3dPred && props.refAA && props.variantAA
+    ? `${aminoAcid3to1Letter(props.refAA)?.toUpperCase()}${props.functionalData.position}${aminoAcid3to1Letter(props.variantAA)?.toUpperCase()}`
+    : '';
+
   return <>
     <b>Annotations from UniProt</b>
     {regions.length === 0 && <div>
@@ -93,6 +98,7 @@ function getResidues(regions: Array<Feature>, props: ResidueRegionTableProps, ex
       })
     }
     <AminoAcidModel refAA={props.refAA} variantAA={props.variantAA!}/>
+    <Missense3dPred m3dPred={props.functionalData.m3dPred} accession={props.functionalData.accession} variantId={variantId} />
     <strong>
       <HelpButton title="Predictions" content={<HelpContent name="predictions" />} />
     </strong>

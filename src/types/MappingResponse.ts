@@ -111,3 +111,8 @@ export interface PopEveScore {
   eve: number,
   esm1v: number
 }
+
+export interface M3dPred {
+  prediction:string
+  damagingFeature:string
+}

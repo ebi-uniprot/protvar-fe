@@ -25,7 +25,8 @@ export const Prediction = (props: ResidueRegionTableProps) => {
     <b>Structure predictions</b><br/>
     <FoldxPred foldxs={props.functionalData.foldxs} variantAA={props.variantAA}/>
     <b>Pathogenicity predictions</b><br/>
-    {(!props.caddScore && !props.amScore && !props.functionalData.eveScore && !props.functionalData.esmScore && !props.functionalData.popEveScore) &&
+    {(!props.caddScore && !props.amScore && !props.functionalData.eveScore
+        && !props.functionalData.esmScore && !props.functionalData.popEveScore) &&
       <div>No predictions available for this variant</div>
     }
     <CaddScorePred cadd={props.caddScore} stdColor={state.stdColor}/>

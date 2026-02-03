@@ -1,4 +1,4 @@
-FROM michaelknightdriver/docker-nginx-brotli:latest
+FROM dockerhub.ebi.ac.uk/uniprot/variation/protvar-deploy/cached/michaelknightdriver-docker-nginx-brotli-latest
 RUN rm /usr/share/nginx/html/* && rm /etc/nginx/conf.d/default.conf
 COPY build /usr/share/nginx/html/ProtVar
 COPY deploy/nginx.conf /etc/nginx/conf.d

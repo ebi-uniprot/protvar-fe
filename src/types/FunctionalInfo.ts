@@ -1,7 +1,7 @@
 import {Evidence, EvidencedString} from "./Common";
 import {Foldx, Interaction, Pocket} from "./Prediction";
 import {Comment} from "./Comment";
-import {ConservScore, EsmScore, EveScore, PopEveScore} from "./MappingResponse";
+import {ConservScore, EsmScore, EveScore, M3dPred, PopEveScore} from "./MappingResponse";
 
 export interface FunctionalInfo {
     accession: string
@@ -29,6 +29,7 @@ export interface FunctionalInfo {
     eveScore: EveScore;
     esmScore: EsmScore;
     popEveScore: PopEveScore;
+    m3dPred: M3dPred;
 }
 
 export interface Gene {
