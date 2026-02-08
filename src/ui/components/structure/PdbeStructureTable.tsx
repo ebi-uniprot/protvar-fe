@@ -1,69 +1,68 @@
 import { PDB_URL_INTERFACE_BY_PROTEIN } from '../../../constants/ExternalUrls';
-import {baseSettings} from './StructuralDetail';
-import PdbeRef from "./PdbeRef";
 import {PdbeStructure} from "../../../types/PdbeStructure";
 import { groupBy } from "../../../utills/Util";
 import React from "react";
-
-const pdbSettings = (molId: string) => {
-  return {...baseSettings,
-    ...{
-      moleculeId: molId
-    },
-    //alphafoldView: false
-  }
-}
+import {useMolstarController} from "./useMolstarController";
+import {useStructureUrl} from "./useStructureUrl";
 
 interface PdbeStructureTableProps {
-  isoFormAccession: string,
-  pdbeData: Array<PdbeStructure>,
-  selectedPdbId: string,
-  setSelected: any,
-  pdbeRef: PdbeRef
+  isoFormAccession: string;
+  pdbeData: PdbeStructure[];
+  selectedPdbId: string;
+  setSelected: any;
+  molstar: ReturnType<typeof useMolstarController>;
+  urlParams: ReturnType<typeof useStructureUrl>;
 }
 
-function PdbeStructureTable(props: PdbeStructureTableProps) {
+function PdbeStructureTable({ isoFormAccession, pdbeData, selectedPdbId, setSelected, molstar, urlParams }: PdbeStructureTableProps) {
   const rows: Array<React.JSX.Element> = [];
-  const pdbeGroups = groupBy(props.pdbeData, "pdbId")
+  const grouped = groupBy(pdbeData, "pdbId")
   let options = <></>
 
-  for (let id in pdbeGroups) {
-    let chainGroup = pdbeGroups[id].sort((a,b) => a.chainId.localeCompare(b.chainId));
-    const isRowSelected = props.selectedPdbId === id
-    const rowClass = isRowSelected ? 'clickable-row active' : 'clickable-row';
-    const chains = chainGroup.map(c => c.chainId).join(", ")
-    const firstChain = chainGroup[0]
+  for (let id in grouped) {
+    let chains = grouped[id].sort((a,b) => a.chainId.localeCompare(b.chainId));
+    const first = chains[0]
+    const isSelected = selectedPdbId === id
 
-    const tooltip = chainGroup.map(c => c.pdbId + '\t' + c.chainId + '\t' + c.start + '\t' + c.resolution + '\t' + c.experimentalMethod).join('\n')
+    const tooltip = chains.map(c => c.pdbId + '\t' + c.chainId + '\t' + c.start + '\t' + c.resolution + '\t' + c.experimentalMethod).join('\n')
 
-    const clicked = () => {
-      props.setSelected(firstChain)
-      props.pdbeRef.update(pdbSettings(id)).then(() =>
-          props.pdbeRef.subscribeOnload(firstChain.start, firstChain.chainId)
-      );
-    }
-
-    const row = <tr key={id} className={rowClass} title={tooltip} onClick={clicked}>
+    const row = <tr key={id} className={isSelected ? "clickable-row active" : "clickable-row"}
+                    title={tooltip}
+                    onClick={() => {
+                      setSelected(first);
+                      urlParams.setStructure("pdb", first.pdbId);
+                      urlParams.clearIncompatibleActions("pdb");
+                      molstar.loadPdb(first.pdbId, first.start, first.chainId);
+                    }}>
       <td className="small">{id}</td>
-      <td className="small">{chains}</td>
-      <td className="small">{firstChain.start}</td>
-      <td className="small">{firstChain.resolution}</td>
-      <td className="small">{firstChain.experimentalMethod}</td>
+      <td className="small">{chains.map(c => c.chainId).join(", ")}</td>
+      <td className="small">{first.start}</td>
+      <td className="small">{first.resolution}</td>
+      <td className="small">{first.experimentalMethod}</td>
     </tr>
 
-    if (isRowSelected) {
+    if (isSelected) {
       let chainNum = 0;
-      const highlightChainBtn = chainGroup.map(c => {
+      const highlightChainBtn = chains.map(c => {
         const k = 'highlightBtn-'+id+'-'+c.chainId
         chainNum++
         let highlightText = chainNum === 1 ? 'Highlight chain ' + c.chainId : c.chainId
-        return <button key={k} className="button-new" onClick={() => props.pdbeRef.highlightChain(c.start, c.chainId)}>{highlightText}</button>
+        return <button key={k} className="button-new" onClick={() => {
+          urlParams.updateActions({ chain: c.chainId, zoom: null });
+          molstar.highlightChain(c.start, c.chainId);
+        }}>{highlightText}</button>
       })
 
       options = <div className="small">
-          <button className="button-new" onClick={() => props.pdbeRef.zoomToVariant(firstChain.start, firstChain.chainId)}>Zoom to variant</button>
-          {highlightChainBtn}
-          <button className="button-new" onClick={() => props.pdbeRef.resetDefault(firstChain.start, firstChain.chainId)}>Reset</button>
+        <button className="button-new" onClick={() => {
+          urlParams.updateActions({ zoom: true, chain: null });
+          molstar.zoomToVariant(first.start, first.chainId);
+        }}>Zoom to variant</button>
+        {highlightChainBtn}
+        <button className="button-new" onClick={() => {
+          urlParams.updateActions({ chain: null, zoom: null });
+          molstar.resetDefault(first.start, first.chainId);
+        }}>Reset</button>
       </div>
     }
 
@@ -74,16 +73,16 @@ function PdbeStructureTable(props: PdbeStructureTableProps) {
     <div className="tableFixHead">
       <table>
         <thead>
-          <tr>
-            <th colSpan={5}>PDBe Experimental Structure <a href={PDB_URL_INTERFACE_BY_PROTEIN + props.isoFormAccession} target="_blank" rel="noreferrer" title="Click for further information from PDBeKB" className="ext-link"></a></th>
-          </tr>
-          <tr>
-            <th>PDB ID</th>
-            <th>Chain</th>
-            <th>PDB pos.</th>
-            <th>Resolution (Å)</th>
-            <th>Method</th>
-          </tr>
+        <tr>
+          <th colSpan={5}>PDBe Experimental Structure <a href={PDB_URL_INTERFACE_BY_PROTEIN + isoFormAccession} target="_blank" rel="noreferrer" title="Click for further information from PDBeKB" className="ext-link"></a></th>
+        </tr>
+        <tr>
+          <th>PDB ID</th>
+          <th>Chain</th>
+          <th>PDB pos.</th>
+          <th>Resolution (Å)</th>
+          <th>Method</th>
+        </tr>
         </thead>
         <tbody>{rows}</tbody>
       </table>
