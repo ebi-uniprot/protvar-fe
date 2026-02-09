@@ -167,35 +167,51 @@ function StructuralDetail(props: StructuralDetailProps) {
     let structureToLoad: PdbeStructure | PredictedStructure | Interaction | null = null;
 
     if (params.structureId) {
-      const [type, id] = params.structureId.split(":");
+      // Parse new format: pdb:1ABC, prediction:AlphaFold, interaction:P12345_P67890
+      const parts = params.structureId.split(":");
+      const type = parts[0];
+      const id = parts[1]; // May be undefined for default
 
       switch (type) {
         case "pdb":
-          structureToLoad = pdbeData.find((d) => d.pdbId === id) || null;
+          if (id && id !== "default") {
+            structureToLoad = pdbeData.find((d) => d.pdbId === id) || null;
+          } else {
+            // Use first PDB structure as default
+            structureToLoad = pdbeData[0] || null;
+          }
           if (structureToLoad) urlParams.clearIncompatibleActions("pdb");
           break;
-        case "pred":
-          if (id === "alphafill") {
+
+        case "prediction":
+          if (id && id.toLowerCase() === "alphafill") {
             structureToLoad = predictedStructureData.find((p) => "modelEntityId" in p && p.modelEntityId.startsWith("AlphaFill-")) || null;
           } else {
-            structureToLoad = predictedStructureData.find((p) => "uniprotAccession" in p) || null;
+            // Use AlphaFold as default (or first available prediction)
+            structureToLoad = predictedStructureData.find((p) => "uniprotAccession" in p) || predictedStructureData[0] || null;
           }
-          if (structureToLoad) urlParams.clearIncompatibleActions("pred");
+          if (structureToLoad) urlParams.clearIncompatibleActions("prediction");
           break;
-        case "int":
-          const [a, b] = (id || "").split("_");
-          structureToLoad = interactionData.find((i) => i.a === a && i.b === b) || null;
-          if (structureToLoad) urlParams.clearIncompatibleActions("int");
+
+        case "interaction":
+          if (id && id !== "default") {
+            const [a, b] = id.split("_");
+            structureToLoad = interactionData.find((i) => i.a === a && i.b === b) || null;
+          } else {
+            // Use first interaction as default
+            structureToLoad = interactionData[0] || null;
+          }
+          if (structureToLoad) urlParams.clearIncompatibleActions("interaction");
           break;
       }
     } else {
-      // Default selection
+      // Default selection when no structure parameter
       if (pdbeData.length > 0) {
         structureToLoad = pdbeData[0];
         urlParams.clearIncompatibleActions("pdb");
       } else if (predictedStructureData.length > 0) {
         structureToLoad = predictedStructureData[0];
-        urlParams.clearIncompatibleActions("pred");
+        urlParams.clearIncompatibleActions("prediction");
       }
     }
 
@@ -243,7 +259,7 @@ function StructuralDetail(props: StructuralDetailProps) {
         </div>
       </td>
       <td colSpan={5} className="expanded-row structure-data-cell">
-        {pdbeData.length > 0 && (
+        {pdbeData?.length > 0 && (
           <PdbeStructureTable
             isoFormAccession={isoFormAccession}
             pdbeData={pdbeData}
@@ -253,7 +269,7 @@ function StructuralDetail(props: StructuralDetailProps) {
             urlParams={urlParams}
           />
         )}
-        {predictedStructureData.length > 0 && (
+        {predictedStructureData?.length > 0 && (
           <PredictedStructureTable
             isoFormAccession={isoFormAccession}
             predictedStructureData={predictedStructureData}
@@ -265,7 +281,7 @@ function StructuralDetail(props: StructuralDetailProps) {
             urlParams={urlParams}
           />
         )}
-        {interactionData.length > 0 && (
+        {interactionData?.length > 0 && (
           <InteractionInfoTable
             isoFormAccession={isoFormAccession}
             interactionData={interactionData}

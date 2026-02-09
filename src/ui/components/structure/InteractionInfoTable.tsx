@@ -39,8 +39,8 @@ function InteractionInfoTable({
     const row = <tr key={rowId} className={isSelected ? "clickable-row active" : "clickable-row"}
                     onClick={() => {
                       setSelected(i);
-                      urlParams.setStructure("int", rowId);
-                      urlParams.clearIncompatibleActions("int");
+                      urlParams.setStructure("interaction", rowId);
+                      urlParams.clearIncompatibleActions("interaction");
                       molstar.loadInteraction(modelUrl, aaPos, protChain);
                     }}>
       <td className="small" title={`Residues: ${formatRange(i.aresidues)}`}>{i.a}</td>

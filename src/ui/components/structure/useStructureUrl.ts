@@ -1,10 +1,10 @@
 import { useCallback } from "react";
 
-// URL parameter keys
-const STR_PARAM = "str";
-const CHAIN_PARAM = "chain";
-const POCKET_PARAM = "pocket";
-const INTERFACE_PARAM = "interface";
+// URL parameter keys - aligned with James's suggestion
+const STR_PARAM = "structure";
+const CHAIN_PARAM = "highlight_chain";
+const POCKET_PARAM = "highlight_pocket";
+const INTERFACE_PARAM = "highlight_interface";
 const ZOOM_PARAM = "zoom";
 
 export interface StructureUrlParams {
@@ -15,7 +15,7 @@ export interface StructureUrlParams {
   zoom: boolean;
 }
 
-export type StructureType = "pdb" | "pred" | "int";
+export type StructureType = "pdb" | "prediction" | "interaction";
 
 export function useStructureUrl() {
   // Parse URL parameters
@@ -99,11 +99,11 @@ export function useStructureUrl() {
       // PDB only supports chain highlighting
       updates.pocket = null;
       updates.interface = null;
-    } else if (type === "pred") {
+    } else if (type === "prediction") {
       // AlphaFold only supports pocket highlighting
       updates.chain = null;
       updates.interface = null;
-    } else if (type === "int") {
+    } else if (type === "interaction") {
       // Interactions only support interface highlighting
       updates.chain = null;
       updates.pocket = null;

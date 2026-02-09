@@ -43,9 +43,9 @@ function PredictedStructureTable({
 
     const clicked = () => {
       setSelected(predStruc);
-      const predType = predStruc.modelEntityId.startsWith("AlphaFill-") ? "pred:alphafill" : "pred";
-      urlParams.setStructure("pred", predType === "pred:alphafill" ? "alphafill" : undefined);
-      urlParams.clearIncompatibleActions("pred");
+      const isAlphaFill = predStruc.modelEntityId.startsWith("AlphaFill-");
+      urlParams.setStructure("prediction", isAlphaFill ? "AlphaFill" : "AlphaFold");
+      urlParams.clearIncompatibleActions("prediction");
       molstar.loadAf(predStruc.cifUrl, aaPos);
     }
 
