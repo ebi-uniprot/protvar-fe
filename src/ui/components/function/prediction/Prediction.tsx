@@ -7,8 +7,9 @@ import {useContext} from "react";
 import {AppContext} from "../../../App";
 import {CaddScorePred} from "./CaddScorePred";
 import {ColourCheckbox} from "../../../modal/ColourCheckbox";
-import {ResidueRegionTableProps} from "../ResidueRegionTable";
 import {PopEvePred} from "./PopEvePred";
+import {FunctionalInfo} from "../../../../types/FunctionalInfo";
+import {AmScore, TranslatedSequence} from "../../../../types/MappingResponse";
 
 export type PredAttr = {
   text: string,
@@ -18,7 +19,17 @@ export type PredAttr = {
   range?: string
 }
 
-export const Prediction = (props: ResidueRegionTableProps) => {
+export interface PredictionProps {
+  functionalData: FunctionalInfo
+  refAA: string
+  variantAA: string
+  ensg: string;
+  ensp: TranslatedSequence[];
+  caddScore: string;
+  amScore: AmScore;
+}
+
+export const Prediction = (props: PredictionProps) => {
   const state = useContext(AppContext);
   return <><br/>
     <ConservPred conserv={props.functionalData.conservScore} stdColor={state.stdColor} />

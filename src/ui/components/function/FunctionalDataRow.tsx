@@ -2,7 +2,7 @@ import { TOTAL_COLS } from '../../../constants/SearchResultTable';
 import ProteinFunctionTable from './ProteinFunctionTable';
 import GeneAndTranslatedSequenceTable from './GeneAndTranslatedSequenceTable';
 import ProteinInformationTable from './ProteinInformationTable';
-import ResidueRegionTable from './ResidueRegionTable';
+import FunctionalAnnotationsPanel from './FunctionalAnnotationsPanel';
 import ProteinIcon from '../../../images/proteins.svg';
 import {FunctionalInfo} from "../../../types/FunctionalInfo";
 import React from "react";
@@ -40,7 +40,7 @@ function FunctionalDataRow(props: FunctionalDataRowProps) {
             <HelpButton title="" content={<HelpContent name="function-annotations" />} />
             <Spaces count={2} />
             <ShareAnnotationIcon annotation={props.annotation} />
-            <ResidueRegionTable {...props} />
+            <FunctionalAnnotationsPanel {...props} />
             <ProteinFunctionTable functionComments={grouped.get(CommentType.FUNCTION) ?? []}/>
             <ProteinInformationTable apiData={functionalData} groupedComments={grouped}/>
             <GeneAndTranslatedSequenceTable ensg={ensg} ensp={ensp} />
