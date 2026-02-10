@@ -35,13 +35,17 @@ function HelpPageContent() {
 
 const TableOfContent = (props: {id: string}) => {
   return (
-    <div className="grid-container">
-      {HELP_FILES.map((f) => (
-        <Link key={`help-file-${f.name}`} to={`${HELP}#${f.name}`} className={`grid-item ${props.id === f.name ? `grid-item-selected` : ``}`}>
-          {f.title}
+    <nav className="help-toc">
+      {HELP_FILES.map((file) => (
+        <Link
+          key={`help-file-${file.name}`}
+          to={`${HELP}#${file.name}`}
+          className={`help-toc-item ${props.id === file.name ? 'help-toc-item-selected' : ''}`}
+        >
+          {file.title}
         </Link>
       ))}
-    </div>
+    </nav>
   );
 };
 

@@ -2,8 +2,8 @@ import React from "react";
 
 export const SearchHistoryHelp = () => {
   // @ts-ignore
-  return <div className="help">
-    <h4 id="search-history">Search History</h4>
+  return <div className="help-content">
+    <h1 id="search-history">Search History</h1>
 
     Previous searches can be found on the:
     <ul>

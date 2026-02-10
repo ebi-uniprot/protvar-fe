@@ -1,4 +1,4 @@
-#### <a id="downloads-page"></a>Downloads Page
+# <a id="downloads-page"></a>Downloads Page
 
 ![ProtVar Downloads](images/downloads.png)  
 **A.** - All of the user's downloads for this session will be displayed on this page.  

@@ -1,86 +1,212 @@
-.help {
-    padding: 0 20px 40px 10px;
+/* ======================
+   HelpPage / Markdown Styles
+   Fully self-contained in .help-content
+   ====================== */
 
-    code {
-        background-color: ivory;
-        padding: 2px 4px;
-        border-radius: 4px;
-    }
-
-    img {
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-        width: 90%;
-    }
-    h4, h5, h6 {
-        color: gray;
-    }
-    h4 {
-        font-size: 18px;
-    }
-    h5 {
-        font-size: 17px;
-    }
-    h6 {
-        font-size: 16px;
-    }
+.help-content {
+    all: unset; /* Reset inherited styles */
+    display: block;
+    font-family: Arial, sans-serif;
+    line-height: 1.5;
+    color: #333;
+    padding: 0 20px 40px 20px; /* main padding */
+    box-sizing: border-box;
 }
 
-/* unvisited link */
-.help a:link {
-    color: blue;
+/* ----------------------
+   Headings (less bold, lighter gray)
+   ---------------------- */
+.help-content h1,
+.help-content h2,
+.help-content h3,
+.help-content h4,
+.help-content h5,
+.help-content h6 {
+    color: #555;       /* softer gray instead of #444 */
+    margin: 1em 0 0.5em;
+    font-weight: 500;  /* medium weight, less bold than 'bold' */
+    margin-left: 0;    /* flush left */
 }
 
-/* visited link */
-.help a:visited {
-    color: green;
+.help-content h1 { font-size: 1.4em; }
+.help-content h2 { font-size: 1.2em; }
+.help-content h3 { font-size: 1.0em; }
+.help-content h4 { font-size: 0.8em; }
+.help-content h5 { font-size: 0.6em; }
+.help-content h6 { font-size: 0.4em; }
+
+/* ----------------------
+   Paragraphs
+   ---------------------- */
+.help-content p {
+    margin: 0.5em 0;
 }
 
-/* mouse over link */
-.help a:hover {
-    color: #FF9901;
+/* ----------------------
+   Links
+   ---------------------- */
+.help-content a:link { color: #007bff; text-decoration: underline; }
+.help-content a:visited { color: #6c757d; }
+.help-content a:hover { color: #ff9901; text-decoration: underline; }
+.help-content a:active { font-weight: bold; color: #0056b3; }
+
+/* ----------------------
+   Lists
+   ---------------------- */
+.help-content ul,
+.help-content ol {
+    margin: 0.5em 0 0.5em 1.5em;
+    padding-left: 0;
 }
 
-/* selected link */
-.help a:active {
-    color: blue;
+.help-content ol { list-style-type: decimal; }
+.help-content ul { list-style-type: disc; }
+
+/* Nested lists */
+.help-content ul ul,
+.help-content ol ol,
+.help-content ul ol,
+.help-content ol ul {
+    margin-left: 1em;
+}
+
+/* ----------------------
+   Code & Preformatted
+   ---------------------- */
+.help-content code {
+    background-color: #f6f8fa;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 0.95em;
+}
+
+.help-content pre {
+    background-color: #f6f8fa;
+    padding: 8px;
+    border-radius: 4px;
+    overflow-x: auto;
+    margin: 0.5em 0;
+}
+
+.help-content pre code {
+    display: block;
+    white-space: pre-wrap;
+}
+
+/* ----------------------
+   Blockquotes
+   ---------------------- */
+.help-content blockquote {
+    border-left: 4px solid #ddd;
+    padding-left: 1em;
+    color: #555;
+    margin: 0.5em 0;
+    background-color: #f9f9f9;
+}
+
+/* ----------------------
+   Images
+   ---------------------- */
+.help-content img {
+    display: block;
+    margin: 10px auto;
+    max-width: 90%;
+}
+
+/* ----------------------
+   Tables
+   ---------------------- */
+.help-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1em 0;
+    font-size: 0.95em;
+}
+
+.help-content th,
+.help-content td {
+    border: 1px solid #ccc;
+    padding: 6px 8px;
+    text-align: left;
+}
+
+.help-content th {
+    background-color: #f2f2f2;
     font-weight: bold;
 }
 
-.help ol {
-    list-style-type: upper-alpha;
-
+/* ----------------------
+   Horizontal Rule
+   ---------------------- */
+.help-content hr {
+    border: none;
+    border-top: 1px solid #ccc;
+    margin: 1em 0;
 }
 
-.active {
-    background-color: #ccc;
+/* ----------------------
+   Miscellaneous
+   ---------------------- */
+.help-content strong { font-weight: bold; }
+.help-content em { font-style: italic; }
+.help-content del { text-decoration: line-through; }
+
+.help-content ol, .help-content ul {
+    margin-bottom: 0.8em;
 }
 
-/* grid styles for table of content */
-.grid-container {
+/* Optional spacing for headings + first paragraph */
+.help-content h1 + p,
+.help-content h2 + p,
+.help-content h3 + p,
+.help-content h4 + p,
+.help-content h5 + p,
+.help-content h6 + p {
+    margin-top: 0.3em;
+}
+
+/* Scrollable code for long lines */
+.help-content pre {
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+/* Reset margins for lists in tables (nested) */
+.help-content table ul,
+.help-content table ol {
+    margin: 0;
+}
+
+/* Table of content container */
+.help-toc {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Flexible grid layout */
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 16px;
     padding: 16px;
+    margin-bottom: 1em; /* space between TOC and content */
 }
 
-.grid-item {
+/* Individual TOC item */
+.help-toc-item {
     display: block;
     padding: 8px;
     text-align: center;
     background-color: #f0f0f0;
-    text-decoration: none;
     color: #333;
+    text-decoration: none;
     border-radius: 4px;
     transition: background-color 0.3s ease;
+    cursor: pointer;
 }
 
-.grid-item-selected {
+/* Hover state */
+.help-toc-item:hover {
+    background-color: #ddd;
+}
+
+/* Selected/active state */
+.help-toc-item-selected {
     font-weight: bold;
     background-color: lightblue;
-}
-
-.grid-item:hover {
-    background-color: #ddd;
 }

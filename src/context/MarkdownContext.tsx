@@ -1,83 +1,68 @@
-import React, { createContext, useState, useContext} from 'react';
-import ReactMarkdown, {uriTransformer} from "react-markdown";
-import rehypeRaw from "rehype-raw";
-import remarkGfm from "remark-gfm";
-import {HELP} from "../constants/BrowserPaths";
+import React, { createContext, useContext, useState } from 'react';
+import { HELP } from '../constants/BrowserPaths';
+import { marked } from 'marked';
 
-// Define the interface for your markdown map
 interface MarkdownMap {
-  [key: string]: React.JSX.Element | null; // Update to allow null values initially
+  [fileName: string]: React.JSX.Element | null;
 }
 
-// Define the shape of the context
 interface MarkdownContextType {
   markdownMap: MarkdownMap;
-  getMarkdownContent: (fileName: string) => Promise<React.JSX.Element | null>; // Update to return a Promise
+  getMarkdownContent: (fileName: string) => Promise<React.JSX.Element | null>;
 }
 
-// Create the context with an empty default value
 const MarkdownContext = createContext<MarkdownContextType | undefined>(undefined);
 
-// Hook for easy access to the context
 export const useMarkdown = (): MarkdownContextType => {
   const context = useContext(MarkdownContext);
-  if (!context) {
-    throw new Error('useMarkdown must be used within a MarkdownProvider');
-  }
+  if (!context) throw new Error('useMarkdown must be used within a MarkdownProvider');
   return context;
 };
 
-const filePath = "markdown/"
-const fileExt = ".md"
+const filePath = 'markdown/';
+const fileExt = '.md';
 
-// Provider component to wrap the app and provide the markdown data
+// Create a custom renderer
+const renderer = new marked.Renderer();
+
+// Override link rendering
+renderer.link = (href, title, text) => {
+  // If it's an internal anchor link, prefix with /help
+  if (href && href.startsWith('#')) {
+    href = `${process.env.PUBLIC_URL}${HELP}${href}`;
+  }
+  const titleAttr = title ? ` title="${title}"` : '';
+  return `<a href="${href}"${titleAttr}>${text}</a>`;
+};
+
 export const MarkdownProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [markdownMap, setMarkdownMap] = useState<MarkdownMap>({});
 
-  const addHelpPrefix = function (uri: string) {
-    if (uri.startsWith('#'))
-      return "/ProtVar" + HELP + uri //window.location.pathname + uri
-    return uriTransformer(uri)
-  }
-
-  // Function to retrieve markdown content
   const getMarkdownContent = async (fileName: string): Promise<React.JSX.Element | null> => {
-    // Check if the markdown file is already loaded
-    if (markdownMap[fileName]) {
-      return markdownMap[fileName]; // Return the cached content
-    }
+    if (markdownMap[fileName]) return markdownMap[fileName];
 
-    // Load the markdown file if it's not already loaded
     try {
       const response = await fetch(filePath + fileName + fileExt);
       const text = await response.text();
+      if (!text) return null;
 
-      if (text) {
-        const markdownElement = (
-          <div className="help">
-            <ReactMarkdown
-              rehypePlugins={[rehypeRaw]}
-              transformLinkUri={addHelpPrefix}
-              remarkPlugins={[remarkGfm]}
-            >
-              {text}
-            </ReactMarkdown>
-          </div>
-        );
+      // Fix internal anchor links to include /help#
+      //const processedText = text.replace(/href="#/g, `href="${HELP}#`);
 
-        // Update the markdown map with the newly loaded content
-        setMarkdownMap((prevMap) => ({
-          ...prevMap,
-          [fileName]: markdownElement,
-        }));
+      const html = marked.parse(text, { gfm: true, breaks: true, renderer });
 
-        return markdownElement;
-      }
+      // Wrap in help-content for isolated styling
+      const markdownElement = (
+        <div className="help-content" dangerouslySetInnerHTML={{ __html: html }} />
+      );
+
+      setMarkdownMap(prev => ({ ...prev, [fileName]: markdownElement }));
+
+      return markdownElement;
     } catch (error) {
       console.error('Error fetching markdown file:', error);
+      return <div className="help-content"><p>Help content not available.</p></div>;
     }
-
-    return null; // Return null if the file could not be loaded
   };
 
   return (

@@ -2,8 +2,8 @@ import React from "react";
 import {statusMap} from "../../../pages/download/DownloadPage";
 
 export const ResultDownloadHelp = () => {
-  return <div className="help">
-    <h4 id="result-download">Result Download</h4>
+  return <div className="help-content">
+    <h1 id="result-download">Result Download</h1>
 
     <p>1. <strong>Full Input Download</strong></p>
     <ul>

@@ -1,4 +1,4 @@
-#### <a id="structure-annotations"></a>Structure Annotations
+# <a id="structure-annotations"></a>Structure Annotations
 
 ![ProtVar Structure Annotations](images/structure_annotations.png)  
 **A.** This page shows the position of the user variant in protein structures.  

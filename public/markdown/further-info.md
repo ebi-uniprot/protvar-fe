@@ -1,4 +1,4 @@
-#### <a id="further-info"></a>Further Information
+# <a id="further-info"></a>Further Information
 
 <a id="further-info:3d-structure-viewer"></a>**3D Structure Viewer:** 3D structures are visualised using the Mol* viewer which "is a modern web-based open-source toolkit for visualisation and analysis of large-scale molecular data". Further information can be found at their website: [Mol* website](https://molstar.org/)
 ProtVar uses a limited version of Mol* with less functionality than the full version to allow proteins to be displayed quickly and smoothly.
