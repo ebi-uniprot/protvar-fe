@@ -2,6 +2,8 @@ import Spaces from "../../../elements/Spaces";
 import {PRECISION, STD_BENIGN_COLOR, STD_PATHOGENIC_COLOR} from "./PredConstants";
 import {Foldx} from "../../../../types/Prediction";
 import {aminoAcid3to1Letter} from "../../../../utills/Util";
+import {SharePredictionLink} from "./SharePredictionLink";
+import React from "react";
 
 export const FoldxPred = (props: { foldxs: Array<Foldx>, variantAA: string }) => {
   const variantAA = aminoAcid3to1Letter(props.variantAA);
@@ -12,7 +14,9 @@ export const FoldxPred = (props: { foldxs: Array<Foldx>, variantAA: string }) =>
   if (filteredFoldxs && filteredFoldxs.length > 0) {
     return <div>
       <div className="aa-pred">
-        <div>Stability change ΔΔG {filteredFoldxs[0].numFragments > 1 && <small>
+        <div>FoldX - Stability change (ΔΔG)
+          <SharePredictionLink predictionType="foldx" />
+          {filteredFoldxs[0].numFragments > 1 && <small>
           <br/>(using AlphaFold fragment {filteredFoldxs[0].afId})
         </small>}</div>
         <div>{formatFoldxScore(filteredFoldxs[0])}</div>

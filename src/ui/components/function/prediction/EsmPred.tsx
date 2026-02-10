@@ -3,6 +3,8 @@ import {EsmScore} from "../../../../types/MappingResponse";
 import {PredAttr} from "./Prediction";
 import Spaces from "../../../elements/Spaces";
 import {STD_BENIGN_COLOR, STD_PATHOGENIC_COLOR, STD_UNCERTAIN_COLOR} from "./PredConstants";
+import {SharePredictionLink} from "./SharePredictionLink";
+import React from "react";
 
 const PRECISION: number = 1 // dp
 
@@ -20,7 +22,9 @@ export const ESM_COLOR_GRADIENT = tinygradient(ESM_SCORE_ATTR.map(s => s.color))
 export const EsmPred = (props: { esm?: EsmScore, stdColor: boolean }) => {
   if (props.esm) {
   return <div className="aa-pred">
-    <div>ESM-1b</div>
+    <div>ESM-1b
+      <SharePredictionLink predictionType="esm" />
+    </div>
     <div>{formatEsmScore(props.esm)}</div>
     <EsmPredIcon {...props}/>
   </div>}

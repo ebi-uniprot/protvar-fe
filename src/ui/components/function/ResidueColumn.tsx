@@ -6,11 +6,9 @@
 import React from 'react';
 import {Feature, FunctionalInfo} from "../../../types/FunctionalInfo";
 import {AmScore, TranslatedSequence} from "../../../types/MappingResponse";
-import {aminoAcid3to1Letter} from "../../../utills/Util";
 import {EmptyState} from "./common/EmptyState";
 import {FeatureList} from "./features/FeatureList";
 import AminoAcidModel from "./AminoAcidModel";
-import {Missense3dPred} from "./prediction/Missense3dPred";
 import {HelpButton} from "../help/HelpButton";
 import {Prediction} from "./prediction/Prediction";
 import {HelpContent} from "../help/HelpContent";
@@ -30,10 +28,6 @@ interface ResidueColumnProps {
 }
 
 export function ResidueColumn(props: ResidueColumnProps) {
-  const variantId = props.functionalData.m3dPred && props.refAA && props.variantAA
-    ? `${aminoAcid3to1Letter(props.refAA)?.toUpperCase()}${props.functionalData.position}${aminoAcid3to1Letter(props.variantAA)?.toUpperCase()}`
-    : '';
-
   return (
     <div className="residue-annotations">
       <b>Annotations from UniProt</b>
@@ -50,12 +44,6 @@ export function ResidueColumn(props: ResidueColumnProps) {
       )}
 
       <AminoAcidModel refAA={props.refAA} variantAA={props.variantAA} />
-
-      <Missense3dPred
-        m3dPred={props.functionalData.m3dPred}
-        accession={props.functionalData.accession}
-        variantId={variantId}
-      />
 
       <strong>
         <HelpButton title="Predictions" content={<HelpContent name="predictions" />} />
