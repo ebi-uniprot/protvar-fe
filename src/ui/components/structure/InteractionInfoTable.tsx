@@ -1,68 +1,67 @@
-import {baseSettings} from './StructuralDetail';
 import {formatRange} from "../../../utills/Util";
 import {API_URL} from "../../../constants/const";
-import PdbeRef from "./PdbeRef";
 import {HelpContent} from "../help/HelpContent";
 import {HelpButton} from "../help/HelpButton";
 import React from "react";
 import {Interaction} from "../../../types/Prediction";
+import {useMolstarController} from "./useMolstarController";
+import {useStructureUrl} from "./useStructureUrl";
 
-const customSettings = (customUrl: string) => {
-    return {...baseSettings,
-        ...{customData: {
-                url: customUrl,
-                format: "pdb"
-            }
-        },
-        //alphafoldView: false
-    }
-}
 
 interface InteractionInfoTableProps {
-  isoFormAccession: string,
-  interactionData: Array<Interaction>
-  selectedInteraction: string
-  setSelected: any
-  aaPos: number
-  pdbeRef: PdbeRef
+  isoFormAccession: string;
+  interactionData: Interaction[];
+  selectedInteraction: string;
+  setSelected: (item: Interaction) => void;
+  aaPos: number;
+  molstar: ReturnType<typeof useMolstarController>;
+  urlParams: ReturnType<typeof useStructureUrl>;
 }
 
-function InteractionInfoTable(props: InteractionInfoTableProps) {
+function InteractionInfoTable({
+                                isoFormAccession,
+                                interactionData,
+                                selectedInteraction,
+                                setSelected,
+                                aaPos,
+                                molstar,
+                                urlParams,
+                              }: InteractionInfoTableProps) {
   const rows: Array<React.JSX.Element> = [];
   let options = <></>
 
-  props.interactionData.sort((a, b) => b.pdockq - a.pdockq).forEach((i) => {
-    const rowId = i.a+"_"+i.b
-    const isRowSelected = props.selectedInteraction === rowId
-    const rowClass = isRowSelected ? 'clickable-row active' : 'clickable-row';
-    const protChain = i.a === props.isoFormAccession ? 'A' : 'B';
+  interactionData.sort((a, b) => b.pdockq - a.pdockq).forEach((i) => {
+    const rowId = `${i.a}_${i.b}`;
+    const isSelected = selectedInteraction === rowId
+    const protChain = i.a === isoFormAccession ? "A" : "B";
+    const modelUrl = `${API_URL}/prediction/interaction/${i.a}/${i.b}/model`;
 
-    const aResids = 'Residues: ' + formatRange(i.aresidues);
-    const bResids = 'Residues: ' + formatRange(i.bresidues);
-    const modelUrl = API_URL + '/prediction/interaction/'+i.a+'/'+i.b+'/model';
-
-    const clicked = () => {
-      props.setSelected(i)
-      props.pdbeRef.update(customSettings(modelUrl)).then(() =>
-        props.pdbeRef.subscribeOnload(props.aaPos, protChain)
-      );
-    }
-
-    const row = <tr className={rowClass} onClick={clicked} key={(i.a+"_"+i.b)}>
-      <td className="small" title={aResids}>{i.a}</td>
-      <td className="small" title={bResids}>{i.b}</td>
+    const row = <tr key={rowId} className={isSelected ? "clickable-row active" : "clickable-row"}
+                    onClick={() => {
+                      setSelected(i);
+                      urlParams.setStructure("interaction", rowId);
+                      urlParams.clearIncompatibleActions("interaction");
+                      molstar.loadInteraction(modelUrl, aaPos, protChain);
+                    }}>
+      <td className="small" title={`Residues: ${formatRange(i.aresidues)}`}>{i.a}</td>
+      <td className="small" title={`Residues: ${formatRange(i.bresidues)}`}>{i.b}</td>
       <td className="small">{i.pdockq.toFixed(3)}</td>
     </tr>
 
-    if (isRowSelected) {
-      const highlightInterface = async () => {
-        await props.pdbeRef.highlightInterface(i.aresidues, i.bresidues, props.aaPos, protChain)
-      }
-
+    if (isSelected) {
       options = <div className="small">
-        <button className="button-new" onClick={() => props.pdbeRef.zoomToVariant(props.aaPos, protChain)}>Zoom to variant</button>
-        <button className="button-new" onClick={highlightInterface}>Highlight Interface</button>
-        <button className="button-new" onClick={() => props.pdbeRef.resetDefault(props.aaPos, protChain)}>Reset</button>
+        <button className="button-new" onClick={() => {
+          urlParams.updateActions({ zoom: true, interface: null });
+          molstar.zoomToVariant(aaPos, protChain);
+        }}>Zoom to variant</button>
+        <button className="button-new" onClick={() => {
+          urlParams.updateActions({ interface: true, zoom: null });
+          molstar.highlightInterface(i.aresidues, i.bresidues, aaPos, protChain);
+        }}>Highlight Interface</button>
+        <button className="button-new" onClick={() => {
+          urlParams.updateActions({ interface: null, zoom: null });
+          molstar.resetDefault(aaPos, protChain);
+        }}>Reset</button>
       </div>
     }
 
@@ -73,20 +72,20 @@ function InteractionInfoTable(props: InteractionInfoTableProps) {
     <div className="tableFixHead">
       <table>
         <thead>
-          <tr>
-            <th colSpan={3}>Predicted Interacting Structure <HelpButton title="" content={<HelpContent name="predictions" />} /></th>
-          </tr>
-          <tr>
-              <th>Chain A</th>
-              <th>Chain B</th>
-              <th>pDockQ</th>
-          </tr>
+        <tr>
+          <th colSpan={3}>Predicted Interacting Structure <HelpButton title="" content={<HelpContent name="predictions" />} /></th>
+        </tr>
+        <tr>
+          <th>Chain A</th>
+          <th>Chain B</th>
+          <th>pDockQ</th>
+        </tr>
         </thead>
-          <tbody>{rows}</tbody>
+        <tbody>{rows}</tbody>
       </table>
     </div>
     {options}
-    </div>
+  </div>
 }
 
 export default InteractionInfoTable;

@@ -1,4 +1,4 @@
-#### <a id="population-observations"></a>Population Observations
+# <a id="population-observations"></a>Population Observations
 
 ![ProtVar Population Observations](images/population_observations.png)  
 **A.** - This page contains data about the variant in other resources and [co-located variants](#further-info:co-located-variants)  

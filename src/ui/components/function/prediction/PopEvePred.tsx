@@ -2,6 +2,8 @@ import {PopEveScore} from "../../../../types/MappingResponse";
 import {PRECISION} from "./PredConstants";
 import {PredAttr} from "./Prediction";
 import Spaces from "../../../elements/Spaces";
+import {SharePredictionLink} from "./SharePredictionLink";
+import React from "react";
 
 export const POPEVE_SCORE_ATTR: PredAttr[] = [
   {color: 'red', stdColor: 'red', text: 'severe', range: '<-5.056' },
@@ -12,7 +14,9 @@ export const POPEVE_SCORE_ATTR: PredAttr[] = [
 export const PopEvePred = (props: { popeve?: PopEveScore, stdColor: boolean }) => {
   if (props.popeve) {
   return <div className="aa-pred">
-    <div>popEVE</div>
+    <div>popEVE
+      <SharePredictionLink predictionType="popeve" />
+    </div>
     <div>{formatPopEveScore(props.popeve)}</div>
     <PopEvePredIcon {...props} />
   </div>}

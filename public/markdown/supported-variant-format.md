@@ -1,4 +1,4 @@
-#### <a id="supported-variant-format"></a>Supported Variant Format
+# <a id="supported-variant-format"></a>Supported Variant Format
 
 ProtVar supports the following variant formats:
 
@@ -7,7 +7,7 @@ ProtVar supports the following variant formats:
 - **Transcript:** HGVS coding/cDNA
 - **Variant IDs:** dbSNP, ClinVar, COSMIC
 
-##### Genomic
+## Genomic
 
 Genomic input should follow one of the specified formats.
 
@@ -24,7 +24,7 @@ Genomic input should follow one of the specified formats.
 **REF:** Reference nucleotide (A, T, C, G)  
 **ALT:** Alternative nucleotide (A, T, C, G)
 
-##### Protein
+## Protein
 
 Protein input should follow one of the specified formats.
 
@@ -41,7 +41,7 @@ Protein input should follow one of the specified formats.
 **REF:** Reference amino acid (1- or 3-letter code)  
 **ALT:** Alternative amino acid (1- or 3-letter code, TER, *, =)
 
-##### HGVS
+## HGVS
 
 - The **Reference Sequence** part of the input should be a valid RefSeq identifier with the prefix NC, NM, or NP. Optionally, the HGNC gene symbol can be included within brackets.
 - The **Variant Description** part of the input should be valid for the specific scheme.
@@ -52,7 +52,7 @@ Protein input should follow one of the specified formats.
 
 - **Unsupported schemes:** HGVS non-coding, mitochondrial, and RNA schemes (n., m., r.).
 
-##### Variant ID
+## Variant ID
 
 Variant ID input must be a single word with no spaces, beginning with a specific prefix.
 

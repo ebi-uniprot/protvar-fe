@@ -14,6 +14,7 @@ export const HELP_FILES: HelpFile[] = [
   { name: 'function-annotations', md: true, title: 'Function Annotations' },
   { name: 'population-observations', md: true, title: 'Population Observations' },
   { name: 'structure-annotations', md: true, title: 'Structure Annotations' },
+  { name: 'alphafold', md: true, title: 'Alphafold' },
   { name: 'predictions', md: true, title: 'Predictions' },
   { name: 'result-download', md: false, title: 'Result Download' }, // React component
   { name: 'download-options', md: true, title: 'Download Options' },
@@ -22,4 +23,6 @@ export const HELP_FILES: HelpFile[] = [
   { name: 'download-file', md: true, title: 'Download File Format' },
   { name: 'direct-queries', md: true, title: 'Direct Queries' },
   { name: 'api', md: true, title: 'API' },
+  { name: 'annotation-linking', md: true, title: 'Annotation Linking' },
+  { name: 'structure-linking', md: true, title: 'Structure Linking' },
 ];

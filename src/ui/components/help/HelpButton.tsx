@@ -1,19 +1,27 @@
-import React, {useContext, useState} from "react";
-import {AppContext} from "../../App";
+import React, { useContext, useState } from 'react';
+import { AppContext } from '../../App';
 
 interface HelpBtnProps {
-  title: string
-  content: React.JSX.Element
+  title: string;
+  content: React.JSX.Element;
 }
 
-export const HelpButton = (props: HelpBtnProps) => {
-  const state = useContext(AppContext)
+export const HelpButton: React.FC<HelpBtnProps> = ({ title, content }) => {
+  const state = useContext(AppContext);
   const [mouseOver, setMouseOver] = useState(false);
-  return <span onClick={_ => state.updateState("drawer", props.content)}
-               onMouseEnter={_ => setMouseOver(true)}
-               onMouseLeave={_ => setMouseOver(false)}
-               className="help-icon">
-    {props.title} <i className={`bi bi-info-circle${mouseOver ? `-fill` : ``}`}
-                     style={{verticalAlign: 'super', fontSize: '13px'}}></i>
-  </span>
-}
+
+  return (
+    <span
+      onClick={() => state.updateState('drawer', content)}
+      onMouseEnter={() => setMouseOver(true)}
+      onMouseLeave={() => setMouseOver(false)}
+      className="help-icon"
+    >
+      {title}{' '}
+      <i
+        className={`bi bi-info-circle${mouseOver ? `-fill` : ''}`}
+        style={{ verticalAlign: 'super', fontSize: '13px' }}
+      />
+    </span>
+  );
+};

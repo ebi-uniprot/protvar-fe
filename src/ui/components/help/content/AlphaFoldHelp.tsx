@@ -36,16 +36,16 @@ export const AFLegendShortText = () => {
 }
 
 export const AlphaFoldHelp = () => {
-  return <div className="help">
-    <h4 id="alphafold">AlphaFold</h4>
+  return <div className="help-content">
+    <h1 id="alphafold">AlphaFold</h1>
 
-    <h5>Model Confidence</h5>
+    <h2>Model Confidence</h2>
     <p>AlphaFold produces a per-residue confidence score (pLDDT) between 0 and 100. Some regions with
       low pLDDT may be unstructured in isolation.</p>
     <p>
     <AFLegend />
     </p>
-    <h5>Predicted Align Error (PAE)</h5>
+    <h2>Predicted Align Error (PAE)</h2>
     <p>The colour at position (x, y) indicates AlphaFold's expected position error at residue x, when the
       predicted and true structures are aligned on residue y. This is useful for assessing inter-domain
     accuracy.</p>

@@ -1,4 +1,4 @@
-#### <a id="genomic-assembly-detection"></a>Genomic Assembly Detection
+# <a id="genomic-assembly-detection"></a>Genomic Assembly Detection
 The steps in the build determination procedure are as follows:
 
 1. Count number of genomic variants

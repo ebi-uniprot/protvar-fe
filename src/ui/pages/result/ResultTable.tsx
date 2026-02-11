@@ -1,6 +1,6 @@
 import {GENOMIC_COLS, PROTEIN_COLS} from "../../../constants/SearchResultTable";
 import Tool from "../../elements/Tool";
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {PagedMappingResponse} from "../../../types/PagedMappingResponse";
 import {Message, GenomicVariant} from "../../../types/MappingResponse";
 import {StringVoidFun} from "../../../constants/CommonTypes";
@@ -9,6 +9,13 @@ import {getNewPrimaryRow} from "./PrimaryRow";
 import {AppContext} from "../../App";
 import MsgRow from "./MsgRow";
 import {useLocation, useNavigate, useSearchParams} from "react-router-dom";
+import {
+  parseAnnotationParam,
+  buildAnnotationKey,
+  buildAnnotationParam,
+  parseAnnotationKey,
+  clearAnnotationSpecificParams
+} from "./annotationUrl";
 
 function ResultTable(props: { data: PagedMappingResponse | null }) {
   const stdColor = useContext(AppContext).stdColor
@@ -16,28 +23,77 @@ function ResultTable(props: { data: PagedMappingResponse | null }) {
   const location = useLocation();
   const [searchParams] = useSearchParams();
   const [isoformGroupExpanded, setIsoformGroupExpanded] = useState('')
-  const [annotationExpanded, setAnnotationExpanded] = useState(searchParams.get('annotation') ?? '')
+  const [annotationExpanded, setAnnotationExpanded] = useState('')
+
+  // Initialize annotation from URL on mount and when searchParams change
+  useEffect(() => {
+    const annotationParam = searchParams.get('annotation');
+    if (!annotationParam) {
+      setAnnotationExpanded('');
+      return;
+    }
+
+    const parsed = parseAnnotationParam(annotationParam);
+    if (parsed) {
+      const key = buildAnnotationKey(parsed.type, parsed.rowNumber);
+      setAnnotationExpanded(key);
+    } else {
+      setAnnotationExpanded('');
+    }
+  }, [searchParams]);
 
   function toggleIsoformGroup(key: string) {
     setIsoformGroupExpanded(isoformGroupExpanded === key ? '' : key);
   }
 
   function toggleAnnotation(key: string) {
-    const ann = annotationExpanded === key ? '' : key
-    if (ann)
-      searchParams.set("annotation", ann);
-    else
-      searchParams.delete("annotation");
-    setAnnotationExpanded(ann);
+    const newAnnotation = annotationExpanded === key ? '' : key;
+    const oldAnnotation = annotationExpanded;
+    setAnnotationExpanded(newAnnotation);
 
-    const url = `${location.pathname}${searchParams.size > 0 ? `?${searchParams.toString()}` : ``}`
-    navigate(url);
+    // Update URL
+    const newParams = new URLSearchParams(searchParams);
+
+    if (newAnnotation) {
+      const parsed = parseAnnotationKey(newAnnotation);
+      if (parsed) {
+        // Build the URL parameter (omit row number if it's 1)
+        const param = buildAnnotationParam(parsed.type, parsed.rowNumber, true);
+        newParams.set("annotation", param);
+
+        // Clear tab-specific parameters when:
+        // 1. Switching to a different annotation type, OR
+        // 2. Switching to a different row (even same type - each row has different structures)
+        const oldParsed = oldAnnotation ? parseAnnotationKey(oldAnnotation) : null;
+        const isDifferentType = !oldParsed || parsed.type !== oldParsed.type;
+        const isDifferentRow = oldParsed && parsed.rowNumber !== oldParsed.rowNumber;
+
+        if (isDifferentType || isDifferentRow) {
+          clearAnnotationSpecificParams(newParams, parsed.type);
+        }
+      }
+    } else {
+      // When closing all tabs, clear everything
+      newParams.delete("annotation");
+      clearAnnotationSpecificParams(newParams, null);
+    }
+
+    const url = `${location.pathname}${newParams.size > 0 ? `?${newParams.toString()}` : ``}`;
+    navigate(url, { replace: true });
   }
 
   if (!props.data)
     return null
 
-  const tableRows = getTableRows(props.data, isoformGroupExpanded, toggleIsoformGroup, annotationExpanded, toggleAnnotation, stdColor);
+  const tableRows = getTableRows(
+    props.data,
+    isoformGroupExpanded,
+    toggleIsoformGroup,
+    annotationExpanded,
+    toggleAnnotation,
+    stdColor
+  );
+
   return <table className="" cellPadding="0" cellSpacing="0" id="resultTable">
     <thead>
     <tr>
@@ -91,8 +147,14 @@ export const rowBg = (index: number) => {
 const NO_MAPPING: Message = {type: 'ERROR', text: 'No mapping found'}
 
 // Process and convert paged mapping response into table rows
-const getTableRows = (data: PagedMappingResponse | null, isoformGroupExpanded: string, toggleIsoformGroup: StringVoidFun,
-                      annotationExpanded: string, toggleAnnotation: StringVoidFun, stdColor: boolean) => {
+const getTableRows = (
+  data: PagedMappingResponse | null,
+  isoformGroupExpanded: string,
+  toggleIsoformGroup: StringVoidFun,
+  annotationExpanded: string,
+  toggleAnnotation: StringVoidFun,
+  stdColor: boolean
+) => {
   const tableRows: Array<React.JSX.Element> = [];
 
   // whole-input messages
@@ -130,18 +192,31 @@ const getTableRows = (data: PagedMappingResponse | null, isoformGroupExpanded: s
           if (isoformIdx === 0) {
             primaryRow++;
             altRow = 0; // reset
-            tableRows.push(getNewPrimaryRow(`row-${primaryRow}`, isoformGroupKey, isoformGroupExpanded, inputIndex, genomicVariant, input, gene, isoform,
-              toggleIsoformGroup, annotationExpanded, toggleAnnotation, gene.isoforms.length > 1, stdColor))
+
+            tableRows.push(getNewPrimaryRow(
+              `row-${primaryRow}`,
+              isoformGroupKey,
+              isoformGroupExpanded,
+              inputIndex,
+              genomicVariant,
+              input,
+              gene,
+              isoform,
+              toggleIsoformGroup,
+              annotationExpanded,
+              toggleAnnotation,
+              gene.isoforms.length > 1,
+              stdColor
+            ))
           } else if (isoformGroupKey === isoformGroupExpanded) {
             altRow++;
             tableRows.push(getAlternateIsoFormRow(`row-${primaryRow}-${altRow}`, inputIndex, isoform))
           }
         })
       })
-
     })
-
   });
+
   return tableRows;
 };
 

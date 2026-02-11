@@ -23,6 +23,11 @@ const bannerText = (
     or suggestions, and use the{" "}
     <a href="https://www.ebi.ac.uk/ProtVar/">stable ProtVar version</a> if you
     can’t retrieve what you need from this one.
+
+    <div>
+      <i className="bi bi-stars banner-new-icon"></i>{' '}
+      <a href="/ProtVar/help#structure-linking">Structure</a> Tab Direct Linking
+    </div>
   </>
 );
 

@@ -1,4 +1,4 @@
-#### <a id="predictions"></a>Predictions
+# <a id="predictions"></a>Predictions
 
 - **Conservation:** Inter species amino acid conservation based on UniRef90 sequence alignments using the ScoreCons algorithm (Source: PubMeb ID [11093265](https://pubmed.ncbi.nlm.nih.gov/11093265)).
 Scored from 0 (no conservation) to 1 (complete conservation).
@@ -11,13 +11,13 @@ Scored from 0 (no conservation) to 1 (complete conservation).
   - _0.75-0.90_ = high conservation
   - _0.90-1.00_ = very high conservation
 
-##### Structure Predictions
+## Structure Predictions
 
 - **Stability change:** The predicted free energy change in the protein when the reference amino acid is replaced with the variant as calculated using foldX v5.0 on the AlphaFold2 structure (Source: PubMeb ID [15980494](https://pubmed.ncbi.nlm.nih.gov/15980494)). 
 
   A ΔΔG of more than 2 kcal/mol is considered to be likely destabilising to the protein.
 
-##### Pathogenicity Predictions
+## Pathogenicity Predictions
 Predictions relating to the probability that the user entered variant has a pathogenic or benign consequence.
 
 - **CADD:** Scaled Combined Annotation-Dependent Depletion scores (Source: PubMeb ID [30371827](https://pubmed.ncbi.nlm.nih.gov/30371827)). An integrative annotation score built from genomic features. Scores are relative to all other scores. They are log10 scaled with higher values representing a more deleterious variant consequence.
@@ -45,7 +45,7 @@ Scores range from -25 (most deleterious) to 0 (least deleterious).
   - _-5 to 0_ = likely benign
 
 
-##### Pockets containing the variant
+## Pockets containing the variant
 Predicted protein pockets containing the variant position and other amino acids involved in the pocket with prediction confidence (Source: PubMeb ID [38854010](https://pubmed.ncbi.nlm.nih.gov/38854010)).
 
 - **Pocket confidence:** Filter pockets containing the variant in the protein according to confidence that the pocket exists. Thresholds taken from the original publication.
@@ -60,7 +60,7 @@ Predicted protein pockets containing the variant position and other amino acids 
 - **Radius of gyration:** A measure of pocket compactness.
 - **Residues:** The amino acids which are predicted to compose the pocket.
 
-##### Protein-protein interfaces containing the variant
+## Protein-protein interfaces containing the variant
 Predicted protein-protein interfaces containing the variant position with information about the quality of the interface and the proteins involved (Source: PubMeb ID [36690744](https://pubmed.ncbi.nlm.nih.gov/36690744), [38854010](https://pubmed.ncbi.nlm.nih.gov/38854010)).
 
 - **pDockQ:** interface confidence score based on the pLDDT model confidence and the number of residues at the interface as demonstrated in the original research (above).

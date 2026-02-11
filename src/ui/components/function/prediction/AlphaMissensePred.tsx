@@ -2,6 +2,8 @@ import {AmScore} from "../../../../types/MappingResponse";
 import {PredAttr} from "./Prediction";
 import Spaces from "../../../elements/Spaces";
 import {PRECISION, STD_BENIGN_COLOR, STD_PATHOGENIC_COLOR, STD_UNCERTAIN_COLOR} from "./PredConstants";
+import {SharePredictionLink} from "./SharePredictionLink";
+import React from "react";
 
 export const AM_SCORE_ATTR: {[key: string]: PredAttr} = {
   BENIGN: { color: '#3853a4', stdColor: STD_BENIGN_COLOR, text: 'benign' },
@@ -12,7 +14,9 @@ export const AM_SCORE_ATTR: {[key: string]: PredAttr} = {
 export const AlphaMissensePred = (props: { am?: AmScore, stdColor: boolean }) => {
   if (props.am) {
     return <div className="aa-pred">
-      <div>AlphaMissense</div>
+      <div>AlphaMissense
+        <SharePredictionLink predictionType="alphamissense" />
+      </div>
       <div>{formatAMScore(props.am)}</div>
       <AlphaMissensePredIcon {...props} />
     </div>

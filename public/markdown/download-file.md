@@ -1,4 +1,4 @@
-#### <a id="download-file"></a>Download File Format
+# <a id="download-file"></a>Download File Format
 
 The output file has 41 columns in total. Every column value is double-quoted, for example "User input" and then separated by a comma.
 Columns can contain "N/A" as a value indicating either:
@@ -8,7 +8,7 @@ Columns can contain "N/A" as a value indicating either:
 - No data exists in our database in the category for this variant
 - One of the external APIs is not working
 
-##### Download Help File Contents
+## Download Help File Contents
 
 The output file will be in CSV (comma separated values) format. The file is divided into the following general categories:
 
@@ -29,7 +29,7 @@ The descriptions of the columns in the download file below are numbered from lef
 <a id="download-file:user-input"></a>**A - User input:**
 This field replicates the user input with no changes to the format. Users can use this field to match their input data to the annotated output file.
 
-##### <a id="download-file:user-input-columns"></a>Genomic coodinate Columns
+## <a id="download-file:user-input-columns"></a>Genomic coodinate Columns
 
 There are six columns:
 - [Chromosome](#download-file:chromosome)
@@ -49,7 +49,7 @@ Only numbers 1-22 or X or Y or mitochondria (chrM, mitochondria, mitochondrion, 
 
 <a id="download-file:alternative-allele"></a>**F - Alternative_allele** This is the alternative allele and will always match the user input. Any user inputs except 'A', 'G', 'C', 'T' will be flagged in the "notes" section.
 
-##### <a id="download-file:mapping-notes-columns"></a>Mapping Notes Columns
+## <a id="download-file:mapping-notes-columns"></a>Mapping Notes Columns
 
 <a id="download-file:mapping-notes"></a>**G - Mapping_notes:** Single column which describes potential issues with the user input. It will contain "N/A" if there is nothing to report. Possible issues include:
 - Invalid input - Such as a nonsense chromosome, a non-numeric coordinate of invalid nucleotides in either the reference or variant allele positions
@@ -62,7 +62,7 @@ Only numbers 1-22 or X or Y or mitochondria (chrM, mitochondria, mitochondrion, 
     - variant in an intronic region
     - no transcript maps to the canonical isoform
 
-##### <a id="download-file:genomic-mapping-columns"></a>Genomic Mapping Columns
+## <a id="download-file:genomic-mapping-columns"></a>Genomic Mapping Columns
 
 Contains information regarding mapping of the user variant input to the relevant gene(s), transcript(s) and codon. The category contains six columns:
 - [Gene](#download-file:gene)
@@ -92,7 +92,7 @@ starting "ENSP". For example:
 
 <a id="download-file:mane-transcript"></a>**M - MANE_transcript:** MANE (Matched Annotation from NCBI and EBI). - One of the transcripts is selected as the representative by NCBI and Ensembl. This transcript may not translate into the UniProt canonical isoform sequence. If the MANE Select corresponds directly to the isoform described in the row the MANE Select ID is given. If they do not match, "N/A" is found in the column and the MANE Select ID is found with the corresponding transcript in the "Alternative_isoform_mappings" column. More information can be found on the [Ensembl website](https://www.ensembl.org/info/genome/genebuild/mane.html)
 
-##### <a id="download-file:protein-mapping-columns"></a>Protein Mapping Columns
+## <a id="download-file:protein-mapping-columns"></a>Protein Mapping Columns
 
 Contains information regarding mapping of the user variant input to the encoded protein(s). The category contains six columns:
 
@@ -118,7 +118,7 @@ consequence and ENSP and ENST identifiers. Many genes have several transcripts c
 
 <a id="download-file:consequences"></a>**S - Consequences:** The consequence of the variant on the amino acid sequence.
 
-##### <a id="download-file:function-annotations-columns"></a>Function Annotations Columns
+## <a id="download-file:function-annotations-columns"></a>Function Annotations Columns
 
 These columns contain functional annotations regarding the variant amino acid, region and protein. There are 12 columns in this category:
 
@@ -159,7 +159,7 @@ These columns contain functional annotations regarding the variant amino acid, r
 
 <a id="download-file:protein-interactions"></a>**AD - Protein_interactions_PROTEIN(gene):** This shows which other proteins have been shown to interact with the variant containing protein. This data is from the EMBL-EBI IntAct database and is predominantly from manual curation. The format is: UniProt accession(gene symbol). Different interacting partners are separated by ";".
 
-##### <a id="download-file:predictions-columns"></a>Structure Prediction Columns
+## <a id="download-file:predictions-columns"></a>Structure Prediction Columns
 Predictions based on structure hosted by ProtVar. There are 4 columns in this category:
 
 - [Predicted_pockets](#download-file:predicted-pockets)
@@ -175,7 +175,7 @@ Predictions based on structure hosted by ProtVar. There are 4 columns in this ca
 
 <a id="download-file:conservation-score"></a>**AH - Conservation_score:**  Is a score from 0-1 where 0 is not at all conserved and 1 is totally conserved in pre-calculated multiple sequence alignments based on UniRef90 and scored using the ScoreCons algorithm.
 
-##### <a id="download-file:predictors-columns"></a>Pathogenicity Prediction Columns
+## <a id="download-file:predictors-columns"></a>Pathogenicity Prediction Columns
 Pathogenicity prediction retrieved from other resources (all pre-computed). There are 3 columns in this category:
 
 - [AlphaMissense_pathogenicity(class)](#download-file:alphamissense)
@@ -188,7 +188,7 @@ Pathogenicity prediction retrieved from other resources (all pre-computed). Ther
 
 <a id="download-file:esm1b-score"></a>**AK - ESM1b_score:** A 650-million-parameter protein language model trained on 250 million protein sequences across all organisms. It is log 10 scaled and the category boundaries can be seen in the ProtVar legend. Higher scores equate to variants with a higher probability of deliteriousness. [ESM1b paper](https://www.nature.com/articles/s41588-023-01465-0)
 
-##### <a id="download-file:population-observations-columns"></a>Population Observations Columns
+## <a id="download-file:population-observations-columns"></a>Population Observations Columns
 There are five columns in this category:
 
 - [Genomic_location](#download-file:genomic-location)
@@ -210,7 +210,7 @@ actively transcribing DNA.
 
 <a id="download-file:variants-colocated-at-residue-position"></a>**AP - Variants_colocated_at_residue_position:** This column describes other variants which have been described at the same AMINO ACID position. As a codon is three nucleotides this means that the variants here could be at any one of three positions and can be any alternative allele.
 
-##### <a id="download-file:structure-annotations-columns"></a>Structure Annotations Columns
+## <a id="download-file:structure-annotations-columns"></a>Structure Annotations Columns
 
 This category has one column:
 

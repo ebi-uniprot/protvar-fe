@@ -1,4 +1,4 @@
-#### <a id="result-page"></a>Result Page
+# <a id="result-page"></a>Result Page
 
 ![ProtVar Result Page](images/result_page.png)
 **A.** [Downloads](#further-info:downloads) A. My downloads contains all the files you have submitted for download. These can be downloaded from here to your local computer. Users can return to the same results again by clicking the 'Results' tab. The results will remain during the users session or until they are replaced by new results.   
