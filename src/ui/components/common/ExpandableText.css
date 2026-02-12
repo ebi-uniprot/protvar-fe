@@ -1,0 +1,36 @@
+.expandable-text {
+    font-size: 14px;
+    color: #333;
+}
+
+.expandable-text-content {
+    line-height: 1.5;
+}
+
+.pubmed-link {
+    color: #0066cc;
+    text-decoration: none;
+}
+
+.pubmed-link:hover {
+    text-decoration: underline;
+}
+
+.expandable-text-toggle {
+    margin-left: 8px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #0066cc;
+    cursor: pointer;
+    vertical-align: baseline;
+    font-size: 14px;
+}
+
+.expandable-text-toggle:hover {
+    color: #004499;
+}
+
+.expandable-text-toggle i {
+    vertical-align: middle;
+}
