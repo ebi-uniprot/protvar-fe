@@ -1,66 +1,70 @@
-import React, { Fragment } from "react"
-import { v1 as uuidv1 } from 'uuid';
-import {Evidence} from "../../../types/Common";
+import React, { Fragment, useMemo } from "react";
+import { Evidence } from "../../../types/Common";
+import PubMedIdList from "./PubMedIdList";
 
-interface IdUrl {
-  id: string
-  sourceUrl: string
+export interface IdUrl {
+  id: string;
+  sourceUrl: string;
 }
 
 interface EvidencesProps {
-  evidences: Array<Evidence>
+  evidences: Array<Evidence>;
 }
 
-const Evidences = (props: EvidencesProps) => {
-  const { evidences } = props;
-  let evidenceList: Array<IdUrl> = [];
-  let evidenceMap = new Map();
-  let evidenceListToRet: Array<React.JSX.Element> = [];
+const Evidences = ({ evidences }: EvidencesProps) => {
+  // Group evidences by source name
+  const evidencesBySource = useMemo(() => {
+    const grouped = new Map<string, IdUrl[]>();
 
-  if (evidences && evidences.length > 0) {
-    evidences.forEach((evidence) => {
-      if (evidence.source && evidence.source.id) {
-        let url = evidence.source.url ? evidence.source.url : '';
-        let newEvidence = {
+    evidences?.forEach((evidence) => {
+      if (evidence.source?.id) {
+        const sourceName = evidence.source.name;
+        const idUrl: IdUrl = {
           id: evidence.source.id,
-          sourceUrl: url
+          sourceUrl: evidence.source.url || ''
         };
-        if (evidenceMap.get(evidence.source.name)) {
-          evidenceList = evidenceMap.get(evidence.source.name);
-          evidenceList.push(newEvidence);
-        } else {
-          evidenceList = [];
-          evidenceList.push(newEvidence);
+
+        if (!grouped.has(sourceName)) {
+          grouped.set(sourceName, []);
         }
-        evidenceMap.set(evidence.source.name, evidenceList);
+        grouped.get(sourceName)!.push(idUrl);
       }
     });
-    evidenceMap.forEach((value, key) => {
-      let list = value.map(getEvidence);
-      evidenceListToRet.push(getEvidenceForEachSource(key, list));
-    })
+
+    return grouped;
+  }, [evidences]);
+
+  if (!evidences || evidences.length === 0) {
+    return null;
   }
 
-  return <>{evidenceListToRet}</>;
-}
-
-function getEvidenceForEachSource(sourceName: string, ids: Array<React.JSX.Element>) {
   return (
-    <Fragment key={uuidv1()}>
-      <b>{sourceName} :</b>
-      <ul className="flatList">{ids}</ul>
-    </Fragment>
+    <>
+      {Array.from(evidencesBySource.entries()).map(([sourceName, ids]) => (
+        <Fragment key={sourceName}>
+          <b>{sourceName} :</b>
+          {sourceName === 'PubMed' ? (
+            <PubMedIdList ids={ids} />
+          ) : (
+            <ul className="flatList">
+              {ids.map((evidence) => (
+                <li key={evidence.id}>
+                  <a
+                    href={evidence.sourceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="ext-link"
+                  >
+                    {evidence.id}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
+        </Fragment>
+      ))}
+    </>
   );
-}
-
-function getEvidence(evidence: IdUrl) {
-  return (
-    <li key={uuidv1()}>
-      <a href={evidence.sourceUrl} target="_blank" rel="noopener noreferrer" className="ext-link">
-        {evidence.id}
-      </a>
-    </li>
-  );
-}
+};
 
 export default Evidences;
