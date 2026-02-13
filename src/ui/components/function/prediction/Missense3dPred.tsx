@@ -2,8 +2,10 @@ import React from "react";
 import {FunctionalInfo} from "../../../../types/FunctionalInfo";
 import {aminoAcid3to1Letter} from "../../../../utills/Util";
 import {SharePredictionLink} from "./SharePredictionLink";
+import Spaces from "../../../elements/Spaces";
+import {STD_BENIGN_COLOR, STD_PATHOGENIC_COLOR} from "./PredConstants";
 
-const M3D_BASE_URL = "https://missense3d.bc.ic.ac.uk/~missense3d2/results-details.html";
+const M3D_BASE_URL = 'https://missense3d.bc.ic.ac.uk/~missense3d2/results-details.html';
 
 interface Missense3dPredProps {
   functionalData: FunctionalInfo
@@ -18,7 +20,8 @@ export const Missense3dPred = ({functionalData, refAA, variantAA}: Missense3dPre
     ? `${aminoAcid3to1Letter(refAA)?.toUpperCase()}${functionalData.position}${aminoAcid3to1Letter(variantAA)?.toUpperCase()}`
     : '';
 
-  const predColor = functionalData.m3dPred.prediction === "Damaging" ? "red" : "blue";
+  const predText = functionalData.m3dPred.prediction.toLowerCase();
+  const predColor = predText === 'damaging' ? STD_PATHOGENIC_COLOR : STD_BENIGN_COLOR;
   const formattedText = functionalData.m3dPred.damagingFeature?.split('|')
     .map(str => str.trim().replace(/_/g, ' '))
     .join(', ');
@@ -30,13 +33,12 @@ export const Missense3dPred = ({functionalData, refAA, variantAA}: Missense3dPre
 
   return (
     <div className="aa-pred">
-      <div>Missense3D prediction
-        <SharePredictionLink predictionType="m3d" />
-        <a href={m3dUrl} target="_blank" rel="noreferrer" className="ext-link" aria-label="View in Missense3D (opens in new tab)"></a>
-      </div>
-      <div style={{color: predColor}}>{functionalData.m3dPred.prediction}</div>
+      <div><SharePredictionLink predictionType="m3d" /> Missense3D</div>
+      <div></div>
       <div title={isTruncated ? formattedText : undefined}>
-        {displayText}
+        <i className="bi bi-circle-fill" style={{color: predColor}}></i>
+        <Spaces/>{predText}<a href={m3dUrl} target="_blank" rel="noreferrer" className="ext-link" aria-label="View in Missense3D (opens in new tab)"></a>
+        {displayText !== '-' && <div style={{fontSize: "smaller", marginLeft: '18px', color: 'darkgray'}}>{displayText}</div>}
       </div>
     </div>
   );

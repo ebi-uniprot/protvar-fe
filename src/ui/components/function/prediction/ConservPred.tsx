@@ -24,9 +24,7 @@ export const CONSERV_COLOUR_GRADIENT = tinygradient(CONSERV_SCORE_ATTR.map(s => 
 export const ConservPred = (props: { conserv?: ConservScore, stdColor: boolean }) => {
   if (props.conserv) {
   return <div className="aa-pred">
-    <div>Conservation
-      <SharePredictionLink predictionType="conserv" />
-    </div>
+    <div><SharePredictionLink predictionType="conserv" /> Conservation</div>
     <div>{formatConservScore(props.conserv)}</div>
     <ConservPredIcon {...props}/>
   </div>}

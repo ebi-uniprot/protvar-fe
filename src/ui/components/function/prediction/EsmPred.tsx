@@ -22,9 +22,7 @@ export const ESM_COLOR_GRADIENT = tinygradient(ESM_SCORE_ATTR.map(s => s.color))
 export const EsmPred = (props: { esm?: EsmScore, stdColor: boolean }) => {
   if (props.esm) {
   return <div className="aa-pred">
-    <div>ESM-1b
-      <SharePredictionLink predictionType="esm" />
-    </div>
+    <div><SharePredictionLink predictionType="esm" /> ESM-1b</div>
     <div>{formatEsmScore(props.esm)}</div>
     <EsmPredIcon {...props}/>
   </div>}

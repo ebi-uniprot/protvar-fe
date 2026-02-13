@@ -14,9 +14,7 @@ export const AM_SCORE_ATTR: {[key: string]: PredAttr} = {
 export const AlphaMissensePred = (props: { am?: AmScore, stdColor: boolean }) => {
   if (props.am) {
     return <div className="aa-pred">
-      <div>AlphaMissense
-        <SharePredictionLink predictionType="alphamissense" />
-      </div>
+      <div><SharePredictionLink predictionType="alphamissense" /> AlphaMissense</div>
       <div>{formatAMScore(props.am)}</div>
       <AlphaMissensePredIcon {...props} />
     </div>

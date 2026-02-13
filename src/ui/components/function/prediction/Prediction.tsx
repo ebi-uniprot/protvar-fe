@@ -108,7 +108,9 @@ export const Prediction = (props: PredictionProps) => {
       </PredictionWrapper>
 
 
-      <ColourCheckbox state={state} />
+      <div style={{marginTop: '10px'}}>
+        <ColourCheckbox state={state} />
+      </div>
     </>
   );
 }

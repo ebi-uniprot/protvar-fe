@@ -14,9 +14,7 @@ export const POPEVE_SCORE_ATTR: PredAttr[] = [
 export const PopEvePred = (props: { popeve?: PopEveScore, stdColor: boolean }) => {
   if (props.popeve) {
   return <div className="aa-pred">
-    <div>popEVE
-      <SharePredictionLink predictionType="popeve" />
-    </div>
+    <div><SharePredictionLink predictionType="popeve" /> popEVE</div>
     <div>{formatPopEveScore(props.popeve)}</div>
     <PopEvePredIcon {...props} />
   </div>}

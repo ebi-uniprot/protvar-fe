@@ -20,9 +20,7 @@ export const CADD_SCORE_ATTR: PredAttr[] = [
 export const CaddScorePred = (props: { cadd?: string, stdColor: boolean }) => {
   if (props.cadd) {
   return <div className="aa-pred">
-    <div>CADD
-      <SharePredictionLink predictionType="cadd" />
-    </div>
+    <div><SharePredictionLink predictionType="cadd" /> CADD</div>
   <div>{formatCaddScore(props.cadd)}</div>
   <CADDIcon {...props} />
   </div>}

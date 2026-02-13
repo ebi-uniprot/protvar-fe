@@ -45,10 +45,6 @@ export function ResidueColumn(props: ResidueColumnProps) {
 
       <AminoAcidModel refAA={props.refAA} variantAA={props.variantAA} />
 
-      <strong>
-        <HelpButton title="Predictions" content={<HelpContent name="predictions" />} />
-      </strong>
-
       <Prediction
         functionalData={props.functionalData}
         refAA={props.refAA}
@@ -58,6 +54,10 @@ export function ResidueColumn(props: ResidueColumnProps) {
         caddScore={props.caddScore}
         amScore={props.amScore}
       />
+
+      <small>
+        <HelpButton title="Predictions Help" content={<HelpContent name="predictions" />} />
+      </small>
     </div>
   );
 }
