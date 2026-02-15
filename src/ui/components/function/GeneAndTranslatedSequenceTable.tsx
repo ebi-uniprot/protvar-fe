@@ -1,43 +1,47 @@
 import { ENSEMBL_GENE_RUL } from "../../../constants/ExternalUrls";
-import { v1 as uuidv1 } from 'uuid';
 import {TranslatedSequence} from "../../../types/MappingResponse";
 import React from "react";
 
 interface GeneAndTranslatedSequenceTableProps {
-ensg: string
-ensp: Array<TranslatedSequence>
+  ensg: string;
+  ensp: Array<TranslatedSequence>;
 }
+
 function GeneAndTranslatedSequenceTable(props: GeneAndTranslatedSequenceTableProps) {
   const {ensg, ensp} = props;
   const ensgUrl = ENSEMBL_GENE_RUL + ensg;
-  var translatedSequences: Array<React.JSX.Element> = [];
-  ensp.forEach((ensps) => {
-    var enspsUrl = ENSEMBL_GENE_RUL + ensps.ensp;
-    translatedSequences.push(
-      <li key={uuidv1()}>
-        <a href={enspsUrl} target="_blank" rel="noreferrer" className="ext-link">
-          {ensps.ensp} - {ensps.ensts}
-        </a>
-      </li>
-    );
-  });
-  return <table>
-    <tbody>
-      <tr>
-        <th>Ensembl Gene ID</th>
-        <th>Translated Sequence and Transcript IDs for the Canonical Isoform</th>
-      </tr>
-      <tr>
-        <td>
-          <a href={ensgUrl} target="_blank" rel="noreferrer" className="ext-link">
+
+  return (
+    <div className="gene-sequence-panel">
+      <div className="section-title">Ensembl Gene and Transcript Information</div>
+
+      <div className="gene-sequence-grid">
+        <div className="gene-info">
+          <h4>Ensembl Gene</h4>
+          <a href={ensgUrl} target="_blank" rel="noreferrer" className="ext-link gene-link">
             {ensg}
           </a>
-        </td>
-        <td>
-          <ul>{translatedSequences}</ul>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+        </div>
+
+        <div className="transcript-info">
+          <h4>Canonical Isoform Transcripts</h4>
+          <div className="transcript-list">
+            {ensp.map((ensps, index) => {
+              const enspsUrl = ENSEMBL_GENE_RUL + ensps.ensp;
+              return (
+                <div key={index} className="transcript-item">
+                  <a href={enspsUrl} target="_blank" rel="noreferrer" className="ext-link">
+                    {ensps.ensp}
+                  </a>
+                  <span className="transcript-id">{ensps.ensts}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
+
 export default GeneAndTranslatedSequenceTable;

@@ -1,6 +1,7 @@
 import React, { Fragment, useMemo } from "react";
 import { Evidence } from "../../../types/Common";
-import PubMedIdList from "./PubMedIdList";
+import PubMedList from "./PubMedList";
+import '../../../styles/new/evidences.css';
 
 export interface IdUrl {
   id: string;
@@ -39,14 +40,14 @@ const Evidences = ({ evidences }: EvidencesProps) => {
   }
 
   return (
-    <>
+    <div className="evidences-container">
       {Array.from(evidencesBySource.entries()).map(([sourceName, ids]) => (
         <Fragment key={sourceName}>
-          <b>{sourceName} :</b>
-          {sourceName === 'PubMed' ? (
-            <PubMedIdList ids={ids} />
+          <b>{sourceName.toLowerCase() === 'pubmed' ? 'PubMed' : sourceName}</b>
+          {sourceName.toLowerCase() === 'pubmed' ? (
+            <PubMedList ids={ids} />
           ) : (
-            <ul className="flatList">
+            <ul className="evidences-list">
               {ids.map((evidence) => (
                 <li key={evidence.id}>
                   <a
@@ -63,7 +64,7 @@ const Evidences = ({ evidences }: EvidencesProps) => {
           )}
         </Fragment>
       ))}
-    </>
+    </div>
   );
 };
 

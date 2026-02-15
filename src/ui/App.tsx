@@ -18,6 +18,7 @@ import {StatsProvider} from "../context/StatsContext";
 import {DEFAULT_PAGE_SIZE} from "../constants/const";
 import NotFoundPage from "./pages/NotFoundPage";
 import {MarkdownProvider} from "../context/MarkdownContext";
+import "../styles/new/common.css";
 
 const empty: ReactElement = <></>;
 

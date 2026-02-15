@@ -2,9 +2,8 @@
  * List component for protein-protein interactions
  */
 
-import React, { Fragment } from 'react';
+import React from 'react';
 import { Interaction } from '../../../../types/Prediction';
-import { ReactComponent as ChevronDownIcon } from '../../../../images/chevron-down.svg';
 import { InteractionCard } from './InteractionCard';
 import { EmptyState } from '../common/EmptyState';
 
@@ -29,24 +28,27 @@ export function InteractionList({
     return <EmptyState message="No P-P interaction predicted at variant position" />;
   }
 
+  const isExpanded = expandedSection === SECTION_KEY;
+
   return (
-    <Fragment key={SECTION_KEY}>
+    <div className="struct-pred-section">
       <button
         type="button"
         className="collapsible"
         onClick={() => onToggle(SECTION_KEY)}
+        aria-expanded={isExpanded}
       >
-        Protein-protein interfaces containing variant
-        <ChevronDownIcon className="chevronicon" />
+        <i className={`bi bi-chevron-${isExpanded ? 'down' : 'right'} chevron-icon`}></i>
+        <span>Protein-protein interfaces containing variant</span>
       </button>
 
-      {expandedSection === SECTION_KEY && (
-        <div className="struct-pred">
-          <p>
+      {isExpanded && (
+        <div className="struct-pred-content">
+          <p className="struct-pred-description">
             Proteins which are predicted to interact with {accession} where the variant is at the interface:
           </p>
 
-          <div className="interaction-grid">
+          <div className="interaction-header">
             <div>Protein</div>
             <div>pDockQ</div>
             <div></div>
@@ -62,11 +64,11 @@ export function InteractionList({
             />
           ))}
 
-          <p>
+          <p className="struct-pred-help">
             Click on <i className="bi bi-eye" /> to visualise interacting structure in the 3D structure tab.
           </p>
         </div>
       )}
-    </Fragment>
+    </div>
   );
 }

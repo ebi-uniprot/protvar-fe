@@ -4,7 +4,7 @@ function NoFunctionalDataRow() {
   return <tr>
     <td colSpan={TOTAL_COLS} className="expanded-row">
       {' '}
-      <div className="significances-groups">
+      <div className="">
         <div className="column">No functional data for this residue</div>
       </div>
     </td>

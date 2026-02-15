@@ -12,6 +12,7 @@ import {HelpButton} from "../help/HelpButton";
 import {HelpContent} from "../help/HelpContent";
 import {PocketList} from "./pockets/PocketList";
 import {InteractionList} from "./interactions/InteractionList";
+import '../../../styles/new/pockets-interactions.css';
 
 interface RegionColumnProps {
   regions: Feature[];
@@ -27,7 +28,9 @@ interface RegionColumnProps {
 export function RegionColumn(props: RegionColumnProps) {
   return (
     <div className="region-annotations">
-      <b>Annotations from UniProt</b>
+      <div className="column-header">Region Containing Variant Position</div>
+
+      <div className="section-title">UniProt Annotations</div>
 
       {props.regions.length === 0 ? (
         <EmptyState message="No functional data for the region" />
@@ -40,13 +43,12 @@ export function RegionColumn(props: RegionColumnProps) {
         />
       )}
 
-      <div>
-        <strong>
-          <HelpButton
-            title="Structure predictions"
-            content={<HelpContent name="predictions" />}
-          />
-        </strong>
+      <div className="section-title">
+        <span>Structure Predictions</span>
+        <HelpButton
+          title=""
+          content={<HelpContent name="predictions" />}
+        />
       </div>
 
       <PocketList

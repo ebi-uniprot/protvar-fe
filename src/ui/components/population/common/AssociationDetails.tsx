@@ -1,30 +1,37 @@
-import { Fragment } from "react"
-import Evidences from "../../function/Evidences";
-import { v1 as uuidv1 } from 'uuid';
+import React from "react";
+import Evidences from "../../common/Evidences";
 import {VariantAssociation} from "../../../../types/PopulationObservation";
 
 interface AssociationDetailsProps {
-  associations: Array<VariantAssociation>
+  associations: VariantAssociation[];
 }
+
 function AssociationDetails(props: AssociationDetailsProps) {
-  if (props.associations.length === 0)
-    return <>No association found</>
-  return <>{props.associations.map(getAssociation)}</>;
-}
-function getAssociation(association: VariantAssociation) {
-  let name = association.name;
-  if (association.description)
-    name = name + '-' + association.description.replace(/α/g, "Alpha");
+  if (props.associations.length === 0) {
+    return <div className="no-data-message">No association found</div>;
+  }
+
   return (
-    <Fragment key={uuidv1()}>
-      <ul>
-        <li>{name}</li>
-        <li>
-          <Evidences evidences={association.evidences} />
-        </li>
-      </ul>
-      <hr />
-    </Fragment>
+    <div>
+      {props.associations.map((association, index) => (
+        <AssociationCard key={index} association={association} />
+      ))}
+    </div>
   );
 }
+
+function AssociationCard({ association }: { association: VariantAssociation }) {
+  let name = association.name;
+  if (association.description) {
+    name = name + ' - ' + association.description.replace(/α/g, "Alpha");
+  }
+
+  return (
+    <div className="association-card">
+      <div className="association-name">{name}</div>
+      <Evidences evidences={association.evidences} />
+    </div>
+  );
+}
+
 export default AssociationDetails;

@@ -1,0 +1,277 @@
+/**
+ * Styling for evidence display components
+ * Used across multiple areas of the application
+ */
+
+/* ============================================
+   EVIDENCE CONTAINER
+   ============================================ */
+
+.evidences-container {
+    margin-top: 8px;
+}
+
+.evidences-container b {
+    font-size: 13px;
+    color: #555;
+    font-weight: 600;
+    margin-top: 8px;
+    display: inline-block;
+}
+
+/* ============================================
+   EVIDENCES LIST STYLING
+   ============================================ */
+
+.evidences-list {
+    list-style: none;
+    padding-left: 0;
+    margin: 4px 0 8px 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.evidences-list li {
+    display: inline-block;
+    background: #f0f4f8;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+.evidences-list li::after {
+    content: ',';
+    margin-left: 2px;
+    color: #999;
+}
+
+.evidences-list li:last-child::after {
+    content: '';
+}
+
+/* ============================================
+   PUBMED LIST CONTAINER
+   ============================================ */
+
+.pubmed-list-container {
+    margin: 4px 0 8px 0;
+    font-weight: 500;
+}
+
+.pubmed-list-container ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.pubmed-list-container ul li {
+    margin: 6px 0;
+}
+
+/* PubMed item header - contains button and link */
+.pubmed-item-header {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* ============================================
+   EXPAND/COLLAPSE ALL CONTROLS
+   ============================================ */
+
+.pubmed-expand-controls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+    padding: 4px 0;
+}
+
+.pubmed-expand-label {
+    font-size: 12px;
+    color: #666;
+    font-weight: 500;
+    user-select: none;
+}
+
+/* ============================================
+   ARTICLE CARD
+   ============================================ */
+
+.pubmed-article-card {
+    margin-top: 6px;
+    margin-left: 20px;
+    padding: 10px 12px;
+    background: #f8f9fa;
+    border-left: 3px solid #4a90e2;
+    border-radius: 4px;
+    font-size: 13px;
+    animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   ARTICLE STATES
+   ============================================ */
+
+.pubmed-article-loading {
+    color: #666;
+    font-style: italic;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.pubmed-article-loading i {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.pubmed-article-error {
+    color: #dc3545;
+    font-style: italic;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* ============================================
+   ARTICLE CONTENT
+   ============================================ */
+
+.pubmed-article-title {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 6px;
+    line-height: 1.4;
+    display: flex;
+    gap: 6px;
+}
+
+.pubmed-article-title i {
+    margin-top: 2px;
+    flex-shrink: 0;
+    color: #4a90e2;
+}
+
+.pubmed-article-authors {
+    font-size: 12px;
+    color: #666;
+    display: flex;
+    gap: 6px;
+    line-height: 1.4;
+}
+
+.pubmed-article-authors i {
+    margin-top: 2px;
+    flex-shrink: 0;
+    color: #888;
+}
+
+/* ============================================
+   INTEGRATION WITH FEATURE CONTENT
+   ============================================ */
+
+/* Ensure proper spacing when nested in feature content */
+.feature-content .pubmed-list-container {
+    margin-top: 8px;
+}
+
+.feature-content .pubmed-article-card {
+    margin-left: 20px;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+    .evidences-list {
+        gap: 6px;
+    }
+
+    .evidences-list li {
+        font-size: 12px;
+        padding: 3px 6px;
+    }
+
+    .pubmed-article-card {
+        margin-left: 16px;
+        padding: 8px 10px;
+        font-size: 12px;
+    }
+
+    .pubmed-article-title {
+        font-size: 12px;
+    }
+
+    .pubmed-article-authors {
+        font-size: 11px;
+    }
+
+    .pubmed-expand-label {
+        font-size: 11px;
+    }
+}
+
+/* ============================================
+   DARK MODE SUPPORT
+   ============================================ */
+
+@media (prefers-color-scheme: dark) {
+    .evidences-container b {
+        color: #b0b0b0;
+    }
+
+    .evidences-list li {
+        background: #2a2a2a;
+        color: #e0e0e0;
+    }
+
+    .pubmed-article-card {
+        background: #2a2a2a;
+        border-left-color: #6ea8fe;
+    }
+
+    .pubmed-article-title {
+        color: #e0e0e0;
+    }
+
+    .pubmed-article-title i {
+        color: #6ea8fe;
+    }
+
+    .pubmed-article-authors {
+        color: #999;
+    }
+
+    .pubmed-article-authors i {
+        color: #777;
+    }
+
+    .pubmed-article-loading {
+        color: #999;
+    }
+
+    .pubmed-article-error {
+        color: #f8717c;
+    }
+
+    .pubmed-expand-label {
+        color: #999;
+    }
+}

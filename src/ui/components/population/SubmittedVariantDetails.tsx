@@ -3,27 +3,32 @@ import {Variant} from "../../../types/PopulationObservation";
 import React from "react";
 
 interface SubmittedVariantDetailsProps {
-  variants: Array<Variant>
+  variants: Variant[];
 }
+
 function SubmittedVariantDetails(props: SubmittedVariantDetailsProps) {
   if (props.variants.length <= 0) {
-    return <label><b>The variant has not been reported before</b></label>
+    return <div className="submitted-variant-no-data">The variant has not been reported before</div>;
   }
 
-  let variant = props.variants[0];
-  let change = variant.wildType + '>' + variant.alternativeSequence;
+  const variant = props.variants[0];
+  const change = variant.wildType + ' > ' + variant.alternativeSequence;
 
   return (
-    <ul>
-      <li>
-        <b>Change:</b> {change}
-      </li>
-      <li>
-        <b>Genomic Location:</b> {variant.genomicLocation?.[0]}
-      </li>
-      <XRefDetail xrefs={variant.xrefs} populationFrequencies={variant.populationFrequencies}
-                  clinicalSignificances={variant.clinicalSignificances}/>
-    </ul>
+    <div className="submitted-variant-details">
+      <div className="protein-change-card">
+        <div className="protein-change">{change}</div>
+        {variant.genomicLocation?.[0] && (
+          <div className="genomic-location">{variant.genomicLocation[0]}</div>
+        )}
+      </div>
+
+      <XRefDetail
+        xrefs={variant.xrefs}
+        populationFrequencies={variant.populationFrequencies}
+        clinicalSignificances={variant.clinicalSignificances}
+      />
+    </div>
   );
 }
 

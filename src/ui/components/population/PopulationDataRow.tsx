@@ -11,12 +11,14 @@ import Spaces from "../../elements/Spaces";
 import {ShareAnnotationIcon} from "../common/ShareLink";
 import NoPopulationDataRow from "./NoPopulationDataRow";
 import {PopulationAlleleFreq} from "./PopulationAlleleFreq";
+import '../../../styles/new/annotation.css';
+import '../../../styles/new/population.css';
 
 interface PopulationDataRowProps {
-  annotation: string
-  poApiData: PopulationObservation,
-  variantAA: string
-  genomicVariant: string
+  annotation: string;
+  poApiData: PopulationObservation;
+  variantAA: string;
+  genomicVariant: string;
 }
 
 function PopulationDataRow(props: PopulationDataRowProps) {
@@ -26,91 +28,76 @@ function PopulationDataRow(props: PopulationDataRowProps) {
   const colocatedVariants = proteinVariants.filter(variant => variant.alternativeSequence !== props.variantAA);
   const { freqMap } = props.poApiData;
 
-  // If no protein variants are found but allele frequency is available, display allele frequency only
-  if (proteinVariants.length === 0 &&
-    (!freqMap || Object.keys(freqMap).length === 0)) {
+  // If no protein variants are found and no allele frequency is available
+  if (proteinVariants.length === 0 && (!freqMap || Object.keys(freqMap).length === 0)) {
     return <NoPopulationDataRow/>;
   }
 
+  // Determine which allele frequencies to show in each column
+  const parts = props.genomicVariant.split("-");
+  const isValid = parts.length === 4;
+  const alt = isValid ? parts[3] : null;
+
+  const mainFreqMap = alt && freqMap ? {...(freqMap[alt] ? {[alt]: freqMap[alt]} : {})} : {};
+  const otherFreqMap = freqMap && alt
+    ? Object.fromEntries(Object.entries(freqMap).filter(([allele]) => allele !== alt))
+    : {};
+
   return <tr>
     <td colSpan={TOTAL_COLS} className="expanded-row">
-      <div className="significances-groups">
-        <div className="column">
-          <h5 style={{display: "inline"}}>
-            <img src={PopulationIcon} className="click-icon" alt="population icon"
-                 title="Population observation"/> Population Observation
+      <div className="annotation-data-container">
+        <div className="annotation-header">
+          <h5>
+            <img src={PopulationIcon} className="click-icon" alt="population icon" title="Population observation" />
+            Population Observation
           </h5>
-          <HelpButton title="" content={<HelpContent name="population-observations"/>}/>
-          <Spaces count={2}/>
-          <ShareAnnotationIcon annotation={props.annotation}/>
-          <table>
-            <tbody>
-            <tr>
-              <th>Submitted Variant Details</th>
-              <th>Co-located Variants at Residue Level</th>
-            </tr>
-            {freqMap && Object.keys(freqMap).length > 0 &&
-              <AlleleFreqRow freqMap={freqMap} genomicVariant={props.genomicVariant} />
-            }
-            <tr>
-              <td style={{verticalAlign: "top"}}><SubmittedVariantDetails variants={submittedVariants} /></td>
-              <td><CoLocatedVariantDetails coLocatedVariants={colocatedVariants}/></td>
-            </tr>
-            </tbody>
-          </table>
-          {submittedVariants.length > 0 && submittedVariants[0].association &&
-            <table>
-              <tbody>
-              <tr>
-                <th>Associated Diseases from UniProt</th>
-              </tr>
-              <tr>
-                <td><AssociationDetails associations={submittedVariants[0].association}/></td>
-              </tr>
-              </tbody>
-            </table>}
+          <div className="annotation-actions">
+            <HelpButton title="" content={<HelpContent name="population-observations"/>}/>
+            <Spaces count={2}/>
+            <ShareAnnotationIcon annotation={props.annotation}/>
+          </div>
         </div>
+
+        <div className="annotation-grid">
+          {/* Left Column: Submitted Variant Details */}
+          <div className="annotation-column">
+            <div className="column-header">Submitted Variant Details</div>
+            <PopulationAlleleFreq
+              freqMap={mainFreqMap}
+              genomicVariant={props.genomicVariant}
+              stdColor={false}
+            />
+            <SubmittedVariantDetails variants={submittedVariants} />
+          </div>
+
+          {/* Right Column: Co-located Variants */}
+          <div className="annotation-column">
+            <div className="column-header">Co-located Variants at Residue Level</div>
+            <PopulationAlleleFreq
+              freqMap={otherFreqMap}
+              genomicVariant={props.genomicVariant}
+              stdColor={false}
+            />
+            <CoLocatedVariantDetails coLocatedVariants={colocatedVariants}/>
+          </div>
+        </div>
+
+        {/* Associated Diseases - Full Width Below */}
+        {submittedVariants.length > 0 && submittedVariants[0].association && (
+          <div className="association-section">
+            <div className="section-title">
+              <span>Associated Diseases from UniProt</span>
+            </div>
+            <div className="section-content">
+              <AssociationDetails associations={submittedVariants[0].association}/>
+            </div>
+          </div>
+        )}
+
       </div>
     </td>
   </tr>
 }
 
-interface AlleleFreqRowProps {
-  freqMap: { [key: string]: AlleleFreq };
-  genomicVariant: string
-}
-function AlleleFreqRow(props: AlleleFreqRowProps) {
-  const {freqMap, genomicVariant} = props
-  const parts = genomicVariant.split("-");
-  const isValid = parts.length === 4;
-
-  if (!isValid) {
-    return (
-      <tr>
-        <td>
-          <PopulationAlleleFreq freqMap={freqMap} genomicVariant={genomicVariant} stdColor={false}/>
-        </td>
-        <td></td>
-      </tr>
-    );
-  }
-
-  const alt = parts[3];
-  const mainFreqMap = {...(freqMap[alt] ? {[alt]: freqMap[alt]} : {})};
-  const otherFreqMap = Object.fromEntries(
-    Object.entries(freqMap).filter(([allele]) => allele !== alt)
-  );
-
-  return <tr>
-    <td>
-      <PopulationAlleleFreq freqMap={mainFreqMap} genomicVariant={genomicVariant} stdColor={false} />
-    </td>
-    <td>
-      {Object.keys(otherFreqMap).length > 0 && (
-        <PopulationAlleleFreq freqMap={otherFreqMap} genomicVariant={genomicVariant} stdColor={false} />
-      )}
-    </td>
-  </tr>
-}
 
 export default PopulationDataRow;

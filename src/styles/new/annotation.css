@@ -1,0 +1,487 @@
+/**
+ * annotation.css - Common styles for annotation tabs (Function, Population, Structure, etc.)
+ * Shared components and patterns used across multiple annotation types
+ */
+
+/* ============================================
+   EXPANDED ROW CONTAINER
+   ============================================ */
+
+.expanded-row {
+    padding: 0;
+}
+
+/* Annotation Data Container */
+.annotation-data-container {
+    padding: 20px;
+}
+
+/* ============================================
+   ANNOTATION HEADER
+   ============================================ */
+
+.annotation-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.annotation-header h5 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    font-size: 18px;
+    color: #333;
+}
+
+.annotation-header .click-icon {
+    width: 24px;
+    height: 24px;
+}
+
+.annotation-actions {
+    display: flex;
+    align-items: center;
+}
+
+/* ============================================
+   GRID LAYOUT (SHARED)
+   ============================================ */
+
+.annotation-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 20px 0;
+}
+
+/* Responsive - stack on mobile */
+@media (max-width: 1024px) {
+    .annotation-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+}
+
+/* ============================================
+   COLUMN LAYOUT (SHARED)
+   ============================================ */
+
+.annotation-column {
+    background: #fafafa;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+/* Column header - seamlessly at top */
+.column-header {
+    display: block;
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    padding: 14px 20px;
+    background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+    margin: 0;
+    border: none;
+}
+
+/* Content padding below header */
+.annotation-column > *:not(.column-header) {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.annotation-column > .column-header + * {
+    padding-top: 20px;
+}
+
+.annotation-column > *:last-child {
+    padding-bottom: 20px;
+}
+
+/* Section titles within columns */
+.section-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    font-weight: 600;
+    color: #555;
+    margin: 20px 0 12px 0;
+    padding: 10px 14px;
+    background: white;
+    border-radius: 6px 6px 0 0;
+    border: 1px solid #e8e8e8;
+    border-bottom: none;
+}
+
+.section-title:first-of-type {
+    margin-top: 0;
+}
+
+/* Content area below section title */
+.section-content {
+    background: white;
+    border: 1px solid #e8e8e8;
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+    padding: 14px;
+}
+
+/* ============================================
+   ANNOTATION TABLES
+   ============================================ */
+
+.annotation-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.annotation-table th {
+    background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+    color: white;
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.annotation-table td {
+    padding: 16px;
+    border-top: 1px solid #e8e8e8;
+    vertical-align: top;
+}
+
+.annotation-table td:not(:last-child) {
+    border-right: 1px solid #e8e8e8;
+}
+
+/* ============================================
+   COLLAPSIBLE SECTIONS (CONSISTENT PATTERN)
+   ============================================ */
+
+.collapsible {
+    width: 100%;
+    background-color: #fafafa;
+    color: #333;
+    cursor: pointer;
+    padding: 10px 12px;
+    border: 1px solid #e8e8e8;
+    border-radius: 6px;
+    text-align: left;
+    outline: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.collapsible:hover {
+    background-color: #f0f0f0;
+    border-color: #d8d8d8;
+}
+
+.collapsible:focus {
+    outline: 2px solid #4a90e2;
+    outline-offset: 2px;
+}
+
+.collapsible .chevron-icon {
+    font-size: 14px;
+    color: #666;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.collapsible b,
+.collapsible strong {
+    flex: 1;
+    font-weight: 600;
+}
+
+/* Seamless connection when expanded */
+.collapsible[aria-expanded="true"] {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom: none;
+}
+
+/* ============================================
+   EXPANDABLE TEXT COMPONENT
+   ============================================ */
+
+.expandable-text {
+    line-height: 1.6;
+}
+
+.expandable-text.collapsed {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.expandable-text-toggle {
+    background: none;
+    border: none;
+    color: #4a90e2;
+    cursor: pointer;
+    padding: 0;
+    font-size: 13px;
+    font-weight: 500;
+    margin-top: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: color 0.2s ease;
+}
+
+.expandable-text-toggle:hover {
+    color: #357abd;
+    text-decoration: underline;
+}
+
+.expandable-text-toggle:focus {
+    outline: 2px solid #4a90e2;
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+
+/* ============================================
+   NESTED LISTS
+   ============================================ */
+
+.nested-list {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.nested-list li {
+    margin: 6px 0;
+}
+
+.nested-list ul {
+    list-style: disc;
+    padding-left: 20px;
+    margin: 4px 0;
+}
+
+.nested-list b {
+    font-weight: 600;
+    color: #555;
+}
+
+/* Flat list variant (horizontal) */
+.flatList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    list-style: none;
+    padding-left: 0;
+    margin: 4px 0;
+}
+
+.flatList li {
+    margin: 0;
+}
+
+.flatList li::after {
+    content: ',';
+    margin-left: 2px;
+    color: #999;
+}
+
+.flatList li:last-child::after {
+    content: '';
+}
+
+/* ============================================
+   NO DATA STATE
+   ============================================ */
+
+.no-data-message {
+    padding: 20px;
+    text-align: center;
+    color: #999;
+    font-style: italic;
+    background: #fafafa;
+    border-radius: 6px;
+    border: 1px dashed #ddd;
+}
+
+.ext-pred-link-inline {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 4px;
+    color: #4a90e2;
+    text-decoration: none;
+    border-radius: 3px;
+    transition: all 0.2s ease;
+    margin-left: auto;
+}
+
+.ext-pred-link-inline:hover {
+    background: #e8f4f8;
+    color: #357abd;
+}
+
+.ext-pred-link-inline:focus {
+    outline: 2px solid #4a90e2;
+    outline-offset: 2px;
+}
+
+.ext-pred-link-inline .bi-box-arrow-up-right {
+    font-size: 12px;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+    .annotation-data-container {
+        padding: 16px;
+    }
+
+    .annotation-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .annotation-table th,
+    .annotation-table td {
+        padding: 10px;
+        font-size: 12px;
+    }
+
+    .annotation-column > *:not(.column-header) {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .annotation-column > .column-header + * {
+        padding-top: 16px;
+    }
+
+    .annotation-column > *:last-child {
+        padding-bottom: 16px;
+    }
+
+    .column-header {
+        font-size: 14px;
+        padding: 12px 16px;
+    }
+
+    .section-title {
+        font-size: 14px;
+    }
+
+    .collapsible {
+        font-size: 13px;
+        padding: 8px 10px;
+    }
+}
+
+/* ============================================
+   DARK MODE SUPPORT
+   ============================================ */
+
+@media (prefers-color-scheme: dark) {
+    .annotation-header {
+        border-bottom-color: #3a3a3a;
+    }
+
+    .annotation-header h5 {
+        color: #e0e0e0;
+    }
+
+    .annotation-column {
+        background: #1e1e1e;
+    }
+
+    .column-header {
+        background: linear-gradient(135deg, #2563ab 0%, #1e4a7a 100%);
+        color: #e0e0e0;
+    }
+
+    .section-title {
+        color: #b0b0b0;
+        background: #2a2a2a;
+        border-color: #3a3a3a;
+    }
+
+    .section-content {
+        background: #2a2a2a;
+        border-color: #3a3a3a;
+    }
+
+    .annotation-table {
+        background: #2a2a2a;
+    }
+
+    .annotation-table th {
+        background: linear-gradient(135deg, #2563ab 0%, #1e4a7a 100%);
+    }
+
+    .annotation-table td {
+        border-color: #3a3a3a;
+        background: #2a2a2a;
+        color: #e0e0e0;
+    }
+
+    .collapsible {
+        background: #1e1e1e;
+        border-color: #3a3a3a;
+        color: #e0e0e0;
+    }
+
+    .collapsible:hover {
+        background: #252525;
+        border-color: #4a4a4a;
+    }
+
+    .collapsible .chevron-icon {
+        color: #999;
+    }
+
+    .nested-list b {
+        color: #b0b0b0;
+    }
+
+    .no-data-message {
+        background: #2a2a2a;
+        border-color: #3a3a3a;
+        color: #999;
+    }
+
+    .expandable-text-toggle {
+        color: #6ea8fe;
+    }
+
+    .expandable-text-toggle:hover {
+        color: #9ec5fe;
+    }
+
+    .ext-pred-link-inline {
+        color: #6ea8fe;
+    }
+
+    .ext-pred-link-inline:hover {
+        background: rgba(110, 168, 254, 0.1);
+        color: #9ec5fe;
+    }
+}

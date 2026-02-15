@@ -2,9 +2,8 @@
  * List component for pockets with filtering and pagination
  */
 
-import React, { Fragment, useState } from 'react';
+import React, { useState } from 'react';
 import { Pocket } from '../../../../types/Prediction';
-import { ReactComponent as ChevronDownIcon } from '../../../../images/chevron-down.svg';
 import { PocketCard } from './PocketCard';
 import { PocketFilter } from './PocketFilter';
 import { PaginatedList } from '../common/PaginatedList';
@@ -38,19 +37,22 @@ export function PocketList({
     setVisibleCount(PAGE_SIZE); // Reset pagination when filtering
   };
 
+  const isExpanded = expandedSection === SECTION_KEY;
+
   return (
-    <Fragment key={SECTION_KEY}>
+    <div className="struct-pred-section">
       <button
         type="button"
         className="collapsible"
         onClick={() => onToggle(SECTION_KEY)}
+        aria-expanded={isExpanded}
       >
-        Pockets containing variant
-        <ChevronDownIcon className="chevronicon" />
+        <i className={`bi bi-chevron-${isExpanded ? 'down' : 'right'} chevron-icon`}></i>
+        <span>Pockets containing variant</span>
       </button>
 
-      {expandedSection === SECTION_KEY && (
-        <div className="struct-pred">
+      {isExpanded && (
+        <div className="struct-pred-content">
           <PocketFilter
             pockets={pockets}
             onFilter={handleFilter}
@@ -76,6 +78,6 @@ export function PocketList({
           />
         </div>
       )}
-    </Fragment>
+    </div>
   );
 }

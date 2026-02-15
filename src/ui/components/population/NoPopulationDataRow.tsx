@@ -4,7 +4,7 @@ function NoPopulationDataRow() {
   return <tr>
     <td colSpan={TOTAL_COLS} className="expanded-row">
       {' '}
-      <div className="significances-groups">
+      <div className="">
         <div className="column">
           <b>No Population Observation to report</b>
         </div>

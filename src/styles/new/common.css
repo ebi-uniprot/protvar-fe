@@ -1,0 +1,237 @@
+/* Base external link (only when .ext-link is used) */
+a.ext-link {
+    color: #4a90e2;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.2s, text-decoration 0.2s;
+}
+
+/* Arrow icon */
+a.ext-link::after {
+    content: "";
+    display: inline-block;
+    width: 0.9em;
+    height: 0.9em;
+    margin-left: 4px;
+
+    -webkit-mask: url("../../images/ext-link-arrow.svg") no-repeat center / contain;
+    mask: url("../../images/ext-link-arrow.svg") no-repeat center / contain;
+    background-color: currentColor;
+
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+/* Hover */
+a.ext-link:hover {
+    color: #357abd;
+}
+
+a.ext-link:hover::after {
+    opacity: 1;
+}
+
+/* Visited */
+a.ext-link:visited {
+    color: #6b46c1;
+}
+
+/* Focus accessibility */
+a.ext-link:focus {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+}
+
+
+/* ============================================
+   PROTVAR LINK (Two-tone Brand Colors)
+   ============================================ */
+
+.protvar-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 6px;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    margin-left: 8px;
+}
+
+.protvar-link:hover {
+    background: #f5f5f5;
+}
+
+.protvar-link:focus {
+    outline: 2px solid #ff9901;
+    outline-offset: 2px;
+}
+
+.protvar-badge {
+    display: inline-flex;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    background: #fafafa;
+    padding: 2px 5px;
+    border-radius: 3px;
+    line-height: 1;
+}
+
+.protvar-badge .p-letter {
+    color: #9fccaf;  /* Mint green from logo */
+}
+
+.protvar-badge .v-letter {
+    color: #ff9901;  /* Orange from logo */
+}
+
+.protvar-link:hover .protvar-badge {
+    background: #f0f0f0;
+}
+
+.protvar-link .bi-box-arrow-up-right {
+    font-size: 11px;
+    color: #666;
+}
+
+.protvar-link:hover .bi-box-arrow-up-right {
+    color: #333;
+}
+
+/* ============================================
+   ICON BUTTON STYLING
+   ============================================ */
+
+.icon-btn {
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    color: #666;
+    font-size: 16px;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-btn:hover {
+    color: #4a90e2;
+    background: rgba(74, 144, 226, 0.1);
+    border-radius: 4px;
+}
+
+.icon-btn:active {
+    transform: scale(0.95);
+}
+
+.icon-btn i {
+    display: block;
+}
+
+/* ============================================
+   SHOW MORE/LESS BUTTON
+   ============================================ */
+
+.show-btn {
+    background: #f0f4f8;
+    border: 1px solid #d0d8e0;
+    border-radius: 4px;
+    padding: 6px 12px;
+    cursor: pointer;
+    color: #4a90e2;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    margin-top: 8px;
+}
+
+.show-btn:hover {
+    background: #e0e8f0;
+    border-color: #4a90e2;
+    color: #357abd;
+}
+
+.show-btn:active {
+    transform: scale(0.98);
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+    a.ext-link { color: #6ea8fe; }
+    a.ext-link:hover { color: #9ec5fe; }
+    a.ext-link:visited { color: #b197fc; }
+
+    .icon-btn {
+        color: #999;
+    }
+
+    .icon-btn:hover {
+        color: #6ea8fe;
+        background: rgba(110, 168, 254, 0.1);
+    }
+
+    .show-btn {
+        background: #2a2a2a;
+        border-color: #3a3a3a;
+        color: #6ea8fe;
+    }
+
+    .show-btn:hover {
+        background: #3a3a3a;
+        border-color: #6ea8fe;
+        color: #9ec5fe;
+    }
+
+    /* ProtVar link */
+    .protvar-link:hover {
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    .protvar-badge {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .protvar-link:hover .protvar-badge {
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .protvar-link .bi-box-arrow-up-right {
+        color: #999;
+    }
+
+    .protvar-link:hover .bi-box-arrow-up-right {
+        color: #ccc;
+    }
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+    .icon-btn {
+        font-size: 14px;
+    }
+
+    .show-btn {
+        font-size: 12px;
+        padding: 5px 10px;
+    }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+.icon-btn:focus {
+    outline: 2px solid #4a90e2;
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+.show-btn:focus {
+    outline: 2px solid #4a90e2;
+    outline-offset: 2px;
+}

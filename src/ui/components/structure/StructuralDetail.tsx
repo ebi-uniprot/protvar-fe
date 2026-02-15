@@ -245,7 +245,7 @@ function StructuralDetail(props: StructuralDetailProps) {
   return (
     <tr key={isoFormAccession}>
       <td colSpan={10} className="expanded-row structure-data-cell">
-        <div className="significances-groups">
+        <div className="">
           <div className="column">
             <h5 style={{display: "inline"}}>
               <img src={StructureIcon} className="click-icon" alt="structure icon"
@@ -301,7 +301,7 @@ function NoStructureDataRow() {
   return <tr>
     <td colSpan={15} className="expanded-row">
       {' '}
-      <div className="significances-groups">
+      <div className="">
         <div className="column">
           <b>No structural data available for this protein</b>
         </div>

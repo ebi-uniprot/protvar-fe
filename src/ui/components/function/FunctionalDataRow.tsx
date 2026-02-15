@@ -1,7 +1,6 @@
 import { TOTAL_COLS } from '../../../constants/SearchResultTable';
-import ProteinFunctionTable from './ProteinFunctionTable';
 import GeneAndTranslatedSequenceTable from './GeneAndTranslatedSequenceTable';
-import ProteinInformationTable from './ProteinInformationTable';
+import ProteinInfoPanel from './ProteinInfoPanel';
 import FunctionalAnnotationsPanel from './FunctionalAnnotationsPanel';
 import ProteinIcon from '../../../images/proteins.svg';
 import {FunctionalInfo} from "../../../types/FunctionalInfo";
@@ -11,10 +10,12 @@ import {HelpContent} from "../help/HelpContent";
 import {HelpButton} from "../help/HelpButton";
 import {ShareAnnotationIcon} from "../common/ShareLink";
 import Spaces from "../../elements/Spaces";
-import {Comment, CommentType} from "../../../types/Comment";
+import {Comment} from "../../../types/Comment";
+import '../../../styles/new/annotation.css';
+import '../../../styles/new/function.css';
 
 interface FunctionalDataRowProps extends FunctionalDetailProps {
-  functionalData: FunctionalInfo
+  functionalData: FunctionalInfo;
 }
 
 function FunctionalDataRow(props: FunctionalDataRowProps) {
@@ -31,20 +32,22 @@ function FunctionalDataRow(props: FunctionalDataRowProps) {
   return (
     <tr>
       <td colSpan={TOTAL_COLS} className="expanded-row">
-        <div className="significances-groups">
-          <div className="column">
-            <h5 style={{display: "inline"}}>
-              <img src={ProteinIcon} className="click-icon" alt="protein icon"
-                   title="Functional information"/> Functional information
+        <div className="annotation-data-container">
+          <div className="annotation-header">
+            <h5>
+              <img src={ProteinIcon} className="click-icon" alt="protein icon" title="Functional information" />
+              Functional Information
             </h5>
-            <HelpButton title="" content={<HelpContent name="function-annotations" />} />
-            <Spaces count={2} />
-            <ShareAnnotationIcon annotation={props.annotation} />
-            <FunctionalAnnotationsPanel {...props} />
-            <ProteinFunctionTable functionComments={grouped.get(CommentType.FUNCTION) ?? []}/>
-            <ProteinInformationTable apiData={functionalData} groupedComments={grouped}/>
-            <GeneAndTranslatedSequenceTable ensg={ensg} ensp={ensp} />
+            <div className="annotation-actions">
+              <HelpButton title="" content={<HelpContent name="function-annotations" />} />
+              <Spaces count={2} />
+              <ShareAnnotationIcon annotation={props.annotation} />
+            </div>
           </div>
+
+          <FunctionalAnnotationsPanel {...props} />
+          <ProteinInfoPanel functionalData={functionalData} groupedComments={grouped} />
+          <GeneAndTranslatedSequenceTable ensg={ensg} ensp={ensp} />
         </div>
       </td>
     </tr>

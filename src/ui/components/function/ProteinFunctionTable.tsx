@@ -1,4 +1,4 @@
-import Evidences from "./Evidences";
+import Evidences from "../common/Evidences";
 import {Comment} from "../../../types/Comment";
 import {Evidence} from "../../../types/Common";
 import {v1 as uuidv1} from "uuid";
@@ -34,12 +34,7 @@ function ProteinFunctionTable(props: ProteinFunctionTableProps) {
             <tr key={uuidv1()}>
               <td>
                 <ExpandableText text={functionText} />
-                {evidences.length > 0 && (
-                  <>
-                    <br/>
-                    <Evidences evidences={evidences}/>
-                  </>
-                )}
+                <Evidences evidences={evidences}/>
               </td>
             </tr>
           )

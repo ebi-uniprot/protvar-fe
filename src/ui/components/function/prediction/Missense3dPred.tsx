@@ -35,10 +35,24 @@ export const Missense3dPred = ({functionalData, refAA, variantAA}: Missense3dPre
     <div className="aa-pred">
       <div><SharePredictionLink predictionType="m3d" /> Missense3D</div>
       <div></div>
-      <div title={isTruncated ? formattedText : undefined}>
+      <div>
         <i className="bi bi-circle-fill" style={{color: predColor}}></i>
-        <Spaces/>{predText}<a href={m3dUrl} target="_blank" rel="noreferrer" className="ext-link" aria-label="View in Missense3D (opens in new tab)"></a>
-        {displayText !== '-' && <div style={{fontSize: "smaller", marginLeft: '18px', color: 'darkgray'}}>{displayText}</div>}
+        <Spaces/>{predText}
+        <a
+          href={m3dUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          title="View in Missense3D"
+          aria-label="View in Missense3D"
+          className="ext-pred-link-inline"
+        >
+          <i className="bi bi-box-arrow-up-right"></i>
+        </a>
+        {displayText !== '-' && (
+          <div title={isTruncated ? formattedText : undefined}>
+            {displayText}
+          </div>
+        )}
       </div>
     </div>
   );

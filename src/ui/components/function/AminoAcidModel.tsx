@@ -62,7 +62,7 @@ const AminoAcidModel = (props: AminoAcidModelProps) => {
             <td>
               <div>
                 <img className="img-size" src={getImageByKey(refAA)} alt={refAA} />
-                <span className="icon-arrow">&#8594;</span>
+                <i className="bi bi-arrow-right-short icon-arrow"></i>
                 <img className="img-size" src={getImageByKey(variantAA)} alt={variantAA} />
               </div>
               <div style={{ textAlign: "center" }}>

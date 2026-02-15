@@ -12,18 +12,21 @@ export const FoldxPred = (props: { foldxs: Array<Foldx>, variantAA: string }) =>
     : props.foldxs;
 
   if (filteredFoldxs && filteredFoldxs.length > 0) {
-    return <div>
-      <div className="aa-pred">
-        <div><SharePredictionLink predictionType="foldx" /> FoldX - Stability change (ΔΔG)
-          {filteredFoldxs[0].numFragments > 1 && <small>
-          <br/>(using AlphaFold fragment {filteredFoldxs[0].afId})
-        </small>}</div>
-        <div>{formatFoldxScore(filteredFoldxs[0])}</div>
-        <FoldxPredIcon foldx={filteredFoldxs[0]}/>
+    return (
+      <div>
+        <div className="aa-pred">
+          <div><SharePredictionLink predictionType="foldx" /> FoldX - Stability change (ΔΔG)
+            {filteredFoldxs[0].numFragments > 1 && <small>
+            <br/>(using AlphaFold fragment {filteredFoldxs[0].afId})
+          </small>}
+          </div>
+          <div>{formatFoldxScore(filteredFoldxs[0])}</div>
+          <FoldxPredIcon foldx={filteredFoldxs[0]}/>
+        </div>
       </div>
-    </div>
+    );
   }
-  return <div>No predictions available for this variant</div>
+  return <></>;
 }
 
 export function formatFoldxScore(foldx?: Foldx) {

@@ -20,7 +20,7 @@ function FunctionalAnnotationsPanel(props: FunctionalAnnotationsPanelProps) {
   const [expandedSection, setExpandedSection] = useState<string>('');
   const { openPocketInStructure, openInteractionInStructure } = useStructureNavigation();
 
-// Toggle function - compares current state
+  // Toggle function - compares current state
   const toggleSection = (key: string) => {
     setExpandedSection(expandedSection === key ? '' : key);
   };
@@ -34,44 +34,33 @@ function FunctionalAnnotationsPanel(props: FunctionalAnnotationsPanelProps) {
     [props.functionalData.features, props.functionalData.position]
   );
 
-  return <table className="functional-annotations-table">
-    <thead>
-    <tr>
-      <th>Variant Residue Position</th>
-      <th>Region Containing Variant Position</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-      <td className="residue-column" style={{ verticalAlign: 'top' }}>
-        <ResidueColumn
-          residues={residues}
-          functionalData={props.functionalData}
-          refAA={props.refAA}
-          variantAA={props.variantAA}
-          expandedSection={expandedSection}
-          onToggleSection={toggleSection}
-          ensg={props.ensg}
-          ensp={props.ensp}
-          caddScore={props.caddScore}
-          amScore={props.amScore}
-        />
-      </td>
-      <td className="region-column" style={{ verticalAlign: 'top' }}>
-        <RegionColumn
-          regions={regions}
-          accession={props.functionalData.accession}
-          pockets={props.functionalData.pockets}
-          interactions={props.functionalData.interactions}
-          expandedSection={expandedSection}
-          onToggleSection={toggleSection}
-          onViewPocket={openPocketInStructure}
-          onViewInteraction={openInteractionInStructure}
-        />
-      </td>
-    </tr>
-    </tbody>
-  </table>
+  return (
+    <div className="functional-annotations-grid">
+      <ResidueColumn
+        residues={residues}
+        functionalData={props.functionalData}
+        refAA={props.refAA}
+        variantAA={props.variantAA}
+        expandedSection={expandedSection}
+        onToggleSection={toggleSection}
+        ensg={props.ensg}
+        ensp={props.ensp}
+        caddScore={props.caddScore}
+        amScore={props.amScore}
+      />
+
+      <RegionColumn
+        regions={regions}
+        accession={props.functionalData.accession}
+        pockets={props.functionalData.pockets}
+        interactions={props.functionalData.interactions}
+        expandedSection={expandedSection}
+        onToggleSection={toggleSection}
+        onViewPocket={openPocketInStructure}
+        onViewInteraction={openInteractionInStructure}
+      />
+    </div>
+  );
 }
 
 export default FunctionalAnnotationsPanel;

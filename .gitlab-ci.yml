@@ -22,6 +22,7 @@ workflow:
       variables:
         BE_API: "https://wwwdev.ebi.ac.uk/ProtVar/api"
     - if: '$CI_COMMIT_BRANCH == "int"'
+      when: manual  # Require manual trigger
       variables:
         BE_API: "https://wwwint.ebi.ac.uk/ProtVar/api"
     - when: always

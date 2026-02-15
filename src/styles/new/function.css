@@ -1,0 +1,928 @@
+/**
+ * function.css - Styling for functional annotations panel
+ * Includes grid layout, ResidueColumn, RegionColumn, feature lists, and predictions
+ */
+
+/* ============================================
+   GRID LAYOUT
+   ============================================ */
+
+.functional-annotations-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 20px 0;
+}
+
+/* Responsive - stack on mobile */
+@media (max-width: 1024px) {
+    .functional-annotations-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+}
+
+/* ============================================
+   SHARED COLUMN LAYOUT
+   ============================================ */
+
+.residue-annotations,
+.region-annotations {
+    background: #fafafa;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+/* Column header - seamlessly at top */
+.column-header {
+    display: block;
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    padding: 14px 20px;
+    background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+    margin: 0;
+    border: none;
+}
+
+/* Content padding below header */
+.residue-annotations > *:not(.column-header),
+.region-annotations > *:not(.column-header) {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.residue-annotations > .column-header + *,
+.region-annotations > .column-header + * {
+    padding-top: 20px;
+}
+
+.residue-annotations > *:last-child,
+.region-annotations > *:last-child {
+    padding-bottom: 20px;
+}
+
+/* Section titles within columns */
+.section-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+    margin: 20px 0 12px 0;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.section-title:first-of-type {
+    margin-top: 0;
+}
+
+/* ============================================
+   FEATURE LIST SECTION
+   ============================================ */
+
+.feature-list {
+    margin-bottom: 24px;
+}
+
+.feature-item {
+    margin-bottom: 8px;
+}
+
+.feature-list .collapsible {
+    width: 100%;
+    background-color: #fff;
+    color: #333;
+    cursor: pointer;
+    padding: 10px 12px;
+    border: 1px solid #e8e8e8;
+    border-radius: 6px;
+    text-align: left;
+    outline: none;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.feature-list .collapsible:hover {
+    background-color: #f5f5f5;
+    border-color: #d8d8d8;
+}
+
+.feature-list .collapsible:focus {
+    outline: 2px solid #4a90e2;
+    outline-offset: 2px;
+}
+
+/* Chevron icon on the left */
+.chevron-icon {
+    font-size: 14px;
+    color: #666;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.feature-list .badge {
+    background-color: #4a90e2;
+    color: white;
+    padding: 2px 7px;
+    border-radius: 10px;
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+}
+
+.feature-title {
+    flex: 1;
+}
+
+/* Feature expanded content - seamless connection when open */
+.feature-item:has(.collapsible[aria-expanded="true"]) .collapsible {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom: none;
+    border-color: #e8e8e8;
+}
+
+.feature-content {
+    padding: 12px 16px;
+    background: #fafafa;
+    border: 1px solid #e8e8e8;
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+    animation: expandDown 0.2s ease-out;
+}
+
+@keyframes expandDown {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.feature-position {
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+/* ============================================
+   EMPTY STATE
+   ============================================ */
+
+.empty-state {
+    padding: 20px;
+    text-align: center;
+    color: #999;
+    font-style: italic;
+    background: #fff;
+    border-radius: 6px;
+    border: 1px dashed #ddd;
+    margin-bottom: 20px;
+}
+
+/* ============================================
+   AMINO ACID MODEL SECTION
+   ============================================ */
+
+.img-table {
+    width: 100%;
+    margin: 20px 0;
+    background: #fff;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.img-size {
+    max-width: 120px;
+    height: auto;
+    display: inline-block;
+}
+
+.icon-arrow {
+    font-size: 40px;
+    margin: 0 12px;
+    color: #00709b;
+    vertical-align: middle;
+    transform: scale(.5, 1);
+}
+
+/* ============================================
+   PREDICTIONS SECTION
+   ============================================ */
+
+.predictions-section {
+    margin-top: 24px;
+}
+
+.predictions-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+/* Color toggle - before predictions */
+.colour-toggle {
+    margin: 0 0 16px 0;
+    padding: 10px 14px;
+    background: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+}
+
+.colour-toggle label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 13px;
+    color: #555;
+    font-weight: 500;
+    user-select: none;
+    line-height: 1;
+}
+
+.colour-toggle input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin: 0;
+    accent-color: #4a90e2;
+    vertical-align: middle;
+}
+
+.colour-toggle label span {
+    flex: 1;
+    line-height: 18px;
+}
+
+/* Prediction subsection headers */
+.prediction-subsection-header {
+    font-size: 14px;
+    font-weight: 600;
+    color: #555;
+    margin: 20px 0 12px 0;
+    padding: 0 0 6px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.prediction-subsection-header::before {
+    display: none;
+}
+
+/* Individual prediction items */
+.prediction-item {
+    position: relative;
+    margin-bottom: 12px;
+}
+
+.aa-pred {
+    background: white;
+    border: 1px solid #e8e8e8;
+    border-radius: 8px;
+    padding: 14px 16px;
+    transition: all 0.3s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.aa-pred:hover {
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    border-color: #d0d0d0;
+}
+
+.aa-pred:focus-within {
+    outline: 2px solid #4a90e2;
+    outline-offset: 2px;
+}
+
+/* Prediction header (name + share link) */
+.aa-pred > div:first-child {
+    font-weight: 600;
+    font-size: 13px;
+    color: #444;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    letter-spacing: 0;
+}
+
+/* Prediction score */
+.aa-pred > div:nth-child(2) {
+    font-size: 24px;
+    font-weight: 700;
+    color: #333;
+    margin: 8px 0;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+/* Prediction interpretation (icon + text) */
+.aa-pred > div:last-child {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #666;
+    padding-top: 8px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.aa-pred .bi-circle-fill {
+    font-size: 12px;
+    flex-shrink: 0;
+    filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.1));
+}
+
+/* No predictions message */
+.no-predictions {
+    padding: 16px;
+    text-align: center;
+    color: #999;
+    font-style: italic;
+    background: #fff;
+    border-radius: 6px;
+    border: 1px dashed #ddd;
+    margin: 12px 0;
+}
+
+/* ============================================
+   PREDICTION HIGHLIGHTING
+   ============================================ */
+
+.prediction-highlighted {
+    animation: highlightFadeIn 0.3s ease forwards;
+}
+
+.prediction-highlighted .aa-pred {
+    border-color: #FFC107;
+    background-color: rgba(255, 235, 59, 0.08);
+    box-shadow: 0 3px 8px rgba(255, 193, 7, 0.2);
+}
+
+@keyframes highlightFadeIn {
+    from {
+        transform: scale(0.98);
+        opacity: 0.8;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* ============================================
+   SHARE PREDICTION LINK
+   ============================================ */
+
+.share-prediction-link {
+    opacity: 0.5;
+    transition: all 0.2s ease;
+    background: none;
+    border: none;
+    padding: 0 4px;
+    cursor: pointer;
+    color: #666;
+    font-size: 14px;
+}
+
+.share-prediction-link:hover {
+    opacity: 1;
+    color: #4a90e2;
+    transform: scale(1.1);
+}
+
+.share-prediction-link:focus {
+    outline: 2px solid #4a90e2;
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+
+.share-prediction-link i.bi-check2 {
+    color: #4CAF50;
+}
+
+/* ============================================
+   PREDICTION-SPECIFIC STYLING
+   ============================================ */
+
+/* FoldX */
+.aa-pred small {
+    font-size: 11px;
+    color: #888;
+    font-weight: 400;
+    display: block;
+    margin-top: 4px;
+}
+
+/* Missense3D */
+.aa-pred div[title] {
+    cursor: help;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+    .residue-annotations > *:not(.column-header),
+    .region-annotations > *:not(.column-header) {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .residue-annotations > .column-header + *,
+    .region-annotations > .column-header + * {
+        padding-top: 16px;
+    }
+
+    .residue-annotations > *:last-child,
+    .region-annotations > *:last-child {
+        padding-bottom: 16px;
+    }
+
+    .column-header {
+        font-size: 14px;
+        padding: 12px 16px;
+    }
+
+    .section-title {
+        font-size: 14px;
+    }
+
+    .aa-pred {
+        padding: 12px 14px;
+    }
+
+    .aa-pred > div:nth-child(2) {
+        font-size: 20px;
+    }
+
+    .img-size {
+        max-width: 90px;
+    }
+
+    .icon-arrow {
+        font-size: 32px;
+        margin: 0 8px;
+    }
+
+    .colour-toggle {
+        padding: 8px 12px;
+    }
+
+    .colour-toggle label {
+        font-size: 12px;
+    }
+}
+
+/* ============================================
+   PROTEIN INFORMATION COMPONENTS
+   ============================================ */
+
+/* Protein Info Panel */
+.protein-info-panel {
+    margin: 24px 0;
+    background: #fafafa;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.protein-info-panel .section-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    padding: 14px 20px;
+    background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+    margin: 0;
+    border: none;
+}
+
+.protein-info-panel > *:not(.section-title) {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.protein-info-panel > .section-title + * {
+    padding-top: 20px;
+}
+
+.protein-info-panel > *:last-child {
+    padding-bottom: 20px;
+}
+
+.protein-function-section {
+    margin-bottom: 24px;
+}
+
+.protein-function-section h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #555;
+    margin: 0 0 12px 0;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.function-entry {
+    background: white;
+    padding: 14px 16px;
+    border-radius: 6px;
+    border: 1px solid #e8e8e8;
+    margin-bottom: 12px;
+}
+
+.function-entry:last-child {
+    margin-bottom: 0;
+}
+
+.no-data {
+    color: #999;
+    font-style: italic;
+    padding: 12px;
+    background: white;
+    border-radius: 6px;
+    border: 1px dashed #ddd;
+}
+
+/* Protein Details Grid */
+.protein-details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.protein-basic-info,
+.protein-detailed-info {
+    background: white;
+    padding: 16px;
+    border-radius: 6px;
+    border: 1px solid #e8e8e8;
+}
+
+.protein-basic-info h4,
+.protein-detailed-info h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #555;
+    margin: 0 0 12px 0;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+/* Info List */
+.info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.info-row {
+    display: flex;
+    gap: 8px;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.info-label {
+    font-weight: 600;
+    color: #555;
+    flex-shrink: 0;
+    min-width: 140px;
+}
+
+.info-value {
+    color: #333;
+    flex: 1;
+}
+
+/* Protein Info Items */
+.protein-info-item {
+    margin-bottom: 6px;
+}
+
+.protein-info-item .collapsible {
+    width: 100%;
+    background-color: #fff;
+    color: #333;
+    cursor: pointer;
+    padding: 10px 12px;
+    border: 1px solid #e8e8e8;
+    border-radius: 6px;
+    text-align: left;
+    outline: none;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.protein-info-item .collapsible:hover {
+    background-color: #f5f5f5;
+    border-color: #d8d8d8;
+}
+
+.protein-info-item:has(.collapsible[aria-expanded="true"]) .collapsible {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom: none;
+    border-color: #e8e8e8;
+}
+
+.protein-info-title {
+    flex: 1;
+    font-weight: 600;
+}
+
+.protein-info-content {
+    padding: 12px 16px;
+    background: #fafafa;
+    border: 1px solid #e8e8e8;
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+    animation: slideDown 0.2s ease-out;
+}
+
+.protein-info-detail {
+    padding: 8px 0;
+    border-bottom: 1px solid #e8e8e8;
+}
+
+.protein-info-detail:last-child {
+    border-bottom: none;
+}
+
+.protein-info-detail p {
+    margin: 0 0 8px 0;
+    line-height: 1.5;
+}
+
+.reaction-name {
+    font-weight: 500;
+    color: #333;
+}
+
+.rhea-links {
+    margin: 8px 0;
+}
+
+.rhea-links a {
+    margin-right: 12px;
+}
+
+/* Gene and Sequence Panel */
+.gene-sequence-panel {
+    margin: 24px 0;
+    background: #fafafa;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.gene-sequence-panel .section-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    padding: 14px 20px;
+    background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+    margin: 0;
+    border: none;
+}
+
+.gene-sequence-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 20px;
+    padding: 20px;
+}
+
+.gene-info,
+.transcript-info {
+    background: white;
+    padding: 16px;
+    border-radius: 6px;
+    border: 1px solid #e8e8e8;
+}
+
+.gene-info h4,
+.transcript-info h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #555;
+    margin: 0 0 12px 0;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.gene-link {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.transcript-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.transcript-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    background: #f8f9fa;
+    border-radius: 4px;
+    border: 1px solid #e8e8e8;
+}
+
+.transcript-id {
+    color: #666;
+    font-size: 13px;
+}
+
+/* Responsive - Protein Info */
+@media (max-width: 1024px) {
+    .protein-details-grid,
+    .gene-sequence-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .protein-info-panel,
+    .gene-sequence-panel {
+        padding: 16px;
+    }
+
+    .info-label {
+        min-width: 120px;
+        font-size: 12px;
+    }
+
+    .info-value {
+        font-size: 12px;
+    }
+}
+
+/* ============================================
+   DARK MODE SUPPORT
+   ============================================ */
+
+@media (prefers-color-scheme: dark) {
+    .residue-annotations,
+    .region-annotations {
+        background: #1e1e1e;
+        color: #e0e0e0;
+    }
+
+    .column-header {
+        background: linear-gradient(135deg, #2563ab 0%, #1e4a7a 100%);
+        color: #e0e0e0;
+    }
+
+    .section-title {
+        color: #e0e0e0;
+        border-bottom-color: #3a3a3a;
+    }
+
+    .colour-toggle {
+        background: #2a2a2a;
+        border-color: #3a3a3a;
+    }
+
+    .colour-toggle label {
+        color: #b0b0b0;
+    }
+
+    .aa-pred,
+    .feature-list .collapsible,
+    .img-table {
+        background: #2a2a2a;
+        border-color: #3a3a3a;
+        color: #e0e0e0;
+    }
+
+    .aa-pred:hover,
+    .feature-list .collapsible:hover {
+        border-color: #4a4a4a;
+    }
+
+    .prediction-subsection-header,
+    .predictions-header {
+        color: #e0e0e0;
+        border-bottom-color: #3a3a3a;
+    }
+
+    .empty-state,
+    .no-predictions {
+        background: #2a2a2a;
+        border-color: #3a3a3a;
+        color: #999;
+    }
+
+    .feature-content {
+        background: #1e1e1e;
+        border-color: #3a3a3a;
+    }
+
+    .chevron-icon {
+        color: #999;
+    }
+
+    /* Protein Info Dark Mode */
+    .protein-info-panel,
+    .gene-sequence-panel {
+        background: #1e1e1e;
+    }
+
+    .protein-info-panel .section-title,
+    .gene-sequence-panel .section-title {
+        background: linear-gradient(135deg, #2563ab 0%, #1e4a7a 100%);
+        color: #e0e0e0;
+    }
+
+    .protein-function-section h4,
+    .protein-basic-info h4,
+    .protein-detailed-info h4,
+    .gene-info h4,
+    .transcript-info h4 {
+        color: #b0b0b0;
+        border-bottom-color: #3a3a3a;
+    }
+
+    .function-entry,
+    .protein-basic-info,
+    .protein-detailed-info,
+    .gene-info,
+    .transcript-info {
+        background: #2a2a2a;
+        border-color: #3a3a3a;
+    }
+
+    .info-label {
+        color: #b0b0b0;
+    }
+
+    .info-value {
+        color: #e0e0e0;
+    }
+
+    .protein-info-item .collapsible {
+        background: #2a2a2a;
+        border-color: #3a3a3a;
+        color: #e0e0e0;
+    }
+
+    .protein-info-item .collapsible:hover {
+        border-color: #4a4a4a;
+    }
+
+    .protein-info-content {
+        background: #1e1e1e;
+        border-color: #3a3a3a;
+    }
+
+    .protein-info-detail {
+        border-bottom-color: #3a3a3a;
+    }
+
+    .reaction-name {
+        color: #e0e0e0;
+    }
+
+    .transcript-item {
+        background: #2a2a2a;
+        border-color: #3a3a3a;
+    }
+
+    .transcript-id {
+        color: #999;
+    }
+
+    .no-data {
+        background: #2a2a2a;
+        border-color: #3a3a3a;
+    }
+}

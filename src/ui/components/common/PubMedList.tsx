@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { IdUrl } from "./Evidences";
-import './PubMedIdList.css';
 
 // Shared instance for PubMed API
 const pubmedApi = axios.create({
@@ -16,26 +15,25 @@ interface PubMedArticle {
   error?: string;
 }
 
-interface PubMedIdListProps {
+interface PubMedListProps {
   ids: IdUrl[];
   initialShowCount?: number;
 }
 
-const PubMedIdList: React.FC<PubMedIdListProps> = ({
-                                                     ids,
-                                                     initialShowCount = 3
-                                                   }) => {
+const PubMedList: React.FC<PubMedListProps> = ({
+                                                 ids,
+                                                 initialShowCount = 3
+                                               }) => {
   const [expanded, setExpanded] = useState(false);
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
   const [articles, setArticles] = useState<Map<string, PubMedArticle>>(new Map());
 
   const visibleIds = expanded ? ids : ids.slice(0, initialShowCount);
   const hasMore = ids.length > initialShowCount;
-  const showExpandAll = visibleIds.length > 1; // Only show if more than 1 ID
+  const showExpandAll = visibleIds.length > 1;
   const allExpanded = visibleIds.every(({ id }) => expandedIds.has(id));
 
   const fetchArticles = async (pmids: string[]) => {
-    // Set loading state for all
     setArticles(prev => {
       const newMap = new Map(prev);
       pmids.forEach(pmid => {
@@ -45,14 +43,12 @@ const PubMedIdList: React.FC<PubMedIdListProps> = ({
     });
 
     try {
-      // Single or batch request - works the same way
       const response = await pubmedApi.get('/esummary.fcgi', {
         params: { db: 'pubmed', id: pmids.join(','), retmode: 'json' }
       });
 
       const results = response.data.result;
 
-      // Update all articles from the response
       setArticles(prev => {
         const newMap = new Map(prev);
         pmids.forEach(pmid => {
@@ -76,7 +72,6 @@ const PubMedIdList: React.FC<PubMedIdListProps> = ({
       });
     } catch (err) {
       console.error('Error fetching PubMed articles:', err);
-      // Set error state for all
       setArticles(prev => {
         const newMap = new Map(prev);
         pmids.forEach(pmid => {
@@ -100,7 +95,7 @@ const PubMedIdList: React.FC<PubMedIdListProps> = ({
       } else {
         newSet.add(pmid);
         if (!articles.has(pmid)) {
-          fetchArticles([pmid]); // Single ID as array
+          fetchArticles([pmid]);
         }
       }
       return newSet;
@@ -111,10 +106,9 @@ const PubMedIdList: React.FC<PubMedIdListProps> = ({
     const allVisibleIds = visibleIds.map(({ id }) => id);
     setExpandedIds(new Set(allVisibleIds));
 
-    // Fetch uncached articles in a single batch
     const uncachedIds = allVisibleIds.filter(id => !articles.has(id));
     if (uncachedIds.length > 0) {
-      fetchArticles(uncachedIds); // Multiple IDs as array
+      fetchArticles(uncachedIds);
     }
   };
 
@@ -123,7 +117,7 @@ const PubMedIdList: React.FC<PubMedIdListProps> = ({
   };
 
   return (
-    <div>
+    <div className="pubmed-list-container">
       {showExpandAll && (
         <div className="pubmed-expand-controls">
           <button
@@ -146,41 +140,49 @@ const PubMedIdList: React.FC<PubMedIdListProps> = ({
 
           return (
             <li key={id}>
-              <button
-                className="icon-btn"
-                onClick={() => toggleArticleDetails(id)}
-                aria-label={isExpanded ? "Hide details" : "Show details"}
-              >
-                <i className={`bi bi-caret-${isExpanded ? 'down' : 'right'}`}></i>
-              </button>{' '}
-              <a
-                href={sourceUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="ext-link"
-              >
-                {id}
-              </a>
+              <div className="pubmed-item-header">
+                <button
+                  className="icon-btn"
+                  onClick={() => toggleArticleDetails(id)}
+                  aria-label={isExpanded ? "Hide details" : "Show details"}
+                >
+                  <i className={`bi bi-caret-${isExpanded ? 'down' : 'right'}`}></i>
+                </button>
+                <a
+                  href={sourceUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="ext-link"
+                >
+                  {id}
+                </a>
+              </div>
 
               {isExpanded && article && (
                 <div className="pubmed-article-card">
                   {article.loading ? (
                     <div className="pubmed-article-loading">
-                      <i className="bi bi-hourglass-split"></i> <em>Loading...</em>
+                      <i className="bi bi-hourglass-split"></i>
+                      <em>Loading...</em>
                     </div>
                   ) : article.error ? (
                     <div className="pubmed-article-error">
-                      <i className="bi bi-exclamation-triangle"></i> <em>{article.error}</em>
+                      <i className="bi bi-exclamation-triangle"></i>
+                      <em>{article.error}</em>
                     </div>
                   ) : (
                     <>
                       <div className="pubmed-article-title">
-                        <i className="bi bi-file-text"></i> {article.title}
+                        <i className="bi bi-file-text"></i>
+                        <span>{article.title}</span>
                       </div>
                       {article.authors.length > 0 && (
                         <div className="pubmed-article-authors">
-                          <i className="bi bi-people"></i> {article.authors.slice(0, 3).join(', ')}
-                          {article.authors.length > 3 && ` +${article.authors.length - 3} more`}
+                          <i className="bi bi-people"></i>
+                          <span>
+                            {article.authors.slice(0, 3).join(', ')}
+                            {article.authors.length > 3 && ` +${article.authors.length - 3} more`}
+                          </span>
                         </div>
                       )}
                     </>
@@ -207,4 +209,4 @@ const PubMedIdList: React.FC<PubMedIdListProps> = ({
   );
 };
 
-export default PubMedIdList;
+export default PubMedList;
