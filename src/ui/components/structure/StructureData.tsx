@@ -1,8 +1,9 @@
 import React, {useEffect, useState, useRef, useCallback} from 'react';
-import PdbeStructureTable from './PdbeStructureTable';
-import PredictedStructureTable from './PredictedStructureTable';
-import PdbeMolstar from "./PdbeMolstar";
-import InteractionInfoTable from "./InteractionInfoTable";
+import {TOTAL_COLS} from '../../../constants/SearchResultTable';
+import PdbeStructureTable from './tables/PdbeStructureTable';
+import PredictedStructureTable from './tables/PredictedStructureTable';
+import PdbeMolstar from "./viewer/PdbeMolstar";
+import InteractionInfoTable from "./tables/InteractionInfoTable";
 import LoaderRow from "../../pages/result/LoaderRow";
 import {getPredictedStructure} from "../../../services/AlphafoldService";
 import {getFunctionalData, getStructureData} from "../../../services/ProtVarService";
@@ -17,24 +18,26 @@ import {ALPHAFILL_URL, hasAlphafillStructure} from "../../../services/AlphafillS
 import {Interaction, Pocket} from "../../../types/Prediction";
 import {useMolstarController} from "./useMolstarController";
 import {useStructureUrl} from "./useStructureUrl";
+import {PAEPanel} from "./viewer/PAEPanel";
+import "../../../styles/new/annotation.css";
+import "../../../styles/new/structure.css";
 
-
-interface StructuralDetailProps {
-  annotation: string
-  isoFormAccession: string,
-  aaPosition: number,
-  variantAA: string, // 3 letter
-  proteinStructureUri: string
+interface StructureDataProps {
+  annotation: string;
+  isoFormAccession: string;
+  aaPosition: number;
+  variantAA: string; // 3-letter variant AA code
+  proteinStructureUri: string;
 }
 
 export interface AlphaFillStructure {
-  modelEntityId: string
-  cifUrl: string
+  modelEntityId: string;
+  cifUrl: string;
 }
 
-export type PredictedStructure = AlphafoldResponseElement | AlphaFillStructure
+export type PredictedStructure = AlphafoldResponseElement | AlphaFillStructure;
 
-function StructuralDetail(props: StructuralDetailProps) {
+function StructureData(props: StructureDataProps) {
   const { isoFormAccession, aaPosition, variantAA, proteinStructureUri } = props;
   const molstar = useMolstarController();
   const urlParams = useStructureUrl();
@@ -45,6 +48,8 @@ function StructuralDetail(props: StructuralDetailProps) {
   const [pocketData, setPocketData] = useState<Pocket[]>([]);
   const [selected, setSelected] = useState<PdbeStructure | PredictedStructure | Interaction | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isPaeOpen, setIsPaeOpen] = useState(false);
+  const [paeUrl, setPaeUrl] = useState<string>("");
   const hasLoadedFromUrl = useRef(false);
 
   const addPredictedStructures = (newItems: PredictedStructure[]) =>
@@ -139,7 +144,6 @@ function StructuralDetail(props: StructuralDetailProps) {
               }
             }
           } else {
-            // apply default highlight
             await molstar.highlightVariant(aaPosition);
           }
         } else if ("a" in selected && "b" in selected) {
@@ -149,7 +153,6 @@ function StructuralDetail(props: StructuralDetailProps) {
           } else if (params.interface) {
             await molstar.highlightInterface(selected.aresidues, selected.bresidues, aaPosition, protChain);
           } else {
-            // apply default highlight
             await molstar.highlightVariant(aaPosition, protChain);
           }
         }
@@ -218,6 +221,12 @@ function StructuralDetail(props: StructuralDetailProps) {
     if (structureToLoad) {
       hasLoadedFromUrl.current = true;
       setSelected(structureToLoad);
+
+      // Open PAE if AlphaFold structure with PAE
+      if ("paeImageUrl" in structureToLoad) {
+        setPaeUrl(structureToLoad.paeImageUrl);
+        setIsPaeOpen(true);
+      }
     }
   }, [pdbeData, predictedStructureData, interactionData, isLoading, urlParams]);
 
@@ -239,59 +248,176 @@ function StructuralDetail(props: StructuralDetailProps) {
     };
   }, [proteinStructureUri, isoFormAccession, aaPosition]);
 
+  // Generate viewer control actions based on selected structure
+  const getViewerActions = () => {
+    if (!selected) return [];
+
+    const actions: Array<{ label: string; onClick: () => void; variant?: 'primary' | 'reset' }> = [];
+
+    // Zoom action (always available)
+    actions.push({
+      label: "Zoom to variant",
+      onClick: () => {
+        if ("pdbId" in selected) {
+          urlParams.updateActions({ zoom: true, chain: null });
+          molstar.zoomToVariant(selected.start, selected.chainId);
+        } else if ("cifUrl" in selected) {
+          urlParams.updateActions({ zoom: true, pocket: null });
+          molstar.zoomToVariant(aaPosition);
+        } else if ("a" in selected && "b" in selected) {
+          const protChain = selected.a === isoFormAccession ? "A" : "B";
+          urlParams.updateActions({ zoom: true, interface: null });
+          molstar.zoomToVariant(aaPosition, protChain);
+        }
+      },
+      variant: 'primary' as const
+    });
+
+    // Type-specific actions
+    if ("pdbId" in selected) {
+      // Chain highlighting for PDB
+      const chains = pdbeData.filter(d => d.pdbId === selected.pdbId);
+      chains.forEach((chain, idx) => {
+        const label = idx === 0 ? `Chain ${chain.chainId}` : chain.chainId;
+        actions.push({
+          label,
+          onClick: () => {
+            urlParams.updateActions({ chain: chain.chainId, zoom: null });
+            molstar.highlightChain(chain.start, chain.chainId);
+          }
+        });
+      });
+    } else if ("cifUrl" in selected) {
+      // Pocket highlighting for AlphaFold
+      pocketData.forEach((pocket, idx) => {
+        const label = idx === 0 ? `Pocket P${pocket.pocketId}` : `P${pocket.pocketId}`;
+        actions.push({
+          label,
+          onClick: () => {
+            urlParams.updateActions({ pocket: `p${pocket.pocketId}`, zoom: null });
+            molstar.highlightPocket(aaPosition, pocket.resid);
+          }
+        });
+      });
+    } else if ("a" in selected && "b" in selected) {
+      // Interface highlighting for interactions
+      actions.push({
+        label: "Interface",
+        onClick: () => {
+          const protChain = selected.a === isoFormAccession ? "A" : "B";
+          urlParams.updateActions({ interface: true, zoom: null });
+          molstar.highlightInterface(selected.aresidues, selected.bresidues, aaPosition, protChain);
+        }
+      });
+    }
+
+    // Reset action
+    actions.push({
+      label: "Reset",
+      onClick: () => {
+        if ("pdbId" in selected) {
+          urlParams.updateActions({ chain: null, zoom: null });
+          molstar.resetDefault(selected.start, selected.chainId);
+        } else if ("cifUrl" in selected) {
+          urlParams.updateActions({ pocket: null, zoom: null });
+          molstar.resetDefault(aaPosition);
+        } else if ("a" in selected && "b" in selected) {
+          const protChain = selected.a === isoFormAccession ? "A" : "B";
+          urlParams.updateActions({ interface: null, zoom: null });
+          molstar.resetDefault(aaPosition, protChain);
+        }
+      },
+      variant: 'reset' as const
+    });
+
+    return actions;
+  };
+
   if (isLoading) return <LoaderRow />;
   if (!selected) return <NoStructureDataRow />;
 
   return (
-    <tr key={isoFormAccession}>
-      <td colSpan={10} className="expanded-row structure-data-cell">
-        <div className="">
+    <tr>
+      <td colSpan={TOTAL_COLS} className="expanded-row">
+        <div className="significances-groups">
           <div className="column">
-            <h5 style={{display: "inline"}}>
-              <img src={StructureIcon} className="click-icon" alt="structure icon"
-                   title="3D structure"/> Structures
-            </h5>
-            <HelpButton title="" content={<HelpContent name="structure-annotations"/>}/>
-            <Spaces count={2}/>
-            <ShareAnnotationIcon annotation={props.annotation}/>
-            <PdbeMolstar selected={selected} pdbeRef={molstar.ref}/>
+            <div className="annotation-header">
+              <h5>
+                <img src={StructureIcon} className="click-icon" alt="structure icon" title="3D structure" />
+                3D Structures
+              </h5>
+              <div className="annotation-actions">
+                <HelpButton title="" content={<HelpContent name="structure-annotations"/>}/>
+                <Spaces count={2}/>
+                <ShareAnnotationIcon annotation={props.annotation}/>
+              </div>
+            </div>
+
+            <div className="structure-container">
+              {/* Left: Tables */}
+              <div className="structure-tables-column">
+                {pdbeData.length > 0 && (
+                  <PdbeStructureTable
+                    isoFormAccession={isoFormAccession}
+                    pdbeData={pdbeData}
+                    selectedPdbId={"pdbId" in selected ? selected.pdbId : ""}
+                    setSelected={setSelected}
+                    molstar={molstar}
+                    urlParams={urlParams}
+                  />
+                )}
+                {predictedStructureData.length > 0 && (
+                  <PredictedStructureTable
+                    isoFormAccession={isoFormAccession}
+                    predictedStructureData={predictedStructureData}
+                    selectedPredictedStructure={"modelEntityId" in selected ? selected.modelEntityId : ""}
+                    setSelected={(structure) => {
+                      setSelected(structure);
+                      if ("paeImageUrl" in structure) {
+                        setPaeUrl(structure.paeImageUrl);
+                        setIsPaeOpen(true);
+                      } else {
+                        setIsPaeOpen(false);
+                      }
+                    }}
+                    aaPos={aaPosition}
+                    pocketData={pocketData}
+                    molstar={molstar}
+                    urlParams={urlParams}
+                  />
+                )}
+                {interactionData.length > 0 && (
+                  <InteractionInfoTable
+                    isoFormAccession={isoFormAccession}
+                    interactionData={interactionData}
+                    selectedInteraction={"a" in selected && "b" in selected ? (selected.a + "_" + selected.b) : ""}
+                    setSelected={(interaction) => {
+                      setSelected(interaction);
+                      setIsPaeOpen(false);
+                    }}
+                    aaPos={aaPosition}
+                    molstar={molstar}
+                    urlParams={urlParams}
+                  />
+                )}
+              </div>
+
+              {/* Right: Viewer + PAE */}
+              <div className="structure-viewer-column">
+                <PdbeMolstar
+                  selected={selected}
+                  pdbeRef={molstar.ref}
+                  controlActions={getViewerActions()}
+                />
+                <PAEPanel
+                  isOpen={isPaeOpen}
+                  paeImageUrl={paeUrl}
+                  onClose={() => setIsPaeOpen(false)}
+                />
+              </div>
+            </div>
           </div>
         </div>
-      </td>
-      <td colSpan={5} className="expanded-row structure-data-cell">
-        {pdbeData?.length > 0 && (
-          <PdbeStructureTable
-            isoFormAccession={isoFormAccession}
-            pdbeData={pdbeData}
-            selectedPdbId={"pdbId" in selected ? selected.pdbId : ""}
-            setSelected={setSelected}
-            molstar={molstar}
-            urlParams={urlParams}
-          />
-        )}
-        {predictedStructureData?.length > 0 && (
-          <PredictedStructureTable
-            isoFormAccession={isoFormAccession}
-            predictedStructureData={predictedStructureData}
-            selectedPredictedStructure={"modelEntityId" in selected ? selected.modelEntityId : ""}
-            setSelected={setSelected}
-            aaPos={aaPosition}
-            pocketData={pocketData}
-            molstar={molstar}
-            urlParams={urlParams}
-          />
-        )}
-        {interactionData?.length > 0 && (
-          <InteractionInfoTable
-            isoFormAccession={isoFormAccession}
-            interactionData={interactionData}
-            selectedInteraction={"a" in selected && "b" in selected ? (selected.a + "_" + selected.b) : ""}
-            setSelected={setSelected}
-            aaPos={aaPosition}
-            molstar={molstar}
-            urlParams={urlParams}
-          />
-        )}
       </td>
     </tr>
   );
@@ -299,15 +425,10 @@ function StructuralDetail(props: StructuralDetailProps) {
 
 function NoStructureDataRow() {
   return <tr>
-    <td colSpan={15} className="expanded-row">
-      {' '}
-      <div className="">
-        <div className="column">
-          <b>No structural data available for this protein</b>
-        </div>
-      </div>
+    <td colSpan={TOTAL_COLS} className="expanded-row">
+      <div className="column">No structural data available for this protein</div>
     </td>
   </tr>
 }
 
-export default StructuralDetail;
+export default StructureData;

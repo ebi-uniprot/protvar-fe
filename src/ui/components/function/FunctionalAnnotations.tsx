@@ -6,7 +6,7 @@ import {useStructureNavigation} from "../../../hooks/useStructureNavigation";
 import {ResidueColumn} from "./ResidueColumn";
 import {RegionColumn} from "./RegionColumn";
 
-export interface FunctionalAnnotationsPanelProps {
+export interface FunctionalAnnotationsProps {
   functionalData: FunctionalInfo
   refAA: string
   variantAA: string
@@ -16,7 +16,7 @@ export interface FunctionalAnnotationsPanelProps {
   amScore: AmScore
 }
 
-function FunctionalAnnotationsPanel(props: FunctionalAnnotationsPanelProps) {
+function FunctionalAnnotations(props: FunctionalAnnotationsProps) {
   const [expandedSection, setExpandedSection] = useState<string>('');
   const { openPocketInStructure, openInteractionInStructure } = useStructureNavigation();
 
@@ -63,4 +63,4 @@ function FunctionalAnnotationsPanel(props: FunctionalAnnotationsPanelProps) {
   );
 }
 
-export default FunctionalAnnotationsPanel;
+export default FunctionalAnnotations;

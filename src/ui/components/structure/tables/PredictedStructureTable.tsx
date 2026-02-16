@@ -1,14 +1,14 @@
 import React from "react";
-import {ALPHAFOLD_URL_INTERFACE_BY_PROTEIN} from '../../../constants/ExternalUrls';
-import {formatRange} from "../../../utills/Util";
-import {PredictedStructure} from "./StructuralDetail";
-import {HelpButton} from "../help/HelpButton";
-import {AFLegendShortText, AlphaFoldHelp} from "../help/content/AlphaFoldHelp";
-import {PAEImg} from "./PAEImg";
-import {HelpContent} from "../help/HelpContent";
-import {Pocket} from "../../../types/Prediction";
-import {useMolstarController} from "./useMolstarController";
-import {useStructureUrl} from "./useStructureUrl";
+import {ALPHAFOLD_URL_INTERFACE_BY_PROTEIN} from '../../../../constants/ExternalUrls';
+import {formatRange} from "../../../../utills/Util";
+import {PredictedStructure} from "../StructureData";
+import {HelpButton} from "../../help/HelpButton";
+import {AFLegendShortText, AlphaFoldHelp} from "../../help/content/AlphaFoldHelp";
+import {PAEImg} from "../PAEImg";
+import {HelpContent} from "../../help/HelpContent";
+import {Pocket} from "../../../../types/Prediction";
+import {useMolstarController} from "../useMolstarController";
+import {useStructureUrl} from "../useStructureUrl";
 
 
 interface PredictedStructureTableProps {

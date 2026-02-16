@@ -2,12 +2,12 @@ import { ENSEMBL_GENE_RUL } from "../../../constants/ExternalUrls";
 import {TranslatedSequence} from "../../../types/MappingResponse";
 import React from "react";
 
-interface GeneAndTranslatedSequenceTableProps {
+interface GeneAndTranslatedSequenceProps {
   ensg: string;
   ensp: Array<TranslatedSequence>;
 }
 
-function GeneAndTranslatedSequenceTable(props: GeneAndTranslatedSequenceTableProps) {
+function GeneAndTranslatedSequence(props: GeneAndTranslatedSequenceProps) {
   const {ensg, ensp} = props;
   const ensgUrl = ENSEMBL_GENE_RUL + ensg;
 
@@ -44,4 +44,4 @@ function GeneAndTranslatedSequenceTable(props: GeneAndTranslatedSequenceTablePro
   );
 }
 
-export default GeneAndTranslatedSequenceTable;
+export default GeneAndTranslatedSequence;

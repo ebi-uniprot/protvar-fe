@@ -1,9 +1,9 @@
-import { PDB_URL_INTERFACE_BY_PROTEIN } from '../../../constants/ExternalUrls';
-import {PdbeStructure} from "../../../types/PdbeStructure";
-import { groupBy } from "../../../utills/Util";
+import { PDB_URL_INTERFACE_BY_PROTEIN } from '../../../../constants/ExternalUrls';
+import {PdbeStructure} from "../../../../types/PdbeStructure";
+import { groupBy } from "../../../../utills/Util";
 import React from "react";
-import {useMolstarController} from "./useMolstarController";
-import {useStructureUrl} from "./useStructureUrl";
+import {useMolstarController} from "../useMolstarController";
+import {useStructureUrl} from "../useStructureUrl";
 
 interface PdbeStructureTableProps {
   isoFormAccession: string;

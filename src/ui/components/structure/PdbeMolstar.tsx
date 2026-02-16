@@ -4,7 +4,7 @@ import "pdbe-molstar/build/pdbe-molstar-light.css";
 import Loader from "../../elements/Loader";
 import {PdbeStructure} from "../../../types/PdbeStructure";
 import {API_URL} from "../../../constants/const";
-import {PredictedStructure} from "./StructuralDetail";
+import {PredictedStructure} from "./StructureData";
 import {Interaction} from "../../../types/Prediction";
 
 interface PdbeMolstarProps {

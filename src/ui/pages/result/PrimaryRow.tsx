@@ -30,9 +30,9 @@ import {
 } from "../../../types/MappingResponse";
 import {rowBg} from "./ResultTable";
 
-const StructuralDetail = lazy(() => import(/* webpackChunkName: "StructuralDetail" */ "../../components/structure/StructuralDetail"));
-const PopulationDetail = lazy(() => import(/* webpackChunkName: "PopulationDetail" */ "../../components/population/PopulationDetail"));
-const FunctionalDetail = lazy(() => import(/* webpackChunkName: "FunctionalDetail" */ "../../components/function/FunctionalDetail"));
+const StructureData = lazy(() => import(/* webpackChunkName: "StructureData" */ "../../components/structure/./StructureData"));
+const PopulationData = lazy(() => import(/* webpackChunkName: "PopulationData" */ "../../components/population/./PopulationData"));
+const FunctionalData = lazy(() => import(/* webpackChunkName: "FunctionalData" */ "../../components/function/./FunctionalData"));
 
 export const getIdUrl = (id:string) => {
   if (id) {
@@ -221,17 +221,17 @@ export const getNewPrimaryRow = (isoformKey: string, isoformGroup: string, isofo
 
     {populationKey === annotationExpanded &&
       <Suspense fallback={<LoaderRow />}>
-        <PopulationDetail annotation={annotationExpanded} populationObservationsUri={isoform.populationObservationsUri!} variantAA={isoform.variantAA!} genomicVariant={genomicVariantStr} />
+        <PopulationData annotation={annotationExpanded} populationObservationsUri={isoform.populationObservationsUri!} variantAA={isoform.variantAA!} genomicVariant={genomicVariantStr} />
       </Suspense>
     }
     {structuralKey === annotationExpanded &&
       <Suspense fallback={<LoaderRow />}>
-        <StructuralDetail annotation={annotationExpanded} isoFormAccession={isoform.accession!} aaPosition={isoform.isoformPosition!} variantAA={isoform.variantAA!} proteinStructureUri={isoform.proteinStructureUri!}/>
+        <StructureData annotation={annotationExpanded} isoFormAccession={isoform.accession!} aaPosition={isoform.isoformPosition!} variantAA={isoform.variantAA!} proteinStructureUri={isoform.proteinStructureUri!}/>
       </Suspense>
     }
     {functionalKey === annotationExpanded &&
       <Suspense fallback={<LoaderRow />}>
-        <FunctionalDetail
+        <FunctionalData
           annotation={annotationExpanded}
           caddScore={gene.caddScore?.toString()}
           amScore={isoform.amScore}

@@ -1,11 +1,11 @@
-import {formatRange} from "../../../utills/Util";
-import {API_URL} from "../../../constants/const";
-import {HelpContent} from "../help/HelpContent";
-import {HelpButton} from "../help/HelpButton";
+import {formatRange} from "../../../../utills/Util";
+import {API_URL} from "../../../../constants/const";
+import {HelpContent} from "../../help/HelpContent";
+import {HelpButton} from "../../help/HelpButton";
 import React from "react";
-import {Interaction} from "../../../types/Prediction";
-import {useMolstarController} from "./useMolstarController";
-import {useStructureUrl} from "./useStructureUrl";
+import {Interaction} from "../../../../types/Prediction";
+import {useMolstarController} from "../useMolstarController";
+import {useStructureUrl} from "../useStructureUrl";
 
 
 interface InteractionInfoTableProps {
