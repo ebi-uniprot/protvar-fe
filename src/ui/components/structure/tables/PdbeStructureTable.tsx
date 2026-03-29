@@ -4,6 +4,7 @@ import { groupBy } from "../../../../utills/Util";
 import React from "react";
 import {useMolstarController} from "../useMolstarController";
 import {useStructureUrl} from "../useStructureUrl";
+import {ExtLink} from "../../common/Link";
 
 interface PdbeStructureTableProps {
   isoFormAccession: string;
@@ -74,7 +75,8 @@ function PdbeStructureTable({ isoFormAccession, pdbeData, selectedPdbId, setSele
       <table>
         <thead>
         <tr>
-          <th colSpan={5}>PDBe Experimental Structure <a href={PDB_URL_INTERFACE_BY_PROTEIN + isoFormAccession} target="_blank" rel="noreferrer" title="Click for further information from PDBeKB" className="ext-link"></a></th>
+          <th colSpan={5}>PDBe Experimental Structure <ExtLink url={PDB_URL_INTERFACE_BY_PROTEIN + isoFormAccession} />
+          </th>
         </tr>
         <tr>
           <th>PDB ID</th>

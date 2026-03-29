@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {ClinicalSignificance, PopulationFrequency} from "../../../../types/PopulationObservation";
 import {DbReferenceObject} from "../../../../types/Common";
-import {ProtVarLink} from "../../common/ProtVarLink";
+import {ExtLink, PVLink} from "../../common/Link";
 
 const XREF_SHOW_LIMIT = 5;
 const PV_SEARCH = '/ProtVar/query?search=';
@@ -116,17 +116,10 @@ function XRefDetail({xrefs, populationFrequencies, clinicalSignificances}: XRefD
             <ul className={`xref-list ${!isExpanded ? 'collapsed' : ''}`}>
               {sourceXrefs.map((xref, idx) => (
                 <li key={idx}>
-                  <a
-                    href={xref.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="ext-link"
-                  >
-                    {xref.id}
-                  </a>
+                  <ExtLink url={xref.url} text={xref.id} />
                   {/* ProtVar Link - only show if ID format matches source */}
                   {shouldShowProtVarLink(xref.id, source) &&
-                    <ProtVarLink url={buildProtVarUrl(xref.id)} />
+                    <PVLink url={buildProtVarUrl(xref.id)} />
                   }
                 </li>
               ))}
@@ -150,56 +143,5 @@ function XRefDetail({xrefs, populationFrequencies, clinicalSignificances}: XRefD
       })}
     </div>
   );
-}/*
-  return (
-    <div className="xref-section">
-      <b>Cross-References</b>
-      <ul>
-        {Array.from(xrefGroups.entries()).map(([sourceName, xRefList]) => {
-
-          const [isExpanded, setIsExpanded] = useState(false);
-          const hasMany = xRefList.length > XREF_SHOW_LIMIT;
-
-
-          const significance=significanceMap.get(sourceName)
-          const popFreq=popFreqMap.get(sourceName)
-
-            return <li className="xref-source-group">
-            <div className="xref-source-name">{sourceName}</div>
-            <ul className={`xref-list ${!isExpanded && hasMany ? 'collapsed' : ''}`}>
-              {xRefList.map((xref, index) => (
-                <a href={xref.url} target="_blank" rel="noreferrer" className="ext-link">
-                  {xref.id}
-                </a>
-              ))}
-            </ul>
-
-            {hasMany && (
-              <button
-                className="show-btn"
-                onClick={() => setIsExpanded(!isExpanded)}
-              >
-                <i className={`bi bi-chevron-${isExpanded ? 'up' : 'down'}`}></i>
-                {isExpanded ? 'Show less' : `Show ${xRefList.length - XREF_SHOW_LIMIT} more`}
-              </button>
-            )}
-
-            {significance && (
-              <div className="xref-significance">
-                {significance.type.toLowerCase()}
-              </div>
-            )}
-
-            {popFreq && (
-              <div className="xref-pop-freq">
-                <b>{popFreq.populationName}</b> - {popFreq.frequency}
-              </div>
-            )}
-          </li>
-        })}
-      </ul>
-    </div>
-  );
 }
-*/
 export default XRefDetail;

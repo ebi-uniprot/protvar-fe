@@ -2,6 +2,7 @@ import React, { Fragment, useMemo } from "react";
 import { Evidence } from "../../../types/Common";
 import PubMedList from "./PubMedList";
 import '../../../styles/new/evidences.css';
+import {ExtLink} from "./Link";
 
 export interface IdUrl {
   id: string;
@@ -50,14 +51,7 @@ const Evidences = ({ evidences }: EvidencesProps) => {
             <ul className="evidences-list">
               {ids.map((evidence) => (
                 <li key={evidence.id}>
-                  <a
-                    href={evidence.sourceUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="ext-link"
-                  >
-                    {evidence.id}
-                  </a>
+                  <ExtLink url={evidence.sourceUrl} text={evidence.id} />
                 </li>
               ))}
             </ul>

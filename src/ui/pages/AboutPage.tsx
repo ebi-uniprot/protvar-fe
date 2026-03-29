@@ -15,6 +15,7 @@ import MolstarLogo from "../../images/molstar.png";
 import NCBILogo from "../../images/NCBILogo.png";
 import VarSiteLogo from "../../images/VarSiteLogo.png";
 import {TITLE} from "../../constants/const";
+import {ExtLink} from "../components/common/Link";
 
 function AboutPageContent() {
   //var today = new Date();
@@ -25,6 +26,7 @@ function AboutPageContent() {
     document.title = `About | ${TITLE}`;
   }, []);
 
+  // @ts-ignore
   return <div className="container">
     <h5>About</h5>
     <div className="text">
@@ -36,8 +38,7 @@ function AboutPageContent() {
         and predictions to better understand the potential effects of missense variation on humans.
       </p>
 
-      <p>Watch the <a href="https://www.youtube.com/watch?v=6dsbozAi1lk" target="_blank" rel="noreferrer" className="ext-link">ProtVar launch
-        webinar</a>.
+      <p>Watch the <ExtLink url="https://www.youtube.com/watch?v=6dsbozAi1lk" text="ProtVar launch webinar" />.
         <br/>
         <iframe id="ytplayer" title="Launch webinar video" width="360" height="202.5"
                 src="https://www.youtube.com/embed/6dsbozAi1lk"
@@ -56,8 +57,7 @@ function AboutPageContent() {
       <p>
         James D Stephenson, Prabhat Totoo, David F Burke, Jürgen Jänes, Pedro Beltrao, Maria J Martin,
       ProtVar: mapping and contextualizing human missense variation, <i>Nucleic Acids Research</i>, 2024;&nbsp;
-      <a className="ref-link ext-link" href="https://doi.org/10.1093/nar/gkae413"
-         target="_blank" rel="noreferrer">https://doi.org/10.1093/nar/gkae413</a>
+      <ExtLink url="https://doi.org/10.1093/nar/gkae413" text="https://doi.org/10.1093/nar/gkae413" />
       </p>
 
 

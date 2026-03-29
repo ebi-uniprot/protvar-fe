@@ -2,6 +2,7 @@ import RegionProteinProps from "./RegionProteinProps";
 import { EmptyElement } from "../../../../constants/ConstElement";
 import { INTACT_URL } from "../../../../constants/ExternalUrls";
 import {IntAct, IntActComment} from "../../../../types/Comment";
+import {ExtLink} from "../../common/Link";
 
 interface IntActsProps extends RegionProteinProps {
   accession: string
@@ -51,9 +52,7 @@ function IntActs(props: IntActsProps) {
               </div>
               <div className="info-row">
                 <span className="info-label">IntAct</span>
-                <a href={INTACT_URL + interactor} target="_blank" rel="noreferrer" className="ext-link">
-                  {interactor}
-                </a>
+                <ExtLink url={INTACT_URL + interactor} text={interactor} />
               </div>
             </div>
           )}

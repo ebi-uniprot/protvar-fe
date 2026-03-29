@@ -1,6 +1,7 @@
 import { ENSEMBL_GENE_RUL } from "../../../constants/ExternalUrls";
 import {TranslatedSequence} from "../../../types/MappingResponse";
 import React from "react";
+import {ExtLink} from "../common/Link";
 
 interface GeneAndTranslatedSequenceProps {
   ensg: string;
@@ -18,9 +19,7 @@ function GeneAndTranslatedSequence(props: GeneAndTranslatedSequenceProps) {
       <div className="gene-sequence-grid">
         <div className="gene-info">
           <h4>Ensembl Gene</h4>
-          <a href={ensgUrl} target="_blank" rel="noreferrer" className="ext-link gene-link">
-            {ensg}
-          </a>
+          <ExtLink url={ensgUrl} text={ensg} />
         </div>
 
         <div className="transcript-info">
@@ -30,9 +29,7 @@ function GeneAndTranslatedSequence(props: GeneAndTranslatedSequenceProps) {
               const enspsUrl = ENSEMBL_GENE_RUL + ensps.ensp;
               return (
                 <div key={index} className="transcript-item">
-                  <a href={enspsUrl} target="_blank" rel="noreferrer" className="ext-link">
-                    {ensps.ensp}
-                  </a>
+                  <ExtLink url={enspsUrl} text={ensps.ensp} />
                   <span className="transcript-id">{ensps.ensts}</span>
                 </div>
               );

@@ -5,6 +5,7 @@ import RegionProtein from "./RegionProtein";
 import {CatalyticActivityComment, Comment} from "../../../../types/Comment";
 import {DbReference} from "../../../../types/Common";
 import React from "react";
+import {ExtLink} from "../../common/Link";
 
 function CatalyticActivities(props: RegionProteinProps) {
   return <RegionProtein title="Catalytic Activity" detailComponentGenerator={getCatalyticActivity} {...props}/>
@@ -31,17 +32,7 @@ function getRHEA(dbReferences: Array<DbReference>) {
   if (dbReferences) {
     dbReferences.forEach((reference) => {
       if (reference.type === 'Rhea' && reference.id.includes('RHEA:')) {
-        reaIds.push(
-          <a
-            key={reference.id}
-            href={RHEA_URL + reference.id.split(':')[1]}
-            target="_blank"
-            rel="noreferrer"
-            className="ext-link"
-          >
-            {reference.id}
-          </a>
-        );
+        reaIds.push(<ExtLink url={RHEA_URL + reference.id.split(':')[1]} text={reference.id} />);
       }
     });
   }

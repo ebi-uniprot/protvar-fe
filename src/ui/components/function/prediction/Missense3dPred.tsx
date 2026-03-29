@@ -4,6 +4,7 @@ import {aminoAcid3to1Letter} from "../../../../utills/Util";
 import {SharePredictionLink} from "./SharePredictionLink";
 import Spaces from "../../../elements/Spaces";
 import {STD_BENIGN_COLOR, STD_PATHOGENIC_COLOR} from "./PredConstants";
+import {ExtLink} from "../../common/Link";
 
 const M3D_BASE_URL = 'https://missense3d.bc.ic.ac.uk/~missense3d2/results-details.html';
 
@@ -38,16 +39,7 @@ export const Missense3dPred = ({functionalData, refAA, variantAA}: Missense3dPre
       <div>
         <i className="bi bi-circle-fill" style={{color: predColor}}></i>
         <Spaces/>{predText}
-        <a
-          href={m3dUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          title="View in Missense3D"
-          aria-label="View in Missense3D"
-          className="ext-pred-link-inline"
-        >
-          <i className="bi bi-box-arrow-up-right"></i>
-        </a>
+        <span className="ml-auto"><ExtLink url={m3dUrl} title="View in Missense3D" /></span>
         {displayText !== '-' && (
           <div title={isTruncated ? formattedText : undefined}>
             {displayText}

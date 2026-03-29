@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { IdUrl } from "./Evidences";
+import {ExtLink} from "./Link";
 
 // Shared instance for PubMed API
 const pubmedApi = axios.create({
@@ -148,14 +149,7 @@ const PubMedList: React.FC<PubMedListProps> = ({
                 >
                   <i className={`bi bi-caret-${isExpanded ? 'down' : 'right'}`}></i>
                 </button>
-                <a
-                  href={sourceUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="ext-link"
-                >
-                  {id}
-                </a>
+                <ExtLink url={sourceUrl} text={id} />
               </div>
 
               {isExpanded && article && (

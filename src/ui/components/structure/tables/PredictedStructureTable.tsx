@@ -9,6 +9,7 @@ import {HelpContent} from "../../help/HelpContent";
 import {Pocket} from "../../../../types/Prediction";
 import {useMolstarController} from "../useMolstarController";
 import {useStructureUrl} from "../useStructureUrl";
+import {ExtLink} from "../../common/Link";
 
 
 interface PredictedStructureTableProps {
@@ -101,9 +102,7 @@ function PredictedStructureTable({
       <table>
         <thead>
         <tr>
-          <th colSpan={3}>Predicted Structure based on AlphaFold <a
-            href={ALPHAFOLD_URL_INTERFACE_BY_PROTEIN + isoFormAccession} target="_blank" rel="noreferrer"
-            title="Click for further information from AlphaFold" className="ext-link"></a>
+          <th colSpan={3}>Predicted Structure based on AlphaFold <ExtLink url={ALPHAFOLD_URL_INTERFACE_BY_PROTEIN + isoFormAccession} />
           </th>
         </tr>
         <tr>

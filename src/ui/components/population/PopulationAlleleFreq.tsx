@@ -2,7 +2,7 @@ import {PredAttr} from "../function/prediction/Prediction";
 import {STD_COLOR_GRADIENT_REVERSE} from "../function/prediction/PredConstants";
 import React from "react";
 import {AlleleFreq} from "../../../types/PopulationObservation";
-import {ProtVarLink} from "../common/ProtVarLink";
+import {ExtLink} from "../common/Link";
 
 const PRECISION: number = 5; // decimal places
 
@@ -69,15 +69,9 @@ function AlleleFreqCard({ allele, freq, genomicVariant, stdColor }: AlleleFreqCa
       <div className="allele-freq-top">
         <span className="allele-name">{allele}:</span>
         <span className="allele-value" title={freq.af.toString()}>{freq.af.toFixed(PRECISION)}</span>
-        <a
-          href={gnomadUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="ext-pred-link-inline"
-          title={`View ${allele} in GnomAD`}
-        >
-          <i className="bi bi-box-arrow-up-right"></i>
-        </a>
+        <span className="ml-auto">
+          <ExtLink url={gnomadUrl} title={`View ${allele} in GnomAD`} />
+        </span>
       </div>
       <div className="allele-freq-bottom">
         <span className="allele-classification">
