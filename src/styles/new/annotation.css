@@ -322,29 +322,10 @@
     border: 1px dashed #ddd;
 }
 
-.ext-pred-link-inline {
+.gnomad-link {
     display: inline-flex;
     align-items: center;
-    padding: 2px 4px;
-    color: #4a90e2;
-    text-decoration: none;
-    border-radius: 3px;
-    transition: all 0.2s ease;
     margin-left: auto;
-}
-
-.ext-pred-link-inline:hover {
-    background: #e8f4f8;
-    color: #357abd;
-}
-
-.ext-pred-link-inline:focus {
-    outline: 2px solid #4a90e2;
-    outline-offset: 2px;
-}
-
-.ext-pred-link-inline .bi-box-arrow-up-right {
-    font-size: 12px;
 }
 
 /* ============================================
@@ -473,15 +454,6 @@
     }
 
     .expandable-text-toggle:hover {
-        color: #9ec5fe;
-    }
-
-    .ext-pred-link-inline {
-        color: #6ea8fe;
-    }
-
-    .ext-pred-link-inline:hover {
-        background: rgba(110, 168, 254, 0.1);
         color: #9ec5fe;
     }
 }

@@ -1,0 +1,284 @@
+/**
+ * tables.css - Table component styles
+ * Structure tables with card-based design
+ */
+
+/* ============================================
+   STRUCTURE TABLE CARD CONTAINER
+   ============================================ */
+
+.structure-table-card {
+    background: var(--color-bg-secondary);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+}
+
+.structure-table-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    background: var(--gradient-blue);
+    color: white;
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+}
+
+.structure-table-header a {
+    color: white;
+    opacity: 0.9;
+    text-decoration: none;
+    transition: opacity var(--transition-base);
+}
+
+.structure-table-header a:hover {
+    opacity: 1;
+}
+
+/* ============================================
+   STRUCTURE CARDS CONTAINER (Scrollable)
+   ============================================ */
+
+.structure-cards-container {
+    max-height: 400px;
+    overflow-y: auto;
+    padding: var(--spacing-md);
+}
+
+/* Scrollbar styling */
+.structure-cards-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.structure-cards-container::-webkit-scrollbar-track {
+    background: var(--color-gray-200);
+    border-radius: var(--radius-sm);
+}
+
+.structure-cards-container::-webkit-scrollbar-thumb {
+    background: var(--color-gray-500);
+    border-radius: var(--radius-sm);
+}
+
+.structure-cards-container::-webkit-scrollbar-thumb:hover {
+    background: var(--color-gray-600);
+}
+
+/* ============================================
+   LEGACY TABLE DESIGN (Fallback)
+   ============================================ */
+
+.structure-table-scroll {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.structure-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.structure-table thead {
+    position: sticky;
+    top: 0;
+    background: var(--color-gray-200);
+    z-index: var(--z-sticky);
+}
+
+.structure-table th {
+    padding: 10px 12px;
+    text-align: left;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-secondary);
+    border-bottom: 2px solid var(--color-border-medium);
+}
+
+.structure-table tbody tr {
+    cursor: pointer;
+    transition: background var(--transition-fast);
+    border-bottom: 1px solid var(--color-border-light);
+}
+
+.structure-table tbody tr:hover {
+    background: var(--color-gray-100);
+}
+
+.structure-table tbody tr.active {
+    background: var(--color-primary-lightest);
+    border-left: 3px solid var(--color-primary);
+}
+
+.structure-table td {
+    padding: 10px 12px;
+    font-size: var(--font-size-base);
+    color: var(--color-text-primary);
+}
+
+.structure-table td.small {
+    font-size: var(--font-size-sm);
+}
+
+/* Scroll to selected row */
+.structure-table tbody tr.active {
+    scroll-margin-top: 60px;
+}
+
+/* ============================================
+   INTERACTION HEADER (Table-style header)
+   ============================================ */
+
+.interaction-header {
+    display: grid;
+    grid-template-columns: 2fr 1fr 2fr;
+    gap: var(--spacing-md);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-bottom: var(--spacing-sm);
+}
+
+/* ============================================
+   POCKET GRID (Label-Value Grid)
+   ============================================ */
+
+.pocket-grid {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: var(--spacing-sm) var(--spacing-lg);
+    align-items: center;
+    font-size: var(--font-size-base);
+    margin-bottom: var(--spacing-md);
+}
+
+.pocket-grid label,
+.pocket-grid > div:nth-child(odd):not(.pocket-confidence-dropdown) {
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
+}
+
+/* ============================================
+   TABLE ACTIONS
+   ============================================ */
+
+.table-actions {
+    padding: var(--spacing-md) var(--spacing-lg);
+    background: var(--color-bg-tertiary);
+    border-top: 1px solid var(--color-border-medium);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+    .structure-table-header {
+        padding: var(--spacing-md) var(--spacing-lg);
+        font-size: var(--font-size-md);
+    }
+
+    .structure-cards-container {
+        max-height: 300px;
+        padding: 10px;
+    }
+
+    .structure-table-scroll {
+        max-height: 300px;
+    }
+
+    .structure-table th,
+    .structure-table td {
+        padding: var(--spacing-sm) 10px;
+        font-size: var(--font-size-sm);
+    }
+
+    .table-actions {
+        gap: var(--spacing-xs);
+        padding: 10px 12px;
+    }
+
+    .interaction-header {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-xs);
+    }
+
+    .pocket-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-sm);
+    }
+}
+
+/* ============================================
+   DARK MODE SUPPORT
+   ============================================ */
+
+@media (prefers-color-scheme: dark) {
+    .structure-table-card {
+        background: var(--color-bg-primary);
+    }
+
+    .structure-table-header {
+        background: var(--gradient-blue-dark);
+    }
+
+    .structure-cards-container::-webkit-scrollbar-track {
+        background: var(--color-gray-100);
+    }
+
+    .structure-cards-container::-webkit-scrollbar-thumb {
+        background: var(--color-gray-300);
+    }
+
+    .structure-cards-container::-webkit-scrollbar-thumb:hover {
+        background: var(--color-gray-400);
+    }
+
+    .structure-table thead {
+        background: var(--color-bg-secondary);
+    }
+
+    .structure-table th {
+        color: var(--color-text-secondary);
+        border-color: var(--color-border-light);
+    }
+
+    .structure-table tbody tr {
+        border-color: var(--color-border-light);
+    }
+
+    .structure-table tbody tr:hover {
+        background: var(--color-bg-tertiary);
+    }
+
+    .structure-table tbody tr.active {
+        background: #2a4a5a;
+        border-left-color: var(--color-primary);
+    }
+
+    .structure-table td {
+        color: var(--color-text-primary);
+    }
+
+    .table-actions {
+        background: var(--color-bg-secondary);
+        border-color: var(--color-border-light);
+    }
+
+    .interaction-header {
+        background: #2a4a5a;
+        color: var(--color-text-secondary);
+    }
+
+    .pocket-grid label,
+    .pocket-grid > div:nth-child(odd):not(.pocket-confidence-dropdown) {
+        color: var(--color-text-secondary);
+    }
+}

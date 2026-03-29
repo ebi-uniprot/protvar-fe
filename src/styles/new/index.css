@@ -1,0 +1,70 @@
+/**
+ * index.css - Main CSS Entry Point
+ * Import this file in your App.tsx or index.tsx
+ *
+ * Usage:
+ *   import './styles/new/index.css';
+ *
+ * Import order matters! Core → Components → Annotations → Features
+ */
+
+/* ==============================================
+   1. CORE - Variables, Reset, Typography
+   ============================================== */
+
+@import './core/variables.css';
+
+/* ==============================================
+   2. COMPONENTS - Shared UI elements
+   ============================================== */
+
+@import './components/buttons.css';
+@import './components/links.css';
+@import './components/collapsibles.css';
+@import './components/cards.css';
+@import './components/tables.css';
+@import './components/badges.css';
+
+/* ==============================================
+   3. ANNOTATION SYSTEM - Shared patterns
+   ============================================== */
+
+@import './annotation/annotation-base.css';
+@import './annotation/annotation-header.css';
+
+/* ==============================================
+   4. ANNOTATION TYPES - Specific implementations
+   ============================================== */
+
+/* These will be the existing files with updated class names */
+/* @import './annotation/function.css'; */
+/* @import './annotation/population.css'; */
+/* @import './annotation/structure.css'; */
+
+/* ==============================================
+   5. FEATURES - Specialized components
+   ============================================== */
+
+/* These will be the existing files */
+/* @import './features/predictions.css'; */
+/* @import './features/evidences.css'; */
+
+/* ==============================================
+   6. LEGACY - For backward compatibility
+   ============================================== */
+
+/* Import existing common.css for now */
+/* This can be removed once all styles are migrated */
+/* @import './common.css'; */
+
+/* ==============================================
+   NOTES:
+
+   - Variables are loaded first (CSS custom properties)
+   - Components are loaded next (buttons, links, etc.)
+   - Annotation base styles come after
+   - Specific annotation types override base
+   - Features come last
+
+   Dark mode is handled via @media queries in each file
+   ============================================== */

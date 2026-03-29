@@ -83,10 +83,10 @@ pdbe-molstar {
 
 .viewer-controls {
     position: absolute;
-    top: 12px;
+    bottom: 48px;
     right: 12px;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 6px;
     z-index: 10;
 }

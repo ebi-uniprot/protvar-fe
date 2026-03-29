@@ -1,0 +1,296 @@
+/**
+ * badges.css - Badge and label components
+ * Tags, labels, badges, and status indicators
+ */
+
+/* ============================================
+   BASE BADGE
+   ============================================ */
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 6px;
+    background: var(--color-gray-200);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+}
+
+/* ============================================
+   DATA RICHNESS BADGE
+   ============================================ */
+
+.data-richness-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: 3px 8px;
+    background: rgba(74, 144, 226, 0.1);
+    border: 1px solid rgba(74, 144, 226, 0.2);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-primary);
+    margin-left: var(--spacing-sm);
+}
+
+.data-richness-badge i {
+    font-size: 10px;
+}
+
+/* ============================================
+   POCKET BADGE
+   ============================================ */
+
+.pocket-badge {
+    background: var(--color-primary-lightest);
+    color: var(--color-primary);
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+}
+
+/* ============================================
+   STRUCTURE BADGE (Resolution, Method)
+   ============================================ */
+
+.structure-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 6px;
+    background: var(--color-gray-100);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-primary);
+}
+
+/* ============================================
+   CONFIDENCE LEVEL BADGES
+   ============================================ */
+
+.conf-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+}
+
+.conf-badge.conf-vhigh {
+    background: rgba(40, 167, 69, 0.1);
+    color: #28a745;
+}
+
+.conf-badge.conf-high {
+    background: rgba(92, 184, 92, 0.1);
+    color: #5cb85c;
+}
+
+.conf-badge.conf-low {
+    background: rgba(240, 173, 78, 0.1);
+    color: #f0ad4e;
+}
+
+.conf-badge.conf-vlow {
+    background: rgba(217, 83, 79, 0.1);
+    color: #d9534f;
+}
+
+/* ============================================
+   CONFIDENCE ICONS (Without background)
+   ============================================ */
+
+.conf-vhigh {
+    color: #28a745;
+}
+
+.conf-high {
+    color: #5cb85c;
+}
+
+.conf-low {
+    color: #f0ad4e;
+}
+
+.conf-vlow {
+    color: #d9534f;
+}
+
+.conf-vhigh,
+.conf-high,
+.conf-low,
+.conf-vlow {
+    font-size: var(--font-size-md);
+    margin-right: var(--spacing-xs);
+}
+
+/* ============================================
+   ALPHAFOLD CONFIDENCE COLORS (for PAE legend)
+   ============================================ */
+
+.confidence-color {
+    width: 30px;
+    height: 12px;
+    border-radius: 2px;
+    border: 1px solid var(--color-border-dark);
+}
+
+.conf-very-high {
+    background: #0053D6;
+}
+
+.conf-high {
+    background: #65CBF3;
+}
+
+.conf-low {
+    background: #FFDB13;
+}
+
+.conf-very-low {
+    background: #FF7D45;
+}
+
+/* ============================================
+   STATUS BADGES
+   ============================================ */
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+}
+
+.status-badge.status-success {
+    background: rgba(40, 167, 69, 0.1);
+    color: #28a745;
+}
+
+.status-badge.status-warning {
+    background: rgba(255, 193, 7, 0.1);
+    color: #ffc107;
+}
+
+.status-badge.status-danger {
+    background: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+}
+
+.status-badge.status-info {
+    background: rgba(23, 162, 184, 0.1);
+    color: #17a2b8;
+}
+
+/* ============================================
+   XREF SIGNIFICANCE BADGE
+   ============================================ */
+
+.xref-significance {
+    font-style: italic;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+    .badge,
+    .pocket-badge,
+    .structure-badge,
+    .conf-badge,
+    .status-badge {
+        font-size: 10px;
+        padding: 2px 5px;
+    }
+
+    .data-richness-badge {
+        font-size: 10px;
+        padding: 2px 6px;
+    }
+}
+
+/* ============================================
+   DARK MODE SUPPORT
+   ============================================ */
+
+@media (prefers-color-scheme: dark) {
+    .badge {
+        background: var(--color-bg-tertiary);
+        color: var(--color-text-primary);
+    }
+
+    .data-richness-badge {
+        background: rgba(110, 168, 254, 0.15);
+        border-color: rgba(110, 168, 254, 0.3);
+        color: var(--color-primary);
+    }
+
+    .pocket-badge {
+        background: rgba(110, 168, 254, 0.15);
+        color: var(--color-primary);
+    }
+
+    .structure-badge {
+        background: rgba(110, 168, 254, 0.15);
+        color: var(--color-primary);
+    }
+
+    .conf-badge.conf-vhigh {
+        background: rgba(40, 167, 69, 0.2);
+        color: #4ade80;
+    }
+
+    .conf-badge.conf-high {
+        background: rgba(92, 184, 92, 0.2);
+        color: #86efac;
+    }
+
+    .conf-badge.conf-low {
+        background: rgba(240, 173, 78, 0.2);
+        color: #fbbf24;
+    }
+
+    .conf-badge.conf-vlow {
+        background: rgba(217, 83, 79, 0.2);
+        color: #f87171;
+    }
+
+    .confidence-color {
+        border-color: var(--color-border-medium);
+    }
+
+    .status-badge.status-success {
+        background: rgba(40, 167, 69, 0.2);
+        color: #4ade80;
+    }
+
+    .status-badge.status-warning {
+        background: rgba(255, 193, 7, 0.2);
+        color: #fbbf24;
+    }
+
+    .status-badge.status-danger {
+        background: rgba(220, 53, 69, 0.2);
+        color: #f87171;
+    }
+
+    .status-badge.status-info {
+        background: rgba(23, 162, 184, 0.2);
+        color: #38bdf8;
+    }
+
+    .xref-significance {
+        color: var(--color-text-tertiary);
+    }
+}

@@ -1,0 +1,301 @@
+/**
+ * MODERNIZED ANNOTATION HEADER
+ * With data-richness gradient coloring for icons
+ */
+
+/* ============================================
+   ANNOTATION HEADER
+   ============================================ */
+
+.annotation-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e8e8e8;
+}
+
+.annotation-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.annotation-title h5 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+}
+
+/* ============================================
+   ANNOTATION ICON WITH DATA-RICHNESS GRADIENT
+   ============================================ */
+
+.annotation-icon {
+    width: 28px;
+    height: 28px;
+    padding: 6px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+/* Default state (no data or data-fill not set) */
+.annotation-icon {
+    background: linear-gradient(135deg, #e0e0e0 0%, #c0c0c0 100%);
+    opacity: 0.6;
+}
+
+/* Data richness levels - controlled by data-fill attribute (0.0 to 1.0) */
+
+/* Very low (0.0 - 0.2) - Gray */
+.annotation-icon[data-fill^="0.0"],
+.annotation-icon[data-fill^="0.1"] {
+    background: linear-gradient(135deg, #e0e0e0 0%, #c8c8c8 100%);
+    opacity: 0.7;
+}
+
+/* Low (0.2 - 0.4) - Light Blue */
+.annotation-icon[data-fill^="0.2"],
+.annotation-icon[data-fill^="0.3"] {
+    background: linear-gradient(135deg, #d0e8f8 0%, #b0d8f0 100%);
+    opacity: 0.8;
+}
+
+/* Medium (0.4 - 0.6) - Blue */
+.annotation-icon[data-fill^="0.4"],
+.annotation-icon[data-fill^="0.5"] {
+    background: linear-gradient(135deg, #8fc9e8 0%, #6bb8e0 100%);
+    opacity: 0.9;
+}
+
+/* High (0.6 - 0.8) - Strong Blue */
+.annotation-icon[data-fill^="0.6"],
+.annotation-icon[data-fill^="0.7"] {
+    background: linear-gradient(135deg, #5eb8e8 0%, #4a90e2 100%);
+    opacity: 1;
+    box-shadow: 0 2px 6px rgba(74, 144, 226, 0.2);
+}
+
+/* Very High (0.8 - 1.0) - Vibrant Blue with glow */
+.annotation-icon[data-fill^="0.8"],
+.annotation-icon[data-fill^="0.9"],
+.annotation-icon[data-fill="1.0"],
+.annotation-icon[data-fill="1"] {
+    background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+    opacity: 1;
+    box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+    animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+    0%, 100% {
+        box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+    }
+    50% {
+        box-shadow: 0 4px 16px rgba(74, 144, 226, 0.5);
+    }
+}
+
+/* Hover effect - scales and brightens */
+.annotation-icon:hover {
+    transform: scale(1.1);
+    filter: brightness(1.1);
+}
+
+/* ============================================
+   ANNOTATION ACTIONS
+   ============================================ */
+
+.annotation-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Help button */
+.help-icon {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 10px;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    color: #555;
+    transition: all 0.2s ease;
+}
+
+.help-icon:hover {
+    background: #f8f9fa;
+    border-color: #4a90e2;
+    color: #4a90e2;
+}
+
+.help-icon i {
+    font-size: 14px;
+    transition: color 0.2s ease;
+}
+
+.help-icon:hover i {
+    color: #4a90e2;
+}
+
+/* Share button */
+.icon-btn {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 6px 10px;
+    cursor: pointer;
+    color: #555;
+    font-size: 16px;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-btn:hover {
+    background: #f8f9fa;
+    border-color: #4a90e2;
+    color: #4a90e2;
+}
+
+.icon-btn:active {
+    transform: scale(0.95);
+}
+
+/* ============================================
+   DATA RICHNESS INDICATOR (Optional badge)
+   ============================================ */
+
+.data-richness-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    background: rgba(74, 144, 226, 0.1);
+    border: 1px solid rgba(74, 144, 226, 0.2);
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #4a90e2;
+    margin-left: 8px;
+}
+
+.data-richness-badge i {
+    font-size: 10px;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+    .annotation-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 14px 16px;
+    }
+
+    .annotation-title {
+        gap: 10px;
+    }
+
+    .annotation-title h5 {
+        font-size: 16px;
+    }
+
+    .annotation-icon {
+        width: 24px;
+        height: 24px;
+        padding: 5px;
+    }
+
+    .annotation-actions {
+        align-self: flex-end;
+    }
+}
+
+/* ============================================
+   DARK MODE
+   ============================================ */
+
+@media (prefers-color-scheme: dark) {
+    .annotation-header {
+        background: linear-gradient(135deg, #2a2a2a 0%, #1e1e1e 100%);
+        border-color: #3a3a3a;
+    }
+
+    .annotation-title h5 {
+        color: #e0e0e0;
+    }
+
+    /* Icon gradients adjusted for dark mode */
+    .annotation-icon[data-fill^="0.0"],
+    .annotation-icon[data-fill^="0.1"] {
+        background: linear-gradient(135deg, #4a4a4a 0%, #3a3a3a 100%);
+    }
+
+    .annotation-icon[data-fill^="0.2"],
+    .annotation-icon[data-fill^="0.3"] {
+        background: linear-gradient(135deg, #3a5a7a 0%, #2a4a6a 100%);
+    }
+
+    .annotation-icon[data-fill^="0.4"],
+    .annotation-icon[data-fill^="0.5"] {
+        background: linear-gradient(135deg, #4a6a8a 0%, #3a5a7a 100%);
+    }
+
+    .annotation-icon[data-fill^="0.6"],
+    .annotation-icon[data-fill^="0.7"] {
+        background: linear-gradient(135deg, #5a7a9a 0%, #4a6a8a 100%);
+        box-shadow: 0 2px 6px rgba(90, 122, 154, 0.3);
+    }
+
+    .annotation-icon[data-fill^="0.8"],
+    .annotation-icon[data-fill^="0.9"],
+    .annotation-icon[data-fill="1.0"],
+    .annotation-icon[data-fill="1"] {
+        background: linear-gradient(135deg, #6ea8fe 0%, #5a8fde 100%);
+        box-shadow: 0 4px 12px rgba(110, 168, 254, 0.4);
+    }
+
+    @keyframes pulse-glow {
+        0%, 100% {
+            box-shadow: 0 4px 12px rgba(110, 168, 254, 0.4);
+        }
+        50% {
+            box-shadow: 0 4px 16px rgba(110, 168, 254, 0.6);
+        }
+    }
+
+    .help-icon,
+    .icon-btn {
+        background: #2a2a2a;
+        border-color: #3a3a3a;
+        color: #b0b0b0;
+    }
+
+    .help-icon:hover,
+    .icon-btn:hover {
+        background: #3a3a3a;
+        border-color: #6ea8fe;
+        color: #6ea8fe;
+    }
+
+    .data-richness-badge {
+        background: rgba(110, 168, 254, 0.15);
+        border-color: rgba(110, 168, 254, 0.3);
+        color: #6ea8fe;
+    }
+}

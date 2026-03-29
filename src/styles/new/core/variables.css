@@ -1,0 +1,227 @@
+/**
+ * variables.css - CSS Custom Properties
+ * Core variables used throughout the application
+ */
+
+:root {
+    /* ============================================
+       COLORS - Primary Palette
+       ============================================ */
+
+    /* Primary Blue */
+    --color-primary: #4a90e2;
+    --color-primary-dark: #357abd;
+    --color-primary-light: #6ea8fe;
+    --color-primary-lighter: #8fc9e8;
+    --color-primary-lightest: #d0e8f8;
+
+    /* Grays */
+    --color-gray-50: #fafafa;
+    --color-gray-100: #f8f9fa;
+    --color-gray-200: #f0f0f0;
+    --color-gray-300: #e8e8e8;
+    --color-gray-400: #e0e0e0;
+    --color-gray-500: #d0d0d0;
+    --color-gray-600: #999;
+    --color-gray-700: #666;
+    --color-gray-800: #555;
+    --color-gray-900: #333;
+
+    /* Semantic Colors */
+    --color-success: #28a745;
+    --color-warning: #ffc107;
+    --color-danger: #dc3545;
+    --color-info: #17a2b8;
+
+    /* Text Colors */
+    --color-text-primary: #333;
+    --color-text-secondary: #666;
+    --color-text-tertiary: #999;
+    --color-text-muted: #888;
+
+    /* Background Colors */
+    --color-bg-primary: #ffffff;
+    --color-bg-secondary: #fafafa;
+    --color-bg-tertiary: #f8f9fa;
+    --color-bg-elevated: #ffffff;
+
+    /* Border Colors */
+    --color-border-light: #e8e8e8;
+    --color-border-medium: #e0e0e0;
+    --color-border-dark: #d0d0d0;
+
+    /* ============================================
+       GRADIENTS
+       ============================================ */
+
+    --gradient-blue: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+    --gradient-blue-dark: linear-gradient(135deg, #2563ab 0%, #1e4a7a 100%);
+    --gradient-blue-light: linear-gradient(135deg, #6ea8fe 0%, #4a90e2 100%);
+    --gradient-gray: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+
+    /* Data Richness Gradients */
+    --gradient-richness-none: linear-gradient(135deg, #e0e0e0 0%, #c0c0c0 100%);
+    --gradient-richness-low: linear-gradient(135deg, #d0e8f8 0%, #b0d8f0 100%);
+    --gradient-richness-medium: linear-gradient(135deg, #8fc9e8 0%, #6bb8e0 100%);
+    --gradient-richness-high: linear-gradient(135deg, #5eb8e8 0%, #4a90e2 100%);
+    --gradient-richness-very-high: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+
+    /* ============================================
+       SPACING
+       ============================================ */
+
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 12px;
+    --spacing-lg: 16px;
+    --spacing-xl: 20px;
+    --spacing-2xl: 24px;
+    --spacing-3xl: 32px;
+
+    /* ============================================
+       BORDER RADIUS
+       ============================================ */
+
+    --radius-sm: 4px;
+    --radius-md: 6px;
+    --radius-lg: 8px;
+    --radius-xl: 12px;
+    --radius-full: 9999px;
+
+    /* ============================================
+       SHADOWS
+       ============================================ */
+
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.15);
+    --shadow-xl: 0 8px 24px rgba(0, 0, 0, 0.2);
+
+    /* Colored shadows */
+    --shadow-primary-sm: 0 2px 6px rgba(74, 144, 226, 0.2);
+    --shadow-primary-md: 0 4px 12px rgba(74, 144, 226, 0.3);
+    --shadow-primary-lg: 0 4px 16px rgba(74, 144, 226, 0.4);
+
+    /* ============================================
+       TYPOGRAPHY
+       ============================================ */
+
+    --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    --font-family-mono: 'Courier New', Consolas, Monaco, monospace;
+
+    /* Font Sizes */
+    --font-size-xs: 11px;
+    --font-size-sm: 12px;
+    --font-size-base: 13px;
+    --font-size-md: 14px;
+    --font-size-lg: 15px;
+    --font-size-xl: 16px;
+    --font-size-2xl: 18px;
+    --font-size-3xl: 20px;
+
+    /* Font Weights */
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+
+    /* Line Heights */
+    --line-height-tight: 1.2;
+    --line-height-normal: 1.5;
+    --line-height-relaxed: 1.6;
+
+    /* ============================================
+       TRANSITIONS
+       ============================================ */
+
+    --transition-fast: 0.15s ease;
+    --transition-base: 0.2s ease;
+    --transition-slow: 0.3s ease;
+
+    /* ============================================
+       Z-INDEX LAYERS
+       ============================================ */
+
+    --z-base: 1;
+    --z-dropdown: 10;
+    --z-sticky: 20;
+    --z-overlay: 100;
+    --z-modal: 1000;
+    --z-tooltip: 1010;
+
+    /* ============================================
+       LAYOUT
+       ============================================ */
+
+    --max-width-content: 1400px;
+    --sidebar-width: 280px;
+    --header-height: 64px;
+}
+
+/* ============================================
+   DARK MODE VARIABLES
+   ============================================ */
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        /* Colors - Dark Mode */
+        --color-primary: #6ea8fe;
+        --color-primary-dark: #5a8fde;
+        --color-primary-light: #9ec5fe;
+
+        /* Grays - Dark Mode */
+        --color-gray-50: #1e1e1e;
+        --color-gray-100: #2a2a2a;
+        --color-gray-200: #3a3a3a;
+        --color-gray-300: #4a4a4a;
+        --color-gray-400: #5a5a5a;
+        --color-gray-500: #6a6a6a;
+        --color-gray-600: #999;
+        --color-gray-700: #b0b0b0;
+        --color-gray-800: #d0d0d0;
+        --color-gray-900: #e0e0e0;
+
+        /* Text Colors - Dark Mode */
+        --color-text-primary: #e0e0e0;
+        --color-text-secondary: #b0b0b0;
+        --color-text-tertiary: #999;
+        --color-text-muted: #888;
+
+        /* Background Colors - Dark Mode */
+        --color-bg-primary: #1e1e1e;
+        --color-bg-secondary: #2a2a2a;
+        --color-bg-tertiary: #252525;
+        --color-bg-elevated: #2a2a2a;
+
+        /* Border Colors - Dark Mode */
+        --color-border-light: #3a3a3a;
+        --color-border-medium: #4a4a4a;
+        --color-border-dark: #5a5a5a;
+
+        /* Gradients - Dark Mode */
+        --gradient-blue: linear-gradient(135deg, #2563ab 0%, #1e4a7a 100%);
+        --gradient-blue-dark: linear-gradient(135deg, #1e4a7a 0%, #163a5a 100%);
+        --gradient-blue-light: linear-gradient(135deg, #6ea8fe 0%, #5a8fde 100%);
+        --gradient-gray: linear-gradient(135deg, #2a2a2a 0%, #1e1e1e 100%);
+
+        /* Data Richness Gradients - Dark Mode */
+        --gradient-richness-none: linear-gradient(135deg, #4a4a4a 0%, #3a3a3a 100%);
+        --gradient-richness-low: linear-gradient(135deg, #3a5a7a 0%, #2a4a6a 100%);
+        --gradient-richness-medium: linear-gradient(135deg, #4a6a8a 0%, #3a5a7a 100%);
+        --gradient-richness-high: linear-gradient(135deg, #5a7a9a 0%, #4a6a8a 100%);
+        --gradient-richness-very-high: linear-gradient(135deg, #6ea8fe 0%, #5a8fde 100%);
+
+        /* Shadows - Dark Mode */
+        --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.5);
+        --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.6);
+        --shadow-xl: 0 8px 24px rgba(0, 0, 0, 0.7);
+
+        /* Colored shadows - Dark Mode */
+        --shadow-primary-sm: 0 2px 6px rgba(110, 168, 254, 0.3);
+        --shadow-primary-md: 0 4px 12px rgba(110, 168, 254, 0.4);
+        --shadow-primary-lg: 0 4px 16px rgba(110, 168, 254, 0.6);
+    }
+}

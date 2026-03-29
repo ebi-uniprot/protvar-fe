@@ -1,0 +1,374 @@
+/**
+ * annotation-base.css - Shared annotation patterns
+ * Common styles used across Function, Population, and Structure annotations
+ */
+
+/* ============================================
+   EXPANDED ROW CONTAINER
+   ============================================ */
+
+.expanded-row {
+    padding: 0;
+}
+
+/* ============================================
+   ANNOTATION DATA CONTAINER
+   ============================================ */
+
+.annotation-data-container {
+    padding: var(--spacing-xl);
+}
+
+/* ============================================
+   ANNOTATION CONTENT LAYOUTS
+   ============================================ */
+
+.annotation-content {
+    /* Base content area */
+    margin-top: var(--spacing-xl);
+}
+
+/* Grid layout for two-column annotations */
+.annotation-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-xl);
+    margin: var(--spacing-xl) 0;
+}
+
+/* Structure-specific layout (tables left, viewer right) */
+.annotation-content.structure-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-xl);
+    margin: var(--spacing-xl) 0;
+}
+
+/* ============================================
+   ANNOTATION COLUMNS
+   ============================================ */
+
+.annotation-column {
+    background: var(--color-bg-secondary);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+}
+
+/* Column header - seamlessly at top */
+.column-header {
+    display: block;
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: white;
+    padding: 14px 20px;
+    background: var(--gradient-blue);
+    margin: 0;
+    border: none;
+}
+
+/* Content padding below header */
+.annotation-column > *:not(.column-header) {
+    padding-left: var(--spacing-xl);
+    padding-right: var(--spacing-xl);
+}
+
+.annotation-column > .column-header + * {
+    padding-top: var(--spacing-xl);
+}
+
+.annotation-column > *:last-child {
+    padding-bottom: var(--spacing-xl);
+}
+
+/* ============================================
+   STRUCTURE LAYOUT SPECIFIC COLUMNS
+   ============================================ */
+
+/* Tables column (left side) */
+.annotation-tables-column,
+.structure-tables-column {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    overflow-y: auto;
+    max-height: 800px;
+}
+
+/* Viewer column (right side) */
+.annotation-viewer-column,
+.structure-viewer-column {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+/* ============================================
+   SECTION TITLES & CONTENT
+   ============================================ */
+
+.section-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-secondary);
+    margin: var(--spacing-xl) 0 var(--spacing-md) 0;
+    padding: 10px 14px;
+    background: white;
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    border: 1px solid var(--color-border-light);
+    border-bottom: none;
+}
+
+.section-title:first-of-type {
+    margin-top: 0;
+}
+
+/* Content area below section title */
+.section-content {
+    background: white;
+    border: 1px solid var(--color-border-light);
+    border-top: none;
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+    padding: 14px;
+}
+
+/* ============================================
+   SECTION WRAPPERS
+   ============================================ */
+
+.allele-freq-section {
+    margin-bottom: var(--spacing-lg);
+}
+
+.association-section {
+    margin-top: var(--spacing-2xl);
+}
+
+.population-freq-section {
+    margin-top: var(--spacing-md);
+}
+
+.struct-pred-section {
+    margin-bottom: var(--spacing-md);
+}
+
+.struct-pred-section:last-child {
+    margin-bottom: 0;
+}
+
+.xref-section {
+    margin-top: var(--spacing-sm);
+}
+
+/* ============================================
+   NO DATA STATE
+   ============================================ */
+
+.no-data-message {
+    padding: var(--spacing-xl);
+    text-align: center;
+    color: var(--color-text-tertiary);
+    font-style: italic;
+    background: var(--color-bg-secondary);
+    border-radius: var(--radius-md);
+    border: 1px dashed var(--color-border-dark);
+}
+
+.submitted-variant-no-data {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-secondary);
+    font-style: italic;
+    padding: var(--spacing-md) 0;
+}
+
+.no-structure-message {
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-md);
+}
+
+/* ============================================
+   NESTED LISTS
+   ============================================ */
+
+.nested-list {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.nested-list li {
+    margin: 6px 0;
+}
+
+.nested-list ul {
+    list-style: disc;
+    padding-left: 20px;
+    margin: var(--spacing-xs) 0;
+}
+
+.nested-list b {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-secondary);
+}
+
+/* Flat list variant (horizontal) */
+.flatList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    list-style: none;
+    padding-left: 0;
+    margin: var(--spacing-xs) 0;
+}
+
+.flatList li {
+    margin: 0;
+}
+
+.flatList li::after {
+    content: ',';
+    margin-left: 2px;
+    color: var(--color-text-tertiary);
+}
+
+.flatList li:last-child::after {
+    content: '';
+}
+
+/* ============================================
+   EXPANDABLE TEXT COMPONENT
+   ============================================ */
+
+.expandable-text {
+    line-height: var(--line-height-relaxed);
+}
+
+.expandable-text.collapsed {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* ============================================
+   INTRO TEXT
+   ============================================ */
+
+.colocated-variants-intro {
+    margin-bottom: var(--spacing-md);
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+    line-height: var(--line-height-normal);
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 1200px) {
+    .annotation-grid,
+    .annotation-content.structure-layout {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
+
+    /* On mobile, show viewer first (above tables) */
+    .annotation-content.structure-layout .annotation-viewer-column,
+    .annotation-content.structure-layout .structure-viewer-column {
+        order: -1;
+    }
+
+    .annotation-tables-column,
+    .structure-tables-column {
+        max-height: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .annotation-data-container {
+        padding: var(--spacing-lg);
+    }
+
+    .annotation-grid,
+    .annotation-content.structure-layout {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
+
+    .annotation-column > *:not(.column-header) {
+        padding-left: var(--spacing-lg);
+        padding-right: var(--spacing-lg);
+    }
+
+    .annotation-column > .column-header + * {
+        padding-top: var(--spacing-lg);
+    }
+
+    .annotation-column > *:last-child {
+        padding-bottom: var(--spacing-lg);
+    }
+
+    .column-header {
+        font-size: var(--font-size-md);
+        padding: var(--spacing-md) var(--spacing-lg);
+    }
+
+    .section-title {
+        font-size: var(--font-size-md);
+    }
+
+    .no-data-message {
+        padding: var(--spacing-lg);
+    }
+}
+
+/* ============================================
+   DARK MODE SUPPORT
+   ============================================ */
+
+@media (prefers-color-scheme: dark) {
+    .annotation-column {
+        background: var(--color-bg-primary);
+    }
+
+    .column-header {
+        background: var(--gradient-blue-dark);
+        color: var(--color-text-primary);
+    }
+
+    .section-title {
+        color: var(--color-text-secondary);
+        background: var(--color-bg-secondary);
+        border-color: var(--color-border-light);
+    }
+
+    .section-content {
+        background: var(--color-bg-secondary);
+        border-color: var(--color-border-light);
+    }
+
+    .no-data-message,
+    .submitted-variant-no-data,
+    .no-structure-message {
+        background: var(--color-bg-secondary);
+        border-color: var(--color-border-light);
+        color: var(--color-text-tertiary);
+    }
+
+    .nested-list b {
+        color: var(--color-text-secondary);
+    }
+
+    .flatList li::after {
+        color: var(--color-text-tertiary);
+    }
+
+    .colocated-variants-intro {
+        color: var(--color-text-tertiary);
+    }
+}
