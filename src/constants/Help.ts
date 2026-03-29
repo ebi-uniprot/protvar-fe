@@ -21,7 +21,7 @@ export const HELP_FILES: HelpFile[] = [
   { name: 'downloads-page', md: true, title: 'Downloads Page' },
   { name: 'further-info', md: true, title: 'Further Information' },
   { name: 'download-file', md: true, title: 'Download File Format' },
-  { name: 'direct-queries', md: true, title: 'Direct Queries' },
+  { name: 'direct-queries', md: true, title: 'Direct Queries' }, // TODO rename to ProtVar Links and use the protvar-link style
   { name: 'api', md: true, title: 'API' },
   { name: 'annotation-linking', md: true, title: 'Annotation Linking' },
   { name: 'structure-linking', md: true, title: 'Structure Linking' },
