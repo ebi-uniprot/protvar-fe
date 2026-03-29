@@ -4,7 +4,7 @@
   "private": false,
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "7.21.11",
-    "@playwright/test": "1.30.0",
+    "@playwright/test": "1.50.0",
     "@types/file-saver": "2.0.5",
     "@types/react": "18.2.74",
     "@types/react-dom": "18.2.23",
@@ -61,6 +61,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "engines": {
+    "node": ">=22.0.0"
   },
   "dependencies": {
     "sass": "1.62.1"

@@ -28,7 +28,7 @@ workflow:
     - when: always
 
 .js:
-  image: dockerhub.ebi.ac.uk/uniprot/variation/protvar-deploy/cached/node-18.20
+  image: dockerhub.ebi.ac.uk/uniprot/variation/protvar-deploy/cached/node-22
   before_script:
     - node --version
     - npm --version
