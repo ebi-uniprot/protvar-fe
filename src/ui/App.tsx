@@ -18,7 +18,7 @@ import {StatsProvider} from "../context/StatsContext";
 import {DEFAULT_PAGE_SIZE} from "../constants/const";
 import NotFoundPage from "./pages/NotFoundPage";
 import {MarkdownProvider} from "../context/MarkdownContext";
-import "../styles/new/common.css";
+import '../styles/new/index.css';
 
 const empty: ReactElement = <></>;
 
@@ -77,8 +77,16 @@ export default function App() {
         <Routes>
           <Route path={HOME} element={<HomePage />} />
           <Route path={`${RESULT}`} element={<ResultListPage />} />
+
+          {/* Search route for complex inputs */}
+          {/*<Route path="/search" element={<SearchPage />} />*/}
+
+          {/* Clean URL route for simple identifiers */}
+          {/*<Route path="/:identifier" element={<SearchPage />} />*/}
+
           {/* Route for user inputId - result/{inputId} */}
           <Route path={`${RESULT}/:input`} element={<ResultPage />} />
+          {/*use /search with backward compatibility for /query */}
           <Route path={QUERY} element={<QueryPage queryType="search" />} />
           <Route path={API_ERROR} element={<APIErrorPage />} />
           <Route path={ABOUT} element={<AboutPage />} />

@@ -24,6 +24,20 @@ function PopulationData(props: PopulationDataProps) {
   const { annotation, populationObservationsUri, variantAA, genomicVariant } = props;
   const [poApiData, setPoApiData] = useState<PopulationObservation>();
 
+  // Calculate data richness
+  const calculateDataRichness = (data?: PopulationObservation): number => {
+    if (!data) return 0;
+
+    let score = 0;
+    if (data.freqMap && Object.keys(data.freqMap).length > 0) score += 0.4;
+    if (data.variants && data.variants.length > 0) score += 0.3;
+    if (data.variants?.[0]?.association) score += 0.3;
+
+    return Math.min(score, 1.0);
+  };
+
+  //const dataRichness = poApiData ? calculateDataRichness(poApiData) : Math.random();
+  const dataRichness = calculateDataRichness(poApiData);
 
   useEffect(() => {
     getPopulationData(populationObservationsUri).then(
@@ -34,9 +48,7 @@ function PopulationData(props: PopulationDataProps) {
   }, [populationObservationsUri]);
 
   // Show loader while fetching data
-  if (!poApiData) {
-    return <LoaderRow />;
-  }
+  if (!poApiData) return <LoaderRow />;
 
   const proteinVariants = poApiData.variants || [];
   // If no protein variants are found and no allele frequency is available
@@ -62,17 +74,27 @@ function PopulationData(props: PopulationDataProps) {
       <td colSpan={TOTAL_COLS} className="expanded-row">
         <div className="annotation-data-container">
           <div className="annotation-header">
-            <h5>
-              <img src={PopulationIcon} className="click-icon" alt="population icon" title="Population observation" />
-              Population Observation
-            </h5>
+            <div className="annotation-title">
+              <img
+                src={PopulationIcon}
+                className="annotation-icon"
+                data-fill={dataRichness.toFixed(1)}
+                alt="Population observation"
+                title={`Data richness: ${(dataRichness * 100).toFixed(0)}%`}
+              />
+              <h5>Population Observation</h5>
+              {dataRichness > 0.7 && (
+                <span className="data-richness-badge">
+                  <i className="bi bi-check-circle-fill"></i>
+                  Rich data
+                </span>
+              )}
+            </div>
             <div className="annotation-actions">
               <HelpButton title="" content={<HelpContent name="population-observations"/>}/>
-              <Spaces count={2}/>
               <ShareAnnotationIcon annotation={props.annotation}/>
             </div>
           </div>
-
           <div className="annotation-grid">
             {/* Left Column: Submitted Variant Details */}
             <div className="annotation-column">
@@ -116,11 +138,28 @@ function PopulationData(props: PopulationDataProps) {
 }
 
 function NoPopulationDataRow() {
-  return <tr>
-    <td colSpan={TOTAL_COLS} className="expanded-row">
-      <div className="column">No Population Observation to report</div>
-    </td>
-  </tr>
+  return (
+    <tr>
+      <td colSpan={TOTAL_COLS} className="expanded-row">
+        <div className="annotation-data-container">
+          <div className="annotation-header">
+            <div className="annotation-title">
+              <img
+                src={PopulationIcon}
+                className="annotation-icon"
+                data-fill="0.0"
+                alt="Population observation"
+              />
+              <h5>Population Observation</h5>
+            </div>
+          </div>
+          <div className="no-data-message">
+            No population observation data available
+          </div>
+        </div>
+      </td>
+    </tr>
+  );
 }
 
 export default PopulationData;

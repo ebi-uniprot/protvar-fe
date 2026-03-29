@@ -8,7 +8,7 @@ import {useMolstarController} from "../useMolstarController";
 import {useStructureUrl} from "../useStructureUrl";
 
 
-interface InteractionInfoTableProps {
+interface InteractingStructureTableProps {
   isoFormAccession: string;
   interactionData: Interaction[];
   selectedInteraction: string;
@@ -18,7 +18,7 @@ interface InteractionInfoTableProps {
   urlParams: ReturnType<typeof useStructureUrl>;
 }
 
-function InteractionInfoTable({
+function InteractingStructureTable({
                                 isoFormAccession,
                                 interactionData,
                                 selectedInteraction,
@@ -26,7 +26,7 @@ function InteractionInfoTable({
                                 aaPos,
                                 molstar,
                                 urlParams,
-                              }: InteractionInfoTableProps) {
+                              }: InteractingStructureTableProps) {
   const rows: Array<React.JSX.Element> = [];
   let options = <></>
 
@@ -88,4 +88,4 @@ function InteractionInfoTable({
   </div>
 }
 
-export default InteractionInfoTable;
+export default InteractingStructureTable;

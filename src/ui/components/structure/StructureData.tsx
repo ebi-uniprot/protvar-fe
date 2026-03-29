@@ -3,7 +3,7 @@ import {TOTAL_COLS} from '../../../constants/SearchResultTable';
 import PdbeStructureTable from './tables/PdbeStructureTable';
 import PredictedStructureTable from './tables/PredictedStructureTable';
 import PdbeMolstar from "./viewer/PdbeMolstar";
-import InteractionInfoTable from "./tables/InteractionInfoTable";
+import InteractingStructureTable from "./tables/InteractingStructureTable";
 import LoaderRow from "../../pages/result/LoaderRow";
 import {getPredictedStructure} from "../../../services/AlphafoldService";
 import {getFunctionalData, getStructureData} from "../../../services/ProtVarService";
@@ -12,7 +12,6 @@ import {AlphafoldResponseElement} from "../../../types/AlphafoldResponse";
 import StructureIcon from "../../../images/structures-3d.svg";
 import {HelpContent} from "../help/HelpContent";
 import {HelpButton} from "../help/HelpButton";
-import Spaces from "../../elements/Spaces";
 import {ShareAnnotationIcon} from "../common/ShareLink";
 import {ALPHAFILL_URL, hasAlphafillStructure} from "../../../services/AlphafillService";
 import {Interaction, Pocket} from "../../../types/Prediction";
@@ -43,7 +42,7 @@ function StructureData(props: StructureDataProps) {
   const urlParams = useStructureUrl();
 
   const [pdbeData, setPdbeData] = useState<PdbeStructure[]>([]);
-  const [predictedStructureData, setPredictedStructureData] = useState<PredictedStructure[]>([]);
+  const [predictedData, setPredictedData] = useState<PredictedStructure[]>([]);
   const [interactionData, setInteractionData] = useState<Interaction[]>([]);
   const [pocketData, setPocketData] = useState<Pocket[]>([]);
   const [selected, setSelected] = useState<PdbeStructure | PredictedStructure | Interaction | null>(null);
@@ -53,7 +52,20 @@ function StructureData(props: StructureDataProps) {
   const hasLoadedFromUrl = useRef(false);
 
   const addPredictedStructures = (newItems: PredictedStructure[]) =>
-    setPredictedStructureData((prev) => [...prev, ...newItems]);
+    setPredictedData((prev) => [...prev, ...newItems]);
+
+  // Calculate data richness
+  const calculateDataRichness = (): number => {
+
+    let score = 0;
+    if (pdbeData && pdbeData.length > 0) score += 0.4;
+    if (predictedData && predictedData.length > 0) score += 0.3;
+    if (interactionData && interactionData.length > 0) score += 0.3;
+
+    return Math.min(score, 1.0);
+  };
+
+  const dataRichness = calculateDataRichness();
 
   // Fetch structures and functional data
   useEffect(() => {
@@ -188,10 +200,10 @@ function StructureData(props: StructureDataProps) {
 
         case "prediction":
           if (id && id.toLowerCase() === "alphafill") {
-            structureToLoad = predictedStructureData.find((p) => "modelEntityId" in p && p.modelEntityId.startsWith("AlphaFill-")) || null;
+            structureToLoad = predictedData.find((p) => "modelEntityId" in p && p.modelEntityId.startsWith("AlphaFill-")) || null;
           } else {
             // Use AlphaFold as default (or first available prediction)
-            structureToLoad = predictedStructureData.find((p) => "uniprotAccession" in p) || predictedStructureData[0] || null;
+            structureToLoad = predictedData.find((p) => "uniprotAccession" in p) || predictedData[0] || null;
           }
           if (structureToLoad) urlParams.clearIncompatibleActions("prediction");
           break;
@@ -212,8 +224,8 @@ function StructureData(props: StructureDataProps) {
       if (pdbeData.length > 0) {
         structureToLoad = pdbeData[0];
         urlParams.clearIncompatibleActions("pdb");
-      } else if (predictedStructureData.length > 0) {
-        structureToLoad = predictedStructureData[0];
+      } else if (predictedData.length > 0) {
+        structureToLoad = predictedData[0];
         urlParams.clearIncompatibleActions("prediction");
       }
     }
@@ -228,7 +240,7 @@ function StructureData(props: StructureDataProps) {
         setIsPaeOpen(true);
       }
     }
-  }, [pdbeData, predictedStructureData, interactionData, isLoading, urlParams]);
+  }, [pdbeData, predictedData, interactionData, isLoading, urlParams]);
 
   // Apply URL actions when selected (only on initial load from URL)
   const hasAppliedUrlActions = useRef(false);
@@ -339,82 +351,89 @@ function StructureData(props: StructureDataProps) {
   return (
     <tr>
       <td colSpan={TOTAL_COLS} className="expanded-row">
-        <div className="significances-groups">
-          <div className="column">
-            <div className="annotation-header">
-              <h5>
-                <img src={StructureIcon} className="click-icon" alt="structure icon" title="3D structure" />
-                3D Structures
-              </h5>
-              <div className="annotation-actions">
-                <HelpButton title="" content={<HelpContent name="structure-annotations"/>}/>
-                <Spaces count={2}/>
-                <ShareAnnotationIcon annotation={props.annotation}/>
-              </div>
+        <div className="annotation-data-container">
+          <div className="annotation-header">
+            <div className="annotation-title">
+              <img
+                src={StructureIcon}
+                className="annotation-icon"
+                data-fill={dataRichness.toFixed(1)}
+                alt="3D structure"
+                title={`Data richness: ${(dataRichness * 100).toFixed(0)}%`}
+              />
+              <h5>3D Structures</h5>
+              {dataRichness > 0.7 && (
+                <span className="data-richness-badge">
+                  <i className="bi bi-check-circle-fill"></i>
+                  Rich data
+                </span>
+              )}
+            </div>
+            <div className="annotation-actions">
+              <HelpButton title="" content={<HelpContent name="structure-annotations"/>}/>
+              <ShareAnnotationIcon annotation={props.annotation}/>
+            </div>
+          </div>
+          {/* Content - Tables Left, Viewer Right */}
+          <div className="annotation-content structure-layout">
+            <div className="annotation-tables-column">
+              {pdbeData.length > 0 && (
+                <PdbeStructureTable
+                  isoFormAccession={isoFormAccession}
+                  pdbeData={pdbeData}
+                  selectedPdbId={"pdbId" in selected ? selected.pdbId : ""}
+                  setSelected={setSelected}
+                  molstar={molstar}
+                  urlParams={urlParams}
+                />
+              )}
+              {predictedData.length > 0 && (
+                <PredictedStructureTable
+                  isoFormAccession={isoFormAccession}
+                  predictedStructureData={predictedData}
+                  selectedPredictedStructure={"modelEntityId" in selected ? selected.modelEntityId : ""}
+                  setSelected={(structure) => {
+                    setSelected(structure);
+                    if ("paeImageUrl" in structure) {
+                      setPaeUrl(structure.paeImageUrl);
+                      setIsPaeOpen(true);
+                    } else {
+                      setIsPaeOpen(false);
+                    }
+                  }}
+                  aaPos={aaPosition}
+                  pocketData={pocketData}
+                  molstar={molstar}
+                  urlParams={urlParams}
+                />
+              )}
+              {interactionData.length > 0 && (
+                <InteractingStructureTable
+                  isoFormAccession={isoFormAccession}
+                  interactionData={interactionData}
+                  selectedInteraction={"a" in selected && "b" in selected ? (selected.a + "_" + selected.b) : ""}
+                  setSelected={(interaction) => {
+                    setSelected(interaction);
+                    setIsPaeOpen(false);
+                  }}
+                  aaPos={aaPosition}
+                  molstar={molstar}
+                  urlParams={urlParams}
+                />
+              )}
             </div>
 
-            <div className="structure-container">
-              {/* Left: Tables */}
-              <div className="structure-tables-column">
-                {pdbeData.length > 0 && (
-                  <PdbeStructureTable
-                    isoFormAccession={isoFormAccession}
-                    pdbeData={pdbeData}
-                    selectedPdbId={"pdbId" in selected ? selected.pdbId : ""}
-                    setSelected={setSelected}
-                    molstar={molstar}
-                    urlParams={urlParams}
-                  />
-                )}
-                {predictedStructureData.length > 0 && (
-                  <PredictedStructureTable
-                    isoFormAccession={isoFormAccession}
-                    predictedStructureData={predictedStructureData}
-                    selectedPredictedStructure={"modelEntityId" in selected ? selected.modelEntityId : ""}
-                    setSelected={(structure) => {
-                      setSelected(structure);
-                      if ("paeImageUrl" in structure) {
-                        setPaeUrl(structure.paeImageUrl);
-                        setIsPaeOpen(true);
-                      } else {
-                        setIsPaeOpen(false);
-                      }
-                    }}
-                    aaPos={aaPosition}
-                    pocketData={pocketData}
-                    molstar={molstar}
-                    urlParams={urlParams}
-                  />
-                )}
-                {interactionData.length > 0 && (
-                  <InteractionInfoTable
-                    isoFormAccession={isoFormAccession}
-                    interactionData={interactionData}
-                    selectedInteraction={"a" in selected && "b" in selected ? (selected.a + "_" + selected.b) : ""}
-                    setSelected={(interaction) => {
-                      setSelected(interaction);
-                      setIsPaeOpen(false);
-                    }}
-                    aaPos={aaPosition}
-                    molstar={molstar}
-                    urlParams={urlParams}
-                  />
-                )}
-              </div>
-
-              {/* Right: Viewer + PAE */}
-              <div className="structure-viewer-column">
-                <PdbeMolstar
-                  selected={selected}
-                  pdbeRef={molstar.ref}
-                  controlActions={getViewerActions()}
-                />
-                <PAEPanel
-                  isOpen={isPaeOpen}
-                  paeImageUrl={paeUrl}
-                  onClose={() => setIsPaeOpen(false)}
-                />
-              </div>
+            <div className="annotation-viewer-column">
+              <PdbeMolstar
+                selected={selected}
+                pdbeRef={molstar.ref}
+                controlActions={getViewerActions()}
+              />
+              <PAEPanel
+                isOpen={isPaeOpen}
+                paeImageUrl={paeUrl}
+                onClose={() => setIsPaeOpen(false)}
+              />
             </div>
           </div>
         </div>
@@ -424,11 +443,28 @@ function StructureData(props: StructureDataProps) {
 }
 
 function NoStructureDataRow() {
-  return <tr>
-    <td colSpan={TOTAL_COLS} className="expanded-row">
-      <div className="column">No structural data available for this protein</div>
-    </td>
-  </tr>
+  return (
+    <tr>
+      <td colSpan={TOTAL_COLS} className="expanded-row">
+        <div className="annotation-data-container">
+          <div className="annotation-header">
+            <div className="annotation-title">
+              <img
+                src={StructureIcon}
+                className="annotation-icon"
+                data-fill="0.0"
+                alt="3D structure"
+              />
+              <h5>3D Structures</h5>
+            </div>
+          </div>
+          <div className="no-data-message">
+            No structural data available for this protein
+          </div>
+        </div>
+      </td>
+    </tr>
+  );
 }
 
 export default StructureData;

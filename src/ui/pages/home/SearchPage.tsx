@@ -300,38 +300,6 @@ const SearchPage: React.FC = () => {
     }
 
     setError('');
-    /*
-    const detectedType = resolve(trimmedInput);
-
-    // If user explicitly selected a type, validate input against that type's regex
-    if (selectedType) {
-      // Backend and client should agree on these type strings or add a mapping if different
-      if (!detectedType) {
-        setError(`Input does not match any supported type.`);
-        return;
-      }
-      // If user picked UniProt but detectedType isn't UNIPROT, error out
-      if (selectedType !== detectedType) {
-        setError(`Input does not match the selected type ${selectedType}.`);
-        return;
-      }
-    }
-
-    // Navigate and pass type param only if specified
-    const effectiveType = selectedType || detectedType;
-    const normalized = normalize(trimmedInput, effectiveType || '');
-    const typeParam = effectiveType ? `?type=${effectiveType.toLowerCase()}` : '';
-    //navigate(`/search?input=${normalized}&type=${effectiveType.toLowerCase()}`);
-    navigate(`${normalized}${typeParam}`);
-
-    // Simply navigate with input and optional type hint
-    // Let the backend resolve and validate
-    const typeParam = selectedType ? `?type=${selectedType}` : '';
-    navigate(`${trimmedInput}${typeParam}`);
-    */
-
-    // Create URL search params with the current filter values
-    // Note: We don't add sort/order from SearchPage since sorting is only for ResultsPage
 
     // Use shared utility to build filter params
     const params = buildFilterParams(searchFilters);
@@ -370,17 +338,7 @@ const SearchPage: React.FC = () => {
     }
     return true;
   };
-/*
-  const getActiveFilters = () => {
-    const active = [];
-    if (filters_.caddScore > 0) active.push(`CADD ≥ ${filters_.caddScore}`);
-    if (filters_.potential && !filters_.known) active.push('Potential variants only');
-    if (!filters_.potential && filters_.known) active.push('Known variants only');
-    if (filters_.pathogenic) active.push('Pathogenic');
-    if (filters_.clinvar) active.push('ClinVar annotated');
-    return active;
-  };
-*/
+
   return (
     <div className="search-container">
       {/* Header */}
@@ -578,10 +536,10 @@ const SearchPage: React.FC = () => {
         {activeMode === 'browse' && (
           <SearchFilters
             filters={searchFilters}
-            onFiltersChange={setSearchFilters} // todo: reset page to 1!
-            showSorting={false} // No sorting on search page
-          />)
-      }
+            onFiltersChange={setSearchFilters}
+            showSorting={false}
+          />
+        )}
 
         {/* Error Display */}
         {error && (
@@ -616,7 +574,7 @@ const SearchPage: React.FC = () => {
               <div className="results-count">Found 1,247 variants</div>
             </div>
             <div className="active-filters">
-              {/*getActiveFilters()*/[].map((filter, index) => (
+              {[].map((filter, index) => (
                 <div key={index} className="filter-chip">
                   {filter} <span className="remove">×</span>
                 </div>
