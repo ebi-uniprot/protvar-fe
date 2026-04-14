@@ -1,7 +1,7 @@
 import React, { Fragment, useMemo } from "react";
 import { Evidence } from "../../../types/Common";
 import PubMedList from "./PubMedList";
-import '../../../styles/new/evidences.css';
+
 import {ExtLink} from "./Link";
 
 export interface IdUrl {

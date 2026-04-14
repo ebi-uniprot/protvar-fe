@@ -231,15 +231,23 @@
     align-items: center;
     padding: 10px 12px;
     background: white;
-    border: 1px solid var(--color-border-medium);
+    border: 2px solid var(--color-border-medium);
     border-radius: var(--radius-md);
     font-size: var(--font-size-base);
     margin-bottom: var(--spacing-sm);
-    transition: box-shadow var(--transition-base);
+    cursor: pointer;
+    transition: all var(--transition-base);
 }
 
 .interaction-grid:hover {
-    box-shadow: var(--shadow-md);
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-primary-sm);
+}
+
+.interaction-grid.active {
+    background: var(--color-primary-lightest);
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-primary-md);
 }
 
 .interaction-grid:last-of-type {
@@ -253,7 +261,115 @@
 }
 
 /* ============================================
-   STRUCTURE CARDS
+   PDB STRUCTURE CARDS (compact row layout)
+   ============================================ */
+
+.pdb-structure-card {
+    display: grid;
+    grid-template-columns: 3.5rem 4.5rem 3rem 4rem 1fr;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: 5px 12px;
+    border: 1px solid var(--color-border-light);
+    border-left: 3px solid transparent;
+    border-radius: var(--radius-sm);
+    margin-bottom: 2px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-size: var(--font-size-sm);
+}
+
+.pdb-structure-card:hover {
+    background: var(--color-gray-50);
+    border-left-color: var(--color-primary);
+}
+
+.pdb-structure-card.active {
+    background: var(--color-primary-lightest);
+    border-color: var(--color-border-medium);
+    border-left-color: var(--color-primary);
+}
+
+.pdb-structure-card:last-child {
+    margin-bottom: 0;
+}
+
+.pdb-card-id {
+    font-weight: var(--font-weight-bold);
+    font-family: var(--font-family-mono);
+    color: var(--color-text-primary);
+}
+
+.pdb-card-chain {
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.pdb-card-resolution {
+    color: var(--color-text-muted);
+    font-family: var(--font-family-mono);
+}
+
+.pdb-card-method {
+    color: var(--color-text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ============================================
+   PREDICTED INTERACTION CARDS (compact row)
+   ============================================ */
+
+.predicted-interaction-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr 4.5rem;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: 5px 12px;
+    border: 1px solid var(--color-border-light);
+    border-left: 3px solid transparent;
+    border-radius: var(--radius-sm);
+    margin-bottom: 2px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-size: var(--font-size-sm);
+}
+
+.predicted-interaction-card:hover {
+    background: var(--color-gray-50);
+    border-left-color: var(--color-primary);
+}
+
+.predicted-interaction-card.active {
+    background: var(--color-primary-lightest);
+    border-color: var(--color-border-medium);
+    border-left-color: var(--color-primary);
+}
+
+.predicted-interaction-card:last-child {
+    margin-bottom: 0;
+}
+
+.interaction-protein {
+    color: var(--color-text-primary);
+    font-size: var(--font-size-xs);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.interaction-pdockq {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-primary);
+    text-align: right;
+    white-space: nowrap;
+}
+
+/* ============================================
+   STRUCTURE CARDS (legacy, kept for reference)
    ============================================ */
 
 .structure-card {
@@ -327,47 +443,82 @@
     color: var(--color-text-muted);
 }
 
-/* Predicted Structure Card */
+/* Predicted Structure Card - grid row (matches predicted-col-header) */
 .predicted-structure-card {
-    background: white;
-    border: 2px solid var(--color-border-medium);
-    border-radius: var(--radius-md);
-    padding: 14px 16px;
-    margin-bottom: 10px;
+    display: grid;
+    grid-template-columns: 1fr 3.5rem auto;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: 5px 12px;
+    border: 1px solid var(--color-border-light);
+    border-left: 3px solid transparent;
+    border-radius: var(--radius-sm);
+    margin-bottom: 2px;
     cursor: pointer;
-    transition: all var(--transition-base);
+    transition: all var(--transition-fast);
+    font-size: var(--font-size-sm);
 }
 
 .predicted-structure-card:hover {
-    border-color: var(--color-primary);
-    box-shadow: var(--shadow-primary-sm);
+    background: var(--color-gray-50);
+    border-left-color: var(--color-primary);
 }
 
 .predicted-structure-card.active {
     background: var(--color-primary-lightest);
-    border-color: var(--color-primary);
-    box-shadow: var(--shadow-primary-md);
+    border-color: var(--color-border-medium);
+    border-left-color: var(--color-primary);
 }
 
-.predicted-card-header {
+/* Name column */
+.predicted-card-name {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: var(--spacing-sm);
+    align-items: baseline;
+    gap: 4px;
+    overflow: hidden;
 }
 
-.predicted-card-model {
-    font-size: var(--font-size-md);
-    font-weight: var(--font-weight-semibold);
+.predicted-card-type {
     color: var(--color-text-primary);
+    flex-shrink: 0;
 }
 
+.predicted-card-id {
+    color: var(--color-text-muted);
+    font-size: var(--font-size-xs);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.predicted-card-note {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    font-style: italic;
+    flex-shrink: 0;
+}
+
+/* Position column */
+.predicted-card-pos {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+    text-align: center;
+}
+
+/* Pockets column */
 .predicted-card-pockets {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--spacing-xs);
-    font-size: var(--font-size-sm);
-    margin-top: var(--spacing-sm);
+    color: var(--color-text-muted);
+    font-size: var(--font-size-xs);
+}
+
+.pockets-none {
+    color: var(--color-text-muted);
+    font-size: var(--font-size-xs);
+}
+
+.pockets-label {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
 }
 
 /* ============================================
@@ -520,15 +671,58 @@
     }
 
     .structure-card:hover,
-    .predicted-structure-card:hover {
+    .predicted-structure-card:hover,
+    .interaction-grid:hover {
         border-color: var(--color-primary);
         box-shadow: var(--shadow-primary-sm);
     }
 
     .structure-card.active,
-    .predicted-structure-card.active {
+    .predicted-structure-card.active,
+    .interaction-grid.active {
         background: #2a4a5a;
         border-color: var(--color-primary);
+    }
+
+    .pdb-structure-card,
+    .predicted-interaction-card {
+        border-color: var(--color-border-light);
+    }
+
+    .pdb-structure-card:hover,
+    .predicted-interaction-card:hover {
+        background: var(--color-bg-tertiary);
+        border-left-color: var(--color-primary);
+    }
+
+    .pdb-structure-card.active,
+    .predicted-interaction-card.active {
+        background: #2a4a5a;
+        border-left-color: var(--color-primary);
+        border-color: var(--color-border-medium);
+    }
+
+    .pdb-card-id {
+        color: var(--color-text-primary);
+    }
+
+    .pdb-card-chain,
+    .pdb-card-resolution,
+    .pdb-card-method {
+        color: var(--color-text-tertiary);
+    }
+
+    .interaction-protein {
+        color: var(--color-text-secondary);
+    }
+
+    .interaction-pdockq {
+        color: var(--color-primary);
+    }
+
+    .predicted-card-note,
+    .pockets-label {
+        color: var(--color-text-muted);
     }
 
     .allele-name,

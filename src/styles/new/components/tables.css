@@ -1,146 +1,272 @@
 /**
- * tables.css - Table component styles
- * Structure tables with card-based design
+ * tables.css - Table and structure list styles
  */
 
 /* ============================================
-   STRUCTURE TABLE CARD CONTAINER
+   UNIFIED STRUCTURE TABLES CARD
+   All three sections (PDB, Predicted, Interactions) in one card
    ============================================ */
 
-.structure-table-card {
-    background: var(--color-bg-secondary);
+.structure-tables-unified {
+    background: white;
+    border: 1px solid var(--color-border-light);
     border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-sm);
     overflow: hidden;
+    box-shadow: var(--shadow-sm);
 }
 
-.structure-table-header {
+/* ============================================
+   SECTION HEADER (replaces structure-table-header)
+   ============================================ */
+
+.structure-section-header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 14px 20px;
-    background: var(--gradient-blue);
-    color: white;
-    font-size: var(--font-size-lg);
+    gap: 5px;
+    padding: 6px 12px;
+    background: #e8eaed;
+    border-top: 1px solid var(--color-border-light);
+    border-bottom: 1px solid var(--color-border-light);
+    font-size: var(--font-size-xs);
     font-weight: var(--font-weight-semibold);
+    color: var(--color-text-secondary);
 }
 
-.structure-table-header a {
-    color: white;
-    opacity: 0.9;
-    text-decoration: none;
-    transition: opacity var(--transition-base);
+.structure-section-header:first-child {
+    border-top: none;
 }
 
-.structure-table-header a:hover {
+/* Space between sections */
+.structure-section-header:not(:first-child) {
+    margin-top: 8px;
+}
+
+/* Inline help icon — borderless blue filled i, pushed to far right in section header */
+.help-icon-inline {
+    margin-left: auto;
+    font-size: 13px;
+    color: var(--color-primary);
+    cursor: pointer;
+    flex-shrink: 0;
+    opacity: 0.8;
+    transition: opacity 0.15s ease;
+}
+
+.help-icon-inline:hover {
     opacity: 1;
 }
 
-/* ============================================
-   STRUCTURE CARDS CONTAINER (Scrollable)
-   ============================================ */
-
-.structure-cards-container {
-    max-height: 400px;
-    overflow-y: auto;
-    padding: var(--spacing-md);
-}
-
-/* Scrollbar styling */
-.structure-cards-container::-webkit-scrollbar {
-    width: 8px;
-}
-
-.structure-cards-container::-webkit-scrollbar-track {
-    background: var(--color-gray-200);
-    border-radius: var(--radius-sm);
-}
-
-.structure-cards-container::-webkit-scrollbar-thumb {
-    background: var(--color-gray-500);
-    border-radius: var(--radius-sm);
-}
-
-.structure-cards-container::-webkit-scrollbar-thumb:hover {
-    background: var(--color-gray-600);
+/* Count badge inside section header */
+.count-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    background: var(--color-primary);
+    color: white;
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: var(--font-weight-bold);
+    line-height: 1;
+    margin-left: 2px;
 }
 
 /* ============================================
-   LEGACY TABLE DESIGN (Fallback)
+   COLUMN HEADERS
+   Must share grid-template-columns with their card counterparts
    ============================================ */
 
-.structure-table-scroll {
-    max-height: 400px;
-    overflow-y: auto;
-}
-
-.structure-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.structure-table thead {
-    position: sticky;
-    top: 0;
-    background: var(--color-gray-200);
-    z-index: var(--z-sticky);
-}
-
-.structure-table th {
-    padding: 10px 12px;
-    text-align: left;
-    font-size: var(--font-size-sm);
+.structure-col-header {
+    display: grid;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: 3px 12px;
+    font-size: 10px;
     font-weight: var(--font-weight-semibold);
-    color: var(--color-text-secondary);
-    border-bottom: 2px solid var(--color-border-medium);
-}
-
-.structure-table tbody tr {
-    cursor: pointer;
-    transition: background var(--transition-fast);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
     border-bottom: 1px solid var(--color-border-light);
 }
 
-.structure-table tbody tr:hover {
-    background: var(--color-gray-100);
+/* PDB: ID | Chain | Pos | Res (Å) | Method */
+.pdb-col-header {
+    grid-template-columns: 3.5rem 4.5rem 3rem 4rem 1fr;
 }
 
-.structure-table tbody tr.active {
-    background: var(--color-primary-lightest);
-    border-left: 3px solid var(--color-primary);
+/* Predicted: (empty) | Pos | Pockets */
+.predicted-col-header {
+    grid-template-columns: 1fr 3.5rem auto;
 }
 
-.structure-table td {
-    padding: 10px 12px;
-    font-size: var(--font-size-base);
-    color: var(--color-text-primary);
-}
-
-.structure-table td.small {
-    font-size: var(--font-size-sm);
-}
-
-/* Scroll to selected row */
-.structure-table tbody tr.active {
-    scroll-margin-top: 60px;
+/* Interactions: Chain A | Chain B | pDockQ */
+.interaction-col-header {
+    grid-template-columns: 1fr 1fr 4.5rem;
 }
 
 /* ============================================
-   INTERACTION HEADER (Table-style header)
+   SCROLLABLE ROW AREA
+   CSS scroll-shadow trick: shows shadow at top/bottom when overflowing
    ============================================ */
 
-.interaction-header {
+.structure-rows-scroll {
+    max-height: 152px;
+    overflow-y: auto;
+    padding: 3px 8px;
+    /* scroll-shadow: fades content at edges, stronger shadow shows overflow */
+    background:
+        linear-gradient(white 30%, transparent),
+        linear-gradient(transparent, white 70%) 0 100%,
+        radial-gradient(farthest-side at 50% 0, rgba(0,0,0,.12), transparent),
+        radial-gradient(farthest-side at 50% 100%, rgba(0,0,0,.18), transparent) 0 100%;
+    background-repeat: no-repeat;
+    background-size: 100% 32px, 100% 32px, 100% 14px, 100% 14px;
+    background-attachment: local, local, scroll, scroll;
+    /* Firefox scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-gray-400) transparent;
+}
+
+/* Thin scrollbar for row areas */
+.structure-rows-scroll::-webkit-scrollbar {
+    width: 5px;
+}
+.structure-rows-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+.structure-rows-scroll::-webkit-scrollbar-thumb {
+    background: var(--color-gray-400);
+    border-radius: 3px;
+}
+.structure-rows-scroll::-webkit-scrollbar-thumb:hover {
+    background: var(--color-gray-600);
+}
+
+/* For sections with few items (no scroll needed) */
+.structure-rows-noscroll {
+    padding: 3px 8px;
+}
+
+/* ============================================
+   MODEL CONFIDENCE PANEL (AlphaFold/Fill)
+   Slides in when a predicted structure is selected
+   ============================================ */
+
+.model-conf-panel {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease, opacity 0.25s ease;
+    border-top: 1px solid var(--color-border-light);
+}
+
+.model-conf-panel.show {
+    max-height: 500px;
+    opacity: 1;
+}
+
+.model-conf-grid {
     display: grid;
-    grid-template-columns: 2fr 1fr 2fr;
-    gap: var(--spacing-md);
-    padding: var(--spacing-sm) var(--spacing-md);
-    border-radius: var(--radius-sm);
+    grid-template-columns: auto 1fr;
+    gap: var(--spacing-md) var(--spacing-xl);
+    padding: var(--spacing-sm) var(--spacing-md) var(--spacing-md);
     font-size: var(--font-size-sm);
+}
+
+.model-conf-title {
+    font-size: var(--font-size-xs);
     font-weight: var(--font-weight-semibold);
     color: var(--color-text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.3px;
-    margin-bottom: var(--spacing-sm);
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* ============================================
+   TABLE ACTIONS (contextual buttons below selected row)
+   ============================================ */
+
+.table-actions {
+    padding: 5px 12px;
+    background: var(--color-bg-tertiary);
+    border-top: 1px solid var(--color-border-light);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+/* ============================================
+   EMPTY STATE
+   ============================================ */
+
+.no-structures-msg {
+    padding: 10px 12px;
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+    font-style: italic;
+}
+
+/* ============================================
+   VIEWER CONTROLS BAR (below viewer, not overlaid)
+   ============================================ */
+
+.viewer-controls-bar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 5px;
+    padding: 6px 10px;
+    background: white;
+    border-top: 1px solid var(--color-border-light);
+    min-height: 36px;
+}
+
+/* Override absolute positioning for controls inside the bar */
+.viewer-controls-bar .viewer-controls {
+    position: static;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+/* Smaller, more subtle buttons in the bar */
+.viewer-controls-bar .viewer-control-btn {
+    font-size: var(--font-size-xs);
+    padding: 4px 10px;
+    background: var(--color-bg-tertiary);
+    border-color: var(--color-border-dark);
+    box-shadow: none;
+    color: var(--color-text-secondary);
+}
+
+.viewer-controls-bar .viewer-control-btn:hover {
+    background: white;
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    box-shadow: none;
+}
+
+.viewer-controls-bar .viewer-control-btn.btn-primary {
+    background: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+}
+
+.viewer-controls-bar .viewer-control-btn.btn-primary:hover {
+    background: var(--color-primary-dark);
+    border-color: var(--color-primary-dark);
+}
+
+.viewer-controls-bar .viewer-control-btn.btn-reset {
+    background: var(--color-gray-200);
+    border-color: var(--color-gray-500);
+    color: var(--color-text-secondary);
 }
 
 /* ============================================
@@ -163,108 +289,95 @@
 }
 
 /* ============================================
-   TABLE ACTIONS
+   LEGACY - keep for backward compat
    ============================================ */
 
-.table-actions {
-    padding: var(--spacing-md) var(--spacing-lg);
-    background: var(--color-bg-tertiary);
-    border-top: 1px solid var(--color-border-medium);
+.structure-table-card {
+    background: var(--color-bg-secondary);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+}
+
+.structure-table-header {
     display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: 8px 12px;
+    background: var(--color-bg-secondary);
+    border-bottom: 2px solid var(--color-primary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+}
+
+.structure-cards-container {
+    max-height: 400px;
+    overflow-y: auto;
+    padding: var(--spacing-md);
 }
 
 /* ============================================
-   RESPONSIVE DESIGN
+   RESPONSIVE
    ============================================ */
 
 @media (max-width: 768px) {
-    .structure-table-header {
-        padding: var(--spacing-md) var(--spacing-lg);
-        font-size: var(--font-size-md);
+    .structure-rows-scroll {
+        max-height: 120px;
     }
 
-    .structure-cards-container {
-        max-height: 300px;
-        padding: 10px;
-    }
-
-    .structure-table-scroll {
-        max-height: 300px;
-    }
-
-    .structure-table th,
-    .structure-table td {
-        padding: var(--spacing-sm) 10px;
-        font-size: var(--font-size-sm);
+    .pdb-col-header {
+        grid-template-columns: 3rem 4rem 2.5rem 3.5rem 1fr;
     }
 
     .table-actions {
-        gap: var(--spacing-xs);
-        padding: 10px 12px;
-    }
-
-    .interaction-header {
-        grid-template-columns: 1fr;
-        gap: var(--spacing-xs);
-    }
-
-    .pocket-grid {
-        grid-template-columns: 1fr;
-        gap: var(--spacing-sm);
+        gap: 4px;
+        padding: 4px 10px;
     }
 }
 
 /* ============================================
-   DARK MODE SUPPORT
+   DARK MODE
    ============================================ */
 
 @media (prefers-color-scheme: dark) {
-    .structure-table-card {
+    .structure-tables-unified {
         background: var(--color-bg-primary);
+        border-color: var(--color-border-light);
     }
 
-    .structure-table-header {
-        background: var(--gradient-blue-dark);
-    }
-
-    .structure-cards-container::-webkit-scrollbar-track {
-        background: var(--color-gray-100);
-    }
-
-    .structure-cards-container::-webkit-scrollbar-thumb {
-        background: var(--color-gray-300);
-    }
-
-    .structure-cards-container::-webkit-scrollbar-thumb:hover {
-        background: var(--color-gray-400);
-    }
-
-    .structure-table thead {
+    .structure-section-header {
         background: var(--color-bg-secondary);
-    }
-
-    .structure-table th {
+        border-color: var(--color-border-light);
         color: var(--color-text-secondary);
+    }
+
+    .structure-col-header {
+        color: var(--color-text-muted);
         border-color: var(--color-border-light);
     }
 
-    .structure-table tbody tr {
+    .structure-rows-scroll {
+        background:
+            linear-gradient(var(--color-bg-primary) 30%, transparent),
+            linear-gradient(transparent, var(--color-bg-primary) 70%) 0 100%,
+            radial-gradient(farthest-side at 50% 0, rgba(255,255,255,.04), transparent),
+            radial-gradient(farthest-side at 50% 100%, rgba(255,255,255,.04), transparent) 0 100%;
+        background-repeat: no-repeat;
+        background-size: 100% 32px, 100% 32px, 100% 10px, 100% 10px;
+        background-attachment: local, local, scroll, scroll;
+    }
+
+    .structure-rows-scroll::-webkit-scrollbar-thumb {
+        background: var(--color-gray-600);
+    }
+
+    .model-conf-panel {
         border-color: var(--color-border-light);
     }
 
-    .structure-table tbody tr:hover {
-        background: var(--color-bg-tertiary);
-    }
-
-    .structure-table tbody tr.active {
-        background: #2a4a5a;
-        border-left-color: var(--color-primary);
-    }
-
-    .structure-table td {
-        color: var(--color-text-primary);
+    .model-conf-title {
+        color: var(--color-text-secondary);
     }
 
     .table-actions {
@@ -272,9 +385,25 @@
         border-color: var(--color-border-light);
     }
 
-    .interaction-header {
-        background: #2a4a5a;
+    .no-structures-msg {
+        color: var(--color-text-muted);
+    }
+
+    .viewer-controls-bar {
+        background: var(--color-bg-primary);
+        border-color: var(--color-border-light);
+    }
+
+    .viewer-controls-bar .viewer-control-btn {
+        background: var(--color-bg-secondary);
+        border-color: var(--color-border-medium);
         color: var(--color-text-secondary);
+    }
+
+    .viewer-controls-bar .viewer-control-btn:hover {
+        background: var(--color-bg-tertiary);
+        border-color: var(--color-primary);
+        color: var(--color-primary);
     }
 
     .pocket-grid label,

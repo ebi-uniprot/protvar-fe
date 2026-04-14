@@ -1,4 +1,6 @@
 import React from "react";
+import {HelpButton} from "../../help/HelpButton";
+import {AlphaFoldHelp} from "../../help/content/AlphaFoldHelp";
 
 interface PAEPanelProps {
   isOpen: boolean;
@@ -9,12 +11,7 @@ interface PAEPanelProps {
 export const PAEPanel: React.FC<PAEPanelProps> = ({ isOpen, paeImageUrl, onClose }) => {
   return (
     <div className={`pae-panel ${isOpen ? 'open' : ''}`}>
-      <div className="pae-panel-header">
-        <span>AlphaFold Model Quality</span>
-        <button className="pae-panel-close" onClick={onClose} title="Close">
-          ×
-        </button>
-      </div>
+      <button className="pae-panel-close" onClick={onClose} title="Close">×</button>
       <div className="pae-panel-content">
         {/* Model Confidence Legend */}
         <div className="pae-section">
@@ -26,11 +23,11 @@ export const PAEPanel: React.FC<PAEPanelProps> = ({ isOpen, paeImageUrl, onClose
             </div>
             <div className="confidence-item">
               <div className="confidence-color conf-high"></div>
-              <span className="confidence-label">Confident (90 - 70)</span>
+              <span className="confidence-label">Confident (90–70)</span>
             </div>
             <div className="confidence-item">
               <div className="confidence-color conf-low"></div>
-              <span className="confidence-label">Low (70 - 50)</span>
+              <span className="confidence-label">Low (70–50)</span>
             </div>
             <div className="confidence-item">
               <div className="confidence-color conf-very-low"></div>
@@ -41,11 +38,15 @@ export const PAEPanel: React.FC<PAEPanelProps> = ({ isOpen, paeImageUrl, onClose
 
         {/* PAE Image */}
         <div className="pae-section">
-          <div className="pae-section-title">Predicted Aligned Error</div>
+          <div className="pae-section-title">
+            Predicted Aligned Error <HelpButton variant="inline" title="" content={<AlphaFoldHelp />} />
+          </div>
           <div className="pae-image-container">
-            <img src={paeImageUrl} alt="Predicted Aligned Error" />
-            <div className="pae-axis-label pae-y-axis">Aligned residue</div>
-            <div className="pae-axis-label pae-x-axis">Scored residue</div>
+            <div className="pae-y-axis">Aligned residue</div>
+            <div className="pae-image-wrap">
+              <img src={paeImageUrl} alt="Predicted Aligned Error" />
+              <div className="pae-x-axis">Scored residue</div>
+            </div>
           </div>
         </div>
       </div>

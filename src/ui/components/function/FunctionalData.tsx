@@ -11,10 +11,9 @@ import ProteinIcon from '../../../images/proteins.svg';
 import {HelpContent} from "../help/HelpContent";
 import {HelpButton} from "../help/HelpButton";
 import {ShareAnnotationIcon} from "../common/ShareLink";
-import Spaces from "../../elements/Spaces";
 import {Comment} from "../../../types/Comment";
-import '../../../styles/new/annotation.css';
-import '../../../styles/new/function.css';
+
+
 
 export interface FunctionalDataProps {
   annotation: string

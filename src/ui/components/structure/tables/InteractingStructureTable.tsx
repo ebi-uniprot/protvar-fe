@@ -19,73 +19,58 @@ interface InteractingStructureTableProps {
 }
 
 function InteractingStructureTable({
-                                isoFormAccession,
-                                interactionData,
-                                selectedInteraction,
-                                setSelected,
-                                aaPos,
-                                molstar,
-                                urlParams,
-                              }: InteractingStructureTableProps) {
+  isoFormAccession,
+  interactionData,
+  selectedInteraction,
+  setSelected,
+  aaPos,
+  molstar,
+  urlParams,
+}: InteractingStructureTableProps) {
   const rows: Array<React.JSX.Element> = [];
-  let options = <></>
+  const count = interactionData.length;
 
   interactionData.sort((a, b) => b.pdockq - a.pdockq).forEach((i) => {
     const rowId = `${i.a}_${i.b}`;
-    const isSelected = selectedInteraction === rowId
+    const isSelected = selectedInteraction === rowId;
     const protChain = i.a === isoFormAccession ? "A" : "B";
     const modelUrl = `${API_URL}/prediction/interaction/${i.a}/${i.b}/model`;
 
-    const row = <tr key={rowId} className={isSelected ? "clickable-row active" : "clickable-row"}
-                    onClick={() => {
-                      setSelected(i);
-                      urlParams.setStructure("interaction", rowId);
-                      urlParams.clearIncompatibleActions("interaction");
-                      molstar.loadInteraction(modelUrl, aaPos, protChain);
-                    }}>
-      <td className="small" title={`Residues: ${formatRange(i.aresidues)}`}>{i.a}</td>
-      <td className="small" title={`Residues: ${formatRange(i.bresidues)}`}>{i.b}</td>
-      <td className="small">{i.pdockq.toFixed(3)}</td>
-    </tr>
-
-    if (isSelected) {
-      options = <div className="small">
-        <button className="button-new" onClick={() => {
-          urlParams.updateActions({ zoom: true, interface: null });
-          molstar.zoomToVariant(aaPos, protChain);
-        }}>Zoom to variant</button>
-        <button className="button-new" onClick={() => {
-          urlParams.updateActions({ interface: true, zoom: null });
-          molstar.highlightInterface(i.aresidues, i.bresidues, aaPos, protChain);
-        }}>Highlight Interface</button>
-        <button className="button-new" onClick={() => {
-          urlParams.updateActions({ interface: null, zoom: null });
-          molstar.resetDefault(aaPos, protChain);
-        }}>Reset</button>
+    rows.push(
+      <div
+        key={rowId}
+        className={`predicted-interaction-card${isSelected ? ' active' : ''}`}
+        onClick={() => {
+          setSelected(i);
+          urlParams.setStructure("interaction", rowId);
+          urlParams.clearIncompatibleActions("interaction");
+          molstar.loadInteraction(modelUrl, aaPos, protChain);
+        }}
+      >
+        <span className="interaction-protein" title={`Residues: ${formatRange(i.aresidues)}`}>{i.a}</span>
+        <span className="interaction-protein" title={`Residues: ${formatRange(i.bresidues)}`}>{i.b}</span>
+        <span className="interaction-pdockq">{i.pdockq.toFixed(3)}</span>
       </div>
-    }
+    );
+  });
 
-    rows.push(row);
-  })
-
-  return <div>
-    <div className="tableFixHead">
-      <table>
-        <thead>
-        <tr>
-          <th colSpan={3}>Predicted Interacting Structure <HelpButton title="" content={<HelpContent name="predictions" />} /></th>
-        </tr>
-        <tr>
-          <th>Chain A</th>
-          <th>Chain B</th>
-          <th>pDockQ</th>
-        </tr>
-        </thead>
-        <tbody>{rows}</tbody>
-      </table>
-    </div>
-    {options}
-  </div>
+  return (
+    <>
+      <div className="structure-section-header">
+        Predicted Interacting Structure
+        <span className="count-badge">{count}</span>
+        <HelpButton variant="inline" title="" content={<HelpContent name="predictions" />} />
+      </div>
+      <div className="structure-col-header interaction-col-header">
+        <span>Chain A</span>
+        <span>Chain B</span>
+        <span>pDockQ</span>
+      </div>
+      <div className="structure-rows-scroll">
+        {rows}
+      </div>
+    </>
+  );
 }
 
 export default InteractingStructureTable;

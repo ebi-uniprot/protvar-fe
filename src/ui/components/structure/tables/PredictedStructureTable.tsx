@@ -3,8 +3,6 @@ import {ALPHAFOLD_URL_INTERFACE_BY_PROTEIN} from '../../../../constants/External
 import {formatRange} from "../../../../utills/Util";
 import {PredictedStructure} from "../StructureData";
 import {HelpButton} from "../../help/HelpButton";
-import {AFLegendShortText, AlphaFoldHelp} from "../../help/content/AlphaFoldHelp";
-import {PAEImg} from "../PAEImg";
 import {HelpContent} from "../../help/HelpContent";
 import {Pocket} from "../../../../types/Prediction";
 import {useMolstarController} from "../useMolstarController";
@@ -24,113 +22,73 @@ interface PredictedStructureTableProps {
 }
 
 function PredictedStructureTable({
-                                   isoFormAccession,
-                                   predictedStructureData,
-                                   selectedPredictedStructure,
-                                   setSelected,
-                                   aaPos,
-                                   pocketData,
-                                   molstar,
-                                   urlParams,
-                                 }: PredictedStructureTableProps) {
-  const rows: Array<React.JSX.Element> = [];
-  let options = <></>
-  let modelConfAndPAE: React.JSX.Element | null = null
+  isoFormAccession,
+  predictedStructureData,
+  selectedPredictedStructure,
+  setSelected,
+  aaPos,
+  pocketData,
+  molstar,
+  urlParams,
+}: PredictedStructureTableProps) {
+  const cards: Array<React.JSX.Element> = [];
 
   predictedStructureData.forEach(predStruc => {
-
-    const rowId = predStruc.modelEntityId
+    const rowId = predStruc.modelEntityId;
     const isSelected = selectedPredictedStructure === rowId;
+    const isAlphaFill = predStruc.modelEntityId.startsWith("AlphaFill-");
 
-    const clicked = () => {
-      setSelected(predStruc);
-      const isAlphaFill = predStruc.modelEntityId.startsWith("AlphaFill-");
-      urlParams.setStructure("prediction", isAlphaFill ? "AlphaFill" : "AlphaFold");
-      urlParams.clearIncompatibleActions("prediction");
-      molstar.loadAf(predStruc.cifUrl, aaPos);
-    }
+    const displayId = predStruc.modelEntityId.replace("AlphaFill-", "");
 
-    let pocketsList: Array<React.JSX.Element> = [];
-    let pocketsBtn: Array<React.JSX.Element> = [];
+    const pocketSpans = pocketData.length > 0
+      ? pocketData.map((p, i) => (
+          <React.Fragment key={p.pocketId}>
+            {i > 0 && ', '}
+            <span title={`Residues: ${formatRange(p.resid)}`}>P{p.pocketId}</span>
+          </React.Fragment>
+        ))
+      : '–';
 
-    pocketData.forEach((pocket, idx, array) => {
-      const p = 'P' + pocket.pocketId
-      const formattedPockets = 'Residues: ' + formatRange(pocket.resid)
-      const highlightText = idx === 0 ? 'Highlight ' + p : p
-      pocketsList.push(<span key={`pocketsList-${pocket.pocketId}`}
-                             title={formattedPockets}>{p}{idx === array.length - 1 ? '' : ', '}</span>);
-      pocketsBtn.push(<button key={`pocketsBtn-${pocket.pocketId}`}
-                              title={formattedPockets} className="button-new"
-                              onClick={() => {
-                                urlParams.updateActions({ pocket: `p${pocket.pocketId}`, zoom: null });
-                                molstar.highlightPocket(aaPos, pocket.resid);
-                              }}>{highlightText}</button>)
-    });
-
-    const row = <tr key={rowId} className={isSelected ? "clickable-row active" : "clickable-row"} onClick={clicked}>
-      <td className="small">{rowId}</td>
-      <td className="small">{aaPos}</td>
-      <td className="small">{pocketData.length === 0 ? "-" : pocketsList}</td>
-    </tr>
-
-    // set PAE to first AF model in array
-    if (!modelConfAndPAE && "paeImageUrl" in predStruc) {
-      modelConfAndPAE = <ModelConfAndPAE paeImg={predStruc.paeImageUrl}/>
-    }
-
-    if (isSelected) {
-      options = <>
-        <div className="small">
-          <button className="button-new" onClick={() => {
-            urlParams.updateActions({ zoom: true, pocket: null });
-            molstar.zoomToVariant(aaPos);
-          }}>Zoom to variant</button>
-          {pocketsBtn}
-          <button className="button-new" onClick={() => {
-            urlParams.updateActions({ pocket: null, zoom: null });
-            molstar.resetDefault(aaPos);
-          }}>Reset</button>
-        </div>
-        {modelConfAndPAE}
-      </>
-    }
-    rows.push(row);
-  })
-
-  return <div>
-    <div className="tableFixHead">
-      <table>
-        <thead>
-        <tr>
-          <th colSpan={3}>Predicted Structure based on AlphaFold <ExtLink url={ALPHAFOLD_URL_INTERFACE_BY_PROTEIN + isoFormAccession} />
-          </th>
-        </tr>
-        <tr>
-          <th>ID</th>
-          <th>Position</th>
-          <th>Pockets <HelpButton title="" content={<HelpContent name="predictions" />} /></th>
-        </tr>
-        </thead>
-        <tbody>{rows}</tbody>
-      </table>
-    </div>
-    {options}
-  </div>
-}
-
-const ModelConfAndPAE = (props: { paeImg: string }) => {
-  return <div style={{marginTop: '15px'}}>
-
-    <div style={{display: 'grid', gridTemplateColumns: 'auto auto', padding: '5px', fontSize: '0.9em'}}>
-      <div><strong>Model Confidence</strong>
-        <AFLegendShortText/>
+    cards.push(
+      <div
+        key={rowId}
+        className={`predicted-structure-card${isSelected ? ' active' : ''}`}
+        onClick={() => {
+          setSelected(predStruc);
+          urlParams.setStructure("prediction", isAlphaFill ? "AlphaFill" : "AlphaFold");
+          urlParams.clearIncompatibleActions("prediction");
+          molstar.loadAf(predStruc.cifUrl, aaPos);
+        }}
+      >
+        <span className="predicted-card-name">
+          <span className="predicted-card-type">{isAlphaFill ? 'AlphaFill' : 'AlphaFold'}</span>
+          {' '}
+          <span className="predicted-card-id">{displayId}</span>
+          {isAlphaFill && <span className="predicted-card-note"> · ligands</span>}
+        </span>
+        <span className="predicted-card-pos">{aaPos}</span>
+        <span className="predicted-card-pockets">{pocketSpans}</span>
       </div>
-      <div style={{marginBottom: '20px'}}><strong>Predicted Align Error</strong><HelpButton title=""
-                                                                                            content={<AlphaFoldHelp/>}/>
-        <PAEImg imageSrc={props.paeImg}/>
+    );
+  });
+
+  return (
+    <>
+      <div className="structure-section-header">
+        Predicted Structure based on AlphaFold{' '}
+        <ExtLink url={ALPHAFOLD_URL_INTERFACE_BY_PROTEIN + isoFormAccession} />
+        <HelpButton variant="inline" title="" content={<HelpContent name="predictions" />} />
       </div>
-    </div>
-  </div>
+      <div className="structure-col-header predicted-col-header">
+        <span></span>
+        <span>Pos</span>
+        <span>Pockets</span>
+      </div>
+      <div className="structure-rows-noscroll">
+        {cards}
+      </div>
+    </>
+  );
 }
 
 export default PredictedStructureTable;

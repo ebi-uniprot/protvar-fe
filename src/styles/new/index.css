@@ -33,38 +33,11 @@
 @import './annotation/annotation-header.css';
 
 /* ==============================================
-   4. ANNOTATION TYPES - Specific implementations
+   4. ANNOTATION TYPES
    ============================================== */
 
-/* These will be the existing files with updated class names */
-/* @import './annotation/function.css'; */
-/* @import './annotation/population.css'; */
-/* @import './annotation/structure.css'; */
-
-/* ==============================================
-   5. FEATURES - Specialized components
-   ============================================== */
-
-/* These will be the existing files */
-/* @import './features/predictions.css'; */
-/* @import './features/evidences.css'; */
-
-/* ==============================================
-   6. LEGACY - For backward compatibility
-   ============================================== */
-
-/* Import existing common.css for now */
-/* This can be removed once all styles are migrated */
-/* @import './common.css'; */
-
-/* ==============================================
-   NOTES:
-
-   - Variables are loaded first (CSS custom properties)
-   - Components are loaded next (buttons, links, etc.)
-   - Annotation base styles come after
-   - Specific annotation types override base
-   - Features come last
-
-   Dark mode is handled via @media queries in each file
-   ============================================== */
+@import './annotation/function.css';
+@import './annotation/population.css';
+@import './annotation/structure.css';
+@import './annotation/evidences.css';
+@import './annotation/pockets-interactions.css';

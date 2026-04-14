@@ -12,7 +12,7 @@ import {HelpButton} from "../help/HelpButton";
 import {HelpContent} from "../help/HelpContent";
 import {PocketList} from "./pockets/PocketList";
 import {InteractionList} from "./interactions/InteractionList";
-import '../../../styles/new/pockets-interactions.css';
+
 
 interface RegionColumnProps {
   regions: Feature[];

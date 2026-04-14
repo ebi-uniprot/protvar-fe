@@ -18,8 +18,8 @@ import {Interaction, Pocket} from "../../../types/Prediction";
 import {useMolstarController} from "./useMolstarController";
 import {useStructureUrl} from "./useStructureUrl";
 import {PAEPanel} from "./viewer/PAEPanel";
-import "../../../styles/new/annotation.css";
-import "../../../styles/new/structure.css";
+
+
 
 interface StructureDataProps {
   annotation: string;
@@ -377,7 +377,7 @@ function StructureData(props: StructureDataProps) {
           {/* Content - Tables Left, Viewer Right */}
           <div className="annotation-content structure-layout">
             <div className="annotation-tables-column">
-              {pdbeData.length > 0 && (
+              <div className="structure-tables-unified">
                 <PdbeStructureTable
                   isoFormAccession={isoFormAccession}
                   pdbeData={pdbeData}
@@ -386,41 +386,41 @@ function StructureData(props: StructureDataProps) {
                   molstar={molstar}
                   urlParams={urlParams}
                 />
-              )}
-              {predictedData.length > 0 && (
-                <PredictedStructureTable
-                  isoFormAccession={isoFormAccession}
-                  predictedStructureData={predictedData}
-                  selectedPredictedStructure={"modelEntityId" in selected ? selected.modelEntityId : ""}
-                  setSelected={(structure) => {
-                    setSelected(structure);
-                    if ("paeImageUrl" in structure) {
-                      setPaeUrl(structure.paeImageUrl);
-                      setIsPaeOpen(true);
-                    } else {
+                {predictedData.length > 0 && (
+                  <PredictedStructureTable
+                    isoFormAccession={isoFormAccession}
+                    predictedStructureData={predictedData}
+                    selectedPredictedStructure={"modelEntityId" in selected ? selected.modelEntityId : ""}
+                    setSelected={(structure) => {
+                      setSelected(structure);
+                      if ("paeImageUrl" in structure) {
+                        setPaeUrl(structure.paeImageUrl);
+                        setIsPaeOpen(true);
+                      } else {
+                        setIsPaeOpen(false);
+                      }
+                    }}
+                    aaPos={aaPosition}
+                    pocketData={pocketData}
+                    molstar={molstar}
+                    urlParams={urlParams}
+                  />
+                )}
+                {interactionData.length > 0 && (
+                  <InteractingStructureTable
+                    isoFormAccession={isoFormAccession}
+                    interactionData={interactionData}
+                    selectedInteraction={"a" in selected && "b" in selected ? (selected.a + "_" + selected.b) : ""}
+                    setSelected={(interaction) => {
+                      setSelected(interaction);
                       setIsPaeOpen(false);
-                    }
-                  }}
-                  aaPos={aaPosition}
-                  pocketData={pocketData}
-                  molstar={molstar}
-                  urlParams={urlParams}
-                />
-              )}
-              {interactionData.length > 0 && (
-                <InteractingStructureTable
-                  isoFormAccession={isoFormAccession}
-                  interactionData={interactionData}
-                  selectedInteraction={"a" in selected && "b" in selected ? (selected.a + "_" + selected.b) : ""}
-                  setSelected={(interaction) => {
-                    setSelected(interaction);
-                    setIsPaeOpen(false);
-                  }}
-                  aaPos={aaPosition}
-                  molstar={molstar}
-                  urlParams={urlParams}
-                />
-              )}
+                    }}
+                    aaPos={aaPosition}
+                    molstar={molstar}
+                    urlParams={urlParams}
+                  />
+                )}
+              </div>
             </div>
 
             <div className="annotation-viewer-column">
