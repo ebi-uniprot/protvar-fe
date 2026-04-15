@@ -12,7 +12,6 @@ export const ExpandableText: React.FC<ExpandableTextProps> = ({
                                                               }) => {
   const [expanded, setExpanded] = useState(false);
 
-  // Helper function to convert PubMed references to links
   const convertPubMedLinks = (input: string): (string | React.JSX.Element)[] => {
     const regex = /PubMed:(\d+)/g;
     const parts: (string | React.JSX.Element)[] = [];
@@ -24,20 +23,18 @@ export const ExpandableText: React.FC<ExpandableTextProps> = ({
       if (match.index > lastIndex) {
         parts.push(input.substring(lastIndex, match.index));
       }
-
       parts.push('PubMed:');
       parts.push(
-      <a
-      key={`pubmed-${match[1]}-${keyCounter++}`}
-      href={`https://pubmed.ncbi.nlm.nih.gov/${match[1]}`}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="pubmed-link"
+        <a
+          key={`pubmed-${match[1]}-${keyCounter++}`}
+          href={`https://pubmed.ncbi.nlm.nih.gov/${match[1]}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="pubmed-link"
         >
-        {match[1]}
-    </a>
-    );
-
+          {match[1]}
+        </a>
+      );
       lastIndex = regex.lastIndex;
     }
 
@@ -48,10 +45,9 @@ export const ExpandableText: React.FC<ExpandableTextProps> = ({
     return parts;
   };
 
-  const displayContent = useMemo(() => {
-    const isTruncated = text.length > charLimit;
+  const isTruncated = text.length > charLimit;
 
-    // Determine text to display
+  const displayContent = useMemo(() => {
     let displayText = text;
     if (!expanded && isTruncated) {
       displayText = text.substring(0, charLimit);
@@ -59,16 +55,12 @@ export const ExpandableText: React.FC<ExpandableTextProps> = ({
       if (lastSpaceIndex > charLimit - 20) {
         displayText = displayText.substring(0, lastSpaceIndex);
       }
-      displayText += '...';
     }
-
     return convertPubMedLinks(displayText);
   }, [text, charLimit, expanded]);
 
-  const isTruncated = text.length > charLimit;
-
   return (
-    <div className="expandable-text">
+    <span className="expandable-text">
       <span className="expandable-text-content">{displayContent}</span>
       {isTruncated && (
         <button
@@ -77,9 +69,12 @@ export const ExpandableText: React.FC<ExpandableTextProps> = ({
           aria-label={expanded ? 'Show less' : 'Show more'}
           title={expanded ? 'Show less' : 'Show more'}
         >
-          <i className={`bi bi-${expanded ? 'dash-square-dotted' : 'plus-square-dotted'}`}></i>
+          {expanded
+            ? <i className="bi bi-chevron-bar-up" />
+            : <i className="bi bi-three-dots" />
+          }
         </button>
       )}
-    </div>
+    </span>
   );
 };

@@ -120,29 +120,62 @@
    ============================================ */
 
 .show-btn {
-    background: var(--color-gray-100);
-    border: 1px solid var(--color-border-dark);
-    border-radius: var(--radius-sm);
-    padding: 6px 12px;
+    background: none;
+    border: 1px solid var(--color-border-medium);
+    border-radius: var(--radius-full);
+    padding: 1px 10px;
     cursor: pointer;
-    color: var(--color-primary);
-    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
     font-weight: var(--font-weight-medium);
     transition: all var(--transition-base);
-    margin-top: var(--spacing-sm);
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
 }
 
 .show-btn:hover {
-    background: var(--color-gray-200);
     border-color: var(--color-primary);
-    color: var(--color-primary-dark);
+    color: var(--color-primary);
+    background: var(--color-primary-lightest);
 }
 
-.show-btn:active {
-    transform: scale(0.98);
+.show-btn:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
 }
 
-.show-btn:focus {
+.show-more-controls {
+    display: flex;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-sm);
+}
+
+/* ============================================
+   PUBMED INLINE BUTTONS
+   Same ghost family as show-btn, but smaller/icon-only
+   ============================================ */
+
+.pubmed-btn {
+    background: none;
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-sm);
+    padding: 2px 5px;
+    cursor: pointer;
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+    line-height: 1;
+    transition: all var(--transition-base);
+    display: inline-flex;
+    align-items: center;
+}
+
+.pubmed-btn:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+.pubmed-btn:focus-visible {
     outline: 2px solid var(--color-primary);
     outline-offset: 2px;
 }
@@ -336,13 +369,24 @@
     }
 
     .show-btn {
-        background: var(--color-bg-secondary);
-        border-color: var(--color-border-light);
-        color: var(--color-primary);
+        border-color: var(--color-border-medium);
+        color: var(--color-text-tertiary);
     }
 
     .show-btn:hover {
-        background: var(--color-bg-tertiary);
+        border-color: var(--color-primary);
+        color: var(--color-primary);
+        background: rgba(110, 168, 254, 0.08);
+    }
+
+    .pubmed-btn {
+        border-color: var(--color-border-light);
+        color: var(--color-text-tertiary);
+    }
+
+    .pubmed-btn:hover {
+        border-color: var(--color-primary);
+        color: var(--color-primary);
     }
 
     .viewer-control-btn {

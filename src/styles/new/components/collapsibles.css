@@ -31,6 +31,10 @@
 }
 
 .collapsible:focus {
+    outline: none;
+}
+
+.collapsible:focus-visible {
     outline: 2px solid var(--color-primary);
     outline-offset: 2px;
 }
@@ -95,35 +99,6 @@
     margin-bottom: 0;
 }
 
-.struct-pred-section .collapsible {
-    width: 100%;
-    background-color: var(--color-bg-secondary);
-    color: var(--color-text-primary);
-    cursor: pointer;
-    padding: 10px 12px;
-    border: 1px solid var(--color-border-light);
-    border-radius: var(--radius-md);
-    text-align: left;
-    outline: none;
-    font-size: var(--font-size-md);
-    font-weight: var(--font-weight-medium);
-    transition: all var(--transition-base);
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-}
-
-.struct-pred-section .collapsible:hover {
-    background-color: var(--color-gray-200);
-    border-color: var(--color-border-dark);
-}
-
-.struct-pred-section:has(.collapsible[aria-expanded="true"]) .collapsible {
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-    border-bottom: none;
-}
-
 .struct-pred-section .collapsible span {
     flex: 1;
 }
@@ -164,26 +139,15 @@
     margin-bottom: var(--spacing-sm);
 }
 
-.genomic-location-section .collapsible {
-    background: white;
-    font-size: var(--font-size-base);
-    padding: var(--spacing-sm) 10px;
-}
-
 .genomic-location-content,
 .colocated-variant-content,
 .colocated-variant-xrefs {
     padding: 10px 12px;
-    background: white;
+    background: var(--color-bg-tertiary);
     border: 1px solid var(--color-border-light);
     border-top: none;
     border-radius: 0 0 var(--radius-md) var(--radius-md);
     margin-bottom: var(--spacing-sm);
-}
-
-.colocated-variant-content {
-    padding: 12px 16px;
-    background: var(--color-bg-tertiary);
 }
 
 /* ============================================
@@ -205,7 +169,9 @@
     }
 
     .collapsible-content,
-    .struct-pred-content {
+    .struct-pred-content,
+    .feature-content,
+    .protein-info-content {
         padding: 10px 12px;
     }
 }
@@ -231,7 +197,9 @@
     }
 
     .collapsible-content,
-    .struct-pred-content {
+    .struct-pred-content,
+    .feature-content,
+    .protein-info-content {
         background: var(--color-bg-tertiary);
         border-color: var(--color-border-light);
     }
@@ -241,17 +209,9 @@
         color: var(--color-text-secondary);
     }
 
-    .genomic-location-section .collapsible {
-        background: var(--color-bg-primary);
-    }
-
     .genomic-location-content,
+    .colocated-variant-content,
     .colocated-variant-xrefs {
-        background: var(--color-bg-primary);
-        border-color: var(--color-border-light);
-    }
-
-    .colocated-variant-content {
         background: var(--color-bg-tertiary);
         border-color: var(--color-border-light);
     }

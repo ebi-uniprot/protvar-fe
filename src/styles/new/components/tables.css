@@ -3,42 +3,38 @@
  */
 
 /* ============================================
-   UNIFIED STRUCTURE TABLES CARD
-   All three sections (PDB, Predicted, Interactions) in one card
+   STRUCTURE TABLES STACK
+   Each structure type is its own separate card
    ============================================ */
 
-.structure-tables-unified {
-    background: white;
-    border: 1px solid var(--color-border-light);
+.structure-tables-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
+}
+
+/* Matches .annotation-column */
+.structure-type-section {
+    background: var(--color-bg-secondary);
     border-radius: var(--radius-lg);
     overflow: hidden;
     box-shadow: var(--shadow-sm);
 }
 
 /* ============================================
-   SECTION HEADER (replaces structure-table-header)
+   SECTION HEADER — matches .column-header
    ============================================ */
 
 .structure-section-header {
     display: flex;
     align-items: center;
     gap: 5px;
-    padding: 6px 12px;
+    padding: 8px 12px;
     background: #e8eaed;
-    border-top: 1px solid var(--color-border-light);
     border-bottom: 1px solid var(--color-border-light);
-    font-size: var(--font-size-xs);
+    font-size: var(--font-size-sm);
     font-weight: var(--font-weight-semibold);
-    color: var(--color-text-secondary);
-}
-
-.structure-section-header:first-child {
-    border-top: none;
-}
-
-/* Space between sections */
-.structure-section-header:not(:first-child) {
-    margin-top: 8px;
+    color: var(--color-text-primary);
 }
 
 /* Inline help icon — borderless blue filled i, pushed to far right in section header */
@@ -341,15 +337,14 @@
    ============================================ */
 
 @media (prefers-color-scheme: dark) {
-    .structure-tables-unified {
-        background: var(--color-bg-primary);
-        border-color: var(--color-border-light);
+    .structure-type-section {
+        background: var(--color-bg-secondary);
     }
 
     .structure-section-header {
-        background: var(--color-bg-secondary);
+        background: var(--color-bg-tertiary);
         border-color: var(--color-border-light);
-        color: var(--color-text-secondary);
+        color: var(--color-text-primary);
     }
 
     .structure-col-header {

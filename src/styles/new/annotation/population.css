@@ -11,73 +11,54 @@
 }
 
 .allele-freq-header {
-    font-size: 13px;
-    font-weight: 600;
-    color: #555;
-    margin-bottom: 8px;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-secondary);
+    margin-bottom: 6px;
 }
 
 .allele-freq-content {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 4px;
 }
 
-.allele-freq-card {
-    background: white;
-    border: 1px solid #e0e0e0;
-    border-radius: 6px;
-    padding: 10px 12px;
-    transition: box-shadow 0.2s ease;
-}
-
-.allele-freq-card:hover {
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-}
-
-.allele-freq-top {
+/* Compact single-row per allele with colored left accent */
+.allele-freq-row {
     display: flex;
-    align-items: baseline;
-    gap: 8px;
-    margin-bottom: 6px;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 10px;
+    border-left: 3px solid transparent;
+    border-radius: var(--radius-sm);
+    background: var(--color-bg-secondary);
+    font-size: var(--font-size-sm);
 }
 
-.allele-name {
-    font-size: 14px;
-    font-weight: 600;
-    color: #333;
+.allele-freq-name {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    min-width: 2ch;
 }
 
-.allele-value {
-    font-size: 15px;
-    font-weight: 600;
-    color: #4a90e2;
+.allele-freq-value {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-primary);
     font-family: 'Courier New', Consolas, Monaco, monospace;
+    min-width: 8ch;
 }
 
-.allele-freq-bottom {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    font-size: 12px;
-}
-
-.allele-classification {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    color: #666;
+.allele-freq-class {
+    color: var(--color-text-secondary);
     font-style: italic;
+    flex: 1;
 }
 
-.allele-classification .bi-circle-fill {
-    font-size: 10px;
-}
-
-.allele-count {
-    color: #888;
+.allele-freq-count {
+    color: var(--color-text-muted);
     font-family: 'Courier New', Consolas, Monaco, monospace;
+    font-size: var(--font-size-xs);
+    margin-left: auto;
 }
 
 /* ============================================
@@ -88,68 +69,56 @@
     margin-top: 24px;
 }
 
-.association-card {
-    background: #f8f9fa;
-    padding: 12px 14px;
-    border-left: 3px solid #4a90e2;
-    border-radius: 4px;
-    margin-bottom: 12px;
-    font-size: 13px;
-}
-
-.association-card:last-child {
-    margin-bottom: 0;
-}
-
-.association-name {
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 6px;
-}
 
 /* ============================================
-   SUBMITTED VARIANT DETAILS
+   VARIANT SELECTOR ITEMS (submitted + co-located)
    ============================================ */
 
-.submitted-variant-details {
-    margin: 0;
-}
-
-.protein-change-card {
+.variant-item {
     display: flex;
-    align-items: center;
+    align-items: baseline;
     justify-content: space-between;
-    gap: 16px;
-    padding: 14px 16px;
-    background: white;
-    border: 1px solid #e0e0e0;
-    border-radius: 6px;
-    margin-bottom: 16px;
-    transition: box-shadow 0.2s ease;
+    gap: 12px;
+    padding: 8px 12px;
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-sm);
+    margin-bottom: 6px;
+    cursor: pointer;
+    transition: background var(--transition-base), border-color var(--transition-base);
+    background: var(--color-bg-primary);
 }
 
-.protein-change-card:hover {
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+.variant-item:hover {
+    background: var(--color-bg-secondary);
+    border-color: var(--color-border-medium);
 }
 
-.protein-change {
-    font-size: 14px;
-    font-weight: 600;
-    color: #333;
-    flex-shrink: 0;
+.variant-item--selected {
+    background: var(--color-primary-lightest);
+    border-color: var(--color-primary);
 }
 
-.genomic-location {
-    font-size: 13px;
-    font-weight: 400;
-    color: #888;
+.variant-item--selected:hover {
+    background: var(--color-primary-lightest);
+}
+
+.variant-change {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    white-space: nowrap;
+}
+
+.variant-location {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
     text-align: right;
     word-break: break-all;
 }
 
 .submitted-variant-no-data {
-    font-weight: 600;
-    color: #666;
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-secondary);
     font-style: italic;
     padding: 12px 0;
 }
@@ -160,120 +129,33 @@
 
 .colocated-variants-intro {
     margin-bottom: 12px;
-    font-size: 13px;
-    color: #666;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
     line-height: 1.5;
 }
 
-.colocated-variant-section {
-    margin-bottom: 8px;
-}
-
-.colocated-variant-content {
-    padding: 12px 16px;
-    background: #f8f9fa;
-    border: 1px solid #e8e8e8;
-    border-top: none;
-    border-radius: 0 0 6px 6px;
-    animation: slideDown 0.2s ease-out;
-}
-
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-4px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.genomic-location-section {
-    margin-bottom: 8px;
-}
-
-.genomic-location-section .collapsible {
-    background: white;
-    font-size: 13px;
-    padding: 8px 10px;
-}
-
-.colocated-variant-xrefs {
-    padding: 10px 12px;
-    background: white;
-    border: 1px solid #e8e8e8;
-    border-top: none;
-    border-radius: 0 0 6px 6px;
-    margin-bottom: 8px;
-}
-
 /* ============================================
-   CROSS-REFERENCES (XREFS)
+   SHARED VARIANT DETAIL PANEL (below both columns)
    ============================================ */
 
-.xref-section {
-    margin-top: 8px;
+@keyframes panelHighlight {
+    0%   { box-shadow: 0 0 0 2px var(--color-primary); }
+    100% { box-shadow: var(--shadow-sm); }
 }
 
-.xref-source-group {
-    margin-bottom: 10px;
+.variant-detail-panel {
+    margin-top: var(--spacing-xl);
+    animation: panelHighlight 0.5s ease-out;
 }
 
-/* XRef source header - contains name, significance, and freq inline */
-.xref-source-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-bottom: 4px;
+.variant-detail-location {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-normal);
+    color: var(--color-text-muted);
+    margin-left: var(--spacing-sm);
 }
 
-.xref-source-name {
-    font-weight: 600;
-    color: #555;
-}
 
-.xref-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    list-style: none;
-    padding-left: 0;
-    margin: 4px 0;
-}
-
-.xref-list li {
-    margin: 0;
-}
-
-.xref-list.collapsed li:nth-child(n+6) {
-    display: none;
-}
-
-.xref-significance {
-    font-style: italic;
-    color: #666;
-    font-size: 12px;
-}
-
-.xref-pop-freq {
-    font-size: 12px;
-    color: #666;
-    margin-top: 2px;
-}
-
-.xref-pop-freq b {
-    font-weight: 600;
-    color: #555;
-}
-
-/* Inline pop freq (next to source name) */
-.xref-pop-freq-inline {
-    font-size: 12px;
-    color: #666;
-    font-style: italic;
-}
 
 /* ============================================
    POPULATION FREQUENCIES
@@ -283,22 +165,48 @@
     margin-top: 12px;
 }
 
-.population-freq-item {
-    background: #f8f9fa;
-    padding: 8px 12px;
-    border-radius: 4px;
-    margin-bottom: 6px;
-    font-size: 13px;
+/* Grid of source cells — mirrors .xref-groups */
+.pop-freq-groups {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 6px;
+    padding-left: 8px;
 }
 
-.population-freq-source {
-    font-weight: 600;
-    color: #555;
+.pop-freq-source-group {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 6px 8px;
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-sm);
+}
+
+.pop-freq-source-name {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
     margin-bottom: 2px;
 }
 
-.population-freq-data {
-    color: #666;
+.pop-freq-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 6px;
+    font-size: var(--font-size-xs);
+}
+
+.pop-freq-population {
+    color: var(--color-text-secondary);
+    flex: 1;
+}
+
+.pop-freq-value {
+    font-family: 'Courier New', Consolas, Monaco, monospace;
+    color: var(--color-primary);
+    white-space: nowrap;
 }
 
 /* ============================================
@@ -306,58 +214,24 @@
    ============================================ */
 
 @media (max-width: 768px) {
-    .xref-list {
+
+
+    .allele-freq-row {
         gap: 6px;
-        font-size: 12px;
+        padding: 4px 8px;
     }
 
-    .association-card {
-        padding: 10px 12px;
-        font-size: 12px;
+    .allele-freq-value {
+        min-width: 7ch;
     }
 
-    .colocated-variant-content,
-    .colocated-variant-xrefs {
-        padding: 10px 12px;
-    }
-
-    .allele-freq-section {
-        margin-bottom: 12px;
-    }
-
-    .allele-freq-card {
-        padding: 8px 10px;
-    }
-
-    .allele-freq-top {
-        gap: 6px;
-    }
-
-    .allele-name {
-        font-size: 13px;
-    }
-
-    .allele-value {
-        font-size: 14px;
-    }
-
-    .allele-freq-bottom {
-        font-size: 11px;
-    }
-
-    .protein-change-card {
+    .variant-item {
         flex-direction: column;
         align-items: flex-start;
-        gap: 8px;
-        padding: 12px 14px;
+        gap: 4px;
     }
 
-    .protein-change {
-        font-size: 15px;
-    }
-
-    .genomic-location {
-        font-size: 12px;
+    .variant-location {
         text-align: left;
     }
 }
@@ -367,112 +241,47 @@
    ============================================ */
 
 @media (prefers-color-scheme: dark) {
-    .allele-freq-header {
-        color: #b0b0b0;
+    .allele-freq-row {
+        background: var(--color-bg-secondary);
     }
 
-    .allele-freq-card {
-        background: #1e1e1e;
-        border-color: #3a3a3a;
+    .allele-freq-value {
+        color: var(--color-primary);
     }
 
-    .allele-freq-card:hover {
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    .allele-freq-class {
+        color: var(--color-text-tertiary);
     }
 
-    .allele-name {
-        color: #e0e0e0;
-    }
-
-    .allele-value {
-        color: #6ea8fe;
-    }
-
-    .allele-classification {
-        color: #999;
-    }
-
-    .allele-count {
-        color: #999;
-    }
-
-    .protein-change-card {
-        background: #1e1e1e;
-        border-color: #3a3a3a;
-    }
-
-    .protein-change-card:hover {
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-    }
-
-    .protein-change {
-        color: #e0e0e0;
-    }
-
-    .genomic-location {
-        color: #999;
+    .allele-freq-count {
+        color: var(--color-text-muted);
     }
 
     .submitted-variant-no-data {
-        color: #999;
+        color: var(--color-text-tertiary);
     }
 
     .colocated-variants-intro {
-        color: #999;
+        color: var(--color-text-tertiary);
     }
 
-    .colocated-variant-content {
-        background: #252525;
-        border-color: #3a3a3a;
+
+
+
+    .pop-freq-source-group {
+        background: var(--color-bg-secondary);
+        border-color: var(--color-border-light);
     }
 
-    .genomic-location-section .collapsible {
-        background: #1e1e1e;
+    .pop-freq-source-name {
+        color: var(--color-text-primary);
     }
 
-    .colocated-variant-xrefs {
-        background: #1e1e1e;
-        border-color: #3a3a3a;
+    .pop-freq-population {
+        color: var(--color-text-tertiary);
     }
 
-    .xref-source-name {
-        color: #b0b0b0;
-    }
-
-    .xref-significance {
-        color: #999;
-    }
-
-    .xref-pop-freq {
-        color: #999;
-    }
-
-    .xref-pop-freq b {
-        color: #b0b0b0;
-    }
-
-    .xref-pop-freq-inline {
-        color: #999;
-    }
-
-    .association-card {
-        background: #2a2a2a;
-        border-left-color: #6ea8fe;
-    }
-
-    .association-name {
-        color: #e0e0e0;
-    }
-
-    .population-freq-item {
-        background: #2a2a2a;
-    }
-
-    .population-freq-source {
-        color: #b0b0b0;
-    }
-
-    .population-freq-data {
-        color: #999;
+    .pop-freq-value {
+        color: var(--color-primary);
     }
 }

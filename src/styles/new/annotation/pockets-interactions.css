@@ -40,48 +40,6 @@
     margin-bottom: 0;
 }
 
-.struct-pred-section .collapsible {
-    width: 100%;
-    background-color: #fafafa;
-    color: #333;
-    cursor: pointer;
-    padding: 10px 12px;
-    border: 1px solid #e8e8e8;
-    border-radius: 6px;
-    text-align: left;
-    outline: none;
-    font-size: 14px;
-    font-weight: 500;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.struct-pred-section .collapsible:hover {
-    background-color: #f0f0f0;
-    border-color: #d8d8d8;
-}
-
-.struct-pred-section:has(.collapsible[aria-expanded="true"]) .collapsible {
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-    border-bottom: none;
-}
-
-.struct-pred-section .collapsible span {
-    flex: 1;
-}
-
-/* Structure prediction content */
-.struct-pred-content {
-    padding: 14px;
-    background: #f8f9fa;
-    border: 1px solid #e8e8e8;
-    border-top: none;
-    border-radius: 0 0 6px 6px;
-    animation: expandDown 0.2s ease-out;
-}
 
 .struct-pred-description {
     margin: 0 0 12px 0;
@@ -265,30 +223,6 @@
 
 @media (prefers-color-scheme: dark) {
 
-    /* Structure Predictions Dark Mode */
-    .struct-pred-section .collapsible {
-        background: #1e1e1e;
-        border-color: #3a3a3a;
-        color: #e0e0e0;
-    }
-
-    .struct-pred-section .collapsible:hover {
-        background: #252525;
-        border-color: #4a4a4a;
-    }
-
-    .struct-pred-content {
-        background: #252525;
-        border-color: #3a3a3a;
-    }
-
-    .struct-pred-description {
-        color: #b0b0b0;
-    }
-
-    .struct-pred-help {
-        color: #999;
-    }
 
     .pocket-card,
     .interaction-grid {

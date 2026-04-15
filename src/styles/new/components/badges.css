@@ -18,6 +18,22 @@
     color: var(--color-text-primary);
 }
 
+/* Compact numeric count indicator */
+.count-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    padding: 1px 5px;
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-muted);
+    line-height: 1.4;
+}
+
 /* ============================================
    DATA RICHNESS BADGE
    ============================================ */

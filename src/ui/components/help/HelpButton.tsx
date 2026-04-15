@@ -31,7 +31,6 @@ export const HelpButton: React.FC<HelpBtnProps> = ({ title, content, variant }) 
       {title}{' '}
       <i
         className={`bi bi-info-circle${mouseOver ? `-fill` : ''}`}
-        style={{ verticalAlign: 'super', fontSize: '13px' }}
       />
     </span>
   );
