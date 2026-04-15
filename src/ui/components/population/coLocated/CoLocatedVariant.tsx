@@ -1,65 +1,42 @@
-import React, { useState } from 'react';
-import { StringVoidFun } from '../../../../constants/CommonTypes';
-import CoLocatedVariantGenomicLocation from './CoLocatedVariantGenomicLocation';
+import React from 'react';
 import {Variant} from "../../../../types/PopulationObservation";
+
 interface CoLocatedVariantProps {
-  toggleCoLocated: StringVoidFun
-  coLocatedVariants: Array<Variant>
-  expandedCoLocatedKey: string
+  coLocatedVariants: Variant[];
+  selectedVariant: Variant | null;
+  onSelect: (variant: Variant) => void;
 }
 
-function CoLocatedVariant(props: CoLocatedVariantProps) {
-  const { toggleCoLocated, expandedCoLocatedKey, coLocatedVariants } = props;
-  const [expandedGenomicKey, setExpandedGenomicKey] = useState('');
+function getVariantLabel(variant: Variant): string {
+  if (variant.genomicLocation?.length > 0) return variant.genomicLocation[0];
+  if (variant.xrefs?.length > 0) return variant.xrefs[0].id;
+  return '';
+}
 
-  const toggleGenomic = (key: string) => {
-    setExpandedGenomicKey(expandedGenomicKey === key ? '' : key);
-  };
+function CoLocatedVariant({ coLocatedVariants, selectedVariant, onSelect }: CoLocatedVariantProps) {
+  return (
+    <>
+      {coLocatedVariants.map((variant, index) => {
+        const change = variant.wildType + ' > ' + variant.alternativeSequence;
+        const label = getVariantLabel(variant);
+        const isSelected = selectedVariant === variant;
 
-  // Group variants by change (wildType > alternativeSequence)
-  const coLocatedVariantsMap = new Map<string, Variant[]>();
-  coLocatedVariants.forEach((variant) => {
-    const change = variant.wildType + ' > ' + variant.alternativeSequence;
-    if (!coLocatedVariantsMap.has(change)) {
-      coLocatedVariantsMap.set(change, []);
-    }
-    coLocatedVariantsMap.get(change)!.push(variant);
-  });
-
-  const variantDetails: Array<React.JSX.Element> = [];
-  coLocatedVariantsMap.forEach((variants, change) => {
-    const isExpanded = change === expandedCoLocatedKey;
-
-    variantDetails.push(
-      <div key={change} className="colocated-variant-section">
-        <button
-          type="button"
-          className="collapsible"
-          onClick={() => toggleCoLocated(change)}
-          aria-expanded={isExpanded}
-        >
-          <i className={`bi bi-chevron-${isExpanded ? 'down' : 'right'} chevron-icon`}></i>
-          <b>{change} ({variants.length})</b>
-        </button>
-
-        {isExpanded && (
-          <div className="colocated-variant-content">
-
-              {variants.map((variant, index) => (
-                <CoLocatedVariantGenomicLocation
-                  coLocatedVariant={variant}
-                  toggleGenomic={toggleGenomic}
-                  expandedGenomicKey={expandedGenomicKey}
-                />
-              ))}
-
+        return (
+          <div
+            key={index}
+            className={`variant-item${isSelected ? ' variant-item--selected' : ''}`}
+            onClick={() => onSelect(variant)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={e => e.key === 'Enter' && onSelect(variant)}
+          >
+            <span className="variant-change">{change}</span>
+            {label && <span className="variant-location">{label}</span>}
           </div>
-        )}
-      </div>
-    );
-  });
-
-  return <>{variantDetails}</>;
+        );
+      })}
+    </>
+  );
 }
 
 export default CoLocatedVariant;

@@ -1,8 +1,8 @@
 import React, { Fragment, useMemo } from "react";
 import { Evidence } from "../../../types/Common";
 import PubMedList from "./PubMedList";
-
 import {ExtLink} from "./Link";
+import { getSourceRank } from "./sourceRanking";
 
 export interface IdUrl {
   id: string;
@@ -14,7 +14,7 @@ interface EvidencesProps {
 }
 
 const Evidences = ({ evidences }: EvidencesProps) => {
-  // Group evidences by source name
+  // Group evidences by source name, sorted by clinical authority rank
   const evidencesBySource = useMemo(() => {
     const grouped = new Map<string, IdUrl[]>();
 
@@ -33,7 +33,11 @@ const Evidences = ({ evidences }: EvidencesProps) => {
       }
     });
 
-    return grouped;
+    // Sort entries by rank
+    const sorted: [string, IdUrl[]][] = Array.from(grouped.entries()).sort(
+      ([a], [b]) => getSourceRank(a) - getSourceRank(b)
+    );
+    return new Map<string, IdUrl[]>(sorted);
   }, [evidences]);
 
   if (!evidences || evidences.length === 0) {
@@ -44,17 +48,19 @@ const Evidences = ({ evidences }: EvidencesProps) => {
     <div className="evidences-container">
       {Array.from(evidencesBySource.entries()).map(([sourceName, ids]) => (
         <Fragment key={sourceName}>
-          <b>{sourceName.toLowerCase() === 'pubmed' ? 'PubMed' : sourceName}</b>
+          <span className="source-label">
+            {sourceName.toLowerCase() === 'pubmed' ? 'PubMed' : sourceName}
+          </span>
           {sourceName.toLowerCase() === 'pubmed' ? (
             <PubMedList ids={ids} />
           ) : (
-            <ul className="evidences-list">
+            <div className="id-list">
               {ids.map((evidence) => (
-                <li key={evidence.id}>
+                <span key={evidence.id} className="id-chip">
                   <ExtLink url={evidence.sourceUrl} text={evidence.id} />
-                </li>
+                </span>
               ))}
-            </ul>
+            </div>
           )}
         </Fragment>
       ))}

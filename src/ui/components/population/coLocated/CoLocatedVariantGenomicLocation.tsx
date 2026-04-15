@@ -1,5 +1,5 @@
-import AssociationDetails from "../common/AssociationDetails";
-import XRefDetail from "../common/XRefDetail";
+import AssociatedDiseases from "../common/AssociatedDiseases";
+import XRefList from "../common/XRefList";
 import PopulationFrequencyDetails from "../common/PopulationFrequencyDetails";
 import { StringVoidFun } from "../../../../constants/CommonTypes";
 import {VariantAssociation, Variant} from "../../../../types/PopulationObservation";
@@ -44,7 +44,7 @@ function CoLocatedVariantGenomicLocationDetail(props: CoLocatedVariantGenomicLoc
 
   return (
     <div className="colocated-variant-xrefs">
-      <XRefDetail
+      <XRefList
         xrefs={variant.xrefs}
         populationFrequencies={variant.populationFrequencies}
         clinicalSignificances={variant.clinicalSignificances}
@@ -62,7 +62,7 @@ function getAssociationsTag(associations: Array<VariantAssociation>) {
     return (
       <li>
         <b>Associated Diseases from UniProt:</b>
-        <AssociationDetails associations={associations} />
+        <AssociatedDiseases associations={associations} />
       </li>
     );
   }

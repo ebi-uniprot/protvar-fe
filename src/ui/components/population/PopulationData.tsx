@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import LoaderRow from '../../pages/result/LoaderRow';
 import {getPopulationData} from "../../../services/ProtVarService";
-import {PopulationObservation} from "../../../types/PopulationObservation";
+import {PopulationObservation, Variant} from "../../../types/PopulationObservation";
 import {TOTAL_COLS} from "../../../constants/SearchResultTable";
 import PopulationIcon from "../../../images/human.svg";
 import {HelpButton} from "../help/HelpButton";
 import {HelpContent} from "../help/HelpContent";
-import Spaces from "../../elements/Spaces";
 import {ShareAnnotationIcon} from "../common/ShareLink";
 import {PopulationAlleleFreq} from "./PopulationAlleleFreq";
 import SubmittedVariantDetails from "./SubmittedVariantDetails";
 import CoLocatedVariantDetails from "./coLocated/CoLocatedVariantDetails";
-import AssociationDetails from "./common/AssociationDetails";
+import AssociatedDiseases from "./common/AssociatedDiseases";
+import XRefList from "./common/XRefList";
+import PopulationFrequencyDetails from "./common/PopulationFrequencyDetails";
 
 interface PopulationDataProps {
   annotation: string
@@ -23,43 +24,43 @@ interface PopulationDataProps {
 function PopulationData(props: PopulationDataProps) {
   const { annotation, populationObservationsUri, variantAA, genomicVariant } = props;
   const [poApiData, setPoApiData] = useState<PopulationObservation>();
+  const [selectedVariant, setSelectedVariant] = useState<Variant | null>(null);
 
-  // Calculate data richness
   const calculateDataRichness = (data?: PopulationObservation): number => {
     if (!data) return 0;
-
     let score = 0;
     if (data.freqMap && Object.keys(data.freqMap).length > 0) score += 0.4;
     if (data.variants && data.variants.length > 0) score += 0.3;
     if (data.variants?.[0]?.association) score += 0.3;
-
     return Math.min(score, 1.0);
   };
 
-  //const dataRichness = poApiData ? calculateDataRichness(poApiData) : Math.random();
   const dataRichness = calculateDataRichness(poApiData);
 
   useEffect(() => {
-    getPopulationData(populationObservationsUri).then(
-      response => {
-        setPoApiData(response.data);
-      }
-    );
+    getPopulationData(populationObservationsUri).then(response => {
+      setPoApiData(response.data);
+    });
   }, [populationObservationsUri]);
 
-  // Show loader while fetching data
+  // Default selection: submitted variant when data loads
+  useEffect(() => {
+    if (poApiData) {
+      const submitted = poApiData.variants?.filter(v => v.alternativeSequence === variantAA) || [];
+      setSelectedVariant(submitted[0] || poApiData.variants?.[0] || null);
+    }
+  }, [poApiData, variantAA]);
+
   if (!poApiData) return <LoaderRow />;
 
   const proteinVariants = poApiData.variants || [];
-  // If no protein variants are found and no allele frequency is available
   if (proteinVariants.length === 0 && (!poApiData.freqMap || Object.keys(poApiData.freqMap).length === 0)) {
     return <NoPopulationDataRow/>;
   }
 
-  const submittedVariants = proteinVariants.filter(variant => variant.alternativeSequence === props.variantAA);
-  const colocatedVariants = proteinVariants.filter(variant => variant.alternativeSequence !== props.variantAA);
+  const submittedVariants = proteinVariants.filter(variant => variant.alternativeSequence === variantAA);
+  const colocatedVariants = proteinVariants.filter(variant => variant.alternativeSequence !== variantAA);
 
-  // Determine which allele frequencies to show in each column
   const parts = genomicVariant.split("-");
   const isValid = parts.length === 4;
   const alt = isValid ? parts[3] : null;
@@ -68,6 +69,11 @@ function PopulationData(props: PopulationDataProps) {
   const otherFreqMap = poApiData.freqMap && alt
     ? Object.fromEntries(Object.entries(poApiData.freqMap).filter(([allele]) => allele !== alt))
     : {};
+
+  const selectedChange = selectedVariant
+    ? `${selectedVariant.wildType} > ${selectedVariant.alternativeSequence}`
+    : null;
+  const selectedLocation = selectedVariant?.genomicLocation?.[0];
 
   return (
     <tr>
@@ -95,16 +101,21 @@ function PopulationData(props: PopulationDataProps) {
               <ShareAnnotationIcon annotation={props.annotation}/>
             </div>
           </div>
+
           <div className="annotation-grid">
-            {/* Left Column: Submitted Variant Details */}
+            {/* Left Column: Submitted Variant */}
             <div className="annotation-column">
-              <div className="column-header">Submitted Variant Details</div>
+              <div className="column-header">Submitted Variant</div>
               <PopulationAlleleFreq
                 freqMap={mainFreqMap}
                 genomicVariant={props.genomicVariant}
                 stdColor={false}
               />
-              <SubmittedVariantDetails variants={submittedVariants} />
+              <SubmittedVariantDetails
+                variants={submittedVariants}
+                selectedVariant={selectedVariant}
+                onSelect={setSelectedVariant}
+              />
             </div>
 
             {/* Right Column: Co-located Variants */}
@@ -115,19 +126,33 @@ function PopulationData(props: PopulationDataProps) {
                 genomicVariant={props.genomicVariant}
                 stdColor={false}
               />
-              <CoLocatedVariantDetails coLocatedVariants={colocatedVariants}/>
+              <CoLocatedVariantDetails
+                coLocatedVariants={colocatedVariants}
+                selectedVariant={selectedVariant}
+                onSelect={setSelectedVariant}
+              />
             </div>
           </div>
 
-          {/* Associated Diseases - Full Width Below */}
-          {submittedVariants.length > 0 && submittedVariants[0].association && (
-            <div className="association-section">
-              <div className="section-title">
-                <span>Associated Diseases from UniProt</span>
+          {/* Shared Detail Panel: XRef + Diseases for selected variant */}
+          {selectedVariant && (
+            <div
+              key={selectedVariant.wildType + selectedVariant.alternativeSequence + (selectedVariant.genomicLocation?.[0] ?? '')}
+              className="annotation-column variant-detail-panel"
+            >
+              <div className="column-header">
+                {selectedChange}
+                {selectedLocation && (
+                  <span className="variant-detail-location">{selectedLocation}</span>
+                )}
               </div>
-              <div className="section-content">
-                <AssociationDetails associations={submittedVariants[0].association}/>
-              </div>
+              <XRefList
+                xrefs={selectedVariant.xrefs}
+                populationFrequencies={selectedVariant.populationFrequencies}
+                clinicalSignificances={selectedVariant.clinicalSignificances}
+              />
+              <PopulationFrequencyDetails populationFrequencies={selectedVariant.populationFrequencies} />
+              <AssociatedDiseases associations={selectedVariant.association} />
             </div>
           )}
 

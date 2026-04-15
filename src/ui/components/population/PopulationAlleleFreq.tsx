@@ -63,27 +63,19 @@ function AlleleFreqCard({ allele, freq, genomicVariant, stdColor }: AlleleFreqCa
   const classification = getClassification(freq.af);
   const showAcAn = freq.ac !== undefined && freq.an !== undefined;
   const gnomadUrl = buildGnomadUrl(genomicVariant, allele);
+  const accentColor = stdColor ? classification.stdColor : classification.color;
 
   return (
-    <div className="allele-freq-card">
-      <div className="allele-freq-top">
-        <span className="allele-name">{allele}:</span>
-        <span className="allele-value" title={freq.af.toString()}>{freq.af.toFixed(PRECISION)}</span>
-        <span className="ml-auto">
-          <ExtLink url={gnomadUrl} title={`View ${allele} in GnomAD`} />
+    <div className="allele-freq-row" style={{ borderLeftColor: accentColor }}>
+      <span className="allele-freq-name">{allele}</span>
+      <span className="allele-freq-value" title={freq.af.toString()}>{freq.af.toFixed(PRECISION)}</span>
+      <span className="allele-freq-class" title={classification.range}>{classification.text}</span>
+      {showAcAn && (
+        <span className="allele-freq-count" title="Alternate allele count / Total number of alleles">
+          {freq.ac}/{freq.an}
         </span>
-      </div>
-      <div className="allele-freq-bottom">
-        <span className="allele-classification">
-          <i className="bi bi-circle-fill" style={{ color: stdColor ? classification.stdColor : classification.color }}></i>
-          {classification.text}
-        </span>
-        {showAcAn && (
-          <span className="allele-count" title="Alternate allele count / Total number of alleles">
-            {freq.ac}/{freq.an}
-          </span>
-        )}
-      </div>
+      )}
+      <ExtLink url={gnomadUrl} title={`View ${allele} in GnomAD`} />
     </div>
   );
 }
