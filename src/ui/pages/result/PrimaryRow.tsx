@@ -13,6 +13,7 @@ import {
 import { ALLELE, CONSEQUENCES } from "../../../constants/SearchResultTable";
 import Spaces from "../../elements/Spaces";
 import Tool from "../../elements/Tool";
+import {TextLink} from "../../components/common/Link";
 import {caddScoreAttr, formatCaddScore} from "../../components/function/prediction/CaddScorePred";
 import {amScoreAttr, formatAMScore} from "../../components/function/prediction/AlphaMissensePred";
 import ProteinIcon from '../../../images/proteins.svg';
@@ -136,30 +137,23 @@ export const getNewPrimaryRow = (isoformKey: string, isoformGroup: string, isofo
     <tr style={rowBg(index)} title={'Input: ' + input.inputStr}>
       <td style={genomicStyle}>
         <Tool tip="Click to see the a summary for this chromosome from Ensembl" pos="up-left">
-          <a href={getEnsemblChrUrl(genomicVariant.chromosome)} target="_blank" rel="noopener noreferrer">
-            {genomicVariant.chromosome}
-          </a>
+          <TextLink url={getEnsemblChrUrl(genomicVariant.chromosome)} text={genomicVariant.chromosome} />
         </Tool>
       </td>
       <td style={genomicStyle}>
         <Tool tip="Click to see the region detail for this genomic coordinate from Ensembl" pos="up-left">
           {(input.type === "GENOMIC" && 'isLiftedFrom37' in input && input.isLiftedFrom37) && <span className="h37">37&rarr;38</span>}
-          <a href={getEnsemblViewUrl(genomicVariant.chromosome, genomicVariant.position)} target="_blank" rel="noopener noreferrer">
-            {genomicVariant.position}
-          </a>
+          <TextLink url={getEnsemblViewUrl(genomicVariant.chromosome, genomicVariant.position)} text={String(genomicVariant.position)} />
         </Tool>
       </td>
       <td style={idStyle}><Tool tip="Variant ID provided by the user">
-        { idValue && <a href={getIdUrl(idValue)} target="_blank" rel="noopener noreferrer">
-          {idValue}
-        </a>
-      }
+        { idValue && <TextLink url={getIdUrl(idValue)} text={idValue} /> }
       </Tool></td>
       <td><Tool tip={ALLELE.get(genomicVariant.refBase)}>{genomicVariant.refBase}</Tool></td>
       <td><Tool tip={ALLELE.get(gene.altAllele)}>{gene.altAllele}</Tool></td>
       <td>
         <Tool tip="Click here for gene information from Ensembl">
-          <a href={ENSEMBL_GENE_URL + gene.geneName} target="_blank" rel="noopener noreferrer">{gene.geneName}</a>
+          <TextLink url={ENSEMBL_GENE_URL + gene.geneName} text={gene.geneName} />
         </Tool>
       </td>
       <td>
@@ -179,8 +173,7 @@ export const getNewPrimaryRow = (isoformKey: string, isoformGroup: string, isofo
           <CanonicalIcon isCanonical={isoform.canonical}/>
           <Spaces/>
           <Tool tip="Click to see the UniProt page for this accession">
-            <a href={UNIPROT_ACCESSION_URL + isoform.accession} target="_blank"
-               rel="noopener noreferrer">{isoform.accession}</a>
+            <TextLink url={UNIPROT_ACCESSION_URL + isoform.accession} text={isoform.accession} />
           </Tool>
           {hasAltIsoForm && <>
             <Spaces/>

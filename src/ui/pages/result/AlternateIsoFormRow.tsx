@@ -1,4 +1,5 @@
 import { UNIPROT_ACCESSION_URL } from "../../../constants/ExternalUrls";
+import {TextLink} from "../../components/common/Link";
 import { ANNOTATION_COLS, CONSEQUENCES, GENOMIC_COLS } from "../../../constants/SearchResultTable";
 import { fullAminoAcidName } from "../../../utills/Util";
 import Tool from "../../elements/Tool";
@@ -38,7 +39,7 @@ export function getAlternateIsoFormRow(isoformKey: string, index: number, isofor
       <CanonicalIcon isCanonical={false}/>
       <Spaces/>
       <Tool tip="Click to see the UniProt page for this accession">
-        <a href={UNIPROT_ACCESSION_URL + isoform.accession} target="_blank" rel="noopener noreferrer">{isoform.accession}</a>
+        <TextLink url={UNIPROT_ACCESSION_URL + isoform.accession} text={isoform.accession} />
       </Tool>
     </td>
     <td><Tool tip={isoform.proteinName}>{getProteinName(isoform.proteinName)}</Tool></td>

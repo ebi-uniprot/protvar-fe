@@ -6,6 +6,7 @@ import React from 'react';
 import { Interaction } from '../../../../types/Prediction';
 import { InteractionCard } from './InteractionCard';
 import { EmptyState } from '../common/EmptyState';
+import { ExpandableList } from '../../common/ExpandableList';
 
 interface InteractionListProps {
   interactions: Interaction[];
@@ -39,7 +40,7 @@ export function InteractionList({
         aria-expanded={isExpanded}
       >
         <i className={`bi bi-chevron-${isExpanded ? 'down' : 'right'} chevron-icon`}></i>
-        <span>Protein-protein interfaces containing variant</span>
+        <span>Protein-protein interfaces containing variant <span className="count-badge">{interactions.length}</span></span>
       </button>
 
       {isExpanded && (
@@ -54,15 +55,18 @@ export function InteractionList({
             <div></div>
           </div>
 
-          {interactions.map((interaction, index) => (
-            <InteractionCard
-              key={`interaction-${index + 1}`}
-              interaction={interaction}
-              currentAccession={accession}
-              index={index}
-              onViewInStructure={onViewInStructure}
-            />
-          ))}
+          <ExpandableList
+            items={interactions}
+            renderItem={(interaction, index) => (
+              <InteractionCard
+                key={`interaction-${index + 1}`}
+                interaction={interaction}
+                currentAccession={accession}
+                index={index}
+                onViewInStructure={onViewInStructure}
+              />
+            )}
+          />
 
           <p className="struct-pred-help">
             Click on <i className="bi bi-eye" /> to visualise interacting structure in the 3D structure tab.

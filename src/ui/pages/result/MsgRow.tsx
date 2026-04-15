@@ -7,6 +7,7 @@ import {
 import {rowBg} from "./ResultTable";
 import Tool from "../../elements/Tool";
 import {getEnsemblChrUrl, getEnsemblViewUrl, getIdUrl, getIdValue} from "./PrimaryRow";
+import {TextLink} from "../../components/common/Link";
 
 export const WARN_ICON = <><i className="msg-warn bi bi-exclamation-triangle-fill"></i>{' '}</>
 export const ERROR_ICON = <><i className="msg-error bi bi-x-circle-fill"></i>{' '}</>
@@ -49,24 +50,16 @@ const MsgRow = ({
           <>
             <td>
               <Tool tip="Click to see the a summary for this chromosome from Ensembl" pos="up-left">
-                <a href={getEnsemblChrUrl(genomicVariant.chromosome)} target="_blank" rel="noopener noreferrer">
-                  {genomicVariant.chromosome}
-                </a>
+                <TextLink url={getEnsemblChrUrl(genomicVariant.chromosome)} text={genomicVariant.chromosome} />
               </Tool>
             </td>
             <td>
               <Tool tip="Click to see the region detail for this genomic coordinate from Ensembl" pos="up-left">
-                <a href={getEnsemblViewUrl(genomicVariant.chromosome, genomicVariant.position)} target="_blank"
-                   rel="noopener noreferrer">
-                  {genomicVariant.position}
-                </a>
+                <TextLink url={getEnsemblViewUrl(genomicVariant.chromosome, genomicVariant.position)} text={String(genomicVariant.position)} />
               </Tool>
             </td>
             <td><Tool tip="Variant ID provided by the user">
-              { idValue && <a href={getIdUrl(idValue)} target="_blank" rel="noopener noreferrer">
-                {idValue}
-              </a>
-              }
+              { idValue && <TextLink url={getIdUrl(idValue)} text={idValue} /> }
             </Tool></td>
             <td><Tool tip={ALLELE.get(genomicVariant.refBase)}>{genomicVariant.refBase}</Tool></td>
             <td><Tool tip={ALLELE.get(genomicVariant.altBase)}>{genomicVariant.altBase}</Tool></td>

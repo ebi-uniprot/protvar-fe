@@ -48,7 +48,7 @@ export function PocketList({
         aria-expanded={isExpanded}
       >
         <i className={`bi bi-chevron-${isExpanded ? 'down' : 'right'} chevron-icon`}></i>
-        <span>Pockets containing variant</span>
+        <span>Pockets containing variant <span className="count-badge">{pockets.length}</span></span>
       </button>
 
       {isExpanded && (

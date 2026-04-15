@@ -14,16 +14,16 @@ function GeneAndTranslatedSequence(props: GeneAndTranslatedSequenceProps) {
 
   return (
     <div className="gene-sequence-panel">
-      <div className="section-title">Ensembl Gene and Transcript Information</div>
+      <div className="column-header">Ensembl Gene and Transcript Information</div>
 
       <div className="gene-sequence-grid">
         <div className="gene-info">
-          <h4>Ensembl Gene</h4>
+          <div className="section-title">Ensembl Gene</div>
           <ExtLink url={ensgUrl} text={ensg} />
         </div>
 
         <div className="transcript-info">
-          <h4>Canonical Isoform Transcripts</h4>
+          <div className="section-title">Canonical Isoform Transcripts</div>
           <div className="transcript-list">
             {ensp.map((ensps, index) => {
               const enspsUrl = ENSEMBL_GENE_RUL + ensps.ensp;

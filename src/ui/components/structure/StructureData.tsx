@@ -73,7 +73,7 @@ function StructureData(props: StructureDataProps) {
 
     getStructureData(proteinStructureUri)
       .then((res) => {
-        if (!isCancelled) setPdbeData(res.data);
+        if (!isCancelled) setPdbeData(res.data ?? []);
         return getPredictedStructure(isoFormAccession);
       })
       .then((res) => {
@@ -106,8 +106,8 @@ function StructureData(props: StructureDataProps) {
       })
       .then((res) => {
         if (res && !isCancelled) {
-          setInteractionData(res.data.interactions);
-          setPocketData(res.data.pockets);
+          setInteractionData(res.data.interactions ?? []);
+          setPocketData(res.data.pockets ?? []);
         }
       })
       .catch((err) => console.error("Error fetching structure data:", err))
@@ -377,48 +377,54 @@ function StructureData(props: StructureDataProps) {
           {/* Content - Tables Left, Viewer Right */}
           <div className="annotation-content structure-layout">
             <div className="annotation-tables-column">
-              <div className="structure-tables-unified">
-                <PdbeStructureTable
-                  isoFormAccession={isoFormAccession}
-                  pdbeData={pdbeData}
-                  selectedPdbId={"pdbId" in selected ? selected.pdbId : ""}
-                  setSelected={setSelected}
-                  molstar={molstar}
-                  urlParams={urlParams}
-                />
-                {predictedData.length > 0 && (
-                  <PredictedStructureTable
+              <div className="structure-tables-stack">
+                <div className="structure-type-section">
+                  <PdbeStructureTable
                     isoFormAccession={isoFormAccession}
-                    predictedStructureData={predictedData}
-                    selectedPredictedStructure={"modelEntityId" in selected ? selected.modelEntityId : ""}
-                    setSelected={(structure) => {
-                      setSelected(structure);
-                      if ("paeImageUrl" in structure) {
-                        setPaeUrl(structure.paeImageUrl);
-                        setIsPaeOpen(true);
-                      } else {
-                        setIsPaeOpen(false);
-                      }
-                    }}
-                    aaPos={aaPosition}
-                    pocketData={pocketData}
+                    pdbeData={pdbeData}
+                    selectedPdbId={"pdbId" in selected ? selected.pdbId : ""}
+                    setSelected={setSelected}
                     molstar={molstar}
                     urlParams={urlParams}
                   />
+                </div>
+                {predictedData?.length > 0 && (
+                  <div className="structure-type-section">
+                    <PredictedStructureTable
+                      isoFormAccession={isoFormAccession}
+                      predictedStructureData={predictedData}
+                      selectedPredictedStructure={"modelEntityId" in selected ? selected.modelEntityId : ""}
+                      setSelected={(structure) => {
+                        setSelected(structure);
+                        if ("paeImageUrl" in structure) {
+                          setPaeUrl(structure.paeImageUrl);
+                          setIsPaeOpen(true);
+                        } else {
+                          setIsPaeOpen(false);
+                        }
+                      }}
+                      aaPos={aaPosition}
+                      pocketData={pocketData}
+                      molstar={molstar}
+                      urlParams={urlParams}
+                    />
+                  </div>
                 )}
-                {interactionData.length > 0 && (
-                  <InteractingStructureTable
-                    isoFormAccession={isoFormAccession}
-                    interactionData={interactionData}
-                    selectedInteraction={"a" in selected && "b" in selected ? (selected.a + "_" + selected.b) : ""}
-                    setSelected={(interaction) => {
-                      setSelected(interaction);
-                      setIsPaeOpen(false);
-                    }}
-                    aaPos={aaPosition}
-                    molstar={molstar}
-                    urlParams={urlParams}
-                  />
+                {interactionData?.length > 0 && (
+                  <div className="structure-type-section">
+                    <InteractingStructureTable
+                      isoFormAccession={isoFormAccession}
+                      interactionData={interactionData}
+                      selectedInteraction={"a" in selected && "b" in selected ? (selected.a + "_" + selected.b) : ""}
+                      setSelected={(interaction) => {
+                        setSelected(interaction);
+                        setIsPaeOpen(false);
+                      }}
+                      aaPos={aaPosition}
+                      molstar={molstar}
+                      urlParams={urlParams}
+                    />
+                  </div>
                 )}
               </div>
             </div>

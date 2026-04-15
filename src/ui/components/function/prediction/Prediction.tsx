@@ -34,7 +34,7 @@ export interface PredictionProps {
 
 export const Prediction = (props: PredictionProps) => {
   const state = useContext(AppContext);
-  const highlightedPrediction = usePredictionHighlight();
+  const { highlightedPrediction } = usePredictionHighlight();
 
   const hasPathogenicityPredictions = props.caddScore || props.amScore ||
     props.functionalData.eveScore || props.functionalData.esmScore ||

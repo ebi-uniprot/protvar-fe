@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {PredictionType} from "../../../../hooks/usePredictionHighlight";
 import './SharePredictionLink.css';
 
@@ -13,6 +13,7 @@ export function SharePredictionLink({
                                       title
                                     }: SharePredictionLinkProps) {
   const location = useLocation();
+  const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
 
   const handleClick = (e: React.MouseEvent) => {
@@ -30,6 +31,9 @@ export function SharePredictionLink({
     }).catch(err => {
       console.error('Failed to copy link:', err);
     });
+
+    // Trigger local highlight via URL — the hook reads this and fires the highlight
+    navigate({ search: params.toString() }, { replace: true });
   };
 
   return (

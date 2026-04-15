@@ -18,11 +18,16 @@ function ProteinInfoPanel(props: ProteinInfoPanelProps) {
 
   return (
     <div className="protein-info-panel">
-      <div className="section-title">Protein Information from UniProt</div>
+      <div className="column-header">Protein Information from UniProt</div>
 
       {/* Protein Function */}
       <div className="protein-function-section">
-        <h4>General Function</h4>
+        <div className="section-title">
+          <span>
+            General Function
+            {functionComments.length > 0 && <span className="count-badge" style={{ marginLeft: 5 }}>{functionComments.length}</span>}
+          </span>
+        </div>
         {!hasFunction ? (
           <p className="no-data">No protein function information available</p>
         ) : (
@@ -48,7 +53,7 @@ function ProteinInfoPanel(props: ProteinInfoPanelProps) {
       {/* Protein Details Grid */}
       <div className="protein-details-grid">
         <div className="protein-basic-info">
-          <h4>Basic Information</h4>
+          <div className="section-title">Basic Information</div>
           <div className="info-list">
             {functionalData.name && (
               <div className="info-row">
@@ -97,7 +102,7 @@ function ProteinInfoPanel(props: ProteinInfoPanelProps) {
         </div>
 
         <div className="protein-detailed-info">
-          <h4>Detailed Information</h4>
+          <div className="section-title">Detailed Information</div>
           <ProteinInformationRegions
             groupedComments={groupedComments}
             accession={functionalData.accession}

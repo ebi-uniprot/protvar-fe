@@ -39,7 +39,15 @@ export function ResidueColumn(props: ResidueColumnProps) {
     <div className="residue-annotations">
       <div className="column-header">Variant Residue Position</div>
 
-      <div className="section-title">UniProt Annotations</div>
+      <div className="section-title">
+        <span>
+          UniProt Annotations
+          {props.residues.length > 0 && (
+            <span className="count-badge" style={{ marginLeft: 6 }}>{props.residues.length}</span>
+          )}
+        </span>
+        <HelpButton variant="inline" title="" content={<HelpContent name="uniprot-feature-ranking" />} />
+      </div>
 
       {props.residues.length === 0 ? (
         <EmptyState message="No functional data for the variant position" />
@@ -55,16 +63,17 @@ export function ResidueColumn(props: ResidueColumnProps) {
       <AminoAcidModel refAA={props.refAA} variantAA={props.variantAA} />
 
       <div className="predictions-section">
-        <div className="predictions-header">
+        <div className="section-title">
           <span>Predictions</span>
-          <HelpButton title="" content={<HelpContent name="predictions" />} />
+          <HelpButton variant="inline" title="" content={<HelpContent name="predictions" />} />
         </div>
 
         {/* Color settings before predictions */}
         <div className="colour-toggle">
-          <label title="Uncheck to use original source colours">
+          <label className="toggle-switch" title="Toggle between ProtVar standardised and original source colours">
             <input type="checkbox" checked={state.stdColor} onChange={toggleStdColor} />
-            <span>ProtVar standardised colours</span>
+            <span className="toggle-track"><span className="toggle-thumb"></span></span>
+            <span className="toggle-label">ProtVar standardised colours</span>
           </label>
         </div>
 
