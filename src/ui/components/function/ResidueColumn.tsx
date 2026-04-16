@@ -20,7 +20,7 @@ interface ResidueColumnProps {
   functionalData: FunctionalInfo;
   refAA: string;
   variantAA: string;
-  expandedSection: string;
+  expandedSections: Set<string>;
   onToggleSection: (key: string) => void;
   ensg: string;
   ensp: TranslatedSequence[];
@@ -54,7 +54,7 @@ export function ResidueColumn(props: ResidueColumnProps) {
       ) : (
         <FeatureList
           features={props.residues}
-          expandedSection={props.expandedSection}
+          expandedSections={props.expandedSections}
           onToggle={props.onToggleSection}
           keyPrefix="residue"
         />

@@ -4,6 +4,7 @@ import {VariantAssociation} from "../../../../types/PopulationObservation";
 import {ExpandableList} from "../../common/ExpandableList";
 import {ExpandableText} from "../../common/ExpandableText";
 
+
 interface AssociatedDiseasesProps {
   associations: VariantAssociation[];
 }
@@ -27,16 +28,11 @@ function AssociatedDiseases({ associations }: AssociatedDiseasesProps) {
 }
 
 function AssociationCard({ association }: { association: VariantAssociation }) {
-  const description = association.description?.replace(/α/g, "Alpha");
+  const text = (association.description || association.name).replace(/α/g, "Alpha");
 
   return (
     <div className="association-card">
-      <div className="association-name">{association.name}</div>
-      {description && (
-        <div className="association-description">
-          <ExpandableText text={description} charLimit={150} />
-        </div>
-      )}
+      <ExpandableText text={text} charLimit={150} />
       <Evidences evidences={association.evidences} />
     </div>
   );

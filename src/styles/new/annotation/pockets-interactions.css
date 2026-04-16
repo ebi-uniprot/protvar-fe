@@ -1,289 +1,265 @@
+/**
+ * pockets-interactions.css
+ * Pocket and PPI rows — styled to match structure table row pattern
+ */
+
 /* ============================================
-   CONFIDENCE LEVELS
+   CONFIDENCE LEVEL COLOURS
    ============================================ */
 
-/* Confidence icons and labels */
-.conf-vhigh {
-    color: #28a745;
-}
-
-.conf-high {
-    color: #5cb85c;
-}
-
-.conf-low {
-    color: #f0ad4e;
-}
-
-.conf-vlow {
-    color: #d9534f;
-}
+.conf-vhigh { color: #1a7a30; }  /* dark green */
+.conf-high  { color: #3aaa5a; }  /* medium green — distinct from dark, no halo */
+.conf-low   { color: #c97a00; }  /* amber — darker than #f0ad4e to avoid halo */
+.conf-vlow  { color: #c0392b; }  /* strong red */
 
 .conf-vhigh,
 .conf-high,
 .conf-low,
 .conf-vlow {
-    font-size: 14px;
-    margin-right: 4px;
+    font-size: var(--font-size-sm);
+    margin-right: 2px;
+    -webkit-font-smoothing: antialiased;
 }
 
 /* ============================================
-   STRUCTURE PREDICTIONS (POCKETS & INTERACTIONS)
+   POCKET ENTRIES
+   Hover covers the full two-row entry
    ============================================ */
 
-/* Structure prediction section wrapper */
-.struct-pred-section {
-    margin-bottom: 12px;
+.pocket-entries {
+    border-top: 1px solid var(--color-border-light);
 }
 
-.struct-pred-section:last-child {
-    margin-bottom: 0;
+.pocket-entry {
+    border-bottom: 1px solid var(--color-border-light);
+    transition: background var(--transition-base);
 }
 
-
-.struct-pred-description {
-    margin: 0 0 12px 0;
-    font-size: 13px;
-    color: #555;
-    line-height: 1.5;
+.pocket-entry:last-child {
+    border-bottom: none;
 }
 
-.struct-pred-help {
-    margin: 12px 0 0 0;
-    font-size: 12px;
-    color: #666;
-    font-style: italic;
+.pocket-entry:hover {
+    background: var(--color-primary-lightest);
 }
 
-.struct-pred-help .bi-eye {
-    color: #4a90e2;
-}
-
-/* Pocket Grid (2-column label-value grid) */
-.pocket-grid {
-    display: grid;
-    grid-template-columns: 160px 1fr;
-    gap: 8px 16px;
+/* Row 1: identity + key metrics */
+.pocket-row {
+    display: flex;
     align-items: center;
-    font-size: 13px;
-    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: var(--spacing-lg);
+    padding: 6px 12px 3px 12px;
+    font-size: var(--font-size-sm);
 }
 
-.pocket-grid label,
-.pocket-grid > div:nth-child(odd):not(.pocket-confidence-dropdown) {
-    font-weight: 500;
-    color: #555;
+.pocket-id-btn {
+    min-width: 3.5rem;
+    font-weight: var(--font-weight-semibold);
 }
 
-/* Pocket Card */
-.pocket-card {
-    background: white;
-    border: 1px solid #e0e0e0;
-    border-radius: 6px;
-    padding: 14px;
-    margin-bottom: 12px;
-    transition: box-shadow 0.2s ease;
-}
-
-.pocket-card:hover {
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-}
-
-.pocket-card:last-child {
-    margin-bottom: 0;
-}
-
-.pocket-score {
-    font-weight: 600;
-    color: #333;
-    font-size: 14px;
-}
-
-/* View Structure Button */
-.view-structure-button {
-    background: none;
-    border: none;
-    color: #4a90e2;
-    cursor: pointer;
-    padding: 0;
-    font-size: 13px;
-    font-weight: 500;
+.pocket-metric {
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    transition: all 0.2s ease;
+}
+
+.pocket-score {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+}
+
+/* Row 2: supplementary metrics — dot-separated, muted */
+.pocket-details {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 0 12px 6px 12px;
+    font-size: var(--font-size-xs);
+    color: var(--color-text-secondary);
+    gap: 0;
+}
+
+.pocket-details span {
+    white-space: nowrap;
+}
+
+.pocket-details span + span::before {
+    content: '·';
+    margin: 0 var(--spacing-sm);
+    color: var(--color-text-muted);
+}
+
+.pocket-detail-label {
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-tertiary);
+    margin-right: 3px;
+}
+
+/* Residues: normal font, can wrap */
+.pocket-residues-value {
+    font-size: var(--font-size-xs);
+    word-break: break-word;
+    white-space: normal;
+}
+
+/* ============================================
+   POCKET FILTER — confidence-level pills
+   ============================================ */
+
+.pocket-filter-pills-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    padding: 5px 12px;
+    border-bottom: 1px solid var(--color-border-light);
+    font-size: var(--font-size-xs);
+}
+
+.pocket-filter-label {
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+    font-weight: var(--font-weight-medium);
+    margin-right: 2px;
+}
+
+.pocket-filter-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 2px 8px;
+    border: 1px solid var(--color-border-medium);
+    border-radius: 10px;
+    background: none;
+    font-size: var(--font-size-xs);
+    cursor: pointer;
+    color: var(--color-text-secondary);
+    transition: border-color var(--transition-base), background var(--transition-base), color var(--transition-base);
+}
+
+.pocket-filter-pill:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    background: var(--color-primary-lightest);
+}
+
+.pocket-filter-pill.active {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    background: var(--color-primary-lightest);
+    font-weight: var(--font-weight-medium);
+}
+
+.pocket-filter-clear {
+    background: none;
+    border: none;
+    padding: 0 4px;
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: color var(--transition-base);
+}
+
+.pocket-filter-clear:hover {
+    color: var(--color-text-secondary);
+}
+
+/* ============================================
+   INTERACTION ROWS
+   Must share grid-template-columns with .interaction-col-header
+   ============================================ */
+
+.interaction-row {
+    display: grid;
+    grid-template-columns: 1fr 5rem auto;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: 5px 12px;
+    font-size: var(--font-size-sm);
+    border-bottom: 1px solid var(--color-border-light);
+    transition: background var(--transition-base);
+}
+
+.interaction-row:last-child {
+    border-bottom: none;
+}
+
+.interaction-row:hover {
+    background: var(--color-primary-lightest);
+}
+
+.pdockq-score {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    font-family: var(--font-family-mono);
+}
+
+/* ============================================
+   SHARED: VIEW STRUCTURE BUTTON
+   ============================================ */
+
+.view-structure-button {
+    background: none;
+    border: none;
+    color: var(--color-primary);
+    cursor: pointer;
+    padding: 0;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-normal);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: color var(--transition-base);
 }
 
 .view-structure-button:hover {
-    color: #357abd;
+    color: var(--color-primary-dark);
     text-decoration: underline;
 }
 
 .view-structure-button:focus {
-    outline: 2px solid #4a90e2;
+    outline: 2px solid var(--color-primary);
     outline-offset: 2px;
-    border-radius: 2px;
+    border-radius: var(--radius-sm);
 }
 
-.view-structure-button .bi-eye {
-    font-size: 14px;
-}
-
-/* Pocket Filter Dropdown */
-.pocket-confidence-dropdown {
-}
-
-.pocket-confidence-dropdown .dropdown-trigger {
-    width: 100%;
-    padding: 6px 10px;
-    font-size: 13px;
-    border: 1px solid #d0d0d0;
-    border-radius: 4px;
-    background: white;
-    cursor: pointer;
-    transition: border-color 0.2s ease;
-}
-
-.pocket-confidence-dropdown .dropdown-trigger:hover {
-    border-color: #4a90e2;
-}
-
-.pocket-confidence-dropdown .dropdown-content {
-    border: 1px solid #d0d0d0;
-    border-radius: 4px;
-    background: white;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    max-height: 200px;
-    overflow-y: auto;
-}
-
-.pocket-confidence-dropdown .dropdown-option {
-    padding: 8px 12px;
-    font-size: 13px;
-    cursor: pointer;
-    transition: background-color 0.15s ease;
-}
-
-.pocket-confidence-dropdown .dropdown-option:hover {
-    background-color: #f0f0f0;
-}
-
-.pocket-confidence-dropdown .dropdown-option.selected {
-    background-color: #e8f4f8;
-    color: #4a90e2;
-    font-weight: 500;
-}
-
-/* Interaction Grid (3-column table-like layout) */
-.interaction-header {
-    display: grid;
-    grid-template-columns: 2fr 1fr 2fr;
-    gap: 12px;
-    padding: 8px 12px;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: 600;
-    color: #555;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-    margin-bottom: 8px;
-}
-
-.interaction-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr 2fr;
-    gap: 12px;
-    align-items: center;
-    padding: 10px 12px;
-    background: white;
-    border: 1px solid #e0e0e0;
-    border-radius: 6px;
-    font-size: 13px;
-    margin-bottom: 8px;
-    transition: box-shadow 0.2s ease;
-}
-
-.interaction-grid:hover {
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-}
-
-.interaction-grid:last-of-type {
-    margin-bottom: 0;
-}
-
-.pdockq-score {
-    font-weight: 600;
-    color: #333;
-    font-size: 14px;
+.structure-icon-sm {
+    width: 14px;
+    height: 14px;
+    vertical-align: middle;
+    opacity: 0.8;
 }
 
 /* ============================================
-   DARK MODE SUPPORT
+   DARK MODE
    ============================================ */
 
 @media (prefers-color-scheme: dark) {
-
-
-    .pocket-card,
-    .interaction-grid {
-        background: #1e1e1e;
-        border-color: #3a3a3a;
+    .pocket-entry:hover,
+    .interaction-row:hover {
+        background: rgba(110, 168, 254, 0.08);
     }
 
-    .pocket-card:hover,
-    .interaction-grid:hover {
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    .pocket-entry,
+    .interaction-row {
+        border-color: var(--color-border-light);
     }
 
-    .pocket-grid label,
-    .pocket-grid > div:nth-child(odd):not(.pocket-confidence-dropdown) {
-        color: #b0b0b0;
+    .pocket-filter-pill {
+        border-color: var(--color-border-medium);
+        color: var(--color-text-tertiary);
     }
 
-    .pocket-score,
-    .pdockq-score {
-        color: #e0e0e0;
+    .pocket-filter-pill:hover,
+    .pocket-filter-pill.active {
+        background: rgba(110, 168, 254, 0.1);
+        border-color: var(--color-primary);
+        color: var(--color-primary);
     }
 
-    .view-structure-button {
-        color: #6ea8fe;
-    }
-
-    .view-structure-button:hover {
-        color: #8bb9fe;
-    }
-
-    .interaction-header {
-        background: #2a4a5a;
-        color: #b0b0b0;
-    }
-
-    .pocket-confidence-dropdown .dropdown-trigger {
-        background: #1e1e1e;
-        border-color: #3a3a3a;
-        color: #e0e0e0;
-    }
-
-    .pocket-confidence-dropdown .dropdown-trigger:hover {
-        border-color: #6ea8fe;
-    }
-
-    .pocket-confidence-dropdown .dropdown-content {
-        background: #2a2a2a;
-        border-color: #3a3a3a;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-    }
-
-    .pocket-confidence-dropdown .dropdown-option {
-        color: #e0e0e0;
-    }
-
-    .pocket-confidence-dropdown .dropdown-option:hover {
-        background-color: #3a3a3a;
-    }
-
-    .pocket-confidence-dropdown .dropdown-option.selected {
-        background-color: #2a4a5a;
-        color: #6ea8fe;
-    }
+    .conf-vhigh { color: #4ccc74; }
+    .conf-high  { color: #7ddba0; }
+    .conf-low   { color: #f5b840; }
+    .conf-vlow  { color: #e06060; }
 }

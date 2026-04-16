@@ -97,9 +97,14 @@
     grid-template-columns: 1fr 3.5rem auto;
 }
 
-/* Interactions: Chain A | Chain B | pDockQ */
+/* Interactions: Partner | pDockQ | Confidence */
 .interaction-col-header {
-    grid-template-columns: 1fr 1fr 4.5rem;
+    grid-template-columns: 1fr 5rem auto;
+}
+
+/* Pockets: Pocket | Score | pLDDT | Residues */
+.pocket-col-header {
+    grid-template-columns: 5rem 7rem 6rem 1fr;
 }
 
 /* ============================================

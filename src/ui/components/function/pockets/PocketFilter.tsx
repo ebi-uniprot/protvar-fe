@@ -1,51 +1,60 @@
 /**
- * Filter component for pockets by confidence level
+ * Confidence-level pill filter for pockets.
+ * Only renders when pockets span more than one confidence level.
  */
 
-import React from 'react';
-import { Dropdown } from 'react-dropdown-now';
+import React, { useState, useMemo } from 'react';
 import { Pocket } from '../../../../types/Prediction';
-import {POCKET_FILTER_OPTIONS} from "../utils/confidenceUtils";
+import { getPocketConfidence, CONFIDENCE_LEVELS, ConfidenceLevel } from '../utils/confidenceUtils';
 
 interface PocketFilterProps {
   pockets: Pocket[];
   onFilter: (filteredPockets: Pocket[]) => void;
 }
 
+const ORDERED_LEVELS: ConfidenceLevel[] = [
+  CONFIDENCE_LEVELS.VERY_HIGH,
+  CONFIDENCE_LEVELS.HIGH,
+  CONFIDENCE_LEVELS.LOW,
+];
+
 export function PocketFilter({ pockets, onFilter }: PocketFilterProps) {
-  const handleFilterChange = (option: any) => {
-    const filterValue = option.value;
+  const [activeLabel, setActiveLabel] = useState<string | null>(null);
 
-    const filtered = pockets.filter(pocket => {
-      if (filterValue === 0) {
-        // Very high confidence: >900
-        return pocket.score > 900;
-      } else if (filterValue === 1) {
-        // High confidence: 800-900
-        return pocket.score >= 800 && pocket.score <= 900;
-      } else if (filterValue === 2) {
-        // Low confidence: <800
-        return pocket.score < 800;
-      } else {
-        // Show all (filterValue === -1)
-        return true;
-      }
-    });
+  const presentLevels = useMemo(() => {
+    const labels = new Set(pockets.map(p => getPocketConfidence(p.score).label));
+    return ORDERED_LEVELS.filter(level => labels.has(level.label));
+  }, [pockets]);
 
-    onFilter(filtered);
+  // Only show when there are multiple distinct confidence levels
+  if (presentLevels.length <= 1) return null;
+
+  const handlePill = (label: string) => {
+    const next = activeLabel === label ? null : label;
+    setActiveLabel(next);
+    onFilter(
+      next ? pockets.filter(p => getPocketConfidence(p.score).label === next) : pockets
+    );
   };
 
   return (
-    <div className="pocket-grid">
-      <div>Pocket confidence</div>
-      <div>
-        <Dropdown
-          className="pocket-confidence-dropdown"
-          placeholder="Show all"
-          options={POCKET_FILTER_OPTIONS}
-          onChange={handleFilterChange}
-        />
-      </div>
+    <div className="pocket-filter-pills-row">
+      <span className="pocket-filter-label">Filter:</span>
+      {presentLevels.map(level => (
+        <button
+          key={level.label}
+          className={`pocket-filter-pill${activeLabel === level.label ? ' active' : ''}`}
+          onClick={() => handlePill(level.label)}
+          title={activeLabel === level.label ? 'Clear filter' : `Show ${level.label} only`}
+        >
+          <i className={`bi ${level.icon} ${level.className}`} /> {level.label}
+        </button>
+      ))}
+      {activeLabel && (
+        <button className="pocket-filter-clear" onClick={() => handlePill(activeLabel)}>
+          ✕ clear
+        </button>
+      )}
     </div>
   );
 }

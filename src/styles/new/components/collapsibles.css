@@ -17,7 +17,7 @@
     border-radius: var(--radius-md);
     text-align: left;
     outline: none;
-    font-size: var(--font-size-md);
+    font-size: var(--font-size-base);
     font-weight: var(--font-weight-medium);
     transition: all var(--transition-base);
     display: flex;
@@ -90,14 +90,6 @@
 /* ============================================
    STRUCTURE PREDICTION COLLAPSIBLES
    ============================================ */
-
-.struct-pred-section {
-    margin-bottom: 12px;
-}
-
-.struct-pred-section:last-child {
-    margin-bottom: 0;
-}
 
 .struct-pred-section .collapsible span {
     flex: 1;

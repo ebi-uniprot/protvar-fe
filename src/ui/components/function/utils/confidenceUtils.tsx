@@ -16,25 +16,25 @@ export const CONFIDENCE_LEVELS = {
     threshold: 900,
     icon: 'bi-caret-up-fill',
     className: 'conf-vhigh',
-    label: 'very high confidence',
+    label: 'very high',
   },
   HIGH: {
     threshold: 800,
     icon: 'bi-caret-up-fill',
     className: 'conf-high',
-    label: 'high confidence',
+    label: 'high',
   },
   LOW: {
     threshold: 0,
     icon: 'bi-caret-down-fill',
     className: 'conf-low',
-    label: 'low confidence',
+    label: 'low',
   },
   VERY_LOW: {
     threshold: 0,
     icon: 'bi-caret-down-fill',
     className: 'conf-vlow',
-    label: 'very low confidence',
+    label: 'very low',
   },
 } as const;
 

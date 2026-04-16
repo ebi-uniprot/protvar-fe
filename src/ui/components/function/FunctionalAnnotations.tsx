@@ -17,12 +17,17 @@ export interface FunctionalAnnotationsProps {
 }
 
 function FunctionalAnnotations(props: FunctionalAnnotationsProps) {
-  const [expandedSection, setExpandedSection] = useState<string>('');
+  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set());
   const { openPocketInStructure, openInteractionInStructure } = useStructureNavigation();
 
-  // Toggle function - compares current state
+  // Toggle: each section expands/collapses independently
   const toggleSection = (key: string) => {
-    setExpandedSection(expandedSection === key ? '' : key);
+    setExpandedSections(prev => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
   };
 
   // Filter features into residues and regions
@@ -41,7 +46,7 @@ function FunctionalAnnotations(props: FunctionalAnnotationsProps) {
         functionalData={props.functionalData}
         refAA={props.refAA}
         variantAA={props.variantAA}
-        expandedSection={expandedSection}
+        expandedSections={expandedSections}
         onToggleSection={toggleSection}
         ensg={props.ensg}
         ensp={props.ensp}
@@ -54,7 +59,7 @@ function FunctionalAnnotations(props: FunctionalAnnotationsProps) {
         accession={props.functionalData.accession}
         pockets={props.functionalData.pockets}
         interactions={props.functionalData.interactions}
-        expandedSection={expandedSection}
+        expandedSections={expandedSections}
         onToggleSection={toggleSection}
         onViewPocket={openPocketInStructure}
         onViewInteraction={openInteractionInStructure}

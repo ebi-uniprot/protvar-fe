@@ -608,11 +608,12 @@
     border-top: none;
     border-radius: 0 0 var(--radius-md) var(--radius-md);
     animation: expandDown 0.2s ease-out;
+    font-size: var(--font-size-base);
 }
 
 .protein-info-detail {
     padding: 8px 0;
-    border-bottom: 1px solid #e8e8e8;
+    border-bottom: 1px solid var(--color-border-light);
 }
 
 .protein-info-detail:last-child {
@@ -621,12 +622,13 @@
 
 .protein-info-detail p {
     margin: 0 0 8px 0;
-    line-height: 1.5;
+    line-height: var(--line-height-normal);
+    color: var(--color-text-primary);
 }
 
 .reaction-name {
-    font-weight: 500;
-    color: #333;
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-primary);
 }
 
 .rhea-links {

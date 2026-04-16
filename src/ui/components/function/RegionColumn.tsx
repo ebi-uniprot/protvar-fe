@@ -19,7 +19,7 @@ interface RegionColumnProps {
   accession: string;
   pockets: Pocket[];
   interactions: Interaction[];
-  expandedSection: string;
+  expandedSections: Set<string>;
   onToggleSection: (key: string) => void;
   onViewPocket: (pocket: Pocket) => void;
   onViewInteraction: (interaction: Interaction) => void;
@@ -45,7 +45,7 @@ export function RegionColumn(props: RegionColumnProps) {
       ) : (
         <FeatureList
           features={props.regions}
-          expandedSection={props.expandedSection}
+          expandedSections={props.expandedSections}
           onToggle={props.onToggleSection}
           keyPrefix="region"
         />
@@ -58,7 +58,7 @@ export function RegionColumn(props: RegionColumnProps) {
 
       <PocketList
         pockets={props.pockets}
-        expandedSection={props.expandedSection}
+        expandedSections={props.expandedSections}
         onToggle={props.onToggleSection}
         onViewInStructure={props.onViewPocket}
       />
@@ -66,7 +66,7 @@ export function RegionColumn(props: RegionColumnProps) {
       <InteractionList
         interactions={props.interactions}
         accession={props.accession}
-        expandedSection={props.expandedSection}
+        expandedSections={props.expandedSections}
         onToggle={props.onToggleSection}
         onViewInStructure={props.onViewInteraction}
       />

@@ -9,17 +9,16 @@ import {
   groupFeaturesByType,
   getFeatureLabel,
   getFeaturePriority,
-  FeaturePriority,
 } from '../utils/featureRanking';
 
 interface FeatureListProps {
   features: Feature[];
-  expandedSection: string;
+  expandedSections: Set<string>;
   onToggle: (key: string) => void;
   keyPrefix: string;
 }
 
-export function FeatureList({ features, expandedSection, onToggle, keyPrefix }: FeatureListProps) {
+export function FeatureList({ features, expandedSections, onToggle, keyPrefix }: FeatureListProps) {
   if (features.length === 0) return null;
 
   const grouped = groupFeaturesByType(features);
@@ -31,7 +30,7 @@ export function FeatureList({ features, expandedSection, onToggle, keyPrefix }: 
           key={type}
           type={type}
           features={typeFeatures}
-          expandedSection={expandedSection}
+          expandedSections={expandedSections}
           onToggle={onToggle}
           keyPrefix={keyPrefix}
         />
@@ -43,12 +42,12 @@ export function FeatureList({ features, expandedSection, onToggle, keyPrefix }: 
 interface FeatureGroupProps {
   type: string;
   features: Feature[];
-  expandedSection: string;
+  expandedSections: Set<string>;
   onToggle: (key: string) => void;
   keyPrefix: string;
 }
 
-function FeatureGroup({ type, features, expandedSection, onToggle, keyPrefix }: FeatureGroupProps) {
+function FeatureGroup({ type, features, expandedSections, onToggle, keyPrefix }: FeatureGroupProps) {
   const label = getFeatureLabel(type);
   const priority = getFeaturePriority(type);
 
@@ -68,7 +67,7 @@ function FeatureGroup({ type, features, expandedSection, onToggle, keyPrefix }: 
               key={key}
               itemKey={key}
               feature={feature}
-              isExpanded={expandedSection === key}
+              isExpanded={expandedSections.has(key)}
               onToggle={onToggle}
             />
           );
