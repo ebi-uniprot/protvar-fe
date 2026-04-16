@@ -18,7 +18,7 @@ interface InteractingStructureTableProps {
   urlParams: ReturnType<typeof useStructureUrl>;
 }
 
-function InteractingStructureTable({
+function InteractingStructures({
   isoFormAccession,
   interactionData,
   selectedInteraction,
@@ -73,4 +73,4 @@ function InteractingStructureTable({
   );
 }
 
-export default InteractingStructureTable;
+export default InteractingStructures;

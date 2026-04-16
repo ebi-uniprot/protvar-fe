@@ -21,7 +21,7 @@ interface PredictedStructureTableProps {
   urlParams: ReturnType<typeof useStructureUrl>;
 }
 
-function PredictedStructureTable({
+function PredictedStructures({
   isoFormAccession,
   predictedStructureData,
   selectedPredictedStructure,
@@ -91,4 +91,4 @@ function PredictedStructureTable({
   );
 }
 
-export default PredictedStructureTable;
+export default PredictedStructures;

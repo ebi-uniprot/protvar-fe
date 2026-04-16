@@ -15,7 +15,7 @@ interface PdbeStructureTableProps {
   urlParams: ReturnType<typeof useStructureUrl>;
 }
 
-function PdbeStructureTable({ isoFormAccession, pdbeData, selectedPdbId, setSelected, molstar, urlParams }: PdbeStructureTableProps) {
+function PdbeStructures({ isoFormAccession, pdbeData, selectedPdbId, setSelected, molstar, urlParams }: PdbeStructureTableProps) {
   const grouped = groupBy(pdbeData, "pdbId");
   const count = Object.keys(grouped).length;
   const cards: Array<React.JSX.Element> = [];
@@ -78,4 +78,4 @@ function PdbeStructureTable({ isoFormAccession, pdbeData, selectedPdbId, setSele
   );
 }
 
-export default PdbeStructureTable;
+export default PdbeStructures;

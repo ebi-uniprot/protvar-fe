@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import LoaderRow from '../../pages/result/LoaderRow';
+import Loader from '../../elements/Loader';
 import {getPopulationData} from "../../../services/ProtVarService";
 import {PopulationObservation, Variant} from "../../../types/PopulationObservation";
-import {TOTAL_COLS} from "../../../constants/SearchResultTable";
 import PopulationIcon from "../../../images/human.svg";
 import {HelpButton} from "../help/HelpButton";
 import {HelpContent} from "../help/HelpContent";
 import {ShareAnnotationIcon} from "../common/ShareLink";
+import {NoAnnotationData} from "../common/NoAnnotationData";
 import {PopulationAlleleFreq} from "./PopulationAlleleFreq";
 import SubmittedVariantDetails from "./SubmittedVariantDetails";
 import CoLocatedVariantDetails from "./coLocated/CoLocatedVariantDetails";
@@ -51,11 +51,11 @@ function PopulationData(props: PopulationDataProps) {
     }
   }, [poApiData, variantAA]);
 
-  if (!poApiData) return <LoaderRow />;
+  if (!poApiData) return <div className="annotation-loader"><Loader /></div>;
 
   const proteinVariants = poApiData.variants || [];
   if (proteinVariants.length === 0 && (!poApiData.freqMap || Object.keys(poApiData.freqMap).length === 0)) {
-    return <NoPopulationDataRow/>;
+    return <NoAnnotationData icon={PopulationIcon} iconAlt="Population observation" title="Population Observation" message="No population observation data available" />;
   }
 
   const submittedVariants = proteinVariants.filter(variant => variant.alternativeSequence === variantAA);
@@ -76,10 +76,8 @@ function PopulationData(props: PopulationDataProps) {
   const selectedLocation = selectedVariant?.genomicLocation?.[0];
 
   return (
-    <tr>
-      <td colSpan={TOTAL_COLS} className="expanded-row">
-        <div className="annotation-data-container">
-          <div className="annotation-header">
+    <div className="annotation-data-container">
+      <div className="annotation-header">
             <div className="annotation-title">
               <img
                 src={PopulationIcon}
@@ -156,35 +154,9 @@ function PopulationData(props: PopulationDataProps) {
             </div>
           )}
 
-        </div>
-      </td>
-    </tr>
+    </div>
   );
 }
 
-function NoPopulationDataRow() {
-  return (
-    <tr>
-      <td colSpan={TOTAL_COLS} className="expanded-row">
-        <div className="annotation-data-container">
-          <div className="annotation-header">
-            <div className="annotation-title">
-              <img
-                src={PopulationIcon}
-                className="annotation-icon"
-                data-fill="0.0"
-                alt="Population observation"
-              />
-              <h5>Population Observation</h5>
-            </div>
-          </div>
-          <div className="no-data-message">
-            No population observation data available
-          </div>
-        </div>
-      </td>
-    </tr>
-  );
-}
 
 export default PopulationData;

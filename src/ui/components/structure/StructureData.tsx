@@ -1,10 +1,9 @@
 import React, {useEffect, useState, useRef, useCallback} from 'react';
-import {TOTAL_COLS} from '../../../constants/SearchResultTable';
-import PdbeStructureTable from './tables/PdbeStructureTable';
-import PredictedStructureTable from './tables/PredictedStructureTable';
+import PdbeStructures from './tables/PdbeStructures';
+import PredictedStructures from './tables/PredictedStructures';
 import PdbeMolstar from "./viewer/PdbeMolstar";
-import InteractingStructureTable from "./tables/InteractingStructureTable";
-import LoaderRow from "../../pages/result/LoaderRow";
+import InteractingStructures from "./tables/InteractingStructures";
+import Loader from "../../elements/Loader";
 import {getPredictedStructure} from "../../../services/AlphafoldService";
 import {getFunctionalData, getStructureData} from "../../../services/ProtVarService";
 import {PdbeStructure} from "../../../types/PdbeStructure";
@@ -13,6 +12,7 @@ import StructureIcon from "../../../images/structures-3d.svg";
 import {HelpContent} from "../help/HelpContent";
 import {HelpButton} from "../help/HelpButton";
 import {ShareAnnotationIcon} from "../common/ShareLink";
+import {NoAnnotationData} from "../common/NoAnnotationData";
 import {ALPHAFILL_URL, hasAlphafillStructure} from "../../../services/AlphafillService";
 import {Interaction, Pocket} from "../../../types/Prediction";
 import {useMolstarController} from "./useMolstarController";
@@ -345,13 +345,11 @@ function StructureData(props: StructureDataProps) {
     return actions;
   };
 
-  if (isLoading) return <LoaderRow />;
-  if (!selected) return <NoStructureDataRow />;
+  if (isLoading) return <div className="annotation-loader"><Loader /></div>;
+  if (!selected) return <NoAnnotationData icon={StructureIcon} iconAlt="3D structure" title="3D Structures" message="No structural data available for this protein" />;
 
   return (
-    <tr>
-      <td colSpan={TOTAL_COLS} className="expanded-row">
-        <div className="annotation-data-container">
+    <div className="annotation-data-container">
           <div className="annotation-header">
             <div className="annotation-title">
               <img
@@ -379,7 +377,7 @@ function StructureData(props: StructureDataProps) {
             <div className="annotation-tables-column">
               <div className="structure-tables-stack">
                 <div className="structure-type-section">
-                  <PdbeStructureTable
+                  <PdbeStructures
                     isoFormAccession={isoFormAccession}
                     pdbeData={pdbeData}
                     selectedPdbId={"pdbId" in selected ? selected.pdbId : ""}
@@ -390,7 +388,7 @@ function StructureData(props: StructureDataProps) {
                 </div>
                 {predictedData?.length > 0 && (
                   <div className="structure-type-section">
-                    <PredictedStructureTable
+                    <PredictedStructures
                       isoFormAccession={isoFormAccession}
                       predictedStructureData={predictedData}
                       selectedPredictedStructure={"modelEntityId" in selected ? selected.modelEntityId : ""}
@@ -412,7 +410,7 @@ function StructureData(props: StructureDataProps) {
                 )}
                 {interactionData?.length > 0 && (
                   <div className="structure-type-section">
-                    <InteractingStructureTable
+                    <InteractingStructures
                       isoFormAccession={isoFormAccession}
                       interactionData={interactionData}
                       selectedInteraction={"a" in selected && "b" in selected ? (selected.a + "_" + selected.b) : ""}
@@ -442,35 +440,9 @@ function StructureData(props: StructureDataProps) {
               />
             </div>
           </div>
-        </div>
-      </td>
-    </tr>
+    </div>
   );
 }
 
-function NoStructureDataRow() {
-  return (
-    <tr>
-      <td colSpan={TOTAL_COLS} className="expanded-row">
-        <div className="annotation-data-container">
-          <div className="annotation-header">
-            <div className="annotation-title">
-              <img
-                src={StructureIcon}
-                className="annotation-icon"
-                data-fill="0.0"
-                alt="3D structure"
-              />
-              <h5>3D Structures</h5>
-            </div>
-          </div>
-          <div className="no-data-message">
-            No structural data available for this protein
-          </div>
-        </div>
-      </td>
-    </tr>
-  );
-}
 
 export default StructureData;
