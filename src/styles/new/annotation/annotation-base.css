@@ -160,9 +160,10 @@
 }
 
 /* ============================================
-   NO DATA STATE
+   NO DATA / EMPTY STATES
    ============================================ */
 
+/* Full-panel no-data (used by NoAnnotationData for entire annotation tabs) */
 .no-data-message {
     padding: var(--spacing-xl);
     text-align: center;
@@ -171,6 +172,23 @@
     background: var(--color-bg-secondary);
     border-radius: var(--radius-md);
     border: 1px dashed var(--color-border-dark);
+}
+
+/* Inline empty state (used within sub-sections, e.g. no interactions/pockets) */
+.empty-state-wrapper {
+    display: block;
+    margin-bottom: 6px;
+}
+
+.empty-state {
+    display: inline-block;
+    padding: 5px 10px;
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+    font-style: italic;
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-sm);
 }
 
 .submitted-variant-no-data {
@@ -210,45 +228,6 @@
 .nested-list b {
     font-weight: var(--font-weight-semibold);
     color: var(--color-text-secondary);
-}
-
-/* Flat list variant (horizontal) */
-.flatList {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--spacing-sm);
-    list-style: none;
-    padding-left: 0;
-    margin: var(--spacing-xs) 0;
-}
-
-.flatList li {
-    margin: 0;
-}
-
-.flatList li::after {
-    content: ',';
-    margin-left: 2px;
-    color: var(--color-text-tertiary);
-}
-
-.flatList li:last-child::after {
-    content: '';
-}
-
-/* ============================================
-   EXPANDABLE TEXT COMPONENT
-   ============================================ */
-
-.expandable-text {
-    line-height: var(--line-height-relaxed);
-}
-
-.expandable-text.collapsed {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
 }
 
 /* ============================================
@@ -353,10 +332,6 @@
 
     .nested-list b {
         color: var(--color-text-secondary);
-    }
-
-    .flatList li::after {
-        color: var(--color-text-tertiary);
     }
 
     .colocated-variants-intro {

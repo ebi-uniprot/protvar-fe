@@ -41,3 +41,9 @@
 @import './annotation/structure.css';
 @import './annotation/evidences.css';
 @import './annotation/pockets-interactions.css';
+
+/* ==============================================
+   5. RESULT GRID
+   ============================================== */
+
+@import './result/result-grid.css';

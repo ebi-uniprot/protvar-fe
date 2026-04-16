@@ -1,3 +1,56 @@
+/* ── Result toolbar (pagination + actions row) ── */
+.result-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 4px 0 6px;
+    margin-bottom: 6px;
+}
+
+.result-toolbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+/* Divider between action buttons */
+.result-toolbar-actions > .toolbar-divider {
+    width: 1px;
+    height: 1.2em;
+    background: #c8d4e8;
+    flex-shrink: 0;
+}
+
+/* ── Colour toggle row (below toolbar actions) ── */
+.result-colour-row {
+    display: flex;
+    justify-content: flex-end;
+    padding: 2px 0 4px;
+}
+
+/* ── Notices area (warnings + response messages) ── */
+.result-notices {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 6px;
+}
+
+.result-notice {
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+.result-notice--warn  { background: #fff8e1; border-left: 3px solid #ffc107; color: #6b4c00; }
+.result-notice--error { background: #fef2f2; border-left: 3px solid #dc3545; color: #6d1a23; }
+.result-notice--info  { background: #e8f4fd; border-left: 3px solid #0dcaf0; color: #0c5460; }
+
 /* Sparkle/flash effect for "Result" text when filters are applied */
 .title-sparkle {
     display: inline-block;

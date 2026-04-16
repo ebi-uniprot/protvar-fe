@@ -80,25 +80,6 @@
   cursor: pointer;
 }
 
-.icon-btn {
-  color: black;
-  padding: 4px;
-  border-radius: 10%;
-  border-bottom-color: lightgrey;
-}
-
-.icon-btn:disabled {
-  color: lightgrey;
-}
-
-.icon-btn:hover:not([disabled]) {
-  background-color: #e7e7e7;
-  cursor: pointer;
-}
-.icon-btn:hover:disabled {
-  cursor: default;
-}
-
 .record-count {
   float: right;
   min-width: 24px;

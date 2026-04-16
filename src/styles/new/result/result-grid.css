@@ -1,0 +1,384 @@
+/**
+ * result-grid.css
+ * CSS Grid layout for the main results table.
+ *
+ * Column order (11 cols):
+ *   Genomic: user-id | genomic-pos | codon | cadd
+ *   Protein: isoform | protein-name | aa-change | consequence
+ *   Annotations: popeve | alphamiss | details
+ */
+
+/* ============================================
+   SHARED GRID TEMPLATE
+   All row types and both header rows share this
+   exact template so columns stay aligned.
+   ============================================ */
+
+.result-row,
+.result-col-header,
+.result-group-header {
+    display: grid;
+    grid-template-columns:
+        minmax(5rem, auto)    /* 1  id             */
+        minmax(9rem, auto)    /* 2  genomic-pos     */
+        6.5rem                /* 3  codon           */
+        5rem                  /* 4  cadd            */
+        8rem                  /* 5  isoform         */
+        minmax(8rem, 1fr)     /* 6  protein-name    */
+        6rem                  /* 7  aa-change       */
+        8rem                  /* 8  consequence     */
+        5rem                  /* 9  popeve          */
+        5.5rem                /* 10 alphamiss       */
+        7rem;                 /* 11 details         */
+    column-gap: 6px;
+    align-items: center;
+}
+
+/* ============================================
+   RESULT TABLE CONTAINER
+   ============================================ */
+
+.result-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--font-size-base);
+}
+
+/* ============================================
+   STICKY HEADER
+   ============================================ */
+
+.result-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--color-bg-primary);
+    border-bottom: 2px solid #6987C3;
+}
+
+/* Group header row: Genomic | Protein | Annotations */
+.result-group-header {
+    background: #6987C3;
+    color: white;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.04em;
+}
+
+.result-group-header > * {
+    padding: 3px 6px;
+    text-transform: uppercase;
+}
+
+/* Group spans */
+.result-group-header > :nth-child(1) { grid-column: 1 / 5; }    /* Genomic: user-id…cadd */
+.result-group-header > :nth-child(2) { grid-column: 5 / 11; }   /* Protein: isoform…alphamiss */
+.result-group-header > :nth-child(3) { grid-column: 11 / 12; }  /* Annotations: details only */
+
+/* Dividers between groups */
+.result-group-header > :nth-child(2) {
+    border-left: 1px solid rgba(255,255,255,0.3);
+}
+.result-group-header > :nth-child(3) {
+    border-left: 1px solid rgba(255,255,255,0.3);
+}
+
+/* Column header row */
+.result-col-header {
+    background: #8ea6d8;
+    color: white;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+}
+
+.result-col-header > * {
+    padding: 4px 6px;
+    white-space: nowrap;
+    cursor: default;
+}
+
+/* ============================================
+   DATA ROWS
+   ============================================ */
+
+.result-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.result-row {
+    border-bottom: 1px dotted #ccc;
+    transition: background var(--transition-base);
+    min-height: 2rem;
+}
+
+.result-row:hover {
+    background: #eef3ff !important;
+}
+
+/* Cell padding */
+.result-row > * {
+    padding: 4px 6px;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+/* Alternating row backgrounds */
+.result-row.row-even { background: #ffffff; }
+.result-row.row-odd  { background: #F4F3F3; }
+
+/* Highlight cells based on input type — subtle dotted underline */
+/* Target links inside highlighted cells (override global a { text-decoration: none }) */
+.cell-genomic-input .text-link,
+.cell-protein-input .text-link,
+.cell-id-input      .text-link {
+    text-decoration: underline dotted #999 !important;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+}
+/* For non-link plain text (e.g. AA change col, which is direct-child cell-protein-input) */
+.result-row > .cell-protein-input:not(.isoform-cell) {
+    text-decoration: underline dotted #999;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+}
+
+/* ── Block old SCSS .button border bleeding onto new button classes ──
+   _Button.scss has: .button { border-style: solid; border-width: thin; }
+   (single-class selector). Override with double-class for higher specificity. */
+.button.button--toggle-isoforms {
+    border: none;
+    margin-right: 0;
+    font-weight: inherit;
+}
+
+/* ============================================
+   ISOFORM ROW (alternate isoforms)
+   Genomic cells are empty; protein cols filled.
+   ============================================ */
+
+.result-row-isoform > .cell-genomic {
+    /* empty but maintains grid column */
+    visibility: hidden;
+}
+
+/* ============================================
+   MESSAGE / ERROR ROWS
+   ============================================ */
+
+.result-row-msg {
+    border-bottom: 1px dotted #ccc;
+    padding: 4px 6px;
+    font-size: var(--font-size-sm);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+/* Message cell spanning: full width or partial */
+.result-row-msg .msg-content-full {
+    grid-column: 1 / -1;
+    padding: 4px 8px;
+}
+
+.result-row-msg .msg-content-partial {
+    grid-column: 3 / -1;
+    padding: 4px 8px;
+}
+
+/* ============================================
+   ANNOTATION PANEL ROW (FunctionalData etc.)
+   Full-width block below the triggering row.
+   ============================================ */
+
+.result-annotation {
+    border-bottom: 1px solid var(--color-border-light);
+}
+
+.annotation-loader {
+    padding: 12px;
+    display: flex;
+    justify-content: center;
+}
+
+/* ============================================
+   LOADER ROW
+   ============================================ */
+
+.result-loader-row {
+    padding: 8px;
+    display: flex;
+    justify-content: center;
+    border-bottom: 1px dotted #ccc;
+}
+
+/* ============================================
+   SCORE BOX (CADD, AlphaMissense)
+   ============================================ */
+
+.score-box {
+    display: inline-block;
+    width: 2.2rem;
+    text-align: center;
+    padding: 1px 3px;
+    border-radius: 0.75rem;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    color: white;
+    cursor: default;
+}
+
+.score-box a {
+    color: white;
+    text-decoration: none;
+}
+
+/* ============================================
+   PROTEIN NAME TRUNCATION
+   ============================================ */
+
+.protein-name-cell {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    display: block;
+}
+
+/* ============================================
+   ISOFORM CELL
+   ============================================ */
+
+.isoform-cell {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    white-space: nowrap;
+}
+
+.protein-type-icon {
+    font-size: 0.65rem;
+    font-weight: var(--font-weight-bold);
+    padding: 1px 4px;
+    border-radius: 3px;
+    flex-shrink: 0;
+}
+
+.protein-type-icon--canonical {
+    background: #6987C3;
+    color: white;
+}
+
+.protein-type-icon--isoform {
+    background: #9ab0d8;
+    color: white;
+}
+
+.button--toggle-isoforms {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0 2px;
+    color: var(--color-primary);
+    line-height: 1;
+}
+
+.toggle-isoforms {
+    width: 12px;
+    height: 12px;
+    vertical-align: middle;
+}
+
+/* ============================================
+   CLICK FOR DETAILS BUTTONS
+   ============================================ */
+
+.details-cell {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.button.click-icon-btn {
+    background: none;
+    border: 1px solid transparent;
+    margin-right: 0;
+    padding: 2px 4px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: border-color var(--transition-base), background var(--transition-base);
+}
+
+.button.click-icon-btn:hover {
+    border-color: var(--color-primary);
+    background: var(--color-primary-lightest);
+}
+
+.button.significance {
+    border-color: var(--color-primary);
+    background: var(--color-primary-lightest);
+}
+
+.click-icon {
+    width: 24px;
+    height: 24px;
+    vertical-align: middle;
+}
+
+/* ============================================
+   CONSEQUENCE BADGES
+   ============================================ */
+
+.consequence-badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-variant: small-caps;
+    font-weight: var(--font-weight-bold);
+    padding: 1px 5px;
+    border-radius: 3px;
+    letter-spacing: 0.04em;
+}
+
+.conseq-miss  { background: #fff3cd; color: #856404; }
+.conseq-syn   { background: #d1e7dd; color: #0f5132; }
+.conseq-stop  { background: #f8d7da; color: #842029; }
+
+/* ============================================
+   MISC
+   ============================================ */
+
+/* hGRCh37→38 lift-over badge */
+.h37 {
+    font-size: 0.65rem;
+    background: #f0ad4e;
+    color: white;
+    padding: 0 3px;
+    border-radius: 3px;
+    margin-right: 2px;
+    white-space: nowrap;
+}
+
+/* ============================================
+   DARK MODE
+   ============================================ */
+
+@media (prefers-color-scheme: dark) {
+    .result-header {
+        background: var(--color-bg-primary);
+        border-bottom-color: #4a6ab0;
+    }
+
+    .result-group-header {
+        background: #3a5080;
+    }
+
+    .result-col-header {
+        background: #4a6090;
+    }
+
+    .result-row:hover {
+        background: rgba(110, 168, 254, 0.1) !important;
+    }
+
+    .result-row.row-even { background: var(--color-bg-primary); }
+    .result-row.row-odd  { background: var(--color-bg-secondary); }
+}
