@@ -6,7 +6,7 @@ import {
   PRECISION,
   STD_COLOR_GRADIENT
 } from "./PredConstants";
-import {SharePredictionLink} from "./SharePredictionLink";
+import { CopyLink } from '../../common/CopyLink';
 import React from "react";
 
 export const CONSERV_SCORE_ATTR: PredAttr[] = [
@@ -23,8 +23,8 @@ export const CONSERV_COLOUR_GRADIENT = tinygradient(CONSERV_SCORE_ATTR.map(s => 
 
 export const ConservPred = (props: { conserv?: ConservScore, stdColor: boolean }) => {
   if (props.conserv) {
-  return <div className="aa-pred">
-    <div><SharePredictionLink predictionType="conserv" /> Conservation</div>
+  return <div className="prediction-row">
+    <div><CopyLink predictionType="conserv" /> Conservation</div>
     <div>{formatConservScore(props.conserv)}</div>
     <ConservPredIcon {...props}/>
   </div>}

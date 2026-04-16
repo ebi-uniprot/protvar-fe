@@ -2,7 +2,7 @@ import {PopEveScore} from "../../../../types/MappingResponse";
 import {PRECISION} from "./PredConstants";
 import {PredAttr} from "./Prediction";
 import Spaces from "../../../elements/Spaces";
-import {SharePredictionLink} from "./SharePredictionLink";
+import { CopyLink } from '../../common/CopyLink';
 import React from "react";
 import tinygradient from "tinygradient";
 
@@ -14,8 +14,8 @@ export const POPEVE_SCORE_ATTR: PredAttr[] = [
 
 export const PopEvePred = (props: { popeve?: PopEveScore, stdColor: boolean }) => {
   if (props.popeve) {
-  return <div className="aa-pred">
-    <div><SharePredictionLink predictionType="popeve" /> popEVE</div>
+  return <div className="prediction-row">
+    <div><CopyLink predictionType="popeve" /> popEVE</div>
     <div>{formatPopEveScore(props.popeve)}</div>
     <PopEvePredIcon {...props} />
   </div>}

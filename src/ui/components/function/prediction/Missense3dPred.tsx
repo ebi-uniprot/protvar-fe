@@ -1,7 +1,7 @@
 import React from "react";
 import {FunctionalInfo} from "../../../../types/FunctionalInfo";
 import {aminoAcid3to1Letter} from "../../../../utills/Util";
-import {SharePredictionLink} from "./SharePredictionLink";
+import { CopyLink } from '../../common/CopyLink';
 import Spaces from "../../../elements/Spaces";
 import {STD_BENIGN_COLOR, STD_PATHOGENIC_COLOR} from "./PredConstants";
 import {ExtLink} from "../../common/Link";
@@ -33,8 +33,8 @@ export const Missense3dPred = ({functionalData, refAA, variantAA}: Missense3dPre
   const m3dUrl = `${M3D_BASE_URL}?uniprot_id=${functionalData.accession}&var_id=${variantId}`;
 
   return (
-    <div className="aa-pred">
-      <div><SharePredictionLink predictionType="m3d" /> Missense3D</div>
+    <div className="prediction-row">
+      <div><CopyLink predictionType="m3d" /> Missense3D</div>
       <div></div>
       <div>
         <i className="bi bi-circle-fill" style={{color: predColor}}></i>

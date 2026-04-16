@@ -11,7 +11,7 @@ export const EVE_SCORE_ATTR: {[key: string]: PredAttr} = {
 
 export const EvePred = (props: { eve?: EveScore, stdColor: boolean }) => {
   if (props.eve) {
-  return <div className="aa-pred">
+  return <div className="prediction-row">
     <div>EVE</div>
     <div>{formatEveScore(props.eve)}</div>
     <EvePredIcon {...props} />

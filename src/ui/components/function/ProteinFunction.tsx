@@ -7,7 +7,7 @@ import {ExpandableText} from "../common/ExpandableText";
 interface ProteinFunctionTableProps {
   functionComments: Array<Comment>
 }
-function ProteinFunctionTable(props: ProteinFunctionTableProps) {
+function ProteinFunction(props: ProteinFunctionTableProps) {
   const hasComments = props.functionComments && props.functionComments.length > 0;
 
   return (
@@ -45,4 +45,4 @@ function ProteinFunctionTable(props: ProteinFunctionTableProps) {
   );
 }
 
-export default ProteinFunctionTable;
+export default ProteinFunction;

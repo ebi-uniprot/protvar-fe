@@ -31,10 +31,6 @@ interface ResidueColumnProps {
 export function ResidueColumn(props: ResidueColumnProps) {
   const state = useContext(AppContext);
 
-  const toggleStdColor = () => {
-    state.updateState("stdColor", state.stdColor ? false : true);
-  };
-
   return (
     <div className="residue-annotations">
       <div className="column-header">Variant Residue Position</div>
@@ -66,15 +62,6 @@ export function ResidueColumn(props: ResidueColumnProps) {
         <div className="section-title">
           <span>Predictions</span>
           <HelpButton variant="inline" title="" content={<HelpContent name="predictions" />} />
-        </div>
-
-        {/* Color settings before predictions */}
-        <div className="colour-toggle">
-          <label className="toggle-switch" title="Toggle between ProtVar standardised and original source colours">
-            <input type="checkbox" checked={state.stdColor} onChange={toggleStdColor} />
-            <span className="toggle-track"><span className="toggle-thumb"></span></span>
-            <span className="toggle-label">ProtVar standardised colours</span>
-          </label>
         </div>
 
         <Prediction

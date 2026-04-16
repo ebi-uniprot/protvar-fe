@@ -1,5 +1,4 @@
 import React, { useState, useMemo } from 'react';
-import './ExpandableText.css';
 
 interface ExpandableTextProps {
   text: string;
