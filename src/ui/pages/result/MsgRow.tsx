@@ -1,87 +1,65 @@
-import {ALLELE, TOTAL_COLS} from "../../../constants/SearchResultTable";
-import {
-  VariantInput,
-  Message,
-  GenomicVariant
-} from "../../../types/MappingResponse";
-import {rowBg} from "./ResultTable";
+import React from 'react';
+import { VariantInput, Message, GenomicVariant } from "../../../types/MappingResponse";
 import Tool from "../../elements/Tool";
-import {getEnsemblChrUrl, getEnsemblViewUrl, getIdUrl, getIdValue} from "./PrimaryRow";
-import {TextLink} from "../../components/common/Link";
+import { getEnsemblChrUrl, getEnsemblViewUrl, getIdUrl, getIdValue } from "./PrimaryRow";
+import { TextLink } from "../../components/common/Link";
 
-export const WARN_ICON = <><i className="msg-warn bi bi-exclamation-triangle-fill"></i>{' '}</>
-export const ERROR_ICON = <><i className="msg-error bi bi-x-circle-fill"></i>{' '}</>
-export const INFO_ICON = <><i className="msg-info bi bi-info-circle-fill"></i>{' '}</>
+export const WARN_ICON  = <><i className="msg-warn bi bi-exclamation-triangle-fill"></i>{' '}</>;
+export const ERROR_ICON = <><i className="msg-error bi bi-x-circle-fill"></i>{' '}</>;
+export const INFO_ICON  = <><i className="msg-info bi bi-info-circle-fill"></i>{' '}</>;
 
 const getIcon = (m?: Message) => {
   if (m) {
-    if (m.type === "ERROR")
-      return ERROR_ICON
-    else if (m.type === "WARN")
-      return WARN_ICON
-    else if (m.type === "INFO")
-      return INFO_ICON
+    if (m.type === "ERROR") return ERROR_ICON;
+    if (m.type === "WARN")  return WARN_ICON;
+    if (m.type === "INFO")  return INFO_ICON;
   }
-}
-
-interface MsgRowProps {
-  message: Message,
-  input?: VariantInput
-  genomicVariant?: GenomicVariant // null for request-level messages
-  index?: number     // null for request-level messages
-}
-
-const MsgRow = ({
-                  message,
-                  input,
-                  genomicVariant,
-                  index
-                }: MsgRowProps) => {
-  const inputStr = input?.inputStr ?? '';
-  const rowTitle = input ? `Input: ${inputStr}` : '';
-  const rowStyle = {wordWrap: "break-word", overflowWrap: "break-word"} as React.CSSProperties;
-
-  const idValue = getIdValue(input);
-
-  return (
-    <tr style={rowBg(index ?? -1)} title={rowTitle}>
-      {genomicVariant ?
-        (
-          <>
-            <td>
-              <Tool tip="Click to see the a summary for this chromosome from Ensembl" pos="up-left">
-                <TextLink url={getEnsemblChrUrl(genomicVariant.chromosome)} text={genomicVariant.chromosome} />
-              </Tool>
-            </td>
-            <td>
-              <Tool tip="Click to see the region detail for this genomic coordinate from Ensembl" pos="up-left">
-                <TextLink url={getEnsemblViewUrl(genomicVariant.chromosome, genomicVariant.position)} text={String(genomicVariant.position)} />
-              </Tool>
-            </td>
-            <td><Tool tip="Variant ID provided by the user">
-              { idValue && <TextLink url={getIdUrl(idValue)} text={idValue} /> }
-            </Tool></td>
-            <td><Tool tip={ALLELE.get(genomicVariant.refBase)}>{genomicVariant.refBase}</Tool></td>
-            <td><Tool tip={ALLELE.get(genomicVariant.altBase)}>{genomicVariant.altBase}</Tool></td>
-            <td colSpan={10}>
-              <div style={rowStyle}>
-                {getIcon(message)}
-                <b>{inputStr}</b> {message.text}
-              </div>
-            </td>
-          </>
-        ) : (
-          <td colSpan={TOTAL_COLS}>
-            <div style={rowStyle}>
-              {getIcon(message)}
-              <b>{inputStr}</b> {message.text}
-            </div>
-          </td>
-        )
-      }
-    </tr>
-  )
 };
 
+interface MsgRowProps {
+  message: Message;
+  input?: VariantInput;
+  genomicVariant?: GenomicVariant;
+  index?: number;
+}
+
+const MsgRow = ({ message, input, genomicVariant, index }: MsgRowProps) => {
+  const inputStr = input?.inputStr ?? '';
+  const rowTitle = input ? `Input: ${inputStr}` : '';
+  const idValue = getIdValue(input);
+  const rowClass = `result-row-msg ${(index ?? -1) % 2 === 0 ? 'row-even' : 'row-odd'}`;
+
+  if (genomicVariant) {
+    const genomicPos = `${genomicVariant.chromosome}-${genomicVariant.position}-${genomicVariant.refBase}-${genomicVariant.altBase}`;
+    return (
+      <div className={`result-row ${rowClass}`} title={rowTitle}>
+        {/* col 1: user-id */}
+        <span>
+          <Tool tip="Variant ID provided by the user">
+            {idValue && <TextLink url={getIdUrl(idValue)} text={idValue} />}
+          </Tool>
+        </span>
+        {/* col 2: genomic-pos */}
+        <span>
+          <Tool tip="Click to see region detail from Ensembl" pos="up-left">
+            <TextLink url={getEnsemblViewUrl(genomicVariant.chromosome, genomicVariant.position)} text={genomicPos} />
+          </Tool>
+        </span>
+        {/* cols 3–11: message spanning remaining */}
+        <span style={{ gridColumn: '3 / -1' }}>
+          {getIcon(message)}<b>{inputStr}</b> {message.text}
+        </span>
+      </div>
+    );
+  }
+
+  return (
+    <div className={rowClass} title={rowTitle}>
+      <span style={{ gridColumn: '1 / -1', padding: '4px 8px', wordBreak: 'break-word' }}>
+        {getIcon(message)}<b>{inputStr}</b> {message.text}
+      </span>
+    </div>
+  );
+};
 
 export default MsgRow;

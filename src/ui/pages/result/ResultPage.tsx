@@ -1,11 +1,11 @@
 import DefaultPageLayout from "../../layout/DefaultPageLayout";
-import LegendModal from "../../modal/LegendModal";
+import {LegendContent} from "../../modal/LegendModal";
 import {useLocation, useNavigate, useParams, useSearchParams} from "react-router-dom";
 import ResultTable from "./ResultTable";
-import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
+import React, {useCallback, useContext, useEffect, useMemo, useRef, useState} from "react";
 import PaginationRow from "./PaginationRow";
 import {DEFAULT_PAGE, DEFAULT_PAGE_SIZE, LOCAL_RESULTS, PERMITTED_PAGE_SIZES, TITLE} from "../../../constants/const";
-import DownloadModal from "../../modal/DownloadModal";
+import {DownloadContent} from "../../modal/DownloadModal";
 import {getMapping} from "../../../services/ProtVarService";
 import {PagedMappingResponse} from "../../../types/PagedMappingResponse";
 import "./ResultPage.css";
@@ -16,8 +16,8 @@ import {APP_URL} from "../../App";
 import {HelpButton} from "../../components/help/HelpButton";
 import {HelpContent} from "../../components/help/HelpContent";
 import {ShareLink} from "../../components/common/ShareLink";
-import Spaces from "../../elements/Spaces";
 import Loader from "../../elements/Loader";
+import {AppContext} from "../../App";
 import { FILTER_PARAM_KEYS } from "../../components/search/filterParams";
 import {
   extractFilters,
@@ -40,6 +40,7 @@ export const NO_RESULT = 'No result to display'
 export const UNEXPECTED_ERR = 'An unexpected error occurred'
 
 function ResultPageContent() {
+  const appState = useContext(AppContext);
   const navigate = useNavigate();
   const location = useLocation();
   const { input } = useParams();
@@ -316,7 +317,9 @@ function ResultPageContent() {
     }, 100);
   };
 
-  document.title = `${resultTitle} | ${TITLE}`
+  useEffect(() => {
+    document.title = `${resultTitle} | ${TITLE}`;
+  }, [resultTitle]);
 
   const shareUrl = `${APP_URL}${location.pathname}${location.search}`
 
@@ -326,56 +329,59 @@ function ResultPageContent() {
         <span className={titleFlash ? 'title-sparkle' : ''}>Result <i className="bi bi-chevron-compact-right"></i> {resultTitle}</span>
       </h5>
       <span className="help-icon">
-      <HelpButton title="" content={<HelpContent name="result-page"/>}/>
-        </span>
+        <HelpButton title="" content={<HelpContent name="result-page"/>}/>
+      </span>
     </div>
 
-    {
-      /*
-      Page components:
-      if data
-        && totalPages>1 [pagination]
-        [shareResults][viewLegends][downloadResults]
-      if warning
-        [warning]
-      if data (else nothing)
-        [resultTable]
-      if data && totalPages>1
-        [pagination]
-
-      To check: data (null), warning (''), loading (true)
-      Order updated:
-      - warning reset every time on load
-      - loadData
-        -- set loading true
-        -- if page/Size invalid, set warning
-        -- getResult -> set warning if page requested > totalPage and set data if any
-        -- finally set loading false
-
-      1. Warning is always displayed at the top of the table. It remains visible even when the table is hidden,
-          such as when there are no results to display.
-      2. If no data (on first load) and loading, show Loader (not shown when navigating between pages using Next/Prev).
-      3. All other conditions will show an appropriate message (warning) e.g. No data
-       */
-    }
-
-    {data &&
-      <div style={{display: 'flex', justifyContent: data.totalPages > 1 ? 'space-between' : 'flex-end', width: '100%'}}>
-        {data.totalPages > 1 && <PaginationRow loading={loading} data={data}/>}
-        <span style={{alignSelf: 'flex-end'}}>
-          <div className="legend-container">
-            <ShareLink url={shareUrl} linkText="Share Results"/>
-            <Spaces count={2}/>
-            <LegendModal/>
-            <DownloadModal input={input!} type={inputType!} numPages={(data && data.totalPages) ?? 0}/>
+    {/* ── Response-level messages from API (just under heading) ── */}
+    {(data?.content.messages?.length ?? 0) > 0 && (
+      <div className="result-notices">
+        {data!.content.messages!.map((message, i) => (
+          <div key={`response-msg-${i}`} className={`result-notice result-notice--${message.type.toLowerCase()}`}>
+            {message.text}
           </div>
-      </span>
-      </div>}
+        ))}
+      </div>
+    )}
 
-    {warning && (<div className="result-warning">
-      <i className="file-warning bi bi-exclamation-triangle-fill"></i>{' '}
-      {warning}
-    </div>)}
+    {/* ── Toolbar: pagination (left) | actions (right) ── */}
+    <div className="result-toolbar">
+      <div>
+        {data && data.totalPages > 1 && <PaginationRow loading={loading} data={data}/>}
+      </div>
+      {data && (
+        <div className="result-toolbar-actions">
+          <ShareLink url={shareUrl} linkText="Share" />
+          <span className="toolbar-divider" />
+          <i className="bi bi-circle-half icon-btn"
+             title="View colour legends"
+             onClick={() => appState.updateState("drawer", <LegendContent />)}
+          > Legends</i>
+          <i className="bi bi-download icon-btn"
+             title="Download results"
+             onClick={() => appState.updateState("drawer", <DownloadContent input={input!} type={inputType!} numPages={(data && data.totalPages) ?? 0} />)}
+          > Download</i>
+        </div>
+      )}
+    </div>
+
+    {/* ── Colour toggle row ── */}
+    {data && (
+      <div className="result-colour-row">
+        <label className="toggle-switch" title="Toggle between ProtVar standardised and original source colours">
+          <input type="checkbox" checked={appState.stdColor} onChange={() => appState.updateState("stdColor", !appState.stdColor)} />
+          <span className="toggle-track"><span className="toggle-thumb"></span></span>
+          <span className="toggle-label">ProtVar colours</span>
+        </label>
+      </div>
+    )}
+
+    {/* ── Page-level warning (invalid page, no data, etc.) ── */}
+    {warning && (
+      <div className="result-notices">
+        <div className="result-notice result-notice--warn">{warning}</div>
+      </div>
+    )}
 
     {!data && loading && <Loader/>}
     {inputType !== 'input_id' && inputType !== 'variant' && (

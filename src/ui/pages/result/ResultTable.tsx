@@ -1,14 +1,13 @@
-import {GENOMIC_COLS, PROTEIN_COLS} from "../../../constants/SearchResultTable";
-import Tool from "../../elements/Tool";
-import React, {useContext, useEffect, useState} from "react";
-import {PagedMappingResponse} from "../../../types/PagedMappingResponse";
-import {Message, GenomicVariant} from "../../../types/MappingResponse";
-import {StringVoidFun} from "../../../constants/CommonTypes";
-import {getAlternateIsoFormRow} from "./AlternateIsoFormRow";
-import {getNewPrimaryRow} from "./PrimaryRow";
-import {AppContext} from "../../App";
+import React, { useContext, useEffect, useState } from "react";
+import { PagedMappingResponse } from "../../../types/PagedMappingResponse";
+import { Message, GenomicVariant } from "../../../types/MappingResponse";
+import { StringVoidFun } from "../../../constants/CommonTypes";
+import { getAlternateIsoFormRow } from "./AlternateIsoFormRow";
+import { getNewPrimaryRow } from "./PrimaryRow";
+import { AppContext } from "../../App";
 import MsgRow from "./MsgRow";
-import {useLocation, useNavigate, useSearchParams} from "react-router-dom";
+import Tool from "../../elements/Tool";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import {
   parseAnnotationParam,
   buildAnnotationKey,
@@ -18,28 +17,19 @@ import {
 } from "./annotationUrl";
 
 function ResultTable(props: { data: PagedMappingResponse | null }) {
-  const stdColor = useContext(AppContext).stdColor
+  const stdColor = useContext(AppContext).stdColor;
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams] = useSearchParams();
-  const [isoformGroupExpanded, setIsoformGroupExpanded] = useState('')
-  const [annotationExpanded, setAnnotationExpanded] = useState('')
+  const [isoformGroupExpanded, setIsoformGroupExpanded] = useState('');
+  const [annotationExpanded, setAnnotationExpanded] = useState('');
 
-  // Initialize annotation from URL on mount and when searchParams change
   useEffect(() => {
     const annotationParam = searchParams.get('annotation');
-    if (!annotationParam) {
-      setAnnotationExpanded('');
-      return;
-    }
-
+    if (!annotationParam) { setAnnotationExpanded(''); return; }
     const parsed = parseAnnotationParam(annotationParam);
-    if (parsed) {
-      const key = buildAnnotationKey(parsed.type, parsed.rowNumber);
-      setAnnotationExpanded(key);
-    } else {
-      setAnnotationExpanded('');
-    }
+    if (parsed) setAnnotationExpanded(buildAnnotationKey(parsed.type, parsed.rowNumber));
+    else setAnnotationExpanded('');
   }, [searchParams]);
 
   function toggleIsoformGroup(key: string) {
@@ -51,149 +41,106 @@ function ResultTable(props: { data: PagedMappingResponse | null }) {
     const oldAnnotation = annotationExpanded;
     setAnnotationExpanded(newAnnotation);
 
-    // Update URL
     const newParams = new URLSearchParams(searchParams);
-
     if (newAnnotation) {
       const parsed = parseAnnotationKey(newAnnotation);
       if (parsed) {
-        // Build the URL parameter (omit row number if it's 1)
         const param = buildAnnotationParam(parsed.type, parsed.rowNumber, true);
         newParams.set("annotation", param);
-
-        // Clear tab-specific parameters when:
-        // 1. Switching to a different annotation type, OR
-        // 2. Switching to a different row (even same type - each row has different structures)
         const oldParsed = oldAnnotation ? parseAnnotationKey(oldAnnotation) : null;
-        const isDifferentType = !oldParsed || parsed.type !== oldParsed.type;
-        const isDifferentRow = oldParsed && parsed.rowNumber !== oldParsed.rowNumber;
-
-        if (isDifferentType || isDifferentRow) {
+        if (!oldParsed || parsed.type !== oldParsed.type || parsed.rowNumber !== oldParsed.rowNumber) {
           clearAnnotationSpecificParams(newParams, parsed.type);
         }
       }
     } else {
-      // When closing all tabs, clear everything
       newParams.delete("annotation");
       clearAnnotationSpecificParams(newParams, null);
     }
 
-    const url = `${location.pathname}${newParams.size > 0 ? `?${newParams.toString()}` : ``}`;
+    const url = `${location.pathname}${newParams.size > 0 ? `?${newParams.toString()}` : ''}`;
     navigate(url, { replace: true });
   }
 
-  if (!props.data)
-    return null
+  if (!props.data) return null;
 
-  const tableRows = getTableRows(
+  const rows = getTableRows(
     props.data,
     isoformGroupExpanded,
     toggleIsoformGroup,
     annotationExpanded,
     toggleAnnotation,
-    stdColor
+    stdColor,
   );
 
-  return <table className="" cellPadding="0" cellSpacing="0" id="resultTable">
-    <thead>
-    <tr>
-      <Tool el="th" colSpan={GENOMIC_COLS} tip="Gene and nucleotide level annotations">GENOMIC</Tool>
-      <Tool el="th" colSpan={PROTEIN_COLS} tip="Amino acid/protein level annotations">PROTEIN</Tool>
-      <Tool el="th" tip="Three types of annotations; functional, co-located variants and structural"
-            pos="up-right">ANNOTATIONS</Tool>
-    </tr>
-    <tr>
-      {/* <th className="sticky"><Tool tip="Chromosome" pos="up-left">Chr</Tool></th> */}
-      <Tool el="th" className="sticky" tip="Chromosome" pos="up-left">Chr.</Tool>
-      <Tool el="th" className="sticky" tip="Genomic coordinate">Coordinate</Tool>
-      <Tool el="th" className="sticky" tip="User entered variant identifier">ID</Tool>
-      <Tool el="th" className="sticky" tip="Reference allele">Ref.</Tool>
-      <Tool el="th" className="sticky" tip="Alternative allele">Alt.</Tool>
-      <Tool el="th" className="sticky" tip="HGNC short gene name">Gene</Tool>
-      <Tool el="th" className="sticky"
-            tip="Change of the codon containing the variant nucleotide the position of which is capitalised">Codon
-        (strand)</Tool>
-      <Tool el="th" className="sticky"
-            tip="CADD (Combined Annotation Dependent Depletion) phred-like score. Colours are defined in the legends. Source: PubMed PMID 30371827">CADD
-        v1.7</Tool>
-      <Tool el="th" className="sticky" tip="The protein isoform the variant is mapped to.
-        By default this is the UniProt canonical isoform, however other isoforms are shown if necessary.
-        Alternative isoforms can be shown by expanding the arrow to the right of the isoform"
-            tSize="xlarge">Isoform</Tool>
-      <Tool el="th" className="sticky" tip="Full protein name from UniProt">Protein name</Tool>
-      <Tool el="th" className="sticky" tip="Position of the amino acid containing the variant in the displayed isoform">AA
-        pos.</Tool>
-      <Tool el="th" className="sticky" tip="Three letter amino acid code for the reference and alternative alleles">AA
-        change</Tool>
-      <Tool el="th" className="sticky" tip="A description of the consequence of the variant">Consequence(s)</Tool>
-      <Tool el="th" className="sticky"
-            tip="AlphaMissense prediction. Colours are defined in the legends. Source: PubMed PMID 37733863">AlphaMiss.
-        pred.</Tool>
-      <th className="sticky">Click for details</th>
-    </tr>
-    </thead>
-    <tbody>
-    {tableRows}
-    </tbody>
-  </table>
+  return (
+    <div className="result-table">
+      {/* ── Sticky two-row header ── */}
+      <div className="result-header">
+        <div className="result-group-header">
+          <Tool el="span" tip="Gene and nucleotide level annotations">Genomic</Tool>
+          <Tool el="span" tip="Amino acid / protein level annotations">Protein</Tool>
+          <Tool el="span" tip="Functional, population and structural annotations" pos="up-right">Annotations</Tool>
+        </div>
+        <div className="result-col-header">
+          <Tool el="span" tip="Variant identifier supplied by the user">ID</Tool>
+          <Tool el="span" tip="Genomic position: chromosome-coordinate-ref-alt">Genomic position</Tool>
+          <Tool el="span" tip="Change of the codon containing the variant nucleotide; strand in parentheses">Codon (strand)</Tool>
+          <Tool el="span" tip="CADD phred-like score (v1.7). Source: PubMed PMID 30371827">CADD v1.7</Tool>
+          <Tool el="span" tip="UniProt canonical or alternate isoform the variant is mapped to" tSize="xlarge">Isoform</Tool>
+          <Tool el="span" tip="Full protein name from UniProt">Protein name</Tool>
+          <Tool el="span" tip="Amino acid change in three-letter code format (e.g. Ala205Pro)">AA Change</Tool>
+          <Tool el="span" tip="Consequence of the variant at the protein level">Consequence(s)</Tool>
+          <Tool el="span" tip="popEVE score — population-informed variant effect prediction">popEVE</Tool>
+          <Tool el="span" tip="AlphaMissense pathogenicity prediction. Source: PubMed PMID 37733863">AlphaMissense</Tool>
+          <span>Click for details</span>
+        </div>
+      </div>
+
+      {/* ── Data rows ── */}
+      <div className="result-body">
+        {rows}
+      </div>
+    </div>
+  );
 }
 
-export const rowBg = (index: number) => {
-  const rowColor = {backgroundColor: "#F4F3F3"}
-  const altRowColor = {backgroundColor: "#FFFFFF"}
-  return (index % 2 === 0) ? altRowColor : rowColor;
-}
+const NO_MAPPING: Message = { type: 'ERROR', text: 'No mapping found' };
 
-const NO_MAPPING: Message = {type: 'ERROR', text: 'No mapping found'}
-
-// Process and convert paged mapping response into table rows
 const getTableRows = (
   data: PagedMappingResponse | null,
   isoformGroupExpanded: string,
   toggleIsoformGroup: StringVoidFun,
   annotationExpanded: string,
   toggleAnnotation: StringVoidFun,
-  stdColor: boolean
+  stdColor: boolean,
 ) => {
-  const tableRows: Array<React.JSX.Element> = [];
+  const rows: Array<React.JSX.Element> = [];
 
-  // whole-input messages
-  data?.content.messages?.forEach((message, messageIndex) => {
-    tableRows.push(<MsgRow key={`message-${messageIndex}`} message={message}/>)
-  });
-
-  let primaryRow = 0 // ensures similar or duplicate inputs do not lead to conflicting key
-  let altRow = 0
+  let primaryRow = 0;
+  let altRow = 0;
 
   data?.content.inputs?.forEach((input, inputIndex) => {
-
-    // each user input messages
-    input.messages.forEach((message, messageIndex) => {
-      tableRows.push(<MsgRow key={`input-${inputIndex}-message-${messageIndex}`} index={inputIndex} message={message}
-                             input={input}/>)
+    input.messages.forEach((message, i) => {
+      rows.push(
+        <MsgRow key={`input-${inputIndex}-message-${i}`} index={inputIndex} message={message} input={input} />
+      );
     });
 
     input.derivedGenomicVariants.forEach((genomicVariant: GenomicVariant, genIndex: number) => {
-      /*gInput.messages.forEach((message, messageIndex) => {
-        tableRows.push(<MsgRow index={inputIndex} key={`input-${inputIndex}-${genIndex}-message-${messageIndex}`} message={message} input={input} />)
-      });*/
-      // IT SEEMS WE MAY NOT BE TAKING THE ORIGINAL AND DERIVED GEN INPUT
-      // INTO ACCOUNT SOMEWHERE...
-
-      if (genomicVariant.genes.length === 0 && input.messages.length === 0) { // no message
-        tableRows.push(<MsgRow key={`input-${inputIndex}-${genIndex}-nomapping`} index={inputIndex} message={NO_MAPPING}
-                               input={input} genomicVariant={genomicVariant}/>)
-        return
+      if (genomicVariant.genes.length === 0 && input.messages.length === 0) {
+        rows.push(
+          <MsgRow key={`input-${inputIndex}-${genIndex}-nomapping`} index={inputIndex} message={NO_MAPPING} input={input} genomicVariant={genomicVariant} />
+        );
+        return;
       }
 
       genomicVariant.genes.forEach((gene, geneIdx) => {
-        const isoformGroupKey = `input-${inputIndex}-${genIndex}-gene-${geneIdx}-isoform`
+        const isoformGroupKey = `input-${inputIndex}-${genIndex}-gene-${geneIdx}-isoform`;
         gene.isoforms.forEach((isoform, isoformIdx) => {
           if (isoformIdx === 0) {
             primaryRow++;
-            altRow = 0; // reset
-
-            tableRows.push(getNewPrimaryRow(
+            altRow = 0;
+            rows.push(getNewPrimaryRow(
               `row-${primaryRow}`,
               isoformGroupKey,
               isoformGroupExpanded,
@@ -206,18 +153,24 @@ const getTableRows = (
               annotationExpanded,
               toggleAnnotation,
               gene.isoforms.length > 1,
-              stdColor
-            ))
+              stdColor,
+            ));
           } else if (isoformGroupKey === isoformGroupExpanded) {
             altRow++;
-            tableRows.push(getAlternateIsoFormRow(`row-${primaryRow}-${altRow}`, inputIndex, isoform))
+            rows.push(getAlternateIsoFormRow(`row-${primaryRow}-${altRow}`, inputIndex, isoform));
           }
-        })
-      })
-    })
+        });
+      });
+    });
   });
 
-  return tableRows;
+  return rows;
+};
+
+export const rowBg = (index: number) => {
+  const rowColor    = { backgroundColor: "#F4F3F3" };
+  const altRowColor = { backgroundColor: "#FFFFFF" };
+  return (index % 2 === 0) ? altRowColor : rowColor;
 };
 
 export default ResultTable;

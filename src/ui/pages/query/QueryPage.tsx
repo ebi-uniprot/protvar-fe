@@ -1,17 +1,17 @@
-import React, {useCallback, useEffect, useState} from 'react'
+import React, {useCallback, useContext, useEffect, useState} from 'react'
+
 import {useLocation, useParams, useSearchParams} from 'react-router-dom'
 import ResultTable from '../result/ResultTable'
 import DefaultPageLayout from '../../layout/DefaultPageLayout'
-import DownloadModal from '../../modal/DownloadModal'
-import LegendModal from '../../modal/LegendModal'
+import {DownloadContent} from '../../modal/DownloadModal'
+import {LegendContent} from '../../modal/LegendModal'
 import {TITLE} from "../../../constants/const";
 import {singleVariant} from "../../../services/ProtVarService";
 import {PagedMappingResponse} from "../../../types/PagedMappingResponse";
-import {APP_URL} from "../../App";
+import {APP_URL, AppContext} from "../../App";
 import {HelpButton} from "../../components/help/HelpButton";
 import {HelpContent} from "../../components/help/HelpContent";
 import {ShareLink} from "../../components/common/ShareLink";
-import Spaces from "../../elements/Spaces";
 import Loader from "../../elements/Loader";
 import {NO_DATA, NO_RESULT, UNEXPECTED_ERR} from "../result/ResultPage";
 
@@ -35,6 +35,7 @@ function splitString(input: string | null): string | undefined {
 }
 
 const QueryPageContent = (props: QueryPageProps) => {
+  const appState = useContext(AppContext);
   const location = useLocation()
   const [searchParams] = useSearchParams();
   const {param1, param2, param3, param4} = useParams();
@@ -119,7 +120,9 @@ const QueryPageContent = (props: QueryPageProps) => {
     loadData(props.queryType, searchParams, param1, param2, param3, param4)
   }, [props.queryType, searchParams, param1, param2, param3, param4, loadData]);
 
-  document.title = query ? `${query} | ${TITLE}` : TITLE
+  useEffect(() => {
+    document.title = query ? `${query} | ${TITLE}` : TITLE;
+  }, [query]);
 
   const shareUrl = `${APP_URL}${location.pathname}${location.search}`
 
@@ -127,26 +130,45 @@ const QueryPageContent = (props: QueryPageProps) => {
     <div>
       <h5 className="page-header">Query <i className="bi bi-chevron-compact-right"></i> {query}</h5>
       <span className="help-icon">
-    <HelpButton title="" content={<HelpContent name="direct-queries"/>}/>
+        <HelpButton title="" content={<HelpContent name="direct-queries"/>}/>
       </span>
     </div>
 
-    {data &&
-      <div style={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
-      <span style={{alignSelf: 'flex-end'}}>
-        <div className="legend-container">
-          <ShareLink url={shareUrl} linkText="Share Results"/>
-          <Spaces count={2}/>
-          <LegendModal/>
-          <DownloadModal input={query!} type="variant" numPages={1} />
+    {/* ── Toolbar ── */}
+    {data && (
+      <div className="result-toolbar">
+        <div />
+        <div className="result-toolbar-actions">
+          <ShareLink url={shareUrl} linkText="Share" />
+          <span className="toolbar-divider" />
+          <i className="bi bi-circle-half icon-btn"
+             title="View colour legends"
+             onClick={() => appState.updateState("drawer", <LegendContent />)}
+          > Legends</i>
+          <i className="bi bi-download icon-btn"
+             title="Download results"
+             onClick={() => appState.updateState("drawer", <DownloadContent input={query!} type="variant" numPages={1} />)}
+          > Download</i>
         </div>
-      </span>
-      </div>}
+      </div>
+    )}
 
-    {warning && (<div className="result-warning">
-      <i className="file-warning bi bi-exclamation-triangle-fill"></i>{' '}
-      {warning}
-    </div>)}
+    {/* ── Colour toggle row ── */}
+    {data && (
+      <div className="result-colour-row">
+        <label className="toggle-switch" title="Toggle between ProtVar standardised and original source colours">
+          <input type="checkbox" checked={appState.stdColor} onChange={() => appState.updateState("stdColor", !appState.stdColor)} />
+          <span className="toggle-track"><span className="toggle-thumb"></span></span>
+          <span className="toggle-label">ProtVar colours</span>
+        </label>
+      </div>
+    )}
+
+    {warning && (
+      <div className="result-notices">
+        <div className="result-notice result-notice--warn">{warning}</div>
+      </div>
+    )}
     {!data && loading && <Loader/>}
     <ResultTable data={data}/>
   </div>
