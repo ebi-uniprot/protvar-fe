@@ -1,17 +1,13 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import {PredictionType} from "../../../../hooks/usePredictionHighlight";
-import './SharePredictionLink.css';
+import { PredictionType } from '../../../hooks/usePredictionHighlight';
 
-interface SharePredictionLinkProps {
+interface CopyLinkProps {
   predictionType: PredictionType;
   title?: string;
 }
 
-export function SharePredictionLink({
-                                      predictionType,
-                                      title
-                                    }: SharePredictionLinkProps) {
+export function CopyLink({ predictionType, title }: CopyLinkProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
@@ -40,24 +36,16 @@ export function SharePredictionLink({
     <>
       <button
         onClick={handleClick}
-        className="share-prediction-link"
+        className={`copy-link${copied ? ' copy-link--copied' : ''}`}
         title={title || `Copy link to ${predictionType} prediction`}
         aria-label={`Share ${predictionType} prediction`}
-        style={{
-          background: 'none',
-          border: 'none',
-          cursor: 'pointer',
-          color: copied ? '#4CAF50' : '#666',
-          fontSize: '12px',
-          transition: 'color 0.2s'
-        }}
       >
-        <i className={copied ? 'bi bi-check2' : 'bi bi-link-45deg'}></i>
+        <i className={copied ? 'bi bi-check2' : 'bi bi-link-45deg'} />
       </button>
 
       {copied && (
         <div className="copy-toast">
-          <i className="bi bi-check-circle-fill"></i> Link copied to clipboard!
+          <i className="bi bi-check-circle-fill" /> Link copied to clipboard!
         </div>
       )}
     </>
