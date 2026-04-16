@@ -1,7 +1,5 @@
-import {useCallback, useEffect, useRef, useState} from 'react';
+import {useCallback, useContext, useEffect, useState} from 'react';
 import Button from '../elements/form/Button';
-import Modal from './Modal';
-import useOnClickOutside from '../../hooks/useOnClickOutside';
 import {emailValidate} from '../../utills/Validator';
 import {DownloadRecord, recordFromResponse} from "../../types/DownloadRecord";
 import {LOCAL_DOWNLOADS, LOCAL_RESULTS} from "../../constants/const";
@@ -9,10 +7,10 @@ import Notify from "../elements/Notify";
 import {downloadPost} from "../../services/ProtVarService";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import {useLocation, useSearchParams} from "react-router-dom";
-import Spaces from "../elements/Spaces";
 import {ResultRecord} from "../../types/ResultRecord";
 import {DownloadRequest} from "../../types/DownloadRequest";
 import {InputType} from "../../types/InputType";
+import {AppContext} from "../App";
 
 interface DownloadForm {
   email: string
@@ -22,7 +20,7 @@ interface DownloadForm {
   str: boolean
 }
 
-interface DownloadModalProps {
+export interface DownloadContentProps {
   numPages: number;
   input: string;
   type: InputType;
@@ -30,29 +28,20 @@ interface DownloadModalProps {
 
 const NUM_PAGES_LIMIT = 10;
 
-function DownloadModal(props: DownloadModalProps) {
-  const [showModel, setShowModel] = useState(false)
-  const downloadModelDiv = useRef(null)
-  useOnClickOutside(downloadModelDiv, useCallback(() => setShowModel(false), []));
+export function DownloadContent(props: DownloadContentProps) {
+  const appState = useContext(AppContext);
   const { getItem, setItem } = useLocalStorage();
   const [errorMsg, setErrorMsg] = useState("")
   const [jobNamePlaceholder, setJobNamePlaceholder] = useState<string>('')
 
   const location = useLocation();
   const [searchParams] = useSearchParams();
-  let initialForm: DownloadForm = {
-    email: "",
-    jobName: "",
-    fun: true,
-    pop: true,
-    str: true
-  }
+  const initialForm: DownloadForm = { email: "", jobName: "", fun: true, pop: true, str: true }
   const [form, setForm] = useState<DownloadForm>(initialForm)
   const [annotations, setAnnotations] = useState<boolean>(true)
   const [currPage, setCurrPage] = useState<boolean>(false)
 
   useEffect(() => {
-    // Retrieve result records from local storage
     const localResults = getItem<ResultRecord[]>(LOCAL_RESULTS) || []
     const savedRecord = localResults.find((r) => r.id === props.input);
     if (savedRecord && savedRecord.name) {
@@ -60,107 +49,80 @@ function DownloadModal(props: DownloadModalProps) {
     }
   }, [props.input, getItem]);
 
-  const updateForm = (key: string, value: any) => {
-    setForm({
-      ...form,
-      [key]: value,
-    });
-  };
+  const updateForm = useCallback((key: string, value: any) => {
+    setForm(prev => ({ ...prev, [key]: value }));
+  }, []);
 
   const toggleAnnotations = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAnnotations(event.target.value === 'withAnnotations')
-    form.fun = form.pop = form.str  = !annotations
-    setForm(form)
+    const withAnnotations = event.target.value === 'withAnnotations';
+    setAnnotations(withAnnotations);
+    setForm(prev => ({ ...prev, fun: withAnnotations, pop: withAnnotations, str: withAnnotations }));
   }
 
   const handleSucc = (downloadRec: DownloadRecord) => {
-    let downloads = getItem<DownloadRecord[]>(LOCAL_DOWNLOADS)  || []
+    let downloads = getItem<DownloadRecord[]>(LOCAL_DOWNLOADS) || []
     downloads.unshift(downloadRec)
     setItem(LOCAL_DOWNLOADS, downloads)
-    Notify.sucs(`Job ${downloadRec.downloadId.split('-')[0]} submitted. Check the Downloads page. `)
+    Notify.sucs(`Job ${downloadRec.downloadId.split('-')[0]} submitted. Check the Downloads page.`)
   }
 
   const handleErr = () => {
-    Notify.err(`Job ${form.jobName ? form.jobName : jobNamePlaceholder} failed. Please try again.`)
+    Notify.err(`Job ${form.jobName || jobNamePlaceholder} failed. Please try again.`)
   }
 
   const handleSubmit = () => {
-
     if (!currPage && props.numPages > NUM_PAGES_LIMIT) {
-      var confirm = window.confirm(`Are you sure you want to download all ${props.numPages} pages?\nThis may take a long time to generate.`);
-      if (!confirm) {
-        return;
-      }
+      const confirm = window.confirm(`Are you sure you want to download all ${props.numPages} pages?\nThis may take a long time to generate.`);
+      if (!confirm) return;
     }
 
     const err = emailValidate(form.email)
-    if (err) {
-      setErrorMsg(err)
-      return
-    }
-    setShowModel(false)
+    if (err) { setErrorMsg(err); return; }
 
-    // logic:
-    // if currPage is selected, use the page search param; if this is not set, use page 1
-    // if currPage is not selected, page is set to null, which is interpreted as all pages
+    appState.updateState("drawer", undefined);
+
     const page = currPage ? (searchParams.get('page') ?? "1") : null
-
-    // if page is null (for all pages), pageSize isn't needed
-    // if page isn't null, use the pageSize set in the search param (which may be null, in which case default 25 is used)
     const pageSize = page ? searchParams.get('pageSize') : null
     const assembly = searchParams.get('assembly')
+    const jobName = form.jobName || jobNamePlaceholder
 
-    let jobName = form.jobName ? form.jobName : jobNamePlaceholder
     const request: DownloadRequest = {
       input: props.input,
       type: props.type,
       email: form.email,
-      jobName: jobName,
+      jobName,
       function: form.fun ?? false,
       population: form.pop ?? false,
       structure: form.str ?? false,
       page: page ? parseInt(page) : null,
       pageSize: pageSize ? parseInt(pageSize) : null,
       assembly: props.type === 'variant'
-        ? (assembly === 'grch37' ? 'grch37' : 'grch38') // default to 38
+        ? (assembly === 'grch37' ? 'grch37' : 'grch38')
         : assembly ?? null,
       full: !currPage,
     };
 
     downloadPost(request)
       .then((response) => {
-          const downloadResponse = response.data
-          let downloadRecord = recordFromResponse(downloadResponse)
-          // save download request params in DownloadRecord
-          downloadRecord.page = page ?? undefined
-          downloadRecord.pageSize = pageSize ?? undefined
-          downloadRecord.assembly = assembly ?? undefined
-          downloadRecord.fun = form.fun
-          downloadRecord.pop = form.pop
-          downloadRecord.str = form.str
-          downloadRecord.resultUrl = location.pathname + location.search
-          downloadRecord.clientRequested = new Date().toISOString()
-          handleSucc(downloadRecord)
-        }
-      )
+        const downloadResponse = response.data
+        let downloadRecord = recordFromResponse(downloadResponse)
+        downloadRecord.page = page ?? undefined
+        downloadRecord.pageSize = pageSize ?? undefined
+        downloadRecord.assembly = assembly ?? undefined
+        downloadRecord.fun = form.fun
+        downloadRecord.pop = form.pop
+        downloadRecord.str = form.str
+        downloadRecord.resultUrl = location.pathname + location.search
+        downloadRecord.clientRequested = new Date().toISOString()
+        handleSucc(downloadRecord)
+      })
       .catch(handleErr);
   };
-  return <div id="divDownload" ref={downloadModelDiv} className="padding-left-1x">
-    <Button onClick={() => setShowModel(val => !val)} className={'download-button'}>
-      <i className="bi bi-download"></i>
-      <Spaces count={2} />Download Results
-    </Button>
-    <Modal show={showModel} handleClose={() => setShowModel(false)}>
-      <div className="window__header">
-        <span className="window__header__title">Download Options</span>
-        <span
-            className="modal-close-button"
-            onClick={() => setShowModel(false)}
-          >
-            <i className="bi bi-x-lg"></i>
-        </span>
-      </div>
-      <div className="form-group ">
+
+  return (
+    <div>
+      <h6 style={{ marginBottom: '1rem', fontWeight: 600 }}>Download Options</h6>
+      <div className="form-group">
         <div>
           <table>
             <tbody>
@@ -169,69 +131,41 @@ function DownloadModal(props: DownloadModalProps) {
                 <ul className="new-select">
                   <li>
                     <label>
-                      <input
-                        type="radio"
-                        name="annotations"
-                        value="withAnnotations"
-                        checked={annotations}
-                        onChange={toggleAnnotations}
-                      />
+                      <input type="radio" name="annotations" value="withAnnotations"
+                        checked={annotations} onChange={toggleAnnotations} />
                       Mappings with Annotations
                     </label>
                   </li>
                   <li>
                     <label>
-                      <input
-                        type="radio"
-                        name="annotations"
-                        value="withoutAnnotations"
-                        checked={!annotations}
-                        onChange={toggleAnnotations}
-                      />
+                      <input type="radio" name="annotations" value="withoutAnnotations"
+                        checked={!annotations} onChange={toggleAnnotations} />
                       Mappings only, no annotations
                     </label>
                   </li>
                 </ul>
               </td>
-
               <td>
                 <ul className="new-select">
-                  <li>
-                    <label>Include Annotations</label>
-                  </li>
+                  <li><label>Include Annotations</label></li>
                   <li>
                     <label>
-                      <input
-                        type="checkbox"
-                        name="fun"
-                        checked={form.fun}
-                        onChange={(e) => updateForm(e.target.name, !form.fun)}
-                        disabled={!annotations}
-                      />
+                      <input type="checkbox" name="fun" checked={form.fun} disabled={!annotations}
+                        onChange={(e) => updateForm(e.target.name, !form.fun)} />
                       Functional
                     </label>
                   </li>
                   <li>
                     <label>
-                      <input
-                        type="checkbox"
-                        name="pop"
-                        checked={form.pop}
-                        onChange={(e) => updateForm(e.target.name, !form.pop)}
-                        disabled={!annotations}
-                      />
+                      <input type="checkbox" name="pop" checked={form.pop} disabled={!annotations}
+                        onChange={(e) => updateForm(e.target.name, !form.pop)} />
                       Population Observation
                     </label>
                   </li>
                   <li>
                     <label>
-                      <input
-                        type="checkbox"
-                        name="str"
-                        checked={form.str}
-                        onChange={(e) => updateForm(e.target.name, !form.str)}
-                        disabled={!annotations}
-                      />
+                      <input type="checkbox" name="str" checked={form.str} disabled={!annotations}
+                        onChange={(e) => updateForm(e.target.name, !form.str)} />
                       Structure
                     </label>
                   </li>
@@ -239,32 +173,18 @@ function DownloadModal(props: DownloadModalProps) {
               </td>
               <td>
                 <ul className="new-select">
-                  <li>
-                    Pages
-                  </li>
+                  <li>Pages</li>
                   <li>
                     <label>
-                      <input
-                        type="radio"
-                        name="currPage"
-                        value="false"
-                        disabled={'query' in props}
-                        checked={!currPage}
-                        onChange={_ => setCurrPage(false)}
-                      />
+                      <input type="radio" name="currPage" value="false"
+                        checked={!currPage} onChange={_ => setCurrPage(false)} />
                       All
                     </label>
                   </li>
                   <li>
                     <label>
-                      <input
-                        type="radio"
-                        name="currPage"
-                        value="true"
-                        disabled={'query' in props}
-                        checked={currPage}
-                        onChange={_ => setCurrPage(true)}
-                      />
+                      <input type="radio" name="currPage" value="true"
+                        checked={currPage} onChange={_ => setCurrPage(true)} />
                       Current
                     </label>
                   </li>
@@ -275,45 +195,31 @@ function DownloadModal(props: DownloadModalProps) {
           </table>
 
           <label className="download-label">
-            Email: <span style={{color: "red"}}>{errorMsg ? errorMsg : ""}</span>
-            <div className="small">(Optional, specify an email address for notification when file is ready to
-              download)
-            </div>
-            <input
-              type="email"
-              value={form.email}
-              name="email"
-              onChange={(e) => updateForm(e.target.name, e.target.value)}
-            />
+            Email: <span style={{color: "red"}}>{errorMsg || ""}</span>
+            <div className="small">(Optional, specify an email address for notification when file is ready to download)</div>
+            <input type="email" value={form.email} name="email"
+              onChange={(e) => updateForm(e.target.name, e.target.value)} />
           </label>
           <label className="download-label">
             Job Name:
             <div className="small">(Optional)</div>
-            <input
-              type="text"
-              value={form.jobName}
-              name="jobName"
+            <input type="text" value={form.jobName} name="jobName"
               onChange={(e) => updateForm(e.target.name, e.target.value)}
-              placeholder={jobNamePlaceholder}
-            />
+              placeholder={jobNamePlaceholder} />
           </label>
         </div>
       </div>
-      <div className="window__footer">
-        <div className="float-right padding-bottom-1x">
-          <Button
-            onClick={handleSubmit}
-            className="window__action-button window__default-close-button button "
-          >Submit</Button>
-          <Button
-            onClick={() => setShowModel(false)}
-            className="window__action-button window__default-close-button button"
-          >
-            close
-          </Button>
-        </div>
+      <div style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem' }}>
+        <Button onClick={handleSubmit} className="window__action-button window__default-close-button button">
+          Submit
+        </Button>
+        <Button onClick={() => appState.updateState("drawer", undefined)}
+          className="window__action-button window__default-close-button button">
+          Cancel
+        </Button>
       </div>
-    </Modal>
-  </div>
+    </div>
+  );
 }
-export default DownloadModal;
+
+export default DownloadContent;
