@@ -367,11 +367,12 @@
     flex-shrink: 0;
 }
 
-/* Highlighted state affects the inner row */
-.prediction-item.prediction-highlighted .prediction-row {
-    border-color: #FFC107;
-    border-left-color: #FFC107;
-    background-color: rgba(255, 235, 59, 0.08);
+/* Suppress inner row border change when the outer wrapper is already highlighted */
+.prediction-item.prediction-highlighted .prediction-row,
+.prediction-item.prediction-highlighted .prediction-row:hover {
+    border-color: var(--color-border-light);
+    border-left-color: transparent;
+    background-color: transparent;
 }
 
 /* No predictions message */
