@@ -5,6 +5,7 @@ import ResultTable from "./ResultTable";
 import React, {useCallback, useContext, useEffect, useMemo, useRef, useState} from "react";
 import PaginationRow from "./PaginationRow";
 import {DEFAULT_PAGE, DEFAULT_PAGE_SIZE, LOCAL_RESULTS, PERMITTED_PAGE_SIZES, TITLE} from "../../../constants/const";
+import {RESULT} from "../../../constants/BrowserPaths";
 import {DownloadContent} from "../../modal/DownloadModal";
 import {getMapping, singleVariant} from "../../../services/ProtVarService";
 import {PagedMappingResponse} from "../../../types/PagedMappingResponse";
@@ -25,8 +26,8 @@ import {
   mapUiCaddToBackend, mapUiPopeveToBackend,
   mapUiStabilityToBackend, mapUiAlleleFreqToBackend
 } from "../../components/search/filterUtils";
-import {fromString} from "../../../utills/InputTypeResolver";
-import {InputType} from "../../../types/InputType";
+import {parseIdParam} from "../../../utills/InputTypeResolver";
+import {IdInput, InputType} from "../../../types/InputType";
 import {MappingRequest} from "../../../types/MappingRequest";
 import SearchFilters, {
   SearchFilterParams
@@ -110,8 +111,9 @@ export type QueryType = 'search' | 'genomic' | 'protein' | 'chromosome_protein';
 export type PageMode = 'query' | 'browse';
 
 export interface ResultPageProps {
-  mode?: PageMode;      // 'query' = single variant; 'browse' = identifier/batch (default)
-  queryType?: QueryType; // only relevant when mode='query'
+  mode?: PageMode;       // explicit override; omit to auto-detect from URL params
+  queryType?: QueryType; // only relevant when mode='query' (path-based routes)
+  idType?: InputType;    // set by type-prefixed routes (/gene/:id, /pdb/:id, etc.)
 }
 
 // Build "chr pos [ref alt]" query string from parts
@@ -124,14 +126,27 @@ function splitFirst(input: string | null): string | undefined {
   return input.split(/[\n,|]/)[0]?.trim() || undefined;
 }
 
-function ResultPageContent({ mode = 'browse', queryType }: ResultPageProps) {
+function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProps) {
   const appState = useContext(AppContext);
   const navigate = useNavigate();
   const location = useLocation();
-  // browse mode uses :input; query mode uses :param1/:param2 etc.
-  const { input, param1, param2, param3, param4 } = useParams();
+  // :input for /:input browse; :id for type-prefixed routes; :param* for query routes
+  const { input, id: idParam, param1, param2, param3, param4 } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const [inputType, setInputType] = useState<InputType | null>(null);
+
+  // Auto-detect mode when no explicit prop is given (/search route).
+  // idParamValues MUST be memoized — searchParams.getAll() returns a new array reference on every
+  // render. Without useMemo, the browse effect re-runs after every setResultTitle call (new ref →
+  // effect dep changed → setResultTitle again → re-render → new ref → ...) causing the title and
+  // data to reload in a tight loop.
+  const idParamValues = useMemo(() => searchParams.getAll('id'), [searchParams]);
+  const hasQ = !!(searchParams.get('q') || searchParams.get('search') ||
+                  searchParams.get('chromosome') || searchParams.get('accession'));
+  const mode: PageMode = modeProp === 'query' ? 'query'
+                       : modeProp === 'browse' ? 'browse'
+                       : hasQ ? 'query'
+                       : 'browse';
   const [resultTitle, setResultTitle] = useState(input)
   const [titleFlash, setTitleFlash] = useState(false);
   const [showRedirectToast, setShowRedirectToast] = useState(false);
@@ -174,12 +189,11 @@ function ResultPageContent({ mode = 'browse', queryType }: ResultPageProps) {
     setItem(LOCAL_RESULTS, savedRecords);
   }, [getItem, setItem]);
 
-  const updatingTypeParam = useRef(false);
-
   // ── Browse mode loader (POST /mapping) ─────────────────────────────────────
   const loadBrowseData = useCallback((
-    providedType: InputType | null,
-    input: string,
+    options: {
+      ids?: IdInput[];      // all browse cases — single id, multi-id, or empty (filter-only)
+    },
     page: number,
     pageSize: number,
     assembly: string | null,
@@ -200,8 +214,7 @@ function ResultPageContent({ mode = 'browse', queryType }: ResultPageProps) {
     const knownVariants = filters?.variant !== 'potential' ? true : undefined;
 
     const request: MappingRequest = {
-      input,
-      type: providedType ?? undefined,
+      ...options,
       page, pageSize,
       assembly: assembly ?? undefined,
       known: knownVariants,
@@ -232,16 +245,6 @@ function ResultPageContent({ mode = 'browse', queryType }: ResultPageProps) {
             setData(response.data)
             setInputType(response.data.type);
 
-            const resolvedType = response.data.type;
-            if (resolvedType && resolvedType !== providedType) {
-              updatingTypeParam.current = true;
-              setSearchParams(prev => {
-                const newParams = new URLSearchParams(prev);
-                newParams.set('type', resolvedType);
-                return newParams;
-              });
-            }
-
             viewedRecord(response.data.input, location.pathname + location.search)
 
             if (response.data.type === 'input_id') {
@@ -251,7 +254,10 @@ function ResultPageContent({ mode = 'browse', queryType }: ResultPageProps) {
                 `${response.data.content.inputs[0].inputStr} ...+${totalItems - 1} more `
               setResultTitle(firstInputLine)
             } else {
-              setResultTitle(`${input} (${response.data.totalItems} variants)`)
+              const displayLabel = options.ids?.map(i => i.value).join(', ')
+                ?? response.data.input
+                ?? '';
+              setResultTitle(`${displayLabel} (${response.data.totalItems} variants)`);
               setTitleFlash(true);
               setTimeout(() => setTitleFlash(false), 600);
             }
@@ -349,20 +355,38 @@ function ResultPageContent({ mode = 'browse', queryType }: ResultPageProps) {
     if (!q) { setWarning(INVALID_QUERY); setLoading(false); return; }
     setResultTitle(q);
     loadQueryData(q, assembly);
-  }, [mode, queryType, location.pathname, searchParams, param1, param2, param3, param4, parseQueryInput, assembly, loadQueryData, navigate])
+  }, [mode, queryType, location.pathname, searchParams, param1, param2, param3, param4, parseQueryInput, assembly, loadQueryData, navigate, hasQ])
 
   // ── Browse mode effect ──────────────────────────────────────────────────────
   useEffect(() => {
     if (mode !== 'browse') return;
-    if (updatingTypeParam.current) { updatingTypeParam.current = false; return; }
-    setWarning("");
-    if (!input) return;
-    const trimmedInput = input.trim();
-    const type = searchParams.get('type');
-    const providedType = type ? fromString(type) : null;
-    setResultTitle(trimmedInput);
-    loadBrowseData(providedType, trimmedInput, page, pageSize, assembly, filters);
-  }, [mode, input, searchParams, page, pageSize, assembly, filters, loadBrowseData])
+    setWarning('');
+
+    if (idType && idParam) {
+      // Type-prefixed single-ID route: /gene/:id, /pdb/:id, etc.
+      const trimmed = idParam.trim();
+      setResultTitle(trimmed);
+      loadBrowseData({ ids: [{ type: idType, value: trimmed }] }, page, pageSize, assembly, filters);
+
+    } else if (idParamValues.length > 0) {
+      // Multi-identifier browse: /search?id=...&id=...
+      const ids = idParamValues.map(parseIdParam);
+      const label = ids.map(i => i.value).join(', ');
+      setResultTitle(label);
+      loadBrowseData({ ids }, page, pageSize, assembly, filters);
+
+    } else if (input) {
+      // Bare /:input route (UniProt accession or input_id) — resolve type same as ?id= params
+      const trimmedInput = input.trim();
+      setResultTitle(trimmedInput);
+      loadBrowseData({ ids: [parseIdParam(trimmedInput)] }, page, pageSize, assembly, filters);
+
+    } else {
+      // Filter-only browse: /search with no q= and no id=
+      setResultTitle('All variants');
+      loadBrowseData({}, page, pageSize, assembly, filters);
+    }
+  }, [mode, idType, idParam, idParamValues, input, page, pageSize, assembly, filters, loadBrowseData])
 
   useEffect(() => {
     setLocalFilters(extractFilters(searchParams));
@@ -384,11 +408,55 @@ function ResultPageContent({ mode = 'browse', queryType }: ResultPageProps) {
   };
 
   const isQueryMode = mode === 'query';
+  const isFilterOnly = mode === 'browse' && !idType && !idParam && idParamValues.length === 0 && !input;
   const shareUrl = `${APP_URL}${location.pathname}${location.search}`
   const helpName = isQueryMode ? 'protvar-links' : 'result-page';
+
+  // Context label for the page header — tells the user what kind of input they are looking at.
+  //
+  // Query mode:
+  //   'genomic'  (/g/:chr/:pos)          → "Genomic"
+  //   'protein'  (/p/:acc/:pos)          → "Protein"
+  //   'search'   (/search?q=)            → "Variant"
+  //
+  // Browse mode:
+  //   /result/:id (uploaded variants)    → "Results"   (detected via pathname, not API response)
+  //   /:accession (bare UniProt browse)  → "UniProt"
+  //   /gene/:id                          → "Gene"
+  //   /pdb/:id                           → "PDB"
+  //   /ensembl/:id                       → "Ensembl"
+  //   /refseq/:id                        → "RefSeq"
+  //   /search?id=…&id=…  (multi-id)      → "Browse"
+  //   /search?<filters>  (no id)         → "Browse"
+  //
+  // Note: filters can be combined with any browse context (single id, multi-id, or no id).
+  // "Browse" as a label covers all identifier-based and filter-driven cases.
+  function getContextLabel(): string {
+    if (isQueryMode) {
+      if (queryType === 'genomic') return 'Genomic';
+      if (queryType === 'protein') return 'Protein';
+      return 'Variant'; // 'search' (q=) or chromosome_protein (redirect, rarely seen)
+    }
+    // /result/:id — uploaded multi-variant results (detected by pathname before API responds)
+    if (input && location.pathname.startsWith(RESULT + '/')) return 'Results';
+    // Type-prefixed single-identifier browse
+    if (idType) {
+      const labels: Record<string, string> = {
+        uniprot: 'UniProt', gene: 'Gene', pdb: 'PDB', ensembl: 'Ensembl', refseq: 'RefSeq',
+      };
+      return labels[idType] ?? idType;
+    }
+    // Bare /:accession browse (always UniProt)
+    if (input) return 'UniProt';
+    // Multi-identifier or no-identifier (filters only) — both are generic browse
+    return 'Browse';
+  }
+
+  const sep = <i className="bi bi-chevron-compact-right"></i>;
+  const contextLabel = getContextLabel();
   const pageTitle = isQueryMode
-    ? <>Search <i className="bi bi-chevron-compact-right"></i> {resultTitle}</>
-    : <span className={titleFlash ? 'title-sparkle' : ''}>Result <i className="bi bi-chevron-compact-right"></i> {resultTitle}</span>;
+    ? <>{contextLabel} {sep} {resultTitle}</>
+    : <span className={titleFlash ? 'title-sparkle' : ''}>{contextLabel} {sep} {resultTitle}</span>;
 
   return <div>
     <div ref={resultsTopRef}>
@@ -453,8 +521,8 @@ function ResultPageContent({ mode = 'browse', queryType }: ResultPageProps) {
 
     {!data && loading && <Loader/>}
 
-    {/* ── Filters (browse mode only, and not for batch/variant results) ── */}
-    {!isQueryMode && inputType !== 'input_id' && inputType !== 'variant' && (
+    {/* ── Filters (browse/filter-only mode; not for single-variant or batch results) ── */}
+    {(!isQueryMode || isFilterOnly) && inputType !== 'input_id' && inputType !== 'variant' && (
       <SearchFilters
         filters={localFilters}
         onFiltersChange={setLocalFilters}
@@ -481,7 +549,7 @@ function ResultPageContent({ mode = 'browse', queryType }: ResultPageProps) {
 }
 
 function ResultPage(props: ResultPageProps) {
-  return <DefaultPageLayout content={<ResultPageContent {...props} />}/>
+  return <DefaultPageLayout content={<ResultPageContent {...props}/>}/>
 }
 
 export default ResultPage;
