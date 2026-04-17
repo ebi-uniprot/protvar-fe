@@ -1,11 +1,30 @@
 // InputType.ts
-export type InputType = // need to align with backend // to rename to SearchType? QueryType?
-  | 'gene'
-  | 'variant'
-  | 'refseq'
-  | 'ensembl'
+
+/**
+ * Biological identifier types for browse queries.
+ * These map to database identifiers — not variant queries or uploaded result IDs.
+ */
+export type IdentifierType =
   | 'uniprot'
+  | 'gene'
   | 'pdb'
+  | 'ensembl'
+  | 'refseq';
+
+/** A resolved biological identifier with its detected or declared type */
+export interface Identifier {
+  type: IdentifierType;
+  value: string;
+}
+
+/**
+ * Full input type union — extends IdentifierType with variant query and uploaded result ID.
+ * Used in contexts where all input modes are relevant (e.g. displaying context labels,
+ * type-prefixed routes).
+ */
+export type InputType =
+  | IdentifierType
+  | 'variant'
   | 'input_id';
 
 // Helper constants for display purposes
@@ -29,11 +48,13 @@ export const INPUT_TYPE_EXAMPLES: Record<InputType, string> = {
   input_id: 'e.g. genomic input examples'
 };
 
-/** A resolved identifier with its detected or declared type */
+/** @deprecated Use IdInput for backward compat; prefer Identifier for new code */
 export interface IdInput {
   type: InputType;
   value: string;
 }
+
+export const IDENTIFIER_TYPES: IdentifierType[] = ['uniprot', 'gene', 'pdb', 'ensembl', 'refseq'];
 
 // All valid input types as array (for validation, dropdowns, etc.)
 export const INPUT_TYPES: InputType[] = [

@@ -9,7 +9,7 @@ import useLocalStorage from "../../hooks/useLocalStorage";
 import {useLocation, useSearchParams} from "react-router-dom";
 import {ResultRecord} from "../../types/ResultRecord";
 import {DownloadRequest} from "../../types/DownloadRequest";
-import {InputType} from "../../types/InputType";
+import {Identifier} from "../../types/InputType";
 import {AppContext} from "../App";
 
 interface DownloadForm {
@@ -20,15 +20,17 @@ interface DownloadForm {
   str: boolean
 }
 
-export interface DownloadContentProps {
+export interface DownloadPanelProps {
   numPages: number;
-  input: string;
-  type: InputType;
+  // One of the following identifies what to download:
+  q?: string;          // single variant query
+  resultId?: string;   // uploaded result ID
+  ids?: Identifier[];  // identifier browse
 }
 
 const NUM_PAGES_LIMIT = 10;
 
-export function DownloadContent(props: DownloadContentProps) {
+export function DownloadPanel(props: DownloadPanelProps) {
   const appState = useContext(AppContext);
   const { getItem, setItem } = useLocalStorage();
   const [errorMsg, setErrorMsg] = useState("")
@@ -41,13 +43,15 @@ export function DownloadContent(props: DownloadContentProps) {
   const [annotations, setAnnotations] = useState<boolean>(true)
   const [currPage, setCurrPage] = useState<boolean>(false)
 
+  // Use resultId as the key for local result lookup
   useEffect(() => {
+    if (!props.resultId) return;
     const localResults = getItem<ResultRecord[]>(LOCAL_RESULTS) || []
-    const savedRecord = localResults.find((r) => r.id === props.input);
+    const savedRecord = localResults.find((r) => r.id === props.resultId);
     if (savedRecord && savedRecord.name) {
       setJobNamePlaceholder(savedRecord.name)
     }
-  }, [props.input, getItem]);
+  }, [props.resultId, getItem]);
 
   const updateForm = useCallback((key: string, value: any) => {
     setForm(prev => ({ ...prev, [key]: value }));
@@ -87,8 +91,9 @@ export function DownloadContent(props: DownloadContentProps) {
     const jobName = form.jobName || jobNamePlaceholder
 
     const request: DownloadRequest = {
-      input: props.input,
-      type: props.type,
+      q: props.q,
+      resultId: props.resultId,
+      ids: props.ids,
       email: form.email,
       jobName,
       function: form.fun ?? false,
@@ -96,7 +101,7 @@ export function DownloadContent(props: DownloadContentProps) {
       structure: form.str ?? false,
       page: page ? parseInt(page) : null,
       pageSize: pageSize ? parseInt(pageSize) : null,
-      assembly: props.type === 'variant'
+      assembly: props.q
         ? (assembly === 'grch37' ? 'grch37' : 'grch38')
         : assembly ?? null,
       full: !currPage,
@@ -222,4 +227,4 @@ export function DownloadContent(props: DownloadContentProps) {
   );
 }
 
-export default DownloadContent;
+export default DownloadPanel;

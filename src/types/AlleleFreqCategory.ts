@@ -1,7 +1,6 @@
-// src/types/AlleleFreqCategory.ts
 export enum AlleleFreqCategory {
-  VERY_RARE = 'VERY_RARE',
-  RARE = 'RARE',
-  LOW_FREQUENCY = 'LOW_FREQUENCY',
-  COMMON = 'COMMON'
+  VERY_RARE = 'very_rare',
+  RARE = 'rare',
+  LOW_FREQUENCY = 'low_frequency',
+  COMMON = 'common'
 }

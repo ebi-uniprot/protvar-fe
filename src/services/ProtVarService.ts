@@ -51,29 +51,13 @@ export function uploadFile(file: File, assembly?: string) {
 
 // Mapping
 
-// GET /mapping
+// GET /mapping?q=...
 // Single variant mapping (used for direct /search, /g/, /p/ queries)
-export function singleVariant(input: string, assembly?: string) {
+export function singleVariant(q: string, assembly?: string) {
   return api.get<PagedMappingResponse>(
     `${API_URL}/mapping`,
     {
-      params: {input, assembly},
-      headers: APP_JSON,
-    }
-  );
-}
-
-// GET /mapping/{inputId}
-// Used on page redirect after inputText/File upload
-// Used for URL /result/:inputId
-export function inputIdMapping(inputId: string,
-                               page?: number,
-                               pageSize?: number,
-                               assembly?: string) {
-  return api.get<PagedMappingResponse>(
-    `${API_URL}/mapping/${inputId}`,
-    {
-      params: {page, pageSize, assembly},
+      params: {q, assembly},
       headers: APP_JSON,
     }
   );

@@ -1,16 +1,17 @@
-import {IdInput} from "./InputType";
-//import {CaddCategory} from "./CaddCategory";
-//import {AmClass} from "./AmClass";
+import {Identifier} from "./InputType";
 
-// All browse requests (single-id, multi-id, or filter-only) use the `ids` array.
-// Single-id: ids = [{ type, value }]; multi-id: ids = [{...}, {...}]; filter-only: ids omitted.
-// Type resolution follows the same rule as ?id= URL params: the frontend resolves via
-// parseIdParam() before sending; the backend auto-detects if type is null.
+// Requests use one of:
+//   q         — single variant query (any supported format)
+//   resultId  — uploaded result (32-char hex from POST /input/text or /input/file)
+//   ids       — biological identifier browse (single or multi)
+//   neither   — filter-only browse (no identifier constraint)
 export interface MappingRequest {
-  ids?: IdInput[];
+  q?: string;
+  resultId?: string;
+  ids?: Identifier[];
   page?: number | null;
   pageSize?: number | null;
-  assembly?: string | null; //'auto' | 'grch38' | 'grch37'
+  assembly?: string | null;
 
   // Variant Type
   known?: boolean;

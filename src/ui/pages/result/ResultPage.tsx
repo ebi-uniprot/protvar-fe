@@ -6,7 +6,7 @@ import React, {useCallback, useContext, useEffect, useMemo, useRef, useState} fr
 import PaginationRow from "./PaginationRow";
 import {DEFAULT_PAGE, DEFAULT_PAGE_SIZE, LOCAL_RESULTS, PERMITTED_PAGE_SIZES, TITLE} from "../../../constants/const";
 import {RESULT} from "../../../constants/BrowserPaths";
-import {DownloadContent} from "../../modal/DownloadModal";
+import {DownloadPanel} from "../../modal/DownloadPanel";
 import {getMapping, singleVariant} from "../../../services/ProtVarService";
 import {PagedMappingResponse} from "../../../types/PagedMappingResponse";
 import "./ResultPage.css";
@@ -27,7 +27,7 @@ import {
   mapUiStabilityToBackend, mapUiAlleleFreqToBackend
 } from "../../components/search/filterUtils";
 import {parseIdParam} from "../../../utills/InputTypeResolver";
-import {IdInput, InputType} from "../../../types/InputType";
+import {Identifier, IdentifierType, InputType} from "../../../types/InputType";
 import {MappingRequest} from "../../../types/MappingRequest";
 import SearchFilters, {
   SearchFilterParams
@@ -111,9 +111,9 @@ export type QueryType = 'search' | 'genomic' | 'protein' | 'chromosome_protein';
 export type PageMode = 'query' | 'browse';
 
 export interface ResultPageProps {
-  mode?: PageMode;       // explicit override; omit to auto-detect from URL params
-  queryType?: QueryType; // only relevant when mode='query' (path-based routes)
-  idType?: InputType;    // set by type-prefixed routes (/gene/:id, /pdb/:id, etc.)
+  mode?: PageMode;           // explicit override; omit to auto-detect from URL params
+  queryType?: QueryType;     // only relevant when mode='query' (path-based routes)
+  idType?: IdentifierType;   // set by type-prefixed routes (/gene/:id, /pdb/:id, etc.)
 }
 
 // Build "chr pos [ref alt]" query string from parts
@@ -192,7 +192,8 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
   // ── Browse mode loader (POST /mapping) ─────────────────────────────────────
   const loadBrowseData = useCallback((
     options: {
-      ids?: IdInput[];      // all browse cases — single id, multi-id, or empty (filter-only)
+      resultId?: string;    // uploaded result ID → resultId path
+      ids?: Identifier[];   // identifier browse — single id, multi-id, or empty (filter-only)
     },
     page: number,
     pageSize: number,
@@ -243,20 +244,21 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
         if (response.data) {
           if (response.data.content?.inputs?.length > 0) {
             setData(response.data)
-            setInputType(response.data.type);
 
-            viewedRecord(response.data.input, location.pathname + location.search)
-
-            if (response.data.type === 'input_id') {
-              const totalItems = response.data.totalItems
+            if (options.resultId) {
+              // Uploaded result: type is effectively 'input_id', show summary title
+              setInputType('input_id');
+              const totalItems = response.data.totalItems;
               const firstInputLine = totalItems === 1 ?
                 response.data.content.inputs[0].inputStr :
-                `${response.data.content.inputs[0].inputStr} ...+${totalItems - 1} more `
-              setResultTitle(firstInputLine)
+                `${response.data.content.inputs[0].inputStr} ...+${totalItems - 1} more `;
+              setResultTitle(firstInputLine);
             } else {
-              const displayLabel = options.ids?.map(i => i.value).join(', ')
-                ?? response.data.input
-                ?? '';
+              // Identifier browse: derive type and label from what we sent
+              const sentType = options.ids?.length === 1 ? options.ids[0].type : null;
+              setInputType(sentType ?? null);
+              const displayLabel = options.ids?.map(i => i.value).join(', ') ?? '';
+              if (displayLabel) viewedRecord(displayLabel, location.pathname + location.search);
               setResultTitle(`${displayLabel} (${response.data.totalItems} variants)`);
               setTitleFlash(true);
               setTimeout(() => setTitleFlash(false), 600);
@@ -276,7 +278,10 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
         setData(null)
         if (err.response) {
           if (err.response?.status === 400) {
-            setWarning(err.response.data || 'Invalid input or type mismatch');
+            const errData = err.response.data;
+            // BE may return a Map<String,String> (object) for validation errors — extract text
+            const msg = typeof errData === 'string' ? errData : 'Invalid input or type mismatch';
+            setWarning(msg);
           } else if (err.response.status === 404) {
             setWarning(NO_RESULT);
           } else {
@@ -295,7 +300,7 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
       .then((response) => {
         if (response.data?.content?.inputs?.length > 0) {
           setData(response.data)
-          setInputType(response.data.type)
+          setInputType('variant')
         } else {
           setData(null); setWarning(NO_RESULT)
         }
@@ -376,10 +381,15 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
       loadBrowseData({ ids }, page, pageSize, assembly, filters);
 
     } else if (input) {
-      // Bare /:input route (UniProt accession or input_id) — resolve type same as ?id= params
       const trimmedInput = input.trim();
       setResultTitle(trimmedInput);
-      loadBrowseData({ ids: [parseIdParam(trimmedInput)] }, page, pageSize, assembly, filters);
+      if (location.pathname.startsWith(RESULT + '/')) {
+        // /result/:id — uploaded result, use resultId path
+        loadBrowseData({ resultId: trimmedInput }, page, pageSize, assembly, filters);
+      } else {
+        // /:accession — UniProt accession or other identifier, use ids path
+        loadBrowseData({ ids: [parseIdParam(trimmedInput)] }, page, pageSize, assembly, filters);
+      }
 
     } else {
       // Filter-only browse: /search with no q= and no id=
@@ -493,9 +503,13 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
           <i className="bi bi-download icon-btn"
              title="Download results"
              onClick={() => appState.updateState("drawer",
-               <DownloadContent input={isQueryMode ? (resultTitle ?? '') : input!}
-                                type={isQueryMode ? 'variant' : inputType!}
-                                numPages={isQueryMode ? 1 : (data?.totalPages ?? 0)} />)}
+               <DownloadPanel
+                 q={isQueryMode ? (resultTitle ?? undefined) : undefined}
+                 resultId={!isQueryMode && inputType === 'input_id' ? input ?? undefined : undefined}
+                 ids={!isQueryMode && inputType !== 'input_id' && input && inputType
+                   ? [{ type: inputType as any, value: input }]
+                   : undefined}
+                 numPages={isQueryMode ? 1 : (data?.totalPages ?? 0)} />)}
           > Download</i>
         </div>
       )}
