@@ -28,9 +28,20 @@ function ResultTable(props: { data: PagedMappingResponse | null }) {
     const annotationParam = searchParams.get('annotation');
     if (!annotationParam) { setAnnotationExpanded(''); return; }
     const parsed = parseAnnotationParam(annotationParam);
-    if (parsed) setAnnotationExpanded(buildAnnotationKey(parsed.type, parsed.rowNumber));
-    else setAnnotationExpanded('');
-  }, [searchParams]);
+    if (parsed) {
+      const canonical = buildAnnotationParam(parsed.type, parsed.rowNumber, true);
+      if (canonical !== annotationParam) {
+        // Long form (e.g. "functional-row-1") → redirect to short canonical form ("fun")
+        const newParams = new URLSearchParams(searchParams);
+        newParams.set('annotation', canonical);
+        navigate(`${location.pathname}?${newParams.toString()}`, { replace: true });
+        return;
+      }
+      setAnnotationExpanded(buildAnnotationKey(parsed.type, parsed.rowNumber));
+    } else {
+      setAnnotationExpanded('');
+    }
+  }, [searchParams]); // eslint-disable-line react-hooks/exhaustive-deps
 
   function toggleIsoformGroup(key: string) {
     setIsoformGroupExpanded(isoformGroupExpanded === key ? '' : key);
