@@ -27,12 +27,15 @@ const renderer = new marked.Renderer();
 
 // Override link rendering
 renderer.link = (href, title, text) => {
-  // If it's an internal anchor link, prefix with /help
+  // Internal anchor links: prefix with /help so they navigate to the right section
   if (href && href.startsWith('#')) {
     href = `${process.env.PUBLIC_URL}${HELP}${href}`;
+    const titleAttr = title ? ` title="${title}"` : '';
+    return `<a href="${href}"${titleAttr}>${text}</a>`;
   }
+  // All other links (internal example links and external URLs) open in a new tab
   const titleAttr = title ? ` title="${title}"` : '';
-  return `<a href="${href}"${titleAttr}>${text}</a>`;
+  return `<a href="${href}"${titleAttr} target="_blank" rel="noopener noreferrer">${text}</a>`;
 };
 
 export const MarkdownProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
