@@ -6,7 +6,7 @@ import React, {useCallback, useContext, useEffect, useMemo, useRef, useState} fr
 import PaginationRow from "./PaginationRow";
 import {DEFAULT_PAGE, DEFAULT_PAGE_SIZE, LOCAL_RESULTS, PERMITTED_PAGE_SIZES, TITLE} from "../../../constants/const";
 import {DownloadContent} from "../../modal/DownloadModal";
-import {getMapping} from "../../../services/ProtVarService";
+import {getMapping, singleVariant} from "../../../services/ProtVarService";
 import {PagedMappingResponse} from "../../../types/PagedMappingResponse";
 import "./ResultPage.css";
 
@@ -25,7 +25,7 @@ import {
   mapUiCaddToBackend, mapUiPopeveToBackend,
   mapUiStabilityToBackend, mapUiAlleleFreqToBackend
 } from "../../components/search/filterUtils";
-import {fromString/*, normalize, resolve*/} from "../../../utills/InputTypeResolver";
+import {fromString} from "../../../utills/InputTypeResolver";
 import {InputType} from "../../../types/InputType";
 import {MappingRequest} from "../../../types/MappingRequest";
 import SearchFilters, {
@@ -35,33 +35,111 @@ import SearchFilters, {
 const INVALID_PAGE = `The requested page number is invalid or out of range. Displaying page ${DEFAULT_PAGE} by default.`
 const INVALID_PAGE_SIZE = `The specified page size is invalid. Using the default page size of ${DEFAULT_PAGE_SIZE} instead.`
 const MAX_PAGE_EXCEEDED = `The requested page number exceeds the total number of available pages (total pages: {totalPages}).`
+const INVALID_QUERY = 'Invalid or unrecognised query'
 export const NO_DATA = 'No data'
 export const NO_RESULT = 'No result to display'
 export const UNEXPECTED_ERR = 'An unexpected error occurred'
 
-function ResultPageContent() {
+// Regex used for backward-compat chromosome_protein route parsing
+const chromosomeRegex = /^chr([1-9]|1[0-9]|2[0-2]|X|Y|MT)$/;
+const proteinAccessionRegex = /^([OPQ][0-9][A-Z0-9]{3}[0-9]|[A-NR-Z][0-9]([A-Z][A-Z0-9]{2}[0-9]){1,2})$/;
+const positionRegex = /^\d+$/;
+
+/**
+ * Build the canonical new URL for a deprecated URL pattern.
+ * Returns null if the URL is already canonical (no redirect needed).
+ */
+function buildCanonicalUrl(
+  queryType: QueryType | undefined,
+  pathname: string,
+  searchParams: URLSearchParams,
+  param1?: string, param2?: string, param3?: string, param4?: string
+): string | null {
+  const assembly = searchParams.get('assembly');
+  const suffix = (p: URLSearchParams) => p.toString() ? `?${p.toString()}` : '';
+
+  if (queryType === 'chromosome_protein') {
+    // Old /:chrXX/:pos[/:ref/:alt] → /g/:XX/:pos[/:ref/:alt]
+    if (chromosomeRegex.test(param1 ?? '') && param2) {
+      const chr = param1!.substring(3); // strip 'chr' prefix
+      const segs = [chr, param2, param3, param4].filter(Boolean).join('/');
+      const p = new URLSearchParams();
+      if (assembly) p.set('assembly', assembly);
+      return `/g/${segs}${suffix(p)}`;
+    }
+    // Old /:acc/:pos[/:ref/:alt] → /p/:acc/:pos[/:ref/:alt]
+    if (proteinAccessionRegex.test(param1 ?? '') && param2) {
+      const segs = [param1, param2, param3, param4].filter(Boolean).join('/');
+      const p = new URLSearchParams();
+      if (assembly) p.set('assembly', assembly);
+      return `/p/${segs}${suffix(p)}`;
+    }
+  }
+
+  if (queryType === 'search') {
+    const p = new URLSearchParams();
+    // Rename old param names → new short names
+    const q = searchParams.get('search') ?? searchParams.get('q');
+    const chr = searchParams.get('chromosome');
+    const pos = searchParams.get('genomic_position') ?? searchParams.get('protein_position') ?? searchParams.get('position');
+    const acc = searchParams.get('accession');
+    const ref = searchParams.get('reference_allele') ?? searchParams.get('reference_AA') ?? searchParams.get('ref');
+    const alt = searchParams.get('alternative_allele') ?? searchParams.get('variant_AA') ?? searchParams.get('alt');
+
+    if (q) p.set('q', q);
+    if (chr) p.set('chromosome', chr);
+    if (pos) p.set('position', pos);
+    if (acc) p.set('accession', acc);
+    if (ref) p.set('ref', ref);
+    if (alt) p.set('alt', alt);
+    if (assembly) p.set('assembly', assembly);
+
+    const isOldPath = pathname.endsWith('/query');
+    const hasOldParams = ['search', 'genomic_position', 'protein_position',
+                          'reference_allele', 'alternative_allele', 'reference_AA', 'variant_AA']
+                          .some(k => searchParams.has(k));
+    if (isOldPath || hasOldParams) {
+      return `/search${suffix(p)}`;
+    }
+  }
+
+  return null; // already canonical
+}
+
+export type QueryType = 'search' | 'genomic' | 'protein' | 'chromosome_protein';
+export type PageMode = 'query' | 'browse';
+
+export interface ResultPageProps {
+  mode?: PageMode;      // 'query' = single variant; 'browse' = identifier/batch (default)
+  queryType?: QueryType; // only relevant when mode='query'
+}
+
+// Build "chr pos [ref alt]" query string from parts
+function buildQueryString(p1: string, p2: string, p3?: string | null, p4?: string | null): string {
+  return `${p1} ${p2}${p3 ? ` ${p3}${p4 ? ` ${p4}` : ''}` : ''}`;
+}
+
+function splitFirst(input: string | null): string | undefined {
+  if (!input) return undefined;
+  return input.split(/[\n,|]/)[0]?.trim() || undefined;
+}
+
+function ResultPageContent({ mode = 'browse', queryType }: ResultPageProps) {
   const appState = useContext(AppContext);
   const navigate = useNavigate();
   const location = useLocation();
-  const { input } = useParams();
+  // browse mode uses :input; query mode uses :param1/:param2 etc.
+  const { input, param1, param2, param3, param4 } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const [inputType, setInputType] = useState<InputType | null>(null);
   const [resultTitle, setResultTitle] = useState(input)
   const [titleFlash, setTitleFlash] = useState(false);
-
-  // components that alter search params:
-  // 1) PaginationRow
-  // 2) ShareAnnotation
-  // ?
-  // change in page,pageSize,assembly - requires reload
-  // change in annotation - toggleAnnotation
-  // maybe map searchParams into an interface for expected params where all fields will be optional?
+  const [showRedirectToast, setShowRedirectToast] = useState(false);
 
   const page = parseInt(searchParams.get('page') || `${DEFAULT_PAGE}`, 10);
   const pageSize = parseInt(searchParams.get('pageSize') || `${DEFAULT_PAGE_SIZE}`, 10);
   const assembly = searchParams.get("assembly")
   const filters = useMemo(() => extractFilters(searchParams), [searchParams]);
-  // Add local state for immediate UI feedback
   const [localFilters, setLocalFilters] = useState<SearchFilterParams>(filters);
 
   const [data, setData] = useState<PagedMappingResponse | null>(null)
@@ -70,30 +148,36 @@ function ResultPageContent() {
   const {getItem, setItem} = useLocalStorage();
   const resultsTopRef = useRef<HTMLDivElement>(null);
 
-  const viewedRecord = useCallback((input: string, url: string) => {
+  // Show redirect toast when we arrive after being redirected from a deprecated URL.
+  // The query mode effect sets a sessionStorage flag just before navigating, so we
+  // can detect it here after the new URL is in place.
+  useEffect(() => {
+    if (sessionStorage.getItem('protvar_redirected')) {
+      sessionStorage.removeItem('protvar_redirected');
+      setShowRedirectToast(true);
+      const timer = setTimeout(() => setShowRedirectToast(false), 6000);
+      return () => clearTimeout(timer);
+    }
+  }, [location.pathname, location.search]);
+
+  const viewedRecord = useCallback((id: string, url: string) => {
     const now = new Date().toISOString();
     let savedRecords = getItem<ResultRecord[]>(LOCAL_RESULTS) || [];
-
-    // Find the index of the record to update
-    const index = savedRecords.findIndex(record => record.id === input);
-
+    const index = savedRecords.findIndex(record => record.id === id);
     if (index !== -1) {
-      // Update the record in the array
-      // update url to current page view
       savedRecords[index] = {...savedRecords[index], url, lastViewed: now};
-      // Move the updated record to the beginning of the array
-      const [movedRecord] = savedRecords.splice(index, 1);
-      savedRecords.unshift(movedRecord);
-    } else { // if no matching record is found
-      // add new record to beginning of array
-      savedRecords = [{id: input, url, lastViewed: now}, ...savedRecords]
+      const [moved] = savedRecords.splice(index, 1);
+      savedRecords.unshift(moved);
+    } else {
+      savedRecords = [{id, url, lastViewed: now}, ...savedRecords]
     }
     setItem(LOCAL_RESULTS, savedRecords);
   }, [getItem, setItem]);
 
   const updatingTypeParam = useRef(false);
 
-  const loadData = useCallback((
+  // ── Browse mode loader (POST /mapping) ─────────────────────────────────────
+  const loadBrowseData = useCallback((
     providedType: InputType | null,
     input: string,
     page: number,
@@ -102,72 +186,41 @@ function ResultPageContent() {
     filters?: SearchFilterParams
   ) => {
     setLoading(true)
-    // for testing, add a delay here
 
     const pageIsValid = !isNaN(page) && page > 0;
     const pageSizeIsValid = !isNaN(pageSize) && PERMITTED_PAGE_SIZES.includes(pageSize);
 
-    if (!pageIsValid) {
-      setWarning(INVALID_PAGE)
-      page = DEFAULT_PAGE
-    }
+    if (!pageIsValid) { setWarning(INVALID_PAGE); page = DEFAULT_PAGE; }
+    if (!pageSizeIsValid) { setWarning(INVALID_PAGE_SIZE); pageSize = DEFAULT_PAGE_SIZE; }
 
-    if (!pageSizeIsValid) {
-      setWarning(INVALID_PAGE_SIZE)
-      pageSize = DEFAULT_PAGE_SIZE
-    }
-
-    // Map UI categories to backend categories
-    const backendCaddCategories = filters?.cadd ?
-      mapUiCaddToBackend(filters.cadd) : [];
-    const backendPopeveCategories = filters?.popeve ?
-      mapUiPopeveToBackend(filters.popeve) : [];  // NEW: Map popEVE
-    const backendStabilityCategories = filters?.stability ?
-      mapUiStabilityToBackend(filters.stability) : [];
-    const backendAlleleFreqCategories = filters?.freq ?
-      mapUiAlleleFreqToBackend(filters.freq) : [];
-
-    // Determine 'known' boolean from variantType
-    // Default is 'known' (true), unless explicitly set to 'potential' (undefined/false)
+    const backendCadd = filters?.cadd ? mapUiCaddToBackend(filters.cadd) : [];
+    const backendPopeve = filters?.popeve ? mapUiPopeveToBackend(filters.popeve) : [];
+    const backendStability = filters?.stability ? mapUiStabilityToBackend(filters.stability) : [];
+    const backendFreq = filters?.freq ? mapUiAlleleFreqToBackend(filters.freq) : [];
     const knownVariants = filters?.variant !== 'potential' ? true : undefined;
 
-    // page null or 1, no param
-    // pageSize null or PAGE_SIZE, no param
-    // assembly null or DEFAULT, no param
     const request: MappingRequest = {
       input,
-      type: providedType ?? undefined,  // Send user's type hint to backend
-      page,
-      pageSize,
+      type: providedType ?? undefined,
+      page, pageSize,
       assembly: assembly ?? undefined,
-      // Variant Type (mapped to existing 'known' backend field)
       known: knownVariants,
-
-      // Functional (not yet implemented in backend - will be added later)
       ptm: filters?.ptm,
       mutagenesis: filters?.mutagen,
       conservationMin: filters?.consMin,
       conservationMax: filters?.consMax,
       functionalDomain: filters?.domain,
-
-      // Population (not yet implemented in backend - will be added later)
       diseaseAssociation: filters?.disease,
-      alleleFreq: backendAlleleFreqCategories.length > 0 ? backendAlleleFreqCategories : undefined,
-
-      // Structural
+      alleleFreq: backendFreq.length > 0 ? backendFreq : undefined,
       experimentalModel: filters?.expModel,
       interact: filters?.interact,
       pocket: filters?.pocket,
-      stability: backendStabilityCategories.length > 0 ? backendStabilityCategories : undefined,
-
-      // Consequence
-      cadd: backendCaddCategories.length > 0 ? backendCaddCategories : undefined,
+      stability: backendStability.length > 0 ? backendStability : undefined,
+      cadd: backendCadd.length > 0 ? backendCadd : undefined,
       am: filters?.am ?? [],
-      popeve: backendPopeveCategories.length > 0 ? backendPopeveCategories : undefined,
+      popeve: backendPopeve.length > 0 ? backendPopeve : undefined,
       esm1bMin: filters?.esmMin,
       esm1bMax: filters?.esmMax,
-
-      // Sorting
       sort: filters?.sort,
       order: filters?.order,
     };
@@ -175,18 +228,13 @@ function ResultPageContent() {
     getMapping(request)
       .then((response) => {
         if (response.data) {
-          // checks each level of response obj hierarchy exists and if inputs is non-empty.
-          // if any part of the chain is null or undefined, the entire expr short-circuits
-          // returns false.
-
           if (response.data.content?.inputs?.length > 0) {
             setData(response.data)
-            setInputType(response.data.type); // Backend returns resolved type
+            setInputType(response.data.type);
 
-            // Only update URL if backend resolved a different type than what user provided
             const resolvedType = response.data.type;
             if (resolvedType && resolvedType !== providedType) {
-              updatingTypeParam.current = true; // Flag that we're updating
+              updatingTypeParam.current = true;
               setSearchParams(prev => {
                 const newParams = new URLSearchParams(prev);
                 newParams.set('type', resolvedType);
@@ -204,34 +252,26 @@ function ResultPageContent() {
               setResultTitle(firstInputLine)
             } else {
               setResultTitle(`${input} (${response.data.totalItems} variants)`)
-              // Trigger flash animation
               setTitleFlash(true);
               setTimeout(() => setTitleFlash(false), 600);
             }
           } else {
-            setData(null) // clear prev data
-            setWarning(NO_RESULT)
+            setData(null); setWarning(NO_RESULT)
           }
-          // if no result warning has been set, the following will override it
           const totalPages = response.data.totalPages ?? 0
           if (page !== DEFAULT_PAGE && page > totalPages) {
-            // Handle case where page exceeds totalPages
             setWarning(MAX_PAGE_EXCEEDED.replace("{totalPages}", totalPages.toString()))
-            //page = response.data.totalPages
-            // navigate to last page?
           }
         } else {
-          setData(null) // clear prev data
-          setWarning(NO_DATA)
+          setData(null); setWarning(NO_DATA)
         }
       })
       .catch((err) => {
-        setData(null) // clear prev data
+        setData(null)
         if (err.response) {
           if (err.response?.status === 400) {
-            // Backend returns descriptive error for type mismatches
             setWarning(err.response.data || 'Invalid input or type mismatch');
-          } else if (err.response.status === 404) { // Not found
+          } else if (err.response.status === 404) {
             setWarning(NO_RESULT);
           } else {
             setWarning(`Error ${err.response.status}: ${err.message}`);
@@ -239,101 +279,126 @@ function ResultPageContent() {
         } else {
           setWarning(UNEXPECTED_ERR);
         }
-      }).finally(() => {
-      setLoading(false)
-    })
+      }).finally(() => setLoading(false))
   }, [viewedRecord, location, setSearchParams])
 
+  // ── Query mode loader (GET /mapping?input=) ─────────────────────────────────
+  const loadQueryData = useCallback((q: string, assembly: string | null) => {
+    setLoading(true)
+    singleVariant(q, assembly ?? undefined)
+      .then((response) => {
+        if (response.data?.content?.inputs?.length > 0) {
+          setData(response.data)
+          setInputType(response.data.type)
+        } else {
+          setData(null); setWarning(NO_RESULT)
+        }
+      })
+      .catch((err) => {
+        setData(null)
+        if (err.response?.status === 404) {
+          setWarning(NO_RESULT)
+        } else if (err.response) {
+          setWarning(`Error ${err.response.status}: ${err.message}`)
+        } else {
+          setWarning(UNEXPECTED_ERR)
+        }
+      }).finally(() => setLoading(false))
+  }, [])
+
+  // ── Parse URL into a query string for query mode ────────────────────────────
+  const parseQueryInput = useCallback((): string | null => {
+    const ref = searchParams.get('ref') || searchParams.get('reference_allele') || searchParams.get('reference_AA');
+    const alt = searchParams.get('alt') || searchParams.get('alternative_allele') || searchParams.get('variant_AA');
+    const pos = searchParams.get('position') || searchParams.get('genomic_position') || searchParams.get('protein_position');
+
+    if (queryType === 'search') {
+      const freeText = searchParams.get('q') || searchParams.get('search');
+      if (freeText) return splitFirst(freeText) ?? null;
+      const chr = searchParams.get('chromosome');
+      const acc = searchParams.get('accession');
+      if (chr && pos) return buildQueryString(chr, pos, ref, alt);
+      if (acc && pos) return buildQueryString(acc, pos, ref, alt);
+    } else if (queryType === 'genomic' && param1 && positionRegex.test(param2 ?? '')) {
+      return buildQueryString(param1, param2!, param3, param4);
+    } else if (queryType === 'protein' && proteinAccessionRegex.test(param1 ?? '') && positionRegex.test(param2 ?? '')) {
+      return buildQueryString(param1!, param2!, param3, param4);
+    } else if (queryType === 'chromosome_protein') {
+      if (chromosomeRegex.test(param1 ?? '') && positionRegex.test(param2 ?? ''))
+        return buildQueryString(param1!.substring(3), param2!, param3, param4);
+      if (proteinAccessionRegex.test(param1 ?? '') && positionRegex.test(param2 ?? ''))
+        return buildQueryString(param1!, param2!, param3, param4);
+    }
+    return null;
+  }, [queryType, searchParams, param1, param2, param3, param4])
+
+  // ── Query mode effect ───────────────────────────────────────────────────────
   useEffect(() => {
-    // Skip if we just updated the type parameter ourselves
-    if (updatingTypeParam.current) {
-      updatingTypeParam.current = false;
-      return;
+    if (mode !== 'query') return;
+    setWarning('')
+
+    // Redirect deprecated URLs to canonical form before loading
+    const canonicalUrl = buildCanonicalUrl(queryType, location.pathname, searchParams, param1, param2, param3, param4);
+    if (canonicalUrl) {
+      sessionStorage.setItem('protvar_redirected', '1');
+      navigate(canonicalUrl, { replace: true });
+      return; // navigation triggers re-render with the new URL
     }
 
+    const q = parseQueryInput();
+    if (!q) { setWarning(INVALID_QUERY); setLoading(false); return; }
+    setResultTitle(q);
+    loadQueryData(q, assembly);
+  }, [mode, queryType, location.pathname, searchParams, param1, param2, param3, param4, parseQueryInput, assembly, loadQueryData, navigate])
+
+  // ── Browse mode effect ──────────────────────────────────────────────────────
+  useEffect(() => {
+    if (mode !== 'browse') return;
+    if (updatingTypeParam.current) { updatingTypeParam.current = false; return; }
     setWarning("");
     if (!input) return;
-
     const trimmedInput = input.trim();
     const type = searchParams.get('type');
     const providedType = type ? fromString(type) : null;
-/*
-    // Infer type
-    const detectedType = resolve(trimmedInput);
-
-    let finalType: InputType | null = null;
-
-    if (parsedType) {
-      if (detectedType && parsedType !== detectedType) {
-        setWarning(`Type mismatch: URL says "${parsedType}" but input looks like "${detectedType}". Using detected type.`);
-        finalType = detectedType;
-      } else {
-        finalType = parsedType;
-      }
-    } else {
-      finalType = detectedType;
-    }
-
-    if (!finalType) {
-      setWarning("Could not determine input type.");
-      return;
-    }
-
-    setInputType(finalType);
-
-    const normalized = normalize(trimmedInput, finalType);
-    setResultTitle(normalized);
-    loadData(finalType, input, page, pageSize, assembly, filters);
-*/
     setResultTitle(trimmedInput);
-    loadData(providedType, trimmedInput, page, pageSize, assembly, filters);
-  }, [input, searchParams, page, pageSize, assembly, filters, loadData]) // listening for change in input, and searchParams
+    loadBrowseData(providedType, trimmedInput, page, pageSize, assembly, filters);
+  }, [mode, input, searchParams, page, pageSize, assembly, filters, loadBrowseData])
 
-  // Update local filters when URL changes
   useEffect(() => {
     setLocalFilters(extractFilters(searchParams));
   }, [searchParams]);
-
-  const handleApplyFilters = () => {
-    const newSearchParams = new URLSearchParams(searchParams);
-
-    // Clear existing filter params using the centralized list
-    FILTER_PARAM_KEYS.forEach(key => newSearchParams.delete(key));
-
-    // Use shared utility to build filter params
-    const filterParams = buildFilterParams(localFilters);
-
-    // Append all filter params to the cleared search params
-    filterParams.forEach((value, key) => {
-      newSearchParams.append(key, value);
-    });
-
-    const queryString = newSearchParams.toString();
-    navigate(`${location.pathname}${queryString ? `?${queryString}` : ''}`);
-
-    // Scroll to the top of the results section after navigation
-    setTimeout(() => {
-      resultsTopRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
-  };
 
   useEffect(() => {
     document.title = `${resultTitle} | ${TITLE}`;
   }, [resultTitle]);
 
-  const shareUrl = `${APP_URL}${location.pathname}${location.search}`
+  const handleApplyFilters = () => {
+    const newSearchParams = new URLSearchParams(searchParams);
+    FILTER_PARAM_KEYS.forEach(key => newSearchParams.delete(key));
+    buildFilterParams(localFilters).forEach((value, key) => newSearchParams.append(key, value));
+    // Reset to page 1 when filters change
+    newSearchParams.delete('page');
+    const queryString = newSearchParams.toString();
+    navigate(`${location.pathname}${queryString ? `?${queryString}` : ''}`);
+    setTimeout(() => resultsTopRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+  };
 
-  return <div className="search-results">
+  const isQueryMode = mode === 'query';
+  const shareUrl = `${APP_URL}${location.pathname}${location.search}`
+  const helpName = isQueryMode ? 'protvar-links' : 'result-page';
+  const pageTitle = isQueryMode
+    ? <>Search <i className="bi bi-chevron-compact-right"></i> {resultTitle}</>
+    : <span className={titleFlash ? 'title-sparkle' : ''}>Result <i className="bi bi-chevron-compact-right"></i> {resultTitle}</span>;
+
+  return <div>
     <div ref={resultsTopRef}>
-      <h5 className="page-header">
-        <span className={titleFlash ? 'title-sparkle' : ''}>Result <i className="bi bi-chevron-compact-right"></i> {resultTitle}</span>
-      </h5>
+      <h5 className="page-header">{pageTitle}</h5>
       <span className="help-icon">
-        <HelpButton title="" content={<HelpContent name="result-page"/>}/>
+        <HelpButton title="" content={<HelpContent name={helpName}/>}/>
       </span>
     </div>
 
-    {/* ── Response-level messages from API (just under heading) ── */}
+    {/* ── Response-level messages from API ── */}
     {(data?.content.messages?.length ?? 0) > 0 && (
       <div className="result-notices">
         {data!.content.messages!.map((message, i) => (
@@ -344,10 +409,10 @@ function ResultPageContent() {
       </div>
     )}
 
-    {/* ── Toolbar: pagination (left) | actions (right) ── */}
+    {/* ── Toolbar ── */}
     <div className="result-toolbar">
       <div>
-        {data && data.totalPages > 1 && <PaginationRow loading={loading} data={data}/>}
+        {!isQueryMode && data && data.totalPages > 1 && <PaginationRow loading={loading} data={data}/>}
       </div>
       {data && (
         <div className="result-toolbar-actions">
@@ -359,7 +424,10 @@ function ResultPageContent() {
           > Legends</i>
           <i className="bi bi-download icon-btn"
              title="Download results"
-             onClick={() => appState.updateState("drawer", <DownloadContent input={input!} type={inputType!} numPages={(data && data.totalPages) ?? 0} />)}
+             onClick={() => appState.updateState("drawer",
+               <DownloadContent input={isQueryMode ? (resultTitle ?? '') : input!}
+                                type={isQueryMode ? 'variant' : inputType!}
+                                numPages={isQueryMode ? 1 : (data?.totalPages ?? 0)} />)}
           > Download</i>
         </div>
       )}
@@ -376,7 +444,7 @@ function ResultPageContent() {
       </div>
     )}
 
-    {/* ── Page-level warning (invalid page, no data, etc.) ── */}
+    {/* ── Warnings ── */}
     {warning && (
       <div className="result-notices">
         <div className="result-notice result-notice--warn">{warning}</div>
@@ -384,24 +452,36 @@ function ResultPageContent() {
     )}
 
     {!data && loading && <Loader/>}
-    {inputType !== 'input_id' && inputType !== 'variant' && (
+
+    {/* ── Filters (browse mode only, and not for batch/variant results) ── */}
+    {!isQueryMode && inputType !== 'input_id' && inputType !== 'variant' && (
       <SearchFilters
         filters={localFilters}
-        onFiltersChange={setLocalFilters} // todo: reset page to 1!
+        onFiltersChange={setLocalFilters}
         onApply={handleApplyFilters}
         loading={loading}
-        showSorting={true} // Show sorting on results page
+        showSorting={true}
       />
     )}
 
     <ResultTable data={data}/>
-    {data && data.totalPages > 1 && <PaginationRow loading={loading} data={data}/>}
+    {!isQueryMode && data && data.totalPages > 1 && <PaginationRow loading={loading} data={data}/>}
 
+    {showRedirectToast && (
+      <div className="redirect-toast">
+        <i className="bi bi-arrow-return-left"></i>
+        You arrived via a deprecated URL —{' '}
+        <a href={`${process.env.PUBLIC_URL}/help#protvar-links`} target="_blank" rel="noopener noreferrer">
+          see updated format
+        </a>
+        <button className="redirect-toast-close" onClick={() => setShowRedirectToast(false)}>×</button>
+      </div>
+    )}
   </div>
 }
 
-function ResultPage() {
-  return <DefaultPageLayout content={<ResultPageContent />}/>
+function ResultPage(props: ResultPageProps) {
+  return <DefaultPageLayout content={<ResultPageContent {...props} />}/>
 }
 
 export default ResultPage;

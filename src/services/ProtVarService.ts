@@ -52,7 +52,7 @@ export function uploadFile(file: File, assembly?: string) {
 // Mapping
 
 // GET /mapping
-// Single variant mapping (used in QueryPage/direct link)
+// Single variant mapping (used for direct /search, /g/, /p/ queries)
 export function singleVariant(input: string, assembly?: string) {
   return api.get<PagedMappingResponse>(
     `${API_URL}/mapping`,

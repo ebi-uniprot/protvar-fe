@@ -1,7 +1,10 @@
 export const ABOUT = "/about"
 export const CONTACT = "/contact"
 export const RESULT = "/result" //[/:input]
-export const QUERY = "/query"
+export const QUERY = "/query"   // deprecated, kept for backward compat
+export const SEARCH = "/search" // replaces /query
+export const G_QUERY = "/g"     // direct genomic path: /g/:chr/:pos[/:ref/:alt]
+export const P_QUERY = "/p"     // direct protein path: /p/:acc/:pos[/:ref/:alt]
 export const HOME = "/"
 export const API_ERROR = "/error"
 export const DOWNLOAD = "/download"

@@ -8,7 +8,7 @@ import useLocalStorage from "../../../hooks/useLocalStorage";
 import {ResultRecord} from "../../../types/ResultRecord";
 import {LOCAL_RESULTS} from "../../../constants/const";
 import {uploadFile, uploadText} from "../../../services/ProtVarService";
-import {API_ERROR, QUERY, RESULT} from "../../../constants/BrowserPaths";
+import {API_ERROR, RESULT, SEARCH} from "../../../constants/BrowserPaths";
 import {readFirstLineFromFile} from "../../../utills/FileUtil";
 import { DEFAULT_SEARCH_FILTERS } from '../../components/search/defaultFilters';
 import SearchFilters, {
@@ -259,7 +259,7 @@ const SearchPage: React.FC = () => {
           await handleUpload(() => uploadText(cleanText, genomeAssembly));
         } else {
           // --- Direct single variant query ---
-          let directQuery = `/${QUERY}?search=${encodeURIComponent(cleanText)}`;
+          let directQuery = `${SEARCH}?q=${encodeURIComponent(cleanText)}`;
           if (genomeAssembly === 'grch37') {
             directQuery += `&assembly=${genomeAssembly}`;
           }

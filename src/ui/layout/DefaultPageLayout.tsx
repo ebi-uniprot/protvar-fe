@@ -26,7 +26,7 @@ const bannerText = (
 
     <div>
       <i className="bi bi-stars banner-new-icon"></i>{' '}
-      <a href="/ProtVar/help#structure-linking">Structure</a> Tab Direct Linking
+      <a href="/ProtVar/help#protvar-links">ProtVar Links</a> Structure Tab
     </div>
   </>
 );

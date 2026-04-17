@@ -1,7 +1,7 @@
 // SearchBox.tsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { QUERY } from '../../../constants/BrowserPaths';
+import { SEARCH } from '../../../constants/BrowserPaths';
 import './SearchBox.css';
 
 interface SearchBoxProps {
@@ -23,7 +23,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
       e.preventDefault();
       const trimmedInput = searchInput.trim();
       if (trimmedInput.length >= minLength) {
-        navigate(QUERY + '?search=' + encodeURIComponent(trimmedInput));
+        navigate(SEARCH + '?q=' + encodeURIComponent(trimmedInput));
       }
     }
   };
@@ -31,7 +31,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
   const handleSubmit = () => {
     const trimmedInput = searchInput.trim();
     if (trimmedInput.length >= minLength) {
-      navigate(QUERY + '?search=' + encodeURIComponent(trimmedInput));
+      navigate(SEARCH + '?q=' + encodeURIComponent(trimmedInput));
     }
   };
 

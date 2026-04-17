@@ -5,8 +5,7 @@ import APIErrorPage from "./pages/APIErrorPage";
 import AboutPage from "./pages/AboutPage";
 import ReleasePage from "./pages/ReleasePage";
 import ContactPage from "./pages/ContactPage";
-import {ABOUT, API_ERROR, CONTACT, DOWNLOAD, HELP, HOME, QUERY, RELEASE, RESULT} from "../constants/BrowserPaths";
-import QueryPage from "./pages/query/QueryPage";
+import {ABOUT, API_ERROR, CONTACT, DOWNLOAD, G_QUERY, HELP, HOME, P_QUERY, QUERY, RELEASE, RESULT, SEARCH} from "../constants/BrowserPaths";
 import DownloadPage from "./pages/download/DownloadPage";
 import HelpPage from "./pages/help/HelpPage";
 import {PagedMappingResponse} from "../types/PagedMappingResponse";
@@ -78,16 +77,31 @@ export default function App() {
           <Route path={HOME} element={<HomePage />} />
           <Route path={`${RESULT}`} element={<ResultListPage />} />
 
-          {/* Search route for complex inputs */}
-          {/*<Route path="/search" element={<SearchPage />} />*/}
-
-          {/* Clean URL route for simple identifiers */}
-          {/*<Route path="/:identifier" element={<SearchPage />} />*/}
-
           {/* Route for user inputId - result/{inputId} */}
           <Route path={`${RESULT}/:input`} element={<ResultPage />} />
-          {/*use /search with backward compatibility for /query */}
-          <Route path={QUERY} element={<QueryPage queryType="search" />} />
+
+          {/* Primary search route */}
+          <Route path={SEARCH} element={<ResultPage mode="query" queryType="search" />} />
+          {/* Backward compat: /query → same handler */}
+          <Route path={QUERY} element={<ResultPage mode="query" queryType="search" />} />
+
+          {/* Direct genomic path: /g/:chr/:pos[/:ref/:alt] */}
+          <Route
+            path={`${G_QUERY}/:param1/:param2/:param3?/:param4?`}
+            element={<ResultPage mode="query" queryType="genomic" />}
+          />
+          {/* Direct protein path: /p/:acc/:pos[/:ref/:alt] */}
+          <Route
+            path={`${P_QUERY}/:param1/:param2/:param3?/:param4?`}
+            element={<ResultPage mode="query" queryType="protein" />}
+          />
+
+          {/* Backward compat: old /:chr/:pos and /:acc/:pos path forms */}
+          <Route
+            path="/:param1/:param2/:param3?/:param4?"
+            element={<ResultPage mode="query" queryType="chromosome_protein" />}
+          />
+
           <Route path={API_ERROR} element={<APIErrorPage />} />
           <Route path={ABOUT} element={<AboutPage />} />
           <Route path={RELEASE} element={<ReleasePage />} />
@@ -95,15 +109,7 @@ export default function App() {
           <Route path={DOWNLOAD} element={<DownloadPage />} />
           <Route path={HELP} element={<HelpPage />} />
 
-          {/* Dynamic routes for chromosome and protein queries
-            - /:chromosome/:position/:ref_allele?/:alt_allele?
-            - /:protein_accession/:position/:ref_amino_acid?/:alt_amino_acid?
-          */}
-          <Route
-            path="/:param1/:param2/:param3?/:param4?"
-            element={<QueryPage queryType="chromosome_protein" />}
-          />
-          {/* Route for other input types */}
+          {/* Whole-protein / identifier browse: /:accession */}
           <Route path="/:input" element={<ResultPage />} />
 
           {/* Catch-all route for anything not matched above */}
