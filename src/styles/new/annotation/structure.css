@@ -14,6 +14,47 @@
     margin: 20px 0;
 }
 
+/* ============================================
+   URL STRUCTURE NOT FOUND NOTICE
+   ============================================ */
+
+.structure-url-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: var(--spacing-md);
+    padding: 8px 12px;
+    background: #fff8e1;
+    border-left: 3px solid #ffc107;
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-sm);
+    color: #6b4c00;
+    line-height: 1.4;
+}
+
+.structure-url-notice i {
+    color: #f59e0b;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.structure-url-notice-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #6b4c00;
+    font-size: 15px;
+    padding: 0;
+    margin-left: auto;
+    flex-shrink: 0;
+    line-height: 1;
+    opacity: 0.6;
+}
+
+.structure-url-notice-close:hover {
+    opacity: 1;
+}
+
 /* Left column: Structure tables */
 .structure-tables-column {
     display: flex;
