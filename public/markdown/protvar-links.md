@@ -4,11 +4,33 @@ Direct links to ProtVar allow you to share specific queries, results, annotation
 
 ---
 
-## 1. Single Variant Query
+## Contents
+
+1. [Single Variant Query](#protvar-links:s1)
+   - [1a. Free text](#protvar-links:s1a)
+   - [1b. Direct genomic URL](#protvar-links:s1b)
+   - [1c. Direct protein variant URL](#protvar-links:s1c)
+   - [1d. Genomic query with named parameters](#protvar-links:s1d)
+   - [1e. Protein query with named parameters](#protvar-links:s1e)
+2. [Multi-Variant / Uploaded Results](#protvar-links:s2)
+3. [Identifier Browse](#protvar-links:s3)
+   - [3a. Single identifier — type-prefixed paths](#protvar-links:s3a)
+   - [3b. Multiple identifiers](#protvar-links:s3b)
+   - [3c. Filter-only browse](#protvar-links:s3c)
+4. [Annotation Tab Linking](#protvar-links:s4)
+5. [Structure Viewer Linking](#protvar-links:s5)
+6. [Prediction Highlighting](#protvar-links:s6)
+7. [Search Filters](#protvar-links:s7)
+- [Backward Compatibility](#protvar-links:backward-compat)
+- [Quick Reference](#protvar-links:quick-ref)
+
+---
+
+## <a id="protvar-links:s1"></a>1. Single Variant Query
 
 A single-variant query accepts any ProtVar-supported input format and returns a single-page result.
 
-### 1a. Free text (recommended)
+### <a id="protvar-links:s1a"></a>1a. Free text (recommended)
 
 ```
 /ProtVar/search?q=<variant>
@@ -28,7 +50,7 @@ A single-variant query accepts any ProtVar-supported input format and returns a 
 
 ---
 
-### 1b. Direct genomic URL (path-based)
+### <a id="protvar-links:s1b"></a>1b. Direct genomic URL (path-based)
 
 ```
 /ProtVar/g/<chromosome>/<position>[/<reference_allele>/<alternative_allele>]
@@ -49,7 +71,7 @@ A single-variant query accepts any ProtVar-supported input format and returns a 
 
 ---
 
-### 1c. Direct protein variant URL (path-based)
+### <a id="protvar-links:s1c"></a>1c. Direct protein variant URL (path-based)
 
 ```
 /ProtVar/p/<accession>/<position>[/<reference_AA>/<variant_AA>]
@@ -70,7 +92,7 @@ A single-variant query accepts any ProtVar-supported input format and returns a 
 
 ---
 
-### 1d. Genomic query with named parameters
+### <a id="protvar-links:s1d"></a>1d. Genomic query with named parameters
 
 ```
 /ProtVar/search?chromosome=<chr>&position=<pos>[&ref=<ref>&alt=<alt>]
@@ -90,7 +112,7 @@ A single-variant query accepts any ProtVar-supported input format and returns a 
 
 ---
 
-### 1e. Protein query with named parameters
+### <a id="protvar-links:s1e"></a>1e. Protein query with named parameters
 
 ```
 /ProtVar/search?accession=<acc>&position=<pos>[&ref=<ref_AA>&alt=<alt_AA>]
@@ -109,7 +131,7 @@ A single-variant query accepts any ProtVar-supported input format and returns a 
 
 ---
 
-## 2. Multi-Variant / Uploaded Results
+## <a id="protvar-links:s2"></a>2. Multi-Variant / Uploaded Results
 
 When multiple variants are submitted or a file is uploaded, a unique result ID is generated. Results can be revisited and shared using this ID.
 
@@ -134,25 +156,99 @@ All filter, annotation, and structure parameters described below can also be app
 
 ---
 
-## 3. Whole-Protein View
+## <a id="protvar-links:s3"></a>3. Identifier Browse
 
-View all variants mapped to a UniProt protein. This is a browse view, not a single-variant query.
+Browse all variants mapped to a specific biological entity.
+
+**Single-identifier URLs** use a type-prefixed path and are the recommended format for external resources (PDBe, Ensembl, etc.) linking into ProtVar.
+
+**Multi-identifier URLs** use repeatable `?id=` query parameters on `/ProtVar/search`, regardless of whether the identifiers share a type or not.
+
+Filter, annotation, and structure parameters from Sections 4–7 can be appended to any browse URL.
+
+---
+
+### <a id="protvar-links:s3a"></a>3a. Single identifier — type-prefixed paths
 
 ```
-/ProtVar/<accession>
+/ProtVar/<accession>           UniProt accession (bare; unchanged for backward compat)
+/ProtVar/gene/<symbol>         Gene symbol
+/ProtVar/pdb/<id>              PDB ID
+/ProtVar/ensembl/<id>          Ensembl gene, transcript, or protein
+/ProtVar/refseq/<id>           RefSeq mRNA or protein accession
+```
+
+The bare UniProt accession path (`/ProtVar/P22304`) is the **whole-protein view** — it shows all variants mapped to that protein, organised by position. This is the primary way to explore a protein's complete variant landscape and is the URL format recommended for linking from UniProt or other protein-centric resources.
+
+**Examples:**
+
+- [`/ProtVar/P22304`](/ProtVar/P22304) ← whole-protein view; recommended for UniProt and protein resources
+- [`/ProtVar/gene/BRCA2`](/ProtVar/gene/BRCA2)
+- [`/ProtVar/pdb/6ioz`](/ProtVar/pdb/6ioz) ← recommended for PDBe and structure resources
+- [`/ProtVar/ensembl/ENSG00000139618`](/ProtVar/ensembl/ENSG00000139618)
+- [`/ProtVar/refseq/NM_000059.4`](/ProtVar/refseq/NM_000059.4)
+
+Filters, annotation, and structure parameters can be appended:
+
+- [`/ProtVar/gene/BRCA2?cadd=high&am=pathogenic`](/ProtVar/gene/BRCA2?cadd=high&am=pathogenic)
+- [`/ProtVar/pdb/6ioz?annotation=str`](/ProtVar/pdb/6ioz?annotation=str)
+
+---
+
+### <a id="protvar-links:s3b"></a>3b. Multiple identifiers
+
+Use repeatable `id=` parameters on `/ProtVar/search`. Identifiers can be of any type and mixed freely.
+
+```
+/ProtVar/search?id=<value>[&id=<value>...]
+```
+
+Each `id=` value is either:
+- **Bare** — type is auto-detected from the value format (UniProt, PDB, Ensembl, RefSeq, or gene)
+- **Type-prefixed** — `type:value` to be explicit (useful for gene symbols, which can be ambiguous)
+
+| Type prefix | Identifier type | Example |
+|-------------|----------------|---------|
+| *(none)* | Auto-detected | `id=P22304` → UniProt; `id=6ioz` → PDB |
+| `uniprot:` | UniProt accession | `id=uniprot:P22304` |
+| `gene:` | Gene symbol | `id=gene:BRCA2` |
+| `pdb:` | PDB ID | `id=pdb:6ioz` |
+| `ensembl:` | Ensembl ID | `id=ensembl:ENSG00000139618` |
+| `refseq:` | RefSeq accession | `id=refseq:NM_000059.4` |
+
+**Examples:**
+
+```
+# Two UniProt accessions (auto-detected)
+/ProtVar/search?id=P22304&id=Q4ZIN3
+
+# Gene + PDB (auto-detected)
+/ProtVar/search?id=BRCA2&id=6ioz
+
+# Mixed types, explicit prefixes
+/ProtVar/search?id=gene:BRCA2&id=pdb:6ioz&id=uniprot:P22304
+
+# Multi-identifier with filters
+/ProtVar/search?id=BRCA2&id=TP53&cadd=high&am=pathogenic
+```
+
+---
+
+### <a id="protvar-links:s3c"></a>3c. Filter-only browse (no identifier)
+
+When no `id=` or `q=` is provided, the search returns all variants matching the supplied filters across the entire ProtVar dataset.
+
+```
+/ProtVar/search?<filters>
 ```
 
 **Example:**
 
-[`/ProtVar/P22304`](/ProtVar/P22304)
-
-Filter, annotation, and structure parameters can be appended (see Sections 4–7).
-
-> **Note:** Support for browsing by other identifier types (gene symbol, Ensembl, RefSeq, PDB ID) is planned for a future release.
+[`/ProtVar/search?cadd=high&am=pathogenic&disease=true`](/ProtVar/search?cadd=high&am=pathogenic&disease=true)
 
 ---
 
-## 4. Annotation Tab Linking
+## <a id="protvar-links:s4"></a>4. Annotation Tab Linking
 
 Open a specific annotation panel (Functional, Population, or Structural) directly from a URL by appending `annotation=` to any variant or result URL.
 
@@ -192,7 +288,7 @@ The optional `-<row>` suffix specifies which result row to open (1-indexed). Omi
 
 ---
 
-## 5. Structure Viewer Linking
+## <a id="protvar-links:s5"></a>5. Structure Viewer Linking
 
 When the structural annotation tab is open (`annotation=str`), additional parameters control which structure is displayed and what is highlighted.
 
@@ -244,7 +340,7 @@ Structure parameters are only active when `annotation=str` is also present. They
 
 ---
 
-## 6. Prediction Highlighting
+## <a id="protvar-links:s6"></a>6. Prediction Highlighting
 
 When a Functional annotation tab is open, a specific prediction card can be scrolled to and highlighted by appending `pred=`.
 
@@ -270,7 +366,7 @@ The `pred` parameter is consumed on load and removed from the URL automatically.
 
 ---
 
-## 7. Search Filters
+## <a id="protvar-links:s7"></a>7. Search Filters
 
 Filters can be appended to any browse/result URL to narrow the displayed variants.
 
@@ -329,7 +425,7 @@ Filters can be appended to any browse/result URL to narrow the displayed variant
 
 ---
 
-## Backward Compatibility
+## <a id="protvar-links:backward-compat"></a>Backward Compatibility
 
 The following URL patterns from previous versions of ProtVar remain supported. Please update any external links to use the new formats above.
 
@@ -339,19 +435,19 @@ The following URL patterns from previous versions of ProtVar remain supported. P
 
 | Old URL | New equivalent | Behaviour |
 |---------|---------------|-----------|
-| [`/ProtVar/query?search=P22304%20A205P`](/ProtVar/query?search=P22304%20A205P) | [`/ProtVar/search?q=P22304%20A205P`](/ProtVar/search?q=P22304%20A205P) | Redirected — `/query` → `/search`; `search=` → `q=` |
-| [`/ProtVar/query?chromosome=19&genomic_position=1010539&reference_allele=G&alternative_allele=C`](/ProtVar/query?chromosome=19&genomic_position=1010539&reference_allele=G&alternative_allele=C) | [`/ProtVar/search?chromosome=19&position=1010539&ref=G&alt=C`](/ProtVar/search?chromosome=19&position=1010539&ref=G&alt=C) | Redirected — long param names → short names |
-| [`/ProtVar/query?accession=P22304&protein_position=205&reference_AA=A&variant_AA=P`](/ProtVar/query?accession=P22304&protein_position=205&reference_AA=A&variant_AA=P) | [`/ProtVar/search?accession=P22304&position=205&ref=A&alt=P`](/ProtVar/search?accession=P22304&position=205&ref=A&alt=P) | Redirected — long param names → short names |
-| [`/ProtVar/chr19/1010539/G/C`](/ProtVar/chr19/1010539/G/C) | [`/ProtVar/g/19/1010539/G/C`](/ProtVar/g/19/1010539/G/C) | Redirected — `chr`-prefixed path → `/g/` path |
-| [`/ProtVar/P22304/205/A/P`](/ProtVar/P22304/205/A/P) | [`/ProtVar/p/P22304/205/A/P`](/ProtVar/p/P22304/205/A/P) | Redirected — bare protein path → `/p/` path |
-| [`/ProtVar/P22304`](/ProtVar/P22304) | [`/ProtVar/P22304`](/ProtVar/P22304) | Unchanged — whole-protein view remains at this URL |
-| `?annotation=functional-row-1` | `?annotation=fun` | Accepted — long form parsed; URL not changed |
-| `?annotation=structural-row-2` | `?annotation=str-2` | Accepted — long form parsed; URL not changed |
-| `?annotation=population-row-3` | `?annotation=pop-3` | Accepted — long form parsed; URL not changed |
+| `/ProtVar/query?search=<term>` | `/ProtVar/search?q=<term>` | Redirected — `/query` → `/search`; `search=` → `q=` |
+| `/ProtVar/query?chromosome=<chr>&genomic_position=<pos>&reference_allele=<ref>&alternative_allele=<alt>` | `/ProtVar/search?chromosome=<chr>&position=<pos>&ref=<ref>&alt=<alt>` | Redirected — long param names → short names |
+| `/ProtVar/query?accession=<acc>&protein_position=<pos>&reference_AA=<ref>&variant_AA=<var>` | `/ProtVar/search?accession=<acc>&position=<pos>&ref=<ref>&alt=<var>` | Redirected — long param names → short names |
+| `/ProtVar/chr<N>/<pos>[/<ref>/<alt>]` | `/ProtVar/g/<N>/<pos>[/<ref>/<alt>]` | Redirected — `chr`-prefixed path → `/g/` path |
+| `/ProtVar/<acc>/<pos>[/<ref>/<alt>]` | `/ProtVar/p/<acc>/<pos>[/<ref>/<alt>]` | Redirected — bare protein path → `/p/` path |
+| `/ProtVar/<accession>` | `/ProtVar/<accession>` | Unchanged — whole-protein view |
+| `?annotation=<functional\|structural\|population>[-row-N]` | `?annotation=<fun\|str\|pop>[-N]` | Redirected — long form canonicalised to short form |
+
+> **Note:** The old backward-compat route matches paths where the first segment is `chr`-prefixed (e.g. `/ProtVar/chr19/...`, `/ProtVar/chrX/...`, `/ProtVar/chrMT/...`). Bare paths without the `chr` prefix (e.g. `/ProtVar/19/1010539/G/C`) are not redirected — use `/ProtVar/g/19/1010539/G/C` directly. The new `/g/` route itself accepts chromosomes with or without the `chr` prefix, as the chromosome parser normalises both forms.
 
 ---
 
-## Quick Reference
+## <a id="protvar-links:quick-ref"></a>Quick Reference
 
 ```
 # Single variant — free text
@@ -366,8 +462,19 @@ The following URL patterns from previous versions of ProtVar remain supported. P
 # Multi-variant result
 /ProtVar/result/<id>[?page=N&pageSize=N]
 
-# Whole-protein view
-/ProtVar/<accession>
+# Identifier browse — single (type-prefixed path)
+/ProtVar/<accession>                    UniProt accession (bare, unchanged)
+/ProtVar/gene/<symbol>                  Gene symbol
+/ProtVar/pdb/<id>                       PDB ID
+/ProtVar/ensembl/<id>                   Ensembl gene / transcript / protein
+/ProtVar/refseq/<id>                    RefSeq mRNA or protein accession
+
+# Identifier browse — multiple (repeatable id= param; bare or type:value)
+/ProtVar/search?id=P22304&id=Q4ZIN3
+/ProtVar/search?id=gene:BRCA2&id=pdb:6ioz
+
+# Filter-only browse (no identifier)
+/ProtVar/search?<filters>
 
 # Open annotation tab (row 1)
 ?annotation=fun | ?annotation=str | ?annotation=pop
