@@ -1,0 +1,104 @@
+/**
+ * page-layout.css
+ * Top-level page structure: content wrappers, masthead, footer utilities, about grid.
+ * Migrated from _DefaultPageLayout.scss — dead code removed.
+ */
+
+/* ============================================
+   PAGE CONTENT WRAPPERS
+   ============================================ */
+
+.page-content {
+    position: relative;
+    min-height: 100vh;
+}
+
+.main-content {
+    width: 100%;
+    padding: 20px;
+    transition: margin-left 0.3s ease;
+}
+
+@media screen and (min-width: 769px) {
+    .main-content {
+        margin-left: 0;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .main-content {
+        padding: 15px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .main-content {
+        padding: 10px;
+    }
+}
+
+/* ============================================
+   CONTENT AREA
+   ============================================ */
+
+.content {
+    font-size: 14px;
+}
+
+/* ============================================
+   MASTHEAD (page banner / header)
+   ============================================ */
+
+.content .masthead {
+    border-bottom: 1px solid #a1a1a1; /* lighten(#212121, 50%) */
+    margin-bottom: 2rem;
+    background: linear-gradient(
+        45deg,
+        #014371,
+        rgba(1, 67, 113, 0.7),
+        #014371,
+        #014371
+    );
+}
+
+.content .masthead-inner {
+    padding-top: 0;
+}
+
+/* ============================================
+   SPACING UTILITY (used in LegendModal, AlphaFoldHelp)
+   ============================================ */
+
+.padding-left-right-1x {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+/* ============================================
+   FOOTER SOCIAL SECTION
+   ============================================ */
+
+.twitter-content {
+    display: flex;
+    padding: 1rem;
+}
+
+/* ============================================
+   ABOUT PAGE STATISTICS GRID
+   ============================================ */
+
+.grid-container {
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    gap: 10px;
+    padding: 30px;
+}
+
+.grid-container > div {
+    text-align: center;
+    font-size: 12px;
+}
+
+.varsite-logo {
+    background-color: rgba(0, 124, 130, 0.65);
+}

@@ -342,6 +342,17 @@
 }
 
 /* ============================================
+   DISABLED BUTTON STATE (used via Button.tsx)
+   Migrated from _TextAreaSearch.scss
+   ============================================ */
+
+.button-disabled:hover,
+.button-disabled:focus {
+    color: #fefefe;
+    background-color: #879299;
+}
+
+/* ============================================
    DARK MODE SUPPORT
    ============================================ */
 

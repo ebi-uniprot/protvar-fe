@@ -270,6 +270,26 @@
 }
 
 /* ============================================
+   REF LINK (inline references — Footer, DownloadPage, error pages)
+   Migrated from _TextAreaSearch.scss
+   ============================================ */
+
+.ref-link,
+.ref-link:visited {
+    color: #6987C3;
+    border-bottom-style: none;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.ref-link:hover {
+    color: rgb(0, 124, 130);
+    border-bottom-style: solid;
+    opacity: 0.9;
+    outline-width: 0;
+}
+
+/* ============================================
    DARK MODE SUPPORT
    ============================================ */
 
