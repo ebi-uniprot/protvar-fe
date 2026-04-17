@@ -275,6 +275,80 @@
     margin-top: 0.5rem;
 }
 
+/* Browse by ID — chip input */
+.browse-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.browse-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.25rem 0.6rem;
+    background: #e8f0f7;
+    border: 1px solid #b8d0e8;
+    border-radius: 16px;
+    font-size: 0.875rem;
+    color: #1e4d72;
+    font-weight: 500;
+}
+
+.browse-chip-remove {
+    background: none;
+    border: none;
+    padding: 0;
+    line-height: 1;
+    cursor: pointer;
+    color: #5a8ab0;
+    font-size: 1rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+}
+
+.browse-chip-remove:hover {
+    color: #c0392b;
+}
+
+.browse-input-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.browse-input-row .input-field {
+    flex: 1;
+    margin: 0;
+}
+
+.browse-add-btn {
+    flex-shrink: 0;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #4a90b8;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.browse-add-btn:hover:not(:disabled) {
+    background: #357aa0;
+}
+
+.browse-add-btn:disabled {
+    background: #b8d0e8;
+    cursor: not-allowed;
+}
+
 /* Error Message */
 .error-message {
     display: flex;

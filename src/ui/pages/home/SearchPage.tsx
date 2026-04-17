@@ -15,6 +15,8 @@ import SearchFilters, {
   SearchFilterParams
 } from '../../components/search/SearchFilters';
 import {buildFilterParams} from "../../components/search/filterUtils";
+import {parseIdParam} from "../../../utills/InputTypeResolver";
+import {ID_GENE, ID_PDB, ID_ENSEMBL, ID_REFSEQ} from "../../../constants/BrowserPaths";
 
 interface ExampleData {
   label: string;
@@ -22,7 +24,7 @@ interface ExampleData {
   tip?: string;
 }
 
-type SearchMode = 'variant' | 'browse' | 'text'; // browse=id(identifier) input
+type SearchMode = 'variant' | 'browse' | 'text'; // variant=annotate variants; browse=browse by biological identifier
 export type GenomeAssembly = 'auto' | 'grch38' | 'grch37';
 
 const EXAMPLES: Record<SearchMode, ExampleData[]> = {
@@ -106,7 +108,8 @@ const SearchPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [activeMode, setActiveMode] = useState<SearchMode>('variant');
   const [variantInput, setVariantInput] = useState('');
-  const [browseInput, setBrowseInput] = useState('');
+  const [browseIds, setBrowseIds] = useState<string[]>([]);
+  const [browseInputText, setBrowseInputText] = useState('');
   const [textInput, setTextInput] = useState('');
   const [genomeAssembly, setGenomeAssembly] = useState<GenomeAssembly>('auto');
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
@@ -122,6 +125,29 @@ const SearchPage: React.FC = () => {
     setActiveMode(mode);
     setError('');
   };
+
+  const addBrowseId = () => {
+    const trimmed = browseInputText.trim();
+    if (trimmed && !browseIds.includes(trimmed)) {
+      setBrowseIds(prev => [...prev, trimmed]);
+    }
+    setBrowseInputText('');
+  };
+
+  const removeBrowseId = (index: number) => {
+    setBrowseIds(prev => prev.filter((_, i) => i !== index));
+  };
+
+  function buildSingleIdUrl(raw: string): string {
+    const { type, value } = parseIdParam(raw);
+    switch (type) {
+      case 'gene':    return `${ID_GENE}/${value}`;
+      case 'pdb':     return `${ID_PDB}/${value}`;
+      case 'ensembl': return `${ID_ENSEMBL}/${value}`;
+      case 'refseq':  return `${ID_REFSEQ}/${value}`;
+      default:        return `/${value}`; // uniprot and fallback — bare accession path
+    }
+  }
 
   const cleanInput = (input: string): string => {
     return input
@@ -170,7 +196,10 @@ const SearchPage: React.FC = () => {
         setUploadedFile(null); // Clear file if text example is used
         break;
       case 'browse':
-        setBrowseInput(example.value);
+        // Add as chip if not already present
+        if (!browseIds.includes(example.value)) {
+          setBrowseIds(prev => [...prev, example.value]);
+        }
         break;
       case 'text':
         setTextInput(example.value);
@@ -293,25 +322,39 @@ const SearchPage: React.FC = () => {
   }
 
   const handleBrowseSearch = () => {
-    const trimmedInput = browseInput.trim();
-    if (!trimmedInput) {
-      setError('Input value cannot be empty.');
+    // Flush any partially typed text before submitting
+    const allIds = browseInputText.trim()
+      ? [...browseIds, browseInputText.trim()].filter((v, i, a) => a.indexOf(v) === i)
+      : browseIds;
+
+    if (allIds.length === 0) {
+      setError('Please enter at least one identifier.');
       return;
     }
-
     setError('');
+    if (browseInputText.trim()) {
+      setBrowseIds(allIds);
+      setBrowseInputText('');
+    }
 
-    // Use shared utility to build filter params
-    const params = buildFilterParams(searchFilters);
+    const filterParams = buildFilterParams(searchFilters);
+    const filterStr = filterParams.toString();
 
-    // Build the final URL
-    const queryString = params.toString();
-    navigate(`${trimmedInput}${queryString ? `?${queryString}` : ''}`);
+    if (allIds.length === 1) {
+      const url = buildSingleIdUrl(allIds[0]);
+      navigate(`${url}${filterStr ? `?${filterStr}` : ''}`);
+    } else {
+      const params = new URLSearchParams();
+      allIds.forEach(id => params.append('id', id));
+      filterParams.forEach((v, k) => params.append(k, v));
+      navigate(`${SEARCH}?${params.toString()}`);
+    }
   };
 
   const handleClear = () => {
     setVariantInput('');
-    setBrowseInput('');
+    setBrowseIds([]);
+    setBrowseInputText('');
     setTextInput('');
     setUploadedFile(null);
     setResultsVisible(false);
@@ -334,7 +377,7 @@ const SearchPage: React.FC = () => {
     if (activeMode === 'variant') {
       return !variantInput.trim() && !uploadedFile;
     } else if (activeMode === 'browse') {
-      return !browseInput.trim();
+      return browseIds.length === 0 && !browseInputText.trim();
     }
     return true;
   };
@@ -353,14 +396,14 @@ const SearchPage: React.FC = () => {
           onClick={() => handleModeChange('variant')}
         >
           <span className="icon"><i className="bi bi-list-ul"></i></span>
-          Variant List
+          Annotate Variants
         </button>
         <button
           className={`mode-tab ${activeMode === 'browse' ? 'active' : ''}`}
           onClick={() => handleModeChange('browse')}
         >
           <span className="icon"><i className="bi bi-search"></i></span>
-          Browse by ID
+          Browse by Identifier
         </button>
         {branch !== "dev" &&
           <button
@@ -472,15 +515,46 @@ const SearchPage: React.FC = () => {
         {activeMode === 'browse' && (
           <div className="search-content">
             <div className="input-group">
-              <label className="input-label">Browse all variants for a protein, gene, or identifier</label>
-              <input
-                type="text"
-                className="input-field"
-                placeholder="P68871 or HBB or ENSG00000244734"
-                value={browseInput}
-                onChange={(e) => setBrowseInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-              />
+              <label className="input-label">Browse all mapped variants for a protein, gene, or other biological identifier</label>
+
+              {/* Chips */}
+              {browseIds.length > 0 && (
+                <div className="browse-chips">
+                  {browseIds.map((id, index) => (
+                    <span key={index} className="browse-chip">
+                      {id}
+                      <button
+                        type="button"
+                        className="browse-chip-remove"
+                        onClick={() => removeBrowseId(index)}
+                        aria-label={`Remove ${id}`}
+                      >×</button>
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              {/* Input row */}
+              <div className="browse-input-row">
+                <input
+                  type="text"
+                  className="input-field"
+                  placeholder={browseIds.length > 0 ? "Add another identifier..." : "P68871 or HBB or ENSG00000244734"}
+                  value={browseInputText}
+                  onChange={(e) => setBrowseInputText(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addBrowseId(); } }}
+                />
+                <button
+                  type="button"
+                  className="browse-add-btn"
+                  onClick={addBrowseId}
+                  disabled={!browseInputText.trim()}
+                  title="Add identifier"
+                >
+                  <i className="bi bi-plus-lg"></i>
+                </button>
+              </div>
+
               <div className="examples">
                 <h6>Try these examples</h6>
                 <div className="example-tags">
@@ -557,7 +631,7 @@ const SearchPage: React.FC = () => {
             disabled={isSubmitDisabled() || loading}
             title={activeMode === 'text' ? 'Coming soon' : ''}
           >
-            {activeMode === 'variant' ? 'Submit' : 'Search'}
+            {activeMode === 'variant' ? 'Submit' : 'Browse'}
           </button>
           <button className="btn btn-secondary" onClick={handleClear}>
             Clear All
