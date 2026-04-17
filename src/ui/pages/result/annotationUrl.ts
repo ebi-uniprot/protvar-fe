@@ -94,9 +94,9 @@ export function clearAnnotationSpecificParams(
   // Structure parameters only valid for structural tab
   if (annotationType !== "structural") {
     params.delete("structure");
-    params.delete("highlight_chain");
-    params.delete("highlight_pocket");
-    params.delete("highlight_interface");
+    params.delete("highlightChain");
+    params.delete("highlightPocket");
+    params.delete("highlightInterface");
     params.delete("zoom");
   }
 

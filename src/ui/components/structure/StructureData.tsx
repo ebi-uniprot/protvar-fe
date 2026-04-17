@@ -49,6 +49,7 @@ function StructureData(props: StructureDataProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [isPaeOpen, setIsPaeOpen] = useState(false);
   const [paeUrl, setPaeUrl] = useState<string>("");
+  const [urlStructureWarning, setUrlStructureWarning] = useState<string | null>(null);
   const hasLoadedFromUrl = useRef(false);
 
   const addPredictedStructures = (newItems: PredictedStructure[]) =>
@@ -180,44 +181,62 @@ function StructureData(props: StructureDataProps) {
 
     const params = urlParams.getParams();
     let structureToLoad: PdbeStructure | PredictedStructure | Interaction | null = null;
+    let notFoundLabel: string | null = null; // set when a specific requested structure isn't in the data
 
     if (params.structureId) {
-      // Parse new format: pdb:1ABC, prediction:AlphaFold, interaction:P12345_P67890
       const parts = params.structureId.split(":");
       const type = parts[0];
-      const id = parts[1]; // May be undefined for default
+      const id = parts[1];
 
       switch (type) {
         case "pdb":
           if (id && id !== "default") {
             structureToLoad = pdbeData.find((d) => d.pdbId === id) || null;
+            if (!structureToLoad) notFoundLabel = `PDB entry "${id.toUpperCase()}"`;
           } else {
-            // Use first PDB structure as default
             structureToLoad = pdbeData[0] || null;
           }
           if (structureToLoad) urlParams.clearIncompatibleActions("pdb");
           break;
 
-        case "prediction":
-          if (id && id.toLowerCase() === "alphafill") {
-            structureToLoad = predictedData.find((p) => "modelEntityId" in p && p.modelEntityId.startsWith("AlphaFill-")) || null;
-          } else {
-            // Use AlphaFold as default (or first available prediction)
-            structureToLoad = predictedData.find((p) => "uniprotAccession" in p) || predictedData[0] || null;
-          }
-          if (structureToLoad) urlParams.clearIncompatibleActions("prediction");
+        case "alphafill":
+          structureToLoad = predictedData.find((p) => "modelEntityId" in p && p.modelEntityId.startsWith("AlphaFill-")) || null;
+          if (!structureToLoad) notFoundLabel = `AlphaFill structure`;
+          if (structureToLoad) urlParams.clearIncompatibleActions("alphafill");
+          break;
+
+        case "alphafold":
+        case "prediction": // backward compat: old prediction/prediction:AlphaFill values
+          structureToLoad = predictedData.find((p) => "uniprotAccession" in p) || predictedData[0] || null;
+          if (structureToLoad) urlParams.clearIncompatibleActions("alphafold");
           break;
 
         case "interaction":
           if (id && id !== "default") {
             const [a, b] = id.split("_");
             structureToLoad = interactionData.find((i) => i.a === a && i.b === b) || null;
+            if (!structureToLoad) notFoundLabel = `interaction "${id}"`;
           } else {
-            // Use first interaction as default
             structureToLoad = interactionData[0] || null;
           }
           if (structureToLoad) urlParams.clearIncompatibleActions("interaction");
           break;
+      }
+
+      if (notFoundLabel) {
+        // Requested structure not in data — clear stale URL params and fall back to default
+        urlParams.clearStructureParams();
+        structureToLoad = pdbeData[0] || predictedData[0] || interactionData[0] || null;
+        if (structureToLoad) {
+          setUrlStructureWarning(`${notFoundLabel} was not found for this protein. Showing available structures instead.`);
+          if ("pdbId" in structureToLoad) urlParams.clearIncompatibleActions("pdb");
+          else if ("modelEntityId" in structureToLoad && (structureToLoad as any).modelEntityId?.startsWith("AlphaFill-"))
+            urlParams.clearIncompatibleActions("alphafill");
+          else if ("cifUrl" in structureToLoad) urlParams.clearIncompatibleActions("alphafold");
+        } else {
+          // Requested AND no fallback exists
+          setUrlStructureWarning(`${notFoundLabel} was not found and no other structural data is available for this protein.`);
+        }
       }
     } else {
       // Default selection when no structure parameter
@@ -226,15 +245,13 @@ function StructureData(props: StructureDataProps) {
         urlParams.clearIncompatibleActions("pdb");
       } else if (predictedData.length > 0) {
         structureToLoad = predictedData[0];
-        urlParams.clearIncompatibleActions("prediction");
+        urlParams.clearIncompatibleActions("alphafold");
       }
     }
 
     if (structureToLoad) {
       hasLoadedFromUrl.current = true;
       setSelected(structureToLoad);
-
-      // Open PAE if AlphaFold structure with PAE
       if ("paeImageUrl" in structureToLoad) {
         setPaeUrl(structureToLoad.paeImageUrl);
         setIsPaeOpen(true);
@@ -346,7 +363,8 @@ function StructureData(props: StructureDataProps) {
   };
 
   if (isLoading) return <div className="annotation-loader"><Loader /></div>;
-  if (!selected) return <NoAnnotationData icon={StructureIcon} iconAlt="3D structure" title="3D Structures" message="No structural data available for this protein" />;
+  if (!selected) return <NoAnnotationData icon={StructureIcon} iconAlt="3D structure" title="3D Structures"
+    message={urlStructureWarning ?? "No structural data available for this protein"} />;
 
   return (
     <div className="annotation-data-container">
@@ -372,6 +390,13 @@ function StructureData(props: StructureDataProps) {
               <ShareAnnotationIcon annotation={props.annotation}/>
             </div>
           </div>
+          {urlStructureWarning && (
+            <div className="structure-url-notice">
+              <i className="bi bi-exclamation-triangle-fill"></i>
+              {urlStructureWarning}
+              <button className="structure-url-notice-close" onClick={() => setUrlStructureWarning(null)}>×</button>
+            </div>
+          )}
           {/* Content - Tables Left, Viewer Right */}
           <div className="annotation-content structure-layout">
             <div className="annotation-tables-column">

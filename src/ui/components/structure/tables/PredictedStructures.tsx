@@ -55,8 +55,8 @@ function PredictedStructures({
         className={`predicted-structure-card${isSelected ? ' active' : ''}`}
         onClick={() => {
           setSelected(predStruc);
-          urlParams.setStructure("prediction", isAlphaFill ? "AlphaFill" : "AlphaFold");
-          urlParams.clearIncompatibleActions("prediction");
+          urlParams.setStructure(isAlphaFill ? "alphafill" : "alphafold");
+          urlParams.clearIncompatibleActions(isAlphaFill ? "alphafill" : "alphafold");
           molstar.loadAf(predStruc.cifUrl, aaPos);
         }}
       >
