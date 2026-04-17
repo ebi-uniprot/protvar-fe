@@ -1,0 +1,29 @@
+/**
+ * layout.css
+ * General-purpose layout utilities used across the app.
+ */
+
+/* ============================================
+   PAGE HEADINGS
+   ============================================ */
+
+.page-header {
+    display: inline;
+}
+
+/* ============================================
+   FLEX UTILITIES
+   ============================================ */
+
+.flex {
+    display: flex;
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex1 { flex: 1; }
+.flex2 { flex: 2; }
+.flex6 { flex: 6; }

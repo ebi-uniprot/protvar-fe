@@ -13,6 +13,7 @@
    ============================================== */
 
 @import './core/variables.css';
+@import './core/layout.css';
 
 /* ==============================================
    2. COMPONENTS - Shared UI elements
