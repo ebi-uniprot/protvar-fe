@@ -1,4 +1,4 @@
-import {INPUT_TYPES, InputType} from "../types/InputType";
+import {IdInput, INPUT_TYPES, InputType} from "../types/InputType";
 
 export function resolve(input: string): InputType | null {
   const trimmed = input.trim();
@@ -27,6 +27,27 @@ export function isValid(value: string): value is InputType {
 export function fromString(value: string): InputType | null {
   const lowercase = value.toLowerCase();
   return isValid(lowercase) ? lowercase : null;
+}
+
+/**
+ * Parse a single ?id= parameter value into a typed IdInput.
+ * Accepts "type:value" (explicit) or bare value (auto-detected).
+ * Examples:
+ *   "gene:BRCA2"   → { type: 'gene',    value: 'BRCA2' }
+ *   "P22304"       → { type: 'uniprot', value: 'P22304' }
+ *   "6ioz"         → { type: 'pdb',     value: '6ioz' }
+ */
+export function parseIdParam(raw: string): IdInput {
+  const trimmed = raw.trim();
+  const colonIdx = trimmed.indexOf(':');
+  if (colonIdx > 0) {
+    const prefix = trimmed.substring(0, colonIdx).toLowerCase();
+    const value = trimmed.substring(colonIdx + 1);
+    if (isValid(prefix)) return { type: prefix as InputType, value };
+  }
+  // Auto-detect from value format; fall back to 'gene' for ambiguous symbols
+  const detected = resolve(trimmed) ?? 'gene';
+  return { type: detected, value: trimmed };
 }
 
 export function normalize(input: string, type: InputType): string {

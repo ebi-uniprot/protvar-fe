@@ -5,7 +5,7 @@ import APIErrorPage from "./pages/APIErrorPage";
 import AboutPage from "./pages/AboutPage";
 import ReleasePage from "./pages/ReleasePage";
 import ContactPage from "./pages/ContactPage";
-import {ABOUT, API_ERROR, CONTACT, DOWNLOAD, G_QUERY, HELP, HOME, P_QUERY, QUERY, RELEASE, RESULT, SEARCH} from "../constants/BrowserPaths";
+import {ABOUT, API_ERROR, CONTACT, DOWNLOAD, G_QUERY, HELP, HOME, ID_ENSEMBL, ID_GENE, ID_PDB, ID_REFSEQ, P_QUERY, QUERY, RELEASE, RESULT, SEARCH} from "../constants/BrowserPaths";
 import DownloadPage from "./pages/download/DownloadPage";
 import HelpPage from "./pages/help/HelpPage";
 import {PagedMappingResponse} from "../types/PagedMappingResponse";
@@ -80,10 +80,16 @@ export default function App() {
           {/* Route for user inputId - result/{inputId} */}
           <Route path={`${RESULT}/:input`} element={<ResultPage />} />
 
-          {/* Primary search route */}
-          <Route path={SEARCH} element={<ResultPage mode="query" queryType="search" />} />
+          {/* /search — mode auto-detected: ?q= → variant query, ?id= → multi-id browse, neither → filter-only */}
+          <Route path={SEARCH} element={<ResultPage />} />
           {/* Backward compat: /query → same handler */}
-          <Route path={QUERY} element={<ResultPage mode="query" queryType="search" />} />
+          <Route path={QUERY} element={<ResultPage />} />
+
+          {/* Type-prefixed identifier browse */}
+          <Route path={`${ID_GENE}/:id`} element={<ResultPage idType="gene" />} />
+          <Route path={`${ID_PDB}/:id`} element={<ResultPage idType="pdb" />} />
+          <Route path={`${ID_ENSEMBL}/:id`} element={<ResultPage idType="ensembl" />} />
+          <Route path={`${ID_REFSEQ}/:id`} element={<ResultPage idType="refseq" />} />
 
           {/* Direct genomic path: /g/:chr/:pos[/:ref/:alt] */}
           <Route

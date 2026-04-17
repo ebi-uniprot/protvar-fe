@@ -29,6 +29,12 @@ export const INPUT_TYPE_EXAMPLES: Record<InputType, string> = {
   input_id: 'e.g. genomic input examples'
 };
 
+/** A resolved identifier with its detected or declared type */
+export interface IdInput {
+  type: InputType;
+  value: string;
+}
+
 // All valid input types as array (for validation, dropdowns, etc.)
 export const INPUT_TYPES: InputType[] = [
   'gene',
