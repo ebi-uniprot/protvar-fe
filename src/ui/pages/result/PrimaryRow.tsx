@@ -132,105 +132,114 @@ export const getNewPrimaryRow = (
     <Fragment key={isoformKey}>
       <div className={rowClass} title={`Input: ${input.inputStr}`}>
 
-        {/* 1: User ID */}
-        <span data-label="ID" className={isIdInput ? 'cell-id-input' : ''}>
-          <Tool tip="Variant ID provided by the user">
-            {idValue && <TextLink url={getIdUrl(idValue)} text={idValue} />}
-          </Tool>
-        </span>
-
-        {/* 2: Genomic position (chr-pos-ref-alt) */}
-        <span data-label="Genomic position" className={isGenomicInput ? 'cell-genomic-input' : ''}>
-          <Tool tip="Click to see region detail from Ensembl" pos="up-left">
-            {isGenomicInput && 'isLiftedFrom37' in input && input.isLiftedFrom37 && (
-              <span className="h37">37&rarr;38</span>
-            )}
-            <TextLink url={getEnsemblViewUrl(genomicVariant.chromosome, genomicVariant.position)} text={genomicPos} />
-          </Tool>
-        </span>
-
-        {/* 3: Codon (strand) */}
-        <span data-label="Codon">
-          {codon && (
-            <div className="flex">
-              {codon}&nbsp;
-              <Tool tip={`Codon change in ${strand === '(+)' ? 'positive' : 'negative'}-sense strand gene`}>
-                {strand}
-              </Tool>
-            </div>
-          )}
-        </span>
-
-        {/* 4: CADD v1.7 */}
-        <span data-label="CADD">
-          <Tool
-            className="score-box"
-            style={{ backgroundColor: stdColor ? caddAttr?.stdColor : caddAttr?.color }}
-            tip={`${caddAttr?.range} ${caddAttr?.text}`}
-          >
-            <a href={CADD_INFO_URL} target="_blank" rel="noopener noreferrer">
-              {formatCaddScore(gene.caddScore?.toString())}
-            </a>
-          </Tool>
-        </span>
-
-        {/* 5: Isoform */}
-        <span data-label="Isoform" className={`isoform-cell ${isProteinInput ? 'cell-protein-input' : ''}`}>
-          <CanonicalIcon isCanonical={isoform.canonical} />
-          <Tool tip="Click to see the UniProt page for this accession">
-            <TextLink url={UNIPROT_ACCESSION_URL + isoform.accession} text={isoform.accession} />
-          </Tool>
-          {hasAltIsoForm && (
-            <Tool
-              el="button"
-              onClick={() => toggleIsoFormGroup(isoformGroup)}
-              className="button button--toggle-isoforms"
-              tip={isoformGroupExpanded !== isoformGroup ? "Show more isoforms" : "Hide isoforms"}
-            >
-              {isoformGroupExpanded !== isoformGroup
-                ? <ChevronDownIcon className="toggle-isoforms" />
-                : <ChevronUpIcon  className="toggle-isoforms" />}
+        {/* Card row 1 — genomic (cols 1–4: ID, genomic-pos, codon, CADD) */}
+        <div className="card-row card-row-genomic">
+          {/* 1: User ID */}
+          <span className={isIdInput ? 'cell-id-input' : ''}>
+            <Tool tip="Variant ID provided by the user">
+              {idValue && <TextLink url={getIdUrl(idValue)} text={idValue} />}
             </Tool>
-          )}
-        </span>
+          </span>
 
-        {/* 6: Protein name */}
-        <span data-label="Protein name">
-          <Tool tip={isoform.proteinName}>{getProteinName(isoform.proteinName)}</Tool>
-        </span>
+          {/* 2: Genomic position (chr-pos-ref-alt) */}
+          <span className={isGenomicInput ? 'cell-genomic-input' : ''}>
+            <Tool tip="Click to see region detail from Ensembl" pos="up-left">
+              {isGenomicInput && 'isLiftedFrom37' in input && input.isLiftedFrom37 && (
+                <span className="h37">37&rarr;38</span>
+              )}
+              <TextLink url={getEnsemblViewUrl(genomicVariant.chromosome, genomicVariant.position)} text={genomicPos} />
+            </Tool>
+          </span>
 
-        {/* 7: AA Change (Ala205Pro format) */}
-        <span data-label="AA Change" className={isProteinInput ? 'cell-protein-input' : ''}>
-          <Tool tip={aaChangeTip(aaChange)}>{aaChangeFormatted}</Tool>
-        </span>
+          {/* 3: Codon (strand) — card-sep adds dot separator before it in mobile */}
+          <span className="card-sep">
+            {codon && (
+              <div className="flex">
+                {codon}&nbsp;
+                <Tool tip={`Codon change in ${strand === '(+)' ? 'positive' : 'negative'}-sense strand gene`}>
+                  {strand}
+                </Tool>
+              </div>
+            )}
+          </span>
 
-        {/* 8: Consequence(s) */}
-        <span data-label="Consequence">
-          <Tool tip={CONSEQUENCES.get(isoform.consequences!)} pos="up-right"><ConsequenceBadge consequence={isoform.consequences} /></Tool>
-        </span>
+          {/* 4: CADD v1.7 */}
+          <span>
+            <Tool
+              className="score-box"
+              style={{ backgroundColor: stdColor ? caddAttr?.stdColor : caddAttr?.color }}
+              tip={`${caddAttr?.range} ${caddAttr?.text}`}
+            >
+              <a href={CADD_INFO_URL} target="_blank" rel="noopener noreferrer">
+                {formatCaddScore(gene.caddScore?.toString())}
+              </a>
+            </Tool>
+          </span>
+        </div>
 
-        {/* 9: popEVE — empty until API provides this field */}
-        <span data-label="popEVE"></span>
+        {/* Card row 2 — protein + scores (cols 5–10: isoform, name, aa-change, conseq, popEVE, AM) */}
+        <div className="card-row card-row-protein">
+          {/* 5: Isoform (no chevron — moved to details col) */}
+          <span className={`isoform-cell ${isProteinInput ? 'cell-protein-input' : ''}`}>
+            <CanonicalIcon isCanonical={isoform.canonical} />
+            <Tool tip="Click to see the UniProt page for this accession">
+              <TextLink url={UNIPROT_ACCESSION_URL + isoform.accession} text={isoform.accession} />
+            </Tool>
+          </span>
 
-        {/* 10: AlphaMissense */}
-        <span data-label="AlphaMissense">
-          <Tool
-            className="score-box"
-            style={{ backgroundColor: stdColor ? amAttr?.stdColor : amAttr?.color }}
-            tip={`${isoform.amScore?.amPathogenicity} ${amAttr?.text}`}
-          >
-            <a href={AM_INFO_URL} target="_blank" rel="noopener noreferrer">
-              {formatAMScore(isoform.amScore)}
-            </a>
-          </Tool>
-        </span>
+          {/* 6: Protein name */}
+          <span>
+            <Tool tip={isoform.proteinName}>{getProteinName(isoform.proteinName)}</Tool>
+          </span>
 
-        {/* 11: Click for details */}
-        <span data-label="Details" className="details-cell">
-          <AnnotationButton rowKey={functionalKey}  label="FUN" canonical={isoform.canonical} annotationExpanded={annotationExpanded} toggleAnnotation={toggleAnnotation} />
-          <AnnotationButton rowKey={populationKey}  label="POP" canonical={isoform.canonical} annotationExpanded={annotationExpanded} toggleAnnotation={toggleAnnotation} />
-          <AnnotationButton rowKey={structuralKey}  label="STR" canonical={isoform.canonical} annotationExpanded={annotationExpanded} toggleAnnotation={toggleAnnotation} />
-        </span>
+          {/* 7: AA Change — card-sep adds dot separator before it in mobile */}
+          <span className={`card-sep${isProteinInput ? ' cell-protein-input' : ''}`}>
+            <Tool tip={aaChangeTip(aaChange)}>{aaChangeFormatted}</Tool>
+          </span>
+
+          {/* 8: Consequence(s) */}
+          <span>
+            <Tool tip={CONSEQUENCES.get(isoform.consequences!)} pos="up-right"><ConsequenceBadge consequence={isoform.consequences} /></Tool>
+          </span>
+
+          {/* 9: popEVE — shows N/A badge in card view; empty in grid until API provides data */}
+          <span className="cell-popeve"></span>
+
+          {/* 10: AlphaMissense */}
+          <span>
+            <Tool
+              className="score-box"
+              style={{ backgroundColor: stdColor ? amAttr?.stdColor : amAttr?.color }}
+              tip={`${isoform.amScore?.amPathogenicity} ${amAttr?.text}`}
+            >
+              <a href={AM_INFO_URL} target="_blank" rel="noopener noreferrer">
+                {formatAMScore(isoform.amScore)}
+              </a>
+            </Tool>
+          </span>
+        </div>
+
+        {/* Card row 3 — detail buttons + isoform toggle (col 11) */}
+        <div className="card-row card-row-details">
+          {/* 11: Isoform toggle (above annotation icons) + annotation buttons */}
+          <span className="details-cell">
+            {hasAltIsoForm && (
+              <Tool
+                el="button"
+                onClick={() => toggleIsoFormGroup(isoformGroup)}
+                className="button button--toggle-isoforms"
+                tip={isoformGroupExpanded !== isoformGroup ? "Show more isoforms" : "Hide isoforms"}
+              >
+                {isoformGroupExpanded !== isoformGroup
+                  ? <ChevronDownIcon className="toggle-isoforms" />
+                  : <ChevronUpIcon  className="toggle-isoforms" />}
+              </Tool>
+            )}
+            <AnnotationButton rowKey={functionalKey}  label="FUN" canonical={isoform.canonical} annotationExpanded={annotationExpanded} toggleAnnotation={toggleAnnotation} />
+            <AnnotationButton rowKey={populationKey}  label="POP" canonical={isoform.canonical} annotationExpanded={annotationExpanded} toggleAnnotation={toggleAnnotation} />
+            <AnnotationButton rowKey={structuralKey}  label="STR" canonical={isoform.canonical} annotationExpanded={annotationExpanded} toggleAnnotation={toggleAnnotation} />
+          </span>
+        </div>
 
       </div>
 

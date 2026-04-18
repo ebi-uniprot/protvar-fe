@@ -40,27 +40,33 @@ export function getAlternateIsoFormRow(isoformKey: string, index: number, isofor
 
   return (
     <div key={isoformKey} className={`result-row result-row-isoform ${index % 2 === 0 ? 'row-even' : 'row-odd'}`}>
-      {/* Genomic columns — empty */}
-      <span className="cell-genomic" />
-      <span className="cell-genomic" />
-      <span className="cell-genomic" />
-      <span className="cell-genomic" />
+      {/* Card row 1: genomic (cols 1–4) — empty/hidden for alt isoforms */}
+      <div className="card-row card-row-genomic">
+        <span className="cell-genomic" />
+        <span className="cell-genomic" />
+        <span className="cell-genomic" />
+        <span className="cell-genomic" />
+      </div>
 
-      {/* Protein columns */}
-      <span data-label="Isoform" className="isoform-cell">
-        <CanonicalIcon isCanonical={false} />
-        <Tool tip="Click to see the UniProt page for this accession">
-          <TextLink url={UNIPROT_ACCESSION_URL + isoform.accession} text={isoform.accession} />
-        </Tool>
-      </span>
-      <span data-label="Protein name">{getProteinName(isoform.proteinName)}</span>
-      <span data-label="AA Change"><Tool tip={aaChangeTip(aaChange)}>{aaChangeFormatted}</Tool></span>
-      <span data-label="Consequence"><Tool tip={CONSEQUENCES.get(isoform.consequences!)} pos="up-right"><ConsequenceBadge consequence={isoform.consequences} /></Tool></span>
+      {/* Card row 2: protein + scores (cols 5–10) */}
+      <div className="card-row card-row-protein">
+        <span className="isoform-cell">
+          <CanonicalIcon isCanonical={false} />
+          <Tool tip="Click to see the UniProt page for this accession">
+            <TextLink url={UNIPROT_ACCESSION_URL + isoform.accession} text={isoform.accession} />
+          </Tool>
+        </span>
+        <span>{getProteinName(isoform.proteinName)}</span>
+        <span className="card-sep"><Tool tip={aaChangeTip(aaChange)}>{aaChangeFormatted}</Tool></span>
+        <span><Tool tip={CONSEQUENCES.get(isoform.consequences!)} pos="up-right"><ConsequenceBadge consequence={isoform.consequences} /></Tool></span>
+        <span className="cell-popeve" />
+        <span />
+      </div>
 
-      {/* Score / detail columns — empty for alt isoforms */}
-      <span data-label="popEVE" />
-      <span data-label="AlphaMissense" />
-      <span data-label="Details" />
+      {/* Card row 3: detail buttons (col 11) — empty for alt isoforms */}
+      <div className="card-row card-row-details">
+        <span />
+      </div>
     </div>
   );
 }

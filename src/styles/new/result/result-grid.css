@@ -158,8 +158,14 @@
     background: #eef3ff !important;
 }
 
-/* Cell padding */
-.result-row > * {
+/* Card-row wrappers are transparent to the grid — their children become grid items.
+   This allows grouping spans for the mobile card view without breaking subgrid alignment. */
+.card-row {
+    display: contents;
+}
+
+/* Cell padding — spans are DOM grandchildren (inside card-row) but grid-direct children */
+.card-row > * {
     padding: 4px 8px;
     overflow: hidden;
     white-space: nowrap;
@@ -189,8 +195,8 @@
    Genomic cells are empty; protein cols filled.
    ============================================ */
 
-.result-row-isoform > .cell-genomic {
-    /* empty but maintains grid column */
+.result-row-isoform .cell-genomic {
+    /* empty but maintains grid column position */
     visibility: hidden;
 }
 
@@ -394,66 +400,139 @@
 
 /* ============================================
    RESPONSIVE — CARD LAYOUT (≤ 900px)
-   At narrow widths the grid header hides and each
-   row becomes a stacked card; cells show their label.
+   Three-row card per result:
+     Row 1 (genomic): ID · chr-pos-ref-alt · codon · CADD
+     Row 2 (protein): accession · protein name · AA change · consequence · popEVE · AM
+     Row 3 (actions): isoform toggle (if any) + FUN/POP/STR buttons
+   Values are self-descriptive — no explicit field labels needed.
    ============================================ */
 
 @media (max-width: 900px) {
-    /* Hide the two-row header — labels appear inline on each cell */
     .result-header {
         display: none;
     }
 
-    /* Row becomes a vertical card */
+    /* Card: vertical stack of three rows */
     .result-row {
         display: flex;
         flex-direction: column;
-        padding: 10px 12px;
+        padding: 8px 12px;
         border-bottom: 2px solid var(--color-brand-lightest, #e8f0f7);
         gap: 4px;
         min-height: unset;
     }
 
-    /* Hide cells with no content (empty IDs, empty codon, empty popEVE, etc.) */
-    .result-row > span:empty {
-        display: none;
-    }
-
-    /* Each cell: label + value side by side */
-    .result-row > span {
+    /* Each card-row: horizontal flex */
+    .card-row {
         display: flex;
         align-items: baseline;
-        gap: 8px;
-        white-space: normal;
+        flex-wrap: wrap;
+        gap: 5px;
+        padding: 0;
         overflow: visible;
-        padding: 2px 0;
     }
 
-    /* Label injected from data-label attribute */
-    .result-row > span[data-label]::before {
-        content: attr(data-label);
-        font-size: var(--font-size-xs);
-        font-weight: var(--font-weight-bold);
-        color: var(--color-text-tertiary, #888);
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-        min-width: 7rem;
-        flex-shrink: 0;
+    .card-row > * {
+        padding: 0;
+        overflow: visible;
+        white-space: normal;
     }
 
-    /* Hide empty genomic cells in isoform rows */
-    .result-row-isoform > .cell-genomic {
+    /* Hide empty spans */
+    .card-row > span:empty:not(.cell-popeve) {
         display: none;
     }
 
-    .result-row .score-box {
+    /* ── Row 1: genomic ────────────────────────── */
+    .card-row-genomic {
+        font-size: var(--font-size-sm);
+        color: var(--color-text-secondary);
+        gap: 4px;
+    }
+
+    /* Score boxes in genomic row: compact */
+    .card-row-genomic .score-box {
         display: inline-flex;
         align-items: center;
         justify-content: center;
+        width: 2rem;
+        margin: 0;
+        vertical-align: baseline;
     }
 
-    .details-cell {
+    /* ── Row 2: protein + scores ───────────────── */
+    .card-row-protein {
+        font-size: var(--font-size-base);
+        gap: 5px;
+        padding: 2px 0 2px 8px;
+        border-left: 3px solid #c5d9f0;
+        align-items: baseline;
+    }
+
+    /* Protein name: allow natural wrapping */
+    .card-row-protein .protein-name-cell {
+        white-space: normal;
+        overflow: visible;
+        text-overflow: unset;
+        max-width: none;
+    }
+
+    /* Score boxes in protein row: inline, no extra margin */
+    .card-row-protein .score-box {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2rem;
+        margin: 0;
+        vertical-align: baseline;
+    }
+
+    /* popEVE N/A badge — always visible even when empty */
+    .cell-popeve:empty::after {
+        content: 'N/A';
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2rem;
+        padding: 1px 3px;
+        border-radius: 0.75rem;
+        font-size: var(--font-size-xs);
+        font-weight: var(--font-weight-bold);
+        color: #aaa;
+        background: #eeeeee;
+    }
+
+    /* ── Row 3: annotation actions ─────────────── */
+    .card-row-details {
+        align-items: center;
+        gap: 4px;
+    }
+
+    .card-row-details .details-cell {
+        display: flex;
+        align-items: center;
+        gap: 4px;
         flex-wrap: wrap;
+    }
+
+    /* Thin divider between isoform toggle and annotation buttons */
+    .card-row-details .button--toggle-isoforms {
+        margin-right: 4px;
+        border-right: 1px solid #dde3ef;
+        padding-right: 6px;
+    }
+
+    /* ── Dot separator (·) before codon and AA change ── */
+    .card-sep:not(:empty)::before {
+        content: '·';
+        color: var(--color-text-muted, #bbb);
+        font-size: 1em;
+        margin-right: 3px;
+    }
+
+    /* Isoform rows: hide empty genomic row entirely */
+    .result-row-isoform .card-row-genomic {
+        display: none;
     }
 
     .result-row-msg {
