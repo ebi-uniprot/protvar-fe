@@ -13,7 +13,7 @@
     align-items: center;
     padding: 2px 4px;
     color: var(--color-primary);
-    text-decoration: none;
+    text-decoration: none !important;
     border-radius: var(--radius-sm);
     transition: all var(--transition-base);
 }
@@ -22,7 +22,7 @@
 .text-link:hover {
     background: var(--color-primary-lightest);
     color: var(--color-primary-dark);
-    text-decoration: none;
+    text-decoration: none !important;
 }
 
 .ext-link:focus,
@@ -50,7 +50,7 @@
     display: inline-flex;
     align-items: center;
     padding: 2px 4px;
-    text-decoration: none;
+    text-decoration: none !important;
     border-radius: var(--radius-sm);
     transition: all var(--transition-base);
     margin-left: var(--spacing-sm);
@@ -58,7 +58,7 @@
 
 .protvar-link:hover {
     background: var(--color-gray-200);
-    text-decoration: none;
+    text-decoration: none !important;
 }
 
 .protvar-link:focus {
@@ -68,7 +68,7 @@
 
 .protvar-link:active,
 .protvar-link:visited {
-    text-decoration: none;
+    text-decoration: none !important;
 }
 
 .protvar-label {

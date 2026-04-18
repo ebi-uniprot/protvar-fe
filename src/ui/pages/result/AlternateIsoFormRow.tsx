@@ -47,20 +47,20 @@ export function getAlternateIsoFormRow(isoformKey: string, index: number, isofor
       <span className="cell-genomic" />
 
       {/* Protein columns */}
-      <span className="isoform-cell">
+      <span data-label="Isoform" className="isoform-cell">
         <CanonicalIcon isCanonical={false} />
         <Tool tip="Click to see the UniProt page for this accession">
           <TextLink url={UNIPROT_ACCESSION_URL + isoform.accession} text={isoform.accession} />
         </Tool>
       </span>
-      <span>{getProteinName(isoform.proteinName)}</span>
-      <span><Tool tip={aaChangeTip(aaChange)}>{aaChangeFormatted}</Tool></span>
-      <span><Tool tip={CONSEQUENCES.get(isoform.consequences!)} pos="up-right"><ConsequenceBadge consequence={isoform.consequences} /></Tool></span>
+      <span data-label="Protein name">{getProteinName(isoform.proteinName)}</span>
+      <span data-label="AA Change"><Tool tip={aaChangeTip(aaChange)}>{aaChangeFormatted}</Tool></span>
+      <span data-label="Consequence"><Tool tip={CONSEQUENCES.get(isoform.consequences!)} pos="up-right"><ConsequenceBadge consequence={isoform.consequences} /></Tool></span>
 
-      {/* Annotation columns — empty for alt isoforms */}
-      <span />
-      <span />
-      <span />
+      {/* Score / detail columns — empty for alt isoforms */}
+      <span data-label="popEVE" />
+      <span data-label="AlphaMissense" />
+      <span data-label="Details" />
     </div>
   );
 }

@@ -133,14 +133,14 @@ export const getNewPrimaryRow = (
       <div className={rowClass} title={`Input: ${input.inputStr}`}>
 
         {/* 1: User ID */}
-        <span className={isIdInput ? 'cell-id-input' : ''}>
+        <span data-label="ID" className={isIdInput ? 'cell-id-input' : ''}>
           <Tool tip="Variant ID provided by the user">
             {idValue && <TextLink url={getIdUrl(idValue)} text={idValue} />}
           </Tool>
         </span>
 
         {/* 2: Genomic position (chr-pos-ref-alt) */}
-        <span className={isGenomicInput ? 'cell-genomic-input' : ''}>
+        <span data-label="Genomic position" className={isGenomicInput ? 'cell-genomic-input' : ''}>
           <Tool tip="Click to see region detail from Ensembl" pos="up-left">
             {isGenomicInput && 'isLiftedFrom37' in input && input.isLiftedFrom37 && (
               <span className="h37">37&rarr;38</span>
@@ -150,7 +150,7 @@ export const getNewPrimaryRow = (
         </span>
 
         {/* 3: Codon (strand) */}
-        <span>
+        <span data-label="Codon">
           {codon && (
             <div className="flex">
               {codon}&nbsp;
@@ -162,7 +162,7 @@ export const getNewPrimaryRow = (
         </span>
 
         {/* 4: CADD v1.7 */}
-        <span>
+        <span data-label="CADD">
           <Tool
             className="score-box"
             style={{ backgroundColor: stdColor ? caddAttr?.stdColor : caddAttr?.color }}
@@ -175,7 +175,7 @@ export const getNewPrimaryRow = (
         </span>
 
         {/* 5: Isoform */}
-        <span className={`isoform-cell ${isProteinInput ? 'cell-protein-input' : ''}`}>
+        <span data-label="Isoform" className={`isoform-cell ${isProteinInput ? 'cell-protein-input' : ''}`}>
           <CanonicalIcon isCanonical={isoform.canonical} />
           <Tool tip="Click to see the UniProt page for this accession">
             <TextLink url={UNIPROT_ACCESSION_URL + isoform.accession} text={isoform.accession} />
@@ -195,28 +195,25 @@ export const getNewPrimaryRow = (
         </span>
 
         {/* 6: Protein name */}
-        <span>
+        <span data-label="Protein name">
           <Tool tip={isoform.proteinName}>{getProteinName(isoform.proteinName)}</Tool>
         </span>
 
         {/* 7: AA Change (Ala205Pro format) */}
-        <span className={isProteinInput ? 'cell-protein-input' : ''}>
+        <span data-label="AA Change" className={isProteinInput ? 'cell-protein-input' : ''}>
           <Tool tip={aaChangeTip(aaChange)}>{aaChangeFormatted}</Tool>
         </span>
 
         {/* 8: Consequence(s) */}
-        <span>
+        <span data-label="Consequence">
           <Tool tip={CONSEQUENCES.get(isoform.consequences!)} pos="up-right"><ConsequenceBadge consequence={isoform.consequences} /></Tool>
         </span>
 
-        {/* 9: popEVE — placeholder until API provides this field */}
-        <span>
-          {/* TODO: render isoform.popEveScore when available */}
-          —
-        </span>
+        {/* 9: popEVE — empty until API provides this field */}
+        <span data-label="popEVE"></span>
 
         {/* 10: AlphaMissense */}
-        <span>
+        <span data-label="AlphaMissense">
           <Tool
             className="score-box"
             style={{ backgroundColor: stdColor ? amAttr?.stdColor : amAttr?.color }}
@@ -229,7 +226,7 @@ export const getNewPrimaryRow = (
         </span>
 
         {/* 11: Click for details */}
-        <span className="details-cell">
+        <span data-label="Details" className="details-cell">
           <AnnotationButton rowKey={functionalKey}  label="FUN" canonical={isoform.canonical} annotationExpanded={annotationExpanded} toggleAnnotation={toggleAnnotation} />
           <AnnotationButton rowKey={populationKey}  label="POP" canonical={isoform.canonical} annotationExpanded={annotationExpanded} toggleAnnotation={toggleAnnotation} />
           <AnnotationButton rowKey={structuralKey}  label="STR" canonical={isoform.canonical} annotationExpanded={annotationExpanded} toggleAnnotation={toggleAnnotation} />

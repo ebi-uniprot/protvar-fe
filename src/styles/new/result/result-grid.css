@@ -3,52 +3,82 @@
  * CSS Grid layout for the main results table.
  *
  * Column order (11 cols):
- *   Genomic: user-id | genomic-pos | codon | cadd
- *   Protein: isoform | protein-name | aa-change | consequence
- *   Annotations: popeve | alphamiss | details
+ *   Genomic: user-id | genomic-pos | codon | cadd           (cols 1–4)
+ *   Protein: isoform | protein-name | aa-change | consequence | popeve | alphamiss  (cols 5–10)
+ *   Annotations: details                                     (col 11)
  */
 
 /* ============================================
-   SHARED GRID TEMPLATE
-   All row types and both header rows share this
-   exact template so columns stay aligned.
+   RESULT TABLE — SINGLE GRID CONTAINER
+   .result-table owns the 11-column grid.
+   Every row type uses grid-column: 1/-1 and
+   grid-template-columns: subgrid so all cells
+   participate in the same track-sizing algorithm.
+   Header rows and data rows are guaranteed to be
+   pixel-perfectly aligned.
    ============================================ */
 
+.result-table {
+    display: grid;
+    /*
+     * Flexible columns grow proportionally via fr fractions.
+     * Badge/score/button columns (cadd, popeve, alphamiss, details) stay fixed —
+     * they hold icons and short values that don't benefit from extra width.
+     * Everything else participates in distributing available space.
+     */
+    grid-template-columns:
+        minmax(0, 14rem)      /* 1  id             — 0 min so long IDs don't force grid wider */
+        minmax(8rem, 2fr)     /* 2  genomic-pos    — always present, grows proportionally */
+        minmax(0, 9rem)       /* 3  codon          — collapses when empty */
+        4.5rem                /* 4  cadd           — score badge, fixed */
+        minmax(8rem, 10rem)   /* 5  isoform        — 8rem min ensures dropdown button visible */
+        minmax(8rem, 3fr)     /* 6  protein-name   — always present, gets most space */
+        minmax(0, 10rem)      /* 7  aa-change      — collapses when empty */
+        minmax(0, 11rem)      /* 8  consequence    — collapses when empty */
+        4.5rem                /* 9  popeve         — score badge, fixed */
+        5rem                  /* 10 alphamiss      — score badge, fixed */
+        6.5rem;               /* 11 details        — icon buttons, fixed */
+    column-gap: 8px;
+    font-size: var(--font-size-base);
+    overflow-x: auto;
+    min-width: 0;
+}
+
+/*
+ * All subgrid row containers: each spans the full 11-column table
+ * grid and uses subgrid so their cells feed into the parent's
+ * track-sizing algorithm — the same track widths everywhere.
+ */
 .result-row,
 .result-col-header,
 .result-group-header {
     display: grid;
-    grid-template-columns:
-        minmax(5rem, auto)    /* 1  id             */
-        minmax(9rem, auto)    /* 2  genomic-pos     */
-        6.5rem                /* 3  codon           */
-        5rem                  /* 4  cadd            */
-        8rem                  /* 5  isoform         */
-        minmax(8rem, 1fr)     /* 6  protein-name    */
-        6rem                  /* 7  aa-change       */
-        8rem                  /* 8  consequence     */
-        5rem                  /* 9  popeve          */
-        5.5rem                /* 10 alphamiss       */
-        7rem;                 /* 11 details         */
-    column-gap: 6px;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
     align-items: center;
 }
 
-/* ============================================
-   RESULT TABLE CONTAINER
-   ============================================ */
-
-.result-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: var(--font-size-base);
+/* Full-width non-subgrid rows (annotation panels, messages, loader) */
+.result-annotation,
+.result-loader-row,
+.result-row-msg {
+    grid-column: 1 / -1;
 }
 
 /* ============================================
    STICKY HEADER
    ============================================ */
 
+/*
+ * result-header: a sticky grid item of result-table that spans all
+ * 11 columns and uses subgrid so its two child rows (group + col)
+ * share the same computed tracks as every data row.
+ */
 .result-header {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-template-rows: auto auto;
     position: sticky;
     top: 0;
     z-index: 100;
@@ -66,14 +96,23 @@
 }
 
 .result-group-header > * {
-    padding: 3px 6px;
+    padding: 3px 8px;
     text-transform: uppercase;
+}
+
+/* Annotation icons in the group header — displayed inline, no text transform */
+.annotation-icons-header {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 4px;
+    text-transform: none;
 }
 
 /* Group spans */
 .result-group-header > :nth-child(1) { grid-column: 1 / 5; }    /* Genomic: user-id…cadd */
 .result-group-header > :nth-child(2) { grid-column: 5 / 11; }   /* Protein: isoform…alphamiss */
-.result-group-header > :nth-child(3) { grid-column: 11 / 12; }  /* Annotations: details only */
+.result-group-header > :nth-child(3) { grid-column: 11 / 12; }  /* Annotations: details */
 
 /* Dividers between groups */
 .result-group-header > :nth-child(2) {
@@ -92,18 +131,21 @@
 }
 
 .result-col-header > * {
-    padding: 4px 6px;
-    white-space: nowrap;
+    padding: 4px 8px;
+    white-space: normal;   /* allow wrapping so long labels don't force columns wide */
+    word-break: keep-all;  /* break between words, not within them */
+    line-height: 1.2;
     cursor: default;
+    align-self: end;       /* align header text to bottom of cell */
 }
 
 /* ============================================
    DATA ROWS
    ============================================ */
 
+/* Dissolve result-body so data rows become direct grid items of result-table */
 .result-body {
-    display: flex;
-    flex-direction: column;
+    display: contents;
 }
 
 .result-row {
@@ -118,7 +160,7 @@
 
 /* Cell padding */
 .result-row > * {
-    padding: 4px 6px;
+    padding: 4px 8px;
     overflow: hidden;
     white-space: nowrap;
 }
@@ -127,20 +169,10 @@
 .result-row.row-even { background: #ffffff; }
 .result-row.row-odd  { background: #F4F3F3; }
 
-/* Highlight cells based on input type — subtle dotted underline */
-/* Target links inside highlighted cells (override global a { text-decoration: none }) */
-.cell-genomic-input .text-link,
-.cell-protein-input .text-link,
-.cell-id-input      .text-link {
-    text-decoration: underline dotted #999 !important;
-    text-underline-offset: 3px;
-    text-decoration-thickness: 1px;
-}
-/* For non-link plain text (e.g. AA change col, which is direct-child cell-protein-input) */
-.result-row > .cell-protein-input:not(.isoform-cell) {
-    text-decoration: underline dotted #999;
-    text-underline-offset: 3px;
-    text-decoration-thickness: 1px;
+/* No underlines on any links inside result rows or annotation panels */
+.result-row a,
+.result-annotation a {
+    text-decoration: none !important;
 }
 
 /* ── Block old SCSS .button border bleeding onto new button classes ──
@@ -192,6 +224,8 @@
 
 .result-annotation {
     border-bottom: 1px solid var(--color-border-light);
+    min-width: 0;        /* prevent wide annotation content from forcing the grid wider */
+    overflow-x: auto;   /* annotation panels (tables, viewer) scroll independently */
 }
 
 .annotation-loader {
@@ -229,7 +263,7 @@
 
 .score-box a {
     color: white;
-    text-decoration: none;
+    text-decoration: none !important;
 }
 
 /* ============================================
@@ -253,6 +287,7 @@
     align-items: center;
     gap: 3px;
     white-space: nowrap;
+    overflow: visible;   /* allow dropdown chevron to show even when cell is at minimum width */
 }
 
 .protein-type-icon {
@@ -355,6 +390,75 @@
     border-radius: 3px;
     margin-right: 2px;
     white-space: nowrap;
+}
+
+/* ============================================
+   RESPONSIVE — CARD LAYOUT (≤ 900px)
+   At narrow widths the grid header hides and each
+   row becomes a stacked card; cells show their label.
+   ============================================ */
+
+@media (max-width: 900px) {
+    /* Hide the two-row header — labels appear inline on each cell */
+    .result-header {
+        display: none;
+    }
+
+    /* Row becomes a vertical card */
+    .result-row {
+        display: flex;
+        flex-direction: column;
+        padding: 10px 12px;
+        border-bottom: 2px solid var(--color-brand-lightest, #e8f0f7);
+        gap: 4px;
+        min-height: unset;
+    }
+
+    /* Hide cells with no content (empty IDs, empty codon, empty popEVE, etc.) */
+    .result-row > span:empty {
+        display: none;
+    }
+
+    /* Each cell: label + value side by side */
+    .result-row > span {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+        white-space: normal;
+        overflow: visible;
+        padding: 2px 0;
+    }
+
+    /* Label injected from data-label attribute */
+    .result-row > span[data-label]::before {
+        content: attr(data-label);
+        font-size: var(--font-size-xs);
+        font-weight: var(--font-weight-bold);
+        color: var(--color-text-tertiary, #888);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        min-width: 7rem;
+        flex-shrink: 0;
+    }
+
+    /* Hide empty genomic cells in isoform rows */
+    .result-row-isoform > .cell-genomic {
+        display: none;
+    }
+
+    .result-row .score-box {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .details-cell {
+        flex-wrap: wrap;
+    }
+
+    .result-row-msg {
+        padding: 8px 12px;
+    }
 }
 
 /* ============================================
