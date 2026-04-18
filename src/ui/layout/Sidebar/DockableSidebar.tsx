@@ -3,7 +3,6 @@ import { NavLink } from 'react-router-dom';
 import { DOWNLOAD, HOME, RESULT } from '../../../constants/BrowserPaths';
 import RecentResult from '../../pages/result/RecentResult';
 import Spaces from '../../elements/Spaces';
-import './DockableSidebar.css';
 import {LOCAL_SIDEBAR} from "../../../constants/const";
 
 interface DockableSidebarProps {

@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SEARCH } from '../../../constants/BrowserPaths';
-import './SearchBox.css';
 
 interface SearchBoxProps {
   placeholder?: string;

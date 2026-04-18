@@ -1,0 +1,274 @@
+/**
+ * sidebar.css
+ * DockableSidebar — three states: closed | overlay | docked.
+ *
+ * closed:  off-screen (position:fixed, left: -var(--sidebar-width))
+ * overlay: slides in over content (position:fixed, z-index:1000)
+ * docked:  becomes a CSS grid column (position:sticky, top:0)
+ *          — content shifts right naturally, no z-index fighting.
+ */
+
+/* ============================================
+   SIDEBAR TOGGLE (shown when closed)
+   ============================================ */
+
+.sidebar-toggle {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: var(--z-overlay);
+    background: var(--color-brand);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-sm);
+}
+
+.sidebar-toggle:hover {
+    background: var(--color-brand-dark);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.sidebar-toggle i {
+    font-size: 16px;
+    display: block;
+}
+
+/* ============================================
+   OVERLAY (semi-transparent backdrop, overlay mode only)
+   ============================================ */
+
+.sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: calc(var(--z-modal) - 1);
+    opacity: 0;
+    animation: sidebar-fade-in 0.3s ease forwards;
+}
+
+@keyframes sidebar-fade-in {
+    to { opacity: 1; }
+}
+
+/* ============================================
+   SIDEBAR BASE
+   ============================================ */
+
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--color-bg-primary);
+    border-right: 1px solid var(--color-border-light);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    /* Default: fixed (closed / overlay states) */
+    position: fixed;
+    top: 0;
+    height: 100vh;
+    transition: left var(--transition-slow), box-shadow var(--transition-base);
+}
+
+/* ============================================
+   SIDEBAR STATES
+   ============================================ */
+
+.sidebar.closed {
+    left: calc(-1 * var(--sidebar-width));
+    box-shadow: none;
+}
+
+.sidebar.overlay {
+    left: 0;
+    box-shadow: var(--shadow-lg);
+    z-index: var(--z-modal);
+}
+
+/*
+ * Docked: switch from fixed to sticky so it occupies its grid column.
+ * The .default-page-layout grid gives it var(--sidebar-width) of space,
+ * and sticky keeps it in view while the user scrolls.
+ */
+.sidebar.docked {
+    position: sticky;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    box-shadow: var(--shadow-xs);
+    z-index: var(--z-sticky);
+}
+
+/* ============================================
+   SIDEBAR HEADER
+   ============================================ */
+
+.sidebar-header {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--color-brand-lightest);
+    background: var(--color-brand-lightest);
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-shrink: 0;
+}
+
+.sidebar-controls {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.sidebar-control-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 9px;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    transition: all var(--transition-base);
+    background: transparent;
+    color: var(--color-text-secondary);
+}
+
+.sidebar-control-btn i {
+    font-size: 14px;
+}
+
+.dock-btn:hover {
+    background: var(--color-success);
+    color: white;
+    transform: translateY(-1px);
+}
+
+.undock-btn:hover {
+    background: var(--color-warning);
+    color: #333;
+    transform: translateY(-1px);
+}
+
+.close-btn:hover {
+    background: var(--color-danger);
+    color: white;
+    transform: translateY(-1px);
+}
+
+/* ============================================
+   NAVIGATION
+   ============================================ */
+
+.sidebar-nav {
+    flex: 1;
+    padding-top: 8px;
+    overflow-y: auto;
+}
+
+.sidebar-menu-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.sidebar-menu-item {
+    border-bottom: 1px solid var(--color-border-light);
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    padding: 13px 18px;
+    color: var(--color-text-primary);
+    text-decoration: none;
+    transition: all var(--transition-base);
+    font-size: var(--font-size-md);
+}
+
+.sidebar-link:hover {
+    background: var(--color-brand-lightest);
+    color: var(--color-brand);
+    border-bottom: none;
+    text-decoration: none;
+}
+
+.sidebar-link.active {
+    background: var(--color-brand);
+    color: white;
+    font-weight: var(--font-weight-semibold);
+    border-bottom: none;
+}
+
+.sidebar-link i {
+    margin-right: 8px;
+    width: 16px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+/* Record count badge */
+.record-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-success);
+    color: white;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    padding: 1px 6px;
+    border-radius: var(--radius-full);
+    margin-left: 8px;
+    min-width: 18px;
+}
+
+.record-count.gray-bg {
+    background: var(--color-border-dark);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media screen and (max-width: 768px) {
+    .sidebar {
+        width: 280px;
+    }
+
+    /* On mobile, docked behaves like overlay — fixed, full panel */
+    .sidebar.docked {
+        position: fixed;
+        z-index: var(--z-modal);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .sidebar-toggle {
+        top: 15px;
+        left: 15px;
+        padding: 6px 10px;
+    }
+
+    .sidebar-control-btn span {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .sidebar,
+    .sidebar.docked {
+        width: 100vw;
+    }
+
+    .sidebar-header {
+        padding: 8px 12px;
+        min-height: 44px;
+    }
+
+    .sidebar-control-btn {
+        padding: 4px 8px;
+    }
+}

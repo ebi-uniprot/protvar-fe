@@ -5,29 +5,53 @@
  */
 
 /* ============================================
+   PAGE-LEVEL GRID LAYOUT
+   Two-column grid: [sidebar] [content]
+   Sidebar column only exists when docked; otherwise content spans full width.
+   ============================================ */
+
+/*
+ * The inner layout wrapper holds the docked sidebar + page content.
+ * Default: single-column (sidebar is fixed/off-screen, not in flow).
+ * Docked:  two-column — sidebar takes its own column, content takes 1fr.
+ *
+ * The sidebar switches from position:fixed → position:sticky when docked
+ * so that it occupies its grid column and stays visible as the user scrolls.
+ */
+.default-page-layout {
+    display: grid;
+    grid-template-columns: 1fr;      /* sidebar out-of-flow by default */
+    align-items: start;
+    min-height: 100vh;
+}
+
+.layout-with-docked-sidebar .default-page-layout {
+    grid-template-columns: var(--sidebar-width) 1fr;
+}
+
+/* ============================================
    PAGE CONTENT WRAPPERS
    ============================================ */
 
 .page-content {
     position: relative;
-    min-height: 100vh;
+    min-width: 0;       /* prevent grid blowout */
 }
 
 .main-content {
     width: 100%;
     padding: 20px;
-    transition: margin-left 0.3s ease;
-}
-
-@media screen and (min-width: 769px) {
-    .main-content {
-        margin-left: 0;
-    }
+    min-width: 0;
 }
 
 @media screen and (max-width: 768px) {
     .main-content {
         padding: 15px;
+    }
+
+    /* On mobile, docked sidebar goes back to overlay — full width */
+    .layout-with-docked-sidebar .default-page-layout {
+        grid-template-columns: 1fr;
     }
 }
 

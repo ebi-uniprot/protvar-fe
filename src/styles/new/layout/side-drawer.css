@@ -1,0 +1,140 @@
+/**
+ * side-drawer.css
+ * Right-side slide-in drawer — always position:fixed (overlay only, never docked).
+ * Replaces local SideDrawer.css.
+ */
+
+/* ============================================
+   DRAWER PANEL
+   ============================================ */
+
+.side-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    background: var(--color-bg-primary);
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+    border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+    z-index: var(--z-modal);
+    transform: translateX(100%);
+    transition: transform var(--transition-slow);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.side-drawer.open {
+    transform: translateX(0);
+}
+
+/* ============================================
+   BACKDROP OVERLAY
+   ============================================ */
+
+.drawer-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: calc(var(--z-modal) - 1);
+    opacity: 0;
+    animation: drawer-fade-in 0.3s ease forwards;
+}
+
+@keyframes drawer-fade-in {
+    to { opacity: 1; }
+}
+
+/* ============================================
+   DRAWER HEADER
+   ============================================ */
+
+.drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--color-brand-lightest);
+    background: var(--color-brand-lightest);
+    min-height: 56px;
+    flex-shrink: 0;
+}
+
+.drawer-control-btn,
+.drawer-close-btn {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 11px;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-medium);
+    transition: all var(--transition-base);
+    background: transparent;
+    color: var(--color-text-secondary);
+}
+
+.drawer-control-btn i,
+.drawer-close-btn i {
+    font-size: 16px;
+}
+
+.drawer-control-btn:hover {
+    background: var(--color-brand);
+    color: white;
+    transform: translateY(-1px);
+}
+
+.drawer-close-btn {
+    color: var(--color-danger);
+}
+
+.drawer-close-btn:hover {
+    background: var(--color-danger);
+    color: white;
+    transform: translateY(-1px);
+}
+
+/* ============================================
+   DRAWER CONTENT
+   ============================================ */
+
+.drawer-content {
+    flex: 1;
+    padding: 18px;
+    overflow-y: auto;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media screen and (max-width: 768px) {
+    .side-drawer {
+        width: 100vw !important;
+        border-radius: 0;
+    }
+
+    .drawer-header {
+        padding: 12px 14px;
+    }
+
+    .drawer-control-btn,
+    .drawer-close-btn {
+        padding: 6px 10px;
+        font-size: var(--font-size-base);
+    }
+
+    .drawer-control-btn span,
+    .drawer-close-btn span {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .drawer-content {
+        padding: 14px;
+    }
+}

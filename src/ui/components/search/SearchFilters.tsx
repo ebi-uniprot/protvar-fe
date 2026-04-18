@@ -1,6 +1,5 @@
 // Reorganized SearchFilters.tsx
 import React, { useState, useEffect } from 'react';
-import './SearchFilters.css';
 import {
   CADD_CATEGORIES,
   ALPHAMISSENSE_CATEGORIES,

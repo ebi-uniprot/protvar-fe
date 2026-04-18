@@ -26,6 +26,7 @@
 @import './components/cards.css';
 @import './components/tables.css';
 @import './components/badges.css';
+@import './components/search-box.css';
 
 /* ==============================================
    3. ANNOTATION SYSTEM - Shared patterns
@@ -49,3 +50,18 @@
    ============================================== */
 
 @import './result/result-grid.css';
+
+/* ==============================================
+   6. LAYOUT — Sidebar, Navbar, Drawer
+   ============================================== */
+
+@import './layout/navbar.css';
+@import './layout/sidebar.css';
+@import './layout/side-drawer.css';
+
+/* ==============================================
+   7. SEARCH / HOME PAGE
+   ============================================== */
+
+@import './search/search-page.css';
+@import './search/search-filters.css';

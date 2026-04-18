@@ -1,6 +1,5 @@
 // SearchPage.tsx
 import React, { useState, useRef, ChangeEvent } from 'react';
-import './SearchPage.css';
 import {useNavigate} from "react-router-dom";
 import {HelpContent} from "../../components/help/HelpContent";
 import {HelpButton} from "../../components/help/HelpButton";
@@ -626,14 +625,14 @@ const SearchPage: React.FC = () => {
         {/* Action Buttons */}
         <div className="action-buttons">
           <button
-            className={`btn btn-primary ${isSubmitDisabled() ? 'disabled' : ''}`}
+            className="btn btn-brand btn-lg"
             onClick={handleSearch}
             disabled={isSubmitDisabled() || loading}
             title={activeMode === 'text' ? 'Coming soon' : ''}
           >
             {activeMode === 'variant' ? 'Submit' : 'Browse'}
           </button>
-          <button className="btn btn-secondary" onClick={handleClear}>
+          <button className="btn btn-secondary btn-lg" onClick={handleClear}>
             Clear All
           </button>
         </div>

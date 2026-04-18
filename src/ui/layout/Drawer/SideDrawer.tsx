@@ -1,5 +1,4 @@
 import React, {useContext, useEffect, useState} from "react";
-import "./SideDrawer.css";
 import {AppContext} from "../../App";
 
 export const SideDrawer = () => {

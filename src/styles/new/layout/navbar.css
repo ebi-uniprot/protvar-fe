@@ -1,4 +1,13 @@
-/* Navbar */
+/**
+ * navbar.css
+ * Top navigation bar (masthead/header context — dark brand background).
+ * Replaces local Navbar.css.
+ */
+
+/* ============================================
+   NAVBAR CONTAINER
+   ============================================ */
+
 .navbar {
     display: flex;
     align-items: flex-end;
@@ -7,7 +16,10 @@
     padding: 1rem 0;
 }
 
-/* Brand section */
+/* ============================================
+   BRAND (logo + tagline)
+   ============================================ */
+
 .navbar-brand {
     display: flex;
     flex-direction: column;
@@ -30,7 +42,7 @@
 }
 
 .brand-tagline {
-    font-size: 14px;
+    font-size: var(--font-size-md);
     color: #ccc;
     text-decoration: none;
     margin-top: 8px;
@@ -42,7 +54,10 @@
     border-bottom: none;
 }
 
-/* Right side container */
+/* ============================================
+   RIGHT SECTION (links + search)
+   ============================================ */
+
 .navbar-right {
     display: flex;
     flex-direction: column;
@@ -50,7 +65,10 @@
     gap: 0.25rem;
 }
 
-/* Navigation buttons */
+/* ============================================
+   NAV BUTTONS (grid of links)
+   ============================================ */
+
 .navbar-links {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
@@ -62,25 +80,31 @@
     color: white;
     padding: 10px 12px;
     text-decoration: none;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 500;
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-medium);
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 6px;
-    transition: all 0.2s ease;
+    transition: all var(--transition-base);
     min-width: 0;
     text-align: center;
     background: transparent;
     border: none;
+    cursor: pointer;
 }
 
 .nav-button:hover {
-    background-color: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.15);
     color: white;
-    border-radius: 6px;
     transform: translateY(-1px);
+    border-bottom: none;
+}
+
+.nav-button:focus {
+    outline: 2px solid rgba(255, 255, 255, 0.5);
+    outline-offset: 2px;
 }
 
 .nav-button i {
@@ -88,7 +112,10 @@
     opacity: 0.9;
 }
 
-/* Mobile responsive */
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
 @media screen and (max-width: 768px) {
     .navbar {
         flex-direction: column;
@@ -111,13 +138,12 @@
 
     .navbar-links {
         grid-template-columns: repeat(3, 1fr);
-        gap: 0.25rem;
         max-width: 400px;
     }
 
     .nav-button {
         padding: 8px 10px;
-        font-size: 13px;
+        font-size: var(--font-size-base);
     }
 
     .nav-button i {
@@ -133,17 +159,10 @@
 
     .nav-button {
         padding: 10px 12px;
-        font-size: 13px;
+        font-size: var(--font-size-base);
     }
 }
 
-/* Focus and accessibility */
-.nav-button:focus {
-    outline: 2px solid rgba(255, 255, 255, 0.5);
-    outline-offset: 2px;
-}
-
-/* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
     .nav-button {
         transition: none;

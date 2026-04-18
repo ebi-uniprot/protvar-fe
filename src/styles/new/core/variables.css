@@ -8,12 +8,20 @@
        COLORS - Primary Palette
        ============================================ */
 
-    /* Primary Blue */
+    /* Primary Blue (component accent) */
     --color-primary: #4a90e2;
     --color-primary-dark: #357abd;
     --color-primary-light: #6ea8fe;
     --color-primary-lighter: #8fc9e8;
     --color-primary-lightest: #d0e8f8;
+
+    /* Brand Blue (ProtVar identity — masthead, CTA buttons, active states) */
+    --color-brand: #014373;
+    --color-brand-dark: #012d5a;
+    --color-brand-light: #4a90b8;
+    --color-brand-lighter: #8fc4dc;
+    --color-brand-lightest: #e8f0f7;
+    --color-brand-gradient: linear-gradient(135deg, #4a90b8 0%, #014373 100%);
 
     /* Grays */
     --color-gray-50: #fafafa;
@@ -155,7 +163,7 @@
        ============================================ */
 
     --max-width-content: 1400px;
-    --sidebar-width: 280px;
+    --sidebar-width: 300px;
     --header-height: 64px;
 }
 

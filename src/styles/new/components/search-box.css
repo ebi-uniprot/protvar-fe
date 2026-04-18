@@ -1,4 +1,9 @@
-/* SearchBox Component */
+/**
+ * search-box.css
+ * Compact search box for the navbar/header (dark background context).
+ * Replaces local SearchBox.css.
+ */
+
 .search-box {
     position: relative;
     display: flex;
@@ -12,11 +17,11 @@
     padding: 8px 40px 8px 14px;
     background: rgba(255, 255, 255, 0.06);
     border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 18px;
+    border-radius: var(--radius-full);
     color: #ffffff;
-    font-size: 14px;
+    font-size: var(--font-size-md);
     font-family: inherit;
-    transition: all 0.2s ease;
+    transition: all var(--transition-base);
     outline: none;
     box-sizing: border-box;
     line-height: normal;
@@ -46,9 +51,9 @@
     height: 28px;
     background: transparent;
     border: none;
-    border-radius: 14px;
+    border-radius: var(--radius-full);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all var(--transition-base);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -70,7 +75,7 @@
 
 .search-icon {
     color: rgba(255, 255, 255, 0.5);
-    font-size: 14px;
+    font-size: var(--font-size-md);
     line-height: 1;
 }
 
@@ -82,26 +87,6 @@
     color: rgba(255, 255, 255, 0.3);
 }
 
-/* Cross-browser placeholder styling */
-.search-input::-webkit-input-placeholder {
-    color: rgba(255, 255, 255, 0.55);
-}
-
-.search-input::-moz-placeholder {
-    color: rgba(255, 255, 255, 0.55);
-    opacity: 1;
-}
-
-.search-input:-ms-input-placeholder {
-    color: rgba(255, 255, 255, 0.55);
-}
-
-.search-input:-moz-placeholder {
-    color: rgba(255, 255, 255, 0.55);
-    opacity: 1;
-}
-
-/* Mobile responsive */
 @media screen and (max-width: 480px) {
     .search-box {
         width: 100%;
@@ -109,7 +94,7 @@
     }
 
     .search-input {
-        font-size: 13px;
+        font-size: var(--font-size-base);
         height: 34px;
         padding: 7px 36px 7px 12px;
     }

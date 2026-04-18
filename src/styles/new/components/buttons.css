@@ -35,6 +35,40 @@
    BUTTON VARIANTS
    ============================================ */
 
+/* Large button modifier — used for prominent action buttons (search submit, etc.) */
+.btn-lg {
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
+    border-radius: var(--radius-lg);
+    font-weight: var(--font-weight-semibold);
+}
+
+/* Brand button — ProtVar navy, used for primary CTA */
+.btn-brand {
+    background: var(--color-brand);
+    color: white;
+    border-color: var(--color-brand);
+}
+
+.btn-brand:hover:not(:disabled) {
+    background: var(--color-brand-dark);
+    border-color: var(--color-brand-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(1, 67, 115, 0.3);
+}
+
+.btn-brand:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+.btn-brand:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
 /* Primary Button */
 .btn-primary {
     background: var(--color-primary);
