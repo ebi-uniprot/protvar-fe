@@ -3,7 +3,7 @@ import { PagedMappingResponse } from "../../../types/PagedMappingResponse";
 import { Message, GenomicVariant } from "../../../types/MappingResponse";
 import { StringVoidFun } from "../../../constants/CommonTypes";
 import { getAlternateIsoFormRow } from "./AlternateIsoFormRow";
-import { getNewPrimaryRow } from "./PrimaryRow";
+import { getNewPrimaryRow, AnnotationPanels } from "./PrimaryRow";
 import { AppContext } from "../../App";
 import MsgRow from "./MsgRow";
 import Tool from "../../elements/Tool";
@@ -147,12 +147,19 @@ const getTableRows = (
 
       genomicVariant.genes.forEach((gene, geneIdx) => {
         const isoformGroupKey = `input-${inputIndex}-${genIndex}-gene-${geneIdx}-isoform`;
+        const genomicVariantStr = `${genomicVariant.chromosome}-${genomicVariant.position}-${genomicVariant.refBase}-${genomicVariant.altBase}`;
+        let primaryIsoform = gene.isoforms[0];
+        let primaryKey = '';
+        const geneRowEls: React.JSX.Element[] = [];
+
         gene.isoforms.forEach((isoform, isoformIdx) => {
           if (isoformIdx === 0) {
             primaryRow++;
             altRow = 0;
-            rows.push(getNewPrimaryRow(
-              `row-${primaryRow}`,
+            primaryKey = `row-${primaryRow}`;
+            primaryIsoform = isoform;
+            geneRowEls.push(getNewPrimaryRow(
+              primaryKey,
               isoformGroupKey,
               isoformGroupExpanded,
               inputIndex,
@@ -165,12 +172,30 @@ const getTableRows = (
               toggleAnnotation,
               gene.isoforms.length > 1,
               stdColor,
+              isoformGroupKey === isoformGroupExpanded ? gene.isoforms.slice(1) : [],
             ));
           } else if (isoformGroupKey === isoformGroupExpanded) {
             altRow++;
-            rows.push(getAlternateIsoFormRow(`row-${primaryRow}-${altRow}`, inputIndex, isoform));
+            geneRowEls.push(getAlternateIsoFormRow(`row-${primaryRow}-${altRow}`, inputIndex, isoform));
           }
         });
+
+        if (primaryKey) {
+          // Wrap in display:contents div — guarantees Primary → Alt Isoforms → Annotation Panel
+          // order regardless of React reconciliation behaviour.
+          rows.push(
+            <div key={`group-${primaryKey}`} className="result-gene-group">
+              {geneRowEls}
+              <AnnotationPanels
+                isoformKey={primaryKey}
+                annotationExpanded={annotationExpanded}
+                gene={gene}
+                isoform={primaryIsoform}
+                genomicVariantStr={genomicVariantStr}
+              />
+            </div>
+          );
+        }
       });
     });
   });

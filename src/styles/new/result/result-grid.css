@@ -143,9 +143,20 @@
    DATA ROWS
    ============================================ */
 
-/* Dissolve result-body so data rows become direct grid items of result-table */
-.result-body {
+/* Dissolve result-body and result-gene-group so data rows become direct grid items */
+.result-body,
+.result-gene-group {
     display: contents;
+}
+
+/* Icons shown only in card view — hidden in desktop grid */
+.card-row-icon {
+    display: none;
+}
+
+/* Inline alt isoform rows — only visible in mobile card view */
+.card-isoform-inline {
+    display: none;
 }
 
 .result-row {
@@ -293,7 +304,14 @@
     align-items: center;
     gap: 3px;
     white-space: nowrap;
-    overflow: visible;   /* allow dropdown chevron to show even when cell is at minimum width */
+    overflow: visible;
+    line-height: 1;
+}
+
+/* Ensure Tool wrapper spans inside isoform-cell don't add extra height */
+.isoform-cell > span {
+    display: inline-flex;
+    align-items: center;
 }
 
 .protein-type-icon {
@@ -321,12 +339,13 @@
     padding: 0 2px;
     color: var(--color-primary);
     line-height: 1;
+    display: inline-flex;
+    align-items: center;
 }
 
 .toggle-isoforms {
     width: 12px;
     height: 12px;
-    vertical-align: middle;
 }
 
 /* ============================================
@@ -425,7 +444,7 @@
     /* Each card-row: horizontal flex */
     .card-row {
         display: flex;
-        align-items: baseline;
+        align-items: center;
         flex-wrap: wrap;
         gap: 5px;
         padding: 0;
@@ -447,44 +466,30 @@
     .card-row-genomic {
         font-size: var(--font-size-sm);
         color: var(--color-text-secondary);
-        gap: 4px;
     }
 
-    /* Score boxes in genomic row: compact */
-    .card-row-genomic .score-box {
+    /* Score boxes — compact inline badge */
+    .card-row .score-box {
         display: inline-flex;
         align-items: center;
         justify-content: center;
         width: 2rem;
         margin: 0;
-        vertical-align: baseline;
     }
 
     /* ── Row 2: protein + scores ───────────────── */
     .card-row-protein {
         font-size: var(--font-size-base);
-        gap: 5px;
-        padding: 2px 0 2px 8px;
-        border-left: 3px solid #c5d9f0;
-        align-items: baseline;
     }
 
-    /* Protein name: allow natural wrapping */
-    .card-row-protein .protein-name-cell {
+    /* Protein name: inline so card-sep · stays on same line */
+    .card-row-protein .protein-name-cell,
+    .card-isoform-inline .protein-name-cell {
+        display: inline;
         white-space: normal;
         overflow: visible;
         text-overflow: unset;
         max-width: none;
-    }
-
-    /* Score boxes in protein row: inline, no extra margin */
-    .card-row-protein .score-box {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 2rem;
-        margin: 0;
-        vertical-align: baseline;
     }
 
     /* popEVE N/A badge — always visible even when empty */
@@ -515,13 +520,6 @@
         flex-wrap: wrap;
     }
 
-    /* Thin divider between isoform toggle and annotation buttons */
-    .card-row-details .button--toggle-isoforms {
-        margin-right: 4px;
-        border-right: 1px solid #dde3ef;
-        padding-right: 6px;
-    }
-
     /* ── Dot separator (·) before codon and AA change ── */
     .card-sep:not(:empty)::before {
         content: '·';
@@ -530,9 +528,52 @@
         margin-right: 3px;
     }
 
-    /* Isoform rows: hide empty genomic row entirely */
-    .result-row-isoform .card-row-genomic {
+    /* Fix codon: the inner .flex div is block by default inside a flex item.
+       Force inline-flex so it stays inline with sibling items. */
+    .card-row-genomic .card-sep .flex {
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+    }
+
+    /* ── Card row icons ── */
+    .card-row-icon {
+        display: inline-block;
+        font-size: 0.8rem;
+        color: var(--color-text-muted, #aaa);
+        flex-shrink: 0;
+        align-self: center;
+        margin-right: 1px;
+    }
+
+    /* ── Score labels (CADD / popEVE / AM) — include · separator ── */
+    [data-card-label]::before {
+        content: '· ' attr(data-card-label) ' ';
+        font-size: var(--font-size-xs);
+        color: var(--color-text-muted, #999);
+        font-weight: var(--font-weight-medium);
+    }
+
+    /* Hide separate isoform rows in mobile — shown inline inside primary card instead */
+    .result-row-isoform {
         display: none;
+    }
+
+    /* Inline alt isoform rows within the primary card (between protein and buttons rows) */
+    .card-isoform-inline {
+        display: flex;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 5px;
+        font-size: var(--font-size-base);
+        padding-top: 3px;
+        border-top: 1px dotted #ddd;
+    }
+
+    .card-isoform-inline > * {
+        padding: 0;
+        overflow: visible;
+        white-space: normal;
     }
 
     .result-row-msg {
