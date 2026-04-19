@@ -36,11 +36,11 @@ export function PocketList({ pockets, expandedSections, onToggle, onViewInStruct
         onClick={() => onToggle(SECTION_KEY)}
         aria-expanded={isExpanded}
       >
-        <i className={`bi bi-chevron-${isExpanded ? 'down' : 'right'} chevron-icon`} />
+        <i className="bi bi-chevron-right chevron-icon" />
         <span>Pockets containing variant <span className="count-badge">{pockets.length}</span></span>
       </button>
 
-      {isExpanded && (
+      <div className={`collapsible-anim${isExpanded ? ' open' : ''}`}>
         <div className="struct-pred-content">
           <PocketFilter pockets={pockets} onFilter={setFilteredPockets} />
 
@@ -60,7 +60,7 @@ export function PocketList({ pockets, expandedSections, onToggle, onViewInStruct
             Click <img src={structureIcon} alt="3D structure" className="structure-icon-sm" /> to view in the structure tab.
           </p>
         </div>
-      )}
+      </div>
     </div>
   );
 }

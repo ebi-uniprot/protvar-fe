@@ -162,7 +162,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
       </button>
 
       {/* Filters Panel */}
-      {isExpanded && (
+      <div className={`collapsible-anim${isExpanded ? ' open' : ''}`}>
         <div className="filter-panel">
 
           {/* 1. Variant Type - Radio Buttons */}
@@ -463,7 +463,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
             </div>
           )}
         </div>
-      )}
+      </div>
     </div>
   );
 };

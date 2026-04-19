@@ -34,11 +34,11 @@ export function InteractionList({ interactions, accession, expandedSections, onT
         onClick={() => onToggle(SECTION_KEY)}
         aria-expanded={isExpanded}
       >
-        <i className={`bi bi-chevron-${isExpanded ? 'down' : 'right'} chevron-icon`} />
+        <i className="bi bi-chevron-right chevron-icon" />
         <span>Protein-protein interfaces containing variant <span className="count-badge">{interactions.length}</span></span>
       </button>
 
-      {isExpanded && (
+      <div className={`collapsible-anim${isExpanded ? ' open' : ''}`}>
         <div className="struct-pred-content">
           <p className="struct-pred-description">
             Proteins predicted to interact with {accession} where the variant is at the interface:
@@ -67,7 +67,7 @@ export function InteractionList({ interactions, accession, expandedSections, onT
             Click <img src={structureIcon} alt="3D structure" className="structure-icon-sm" /> to visualise the interacting structure in the structure tab.
           </p>
         </div>
-      )}
+      </div>
     </div>
   );
 }

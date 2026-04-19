@@ -88,22 +88,15 @@ function ResultTable(props: { data: PagedMappingResponse | null }) {
       {/* ── Sticky two-row header ── */}
       <div className="result-header">
         <div className="result-group-header">
-          <Tool el="span" tip="Gene and nucleotide level annotations">Genomic</Tool>
-          <Tool el="span" tip="Amino acid / protein level annotations">Protein</Tool>
-          <Tool el="span" tip="Functional, population and structural annotations" pos="up-right">Annotations</Tool>
-        </div>
-        <div className="result-col-header">
-          <Tool el="span" tip="Variant identifier supplied by the user">ID</Tool>
-          <Tool el="span" tip="Genomic position: chromosome-coordinate-ref-alt">Genomic position</Tool>
-          <Tool el="span" tip="Change of the codon containing the variant nucleotide; strand in parentheses">Codon (strand)</Tool>
-          <Tool el="span" tip="CADD phred-like score (v1.7). Source: PubMed PMID 30371827">CADD v1.7</Tool>
-          <Tool el="span" tip="UniProt canonical or alternate isoform the variant is mapped to" tSize="xlarge">Isoform</Tool>
-          <Tool el="span" tip="Full protein name from UniProt">Protein name</Tool>
-          <Tool el="span" tip="Amino acid change in three-letter code format (e.g. Ala205Pro)">AA Change</Tool>
-          <Tool el="span" tip="Consequence of the variant at the protein level">Consequence(s)</Tool>
-          <Tool el="span" tip="popEVE score — population-informed variant effect prediction">popEVE</Tool>
-          <Tool el="span" tip="AlphaMissense pathogenicity prediction. Source: PubMed PMID 37733863">AlphaMissense</Tool>
-          <span>Click for details</span>
+          <Tool el="span" tip="Gene and nucleotide level annotations">
+            GENOMIC <span className="col-hints">· ID · position · codon · CADD</span>
+          </Tool>
+          <Tool el="span" tip="Amino acid / protein level annotations">
+            PROTEIN <span className="col-hints">· isoform · name · AA change · consequence · popEVE · AlphaMissense</span>
+          </Tool>
+          <Tool el="span" tip="Functional, population and structural annotations" pos="up-right">
+            ANNOTATIONS
+          </Tool>
         </div>
       </div>
 

@@ -125,8 +125,8 @@
 
 /* Bigger icons in rail (collapsed) mode */
 .sidebar:not(.expanded) .sidebar-link i {
-    font-size: 18px;
-    width: 18px;
+    font-size: 21px;
+    width: 21px;
 }
 
 /* ============================================

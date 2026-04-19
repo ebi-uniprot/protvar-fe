@@ -128,9 +128,11 @@ export const getNewPrimaryRow = (
       <div className="card-row card-row-genomic">
         {/* 1: User ID */}
         <span className={isIdInput ? 'cell-id-input' : ''}>
-          <Tool tip="Variant ID provided by the user">
-            {idValue && <TextLink url={getIdUrl(idValue)} text={idValue} />}
-          </Tool>
+          {idValue && (
+            <Tool tip="Variant ID provided by the user">
+              <TextLink url={getIdUrl(idValue)} text={idValue} />
+            </Tool>
+          )}
         </span>
 
         {/* 2: Genomic position (chr-pos-ref-alt) */}

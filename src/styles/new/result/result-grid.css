@@ -33,7 +33,7 @@
         5rem                  /* 10 alphamiss      */
         6.5rem;               /* 11 details        */
     column-gap: 8px;
-    font-size: var(--font-size-base);
+    font-size: var(--font-size-md);
     overflow-x: auto;
     min-width: 0;
     /* Thin scrollbar so the bottom bar is unobtrusive */
@@ -75,7 +75,7 @@
     grid-column: 1 / -1;
     display: grid;
     grid-template-columns: subgrid;
-    grid-template-rows: auto auto;
+    grid-template-rows: auto;
     position: sticky;
     top: 0;
     z-index: 100;
@@ -95,6 +95,17 @@
 .result-group-header > * {
     padding: 3px 8px;
     text-transform: uppercase;
+    min-width: 0;       /* prevents spanning cell from forcing minimum on col 1 */
+    overflow: hidden;
+}
+
+/* Subdued column hints within the group header */
+.col-hints {
+    font-size: 10px;
+    font-weight: var(--font-weight-normal);
+    opacity: 0.8;
+    letter-spacing: 0.02em;
+    text-transform: none;
 }
 
 /* Annotation icons in the group header — displayed inline, no text transform */
@@ -119,22 +130,6 @@
     border-left: 1px solid rgba(255,255,255,0.3);
 }
 
-/* Column header row */
-.result-col-header {
-    background: #8ea6d8;
-    color: white;
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-medium);
-}
-
-.result-col-header > * {
-    padding: 4px 8px;
-    white-space: normal;   /* allow wrapping so long labels don't force columns wide */
-    word-break: keep-all;  /* break between words, not within them */
-    line-height: 1.2;
-    cursor: default;
-    align-self: end;       /* align header text to bottom of cell */
-}
 
 /* ============================================
    DATA ROWS
@@ -179,6 +174,11 @@
     white-space: nowrap;
 }
 
+/* Empty cells contribute no width — lets sparse columns (e.g. ID) collapse */
+.card-row > :empty {
+    padding-inline: 0;
+}
+
 /* ============================================
    COLUMN ALIGNMENT
    Text/link columns: left (default).
@@ -202,14 +202,6 @@
     justify-content: center;
 }
 
-/* Header alignment — match data columns */
-.result-col-header > :nth-child(4),   /* CADD */
-.result-col-header > :nth-child(8),   /* Consequence */
-.result-col-header > :nth-child(9),   /* popEVE */
-.result-col-header > :nth-child(10),  /* AM */
-.result-col-header > :nth-child(11) { /* Details */
-    text-align: center;
-}
 
 /* isoform-cell must stay visible so the chevron isn't clipped by the column boundary */
 .card-row > .isoform-cell {
@@ -338,19 +330,19 @@
     display: block;
 }
 
-/* PopEVE — NA badge matching CADD/AM pill style (desktop and card view consistent) */
+/* PopEVE — N/A: plain gray fill, no border — clearly not a score */
 .cell-popeve:empty::after {
     content: 'NA';
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 2.2rem;
-    padding: 1px 3px;
-    border-radius: 0.75rem;
+    width: auto;
+    padding: 1px 4px;
+    border-radius: 3px;
     font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-bold);
-    color: #999;
-    background: #e8e8e8;
+    font-weight: var(--font-weight-medium);
+    color: #bbb;
+    background: #f0f0f0;
 }
 
 /* First-row tooltip z-index fix:
@@ -502,6 +494,7 @@
     .result-row {
         display: flex;
         flex-direction: column;
+        align-items: stretch;    /* override desktop grid's align-items: center */
         padding: 8px 12px;
         border-bottom: 2px solid var(--color-brand-lightest, #e8f0f7);
         gap: 4px;
@@ -529,9 +522,28 @@
         display: none;
     }
 
+    /* ── Row labels ────────────────────────────── */
+    .card-row-genomic::before,
+    .card-row-protein::before,
+    .card-row-details::before {
+        font-size: 9px;
+        font-weight: var(--font-weight-semibold);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #6987C3;
+        opacity: 0.85;
+        flex-shrink: 0;
+        align-self: center;
+        padding-right: 2px;
+    }
+
+    .card-row-genomic::before { content: 'GENOMIC'; }
+    .card-row-protein::before { content: 'PROTEIN'; }
+    .card-row-details::before { content: 'DETAILS'; }
+
     /* ── Row 1: genomic ────────────────────────── */
     .card-row-genomic {
-        font-size: var(--font-size-sm);
+        font-size: var(--font-size-base);
         color: var(--color-text-secondary);
     }
 
@@ -546,33 +558,21 @@
 
     /* ── Row 2: protein + scores ───────────────── */
     .card-row-protein {
-        font-size: var(--font-size-base);
+        font-size: var(--font-size-md);
     }
 
-    /* Protein name: clip like desktop — full name visible in functional annotation tab */
+    /* Protein name: inline-block keeps it on the same line as the dot separator */
     .card-row-protein .protein-name-cell,
     .card-isoform-inline .protein-name-cell {
-        display: block;
+        display: inline-block;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
         max-width: min(220px, 42vw);
+        vertical-align: middle;
     }
 
-    /* popEVE NA badge — always visible even when empty; override desktop plain-text version */
-    .cell-popeve:empty::after {
-        content: 'NA';
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 2rem;
-        padding: 1px 3px;
-        border-radius: 0.75rem;
-        font-size: var(--font-size-xs);
-        font-weight: var(--font-weight-bold);
-        color: #aaa;
-        background: #eeeeee;
-    }
+    /* popEVE NA badge — inherits desktop style */
 
     /* ── Row 3: annotation actions ─────────────── */
     .card-row-details {
@@ -585,6 +585,7 @@
         align-items: center;
         gap: 4px;
         flex-wrap: wrap;
+        justify-content: flex-start;
     }
 
     /* ── Dot separator (·) before codon and AA change ── */

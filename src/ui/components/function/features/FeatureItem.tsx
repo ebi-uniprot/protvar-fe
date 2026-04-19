@@ -40,9 +40,11 @@ export function FeatureItem({ itemKey, feature, isExpanded, onToggle }: FeatureI
         )}
       </div>
 
-      {isExpanded && hasEvidences && (
-        <div className="feature-evidence-panel">
-          <Evidences evidences={feature.evidences} />
+      {hasEvidences && (
+        <div className={`collapsible-anim${isExpanded ? ' open' : ''}`}>
+          <div className="feature-evidence-panel">
+            <Evidences evidences={feature.evidences} />
+          </div>
         </div>
       )}
     </div>

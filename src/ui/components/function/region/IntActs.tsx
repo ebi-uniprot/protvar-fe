@@ -40,11 +40,11 @@ function IntActs(props: IntActsProps) {
             onClick={() => toggleProteinRegion(key)}
             aria-expanded={isExpanded}
           >
-            <i className={`bi bi-chevron-${isExpanded ? 'down' : 'right'} chevron-icon`}></i>
+            <i className="bi bi-chevron-right chevron-icon"></i>
             <span className="protein-info-title">Interactions</span>
           </button>
 
-          {isExpanded && (
+          <div className={`collapsible-anim${isExpanded ? ' open' : ''}`}>
             <div className="protein-info-content">
               <div className="info-row">
                 <span className="info-label">Protein(gene)</span>
@@ -55,7 +55,7 @@ function IntActs(props: IntActsProps) {
                 <ExtLink url={INTACT_URL + interactor} text={interactor} />
               </div>
             </div>
-          )}
+          </div>
         </div>
       );
     }

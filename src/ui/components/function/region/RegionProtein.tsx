@@ -24,15 +24,15 @@ function RegionProtein(props: RegionProteinProps & {
         onClick={() => toggleProteinRegion(title)}
         aria-expanded={isExpanded}
       >
-        <i className={`bi bi-chevron-${isExpanded ? 'down' : 'right'} chevron-icon`}></i>
+        <i className="bi bi-chevron-right chevron-icon"></i>
         <span className="protein-info-title">{title}</span>
       </button>
 
-      {isExpanded && (
+      <div className={`collapsible-anim${isExpanded ? ' open' : ''}`}>
         <div className="protein-info-content">
           {components}
         </div>
-      )}
+      </div>
     </div>
   );
 }
