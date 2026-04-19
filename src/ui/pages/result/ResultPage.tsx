@@ -11,6 +11,7 @@ import {DownloadPanel} from "../../modal/DownloadPanel";
 import {getMapping, singleVariant} from "../../../services/ProtVarService";
 import {PagedMappingResponse} from "../../../types/PagedMappingResponse";
 import "./ResultPage.css";
+import { toast } from '../../toast/toast';
 
 import {ResultRecord} from "../../../types/ResultRecord";
 import {useStorage} from "../../../context/StorageContext";
@@ -150,7 +151,6 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
                        : 'browse';
   const [resultTitle, setResultTitle] = useState(input)
   const [titleFlash, setTitleFlash] = useState(false);
-  const [showRedirectToast, setShowRedirectToast] = useState(false);
 
   const page = parseInt(searchParams.get('page') || `${DEFAULT_PAGE}`, 10);
   const pageSize = parseInt(searchParams.get('pageSize') || `${DEFAULT_PAGE_SIZE}`, 10);
@@ -167,14 +167,17 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
   const [currentBrowseIds, setCurrentBrowseIds] = useState<Identifier[] | undefined>()
 
   // Show redirect toast when we arrive after being redirected from a deprecated URL.
-  // The query mode effect sets a sessionStorage flag just before navigating, so we
-  // can detect it here after the new URL is in place.
   useEffect(() => {
     if (sessionStorage.getItem(SESSION_REDIRECT)) {
       sessionStorage.removeItem(SESSION_REDIRECT);
-      setShowRedirectToast(true);
-      const timer = setTimeout(() => setShowRedirectToast(false), 6000);
-      return () => clearTimeout(timer);
+      toast.info(
+        <><i className="bi bi-arrow-return-left" /> You arrived via a deprecated URL —{' '}
+          <a href={`${process.env.PUBLIC_URL}/help#protvar-links`} target="_blank" rel="noopener noreferrer">
+            see updated format
+          </a>
+        </>,
+        7000
+      );
     }
   }, [location.pathname, location.search]);
 
@@ -486,11 +489,9 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
     : <span className={titleFlash ? 'title-sparkle' : ''}>{contextLabel} {sep} {resultTitle}</span>;
 
   return <div>
-    <div ref={resultsTopRef}>
+    <div className="page-header-row" ref={resultsTopRef}>
       <h5 className="page-header">{pageTitle}</h5>
-      <span className="help-icon">
-        <HelpButton title="" content={<HelpContent name={helpName}/>}/>
-      </span>
+      <HelpButton title="" content={<HelpContent name={helpName}/>}/>
     </div>
 
     {/* ── Response-level messages from API ── */}
@@ -575,16 +576,6 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
     <ResultTable data={data}/>
     {!isQueryMode && data && data.totalPages > 1 && <PaginationRow loading={loading} data={data}/>}
 
-    {showRedirectToast && (
-      <div className="redirect-toast">
-        <i className="bi bi-arrow-return-left"></i>
-        You arrived via a deprecated URL —{' '}
-        <a href={`${process.env.PUBLIC_URL}/help#protvar-links`} target="_blank" rel="noopener noreferrer">
-          see updated format
-        </a>
-        <button className="redirect-toast-close" onClick={() => setShowRedirectToast(false)}>×</button>
-      </div>
-    )}
   </div>
 }
 

@@ -36,11 +36,6 @@ function DefaultPageLayout({ content }: DefaultPageLayoutProps) {
   const [numDownloads, setNumDownloads] = useState<number>(() => getDownloads().length)
 
   useEffect(() => {
-    const win: any = window
-    if (win.ebiFrameworkInvokeScripts) {
-      win.ebiFrameworkInvokeScripts()
-    }
-
     if (sessionStorage.getItem(SESSION_BANNER)) {
       setShowBanner(false)
     }
@@ -66,12 +61,12 @@ function DefaultPageLayout({ content }: DefaultPageLayoutProps) {
     <>
       <div id="content" className="content">
         <div id="masthead" className="masthead">
-          <div className="masthead-inner row">
+          <div className="masthead-inner">
             <Navbar />
           </div>
         </div>
 
-        <main className="row" role="main">
+        <main role="main">
           <div className={`default-page-layout${isExpanded ? ' sidebar-expanded' : ''}`}>
             {showBanner && (
               <div className="banner">

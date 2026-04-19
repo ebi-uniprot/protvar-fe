@@ -19,6 +19,7 @@ import {DEFAULT_PAGE_SIZE} from "../constants/const";
 import NotFoundPage from "./pages/NotFoundPage";
 import {MarkdownProvider} from "../context/MarkdownContext";
 import '../styles/new/index.css';
+import { ToastContainer } from './toast/ToastContainer';
 
 const empty: ReactElement = <></>;
 
@@ -74,6 +75,7 @@ export default function App() {
     <StorageProvider>
       <MarkdownProvider>
         <StatsProvider>
+        <ToastContainer />
         <Routes>
           <Route path={HOME} element={<HomePage />} />
           <Route path={`${RESULT}`} element={<ResultListPage />} />

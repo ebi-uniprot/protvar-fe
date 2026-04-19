@@ -27,6 +27,8 @@
 @import './components/tables.css';
 @import './components/badges.css';
 @import './components/search-box.css';
+@import './components/loader.css';
+@import './components/toast.css';
 
 /* ==============================================
    3. ANNOTATION SYSTEM - Shared patterns

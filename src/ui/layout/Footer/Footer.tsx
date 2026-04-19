@@ -57,7 +57,7 @@ const Footer: React.FC = () => {
       </div>
 
       {/* Partners and social section */}
-      <div className="pv-footer row">
+      <div className="pv-footer">
         <div className="partners-section">
           <div className="partner-logos">
             <a href="https://www.embl.de/" target="_blank" rel="noreferrer">
@@ -92,10 +92,23 @@ const Footer: React.FC = () => {
         </div>
       </div>
 
-      <div id="global-footer" className="global-footer row">
-        {/* Below expanded footer content is commented for now. Restore it back if there are any concerns */}
-        {/* <nav id="global-nav-expanded" className="global-nav-expanded row" /> */}
-        <section id="ebi-footer-meta" className="ebi-footer-meta" />
+      {/* EBI institutional footer */}
+      <div className="ebi-footer">
+        <div className="ebi-footer-inner">
+          <a href="https://www.ebi.ac.uk/" target="_blank" rel="noreferrer" className="ebi-footer-logo">
+            <img src={EMBLEBILogo} alt="EMBL-EBI" height="30" />
+          </a>
+          <p className="ebi-footer-tagline">
+            EMBL-EBI, Wellcome Genome Campus, Hinxton, Cambridgeshire, CB10 1SD, UK
+          </p>
+          <nav className="ebi-footer-nav" aria-label="EBI footer links">
+            <a href="https://www.ebi.ac.uk/" target="_blank" rel="noreferrer">EMBL-EBI</a>
+            <a href="https://www.ebi.ac.uk/about/terms-of-use" target="_blank" rel="noreferrer">Terms of use</a>
+            <a href="https://www.ebi.ac.uk/data-protection/privacy-notice/embl-ebi-public-website" target="_blank" rel="noreferrer">Privacy</a>
+            <a href="https://www.ebi.ac.uk/accessibility" target="_blank" rel="noreferrer">Accessibility</a>
+            <a href="https://www.ebi.ac.uk/about/cookies" target="_blank" rel="noreferrer">Cookies</a>
+          </nav>
+        </div>
       </div>
 
       <CookieConsent

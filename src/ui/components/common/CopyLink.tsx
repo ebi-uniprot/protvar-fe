@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { PredictionType } from '../../../hooks/usePredictionHighlight';
+import { toast } from '../../toast/toast';
 
 interface CopyLinkProps {
   predictionType: PredictionType;
@@ -10,7 +11,6 @@ interface CopyLinkProps {
 export function CopyLink({ predictionType, title }: CopyLinkProps) {
   const location = useLocation();
   const navigate = useNavigate();
-  const [copied, setCopied] = useState(false);
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -22,32 +22,22 @@ export function CopyLink({ predictionType, title }: CopyLinkProps) {
     const newUrl = `${baseUrl}?${params.toString()}`;
 
     navigator.clipboard.writeText(newUrl).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }).catch(err => {
-      console.error('Failed to copy link:', err);
+      toast.success('Link copied to clipboard!', 2500);
+    }).catch(() => {
+      toast.error('Failed to copy link');
     });
 
-    // Trigger local highlight via URL — the hook reads this and fires the highlight
     navigate({ search: params.toString() }, { replace: true });
   };
 
   return (
-    <>
-      <button
-        onClick={handleClick}
-        className={`copy-link${copied ? ' copy-link--copied' : ''}`}
-        title={title || `Copy link to ${predictionType} prediction`}
-        aria-label={`Share ${predictionType} prediction`}
-      >
-        <i className={copied ? 'bi bi-check2' : 'bi bi-link-45deg'} />
-      </button>
-
-      {copied && (
-        <div className="copy-toast">
-          <i className="bi bi-check-circle-fill" /> Link copied to clipboard!
-        </div>
-      )}
-    </>
+    <button
+      onClick={handleClick}
+      className="copy-link"
+      title={title || `Copy link to ${predictionType} prediction`}
+      aria-label={`Share ${predictionType} prediction`}
+    >
+      <i className="bi bi-link-45deg" />
+    </button>
   );
 }

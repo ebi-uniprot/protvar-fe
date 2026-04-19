@@ -12,11 +12,23 @@
     box-sizing: border-box;
 }
 
-/* Font family (matches EBI Framework Lato) */
+body {
+    margin: 0;
+}
+
+/* Font family */
 html, body,
 h1, h2, h3, h4, h5, h6 {
     font-family: -apple-system, BlinkMacSystemFont, 'Lato', 'Segoe UI', sans-serif;
 }
+
+/* Heading scale — browser defaults are too small/inconsistent without a framework reset */
+h1 { font-size: 2rem;     font-weight: 700; line-height: 1.2; margin: 0 0 1rem; }
+h2 { font-size: 1.5rem;   font-weight: 700; line-height: 1.3; margin: 0 0 0.75rem; }
+h3 { font-size: 1.25rem;  font-weight: 600; line-height: 1.4; margin: 0 0 0.5rem; }
+h4 { font-size: 1.125rem; font-weight: 600; line-height: 1.4; margin: 0 0 0.5rem; }
+h5 { font-size: 1rem;     font-weight: 600; line-height: 1.5; margin: 0 0 0.5rem; }
+h6 { font-size: 0.875rem; font-weight: 600; line-height: 1.5; margin: 0 0 0.25rem; }
 
 /* Suppress browser-default underlines — each link component adds styling explicitly */
 a, a:hover, a:visited, a:active {
@@ -44,12 +56,25 @@ a:focus-visible {
     z-index: 1100 !important;
 }
 
+/* Suppress pointer cursor on tooltip-decorated spans/th — they're not interactive */
+span[aria-label][data-balloon-pos],
+th[aria-label][data-balloon-pos] {
+    cursor: unset;
+}
+
 /* ============================================
-   PAGE HEADINGS
+   PAGE STRUCTURE
    ============================================ */
 
 .page-header {
     display: inline;
+}
+
+/* Responsive content container — replaces Foundation's .row/.container */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-lg);
 }
 
 /* ============================================
