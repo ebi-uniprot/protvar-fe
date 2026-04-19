@@ -11,21 +11,19 @@
    ============================================ */
 
 /*
- * The inner layout wrapper holds the docked sidebar + page content.
- * Default: single-column (sidebar is fixed/off-screen, not in flow).
- * Docked:  two-column — sidebar takes its own column, content takes 1fr.
- *
- * The sidebar switches from position:fixed → position:sticky when docked
- * so that it occupies its grid column and stays visible as the user scrolls.
+ * The inner layout wrapper holds the sidebar rail + page content.
+ * Desktop: two-column — rail (44px) always occupies column 1, content takes 1fr.
+ * Expanded: rail grows to var(--sidebar-width) via .sidebar-expanded class.
+ * Mobile: single-column — sidebar slides in as a fixed overlay.
  */
 .default-page-layout {
     display: grid;
-    grid-template-columns: 1fr;      /* sidebar out-of-flow by default */
+    grid-template-columns: var(--sidebar-rail-width) 1fr;
     align-items: start;
     min-height: 100vh;
 }
 
-.layout-with-docked-sidebar .default-page-layout {
+.default-page-layout.sidebar-expanded {
     grid-template-columns: var(--sidebar-width) 1fr;
 }
 
@@ -40,25 +38,51 @@
 
 .main-content {
     width: 100%;
-    padding: 20px;
+    padding: var(--spacing-lg) var(--spacing-2xl);   /* 16px 24px */
     min-width: 0;
 }
 
 @media screen and (max-width: 768px) {
     .main-content {
-        padding: 15px;
+        padding: var(--spacing-md) var(--spacing-lg);  /* 12px 16px */
     }
 
-    /* On mobile, docked sidebar goes back to overlay — full width */
-    .layout-with-docked-sidebar .default-page-layout {
+    /* On mobile the sidebar is a fixed overlay — no grid column */
+    .default-page-layout,
+    .default-page-layout.sidebar-expanded {
         grid-template-columns: 1fr;
     }
 }
 
 @media screen and (max-width: 480px) {
     .main-content {
-        padding: 10px;
+        padding: var(--spacing-sm) var(--spacing-md);  /* 8px 12px */
     }
+}
+
+/* ============================================
+   FULL-WIDTH MAIN OVERRIDE
+   Foundation 6's .row applies max-width + margin:auto centering.
+   Our layout is sidebar-rail + content grid, so override to fill full width.
+   ============================================ */
+
+main.row {
+    display: block !important;
+    max-width: 100%;
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+/* Foundation .row max-width override for masthead inner */
+.masthead-inner.row {
+    max-width: 100%;
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 0;
 }
 
 /* ============================================
@@ -74,14 +98,13 @@
    ============================================ */
 
 .content .masthead {
-    border-bottom: 1px solid #a1a1a1; /* lighten(#212121, 50%) */
-    margin-bottom: 2rem;
+    border-bottom: 1px solid rgba(0,0,0,0.15);
+    margin-bottom: 0;           /* no gap between masthead and content */
     background: linear-gradient(
-        45deg,
-        #014371,
-        rgba(1, 67, 113, 0.7),
-        #014371,
-        #014371
+        135deg,
+        #014371 0%,
+        #025a94 50%,
+        #014371 100%
     );
 }
 
@@ -121,6 +144,66 @@
 .grid-container > div {
     text-align: center;
     font-size: 12px;
+}
+
+/* ============================================
+   BANNER (dismissible info bar above content)
+   ============================================ */
+
+.banner {
+    grid-column: 1 / -1;            /* span sidebar + content columns */
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-3xl) var(--spacing-sm) var(--spacing-lg);
+    background: var(--color-brand-lightest);
+    border-bottom: 1px solid var(--color-border-medium);
+    font-size: var(--font-size-sm);
+    position: relative;
+}
+
+.banner a {
+    color: var(--color-brand);
+    text-decoration: underline;
+}
+
+.banner a:hover {
+    color: var(--color-brand-dark);
+}
+
+.banner-content {
+    flex: 1;
+    text-align: left;
+    color: var(--color-text-primary);
+    line-height: var(--line-height-normal);
+}
+
+.dismiss-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: var(--spacing-sm);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    color: var(--color-text-tertiary);
+    line-height: 1;
+    padding: 3px 6px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+}
+
+.dismiss-button:hover {
+    color: var(--color-text-primary);
+    background: var(--color-border-light);
+}
+
+.banner-new-icon {
+    color: var(--color-warning);
+    font-size: 1.1em;
+    margin-right: 2px;
 }
 
 .varsite-logo {

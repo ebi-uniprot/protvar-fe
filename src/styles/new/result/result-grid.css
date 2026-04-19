@@ -20,28 +20,25 @@
 
 .result-table {
     display: grid;
-    /*
-     * Flexible columns grow proportionally via fr fractions.
-     * Badge/score/button columns (cadd, popeve, alphamiss, details) stay fixed —
-     * they hold icons and short values that don't benefit from extra width.
-     * Everything else participates in distributing available space.
-     */
     grid-template-columns:
-        minmax(0, 14rem)      /* 1  id             — 0 min so long IDs don't force grid wider */
-        minmax(8rem, 2fr)     /* 2  genomic-pos    — always present, grows proportionally */
-        minmax(0, 9rem)       /* 3  codon          — collapses when empty */
-        4.5rem                /* 4  cadd           — score badge, fixed */
-        minmax(8rem, 10rem)   /* 5  isoform        — 8rem min ensures dropdown button visible */
-        minmax(8rem, 3fr)     /* 6  protein-name   — always present, gets most space */
-        minmax(0, 10rem)      /* 7  aa-change      — collapses when empty */
-        minmax(0, 11rem)      /* 8  consequence    — collapses when empty */
-        4.5rem                /* 9  popeve         — score badge, fixed */
-        5rem                  /* 10 alphamiss      — score badge, fixed */
-        6.5rem;               /* 11 details        — icon buttons, fixed */
+        minmax(0, 14rem)      /* 1  id             */
+        minmax(8rem, 2fr)     /* 2  genomic-pos    */
+        minmax(0, 9rem)       /* 3  codon          */
+        4.5rem                /* 4  cadd           */
+        minmax(8rem, 10rem)   /* 5  isoform        */
+        minmax(8rem, 3fr)     /* 6  protein-name   */
+        minmax(0, 10rem)      /* 7  aa-change      */
+        minmax(0, 11rem)      /* 8  consequence    */
+        4.5rem                /* 9  popeve         */
+        5rem                  /* 10 alphamiss      */
+        6.5rem;               /* 11 details        */
     column-gap: 8px;
     font-size: var(--font-size-base);
     overflow-x: auto;
     min-width: 0;
+    /* Thin scrollbar so the bottom bar is unobtrusive */
+    scrollbar-width: thin;
+    scrollbar-color: #c5d0e0 transparent;
 }
 
 /*
@@ -180,6 +177,11 @@
     padding: 4px 8px;
     overflow: hidden;
     white-space: nowrap;
+}
+
+/* isoform-cell must stay visible so the chevron isn't clipped by the column boundary */
+.card-row > .isoform-cell {
+    overflow: visible;
 }
 
 /* Alternating row backgrounds */

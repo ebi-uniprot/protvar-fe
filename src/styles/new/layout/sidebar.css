@@ -1,163 +1,62 @@
 /**
  * sidebar.css
- * DockableSidebar — three states: closed | overlay | docked.
+ * Rail (40px) | Expanded (220px) — light palette, brand blue accents.
  *
- * closed:  off-screen (position:fixed, left: -var(--sidebar-width))
- * overlay: slides in over content (position:fixed, z-index:1000)
- * docked:  becomes a CSS grid column (position:sticky, top:0)
- *          — content shifts right naturally, no z-index fighting.
+ * Transitions ONLY on expand/collapse (width + label reveal).
+ * Hover and active state changes are instant — no animation on navigation.
  */
-
-/* ============================================
-   SIDEBAR TOGGLE (shown when closed)
-   ============================================ */
-
-.sidebar-toggle {
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    z-index: var(--z-overlay);
-    background: var(--color-brand);
-    color: white;
-    border: none;
-    border-radius: var(--radius-md);
-    padding: 8px 12px;
-    cursor: pointer;
-    transition: all var(--transition-base);
-    box-shadow: var(--shadow-sm);
-}
-
-.sidebar-toggle:hover {
-    background: var(--color-brand-dark);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-md);
-}
-
-.sidebar-toggle i {
-    font-size: 16px;
-    display: block;
-}
-
-/* ============================================
-   OVERLAY (semi-transparent backdrop, overlay mode only)
-   ============================================ */
-
-.sidebar-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: calc(var(--z-modal) - 1);
-    opacity: 0;
-    animation: sidebar-fade-in 0.3s ease forwards;
-}
-
-@keyframes sidebar-fade-in {
-    to { opacity: 1; }
-}
 
 /* ============================================
    SIDEBAR BASE
    ============================================ */
 
 .sidebar {
-    width: var(--sidebar-width);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    width: var(--sidebar-rail-width);
     background: var(--color-bg-primary);
     border-right: 1px solid var(--color-border-light);
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
-    /* Default: fixed (closed / overlay states) */
-    position: fixed;
-    top: 0;
-    height: 100vh;
-    transition: left var(--transition-slow), box-shadow var(--transition-base);
-}
-
-/* ============================================
-   SIDEBAR STATES
-   ============================================ */
-
-.sidebar.closed {
-    left: calc(-1 * var(--sidebar-width));
-    box-shadow: none;
-}
-
-.sidebar.overlay {
-    left: 0;
-    box-shadow: var(--shadow-lg);
-    z-index: var(--z-modal);
-}
-
-/*
- * Docked: switch from fixed to sticky so it occupies its grid column.
- * The .default-page-layout grid gives it var(--sidebar-width) of space,
- * and sticky keeps it in view while the user scrolls.
- */
-.sidebar.docked {
-    position: sticky;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    box-shadow: var(--shadow-xs);
-    z-index: var(--z-sticky);
-}
-
-/* ============================================
-   SIDEBAR HEADER
-   ============================================ */
-
-.sidebar-header {
-    padding: 10px 14px;
-    border-bottom: 1px solid var(--color-brand-lightest);
-    background: var(--color-brand-lightest);
-    min-height: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
+    overflow: hidden;
+    /* Only this transition fires — on expand/collapse click */
+    transition: width 0.28s ease;
     flex-shrink: 0;
 }
 
-.sidebar-controls {
-    display: flex;
-    gap: 6px;
-    align-items: center;
+.sidebar.expanded {
+    width: var(--sidebar-width);
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
-.sidebar-control-btn {
+/* ============================================
+   RAIL TOGGLE (expand / collapse)
+   ============================================ */
+
+.sidebar-rail-toggle {
     display: flex;
     align-items: center;
-    gap: 5px;
-    padding: 5px 9px;
+    justify-content: center;
+    width: 100%;
+    min-height: var(--sidebar-rail-width);
     border: none;
-    border-radius: var(--radius-md);
+    border-bottom: 1px solid var(--color-border-light);
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-tertiary);
     cursor: pointer;
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-medium);
-    transition: all var(--transition-base);
-    background: transparent;
-    color: var(--color-text-secondary);
+    flex-shrink: 0;
+    /* No transition — instant response */
 }
 
-.sidebar-control-btn i {
-    font-size: 14px;
+.sidebar-rail-toggle:hover {
+    background: var(--color-brand-lightest);
+    color: var(--color-brand);
 }
 
-.dock-btn:hover {
-    background: var(--color-success);
-    color: white;
-    transform: translateY(-1px);
-}
-
-.undock-btn:hover {
-    background: var(--color-warning);
-    color: #333;
-    transform: translateY(-1px);
-}
-
-.close-btn:hover {
-    background: var(--color-danger);
-    color: white;
-    transform: translateY(-1px);
+.sidebar-rail-toggle i {
+    font-size: 13px;
 }
 
 /* ============================================
@@ -166,8 +65,8 @@
 
 .sidebar-nav {
     flex: 1;
-    padding-top: 8px;
     overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .sidebar-menu-list {
@@ -177,98 +76,210 @@
 }
 
 .sidebar-menu-item {
-    border-bottom: 1px solid var(--color-border-light);
+    border-bottom: none;
 }
 
 .sidebar-link {
     display: flex;
     align-items: center;
-    padding: 13px 18px;
-    color: var(--color-text-primary);
+    justify-content: center;
+    padding: 11px 0;
+    color: var(--color-text-secondary);
     text-decoration: none;
-    transition: all var(--transition-base);
-    font-size: var(--font-size-md);
+    font-size: var(--font-size-sm);
+    white-space: nowrap;
+    overflow: hidden;
+    /* No transition — instant hover/active response */
+}
+
+.sidebar.expanded .sidebar-link {
+    justify-content: flex-start;
+    padding: 11px 14px;
 }
 
 .sidebar-link:hover {
     background: var(--color-brand-lightest);
     color: var(--color-brand);
-    border-bottom: none;
-    text-decoration: none;
 }
 
 .sidebar-link.active {
-    background: var(--color-brand);
-    color: white;
-    font-weight: var(--font-weight-semibold);
-    border-bottom: none;
+    background: var(--color-brand-lightest);
+    color: var(--color-brand);
+    border-left: 3px solid var(--color-brand);
+    font-weight: var(--font-weight-medium);
+}
+
+/* Compensate for active left border so icon stays centred */
+.sidebar.expanded .sidebar-link.active {
+    padding-left: 11px;   /* 14px - 3px border */
 }
 
 .sidebar-link i {
-    margin-right: 8px;
+    font-size: 15px;
     width: 16px;
     text-align: center;
     flex-shrink: 0;
+    color: inherit;
 }
 
-/* Record count badge */
+/* ============================================
+   LABEL — zero-width in rail so icon stays centred;
+   animates only on expand/collapse (matches sidebar transition)
+   ============================================ */
+
+.sidebar-label {
+    display: flex;
+    align-items: center;
+    max-width: 0;
+    overflow: hidden;
+    margin-left: 0;
+    opacity: 0;
+    pointer-events: none;
+    white-space: nowrap;
+    /* Matches sidebar width transition duration */
+    transition: max-width 0.28s ease,
+                margin-left 0.28s ease,
+                opacity 0.28s ease;
+}
+
+.sidebar.expanded .sidebar-label {
+    max-width: 160px;
+    margin-left: 9px;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* ============================================
+   RECORD COUNT BADGE
+   ============================================ */
+
 .record-count {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: var(--color-success);
-    color: white;
-    font-size: var(--font-size-xs);
+    background: rgba(1, 67, 115, 0.12);
+    color: var(--color-brand);
+    font-size: 9px;
     font-weight: var(--font-weight-bold);
-    padding: 1px 6px;
+    padding: 1px 5px;
     border-radius: var(--radius-full);
-    margin-left: 8px;
-    min-width: 18px;
+    margin-left: 6px;
+    min-width: 16px;
 }
 
 .record-count.gray-bg {
-    background: var(--color-border-dark);
+    background: var(--color-border-light);
+    color: var(--color-text-tertiary);
 }
 
 /* ============================================
-   RESPONSIVE
+   RECENT HISTORY — nested under History nav item
+   ============================================ */
+
+.sidebar-menu-item .map-container {
+    background: var(--color-bg-tertiary);
+    border-top: 1px solid var(--color-border-light);
+    padding-left: calc(var(--sidebar-rail-width) + 4px);
+}
+
+.sidebar-menu-item .map-key {
+    color: var(--color-text-tertiary);
+}
+
+.sidebar-menu-item .map-item {
+    color: var(--color-text-secondary);
+}
+
+.sidebar-menu-item .map-item:hover {
+    background: var(--color-brand-lightest);
+    color: var(--color-brand);
+}
+
+.sidebar-menu-item .map-item.selected {
+    background: var(--color-brand-lightest);
+    color: var(--color-brand);
+    font-weight: var(--font-weight-medium);
+}
+
+.sidebar-menu-item .map-item.selected:hover {
+    background: #d4e4f0;
+}
+
+.sidebar-menu-item .map-item-options button {
+    color: var(--color-text-tertiary);
+}
+
+.sidebar-menu-item .map-item-options button:hover {
+    color: var(--color-danger);
+    background: rgba(220, 53, 69, 0.08);
+}
+
+/* ============================================
+   MOBILE NAV STRIP
+   ============================================ */
+
+.mobile-nav-strip {
+    display: none;
+}
+
+/* ============================================
+   MOBILE
    ============================================ */
 
 @media screen and (max-width: 768px) {
     .sidebar {
-        width: 280px;
-    }
-
-    /* On mobile, docked behaves like overlay — fixed, full panel */
-    .sidebar.docked {
-        position: fixed;
-        z-index: var(--z-modal);
-        box-shadow: var(--shadow-lg);
-    }
-
-    .sidebar-toggle {
-        top: 15px;
-        left: 15px;
-        padding: 6px 10px;
-    }
-
-    .sidebar-control-btn span {
         display: none;
     }
-}
 
-@media screen and (max-width: 480px) {
-    .sidebar,
-    .sidebar.docked {
-        width: 100vw;
+    .mobile-nav-strip {
+        display: flex;
+        grid-column: 1 / -1;
+        background: var(--color-bg-primary);
+        border-bottom: 1px solid var(--color-border-light);
+        position: sticky;
+        top: 0;
+        z-index: var(--z-sticky);
     }
 
-    .sidebar-header {
-        padding: 8px 12px;
+    .mobile-nav-item {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 8px;
+        color: var(--color-text-secondary);
+        position: relative;
+        text-decoration: none;
         min-height: 44px;
     }
 
-    .sidebar-control-btn {
-        padding: 4px 8px;
+    .mobile-nav-item i {
+        font-size: 20px;
+    }
+
+    .mobile-nav-item.active {
+        color: var(--color-brand);
+        background: var(--color-brand-lightest);
+        border-top: 2px solid var(--color-brand);
+    }
+
+    .mobile-nav-item:hover {
+        color: var(--color-brand);
+        background: var(--color-brand-lightest);
+    }
+
+    .mobile-nav-badge {
+        position: absolute;
+        top: 6px;
+        right: calc(50% - 18px);
+        background: rgba(1, 67, 115, 0.15);
+        color: var(--color-brand);
+        font-size: 9px;
+        font-weight: var(--font-weight-bold);
+        border-radius: var(--radius-full);
+        padding: 1px 4px;
+        min-width: 14px;
+        text-align: center;
+        line-height: 14px;
     }
 }

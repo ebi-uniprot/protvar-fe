@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ABOUT, CONTACT, HELP, HOME, RELEASE } from '../../../constants/BrowserPaths';
 import { API_URL } from '../../../constants/const';
 import SearchBox from "../../components/search/SearchBox";
+import VersionInfo from '../VersionInfo';
 
 const Navbar: React.FC = () => {
   return (
@@ -51,6 +52,8 @@ const Navbar: React.FC = () => {
           </Link>
         </div>
       </div>
+
+      <VersionInfo />
     </nav>
   );
 };

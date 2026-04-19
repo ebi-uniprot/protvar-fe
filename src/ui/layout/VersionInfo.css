@@ -1,31 +1,46 @@
-/* Version Info Component */
+/**
+ * VersionInfo
+ * Small version badge anchored to the top-right of .navbar (position:relative).
+ * Hover reveals a dropdown panel with build/data versions.
+ */
+
 .version-info {
     position: absolute;
     top: 0;
     right: 0;
-    font-size: 12px;
-    z-index: 1000;
+    font-size: var(--font-size-xs);
+    z-index: var(--z-dropdown);
 }
 
 .version-trigger {
-    background: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 0 0 0 6px;
-    padding: 8px 10px;
+    background: rgba(255, 255, 255, 0.15);
+    color: rgba(255,255,255,0.9);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-top: none;
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+    padding: 4px 10px;
     cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    transition: background 0.2s;
+    transition: background var(--transition-base);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
 }
 
 .version-trigger:hover {
-    background: #45a049;
+    background: rgba(255, 255, 255, 0.25);
+    color: white;
 }
 
-.version-trigger small {
-    font-size: 10px;
-    opacity: 0.9;
-    margin-left: 4px;
+.beta-badge {
+    background: var(--color-warning);
+    color: #333;
+    font-size: 9px;
+    font-weight: var(--font-weight-bold);
+    padding: 1px 5px;
+    border-radius: var(--radius-full);
 }
 
 .version-panel {
@@ -33,13 +48,14 @@
     position: absolute;
     top: 100%;
     right: 0;
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 4px 0 4px 4px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    padding: 8px;
-    min-width: 140px;
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border-medium);
+    border-radius: var(--radius-md) 0 var(--radius-md) var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    padding: 6px 4px;
+    min-width: 150px;
     white-space: nowrap;
+    z-index: var(--z-dropdown);
 }
 
 .version-info:hover .version-panel {
@@ -47,66 +63,30 @@
 }
 
 .version-panel > div {
-    padding: 2px 4px;
-    font-size: 11px;
-    color: #333;
+    padding: 3px 8px;
+    font-size: var(--font-size-xs);
+    color: var(--color-text-secondary);
+    border-radius: var(--radius-sm);
 }
 
 .version-panel > div:hover {
-    background: #f5f5f5;
-    border-radius: 2px;
+    background: var(--color-bg-tertiary);
 }
 
 .version-panel hr {
-    margin: 6px 0;
+    margin: 4px 8px;
     border: none;
-    border-top: 1px solid #eee;
+    border-top: 1px solid var(--color-border-light);
 }
 
 .data-header {
-    font-weight: bold !important;
-    color: #666 !important;
-    margin: 4px 0 2px 0;
+    font-weight: var(--font-weight-semibold) !important;
+    color: var(--color-text-primary) !important;
+    font-size: var(--font-size-xs) !important;
 }
 
-.beta-badge {
-    background: #F0B429;
-    color: white;
-    font-size: 10px;
-    font-weight: 700;
-    padding: 2px 5px;
-    border-radius: 10px;
-    margin-left: 4px;
-}
-
-/* Mobile responsiveness */
-@media (max-width: 768px) {
-    .version-info {
-        font-size: 11px;
-    }
-
+@media (max-width: 900px) {
     .version-trigger {
-        padding: 6px 8px;
-    }
-
-    .version-trigger small {
-        display: none;
-    }
-
-    .version-panel {
-        right: -10px;
-        min-width: 120px;
-        font-size: 10px;
-    }
-
-    .version-panel > div {
-        padding: 3px;
-    }
-}
-
-@media (max-width: 480px) {
-    .version-panel {
-        right: -20px;
-        transform: translateX(10px);
+        padding: 3px 8px;
     }
 }

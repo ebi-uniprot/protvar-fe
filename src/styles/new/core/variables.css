@@ -163,7 +163,8 @@
        ============================================ */
 
     --max-width-content: 1400px;
-    --sidebar-width: 300px;
+    --sidebar-width: 220px;
+    --sidebar-rail-width: 40px;
     --header-height: 64px;
 }
 

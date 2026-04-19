@@ -1,30 +1,29 @@
-/* Footer component - clean, simplified styles */
+/* ============================================
+   FOOTER CONTENT SECTION (citation + twitter)
+   ============================================ */
 
-/* Main content section */
 .footer-content-section {
     display: grid;
     grid-template-columns: 2fr 1fr;
     gap: 2rem;
-    padding: 2rem;
-    background-color: #f8f9fa;
-    border-top: 1px solid #dee2e6;
-    max-width: 1200px;
-    margin: 0 auto;
+    padding: 2rem 1.5rem;
+    background-color: var(--color-bg-tertiary);
+    border-top: 1px solid var(--color-border-medium);
 }
 
 .citation-container h5,
 .twitter-container h5 {
-    color: #014371;
-    font-size: 18px;
-    font-weight: 600;
+    color: var(--color-brand);
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-semibold);
     margin-bottom: 1rem;
 }
 
 .citation-text {
-    font-size: 14px;
-    line-height: 1.6;
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-relaxed);
     margin-bottom: 1rem;
-    color: #333;
+    color: var(--color-text-primary);
 }
 
 .footer-links {
@@ -32,41 +31,40 @@
 }
 
 .footer-links p {
-    font-size: 13px;
-    color: #666;
-    margin: 0.5rem 0;
-    line-height: 1.5;
-}
-
-.footer-links p:first-child {
-    margin-top: 0;
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+    margin: 0.4rem 0;
+    line-height: var(--line-height-normal);
 }
 
 .ref-link {
-    color: #014371;
+    color: var(--color-brand);
     text-decoration: underline;
 }
 
 .ref-link:hover {
-    color: #012d5a;
+    color: var(--color-brand-dark);
 }
 
 .twitter-content {
-    background: white;
-    border-radius: 8px;
+    background: var(--color-bg-primary);
+    border-radius: var(--radius-lg);
     padding: 1rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-sm);
 }
 
-/* Partners section */
+/* ============================================
+   PARTNERS + SOCIAL
+   ============================================ */
+
 .pv-footer {
-    display: flex;
+    display: flex !important;       /* override Foundation .row flex */
     justify-content: space-between;
     align-items: center;
-    padding: 1.5rem 2rem;
-    background-color: white;
-    max-width: 1200px;
-    margin: 0 auto;
+    padding: 1.5rem !important;
+    background-color: var(--color-bg-primary);
+    max-width: 100% !important;     /* override Foundation .row max-width */
+    margin: 0 !important;
 }
 
 .partner-logos {
@@ -76,12 +74,12 @@
 }
 
 .collaborator-img {
-    transition: opacity 0.3s ease;
     width: 140px;
+    transition: opacity var(--transition-slow);
 }
 
 .partner-logos a:hover .collaborator-img {
-    opacity: 0.8;
+    opacity: 0.75;
 }
 
 .social-signup-section {
@@ -90,9 +88,13 @@
     gap: 0.75rem;
 }
 
-/* Cookie notice */
+/* ============================================
+   COOKIE NOTICE
+   ============================================ */
+
 .cookie-notice {
     color: white;
+    font-size: var(--font-size-sm);
 }
 
 .cookie-notice a {
@@ -104,7 +106,10 @@
     color: white;
 }
 
-/* Mobile responsive */
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
 @media screen and (max-width: 768px) {
     .footer-content-section {
         grid-template-columns: 1fr;
@@ -112,9 +117,9 @@
     }
 
     .pv-footer {
-        flex-direction: column;
+        flex-direction: column !important;
         gap: 1rem;
-        padding: 1.5rem 1rem;
+        padding: 1.5rem 1rem !important;
         text-align: center;
     }
 
@@ -133,6 +138,6 @@
     }
 
     .collaborator-img {
-        width: 120px;
+        width: 110px;
     }
 }

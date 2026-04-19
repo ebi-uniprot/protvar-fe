@@ -4,6 +4,47 @@
  */
 
 /* ============================================
+   GLOBAL RESETS
+   ============================================ */
+
+/* Box model */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+/* Font family (matches EBI Framework Lato) */
+html, body,
+h1, h2, h3, h4, h5, h6 {
+    font-family: -apple-system, BlinkMacSystemFont, 'Lato', 'Segoe UI', sans-serif;
+}
+
+/* Suppress browser-default underlines — each link component adds styling explicitly */
+a, a:hover, a:visited, a:active {
+    text-decoration: none;
+}
+
+/* Remove outline on click; keep visible for keyboard navigation */
+button, input, textarea, select {
+    outline: none;
+}
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+a:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* balloon.css tooltips default to z-index:10 which goes under sticky headers (z-index:100).
+   Override to always float above all page chrome. */
+[aria-label][data-balloon-pos]::after,
+[aria-label][data-balloon-pos]::before {
+    z-index: 1100 !important;
+}
+
+/* ============================================
    PAGE HEADINGS
    ============================================ */
 
