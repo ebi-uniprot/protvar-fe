@@ -25,19 +25,20 @@ interface MsgRowProps {
 
 const MsgRow = ({ message, input, genomicVariant, index }: MsgRowProps) => {
   const inputStr = input?.inputStr ?? '';
-  const rowTitle = input ? `Input: ${inputStr}` : '';
   const idValue = getIdValue(input);
   const rowClass = `result-row-msg ${(index ?? -1) % 2 === 0 ? 'row-even' : 'row-odd'}`;
 
   if (genomicVariant) {
     const genomicPos = `${genomicVariant.chromosome}-${genomicVariant.position}-${genomicVariant.refBase}-${genomicVariant.altBase}`;
     return (
-      <div className={`result-row ${rowClass}`} title={rowTitle}>
+      <div className={`result-row ${rowClass}`}>
         {/* col 1: user-id */}
         <span>
-          <Tool tip="Variant ID provided by the user">
-            {idValue && <TextLink url={getIdUrl(idValue)} text={idValue} />}
-          </Tool>
+          {idValue && (
+            <Tool tip="Variant ID provided by the user">
+              <TextLink url={getIdUrl(idValue)} text={idValue} />
+            </Tool>
+          )}
         </span>
         {/* col 2: genomic-pos */}
         <span>
@@ -54,7 +55,7 @@ const MsgRow = ({ message, input, genomicVariant, index }: MsgRowProps) => {
   }
 
   return (
-    <div className={rowClass} title={rowTitle}>
+    <div className={rowClass}>
       <span style={{ gridColumn: '1 / -1', padding: '4px 8px', wordBreak: 'break-word' }}>
         {getIcon(message)}<b>{inputStr}</b> {message.text}
       </span>

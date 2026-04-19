@@ -63,23 +63,14 @@
 }
 
 /* ============================================
-   STICKY HEADER
+   HEADER
    ============================================ */
 
-/*
- * result-header: a sticky grid item of result-table that spans all
- * 11 columns and uses subgrid so its two child rows (group + col)
- * share the same computed tracks as every data row.
- */
 .result-header {
     grid-column: 1 / -1;
     display: grid;
     grid-template-columns: subgrid;
     grid-template-rows: auto;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: var(--color-bg-primary);
     border-bottom: 2px solid #6987C3;
 }
 
@@ -345,14 +336,6 @@
     background: #f0f0f0;
 }
 
-/* First-row tooltip z-index fix:
-   The sticky result-header has z-index:100, which means balloon tooltips
-   on the first few rows appear behind it. Elevating z-index of the hovered
-   tool element makes its pseudo-element tooltips render above the header. */
-.result-table [aria-label][data-balloon-pos]:hover {
-    position: relative;
-    z-index: 150;
-}
 
 /* ============================================
    ISOFORM CELL
