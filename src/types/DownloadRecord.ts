@@ -1,36 +1,55 @@
+export type DownloadStatus = 'pending' | 'processing' | 'ready'
+
+export interface StatusInfo { text: string; icon: string }
+
+export const DOWNLOAD_STATUS_INFO: Record<DownloadStatus, StatusInfo> = {
+  ready:      { text: 'Ready',      icon: 'download-ready' },
+  processing: { text: 'Processing', icon: 'download-nr'    },
+  pending:    { text: 'Pending',    icon: 'download-nr'    },
+}
+
+// Server response shape — matches the backend DTO exactly
 export interface DownloadResponse {
-    requested: string // "requested": "2024-06-20T22:02:31.157133154" in json
-    downloadId: string // corresponds to the download file name (without ext): <id>[-fun][-pop][-str][-PAGE][-PAGE_SIZE][-ASSEMBLY]
-    jobName: string
-    url: string
-    status: number // -1 (default, not available), 0 (not ready), 1 (ready)
+  id: string            // download file name stem
+  jobName: string
+  fileUrl: string       // full file download URL
+  status: DownloadStatus // string enum from backend
+  requestedAt: string   // server ISO timestamp
 }
 
-export const recordFromResponse = (response: DownloadResponse) : DownloadRecord => {
-    return {
-        ...response
-    }
+// Per-file status entry from POST /download/status
+export interface DownloadStatusEntry {
+  status: DownloadStatus
+  size: number
 }
 
-export interface DownloadRecord extends DownloadResponse {
-    // API DownloadResponse properties inherited
-
-    // new properties, optional to allow backward compatibility (for existing DownloadRecords saved
-    // in localStorage)
-    // from DownloadStatus (status already present)
-    size?: number
-    //ttl?: number
-
-    // from DownloadRequest
-    page?: string
-    pageSize?: string
-    assembly?: string
-    fun?: boolean
-    pop?: boolean
-    str?: boolean
-
-    // new
-    resultUrl?: string // to navigate to result from download list
-
-    clientRequested?: string // recently added as this may be different from the server "requested" time attribute
+// Client-side record stored in localStorage
+export interface DownloadRecord {
+  id: string               // = server's id (download file name stem)
+  jobName: string
+  fileUrl: string          // = server's fileUrl
+  status: DownloadStatus
+  serverRequestedAt: string // server's "requestedAt" timestamp
+  requestedAt: string      // client-side ISO timestamp
+  resultId?: string        // cross-ref to ResultRecord.id
+  resultUrl?: string       // relative URL to navigate back to the originating result page
+  size?: number
+  fun?: boolean
+  pop?: boolean
+  str?: boolean
+  assembly?: string
+  page?: number
+  pageSize?: number
 }
+
+export const recordFromResponse = (
+  response: DownloadResponse,
+  requestedAt: string
+): DownloadRecord => ({
+  id: response.id,
+  jobName: response.jobName,
+  fileUrl: response.fileUrl,
+  status: response.status,
+  serverRequestedAt: response.requestedAt,
+  requestedAt,
+})
