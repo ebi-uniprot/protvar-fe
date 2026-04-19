@@ -1,4 +1,3 @@
-import './PrimaryRow.css';
 import { lazy, Suspense } from "react";
 import { StringVoidFun } from "../../../constants/CommonTypes";
 import {

@@ -1,5 +1,3 @@
-/* RangeSlider.css */
-
 .range-slider {
     display: flex;
     flex-direction: column;
@@ -37,6 +35,11 @@
     background-color: #f1f5f9;
     color: #374151;
     border-color: #cbd5e1;
+}
+
+.range-slider__reset:focus {
+    outline: 2px solid #4a90b8;
+    outline-offset: 2px;
 }
 
 .range-slider__container {
@@ -87,7 +90,7 @@
     border: 2.5px solid #014373;
     cursor: grab;
     pointer-events: auto;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
     transition: all 0.2s ease;
 }
 
@@ -99,40 +102,24 @@
     border: 2.5px solid #014373;
     cursor: grab;
     pointer-events: auto;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
     transition: all 0.2s ease;
 }
 
-.range-slider__input::-webkit-slider-thumb:hover {
-    transform: scale(1.1);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    border-color: #012d5a;
-}
-
+.range-slider__input::-webkit-slider-thumb:hover,
 .range-slider__input::-moz-range-thumb:hover {
     transform: scale(1.1);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     border-color: #012d5a;
 }
 
-.range-slider__input::-webkit-slider-thumb:active {
-    cursor: grabbing;
-    border-color: #012d5a;
-}
-
+.range-slider__input::-webkit-slider-thumb:active,
 .range-slider__input::-moz-range-thumb:active {
     cursor: grabbing;
     border-color: #012d5a;
 }
 
-.range-slider__input::-webkit-slider-runnable-track {
-    width: 100%;
-    height: 5px;
-    cursor: pointer;
-    background: transparent;
-    border: none;
-}
-
+.range-slider__input::-webkit-slider-runnable-track,
 .range-slider__input::-moz-range-track {
     width: 100%;
     height: 5px;
@@ -160,7 +147,6 @@
     color: #64748b;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
     .range-slider {
         min-width: unset;
@@ -169,13 +155,6 @@
     }
 }
 
-/* Focus states */
-.range-slider__reset:focus {
-    outline: 2px solid #4a90b8;
-    outline-offset: 2px;
-}
-
-/* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
     .range-slider__reset,
     .range-slider__input::-webkit-slider-thumb,

@@ -148,8 +148,9 @@
     min-height: 2rem;
 }
 
-.result-row:hover {
-    background: #eef3ff !important;
+.result-row.row-even:hover,
+.result-row.row-odd:hover {
+    background: #eef3ff;
 }
 
 /* Card-row wrappers are transparent to the grid — their children become grid items.
@@ -639,8 +640,9 @@
         background: #4a6090;
     }
 
-    .result-row:hover {
-        background: rgba(110, 168, 254, 0.1) !important;
+    .result-row.row-even:hover,
+    .result-row.row-odd:hover {
+        background: rgba(110, 168, 254, 0.1);
     }
 
     .result-row.row-even { background: var(--color-bg-primary); }

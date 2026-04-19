@@ -1,5 +1,4 @@
 import DefaultPageLayout from "../../layout/DefaultPageLayout";
-import "./HelpPage.css";
 import React, {useEffect, useState} from "react";
 import {Link, useLocation} from 'react-router-dom';
 import {TITLE} from "../../../constants/const";

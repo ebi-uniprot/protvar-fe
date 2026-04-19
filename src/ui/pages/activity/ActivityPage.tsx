@@ -14,7 +14,6 @@ import {HelpButton} from '../../components/help/HelpButton'
 import {ActivityHelp} from '../../components/help/content/ActivityHelp'
 import Spaces from '../../elements/Spaces'
 import {STORE_DOWNLOADS, STORE_HISTORY} from '../../../constants/storage'
-import './ActivityPage.css'
 
 type Tab = 'history' | 'downloads'
 

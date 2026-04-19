@@ -1,7 +1,6 @@
 import DefaultPageLayout from "../layout/DefaultPageLayout";
 import React, {useEffect, useState} from "react";
 import {TITLE} from "../../constants/const";
-import "./ReleasePage.css"
 import ReleaseNotes from "./release/ReleaseNote";
 import Statistics from "./release/Statistics";
 

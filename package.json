@@ -29,7 +29,6 @@
     "react-scripts": "5.0.1",
     "react-share": "5.1.0",
     "react-svg-radar-chart": "1.4.0",
-    "simple-react-notifications2": "1.2.17",
     "tinygradient": "1.1.5",
     "typescript": "4.9.5",
     "uuid": "9.0.1",
@@ -65,7 +64,4 @@
   "engines": {
     "node": ">=22.0.0"
   },
-  "dependencies": {
-    "sass": "1.62.1"
-  }
 }

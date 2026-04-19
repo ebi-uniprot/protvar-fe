@@ -16,7 +16,6 @@
     flex-shrink: 0;
 }
 
-/* Divider between action buttons */
 .result-toolbar-actions > .toolbar-divider {
     width: 1px;
     height: 1.2em;
@@ -24,14 +23,14 @@
     flex-shrink: 0;
 }
 
-/* ── Colour toggle row (below toolbar actions) ── */
+/* ── Colour toggle row ── */
 .result-colour-row {
     display: flex;
     justify-content: flex-end;
     padding: 2px 0 4px;
 }
 
-/* ── Notices area (warnings + response messages) ── */
+/* ── Notices area ── */
 .result-notices {
     display: flex;
     flex-direction: column;
@@ -51,27 +50,15 @@
 .result-notice--error { background: #fef2f2; border-left: 3px solid #dc3545; color: #6d1a23; }
 .result-notice--info  { background: #e8f4fd; border-left: 3px solid #0dcaf0; color: #0c5460; }
 
-/* Sparkle/flash effect for "Result" text when filters are applied */
+/* Sparkle/flash on "Result" heading when filters are active */
 .title-sparkle {
     display: inline-block;
     animation: textSparkle 0.6s ease-in-out;
 }
 
 @keyframes textSparkle {
-    0%, 100% {
-        text-shadow: none;
-        transform: scale(1);
-    }
-    25% {
-        text-shadow: 0 0 8px rgba(100, 150, 255, 0.4), 0 0 12px rgba(100, 150, 255, 0.3);
-        transform: scale(1.01);
-    }
-    50% {
-        text-shadow: 0 0 10px rgba(100, 150, 255, 0.5), 0 0 18px rgba(100, 150, 255, 0.4), 0 0 25px rgba(100, 150, 255, 0.2);
-        transform: scale(1.02);
-    }
-    75% {
-        text-shadow: 0 0 8px rgba(100, 150, 255, 0.4), 0 0 12px rgba(100, 150, 255, 0.3);
-        transform: scale(1.01);
-    }
+    0%, 100% { text-shadow: none; transform: scale(1); }
+    25%  { text-shadow: 0 0 8px rgba(100,150,255,0.4), 0 0 12px rgba(100,150,255,0.3); transform: scale(1.01); }
+    50%  { text-shadow: 0 0 10px rgba(100,150,255,0.5), 0 0 18px rgba(100,150,255,0.4), 0 0 25px rgba(100,150,255,0.2); transform: scale(1.02); }
+    75%  { text-shadow: 0 0 8px rgba(100,150,255,0.4), 0 0 12px rgba(100,150,255,0.3); transform: scale(1.01); }
 }

@@ -1,6 +1,5 @@
 // CitationCarousel.tsx
 import React, { useState, useEffect } from 'react';
-import './CitationCarousel.css';
 
 interface Citation {
   Authors: string;

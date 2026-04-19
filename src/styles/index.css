@@ -29,6 +29,7 @@
 @import './components/search-box.css';
 @import './components/loader.css';
 @import './components/toast.css';
+@import './components/range-slider.css';
 
 /* ==============================================
    3. ANNOTATION SYSTEM - Shared patterns
@@ -48,18 +49,21 @@
 @import './annotation/pockets-interactions.css';
 
 /* ==============================================
-   5. RESULT GRID
+   5. RESULT
    ============================================== */
 
 @import './result/result-grid.css';
+@import './result/result-page.css';
+@import './result/recent-result.css';
 
 /* ==============================================
-   6. LAYOUT — Sidebar, Navbar, Drawer
+   6. LAYOUT — Sidebar, Navbar, Drawer, Footer
    ============================================== */
 
 @import './layout/navbar.css';
 @import './layout/sidebar.css';
 @import './layout/side-drawer.css';
+@import './layout/footer.css';
 
 /* ==============================================
    7. SEARCH / HOME PAGE
@@ -67,3 +71,11 @@
 
 @import './search/search-page.css';
 @import './search/search-filters.css';
+
+/* ==============================================
+   8. PAGES
+   ============================================== */
+
+@import './pages/activity.css';
+@import './pages/help.css';
+@import './pages/release.css';

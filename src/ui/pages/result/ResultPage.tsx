@@ -10,7 +10,6 @@ import {RESULT} from "../../../constants/BrowserPaths";
 import {DownloadPanel} from "../../modal/DownloadPanel";
 import {getMapping, singleVariant} from "../../../services/ProtVarService";
 import {PagedMappingResponse} from "../../../types/PagedMappingResponse";
-import "./ResultPage.css";
 import { toast } from '../../toast/toast';
 
 import {ResultRecord} from "../../../types/ResultRecord";

@@ -1,5 +1,4 @@
 import React from 'react';
-import './VersionInfo.css';
 
 const isDev = process.env.REACT_APP_GIT_BRANCH === "dev";
 

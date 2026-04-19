@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import "./ReleaseNote.css"
 
 // Define the ReleaseNoteProps type to specify the shape of the props.
 type ReleaseNoteProps = {

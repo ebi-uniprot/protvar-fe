@@ -1,4 +1,3 @@
-import "./RecentResult.css"
 import React, {useEffect, useState} from "react";
 import {HOME} from "../../../constants/BrowserPaths";
 import {useNavigate, useParams} from "react-router-dom";

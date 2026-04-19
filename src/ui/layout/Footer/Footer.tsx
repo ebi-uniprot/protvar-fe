@@ -6,7 +6,6 @@ import SignUp from "../SignUp";
 import CitationCarousel from './CitationCarousel';
 import EMBLEBILogo from '../../../images/embl-ebi-logo.svg';
 import openTargetsLogo from '../../../images/open-targets-logo.png';
-import './Footer.css';
 import {ExtLink} from "../../components/common/Link";
 
 const Footer: React.FC = () => {

@@ -1,0 +1,101 @@
+.map-container {
+    padding: 4px 0 8px 0;
+    animation: map-fade-in 0.15s ease;
+}
+
+@keyframes map-fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.map-group {
+    margin-bottom: 4px;
+}
+
+.map-key {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-text-tertiary);
+    padding: 4px 12px 2px;
+    margin: 0;
+}
+
+.map-items {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.map-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background var(--transition-base);
+}
+
+.map-item.selected {
+    background: var(--color-brand);
+    color: white;
+    font-weight: 600;
+}
+
+.map-item:hover {
+    background: var(--color-brand-lightest);
+}
+
+.map-item.selected:hover {
+    background: var(--color-brand-dark);
+}
+
+.map-item-name {
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.map-item-options {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-fast);
+}
+
+.map-item:hover .map-item-options {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.map-item-options button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 2px 4px;
+    font-size: 11px;
+    color: var(--color-text-tertiary);
+    border-radius: var(--radius-sm);
+    transition: color var(--transition-fast), background var(--transition-fast);
+    line-height: 1;
+}
+
+.map-item.selected .map-item-options button {
+    color: rgba(255,255,255,0.7);
+}
+
+.map-item-options button:hover {
+    color: var(--color-danger);
+    background: rgba(220, 53, 69, 0.1);
+}
+
+.map-item.selected .map-item-options button:hover {
+    color: white;
+    background: rgba(255,255,255,0.2);
+}
