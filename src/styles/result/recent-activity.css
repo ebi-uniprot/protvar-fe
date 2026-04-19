@@ -55,9 +55,21 @@
 .map-item-name {
     flex: 1;
     min-width: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.map-item-label {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.map-item-time {
+    font-size: 10px;
+    opacity: 0.7;
 }
 
 .map-item-options {
@@ -98,4 +110,19 @@
 .map-item.selected .map-item-options button:hover {
     color: white;
     background: rgba(255,255,255,0.2);
+}
+
+.map-view-all {
+    display: block;
+    padding: 6px 12px;
+    font-size: 11px;
+    color: var(--color-brand);
+    text-decoration: none;
+    border-top: 1px solid var(--color-border-light);
+    margin-top: 2px;
+}
+
+.map-view-all:hover {
+    background: var(--color-brand-lightest);
+    color: var(--color-brand-dark);
 }

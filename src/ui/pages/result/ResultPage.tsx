@@ -244,6 +244,7 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
                 response.data.content.inputs[0].inputStr :
                 `${response.data.content.inputs[0].inputStr} ...+${totalItems - 1} more `;
               setResultTitle(firstInputLine);
+              touchResult(options.resultId, location.pathname + location.search);
             } else {
               // Identifier browse: derive type and label from what we sent
               const sentType = options.ids?.length === 1 ? options.ids[0].type : null;
@@ -252,8 +253,6 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
               const displayLabel = options.ids?.map(i => i.value).join(', ') ?? '';
               // Only update lastViewed if already saved — browse is not auto-saved
               if (displayLabel) touchResult(displayLabel, location.pathname + location.search);
-              // For uploaded results, always touch (already in history from SearchPage)
-              if (options.resultId) touchResult(options.resultId, location.pathname + location.search);
               setResultTitle(`${displayLabel} (${response.data.totalItems} variants)`);
               setTitleFlash(true);
               setTimeout(() => setTitleFlash(false), 600);
@@ -493,14 +492,14 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
       <HelpButton title="" content={<HelpContent name={helpName}/>}/>
     </div>
 
-    {/* ── Response-level messages from API ── */}
-    {(data?.content.messages?.length ?? 0) > 0 && (
-      <div className="result-notices">
-        {data!.content.messages!.map((message, i) => (
-          <div key={`response-msg-${i}`} className={`result-notice result-notice--${message.type.toLowerCase()}`}>
-            {message.text}
-          </div>
-        ))}
+    {/* ── Colour toggle row ── */}
+    {data && (
+      <div className="result-colour-row">
+        <label className="toggle-switch" title="Toggle between ProtVar standardised and original source colours">
+          <input type="checkbox" checked={appState.stdColor} onChange={() => appState.updateState("stdColor", !appState.stdColor)} />
+          <span className="toggle-track"><span className="toggle-thumb"></span></span>
+          <span className="toggle-label">ProtVar colours</span>
+        </label>
       </div>
     )}
 
@@ -541,14 +540,14 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
       )}
     </div>
 
-    {/* ── Colour toggle row ── */}
-    {data && (
-      <div className="result-colour-row">
-        <label className="toggle-switch" title="Toggle between ProtVar standardised and original source colours">
-          <input type="checkbox" checked={appState.stdColor} onChange={() => appState.updateState("stdColor", !appState.stdColor)} />
-          <span className="toggle-track"><span className="toggle-thumb"></span></span>
-          <span className="toggle-label">ProtVar colours</span>
-        </label>
+    {/* ── Response-level messages from API ── */}
+    {(data?.content.messages?.length ?? 0) > 0 && (
+      <div className="result-notices">
+        {data!.content.messages!.map((message, i) => (
+          <div key={`response-msg-${i}`} className={`result-notice result-notice--${message.type.toLowerCase()}`}>
+            {message.text}
+          </div>
+        ))}
       </div>
     )}
 
@@ -572,7 +571,7 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
       />
     )}
 
-    <ResultTable data={data}/>
+    <ResultTable key={input} data={data}/>
     {!isQueryMode && data && data.totalPages > 1 && <PaginationRow loading={loading} data={data}/>}
 
   </div>

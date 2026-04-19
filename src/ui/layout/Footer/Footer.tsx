@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { CookieConsent } from "react-cookie-consent";
 import { CONTACT } from '../../../constants/BrowserPaths';
 import SignUp from "../SignUp";
-import CitationCarousel from './CitationCarousel';
+import Citation from './Citation';
 import EMBLEBILogo from '../../../images/embl-ebi-logo.svg';
 import openTargetsLogo from '../../../images/open-targets-logo.png';
 import {ExtLink} from "../../components/common/Link";
@@ -22,7 +22,7 @@ const Footer: React.FC = () => {
           </p>
 
           {/* Citation Carousel */}
-          <CitationCarousel />
+          <Citation />
 
           <div className="footer-links">
             <p>

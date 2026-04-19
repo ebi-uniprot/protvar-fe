@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import {SESSION_BANNER, STORE_DOWNLOADS, STORE_HISTORY} from '../../constants/storage'
 import DefaultPageContent from './DefaultPageContent'
 import {SideDrawer} from "./Drawer/SideDrawer";
-import DockableSidebar from "./Sidebar/DockableSidebar";
+import Sidebar from "./Sidebar/Sidebar";
 import Navbar from "./Header/Navbar";
 import Footer from "./Footer/Footer";
 import {useStorage, STORAGE_CHANGE} from "../../context/StorageContext";
@@ -77,7 +77,7 @@ function DefaultPageLayout({ content }: DefaultPageLayoutProps) {
               </div>
             )}
 
-            <DockableSidebar
+            <Sidebar
               numResults={numResults}
               numDownloads={numDownloads}
               onExpandChange={setIsExpanded}

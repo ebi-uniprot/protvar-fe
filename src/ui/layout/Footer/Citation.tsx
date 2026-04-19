@@ -1,7 +1,6 @@
-// CitationCarousel.tsx
 import React, { useState, useEffect } from 'react';
 
-interface Citation {
+interface CitationEntry {
   Authors: string;
   Title: string;
   Publication: string;
@@ -13,26 +12,23 @@ interface Citation {
   URL?: string;
 }
 
-// Simple CSV parser
-const parseCSV = (csvText: string): Citation[] => {
+const parseCSV = (csvText: string): CitationEntry[] => {
   const lines = csvText.trim().split('\n');
   if (lines.length < 2) return [];
 
   const headers = lines[0].split(',').map(h => h.trim());
-  const citations: Citation[] = [];
+  const citations: CitationEntry[] = [];
 
   for (let i = 1; i < lines.length; i++) {
     const line = lines[i].trim();
     if (!line) continue;
 
-    // Handle quoted fields
     const values: string[] = [];
     let currentValue = '';
     let insideQuotes = false;
 
     for (let j = 0; j < line.length; j++) {
       const char = line[j];
-
       if (char === '"') {
         insideQuotes = !insideQuotes;
       } else if (char === ',' && !insideQuotes) {
@@ -52,29 +48,20 @@ const parseCSV = (csvText: string): Citation[] => {
     });
 
     if (citation.Authors && citation.Title) {
-      citations.push(citation as Citation);
+      citations.push(citation as CitationEntry);
     }
   }
 
   return citations;
 };
 
-// Module-level cache - loaded once for the entire application
-let cachedCitations: Citation[] | null = null;
-let loadingPromise: Promise<Citation[]> | null = null;
+let cachedCitations: CitationEntry[] | null = null;
+let loadingPromise: Promise<CitationEntry[]> | null = null;
 
-const loadCitations = (): Promise<Citation[]> => {
-  // Return cached data if already loaded
-  if (cachedCitations !== null) {
-    return Promise.resolve(cachedCitations);
-  }
+const loadCitations = (): Promise<CitationEntry[]> => {
+  if (cachedCitations !== null) return Promise.resolve(cachedCitations);
+  if (loadingPromise !== null) return loadingPromise;
 
-  // Return existing promise if already loading
-  if (loadingPromise !== null) {
-    return loadingPromise;
-  }
-
-  // Start loading
   loadingPromise = fetch(`${process.env.PUBLIC_URL}/citations.csv`)
     .then(response => {
       if (!response.ok) throw new Error('Failed to load citations');
@@ -86,7 +73,7 @@ const loadCitations = (): Promise<Citation[]> => {
       loadingPromise = null;
       return parsed;
     })
-    .catch(err => {
+    .catch(() => {
       loadingPromise = null;
       cachedCitations = [];
       return [];
@@ -95,8 +82,8 @@ const loadCitations = (): Promise<Citation[]> => {
   return loadingPromise;
 };
 
-const CitationCarousel: React.FC = () => {
-  const [citations, setCitations] = useState<Citation[]>([]);
+const Citation: React.FC = () => {
+  const [citations, setCitations] = useState<CitationEntry[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -109,23 +96,18 @@ const CitationCarousel: React.FC = () => {
 
   useEffect(() => {
     if (citations.length === 0) return;
-
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % citations.length);
     }, 8000);
-
     return () => clearInterval(interval);
   }, [citations.length]);
 
-  if (isLoading || citations.length === 0) {
-    return null;
-  }
+  if (isLoading || citations.length === 0) return null;
 
-  const citation = citations[currentIndex];
+  const entry = citations[currentIndex];
 
-  const formatCitation = (cit: Citation): string => {
+  const formatCitation = (cit: CitationEntry): string => {
     const parts: string[] = [];
-
     if (cit.Authors) parts.push(cit.Authors);
     if (cit.Year) parts.push(`(${cit.Year})`);
     if (cit.Title) parts.push(`"${cit.Title}"`);
@@ -138,35 +120,22 @@ const CitationCarousel: React.FC = () => {
       if (cit.Pages) publicationInfo += `, ${cit.Pages}`;
       parts.push(publicationInfo);
     }
-
     if (cit.Publisher) parts.push(cit.Publisher);
-
     return parts.join('. ') + '.';
   };
 
-  const formattedText = formatCitation(citation);
+  const formattedText = formatCitation(entry);
 
   return (
     <div className="citation-carousel">
       <h5>Research Using ProtVar</h5>
       <div className="carousel-content">
-        {citation.URL ? (
-          <a
-            href={citation.URL}
-            target="_blank"
-            rel="noreferrer"
-            className="carousel-citation-link"
-          >
-            <p
-              className="carousel-citation-text"
-              dangerouslySetInnerHTML={{ __html: formattedText }}
-            />
+        {entry.URL ? (
+          <a href={entry.URL} target="_blank" rel="noreferrer" className="carousel-citation-link">
+            <p className="carousel-citation-text" dangerouslySetInnerHTML={{ __html: formattedText }} />
           </a>
         ) : (
-          <p
-            className="carousel-citation-text"
-            dangerouslySetInnerHTML={{ __html: formattedText }}
-          />
+          <p className="carousel-citation-text" dangerouslySetInnerHTML={{ __html: formattedText }} />
         )}
         <div className="carousel-controls">
           <div className="carousel-dots">
@@ -179,13 +148,11 @@ const CitationCarousel: React.FC = () => {
               />
             ))}
           </div>
-          <span className="carousel-counter">
-            {currentIndex + 1} / {citations.length}
-          </span>
+          <span className="carousel-counter">{currentIndex + 1} / {citations.length}</span>
         </div>
       </div>
     </div>
   );
 };
 
-export default CitationCarousel;
+export default Citation;

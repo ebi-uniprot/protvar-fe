@@ -19,6 +19,7 @@
    ============================================ */
 
 .result-table {
+    animation: resultFadeIn 0.18s ease;
     display: grid;
     grid-template-columns:
         minmax(0, 14rem)      /* 1  id             */
@@ -647,4 +648,9 @@
 
     .result-row.row-even { background: var(--color-bg-primary); }
     .result-row.row-odd  { background: var(--color-bg-secondary); }
+}
+
+@keyframes resultFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
 }

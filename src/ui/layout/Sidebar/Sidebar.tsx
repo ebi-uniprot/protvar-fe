@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { ACTIVITY, HOME } from '../../../constants/BrowserPaths';
-import RecentResult from '../../pages/result/RecentResult';
+import RecentActivity from '../../pages/result/RecentActivity';
 import { useStorage } from '../../../context/StorageContext';
 
-interface DockableSidebarProps {
+interface SidebarProps {
   numResults: number;
   numDownloads: number;
   onExpandChange?: (isExpanded: boolean) => void;
 }
 
-const DockableSidebar: React.FC<DockableSidebarProps> = ({
+const Sidebar: React.FC<SidebarProps> = ({
   numResults,
   numDownloads,
   onExpandChange,
@@ -92,7 +92,7 @@ const DockableSidebar: React.FC<DockableSidebarProps> = ({
                   </span>
                 </span>
               </NavLink>
-              {isExpanded && <RecentResult />}
+              {isExpanded && <RecentActivity />}
             </li>
 
             <li className="sidebar-menu-item">
@@ -116,4 +116,4 @@ const DockableSidebar: React.FC<DockableSidebarProps> = ({
   );
 };
 
-export default DockableSidebar;
+export default Sidebar;
