@@ -1,15 +1,9 @@
 import React from 'react';
 
-const isDev = process.env.REACT_APP_GIT_BRANCH === "dev";
-
 const VersionInfo: React.FC = () => {
   return (
     <div className="version-info">
-      <button className="version-trigger">
-        <span>ProtVar {process.env.REACT_APP_PV}
-          {isDev && <span className="beta-badge">beta</span>}
-        </span>
-      </button>
+      <span className="version-badge">v{process.env.REACT_APP_PV}</span>
       <div className="version-panel">
         <div>UI {process.env.REACT_APP_UI}</div>
         <div>API {process.env.REACT_APP_API}</div>

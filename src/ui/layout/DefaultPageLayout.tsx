@@ -68,15 +68,6 @@ function DefaultPageLayout({ content }: DefaultPageLayoutProps) {
 
         <main role="main">
           <div className={`default-page-layout${isExpanded ? ' sidebar-expanded' : ''}`}>
-            {showBanner && (
-              <div className="banner">
-                <button className="dismiss-button" onClick={handleDismiss} aria-label="Dismiss">
-                  <i className="bi bi-x" />
-                </button>
-                <div className="banner-content">{bannerText}</div>
-              </div>
-            )}
-
             <Sidebar
               numResults={numResults}
               numDownloads={numDownloads}
@@ -85,7 +76,9 @@ function DefaultPageLayout({ content }: DefaultPageLayoutProps) {
 
             <SideDrawer/>
 
-            <DefaultPageContent>{content}</DefaultPageContent>
+            <DefaultPageContent banner={showBanner ? { text: bannerText, onDismiss: handleDismiss } : null}>
+              {content}
+            </DefaultPageContent>
           </div>
         </main>
       </div>

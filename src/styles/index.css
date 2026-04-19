@@ -76,6 +76,7 @@
    8. PAGES
    ============================================== */
 
+@import './pages/about.css';
 @import './pages/activity.css';
 @import './pages/help.css';
 @import './pages/release.css';

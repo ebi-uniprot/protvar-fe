@@ -9,14 +9,17 @@ const Navbar: React.FC = () => {
   return (
     <nav className="navbar">
       <div className="navbar-brand">
-        <Link to={HOME} title="ProtVar homepage" className="brand-link">
-          <img
-            src={"ProtVar_logo.png"}
-            alt="ProtVar logo"
-            width="140"
-            className="brand-logo"
-          />
-        </Link>
+        <div className="brand-logo-wrap">
+          <Link to={HOME} title="ProtVar homepage" className="brand-link">
+            <img
+              src={"ProtVar_logo.png"}
+              alt="ProtVar logo"
+              width="140"
+              className="brand-logo"
+            />
+          </Link>
+          <VersionInfo />
+        </div>
         <Link to={HOME} title="ProtVar homepage" className="brand-tagline">
           Contextualising human missense variation
         </Link>
@@ -53,7 +56,6 @@ const Navbar: React.FC = () => {
         </div>
       </div>
 
-      <VersionInfo />
     </nav>
   );
 };

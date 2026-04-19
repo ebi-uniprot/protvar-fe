@@ -158,59 +158,51 @@
 }
 
 /* ============================================
-   VERSION INFO BADGE
+   BRAND LOGO WRAP + VERSION BADGE
    ============================================ */
+
+.brand-logo-wrap {
+    position: relative;
+    display: inline-block;
+}
 
 .version-info {
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 2px;
+    right: 2px;
+    line-height: normal;
     font-size: var(--font-size-xs);
     z-index: var(--z-dropdown);
 }
 
-.version-trigger {
-    background: rgba(255, 255, 255, 0.15);
-    color: rgba(255,255,255,0.9);
-    border: 1px solid rgba(255,255,255,0.2);
-    border-top: none;
-    border-radius: 0 0 var(--radius-md) var(--radius-md);
-    padding: 4px 10px;
-    cursor: pointer;
-    transition: background var(--transition-base);
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-medium);
-    display: flex;
+.version-badge {
+    display: inline-flex;
     align-items: center;
-    gap: 5px;
-    white-space: nowrap;
-}
-
-.version-trigger:hover {
-    background: rgba(255, 255, 255, 0.25);
+    background: rgba(255,255,255,0.22);
     color: white;
-}
-
-.beta-badge {
-    background: var(--color-warning);
-    color: #333;
-    font-size: 9px;
-    font-weight: var(--font-weight-bold);
-    padding: 1px 5px;
+    border: 1px solid rgba(255,255,255,0.3);
     border-radius: var(--radius-full);
+    padding: 1px 7px;
+    font-size: 10px;
+    font-weight: var(--font-weight-semibold);
+    cursor: default;
+    white-space: nowrap;
+    user-select: none;
+    backdrop-filter: blur(2px);
 }
 
 .version-panel {
     display: none;
     position: absolute;
-    top: 100%;
-    right: 0;
+    top: calc(100% + 4px);
+    left: 0;
+    line-height: var(--line-height-normal);
     background: var(--color-bg-elevated);
     border: 1px solid var(--color-border-medium);
-    border-radius: var(--radius-md) 0 var(--radius-md) var(--radius-md);
+    border-radius: 0 var(--radius-md) var(--radius-md) var(--radius-md);
     box-shadow: var(--shadow-lg);
     padding: 6px 4px;
-    min-width: 150px;
+    min-width: 160px;
     white-space: nowrap;
     z-index: var(--z-dropdown);
 }
@@ -243,8 +235,3 @@
     font-size: var(--font-size-xs);
 }
 
-@media (max-width: 900px) {
-    .version-trigger {
-        padding: 3px 8px;
-    }
-}

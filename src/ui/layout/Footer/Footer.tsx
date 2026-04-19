@@ -6,6 +6,10 @@ import Subscribe from "../Subscribe";
 import Citation from './Citation';
 import EMBLEBILogo from '../../../images/embl-ebi-logo.svg';
 import openTargetsLogo from '../../../images/open-targets-logo.png';
+import uniprotLogo from '../../../images/uniprot-logo.svg';
+import ensemblLogo from '../../../images/ensembl-logo.png';
+import pdbeLogo from '../../../images/pdbe-logo.png';
+import decipherLogo from '../../../images/decipher.png';
 import {ExtLink} from "../../components/common/Link";
 
 const Footer: React.FC = () => {
@@ -58,22 +62,22 @@ const Footer: React.FC = () => {
       {/* Partners and social section */}
       <div className="pv-footer">
         <div className="partners-section">
+          <p className="partners-heading">In collaboration with our partners</p>
           <div className="partner-logos">
-            <a href="https://www.embl.de/" target="_blank" rel="noreferrer">
-              <img
-                src={EMBLEBILogo}
-                loading="lazy"
-                alt="EMBL-EBI"
-                className="collaborator-img"
-              />
+            <a href="https://www.uniprot.org/" target="_blank" rel="noreferrer" title="UniProt">
+              <img src={uniprotLogo} loading="lazy" alt="UniProt" className="collaborator-img" />
             </a>
-            <a href="https://www.opentargets.org/" target="_blank" rel="noreferrer">
-              <img
-                src={openTargetsLogo}
-                loading="lazy"
-                alt="Open Targets"
-                className="collaborator-img"
-              />
+            <a href="https://www.opentargets.org/" target="_blank" rel="noreferrer" title="Open Targets">
+              <img src={openTargetsLogo} loading="lazy" alt="Open Targets" className="collaborator-img" />
+            </a>
+            <a href="https://www.deciphergenomics.org/" target="_blank" rel="noreferrer" title="DECIPHER">
+              <img src={decipherLogo} loading="lazy" alt="DECIPHER" className="collaborator-img" />
+            </a>
+            <a href="https://www.ensembl.org/" target="_blank" rel="noreferrer" title="Ensembl">
+              <img src={ensemblLogo} loading="lazy" alt="Ensembl" className="collaborator-img" />
+            </a>
+            <a href="https://www.ebi.ac.uk/pdbe/" target="_blank" rel="noreferrer" title="PDBe">
+              <img src={pdbeLogo} loading="lazy" alt="PDBe" className="collaborator-img" />
             </a>
           </div>
         </div>
@@ -98,15 +102,16 @@ const Footer: React.FC = () => {
             <img src={EMBLEBILogo} alt="EMBL-EBI" height="30" />
           </a>
           <p className="ebi-footer-tagline">
-            EMBL-EBI, Wellcome Genome Campus, Hinxton, Cambridgeshire, CB10 1SD, UK
+            EMBL-EBI, Wellcome Genome Campus, Hinxton, Cambridgeshire, CB10 1SD, UK.
           </p>
-          <nav className="ebi-footer-nav" aria-label="EBI footer links">
-            <a href="https://www.ebi.ac.uk/" target="_blank" rel="noreferrer">EMBL-EBI</a>
+          <p className="ebi-footer-copyright">
+            Copyright © EMBL {new Date().getFullYear()}
+            <span className="ebi-footer-sep">·</span>
+            EMBL-EBI is part of the{' '}
+            <a href="https://www.embl.org/" target="_blank" rel="noreferrer">European Molecular Biology Laboratory</a>
+            <span className="ebi-footer-sep">·</span>
             <a href="https://www.ebi.ac.uk/about/terms-of-use" target="_blank" rel="noreferrer">Terms of use</a>
-            <a href="https://www.ebi.ac.uk/data-protection/privacy-notice/embl-ebi-public-website" target="_blank" rel="noreferrer">Privacy</a>
-            <a href="https://www.ebi.ac.uk/accessibility" target="_blank" rel="noreferrer">Accessibility</a>
-            <a href="https://www.ebi.ac.uk/about/cookies" target="_blank" rel="noreferrer">Cookies</a>
-          </nav>
+          </p>
         </div>
       </div>
 

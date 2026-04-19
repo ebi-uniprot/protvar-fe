@@ -1,0 +1,178 @@
+/**
+ * about.css
+ * Styles for the About page sections.
+ */
+
+/* ============================================
+   SECTION STRUCTURE
+   ============================================ */
+
+.about-section {
+    margin-bottom: var(--spacing-2xl);
+}
+
+.about-section-title {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-sm);
+    padding-bottom: var(--spacing-xs);
+    border-bottom: 2px solid var(--color-border-light);
+}
+
+/* ============================================
+   RESOURCES CARDS
+   ============================================ */
+
+.about-resources {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+}
+
+.about-resource-card {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xs) var(--spacing-md);
+    border: 1px solid var(--color-border-medium);
+    border-radius: var(--radius-md);
+    color: var(--color-brand);
+    text-decoration: none;
+    font-size: var(--font-size-sm);
+    transition: background var(--transition-base), border-color var(--transition-base);
+}
+
+.about-resource-card:hover {
+    background: var(--color-bg-secondary);
+    border-color: var(--color-brand);
+    color: var(--color-brand-dark);
+}
+
+.about-resource-icon {
+    font-size: 1.1em;
+    opacity: 0.8;
+}
+
+/* ============================================
+   CITATION BOX
+   ============================================ */
+
+.about-cite-box {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+    background: var(--color-bg-secondary);
+    border-left: 3px solid var(--color-brand);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-normal);
+}
+
+.about-cite-icon {
+    font-size: 1.4em;
+    color: var(--color-brand);
+    opacity: 0.6;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.about-cite-box p {
+    margin: 0;
+}
+
+/* ============================================
+   FUNDER LOGOS
+   ============================================ */
+
+.about-funder-logos {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-sm);
+}
+
+.about-funder-logo {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+    filter: grayscale(20%);
+    transition: filter var(--transition-base), opacity var(--transition-base);
+    opacity: 0.85;
+}
+
+.about-funder-logos a:hover .about-funder-logo {
+    filter: none;
+    opacity: 1;
+}
+
+/* ============================================
+   ACKNOWLEDGEMENTS GRID
+   ============================================ */
+
+.about-ack-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-sm);
+}
+
+.about-ack-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-sm);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-md);
+    transition: border-color var(--transition-base), box-shadow var(--transition-base);
+}
+
+.about-ack-item:hover {
+    border-color: var(--color-border-medium);
+    box-shadow: var(--shadow-sm);
+}
+
+.about-ack-item img {
+    max-height: 36px;
+    max-width: 100%;
+    width: auto;
+    object-fit: contain;
+    filter: grayscale(30%);
+    opacity: 0.8;
+    transition: filter var(--transition-base), opacity var(--transition-base);
+}
+
+.about-ack-item:hover img {
+    filter: none;
+    opacity: 1;
+}
+
+/* ============================================
+   LEGAL SECTION
+   ============================================ */
+
+.about-section--legal p {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    line-height: var(--line-height-normal);
+}
+
+.about-section--legal p + p {
+    margin-top: var(--spacing-sm);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media screen and (max-width: 600px) {
+    .about-ack-grid {
+        grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    }
+
+    .about-funder-logo {
+        height: 32px;
+    }
+}
