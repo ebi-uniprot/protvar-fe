@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { CookieConsent } from "react-cookie-consent";
 import { CONTACT } from '../../../constants/BrowserPaths';
-import SignUp from "../SignUp";
+import Subscribe from "../Subscribe";
 import Citation from './Citation';
 import EMBLEBILogo from '../../../images/embl-ebi-logo.svg';
 import openTargetsLogo from '../../../images/open-targets-logo.png';
@@ -87,7 +87,7 @@ const Footer: React.FC = () => {
           >
             Follow @EBIProtVar
           </a>
-          <SignUp />
+          <Subscribe />
         </div>
       </div>
 

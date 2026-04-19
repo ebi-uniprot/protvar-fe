@@ -72,6 +72,7 @@ export interface Isoform {
   referenceFunctionUri: string;
   proteinStructureUri: string;
   amScore: AmScore;
+  popEveScore?: PopEveScore;
 }
 
 interface Transcript {

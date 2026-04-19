@@ -4,7 +4,7 @@ import Notify from "../elements/Notify";
 import {emailValidate} from "../../utills/Validator";
 import {useStorage} from "../../context/StorageContext";
 
-function SignUp() {
+function Subscribe() {
   const [email, setEmail] = useState("");
   const form_id = "1ehAvWJrstnYdSfl_j9fT3mJIF7w4pztXrjDKfaFTZ_g"
   const formUrl = "https://docs.google.com/forms/d/" + form_id + "/formResponse"
@@ -39,7 +39,15 @@ function SignUp() {
   return (
     <div className="newsletter-form">
       {subscribed ? (
-        <>Thanks for subscribing!</>
+        <>
+          Thanks for subscribing!{' '}
+          <button
+            className="subscribe-again-btn"
+            onClick={() => setSubscribed(false)}
+          >
+            Subscribe again
+          </button>
+        </>
       ) : (
         <form onSubmit={handleSubmit}>
           <label>Be the first to know about updates on ProtVar</label>
@@ -61,4 +69,4 @@ function SignUp() {
   )
 }
 
-export default SignUp
+export default Subscribe

@@ -14,6 +14,7 @@ import Tool from "../../elements/Tool";
 import { TextLink } from "../../components/common/Link";
 import { caddScoreAttr, formatCaddScore } from "../../components/function/prediction/CaddScorePred";
 import { amScoreAttr, formatAMScore } from "../../components/function/prediction/AlphaMissensePred";
+import { formatPopEveScore, getPopEveColor } from "../../components/function/prediction/PopEvePred";
 import ProteinIcon from '../../../images/proteins.svg';
 import StructureIcon from '../../../images/structures-3d.svg';
 import PopulationIcon from '../../../images/human.svg';
@@ -207,8 +208,18 @@ export const getNewPrimaryRow = (
           <Tool tip={CONSEQUENCES.get(isoform.consequences!)} pos="up-right"><ConsequenceBadge consequence={isoform.consequences} /></Tool>
         </span>
 
-        {/* 9: popEVE — shows N/A badge in card view; empty in grid until API provides data */}
-        <span className="cell-popeve" data-card-label="popEVE"></span>
+        {/* 9: popEVE */}
+        <span className="cell-popeve" data-card-label="popEVE">
+          {isoform.popEveScore && (
+            <Tool
+              className="score-box"
+              style={{ backgroundColor: getPopEveColor(isoform.popEveScore.popeve) }}
+              tip={`${formatPopEveScore(isoform.popEveScore)} popEVE`}
+            >
+              {formatPopEveScore(isoform.popEveScore)}
+            </Tool>
+          )}
+        </span>
 
         {/* 10: AlphaMissense */}
         <span data-card-label="AM">

@@ -319,6 +319,20 @@
     background: var(--color-brand-dark);
 }
 
+.subscribe-again-btn {
+    background: none;
+    border: none;
+    color: var(--color-brand);
+    font-size: var(--font-size-xs);
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+}
+
+.subscribe-again-btn:hover {
+    color: var(--color-brand-dark);
+}
+
 /* ============================================
    RESPONSIVE
    ============================================ */
