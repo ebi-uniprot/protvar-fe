@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useMarkdown } from '../../../context/MarkdownContext';
-import { SearchHistoryHelp } from './content/SearchHistoryHelp';
-import { ResultDownloadHelp } from './content/ResultDownloadHelp';
+import { ActivityHelp } from './content/ActivityHelp';
 import { AlphaFoldHelp } from './content/AlphaFoldHelp';
 
 interface HelpContentProps {
@@ -17,11 +16,10 @@ export const HelpContent: React.FC<HelpContentProps> = ({ name }) => {
   useEffect(() => {
     const loadContent = async () => {
       switch (name) {
-        case 'search-history':
-          setContent(<SearchHistoryHelp />);
-          break;
-        case 'result-download':
-          setContent(<ResultDownloadHelp />);
+        case 'activity':
+        case 'search-history':   // backward compat
+        case 'result-download':  // backward compat
+          setContent(<ActivityHelp />);
           break;
         case 'alphafold':
           setContent(<AlphaFoldHelp />);
