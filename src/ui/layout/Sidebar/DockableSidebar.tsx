@@ -1,152 +1,112 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
-import { DOWNLOAD, HOME, RESULT } from '../../../constants/BrowserPaths';
+import { NavLink, useLocation } from 'react-router-dom';
+import { ACTIVITY, HOME } from '../../../constants/BrowserPaths';
 import RecentResult from '../../pages/result/RecentResult';
-import Spaces from '../../elements/Spaces';
-import {LOCAL_SIDEBAR} from "../../../constants/const";
+import { useStorage } from '../../../context/StorageContext';
 
 interface DockableSidebarProps {
   numResults: number;
-  numDownloads: number | null;
-  onDockChange?: (isDocked: boolean) => void;
+  numDownloads: number;
+  onExpandChange?: (isExpanded: boolean) => void;
 }
 
-type SidebarState = 'closed' | 'overlay' | 'docked';
-
 const DockableSidebar: React.FC<DockableSidebarProps> = ({
-                                                           numResults,
-                                                           numDownloads,
-                                                           onDockChange
-                                                         }) => {
-  const [sidebarState, setSidebarState] = useState<SidebarState>('closed');
+  numResults,
+  numDownloads,
+  onExpandChange,
+}) => {
+  const { getPrefs, setPrefs } = useStorage()
+  const [isExpanded, setIsExpanded] = useState(() => getPrefs().sidebarExpanded)
+  const location = useLocation()
 
-  // Load docked state from localStorage on mount
+  // Both history and downloads live under /activity — distinguish by tab param
+  const onActivity = location.pathname === ACTIVITY
+  const isDownloadsTab = new URLSearchParams(location.search).get('tab') === 'downloads'
+  const historyActive = onActivity && !isDownloadsTab
+  const downloadsActive = onActivity && isDownloadsTab
+
   useEffect(() => {
-    const savedState = localStorage.getItem(LOCAL_SIDEBAR);
-    if (savedState === 'docked') {
-      setSidebarState('docked');
-    }
-  }, []);
+    setPrefs({ sidebarExpanded: isExpanded })
+    onExpandChange?.(isExpanded)
+  }, [isExpanded, onExpandChange, setPrefs])
 
-  // Save docked state to localStorage and notify parent
-  useEffect(() => {
-    if (sidebarState === 'docked') {
-      localStorage.setItem(LOCAL_SIDEBAR, 'docked');
-      onDockChange?.(true);
-    } else {
-      localStorage.removeItem(LOCAL_SIDEBAR);
-      onDockChange?.(false);
-    }
-  }, [sidebarState, onDockChange]);
-
-  const toggleSidebar = () => {
-    setSidebarState(prev => {
-      if (prev === 'closed') return 'overlay';
-      if (prev === 'overlay') return 'closed';
-      return 'closed'; // docked stays docked unless explicitly undocked
-    });
-  };
-
-  const dockSidebar = () => {
-    setSidebarState('docked');
-  };
-
-  const undockSidebar = () => {
-    setSidebarState('overlay');
-  };
-
-  const closeSidebar = () => {
-    setSidebarState('closed');
-  };
-
-  //const isOpen = sidebarState === 'overlay' || sidebarState === 'docked';
-  const isDocked = sidebarState === 'docked';
+  const toggleExpanded = () => setIsExpanded(prev => !prev)
 
   return (
     <>
-      {/* Sidebar Open Button */}
-      {sidebarState === 'closed' && (
-        <button
-          className="sidebar-toggle"
-          onClick={toggleSidebar}
-          aria-label="Open sidebar"
-          title="Open sidebar"
+      {/* Mobile icon strip */}
+      <nav className="mobile-nav-strip" aria-label="Mobile navigation">
+        <NavLink to={HOME} className="mobile-nav-item">
+          <i className="bi bi-search" />
+        </NavLink>
+        <NavLink
+          to={ACTIVITY}
+          className={() => `mobile-nav-item${historyActive ? ' active' : ''}`}
         >
-          <i className="bi bi-list"></i>
+          <i className="bi bi-clock-history" />
+          {numResults > 0 && (
+            <span className="mobile-nav-badge">{numResults}</span>
+          )}
+        </NavLink>
+        <NavLink
+          to={`${ACTIVITY}?tab=downloads`}
+          className={() => `mobile-nav-item${downloadsActive ? ' active' : ''}`}
+        >
+          <i className="bi bi-download" />
+          {numDownloads > 0 && (
+            <span className="mobile-nav-badge">{numDownloads}</span>
+          )}
+        </NavLink>
+      </nav>
+
+      {/* Desktop sidebar */}
+      <div className={`sidebar${isExpanded ? ' expanded' : ''}`}>
+        <button
+          className="sidebar-rail-toggle"
+          onClick={toggleExpanded}
+          title={isExpanded ? 'Collapse sidebar' : 'Expand sidebar'}
+          aria-label={isExpanded ? 'Collapse sidebar' : 'Expand sidebar'}
+        >
+          <i className={`bi ${isExpanded ? 'bi-chevron-left' : 'bi-chevron-right'}`} />
         </button>
-      )}
-
-
-      {/* Overlay for mobile/overlay mode */}
-      {sidebarState === 'overlay' && (
-        <div className="sidebar-overlay" onClick={closeSidebar}></div>
-      )}
-
-      {/* Sidebar */}
-      <div className={`sidebar ${sidebarState}`}>
-        <div className="sidebar-header">
-          <div className="sidebar-controls">
-            {!isDocked && (
-              <button
-                className="sidebar-control-btn dock-btn"
-                onClick={dockSidebar}
-                title="Dock sidebar"
-              >
-                <i className="bi bi-pin-angle"></i>
-                <span>Dock</span>
-              </button>
-            )}
-
-            {isDocked && (
-              <button
-                className="sidebar-control-btn undock-btn"
-                onClick={undockSidebar}
-                title="Undock sidebar"
-              >
-                <i className="bi bi-pin"></i>
-                <span>Undock</span>
-              </button>
-            )}
-
-            <button
-              className="sidebar-control-btn close-btn"
-              onClick={closeSidebar}
-              title="Close sidebar"
-            >
-              <i className="bi bi-x-lg"></i>
-              {isDocked && <span>Close</span>}
-            </button>
-          </div>
-        </div>
 
         <nav className="sidebar-nav">
           <ul className="sidebar-menu-list">
             <li className="sidebar-menu-item">
               <NavLink to={HOME} className="sidebar-link">
-                <i className="bi bi-search"></i>
-                <Spaces count={2} />
-                Search
+                <i className="bi bi-search" />
+                <span className="sidebar-label">Search</span>
               </NavLink>
             </li>
+
             <li className="sidebar-menu-item">
-              <NavLink to={RESULT} className="sidebar-link">
-                <i className="bi bi-clock-history"></i>
-                <Spaces count={2}/>
-                Search History
-                <div className={`record-count ${numResults === 0 ? 'gray-bg' : ''}`}>
-                  {numResults}
-                </div>
+              <NavLink
+                to={ACTIVITY}
+                className={() => `sidebar-link${historyActive ? ' active' : ''}`}
+              >
+                <i className="bi bi-clock-history" />
+                <span className="sidebar-label">
+                  History
+                  <span className={`record-count ${numResults === 0 ? 'gray-bg' : ''}`}>
+                    {numResults}
+                  </span>
+                </span>
               </NavLink>
-              <RecentResult />
+              {isExpanded && <RecentResult />}
             </li>
+
             <li className="sidebar-menu-item">
-              <NavLink to={DOWNLOAD} className="sidebar-link">
-                <i className="bi bi-download"></i>
-                <Spaces count={2}/>
-                Downloads
-                <div className={`record-count ${numDownloads === 0 ? 'gray-bg' : ''}`}>
-                  {numDownloads}
-                </div>
+              <NavLink
+                to={`${ACTIVITY}?tab=downloads`}
+                className={() => `sidebar-link${downloadsActive ? ' active' : ''}`}
+              >
+                <i className="bi bi-download" />
+                <span className="sidebar-label">
+                  Downloads
+                  <span className={`record-count ${numDownloads === 0 ? 'gray-bg' : ''}`}>
+                    {numDownloads}
+                  </span>
+                </span>
               </NavLink>
             </li>
           </ul>

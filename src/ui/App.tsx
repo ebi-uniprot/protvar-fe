@@ -5,14 +5,15 @@ import APIErrorPage from "./pages/APIErrorPage";
 import AboutPage from "./pages/AboutPage";
 import ReleasePage from "./pages/ReleasePage";
 import ContactPage from "./pages/ContactPage";
-import {ABOUT, API_ERROR, CONTACT, DOWNLOAD, G_QUERY, HELP, HOME, ID_ENSEMBL, ID_GENE, ID_PDB, ID_REFSEQ, P_QUERY, QUERY, RELEASE, RESULT, SEARCH} from "../constants/BrowserPaths";
+import {ABOUT, ACTIVITY, API_ERROR, CONTACT, DOWNLOAD, G_QUERY, HELP, HOME, ID_ENSEMBL, ID_GENE, ID_PDB, ID_REFSEQ, P_QUERY, QUERY, RELEASE, RESULT, SEARCH} from "../constants/BrowserPaths";
 import DownloadPage from "./pages/download/DownloadPage";
 import HelpPage from "./pages/help/HelpPage";
 import {PagedMappingResponse} from "../types/PagedMappingResponse";
 import ResultPage from "./pages/result/ResultPage";
 import "bootstrap-icons/font/bootstrap-icons.css"
 import ResultListPage from "./pages/result/ResultListPage";
-import {LocalStorageProvider} from "../context/LocalStorageContext";
+import ActivityPage from "./pages/activity/ActivityPage";
+import {StorageProvider} from "../context/StorageContext";
 import {StatsProvider} from "../context/StatsContext";
 import {DEFAULT_PAGE_SIZE} from "../constants/const";
 import NotFoundPage from "./pages/NotFoundPage";
@@ -70,7 +71,7 @@ export default function App() {
   });
 
   return (<AppContext.Provider value={appState}>
-    <LocalStorageProvider>
+    <StorageProvider>
       <MarkdownProvider>
         <StatsProvider>
         <Routes>
@@ -112,6 +113,7 @@ export default function App() {
           <Route path={ABOUT} element={<AboutPage />} />
           <Route path={RELEASE} element={<ReleasePage />} />
           <Route path={CONTACT} element={<ContactPage />} />
+          <Route path={ACTIVITY} element={<ActivityPage />} />
           <Route path={DOWNLOAD} element={<DownloadPage />} />
           <Route path={HELP} element={<HelpPage />} />
 
@@ -123,6 +125,6 @@ export default function App() {
         </Routes>
         </StatsProvider>
       </MarkdownProvider>
-      </LocalStorageProvider>
+      </StorageProvider>
     </AppContext.Provider>);
 }

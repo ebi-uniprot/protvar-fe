@@ -4,7 +4,8 @@ import {useLocation, useNavigate, useParams, useSearchParams} from "react-router
 import ResultTable from "./ResultTable";
 import React, {useCallback, useContext, useEffect, useMemo, useRef, useState} from "react";
 import PaginationRow from "./PaginationRow";
-import {DEFAULT_PAGE, DEFAULT_PAGE_SIZE, LOCAL_RESULTS, PERMITTED_PAGE_SIZES, TITLE} from "../../../constants/const";
+import {DEFAULT_PAGE, DEFAULT_PAGE_SIZE, PERMITTED_PAGE_SIZES, TITLE} from "../../../constants/const";
+import {SESSION_REDIRECT} from "../../../constants/storage";
 import {RESULT} from "../../../constants/BrowserPaths";
 import {DownloadPanel} from "../../modal/DownloadPanel";
 import {getMapping, singleVariant} from "../../../services/ProtVarService";
@@ -12,7 +13,7 @@ import {PagedMappingResponse} from "../../../types/PagedMappingResponse";
 import "./ResultPage.css";
 
 import {ResultRecord} from "../../../types/ResultRecord";
-import useLocalStorage from "../../../hooks/useLocalStorage";
+import {useStorage} from "../../../context/StorageContext";
 import {APP_URL} from "../../App";
 import {HelpButton} from "../../components/help/HelpButton";
 import {HelpContent} from "../../components/help/HelpContent";
@@ -160,34 +161,22 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
   const [data, setData] = useState<PagedMappingResponse | null>(null)
   const [loading, setLoading] = useState(true)
   const [warning, setWarning] = useState('')
-  const {getItem, setItem} = useLocalStorage();
+  const { touchResult, saveResult, getHistory } = useStorage()
   const resultsTopRef = useRef<HTMLDivElement>(null);
+  // Track browse identifiers so DownloadPanel and Save button can reference them
+  const [currentBrowseIds, setCurrentBrowseIds] = useState<Identifier[] | undefined>()
 
   // Show redirect toast when we arrive after being redirected from a deprecated URL.
   // The query mode effect sets a sessionStorage flag just before navigating, so we
   // can detect it here after the new URL is in place.
   useEffect(() => {
-    if (sessionStorage.getItem('protvar_redirected')) {
-      sessionStorage.removeItem('protvar_redirected');
+    if (sessionStorage.getItem(SESSION_REDIRECT)) {
+      sessionStorage.removeItem(SESSION_REDIRECT);
       setShowRedirectToast(true);
       const timer = setTimeout(() => setShowRedirectToast(false), 6000);
       return () => clearTimeout(timer);
     }
   }, [location.pathname, location.search]);
-
-  const viewedRecord = useCallback((id: string, url: string) => {
-    const now = new Date().toISOString();
-    let savedRecords = getItem<ResultRecord[]>(LOCAL_RESULTS) || [];
-    const index = savedRecords.findIndex(record => record.id === id);
-    if (index !== -1) {
-      savedRecords[index] = {...savedRecords[index], url, lastViewed: now};
-      const [moved] = savedRecords.splice(index, 1);
-      savedRecords.unshift(moved);
-    } else {
-      savedRecords = [{id, url, lastViewed: now}, ...savedRecords]
-    }
-    setItem(LOCAL_RESULTS, savedRecords);
-  }, [getItem, setItem]);
 
   // ── Browse mode loader (POST /mapping) ─────────────────────────────────────
   const loadBrowseData = useCallback((
@@ -257,8 +246,12 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
               // Identifier browse: derive type and label from what we sent
               const sentType = options.ids?.length === 1 ? options.ids[0].type : null;
               setInputType(sentType ?? null);
+              setCurrentBrowseIds(options.ids)
               const displayLabel = options.ids?.map(i => i.value).join(', ') ?? '';
-              if (displayLabel) viewedRecord(displayLabel, location.pathname + location.search);
+              // Only update lastViewed if already saved — browse is not auto-saved
+              if (displayLabel) touchResult(displayLabel, location.pathname + location.search);
+              // For uploaded results, always touch (already in history from SearchPage)
+              if (options.resultId) touchResult(options.resultId, location.pathname + location.search);
               setResultTitle(`${displayLabel} (${response.data.totalItems} variants)`);
               setTitleFlash(true);
               setTimeout(() => setTitleFlash(false), 600);
@@ -291,7 +284,7 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
           setWarning(UNEXPECTED_ERR);
         }
       }).finally(() => setLoading(false))
-  }, [viewedRecord, location, setSearchParams])
+  }, [touchResult, location, setSearchParams])
 
   // ── Query mode loader (GET /mapping?input=) ─────────────────────────────────
   const loadQueryData = useCallback((q: string, assembly: string | null) => {
@@ -351,7 +344,7 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
     // Redirect deprecated URLs to canonical form before loading
     const canonicalUrl = buildCanonicalUrl(queryType, location.pathname, searchParams, param1, param2, param3, param4);
     if (canonicalUrl) {
-      sessionStorage.setItem('protvar_redirected', '1');
+      sessionStorage.setItem(SESSION_REDIRECT, '1');
       navigate(canonicalUrl, { replace: true });
       return; // navigation triggers re-render with the new URL
     }
@@ -419,8 +412,32 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
 
   const isQueryMode = mode === 'query';
   const isFilterOnly = mode === 'browse' && !idType && !idParam && idParamValues.length === 0 && !input;
+  const isBrowseIdentifier = mode === 'browse' && !isFilterOnly &&
+    !(input && location.pathname.startsWith(RESULT + '/'));
   const shareUrl = `${APP_URL}${location.pathname}${location.search}`
   const helpName = isQueryMode ? 'protvar-links' : 'result-page';
+
+  // Determine the browse identifier used as the history record id
+  const browseHistoryId = isBrowseIdentifier
+    ? (currentBrowseIds?.map(i => i.value).join(', ') ?? input ?? undefined)
+    : undefined
+
+  const isSaved = browseHistoryId
+    ? getHistory().some(r => r.id === browseHistoryId)
+    : false
+
+  const handleSaveBrowse = () => {
+    if (!browseHistoryId) return
+    const sentType = currentBrowseIds?.length === 1 ? currentBrowseIds[0].type : undefined
+    const record: ResultRecord = {
+      id: browseHistoryId,
+      type: 'browse',
+      inputType: sentType ?? (idType as any) ?? undefined,
+      url: location.pathname + location.search,
+      savedAt: new Date().toISOString(),
+    }
+    saveResult(record)
+  }
 
   // Context label for the page header — tells the user what kind of input they are looking at.
   //
@@ -496,6 +513,16 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
         <div className="result-toolbar-actions">
           <ShareLink url={shareUrl} linkText="Share" />
           <span className="toolbar-divider" />
+          {isBrowseIdentifier && (
+            <>
+              <i
+                className={`bi ${isSaved ? 'bi-bookmark-fill' : 'bi-bookmark'} icon-btn`}
+                title={isSaved ? 'Saved to history' : 'Save to history'}
+                onClick={handleSaveBrowse}
+              > {isSaved ? 'Saved' : 'Save'}</i>
+              <span className="toolbar-divider" />
+            </>
+          )}
           <i className="bi bi-circle-half icon-btn"
              title="View colour legends"
              onClick={() => appState.updateState("drawer", <LegendContent />)}
@@ -506,9 +533,8 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
                <DownloadPanel
                  q={isQueryMode ? (resultTitle ?? undefined) : undefined}
                  resultId={!isQueryMode && inputType === 'input_id' ? input ?? undefined : undefined}
-                 ids={!isQueryMode && inputType !== 'input_id' && input && inputType
-                   ? [{ type: inputType as any, value: input }]
-                   : undefined}
+                 ids={!isQueryMode && inputType !== 'input_id' ? currentBrowseIds : undefined}
+                 historyId={browseHistoryId}
                  numPages={isQueryMode ? 1 : (data?.totalPages ?? 0)} />)}
           > Download</i>
         </div>

@@ -2,12 +2,10 @@ import {useCallback, useContext, useEffect, useState} from 'react';
 import Button from '../elements/form/Button';
 import {emailValidate} from '../../utills/Validator';
 import {DownloadRecord, recordFromResponse} from "../../types/DownloadRecord";
-import {LOCAL_DOWNLOADS, LOCAL_RESULTS} from "../../constants/const";
 import Notify from "../elements/Notify";
 import {downloadPost} from "../../services/ProtVarService";
-import useLocalStorage from "../../hooks/useLocalStorage";
+import {useStorage} from "../../hooks/useStorage";
 import {useLocation, useSearchParams} from "react-router-dom";
-import {ResultRecord} from "../../types/ResultRecord";
 import {DownloadRequest} from "../../types/DownloadRequest";
 import {Identifier} from "../../types/InputType";
 import {AppContext} from "../App";
@@ -26,13 +24,15 @@ export interface DownloadPanelProps {
   q?: string;          // single variant query
   resultId?: string;   // uploaded result ID
   ids?: Identifier[];  // identifier browse
+  // Optional: links the download record back to a history entry
+  historyId?: string;
 }
 
 const NUM_PAGES_LIMIT = 10;
 
 export function DownloadPanel(props: DownloadPanelProps) {
   const appState = useContext(AppContext);
-  const { getItem, setItem } = useLocalStorage();
+  const { addDownload, getHistory } = useStorage()
   const [errorMsg, setErrorMsg] = useState("")
   const [jobNamePlaceholder, setJobNamePlaceholder] = useState<string>('')
 
@@ -43,15 +43,13 @@ export function DownloadPanel(props: DownloadPanelProps) {
   const [annotations, setAnnotations] = useState<boolean>(true)
   const [currPage, setCurrPage] = useState<boolean>(false)
 
-  // Use resultId as the key for local result lookup
+  // Populate job name placeholder from saved history record
   useEffect(() => {
-    if (!props.resultId) return;
-    const localResults = getItem<ResultRecord[]>(LOCAL_RESULTS) || []
-    const savedRecord = localResults.find((r) => r.id === props.resultId);
-    if (savedRecord && savedRecord.name) {
-      setJobNamePlaceholder(savedRecord.name)
-    }
-  }, [props.resultId, getItem]);
+    const historyId = props.historyId ?? props.resultId
+    if (!historyId) return
+    const saved = getHistory().find(r => r.id === historyId)
+    if (saved?.name) setJobNamePlaceholder(saved.name)
+  }, [props.historyId, props.resultId, getHistory])
 
   const updateForm = useCallback((key: string, value: any) => {
     setForm(prev => ({ ...prev, [key]: value }));
@@ -64,10 +62,9 @@ export function DownloadPanel(props: DownloadPanelProps) {
   }
 
   const handleSucc = (downloadRec: DownloadRecord) => {
-    let downloads = getItem<DownloadRecord[]>(LOCAL_DOWNLOADS) || []
-    downloads.unshift(downloadRec)
-    setItem(LOCAL_DOWNLOADS, downloads)
-    Notify.sucs(`Job ${downloadRec.downloadId.split('-')[0]} submitted. Check the Downloads page.`)
+    addDownload(downloadRec)
+    const label = downloadRec.jobName || downloadRec.id.substring(0, 8)
+    Notify.sucs(`Job "${label}" submitted. Check the Downloads page.`)
   }
 
   const handleErr = () => {
@@ -109,16 +106,16 @@ export function DownloadPanel(props: DownloadPanelProps) {
 
     downloadPost(request)
       .then((response) => {
-        const downloadResponse = response.data
-        let downloadRecord = recordFromResponse(downloadResponse)
-        downloadRecord.page = page ?? undefined
-        downloadRecord.pageSize = pageSize ?? undefined
+        const clientTime = new Date().toISOString()
+        let downloadRecord: DownloadRecord = recordFromResponse(response.data, clientTime)
+        downloadRecord.page = page ? parseInt(page) : undefined
+        downloadRecord.pageSize = pageSize ? parseInt(pageSize) : undefined
         downloadRecord.assembly = assembly ?? undefined
         downloadRecord.fun = form.fun
         downloadRecord.pop = form.pop
         downloadRecord.str = form.str
         downloadRecord.resultUrl = location.pathname + location.search
-        downloadRecord.clientRequested = new Date().toISOString()
+        downloadRecord.resultId = props.historyId ?? props.resultId
         handleSucc(downloadRecord)
       })
       .catch(handleErr);

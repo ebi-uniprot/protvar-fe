@@ -1,14 +1,11 @@
-import '../../styles/index.scss';
 import React, {useEffect, useState} from 'react'
-import {LOCAL_BANNER, LOCAL_DOWNLOADS, LOCAL_RESULTS, LOCAL_SIDEBAR} from '../../constants/const'
+import {SESSION_BANNER, STORE_DOWNLOADS, STORE_HISTORY} from '../../constants/storage'
 import DefaultPageContent from './DefaultPageContent'
 import {SideDrawer} from "./Drawer/SideDrawer";
 import DockableSidebar from "./Sidebar/DockableSidebar";
 import Navbar from "./Header/Navbar";
 import Footer from "./Footer/Footer";
-import VersionInfo from "./VersionInfo";
-import useLocalStorage from "../../hooks/useLocalStorage";
-import {SET_ITEM} from "../../context/LocalStorageContext";
+import {useStorage, STORAGE_CHANGE} from "../../context/StorageContext";
 
 interface DefaultPageLayoutProps {
   content: React.JSX.Element
@@ -22,7 +19,7 @@ const bannerText = (
     <a href="mailto:protvar@ebi.ac.uk">protvar@ebi.ac.uk</a> with any problems
     or suggestions, and use the{" "}
     <a href="https://www.ebi.ac.uk/ProtVar/">stable ProtVar version</a> if you
-    can’t retrieve what you need from this one.
+    can't retrieve what you need from this one.
 
     <div>
       <i className="bi bi-stars banner-new-icon"></i>{' '}
@@ -31,15 +28,12 @@ const bannerText = (
   </>
 );
 
-function DefaultPageLayout(props: DefaultPageLayoutProps) {
+function DefaultPageLayout({ content }: DefaultPageLayoutProps) {
   const [showBanner, setShowBanner] = useState(bannerText != null);
-  // to re-enable banner, uncomment state above, and the lines within
-  // the handleDismiss function
-  //const showBanner = false
-  const [isDocked, setIsDocked] = useState(false);
-  const { getItem } = useLocalStorage();
-  const [numResults, setNumResults] = useState<number>((getItem<any[]>(LOCAL_RESULTS) || []).length)
-  const [numDownloads, setNumDownloads] = useState<number | null>((getItem<any[]>(LOCAL_DOWNLOADS) || []).length)
+  const { getHistory, getDownloads, getPrefs } = useStorage()
+  const [isExpanded, setIsExpanded] = useState(() => getPrefs().sidebarExpanded)
+  const [numResults, setNumResults] = useState<number>(() => getHistory().length)
+  const [numDownloads, setNumDownloads] = useState<number>(() => getDownloads().length)
 
   useEffect(() => {
     const win: any = window
@@ -47,47 +41,29 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
       win.ebiFrameworkInvokeScripts()
     }
 
-    const bannerDismissed = sessionStorage.getItem(LOCAL_BANNER);
-    if (bannerDismissed) {
-      setShowBanner(false);
-    }
-
-    // Check if sidebar was docked on page load
-    const savedState = localStorage.getItem(LOCAL_SIDEBAR);
-    if (savedState === 'docked') {
-      setIsDocked(true);
+    if (sessionStorage.getItem(SESSION_BANNER)) {
+      setShowBanner(false)
     }
   }, [])
 
   useEffect(() => {
     const handleStorageChange = (e: CustomEvent) => {
-      if (e.detail === LOCAL_RESULTS)
-        setNumResults((getItem<any[]>(LOCAL_RESULTS) || []).length);
-      else if (e.detail === LOCAL_DOWNLOADS)
-        setNumDownloads((getItem<any[]>(LOCAL_DOWNLOADS) || []).length)
-    };
-
-    window.addEventListener(SET_ITEM, handleStorageChange as EventListener);
-    return () => {
-      window.removeEventListener(SET_ITEM, handleStorageChange as EventListener);
-    };
-  }, [getItem]);
-
-  const {content} = props;
+      if (e.detail === STORE_HISTORY)
+        setNumResults(getHistory().length)
+      else if (e.detail === STORE_DOWNLOADS)
+        setNumDownloads(getDownloads().length)
+    }
+    window.addEventListener(STORAGE_CHANGE, handleStorageChange as EventListener)
+    return () => window.removeEventListener(STORAGE_CHANGE, handleStorageChange as EventListener)
+  }, [getHistory, getDownloads])
 
   const handleDismiss = () => {
-    sessionStorage.setItem(LOCAL_BANNER, 'true');
-    setShowBanner(false);
-  }
-
-  const handleDockChange = (docked: boolean) => {
-    setIsDocked(docked);
+    sessionStorage.setItem(SESSION_BANNER, 'true')
+    setShowBanner(false)
   }
 
   return (
     <>
-      <VersionInfo />
-
       <div id="content" className="content">
         <div id="masthead" className="masthead">
           <div className="masthead-inner row">
@@ -95,28 +71,26 @@ function DefaultPageLayout(props: DefaultPageLayoutProps) {
           </div>
         </div>
 
-        <main className={`row ${isDocked ? 'layout-with-docked-sidebar' : 'layout-without-docked-sidebar'}`} role="main">
-          {showBanner && (
-            <div className="banner">
-              <button className="dismiss-button" onClick={handleDismiss}>
-                ×
-              </button>
-              <div className="banner-content">{bannerText}</div>
-            </div>
-          )}
+        <main className="row" role="main">
+          <div className={`default-page-layout${isExpanded ? ' sidebar-expanded' : ''}`}>
+            {showBanner && (
+              <div className="banner">
+                <button className="dismiss-button" onClick={handleDismiss} aria-label="Dismiss">
+                  <i className="bi bi-x" />
+                </button>
+                <div className="banner-content">{bannerText}</div>
+              </div>
+            )}
 
-          <div className="default-page-layout">
-            {/* Dockable left sidebar for navigation */}
             <DockableSidebar
               numResults={numResults}
               numDownloads={numDownloads}
-              onDockChange={handleDockChange}
+              onExpandChange={setIsExpanded}
             />
 
-            {/* Right drawer for dynamic content */}
             <SideDrawer/>
 
-            <DefaultPageContent isDocked={isDocked}>{content}</DefaultPageContent>
+            <DefaultPageContent>{content}</DefaultPageContent>
           </div>
         </main>
       </div>

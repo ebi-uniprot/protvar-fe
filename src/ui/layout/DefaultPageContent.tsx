@@ -1,15 +1,10 @@
 import React from "react";
 
-const DefaultPageContent = (props: {
-  children: React.JSX.Element;
-  isDocked?: boolean;
-}) => {
-  const { children, isDocked = false } = props
-
+const DefaultPageContent = (props: { children: React.JSX.Element }) => {
   return (
-    <div className={`page-content ${isDocked ? 'with-docked-sidebar' : ''}`}>
+    <div className="page-content">
       <div className="main-content">
-        {children}
+        {props.children}
       </div>
     </div>
   )

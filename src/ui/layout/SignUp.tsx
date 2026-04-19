@@ -1,9 +1,8 @@
 import { useState } from 'react'
-import {LOCAL_SUBSCRIBED} from '../../constants/const'
 import axios from "axios";
 import Notify from "../elements/Notify";
 import {emailValidate} from "../../utills/Validator";
-import useLocalStorage from "../../hooks/useLocalStorage";
+import {useStorage} from "../../context/StorageContext";
 import "./SignUp.css";
 
 function SignUp() {
@@ -11,40 +10,36 @@ function SignUp() {
   const form_id = "1ehAvWJrstnYdSfl_j9fT3mJIF7w4pztXrjDKfaFTZ_g"
   const formUrl = "https://docs.google.com/forms/d/" + form_id + "/formResponse"
   const email_field_name = "entry.857245557"
-  const { getItem, setItem } = useLocalStorage();
-  const [subscriptionStatus, setSubscriptionStatus] = useState<boolean>(getItem(LOCAL_SUBSCRIBED) || false)
+  const { getUserState, setUserState } = useStorage()
+  const [subscribed, setSubscribed] = useState<boolean>(() => getUserState().subscribed)
+
+  const markSubscribed = () => {
+    setUserState({ subscribed: true })
+    setSubscribed(true)
+  }
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    if (email) {
-        const err = emailValidate(email)
-        if (err) {
-            Notify.err(err)
-        } else {
-            var params: { [k: string]: any } = {};
-            params[email_field_name] = email
-            axios.post(formUrl, null, {params: params})
-                .then((response) => {
-                    if (response.status === 200) {
-                        setItem(LOCAL_SUBSCRIBED, true)
-                        setSubscriptionStatus(true)
-                    }
-                })
-                .catch((_) => {
-                  // CORS issue prevents subscription. Ignoring it for now
-                  // Notify.warn('Could not subscribe. Try later.')
+    if (!email) return
+    const err = emailValidate(email)
+    if (err) { Notify.err(err); return }
 
-                  // Setting the subscription status anyway for now as we are sure the emails are getting registered as expected.
-                  setItem(LOCAL_SUBSCRIBED, true)
-                  setSubscriptionStatus(true)
-                });
-        }
-    }
+    const params: { [k: string]: any } = {}
+    params[email_field_name] = email
+    axios.post(formUrl, null, { params })
+      .then((response) => {
+        if (response.status === 200) markSubscribed()
+      })
+      .catch(() => {
+        // Google Forms blocks CORS so a network error here is expected — the POST
+        // still reaches the form. Mark as subscribed so the user isn't re-prompted.
+        markSubscribed()
+      })
   }
 
   return (
     <div className="newsletter-form">
-      {subscriptionStatus ? (
+      {subscribed ? (
         <>Thanks for subscribing!</>
       ) : (
         <form onSubmit={handleSubmit}>
@@ -57,10 +52,7 @@ function SignUp() {
               name={email_field_name}
               onChange={e => setEmail(e.target.value)}
             />
-            <button
-              className="button subscribe-button"
-              type="submit"
-            >
+            <button className="button subscribe-button" type="submit">
               Subscribe
             </button>
           </div>
@@ -69,4 +61,5 @@ function SignUp() {
     </div>
   )
 }
+
 export default SignUp

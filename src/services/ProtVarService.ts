@@ -8,7 +8,7 @@ import {
 import {FunctionalInfo} from "../types/FunctionalInfo";
 import {PopulationObservation} from "../types/PopulationObservation";
 import {PdbeStructure} from "../types/PdbeStructure";
-import {DownloadResponse} from "../types/DownloadRecord";
+import {DownloadResponse, DownloadStatusEntry} from "../types/DownloadRecord";
 import {InputUploadResponse, PagedMappingResponse} from "../types/PagedMappingResponse";
 import {DownloadRequest} from "../types/DownloadRequest";
 import {MappingRequest} from "../types/MappingRequest";
@@ -107,7 +107,7 @@ export function downloadPost(request: DownloadRequest) {
 }
 
 export function downloadStatus(ids: string[]) {
-  return api.post(
+  return api.post<Record<string, DownloadStatusEntry>>(
     `${API_URL}/download/status`, ids,
     {
       headers: DEFAULT_HEADERS,

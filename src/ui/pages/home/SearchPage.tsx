@@ -3,9 +3,8 @@ import React, { useState, useRef, ChangeEvent } from 'react';
 import {useNavigate} from "react-router-dom";
 import {HelpContent} from "../../components/help/HelpContent";
 import {HelpButton} from "../../components/help/HelpButton";
-import useLocalStorage from "../../../hooks/useLocalStorage";
-import {ResultRecord} from "../../../types/ResultRecord";
-import {LOCAL_RESULTS} from "../../../constants/const";
+import {useStorage} from "../../../context/StorageContext";
+import {ResultRecord, submissionExpiresAt} from "../../../types/ResultRecord";
 import {uploadFile, uploadText} from "../../../services/ProtVarService";
 import {API_ERROR, RESULT, SEARCH} from "../../../constants/BrowserPaths";
 import {readFirstLineFromFile} from "../../../utills/FileUtil";
@@ -116,7 +115,7 @@ const SearchPage: React.FC = () => {
   const [error, setError] = useState('');
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { getItem, setItem } = useLocalStorage();
+  const { saveResult } = useStorage();
 
   const [searchFilters, setSearchFilters] = useState<SearchFilterParams>(DEFAULT_SEARCH_FILTERS);
 
@@ -216,32 +215,17 @@ const SearchPage: React.FC = () => {
   };
 
   const submittedRecord = async (id: string, url: string) => {
-    // Always get latest data to avoid stale cache issues
-    const savedRecords: ResultRecord[] = getItem<ResultRecord[]>(LOCAL_RESULTS) ?? [];
-    const now = new Date().toISOString();
-
-    const existingIndex = savedRecords.findIndex(record => record.id === id);
-    let updatedRecords: ResultRecord[];
-
-    if (existingIndex !== -1) {
-      // Update existing record
-      updatedRecords = [...savedRecords];
-      updatedRecords[existingIndex] = {
-        ...updatedRecords[existingIndex],
-        lastSubmitted: now, //lastViewed: now
-      };
-    } else {
-      // Determine the name
-      const name = await getRecordName(id);
-      // Add new record at the start
-      const newRecord: ResultRecord = {
-        id, url, name,
-        firstSubmitted: now, //lastSubmitted: now, lastViewed: now
-      };
-      updatedRecords = [newRecord, ...savedRecords];
+    const name = await getRecordName(id)
+    const record: ResultRecord = {
+      id,
+      type: 'submission',
+      inputType: 'input_id',
+      url,
+      name,
+      savedAt: new Date().toISOString(),
+      expiresAt: submissionExpiresAt(),
     }
-
-    setItem(LOCAL_RESULTS, updatedRecords);
+    saveResult(record)
   };
 
   // New helper to decide the name
