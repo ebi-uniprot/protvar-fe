@@ -54,55 +54,57 @@ function HistoryTab() {
       <div className="activity-list-header">
         <span>{records.length} entr{records.length === 1 ? 'y' : 'ies'}</span>
         {records.length > 1 && (
-          <button className="bi bi-trash icon-btn" onClick={handleDeleteAll}> Delete all</button>
+          <button className="bi bi-trash icon-btn icon-btn-danger" onClick={handleDeleteAll}> Delete all</button>
         )}
       </div>
-      <table className="table activity-table">
-        <thead>
-          <tr>
-            <th>Last activity</th>
-            <th>Type</th>
-            <th>Name / ID</th>
-            <th>Manage</th>
-          </tr>
-        </thead>
-        <tbody>
-          {records.map(record => (
-            <tr key={record.id}>
-              <td>{getRelativeTime(parseDateString(lastActivity(record)))}</td>
-              <td>
-                <span className={`activity-type-badge activity-type-${record.type}`}>
-                  {record.type === 'submission' ? 'Submitted' : 'Browse'}
-                </span>
-              </td>
-              <td>
-                {editingId === record.id ? (
-                  <input
-                    className="edit-name"
-                    type="text"
-                    value={record.name ?? ''}
-                    autoFocus
-                    onChange={e => handleNameChange(record.id, e.target.value)}
-                    onBlur={() => setEditingId(null)}
-                  />
-                ) : (
-                  <span className="activity-name-cell">
-                    <NavLink to={record.url} className="activity-result-link">
-                      {record.name ?? record.id}
-                    </NavLink>
-                    <i className="bi bi-pencil icon-btn" onClick={() => setEditingId(record.id)} />
-                  </span>
-                )}
-              </td>
-              <td>
-                <ShareLink url={`${APP_URL}${record.url}`} />
-                <Spaces count={2} />
-                <button className="bi bi-trash icon-btn" title="Delete" onClick={() => handleDelete(record.id)} />
-              </td>
+      <div className="table-scroll">
+        <table className="activity-table activity-table--history">
+          <thead>
+            <tr>
+              <th>Last activity</th>
+              <th className="col-center">Type</th>
+              <th>Name / ID</th>
+              <th className="col-center">Manage</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {records.map(record => (
+              <tr key={record.id}>
+                <td>{getRelativeTime(parseDateString(lastActivity(record)))}</td>
+                <td className="col-center">
+                  <span className={`activity-type-badge activity-type-${record.type}`}>
+                    {record.type === 'submission' ? 'Submitted' : 'Browse'}
+                  </span>
+                </td>
+                <td>
+                  {editingId === record.id ? (
+                    <input
+                      className="edit-name"
+                      type="text"
+                      value={record.name ?? ''}
+                      autoFocus
+                      onChange={e => handleNameChange(record.id, e.target.value)}
+                      onBlur={() => setEditingId(null)}
+                    />
+                  ) : (
+                    <span className="activity-name-cell">
+                      <NavLink to={record.url} className="activity-result-link">
+                        {record.name ?? record.id}
+                      </NavLink>
+                      <i className="bi bi-pencil icon-btn" onClick={() => setEditingId(record.id)} />
+                    </span>
+                  )}
+                </td>
+                <td className="col-center">
+                  <ShareLink url={`${APP_URL}${record.url}`} />
+                  <Spaces count={2} />
+                  <button className="bi bi-trash icon-btn icon-btn-danger" title="Delete" onClick={() => handleDelete(record.id)} />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </>
   )
 }
@@ -170,88 +172,90 @@ function DownloadsTab() {
           <div className="activity-list-header">
             <span>{downloads.length} download{downloads.length !== 1 ? 's' : ''}</span>
             {downloads.length > 1 && (
-              <button className="bi bi-trash icon-btn" onClick={handleDeleteAll}> Delete all</button>
+              <button className="bi bi-trash icon-btn icon-btn-danger" onClick={handleDeleteAll}> Delete all</button>
             )}
           </div>
-          <table className="table activity-table">
-            <thead>
-              <tr>
-                <th>Requested</th>
-                <th>Job name</th>
-                <th>Input</th>
-                <th>Options</th>
-                <th>Annotations</th>
-                <th>Status</th>
-                <th>Manage</th>
-              </tr>
-            </thead>
-            <tbody>
-              {downloads.map(dl => {
-                const statusInfo = DOWNLOAD_STATUS_INFO[dl.status]
-                return (
-                  <tr key={dl.id}>
-                    <td>{getRelativeTime(parseDateString(dl.requestedAt))}</td>
-                    <td>
-                      {editingId === dl.id ? (
-                        <input
-                          className="edit-name"
-                          type="text"
-                          value={dl.jobName}
-                          autoFocus
-                          onChange={e => handleNameChange(dl.id, e.target.value)}
-                          onBlur={() => setEditingId(null)}
-                        />
-                      ) : (
-                        <span onClick={() => setEditingId(dl.id)}>
-                          {dl.jobName || <i>Unnamed</i>}
-                          <i className="bi bi-pencil" />
+          <div className="table-scroll">
+            <table className="activity-table activity-table--downloads">
+              <thead>
+                <tr>
+                  <th>Requested</th>
+                  <th>Job name</th>
+                  <th className="col-center">Input</th>
+                  <th>Options</th>
+                  <th className="col-center">Annotations</th>
+                  <th>Status</th>
+                  <th className="col-center">Manage</th>
+                </tr>
+              </thead>
+              <tbody>
+                {downloads.map(dl => {
+                  const statusInfo = DOWNLOAD_STATUS_INFO[dl.status]
+                  return (
+                    <tr key={dl.id}>
+                      <td>{getRelativeTime(parseDateString(dl.requestedAt))}</td>
+                      <td>
+                        {editingId === dl.id ? (
+                          <input
+                            className="edit-name"
+                            type="text"
+                            value={dl.jobName}
+                            autoFocus
+                            onChange={e => handleNameChange(dl.id, e.target.value)}
+                            onBlur={() => setEditingId(null)}
+                          />
+                        ) : (
+                          <span className="activity-name-cell" onClick={() => setEditingId(dl.id)}>
+                            {dl.jobName || <i>Unnamed</i>}
+                            <i className="bi bi-pencil icon-btn" />
+                          </span>
+                        )}
+                      </td>
+                      <td className="col-center">
+                        <span
+                          className={dl.resultUrl ? 'activity-result-link' : undefined}
+                          style={{ cursor: dl.resultUrl ? 'pointer' : undefined }}
+                          title={dl.resultUrl ? 'View result' : undefined}
+                          onClick={() => dl.resultUrl && navigate(dl.resultUrl)}
+                        >
+                          {dl.id.substring(0, 8)}
                         </span>
-                      )}
-                    </td>
-                    <td>
-                      <span
-                        className={dl.resultUrl ? 'activity-result-link' : undefined}
-                        style={{ cursor: dl.resultUrl ? 'pointer' : undefined }}
-                        title={dl.resultUrl ? 'View result' : undefined}
-                        onClick={() => dl.resultUrl && navigate(dl.resultUrl)}
-                      >
-                        {dl.id.substring(0, 8)}
-                      </span>
-                    </td>
-                    <td>
-                      {dl.page && <> p{dl.page}{dl.pageSize && ` (${dl.pageSize})`}</>}
-                      {dl.assembly && (dl.assembly.toLowerCase() !== 'auto') && ` ${dl.assembly}`}
-                    </td>
-                    <td>
-                      {dl.fun ? <i className="bi bi-check green" /> : <i className="bi bi-x red" />} fun
-                      {dl.pop ? <i className="bi bi-check green" /> : <i className="bi bi-x red" />} pop
-                      {dl.str ? <i className="bi bi-check green" /> : <i className="bi bi-x red" />} str
-                    </td>
-                    <td>
-                      <span className={statusInfo.icon} /> {statusInfo.text}
-                      {dl.size && dl.size > 0 ? ` (${humanFileSize(dl.size)})` : ''}
-                    </td>
-                    <td>
-                      <button
-                        className="bi bi-download icon-btn"
-                        title="Download file"
-                        disabled={dl.status !== 'ready'}
-                        onClick={() => downloadFile(dl.fileUrl)}
-                      />
-                      <Spaces count={2} />
-                      <ShareLink url={dl.fileUrl} disabled={dl.status !== 'ready'} />
-                      <Spaces count={2} />
-                      <button
-                        className="bi bi-trash icon-btn"
-                        title="Delete"
-                        onClick={() => handleDelete(dl.id)}
-                      />
-                    </td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
+                      </td>
+                      <td>
+                        {dl.page && <> p{dl.page}{dl.pageSize && ` (${dl.pageSize})`}</>}
+                        {dl.assembly && (dl.assembly.toLowerCase() !== 'auto') && ` ${dl.assembly}`}
+                      </td>
+                      <td className="col-center">
+                        {dl.fun ? <i className="bi bi-check green" /> : <i className="bi bi-x red" />} fun
+                        {dl.pop ? <i className="bi bi-check green" /> : <i className="bi bi-x red" />} pop
+                        {dl.str ? <i className="bi bi-check green" /> : <i className="bi bi-x red" />} str
+                      </td>
+                      <td>
+                        <span className={statusInfo.icon} /> {statusInfo.text}
+                        {dl.size && dl.size > 0 ? ` (${humanFileSize(dl.size)})` : ''}
+                      </td>
+                      <td className="col-center">
+                        <button
+                          className="bi bi-download icon-btn"
+                          title="Download file"
+                          disabled={dl.status !== 'ready'}
+                          onClick={() => downloadFile(dl.fileUrl)}
+                        />
+                        <Spaces count={2} />
+                        <ShareLink url={dl.fileUrl} disabled={dl.status !== 'ready'} />
+                        <Spaces count={2} />
+                        <button
+                          className="bi bi-trash icon-btn icon-btn-danger"
+                          title="Delete"
+                          onClick={() => handleDelete(dl.id)}
+                        />
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
         </>
       )}
     </>
@@ -375,11 +379,9 @@ function ActivityPageContent() {
 
   return (
     <div className="container">
-      <div>
+      <div className="page-header-row">
         <h5 className="page-header">Activity</h5>
-        <span className="help-icon">
-          <HelpButton title="" content={<ActivityHelp />} />
-        </span>
+        <HelpButton title="" content={<ActivityHelp />} />
       </div>
 
       <div className="activity-tabs">
@@ -395,13 +397,22 @@ function ActivityPageContent() {
         >
           <i className="bi bi-download" /> Downloads
         </button>
-        <button
-          className={`activity-tab${activeTab === 'history' && view === 'grouped' ? ' active' : ''}`}
-          onClick={() => { setTab('history'); setView(v => v === 'grouped' ? 'flat' : 'grouped') }}
-          title="Toggle grouped view"
-        >
-          <i className="bi bi-diagram-3" /> {view === 'grouped' ? 'Flat' : 'Grouped'}
-        </button>
+        {activeTab === 'history' && (
+          <div className="view-toggle" title="Switch view">
+            <button
+              className={view === 'flat' ? 'active' : ''}
+              onClick={() => setView('flat')}
+            >
+              <i className="bi bi-list-ul" /> List
+            </button>
+            <button
+              className={view === 'grouped' ? 'active' : ''}
+              onClick={() => setView('grouped')}
+            >
+              <i className="bi bi-diagram-3" /> Grouped
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="activity-panel">

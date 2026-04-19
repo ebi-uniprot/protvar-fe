@@ -1,7 +1,8 @@
 .activity-tabs {
   display: flex;
+  align-items: flex-end;
   gap: 4px;
-  border-bottom: 2px solid var(--color-border);
+  border-bottom: 2px solid var(--color-border-medium);
   margin-bottom: 1rem;
 }
 
@@ -15,6 +16,9 @@
   font-weight: 500;
   color: var(--color-text-secondary);
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   transition: color var(--transition-fast), border-color var(--transition-fast);
 }
 
@@ -25,6 +29,45 @@
 .activity-tab.active {
   color: var(--color-brand);
   border-bottom-color: var(--color-brand);
+}
+
+/* Segmented view toggle — right-aligned inside the tab bar */
+.view-toggle {
+  margin-left: auto;
+  display: flex;
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-bottom: 3px;
+}
+
+.view-toggle button {
+  background: none;
+  border: none;
+  border-right: 1px solid var(--color-border-medium);
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.view-toggle button:last-child {
+  border-right: none;
+}
+
+.view-toggle button.active {
+  background: var(--color-brand);
+  color: white;
+}
+
+.view-toggle button:not(.active):hover {
+  background: var(--color-bg-tertiary);
+  color: var(--color-brand);
 }
 
 .activity-panel {
@@ -40,8 +83,64 @@
   color: var(--color-text-secondary);
 }
 
+/* Responsive scroll wrapper — prevents table from breaking page layout on small screens */
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md);
+  scrollbar-width: thin;
+  scrollbar-color: #c5d0e0 transparent;
+}
+
 .activity-table {
   font-size: 13px;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.activity-table thead tr {
+  background: var(--color-bg-tertiary);
+  border-bottom: 2px solid var(--color-border-medium);
+}
+
+.activity-table th {
+  padding: 8px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  text-align: left;
+}
+
+.activity-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--color-border-light);
+  vertical-align: middle;
+}
+
+.activity-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.activity-table tbody tr:hover {
+  background: var(--color-bg-tertiary);
+}
+
+/* Center-aligned columns: badges, IDs, action buttons */
+.activity-table .col-center {
+  text-align: center;
+}
+
+.edit-name {
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-sm);
+  padding: 2px 6px;
+  font-size: 13px;
+  width: 100%;
+  max-width: 220px;
 }
 
 .activity-type-badge {
@@ -101,7 +200,7 @@
 }
 
 .grouped-item {
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-border-medium);
   border-radius: var(--radius-md);
   overflow: hidden;
 }
@@ -111,7 +210,7 @@
   align-items: center;
   gap: 8px;
   padding: 10px 14px;
-  background: var(--color-surface-alt);
+  background: var(--color-bg-tertiary);
   font-size: 13px;
 }
 
