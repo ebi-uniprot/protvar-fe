@@ -122,11 +122,10 @@ export const getNewPrimaryRow = (
   const rowClass = `result-row ${index % 2 === 0 ? 'row-even' : 'row-odd'}`;
 
   return (
-    <div key={isoformKey} className={rowClass} title={`Input: ${input.inputStr}`}>
+    <div key={isoformKey} className={rowClass}>
 
       {/* Card row 1 — genomic (cols 1–4: ID, genomic-pos, codon, CADD) */}
       <div className="card-row card-row-genomic">
-        <i className="bi bi-dna card-row-icon" />
         {/* 1: User ID */}
         <span className={isIdInput ? 'cell-id-input' : ''}>
           <Tool tip="Variant ID provided by the user">
@@ -135,7 +134,7 @@ export const getNewPrimaryRow = (
         </span>
 
         {/* 2: Genomic position (chr-pos-ref-alt) */}
-        <span className={isGenomicInput ? 'cell-genomic-input' : ''}>
+        <span className={isGenomicInput ? 'cell-genomic-input' : ''} title={`Input: ${input.inputStr}`}>
           <Tool tip="Click to see region detail from Ensembl" pos="up-left">
             {isGenomicInput && 'isLiftedFrom37' in input && input.isLiftedFrom37 && (
               <span className="h37">37&rarr;38</span>
@@ -172,13 +171,8 @@ export const getNewPrimaryRow = (
 
       {/* Card row 2 — protein + scores (cols 5–10: isoform, name, aa-change, conseq, popEVE, AM) */}
       <div className="card-row card-row-protein">
-        <i className="bi bi-diagram-3 card-row-icon" />
-        {/* 5: Isoform — accession + canonical icon + isoform toggle chevron */}
+        {/* 5: Isoform — toggle chevron + canonical icon + accession */}
         <span className={`isoform-cell ${isProteinInput ? 'cell-protein-input' : ''}`}>
-          <CanonicalIcon isCanonical={isoform.canonical} />
-          <Tool tip="Click to see the UniProt page for this accession">
-            <TextLink url={UNIPROT_ACCESSION_URL + isoform.accession} text={isoform.accession} />
-          </Tool>
           {hasAltIsoForm && (
             <Tool
               el="button"
@@ -191,6 +185,10 @@ export const getNewPrimaryRow = (
                 : <ChevronUpIcon  className="toggle-isoforms" />}
             </Tool>
           )}
+          <CanonicalIcon isCanonical={isoform.canonical} />
+          <Tool tip="Click to see the UniProt page for this accession">
+            <TextLink url={UNIPROT_ACCESSION_URL + isoform.accession} text={isoform.accession} />
+          </Tool>
         </span>
 
         {/* 6: Protein name */}
@@ -204,7 +202,7 @@ export const getNewPrimaryRow = (
         </span>
 
         {/* 8: Consequence(s) */}
-        <span className="card-sep">
+        <span className="card-sep cell-consequence">
           <Tool tip={CONSEQUENCES.get(isoform.consequences!)} pos="up-right"><ConsequenceBadge consequence={isoform.consequences} /></Tool>
         </span>
 
@@ -232,7 +230,6 @@ export const getNewPrimaryRow = (
         const altAaFormatted = `${altIso.refAA}${altIso.isoformPosition}${altIso.variantAA}`;
         return (
           <div key={altIso.accession} className="card-isoform-inline">
-            <i className="bi bi-diagram-3 card-row-icon" />
             <span className="isoform-cell">
               <CanonicalIcon isCanonical={false} />
               <Tool tip="Click to see the UniProt page for this accession">
@@ -243,7 +240,7 @@ export const getNewPrimaryRow = (
             <span className="card-sep">
               <Tool tip={aaChangeTip(altAaChange)}>{altAaFormatted}</Tool>
             </span>
-            <span className="card-sep">
+            <span className="card-sep cell-consequence">
               <Tool tip={CONSEQUENCES.get(altIso.consequences!)} pos="up-right">
                 <ConsequenceBadge consequence={altIso.consequences} />
               </Tool>

@@ -179,6 +179,38 @@
     white-space: nowrap;
 }
 
+/* ============================================
+   COLUMN ALIGNMENT
+   Text/link columns: left (default).
+   Numeric scores, short badges, action buttons: center.
+   ============================================ */
+
+/* Score columns: CADD (col 4), popEVE (col 9), AM (col 10) */
+[data-card-label="CADD"],
+.cell-popeve,
+[data-card-label="AM"] {
+    text-align: center;
+}
+
+/* Consequence badge (col 8) */
+.cell-consequence {
+    text-align: center;
+}
+
+/* Action buttons (col 11) */
+.details-cell {
+    justify-content: center;
+}
+
+/* Header alignment — match data columns */
+.result-col-header > :nth-child(4),   /* CADD */
+.result-col-header > :nth-child(8),   /* Consequence */
+.result-col-header > :nth-child(9),   /* popEVE */
+.result-col-header > :nth-child(10),  /* AM */
+.result-col-header > :nth-child(11) { /* Details */
+    text-align: center;
+}
+
 /* isoform-cell must stay visible so the chevron isn't clipped by the column boundary */
 .card-row > .isoform-cell {
     overflow: visible;
@@ -207,6 +239,15 @@
    ISOFORM ROW (alternate isoforms)
    Genomic cells are empty; protein cols filled.
    ============================================ */
+
+.result-row-isoform {
+    border-bottom: 1px dotted #e0e0e0;  /* subtler than primary row — within same input */
+}
+
+/* Indent isoform rows under the canonical toggle chevron */
+.result-row-isoform .isoform-cell {
+    padding-left: 24px;
+}
 
 .result-row-isoform .cell-genomic {
     /* empty but maintains grid column position */
@@ -295,6 +336,30 @@
     text-overflow: ellipsis;
     max-width: 100%;
     display: block;
+}
+
+/* PopEVE — NA badge matching CADD/AM pill style (desktop and card view consistent) */
+.cell-popeve:empty::after {
+    content: 'NA';
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.2rem;
+    padding: 1px 3px;
+    border-radius: 0.75rem;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    color: #999;
+    background: #e8e8e8;
+}
+
+/* First-row tooltip z-index fix:
+   The sticky result-header has z-index:100, which means balloon tooltips
+   on the first few rows appear behind it. Elevating z-index of the hovered
+   tool element makes its pseudo-element tooltips render above the header. */
+.result-table [aria-label][data-balloon-pos]:hover {
+    position: relative;
+    z-index: 150;
 }
 
 /* ============================================
@@ -484,19 +549,19 @@
         font-size: var(--font-size-base);
     }
 
-    /* Protein name: inline so card-sep · stays on same line */
+    /* Protein name: clip like desktop — full name visible in functional annotation tab */
     .card-row-protein .protein-name-cell,
     .card-isoform-inline .protein-name-cell {
-        display: inline;
-        white-space: normal;
-        overflow: visible;
-        text-overflow: unset;
-        max-width: none;
+        display: block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: min(220px, 42vw);
     }
 
-    /* popEVE N/A badge — always visible even when empty */
+    /* popEVE NA badge — always visible even when empty; override desktop plain-text version */
     .cell-popeve:empty::after {
-        content: 'N/A';
+        content: 'NA';
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -538,16 +603,6 @@
         gap: 3px;
     }
 
-    /* ── Card row icons ── */
-    .card-row-icon {
-        display: inline-block;
-        font-size: 0.8rem;
-        color: var(--color-text-muted, #aaa);
-        flex-shrink: 0;
-        align-self: center;
-        margin-right: 1px;
-    }
-
     /* ── Score labels (CADD / popEVE / AM) — include · separator ── */
     [data-card-label]::before {
         content: '· ' attr(data-card-label) ' ';
@@ -569,7 +624,6 @@
         gap: 5px;
         font-size: var(--font-size-base);
         padding-top: 3px;
-        border-top: 1px dotted #ddd;
     }
 
     .card-isoform-inline > * {

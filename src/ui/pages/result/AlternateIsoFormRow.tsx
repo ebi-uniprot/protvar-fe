@@ -50,7 +50,6 @@ export function getAlternateIsoFormRow(isoformKey: string, index: number, isofor
 
       {/* Card row 2: protein + scores (cols 5–10) */}
       <div className="card-row card-row-protein">
-        <i className="bi bi-diagram-3 card-row-icon" />
         <span className="isoform-cell">
           <CanonicalIcon isCanonical={false} />
           <Tool tip="Click to see the UniProt page for this accession">
@@ -59,7 +58,7 @@ export function getAlternateIsoFormRow(isoformKey: string, index: number, isofor
         </span>
         <span className="card-sep">{getProteinName(isoform.proteinName)}</span>
         <span className="card-sep"><Tool tip={aaChangeTip(aaChange)}>{aaChangeFormatted}</Tool></span>
-        <span className="card-sep"><Tool tip={CONSEQUENCES.get(isoform.consequences!)} pos="up-right"><ConsequenceBadge consequence={isoform.consequences} /></Tool></span>
+        <span className="card-sep cell-consequence"><Tool tip={CONSEQUENCES.get(isoform.consequences!)} pos="up-right"><ConsequenceBadge consequence={isoform.consequences} /></Tool></span>
         <span className="cell-popeve" />
         <span />
       </div>
