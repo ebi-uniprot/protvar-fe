@@ -127,6 +127,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 5px;
 }
 
 .icon-btn:hover {
@@ -147,6 +148,13 @@
 
 .icon-btn i {
     display: block;
+}
+
+/* Danger modifier — trash / destructive actions */
+.icon-btn-danger:hover {
+    background: rgba(220, 53, 69, 0.08);
+    border-color: var(--color-danger);
+    color: var(--color-danger);
 }
 
 /* ============================================

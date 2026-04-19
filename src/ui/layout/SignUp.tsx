@@ -52,7 +52,7 @@ function SignUp() {
               name={email_field_name}
               onChange={e => setEmail(e.target.value)}
             />
-            <button className="button subscribe-button" type="submit">
+            <button className="subscribe-button" type="submit">
               Subscribe
             </button>
           </div>

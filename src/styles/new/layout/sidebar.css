@@ -120,6 +120,13 @@
     text-align: center;
     flex-shrink: 0;
     color: inherit;
+    transition: font-size 0.28s ease;
+}
+
+/* Bigger icons in rail (collapsed) mode */
+.sidebar:not(.expanded) .sidebar-link i {
+    font-size: 18px;
+    width: 18px;
 }
 
 /* ============================================

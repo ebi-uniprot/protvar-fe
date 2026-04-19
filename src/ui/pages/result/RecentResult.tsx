@@ -49,7 +49,7 @@ const RecentResult = () => {
                   <ShareLink url={`${APP_URL}${record.url}`} />
                   <button
                     title="Delete"
-                    className="bi bi-trash icon-btn"
+                    className="bi bi-trash icon-btn icon-btn-danger"
                     onClick={() => handleDelete(record.id)}
                   />
                 </div>

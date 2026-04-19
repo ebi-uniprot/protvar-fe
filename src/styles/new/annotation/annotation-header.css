@@ -135,6 +135,11 @@
     vertical-align: middle;
 }
 
+/* Swap outline → filled icon on hover via CSS */
+.help-icon:hover .bi-info-circle::before {
+    content: "\f431";  /* bi-info-circle-fill unicode */
+}
+
 /* Share button */
 .icon-btn {
     display: inline-flex;

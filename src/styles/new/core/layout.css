@@ -66,8 +66,17 @@ th[aria-label][data-balloon-pos] {
    PAGE STRUCTURE
    ============================================ */
 
+/* Heading row: page title inline with help button */
+.page-header-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+}
+
 .page-header {
-    display: inline;
+    margin: 0;
 }
 
 /* Responsive content container — replaces Foundation's .row/.container */
