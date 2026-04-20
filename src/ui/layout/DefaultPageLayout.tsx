@@ -62,7 +62,7 @@ function DefaultPageLayout({ content }: DefaultPageLayoutProps) {
       <div id="content" className="content">
         <div id="masthead" className="masthead">
           <div className="masthead-inner">
-            <Navbar />
+            <Navbar onShowBanner={!showBanner ? () => { sessionStorage.removeItem(SESSION_BANNER); setShowBanner(true); } : undefined} />
           </div>
         </div>
 
@@ -82,7 +82,7 @@ function DefaultPageLayout({ content }: DefaultPageLayoutProps) {
           </div>
         </main>
       </div>
-      <Footer/>
+      <Footer />
     </>
   )
 }

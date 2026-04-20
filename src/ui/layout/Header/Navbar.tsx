@@ -5,7 +5,11 @@ import { API_URL } from '../../../constants/const';
 import SearchBox from "../../components/search/SearchBox";
 import VersionInfo from '../VersionInfo';
 
-const Navbar: React.FC = () => {
+interface NavbarProps {
+  onShowBanner?: () => void;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ onShowBanner }) => {
   return (
     <nav className="navbar">
       <div className="navbar-brand">
@@ -53,7 +57,14 @@ const Navbar: React.FC = () => {
             <i className="bi bi-envelope"></i>
             Contact
           </Link>
+
         </div>
+
+      {onShowBanner && (
+        <button className="navbar-banner-restore" onClick={onShowBanner}>
+          Show banner
+        </button>
+      )}
       </div>
 
     </nav>

@@ -84,7 +84,7 @@
     padding: 7px 10px;
     text-decoration: none;
     border-radius: var(--radius-md);
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-base);
     font-weight: var(--font-weight-medium);
     display: inline-flex;
     align-items: center;
@@ -114,6 +114,26 @@
 .nav-button i {
     font-size: 14px;
     opacity: 0.85;
+}
+
+/* Small "Show banner" restore link — top-right of masthead, only when banner is dismissed */
+.navbar-banner-restore {
+    position: absolute;
+    top: 6px;
+    right: 12px;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.45);
+    font-size: 11px;
+    font-family: inherit;
+    cursor: pointer;
+    padding: 2px 4px;
+    line-height: 1;
+}
+
+.navbar-banner-restore:hover {
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: underline;
 }
 
 /* ============================================
@@ -149,7 +169,7 @@
 @media screen and (max-width: 480px) {
     .nav-button {
         padding: 7px 8px;
-        font-size: var(--font-size-xs);
+        font-size: var(--font-size-sm);
     }
 
     .nav-button i {
@@ -168,8 +188,8 @@
 
 .version-info {
     position: absolute;
-    top: 2px;
-    right: 2px;
+    top: 62px;
+    right: 44px;
     line-height: normal;
     font-size: var(--font-size-xs);
     z-index: var(--z-dropdown);
