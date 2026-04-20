@@ -96,7 +96,7 @@
     position: relative;
     background: #fafafa;
     min-width: 360px;   /* MolStar needs at least ~360px to render usably */
-    border-radius: 8px;
+    border-radius: 0 0 8px 8px;
     overflow: hidden;
 }
 
@@ -112,12 +112,12 @@ pdbe-molstar {
 .viewer-instructions {
     padding: 4px 12px;
     background: white;
+    border: none;
     font-size: 11px;
     color: #999;
     font-weight: 400;
     letter-spacing: 0.01em;
     text-align: center;
-    border-top: 1px solid #f0f0f0;
 }
 
 /* ============================================
@@ -526,7 +526,6 @@ pdbe-molstar {
 
     .viewer-instructions {
         background: #1e1e1e;
-        border-color: #3a3a3a;
         color: #777;
     }
 
