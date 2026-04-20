@@ -1,38 +1,49 @@
 .help-content {
-    all: unset;
     display: block;
-    font-family: Arial, sans-serif;
-    line-height: 1.5;
-    color: #333;
-    padding: 0 20px 40px 20px;
-    box-sizing: border-box;
+    font-family: var(--font-family-base);
+    font-size: var(--font-size-md);
+    line-height: var(--line-height-normal);
+    color: var(--color-text-primary);
+    padding: 0 0 40px;
 }
 
-.help-content h1,
-.help-content h2,
-.help-content h3,
+.help-content h1 {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-brand);
+    border-bottom: 2px solid var(--color-brand-lightest);
+    padding-bottom: 10px;
+    margin: 0 0 16px;
+}
+
+.help-content h2 {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin: 1.4em 0 0.4em;
+}
+
+.help-content h3 {
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
+    margin: 1em 0 0.3em;
+}
+
 .help-content h4,
 .help-content h5,
 .help-content h6 {
-    color: #555;
-    margin: 1em 0 0.5em;
-    font-weight: 500;
-    margin-left: 0;
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
+    margin: 0.8em 0 0.3em;
 }
-
-.help-content h1 { font-size: 1.4em; }
-.help-content h2 { font-size: 1.2em; }
-.help-content h3 { font-size: 1.0em; }
-.help-content h4 { font-size: 0.8em; }
-.help-content h5 { font-size: 0.6em; }
-.help-content h6 { font-size: 0.4em; }
 
 .help-content p { margin: 0.5em 0; }
 
-.help-content a:link    { color: #007bff; text-decoration: underline; }
-.help-content a:visited { color: #6c757d; }
-.help-content a:hover   { color: #ff9901; text-decoration: underline; }
-.help-content a:active  { font-weight: bold; color: #0056b3; }
+.help-content a { color: var(--color-brand); text-decoration: underline; }
+.help-content a:visited { color: var(--color-text-tertiary); }
+.help-content a:hover { color: var(--color-brand-dark); }
 
 .help-content ul,
 .help-content ol {
@@ -51,33 +62,36 @@
 }
 
 .help-content code {
-    background-color: #f6f8fa;
-    padding: 2px 4px;
-    border-radius: 4px;
-    font-family: monospace;
-    font-size: 0.95em;
+    background: var(--color-bg-secondary);
+    padding: 2px 5px;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-family-mono);
+    font-size: 0.9em;
 }
 
 .help-content pre {
-    background-color: #f6f8fa;
-    padding: 8px;
-    border-radius: 4px;
+    background: var(--color-bg-secondary);
+    padding: 10px 14px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border-light);
     overflow-x: auto;
-    max-width: 100%;
-    margin: 0.5em 0;
+    margin: 0.6em 0;
 }
 
 .help-content pre code {
     display: block;
     white-space: pre-wrap;
+    background: none;
+    padding: 0;
 }
 
 .help-content blockquote {
-    border-left: 4px solid #ddd;
+    border-left: 3px solid var(--color-brand-light);
     padding-left: 1em;
-    color: #555;
+    color: var(--color-text-secondary);
     margin: 0.5em 0;
-    background-color: #f9f9f9;
+    background: var(--color-bg-secondary);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
 }
 
 .help-content img {
@@ -90,28 +104,29 @@
     width: 100%;
     border-collapse: collapse;
     margin: 1em 0;
-    font-size: 0.95em;
+    font-size: var(--font-size-sm);
 }
 
 .help-content th,
 .help-content td {
-    border: 1px solid #ccc;
-    padding: 6px 8px;
+    border: 1px solid var(--color-border-medium);
+    padding: 6px 10px;
     text-align: left;
 }
 
 .help-content th {
-    background-color: #f2f2f2;
-    font-weight: bold;
+    background: var(--color-bg-secondary);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-secondary);
 }
 
 .help-content hr {
     border: none;
-    border-top: 1px solid #ccc;
-    margin: 1em 0;
+    border-top: 1px solid var(--color-border-light);
+    margin: 1.2em 0;
 }
 
-.help-content strong { font-weight: bold; }
+.help-content strong { font-weight: var(--font-weight-semibold); }
 .help-content em     { font-style: italic; }
 .help-content del    { text-decoration: line-through; }
 
@@ -127,6 +142,10 @@
 .help-content table ul,
 .help-content table ol {
     margin: 0;
+}
+
+.af-legend-short {
+    padding: 5px;
 }
 
 /* ============================================
