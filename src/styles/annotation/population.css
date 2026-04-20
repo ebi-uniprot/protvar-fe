@@ -96,6 +96,7 @@
 .variant-item--selected {
     background: var(--color-primary-lightest);
     border-color: var(--color-primary);
+    animation: selectedItemFlash 0.8s ease-out;
 }
 
 .variant-item--selected:hover {

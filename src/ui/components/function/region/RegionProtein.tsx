@@ -26,6 +26,7 @@ function RegionProtein(props: RegionProteinProps & {
       >
         <i className="bi bi-chevron-right chevron-icon"></i>
         <span className="protein-info-title">{title}</span>
+        <span className="count-badge">{components.length}</span>
       </button>
 
       <div className={`collapsible-anim${isExpanded ? ' open' : ''}`}>

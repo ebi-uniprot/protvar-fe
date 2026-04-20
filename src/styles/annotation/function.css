@@ -32,6 +32,7 @@
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     overflow: hidden;
+    min-width: 0;   /* allow grid tracks to shrink below content size */
 }
 
 /* Content padding below header */
@@ -326,14 +327,15 @@
 .prediction-item.prediction-highlighted {
     padding: 8px;
     margin: 4px 0;
-    background: rgba(255, 235, 59, 0.2);
-    border-color: #FFC107;
-    animation: highlightFadeIn 0.3s ease forwards;
+    background: var(--color-primary-lightest);
+    border-color: var(--color-primary);
+    animation: predictionFlash 1.2s ease-out forwards;
 }
 
-@keyframes highlightFadeIn {
-    from { transform: scale(0.98); opacity: 0.8; }
-    to   { transform: scale(1);    opacity: 1; }
+@keyframes predictionFlash {
+    0%   { background: rgba(105, 135, 195, 0.25); border-color: var(--color-primary); }
+    40%  { background: rgba(105, 135, 195, 0.18); }
+    100% { background: var(--color-primary-lightest); border-color: var(--color-primary); }
 }
 
 /* 3-column grid row: name | score | interpretation */
@@ -393,7 +395,7 @@
     flex-shrink: 0;
 }
 
-/* Suppress inner row border change when the outer wrapper is already highlighted */
+/* Inner row inherits highlighted wrapper's background — keep borders minimal */
 .prediction-item.prediction-highlighted .prediction-row,
 .prediction-item.prediction-highlighted .prediction-row:hover {
     border-color: var(--color-border-light);
@@ -537,6 +539,7 @@
     padding: 16px;
     border-radius: 6px;
     border: 1px solid #e8e8e8;
+    min-width: 0;
 }
 
 
@@ -637,6 +640,7 @@
     padding: 16px;
     border-radius: 6px;
     border: 1px solid #e8e8e8;
+    min-width: 0;
 }
 
 

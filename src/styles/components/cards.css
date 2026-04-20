@@ -3,6 +3,12 @@
  * Consolidated card patterns from function, population, structure, and predictions
  */
 
+/* Shared selection flash — brief pulse then settles to light-blue selected bg */
+@keyframes selectedItemFlash {
+    0%   { background: rgba(105, 135, 195, 0.22); }
+    100% { background: var(--color-primary-lightest); }
+}
+
 /* ============================================
    BASE CARD
    ============================================ */
@@ -186,23 +192,22 @@
     gap: var(--spacing-sm);
     padding: 5px 12px;
     border: 1px solid var(--color-border-light);
-    border-left: 3px solid transparent;
     border-radius: var(--radius-sm);
     margin-bottom: 2px;
     cursor: pointer;
-    transition: all var(--transition-fast);
+    transition: background var(--transition-fast), border-color var(--transition-fast);
     font-size: var(--font-size-sm);
 }
 
 .pdb-structure-card:hover {
     background: var(--color-gray-50);
-    border-left-color: var(--color-primary);
+    border-color: var(--color-border-medium);
 }
 
 .pdb-structure-card.active {
     background: var(--color-primary-lightest);
-    border-color: var(--color-border-medium);
-    border-left-color: var(--color-primary);
+    border-color: var(--color-primary);
+    animation: selectedItemFlash 0.8s ease-out;
 }
 
 .pdb-structure-card:last-child {
@@ -245,23 +250,22 @@
     gap: var(--spacing-md);
     padding: 5px 12px;
     border: 1px solid var(--color-border-light);
-    border-left: 3px solid transparent;
     border-radius: var(--radius-sm);
     margin-bottom: 2px;
     cursor: pointer;
-    transition: all var(--transition-fast);
+    transition: background var(--transition-fast), border-color var(--transition-fast);
     font-size: var(--font-size-sm);
 }
 
 .predicted-interaction-card:hover {
     background: var(--color-gray-50);
-    border-left-color: var(--color-primary);
+    border-color: var(--color-border-medium);
 }
 
 .predicted-interaction-card.active {
     background: var(--color-primary-lightest);
-    border-color: var(--color-border-medium);
-    border-left-color: var(--color-primary);
+    border-color: var(--color-primary);
+    animation: selectedItemFlash 0.8s ease-out;
 }
 
 .predicted-interaction-card:last-child {
@@ -366,23 +370,22 @@
     gap: var(--spacing-sm);
     padding: 5px 12px;
     border: 1px solid var(--color-border-light);
-    border-left: 3px solid transparent;
     border-radius: var(--radius-sm);
     margin-bottom: 2px;
     cursor: pointer;
-    transition: all var(--transition-fast);
+    transition: background var(--transition-fast), border-color var(--transition-fast);
     font-size: var(--font-size-sm);
 }
 
 .predicted-structure-card:hover {
     background: var(--color-gray-50);
-    border-left-color: var(--color-primary);
+    border-color: var(--color-border-medium);
 }
 
 .predicted-structure-card.active {
     background: var(--color-primary-lightest);
-    border-color: var(--color-border-medium);
-    border-left-color: var(--color-primary);
+    border-color: var(--color-primary);
+    animation: selectedItemFlash 0.8s ease-out;
 }
 
 /* Name column */
@@ -600,21 +603,23 @@
     }
 
     .pdb-structure-card,
-    .predicted-interaction-card {
+    .predicted-interaction-card,
+    .predicted-structure-card {
         border-color: var(--color-border-light);
     }
 
     .pdb-structure-card:hover,
-    .predicted-interaction-card:hover {
+    .predicted-interaction-card:hover,
+    .predicted-structure-card:hover {
         background: var(--color-bg-tertiary);
-        border-left-color: var(--color-primary);
+        border-color: var(--color-border-medium);
     }
 
     .pdb-structure-card.active,
-    .predicted-interaction-card.active {
+    .predicted-interaction-card.active,
+    .predicted-structure-card.active {
         background: #2a4a5a;
-        border-left-color: var(--color-primary);
-        border-color: var(--color-border-medium);
+        border-color: var(--color-primary);
     }
 
     .pdb-card-id {

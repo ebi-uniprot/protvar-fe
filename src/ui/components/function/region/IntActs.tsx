@@ -42,6 +42,7 @@ function IntActs(props: IntActsProps) {
           >
             <i className="bi bi-chevron-right chevron-icon"></i>
             <span className="protein-info-title">Interactions</span>
+            <span className="count-badge">{intActComments[0].interactions.length}</span>
           </button>
 
           <div className={`collapsible-anim${isExpanded ? ' open' : ''}`}>
