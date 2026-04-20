@@ -13,7 +13,7 @@ export const HelpButton: React.FC<HelpBtnProps> = ({ title, content, variant }) 
   if (variant === 'inline') {
     return (
       <i
-        className="bi bi-info-circle-fill help-icon-inline"
+        className="bi bi-question-circle help-icon-inline"
         onClick={() => state.updateState('drawer', content)}
         title={title || 'Help'}
       />
@@ -21,13 +21,14 @@ export const HelpButton: React.FC<HelpBtnProps> = ({ title, content, variant }) 
   }
 
   return (
-    <span
+    <button
+      type="button"
       onClick={() => state.updateState('drawer', content)}
       className="help-icon"
       title={title || 'Help'}
     >
       {title && <>{title}{' '}</>}
-      <i className="bi bi-info-circle" />
-    </span>
+      <i className="bi bi-question-circle" />
+    </button>
   );
 };

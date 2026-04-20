@@ -108,20 +108,22 @@
     gap: 8px;
 }
 
-/* Help button — icon only, consistent with share */
+/* Help button — icon only, borderless at rest so it sits cleanly in page headers */
 .help-icon {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     padding: 3px 6px;
     background: transparent;
-    border: 1px solid var(--color-border-light);
+    border: 1px solid transparent;
     border-radius: var(--radius-sm);
     cursor: pointer;
     font-size: 13px;
+    font-family: inherit;
     color: var(--color-text-secondary);
     transition: all 0.2s ease;
     line-height: 1;
+    text-decoration: none;
 }
 
 .help-icon:hover {
@@ -136,8 +138,8 @@
 }
 
 /* Swap outline → filled icon on hover via CSS */
-.help-icon:hover .bi-info-circle::before {
-    content: "\f431";  /* bi-info-circle-fill unicode */
+.help-icon:hover .bi-question-circle::before {
+    content: "\f505";  /* bi-question-circle-fill unicode */
 }
 
 /* Share button */
