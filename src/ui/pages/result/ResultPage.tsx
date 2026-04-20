@@ -133,7 +133,7 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
   const location = useLocation();
   // :input for /:input browse; :id for type-prefixed routes; :param* for query routes
   const { input, id: idParam, param1, param2, param3, param4 } = useParams();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [inputType, setInputType] = useState<InputType | null>(null);
 
   // Auto-detect mode when no explicit prop is given (/search route).
