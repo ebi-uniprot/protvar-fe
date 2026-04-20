@@ -8,7 +8,7 @@ import EMBLEBILogo from '../../../images/embl-ebi-logo.svg';
 import openTargetsLogo from '../../../images/open-targets-logo.png';
 import uniprotLogo from '../../../images/uniprot-logo.svg';
 import ensemblLogo from '../../../images/ensembl-logo.png';
-import vepGif from '../../../images/vep.gif';
+import vepGif from '../../../images/vep.jpeg';
 import pdbeLogo from '../../../images/pdbe-logo.png';
 import decipherLogo from '../../../images/decipher.png';
 import {ExtLink} from "../../components/common/Link";
@@ -56,6 +56,12 @@ const Footer: React.FC = () => {
                href="https://twitter.com/EBIProtVar?ref_src=twsrc%5Etfw">
               Tweets by EBIProtVar
             </a>
+            <div className="twitter-fallback">
+              <i className="bi bi-twitter-x" />
+              {' '}Follow{' '}
+              <a href="https://twitter.com/EBIProtVar" target="_blank" rel="noreferrer">@EBIProtVar</a>
+              {' '}for the latest updates.
+            </div>
           </div>
           <div className="social-signup-section">
             <a

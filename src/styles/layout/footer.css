@@ -14,7 +14,7 @@
 .citation-container h5,
 .twitter-container h5 {
     color: var(--color-brand);
-    font-size: var(--font-size-lg);
+    font-size: var(--font-size-2xl);
     font-weight: var(--font-weight-semibold);
     margin-bottom: 0.75rem;
     letter-spacing: 0.01em;
@@ -52,6 +52,24 @@
     border-radius: var(--radius-lg);
     padding: 1rem;
     box-shadow: var(--shadow-sm);
+    position: relative;
+}
+
+/* Shown when Twitter widget fails to load; hidden once iframe appears */
+.twitter-fallback {
+    display: block;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    padding: 1rem 0 0.5rem;
+    text-align: center;
+}
+
+.twitter-fallback a {
+    color: var(--color-brand);
+}
+
+.twitter-content:has(iframe) .twitter-fallback {
+    display: none;
 }
 
 /* ============================================
@@ -119,8 +137,6 @@
     flex-wrap: wrap;
     gap: 0.5rem 1.5rem;
     padding: 0.75rem 1.5rem;
-    max-width: 1400px;
-    margin: 0 auto;
 }
 
 .ebi-footer-logo img {
@@ -211,7 +227,7 @@
 
 .citation-carousel h5 {
     color: var(--color-brand);
-    font-size: var(--font-size-lg);
+    font-size: var(--font-size-2xl);
     font-weight: var(--font-weight-semibold);
     margin-bottom: 0.75rem;
 }
@@ -361,17 +377,46 @@
     background: var(--color-brand-dark);
 }
 
+.subscribe-confirmed {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.subscribe-confirmed-text {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-primary);
+}
+
+.subscribe-confirmed-icon {
+    color: #22c55e;
+    font-size: 1.1em;
+    flex-shrink: 0;
+}
+
 .subscribe-again-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
     background: none;
-    border: none;
+    border: 1px solid var(--color-border-medium);
     color: var(--color-brand);
     font-size: var(--font-size-xs);
+    font-family: inherit;
     cursor: pointer;
-    padding: 0;
-    text-decoration: underline;
+    padding: 3px 8px;
+    border-radius: var(--radius-full);
+    transition: background var(--transition-base), border-color var(--transition-base);
+    width: fit-content;
 }
 
 .subscribe-again-btn:hover {
+    background: var(--color-brand-lightest);
+    border-color: var(--color-brand);
     color: var(--color-brand-dark);
 }
 
