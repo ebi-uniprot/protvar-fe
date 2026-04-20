@@ -70,10 +70,10 @@ const PdbeMolstar = ({ selected, pdbeRef, controlActions = [] }: PdbeMolstarProp
 
   return (
     <div className="structure-viewer-wrapper">
-      <div className="viewer-instructions viewer-instructions--top">
+      {pdbeComponent}
+      <div className="viewer-instructions">
         Click variant to see surrounding residues · Click white space to zoom out
       </div>
-      {pdbeComponent}
       <div className="viewer-controls-bar">
         <ViewerControls actions={controlActions} />
       </div>

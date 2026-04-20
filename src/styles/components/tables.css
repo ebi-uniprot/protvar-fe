@@ -78,13 +78,15 @@
     display: grid;
     align-items: center;
     gap: var(--spacing-sm);
-    padding: 3px 12px;
+    /* 1px transparent border + 11px padding = 12px total, matching card's 12px padding inside 1px border */
+    padding: 3px 11px;
+    border: 1px solid transparent;
+    border-bottom-color: var(--color-border-light);
     font-size: 10px;
     font-weight: var(--font-weight-semibold);
     color: var(--color-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.4px;
-    border-bottom: 1px solid var(--color-border-light);
 }
 
 /* PDB: ID | Chain | Pos | Res (Å) | Method */
@@ -97,9 +99,9 @@
     grid-template-columns: 1fr 3.5rem auto;
 }
 
-/* Interactions: Partner | pDockQ | Confidence */
+/* Interactions: Chain A | Chain B | pDockQ */
 .interaction-col-header {
-    grid-template-columns: 1fr 5rem auto;
+    grid-template-columns: 1fr 1fr 4.5rem;
 }
 
 /* Pockets: Pocket | Score | pLDDT | Residues */

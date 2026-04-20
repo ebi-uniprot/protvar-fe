@@ -14,7 +14,7 @@ import Tool from "../../elements/Tool";
 import { TextLink } from "../../components/common/Link";
 import { caddScoreAttr, formatCaddScore } from "../../components/function/prediction/CaddScorePred";
 import { amScoreAttr, formatAMScore } from "../../components/function/prediction/AlphaMissensePred";
-import { formatPopEveScore, getPopEveColor } from "../../components/function/prediction/PopEvePred";
+import { formatPopEveScore, getPopEveColor, getPopEveClass, POPEVE_SCORE_ATTR } from "../../components/function/prediction/PopEvePred";
 import ProteinIcon from '../../../images/proteins.svg';
 import StructureIcon from '../../../images/structures-3d.svg';
 import PopulationIcon from '../../../images/human.svg';
@@ -136,7 +136,7 @@ export const getNewPrimaryRow = (
         </span>
 
         {/* 2: Genomic position (chr-pos-ref-alt) */}
-        <span className={isGenomicInput ? 'cell-genomic-input' : ''} title={`Input: ${input.inputStr}`}>
+        <span className={`cell-genomic${isGenomicInput ? ' cell-genomic-input' : ''}`} title={`Input: ${input.inputStr}`}>
           <Tool tip="Click to see region detail from Ensembl" pos="up-left">
             {isGenomicInput && 'isLiftedFrom37' in input && input.isLiftedFrom37 && (
               <span className="h37">37&rarr;38</span>
@@ -199,7 +199,7 @@ export const getNewPrimaryRow = (
         </span>
 
         {/* 7: AA Change — card-sep adds dot separator before it in mobile */}
-        <span className={`card-sep${isProteinInput ? ' cell-protein-input' : ''}`}>
+        <span className={`card-sep cell-aa-change${isProteinInput ? ' cell-protein-input' : ''}`}>
           <Tool tip={aaChangeTip(aaChange)}>{aaChangeFormatted}</Tool>
         </span>
 
@@ -213,7 +213,11 @@ export const getNewPrimaryRow = (
           {isoform.popEveScore && (
             <Tool
               className="score-box"
-              style={{ backgroundColor: getPopEveColor(isoform.popEveScore.popeve) }}
+              style={{
+                backgroundColor: stdColor
+                  ? POPEVE_SCORE_ATTR[getPopEveClass(isoform.popEveScore.popeve)].stdColor
+                  : getPopEveColor(isoform.popEveScore.popeve)
+              }}
               tip={`${formatPopEveScore(isoform.popEveScore)} popEVE`}
             >
               {formatPopEveScore(isoform.popEveScore)}

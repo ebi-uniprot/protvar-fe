@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SEARCH } from '../../../constants/BrowserPaths';
+import { resolveIdentifier } from '../../../utills/InputTypeResolver';
 
 interface SearchBoxProps {
   placeholder?: string;
@@ -17,12 +18,23 @@ const SearchBox: React.FC<SearchBoxProps> = ({
   const [searchInput, setSearchInput] = useState('');
   const navigate = useNavigate();
 
+  const buildUrl = (raw: string): string => {
+    const trimmed = raw.trim();
+    // Detect unambiguous biological identifiers — route to ID browse page
+    const idType = resolveIdentifier(trimmed);
+    if (idType && idType !== 'gene') {
+      // gene is too ambiguous (could also be part of a variant description)
+      return `${SEARCH}?id=${idType}:${encodeURIComponent(trimmed)}`;
+    }
+    return `${SEARCH}?q=${encodeURIComponent(trimmed)}`;
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       e.preventDefault();
       const trimmedInput = searchInput.trim();
       if (trimmedInput.length >= minLength) {
-        navigate(SEARCH + '?q=' + encodeURIComponent(trimmedInput));
+        navigate(buildUrl(trimmedInput));
       }
     }
   };
@@ -30,7 +42,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
   const handleSubmit = () => {
     const trimmedInput = searchInput.trim();
     if (trimmedInput.length >= minLength) {
-      navigate(SEARCH + '?q=' + encodeURIComponent(trimmedInput));
+      navigate(buildUrl(trimmedInput));
     }
   };
 
@@ -40,7 +52,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
     <div className={`search-box ${className}`}>
       <input
         type="text"
-        title="Enter a variant, protein, gene..."
+        title="Enter a variant, protein ID, gene name..."
         placeholder={placeholder}
         value={searchInput}
         onChange={(e) => setSearchInput(e.target.value)}

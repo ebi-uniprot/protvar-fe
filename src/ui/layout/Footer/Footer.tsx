@@ -56,10 +56,21 @@ const Footer: React.FC = () => {
               Tweets by EBIProtVar
             </a>
           </div>
+          <div className="social-signup-section">
+            <a
+              className="twitter-follow-button"
+              data-size="large"
+              data-show-screen-name="false"
+              href="https://twitter.com/EBIProtVar"
+            >
+              Follow @EBIProtVar
+            </a>
+            <Subscribe />
+          </div>
         </div>
       </div>
 
-      {/* Partners and social section */}
+      {/* Partners section */}
       <div className="pv-footer">
         <div className="partners-section">
           <p className="partners-heading">In collaboration with our partners</p>
@@ -80,18 +91,6 @@ const Footer: React.FC = () => {
               <img src={pdbeLogo} loading="lazy" alt="PDBe" className="collaborator-img" />
             </a>
           </div>
-        </div>
-
-        <div className="social-signup-section">
-          <a
-            className="twitter-follow-button"
-            data-size="large"
-            data-show-screen-name="false"
-            href="https://twitter.com/EBIProtVar"
-          >
-            Follow @EBIProtVar
-          </a>
-          <Subscribe />
         </div>
       </div>
 

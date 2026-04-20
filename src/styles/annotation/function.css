@@ -169,6 +169,52 @@
    AMINO ACID MODEL SECTION
    ============================================ */
 
+.aa-model-wrapper {
+    margin: 16px 0;
+    background: #fff;
+    border-radius: 8px;
+    padding: 12px 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.aa-model-images {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+.aa-model-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    min-width: 100px;
+}
+
+.aa-model-label {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-secondary);
+    text-align: center;
+}
+
+.img-size {
+    max-width: 100px;
+    height: auto;
+    display: block;
+}
+
+.icon-arrow {
+    font-size: 40px;
+    margin: 0 4px;
+    color: #00709b;
+    transform: scale(.5, 1);
+    flex-shrink: 0;
+    align-self: flex-start;
+    margin-top: 30px;
+}
+
+/* Legacy */
 .img-table {
     width: 100%;
     margin: 20px 0;
@@ -176,20 +222,6 @@
     border-radius: 8px;
     padding: 16px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-}
-
-.img-size {
-    max-width: 120px;
-    height: auto;
-    display: inline-block;
-}
-
-.icon-arrow {
-    font-size: 40px;
-    margin: 0 12px;
-    color: #00709b;
-    vertical-align: middle;
-    transform: scale(.5, 1);
 }
 
 /* ============================================

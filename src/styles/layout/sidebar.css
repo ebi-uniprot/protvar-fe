@@ -186,7 +186,7 @@
 .sidebar-menu-item .map-container {
     background: var(--color-bg-tertiary);
     border-top: 1px solid var(--color-border-light);
-    padding-left: calc(var(--sidebar-rail-width) + 4px);
+    padding-left: 8px;
 }
 
 .sidebar-menu-item .map-key {

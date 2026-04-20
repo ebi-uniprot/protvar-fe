@@ -23,17 +23,17 @@
     display: grid;
     grid-template-columns:
         minmax(0, 14rem)      /* 1  id             */
-        minmax(8rem, 2fr)     /* 2  genomic-pos    */
-        minmax(0, 9rem)       /* 3  codon          */
+        minmax(9rem, 2fr)     /* 2  genomic-pos    */
+        minmax(7rem, 9rem)    /* 3  codon          */
         4.5rem                /* 4  cadd           */
         minmax(8rem, 10rem)   /* 5  isoform        */
         minmax(8rem, 3fr)     /* 6  protein-name   */
-        minmax(0, 10rem)      /* 7  aa-change      */
+        minmax(7rem, 10rem)   /* 7  aa-change      */
         minmax(0, 11rem)      /* 8  consequence    */
         4.5rem                /* 9  popeve         */
-        5rem                  /* 10 alphamiss      */
+        4.5rem                /* 10 alphamiss      */
         6.5rem;               /* 11 details        */
-    column-gap: 8px;
+    column-gap: 6px;
     font-size: var(--font-size-md);
     overflow-x: auto;
     min-width: 0;
@@ -193,6 +193,14 @@
 /* Action buttons (col 11) */
 .details-cell {
     justify-content: center;
+    border-left: 1px solid var(--color-border-light);
+}
+
+/* Mono font for genomic position (col 2) and AA change (col 7) */
+.cell-genomic,
+.cell-aa-change {
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-xs);
 }
 
 

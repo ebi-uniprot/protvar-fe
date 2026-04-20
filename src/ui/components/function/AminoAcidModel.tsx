@@ -55,24 +55,18 @@ interface AminoAcidModelProps {
 const AminoAcidModel = (props: AminoAcidModelProps) => {
   const { refAA, variantAA } = props;
   return (
-    <div>
-      <table className="img-table">
-        <tbody>
-          <tr>
-            <td>
-              <div>
-                <img className="img-size" src={getImageByKey(refAA)} alt={refAA} />
-                <i className="bi bi-arrow-right-short icon-arrow"></i>
-                <img className="img-size" src={getImageByKey(variantAA)} alt={variantAA} />
-              </div>
-              <div style={{ textAlign: "center" }}>
-                <span style={{ width: "50%" }}>{fullAminoAcidName(refAA)}</span>
-                <span style={{ width: "50%", float: "right" }}>{fullAminoAcidName(variantAA)}</span>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <div className="aa-model-wrapper">
+      <div className="aa-model-images">
+        <div className="aa-model-item">
+          <img className="img-size" src={getImageByKey(refAA)} alt={refAA} />
+          <span className="aa-model-label">{fullAminoAcidName(refAA)}</span>
+        </div>
+        <i className="bi bi-arrow-right-short icon-arrow"></i>
+        <div className="aa-model-item">
+          <img className="img-size" src={getImageByKey(variantAA)} alt={variantAA} />
+          <span className="aa-model-label">{fullAminoAcidName(variantAA)}</span>
+        </div>
+      </div>
     </div>
   );
 };
