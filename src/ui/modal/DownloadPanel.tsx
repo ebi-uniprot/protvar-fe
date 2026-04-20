@@ -43,7 +43,6 @@ export function DownloadPanel(props: DownloadPanelProps) {
   const [annotations, setAnnotations] = useState<boolean>(true)
   const [currPage, setCurrPage] = useState<boolean>(false)
 
-  // Populate job name placeholder from saved history record
   useEffect(() => {
     const historyId = props.historyId ?? props.resultId
     if (!historyId) return
@@ -122,96 +121,78 @@ export function DownloadPanel(props: DownloadPanelProps) {
   };
 
   return (
-    <div>
-      <h6 style={{ marginBottom: '1rem', fontWeight: 600 }}>Download Panel</h6>
-      <div className="form-group">
-        <div>
-          <table>
-            <tbody>
-            <tr>
-              <td>
-                <ul className="new-select">
-                  <li>
-                    <label>
-                      <input type="radio" name="annotations" value="withAnnotations"
-                        checked={annotations} onChange={toggleAnnotations} />
-                      Mappings with Annotations
-                    </label>
-                  </li>
-                  <li>
-                    <label>
-                      <input type="radio" name="annotations" value="withoutAnnotations"
-                        checked={!annotations} onChange={toggleAnnotations} />
-                      Mappings only, no annotations
-                    </label>
-                  </li>
-                </ul>
-              </td>
-              <td>
-                <ul className="new-select">
-                  <li><label>Include Annotations</label></li>
-                  <li>
-                    <label>
-                      <input type="checkbox" name="fun" checked={form.fun} disabled={!annotations}
-                        onChange={(e) => updateForm(e.target.name, !form.fun)} />
-                      Functional
-                    </label>
-                  </li>
-                  <li>
-                    <label>
-                      <input type="checkbox" name="pop" checked={form.pop} disabled={!annotations}
-                        onChange={(e) => updateForm(e.target.name, !form.pop)} />
-                      Population Observation
-                    </label>
-                  </li>
-                  <li>
-                    <label>
-                      <input type="checkbox" name="str" checked={form.str} disabled={!annotations}
-                        onChange={(e) => updateForm(e.target.name, !form.str)} />
-                      Structure
-                    </label>
-                  </li>
-                </ul>
-              </td>
-              <td>
-                <ul className="new-select">
-                  <li>Pages</li>
-                  <li>
-                    <label>
-                      <input type="radio" name="currPage" value="false"
-                        checked={!currPage} onChange={_ => setCurrPage(false)} />
-                      All
-                    </label>
-                  </li>
-                  <li>
-                    <label>
-                      <input type="radio" name="currPage" value="true"
-                        checked={currPage} onChange={_ => setCurrPage(true)} />
-                      Current
-                    </label>
-                  </li>
-                </ul>
-              </td>
-            </tr>
-            </tbody>
-          </table>
+    <div className="dp">
+      <h6 className="dp-title">Download Panel</h6>
 
-          <label className="download-label">
-            Email: <span style={{color: "red"}}>{errorMsg || ""}</span>
-            <div className="small">(Optional, specify an email address for notification when file is ready to download)</div>
-            <input type="email" value={form.email} name="email"
-              onChange={(e) => updateForm(e.target.name, e.target.value)} />
+      <div className="dp-options">
+        <div className="dp-group">
+          <div className="dp-group-label">Output</div>
+          <label className="dp-option">
+            <input type="radio" name="annotations" value="withAnnotations"
+              checked={annotations} onChange={toggleAnnotations} />
+            With annotations
           </label>
-          <label className="download-label">
-            Job Name:
-            <div className="small">(Optional)</div>
-            <input type="text" value={form.jobName} name="jobName"
-              onChange={(e) => updateForm(e.target.name, e.target.value)}
-              placeholder={jobNamePlaceholder} />
+          <label className="dp-option">
+            <input type="radio" name="annotations" value="withoutAnnotations"
+              checked={!annotations} onChange={toggleAnnotations} />
+            Mappings only
+          </label>
+        </div>
+
+        <div className="dp-group">
+          <div className="dp-group-label">Annotations</div>
+          <label className={`dp-option${!annotations ? ' dp-option--disabled' : ''}`}>
+            <input type="checkbox" name="fun" checked={form.fun} disabled={!annotations}
+              onChange={(e) => updateForm(e.target.name, !form.fun)} />
+            Functional
+          </label>
+          <label className={`dp-option${!annotations ? ' dp-option--disabled' : ''}`}>
+            <input type="checkbox" name="pop" checked={form.pop} disabled={!annotations}
+              onChange={(e) => updateForm(e.target.name, !form.pop)} />
+            Population
+          </label>
+          <label className={`dp-option${!annotations ? ' dp-option--disabled' : ''}`}>
+            <input type="checkbox" name="str" checked={form.str} disabled={!annotations}
+              onChange={(e) => updateForm(e.target.name, !form.str)} />
+            Structure
+          </label>
+        </div>
+
+        <div className="dp-group">
+          <div className="dp-group-label">Pages</div>
+          <label className="dp-option">
+            <input type="radio" name="currPage" value="false"
+              checked={!currPage} onChange={_ => setCurrPage(false)} />
+            All
+          </label>
+          <label className="dp-option">
+            <input type="radio" name="currPage" value="true"
+              checked={currPage} onChange={_ => setCurrPage(true)} />
+            Current
           </label>
         </div>
       </div>
-      <div style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem' }}>
+
+      <div className="dp-fields">
+        <label className="dp-field">
+          <span className="dp-field-label">
+            Email
+            {errorMsg && <span className="dp-field-error">{errorMsg}</span>}
+          </span>
+          <span className="dp-field-hint">Optional — get notified when your file is ready</span>
+          <input type="email" className="dp-input" value={form.email} name="email"
+            onChange={(e) => updateForm(e.target.name, e.target.value)} />
+        </label>
+        <label className="dp-field">
+          <span className="dp-field-label">Job Name</span>
+          <span className="dp-field-hint">Optional</span>
+          <input type="text" className="dp-input" value={form.jobName} name="jobName"
+            onChange={(e) => updateForm(e.target.name, e.target.value)}
+            placeholder={jobNamePlaceholder} />
+        </label>
+      </div>
+
+      <div className="dp-actions">
         <Button onClick={handleSubmit} className="btn btn-primary">
           Generate
         </Button>
