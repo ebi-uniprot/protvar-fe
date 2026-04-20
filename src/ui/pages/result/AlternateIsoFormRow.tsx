@@ -21,6 +21,15 @@ export function aaChangeTip(change: string | undefined) {
   return "Amino acid change " + fullAminoAcidName(change?.split("/")[0]) + " -> " + fullAminoAcidName(change?.split("/")[1]);
 }
 
+export function getConsequenceFullName(consequence?: string): string {
+  if (!consequence) return '';
+  const lower = consequence.toLowerCase();
+  if (lower.includes('missense'))   return 'Missense variant';
+  if (lower.includes('synonymous')) return 'Synonymous variant';
+  if (lower.includes('stop'))       return 'Stop gained';
+  return consequence;
+}
+
 export function CanonicalIcon(props: { isCanonical: boolean | undefined }) {
   if (props.isCanonical === undefined)
     return EmptyElement;

@@ -8,6 +8,7 @@ import EMBLEBILogo from '../../../images/embl-ebi-logo.svg';
 import openTargetsLogo from '../../../images/open-targets-logo.png';
 import uniprotLogo from '../../../images/uniprot-logo.svg';
 import ensemblLogo from '../../../images/ensembl-logo.png';
+import vepGif from '../../../images/vep.gif';
 import pdbeLogo from '../../../images/pdbe-logo.png';
 import decipherLogo from '../../../images/decipher.png';
 import {ExtLink} from "../../components/common/Link";
@@ -86,6 +87,9 @@ const Footer: React.FC = () => {
             </a>
             <a href="https://www.ensembl.org/" target="_blank" rel="noreferrer" title="Ensembl">
               <img src={ensemblLogo} loading="lazy" alt="Ensembl" className="collaborator-img" />
+            </a>
+            <a href="https://www.ensembl.org/info/docs/tools/vep/" target="_blank" rel="noreferrer" title="Ensembl VEP">
+              <img src={vepGif} loading="lazy" alt="Ensembl VEP" className="collaborator-img" />
             </a>
             <a href="https://www.ebi.ac.uk/pdbe/" target="_blank" rel="noreferrer" title="PDBe">
               <img src={pdbeLogo} loading="lazy" alt="PDBe" className="collaborator-img" />

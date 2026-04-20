@@ -4,6 +4,7 @@ import EMBLLogo from "../../images/EMBL_logo.svg.png";
 import OTLogo from "../../images/open-targets-logo.png";
 import UniprotLogo from "../../images/uniprot-logo.svg";
 import EnsemblLogo from "../../images/ensembl-logo.png";
+import VEPGif from "../../images/vep.gif";
 import PDBeLogo from "../../images/pdbe-logo.png";
 import CADDLogo from "../../images/cadd-logo.png";
 import EVELogo from "../../images/eve-logo.svg";
@@ -109,6 +110,9 @@ function AboutPageContent() {
           </a>
           <a href="https://www.ensembl.org/" target="_blank" rel="noreferrer" className="about-ack-item" title="Ensembl">
             <img src={EnsemblLogo} loading="lazy" alt="Ensembl" />
+          </a>
+          <a href="https://www.ensembl.org/info/docs/tools/vep/" target="_blank" rel="noreferrer" className="about-ack-item" title="Ensembl VEP">
+            <img src={VEPGif} loading="lazy" alt="Ensembl VEP" />
           </a>
           <a href="https://www.ebi.ac.uk/pdbe/" target="_blank" rel="noreferrer" className="about-ack-item" title="PDBe">
             <img src={PDBeLogo} loading="lazy" alt="PDBe" />

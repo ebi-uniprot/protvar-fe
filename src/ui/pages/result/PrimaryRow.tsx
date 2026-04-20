@@ -9,7 +9,6 @@ import {
   ENSEMBL_VIEW_URL,
   UNIPROT_ACCESSION_URL
 } from "../../../constants/ExternalUrls";
-import { CONSEQUENCES } from "../../../constants/SearchResultTable";
 import Tool from "../../elements/Tool";
 import { TextLink } from "../../components/common/Link";
 import { caddScoreAttr, formatCaddScore } from "../../components/function/prediction/CaddScorePred";
@@ -22,7 +21,7 @@ import LoaderRow from "./LoaderRow";
 import { ReactComponent as ChevronDownIcon } from "../../../images/chevron-down.svg";
 import { ReactComponent as ChevronUpIcon } from "../../../images/chevron-up.svg";
 import { EmptyElement } from "../../../constants/ConstElement";
-import { aaChangeTip, CanonicalIcon, ConsequenceBadge, getProteinName } from "./AlternateIsoFormRow";
+import { aaChangeTip, CanonicalIcon, ConsequenceBadge, getProteinName, getConsequenceFullName } from "./AlternateIsoFormRow";
 import { Gene, Isoform, VariantInput, GenomicVariant } from "../../../types/MappingResponse";
 
 const StructureData   = lazy(() => import(/* webpackChunkName: "StructureData"   */ "../../components/structure/./StructureData"));
@@ -205,7 +204,7 @@ export const getNewPrimaryRow = (
 
         {/* 8: Consequence(s) */}
         <span className="card-sep cell-consequence">
-          <Tool tip={CONSEQUENCES.get(isoform.consequences!)} pos="up-right"><ConsequenceBadge consequence={isoform.consequences} /></Tool>
+          <Tool tip={getConsequenceFullName(isoform.consequences)} pos="up-right"><ConsequenceBadge consequence={isoform.consequences} /></Tool>
         </span>
 
         {/* 9: popEVE */}
@@ -257,7 +256,7 @@ export const getNewPrimaryRow = (
               <Tool tip={aaChangeTip(altAaChange)}>{altAaFormatted}</Tool>
             </span>
             <span className="card-sep cell-consequence">
-              <Tool tip={CONSEQUENCES.get(altIso.consequences!)} pos="up-right">
+              <Tool tip={getConsequenceFullName(altIso.consequences)} pos="up-right">
                 <ConsequenceBadge consequence={altIso.consequences} />
               </Tool>
             </span>
