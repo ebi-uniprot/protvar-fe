@@ -6,10 +6,58 @@ import { CopyLink } from '../../common/CopyLink';
 import React from "react";
 import tinygradient from "tinygradient";
 
+/* -------------------------------------------------- */
+/* PopEve gradient colors (from original website)     */
+/* -------------------------------------------------- */
+
+export const POPEVE_COLORS = [
+  "rgb(0,0,0)",
+  "rgb(0,0,0)",
+  "rgb(0,0,0)",
+  "rgb(0,0,0)",
+  "rgb(0,0,0)",
+  "rgb(0,0,0)",
+  "rgb(35,5,33)",
+  "rgb(91,13,85)",
+  "rgb(86,50,141)",
+  "rgb(47,106,200)",
+  "rgb(32,149,223)",
+  "rgb(32,186,223)",
+  "rgb(100,203,193)",
+  "rgb(211,206,146)",
+  "rgb(255,208,128)",
+  "rgb(255,208,128)",
+  "rgb(255,208,128)",
+  "rgb(255,208,128)",
+  "rgb(255,208,128)",
+  "rgb(255,208,128)",
+  "rgb(255,208,128)",
+];
+
+const POPEVE_GRADIENT = tinygradient(POPEVE_COLORS);
+
+/* -------------------------------------------------- */
+/* Score bounds from PopEve UI (-7.2 to >= -0.9)      */
+/* -------------------------------------------------- */
+
+export const POPEVE_MIN = -7.2;
+export const POPEVE_MAX = -0.9;
+
+export function getPopEveColor(score: number): string {
+  const clamped = Math.min(Math.max(score, POPEVE_MIN), POPEVE_MAX);
+  const ratio = (clamped - POPEVE_MIN) / (POPEVE_MAX - POPEVE_MIN);
+  return POPEVE_GRADIENT.rgbAt(ratio).toHexString();
+}
+
+/* -------------------------------------------------- */
+/* Category attrs — color uses actual gradient color  */
+/* at a representative score within each range        */
+/* -------------------------------------------------- */
+
 export const POPEVE_SCORE_ATTR: PredAttr[] = [
-  {color: 'red', stdColor: 'red', text: 'severe', range: '<-5.056' },
-  {color: 'lightgrey', stdColor: 'lightgrey', text: 'moderately deleterious', range: '-5.056 to -4.617' },
-  {color: 'blue', stdColor: 'blue', text: 'unlikely deleterious', range: '>-4.617' }
+  { color: getPopEveColor(-6.0),   stdColor: 'red',       text: 'severe',                 range: '<-5.056' },
+  { color: getPopEveColor(-4.837), stdColor: 'lightgrey', text: 'moderately deleterious',  range: '-5.056 to -4.617' },
+  { color: getPopEveColor(-2.5),   stdColor: 'blue',      text: 'unlikely deleterious',    range: '>-4.617' },
 ]
 
 export const PopEvePred = (props: { popeve?: PopEveScore, stdColor: boolean }) => {
@@ -43,49 +91,6 @@ function PopEvePredIcon(props: { popeve?: PopEveScore, stdColor: boolean }) {
     </div>
   }
   return <></>
-}
-
-/* -------------------------------------------------- */
-/* PopEve gradient colors (from original website)  */
-/* -------------------------------------------------- */
-
-const POPEVE_COLORS = [
-  "rgb(0,0,0)",
-  "rgb(0,0,0)",
-  "rgb(0,0,0)",
-  "rgb(0,0,0)",
-  "rgb(0,0,0)",
-  "rgb(0,0,0)",
-  "rgb(35,5,33)",
-  "rgb(91,13,85)",
-  "rgb(86,50,141)",
-  "rgb(47,106,200)",
-  "rgb(32,149,223)",
-  "rgb(32,186,223)",
-  "rgb(100,203,193)",
-  "rgb(211,206,146)",
-  "rgb(255,208,128)",
-  "rgb(255,208,128)",
-  "rgb(255,208,128)",
-  "rgb(255,208,128)",
-  "rgb(255,208,128)",
-  "rgb(255,208,128)",
-  "rgb(255,208,128)",
-];
-
-const POPEVE_GRADIENT = tinygradient(POPEVE_COLORS);
-
-/* -------------------------------------------------- */
-/* Score bounds from PopEve UI (-7.2 to >= -0.9)       */
-/* -------------------------------------------------- */
-
-export const POPEVE_MIN = -7.2;
-export const POPEVE_MAX = -0.9;
-
-export function getPopEveColor(score: number): string {
-  const clamped = Math.min(Math.max(score, POPEVE_MIN), POPEVE_MAX);
-  const ratio = (clamped - POPEVE_MIN) / (POPEVE_MAX - POPEVE_MIN);
-  return POPEVE_GRADIENT.rgbAt(ratio).toHexString();
 }
 
 /* -------------------------------------------------- */

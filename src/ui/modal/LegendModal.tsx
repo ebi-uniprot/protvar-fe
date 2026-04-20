@@ -5,7 +5,9 @@ import { CADD_SCORE_ATTR } from "../components/function/prediction/CaddScorePred
 import { PredAttr } from "../components/function/prediction/Prediction";
 import { AM_SCORE_ATTR } from "../components/function/prediction/AlphaMissensePred";
 import { AF_ATTR } from "../components/population/PopulationAlleleFreq";
-import { POPEVE_SCORE_ATTR } from "../components/function/prediction/PopEvePred";
+import { POPEVE_SCORE_ATTR, POPEVE_COLORS, POPEVE_MIN, POPEVE_MAX } from "../components/function/prediction/PopEvePred";
+import { ESM_SCORE_ATTR } from "../components/function/prediction/EsmPred";
+import { CONSERV_SCORE_ATTR } from "../components/function/prediction/ConservPred";
 import { AppContext } from "../App";
 import { FEATURE_RANKING, FeaturePriority } from "../components/function/utils/featureRanking";
 
@@ -74,14 +76,24 @@ function ConservLegend({ stdColor }: CommonLegendProps) {
   const gradient = stdColor
     ? 'linear-gradient(to right, blue, lightgray, red)'
     : 'linear-gradient(to right, #732faf, #194888, #277777, #72cb5d, #bab518, #c46307, #9d0101)';
-  return <GradientBar gradient={gradient} labels={['Low', 'High']} />;
+  return (
+    <>
+      <GradientBar gradient={gradient} labels={['Low', 'High']} />
+      <CircleItems attrs={CONSERV_SCORE_ATTR} stdColor={stdColor} />
+    </>
+  );
 }
 
 function EsmLegend({ stdColor }: CommonLegendProps) {
   const gradient = stdColor
     ? 'linear-gradient(to right, blue 0%, blue 20%, lightgray 20%, lightgray 40%, red 40%, red 100%)'
     : 'linear-gradient(to right, #460556, #218c8f, #f9e725)';
-  return <GradientBar gradient={gradient} labels={['0', '-5', '-10', '-15', '-20', '-25']} />;
+  return (
+    <>
+      <GradientBar gradient={gradient} labels={['0', '−5', '−10', '−15', '−20', '−25']} />
+      <CircleItems attrs={ESM_SCORE_ATTR} stdColor={stdColor} />
+    </>
+  );
 }
 
 const PRIORITY_META: Record<FeaturePriority, { label: string; color: string; description: string }> = {
@@ -158,6 +170,13 @@ export function LegendContent() {
         </LegendSection>
 
         <LegendSection title="popEVE score">
+          <GradientBar
+            gradient={stdColor
+              ? 'linear-gradient(to right, red 0%, red 34%, lightgrey 34%, lightgrey 41%, blue 41%, blue 100%)'
+              : `linear-gradient(to right, ${POPEVE_COLORS.join(',')})`
+            }
+            labels={[String(POPEVE_MIN), '≥ ' + String(POPEVE_MAX)]}
+          />
           <CircleItems attrs={Object.values(POPEVE_SCORE_ATTR)} stdColor={stdColor} />
           <div style={{ fontSize: '0.75em', fontStyle: 'italic', marginTop: '0.4em', color: '#666' }}>
             Low confidence when gap freq &gt; 0.5
