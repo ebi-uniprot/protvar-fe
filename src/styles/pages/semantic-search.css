@@ -1,0 +1,208 @@
+/**
+ * text-search.css
+ * Semantic text search results page.
+ */
+
+/* ============================================
+   PAGE HEADER
+   ============================================ */
+
+.ts-header {
+    display: flex;
+    align-items: baseline;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-xl);
+    flex-wrap: wrap;
+}
+
+.ts-header .page-header em {
+    font-style: normal;
+    color: var(--color-brand);
+}
+
+.ts-count {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-tertiary);
+}
+
+/* ============================================
+   EMPTY / LOADING / ERROR STATES
+   ============================================ */
+
+.ts-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-3xl) 0;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-md);
+}
+
+.ts-state--error {
+    color: var(--color-danger);
+}
+
+.ts-state-icon {
+    font-size: 2rem;
+    opacity: 0.5;
+}
+
+/* ============================================
+   RESULTS LIST
+   ============================================ */
+
+.ts-results {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    max-width: 860px;
+}
+
+/* ============================================
+   RESULT CARD
+   ============================================ */
+
+.ts-card {
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    background: var(--color-bg-primary);
+    transition: border-color var(--transition-base), box-shadow var(--transition-base);
+}
+
+.ts-card:hover {
+    border-color: var(--color-brand-light);
+    box-shadow: 0 2px 8px rgba(1, 67, 115, 0.08);
+}
+
+.ts-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
+}
+
+.ts-card-title {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    min-width: 0;
+}
+
+.ts-protein-name {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ts-accession {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-brand);
+    font-family: var(--font-family-mono);
+}
+
+/* ============================================
+   SCORE BAR
+   ============================================ */
+
+.ts-score {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    flex-shrink: 0;
+}
+
+.ts-score-bar {
+    height: 6px;
+    border-radius: var(--radius-full);
+    min-width: 30px;
+    max-width: 60px;
+    transition: width var(--transition-base);
+}
+
+.ts-score--high .ts-score-bar { background: var(--color-success); }
+.ts-score--mid  .ts-score-bar { background: var(--color-warning); }
+.ts-score--low  .ts-score-bar { background: var(--color-danger); }
+
+.ts-score-label {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+    min-width: 3.5em;
+    text-align: right;
+}
+
+/* ============================================
+   SOURCE TYPE BADGES
+   ============================================ */
+
+.ts-badge {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    padding: 2px 7px;
+    border-radius: var(--radius-full);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.ts-badge--function   { background: #e8f0fb; color: #1a4f9c; }
+.ts-badge--disease    { background: #fdecea; color: #a02020; }
+.ts-badge--pathway    { background: #e6f4ea; color: #1e6b35; }
+.ts-badge--tissue     { background: #e0f5f5; color: #0d6060; }
+.ts-badge--dev        { background: #fff3e0; color: #8a4e00; }
+.ts-badge--name       { background: #f0ebff; color: #5b2d9e; }
+.ts-badge--other      { background: var(--color-bg-secondary); color: var(--color-text-secondary); }
+
+/* ============================================
+   MATCHING ANNOTATIONS
+   ============================================ */
+
+.ts-matches {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-md);
+}
+
+.ts-match {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.ts-match-text {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    line-height: var(--line-height-normal);
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* ============================================
+   CARD FOOTER
+   ============================================ */
+
+.ts-card-footer {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.ts-view-btn {
+    font-size: var(--font-size-sm);
+}
+
+.ts-load-more {
+    align-self: center;
+    margin-top: var(--spacing-sm);
+}

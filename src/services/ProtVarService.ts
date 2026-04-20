@@ -12,6 +12,7 @@ import {DownloadResponse, DownloadStatusEntry} from "../types/DownloadRecord";
 import {InputUploadResponse, PagedMappingResponse} from "../types/PagedMappingResponse";
 import {DownloadRequest} from "../types/DownloadRequest";
 import {MappingRequest} from "../types/MappingRequest";
+import {VectorSearchResponse} from "../types/VectorSearch";
 
 export const APP_JSON = {"Content-Type": "application/json"}
 export const TEXT_PLAIN = {"Content-Type": "text/plain"}
@@ -111,6 +112,16 @@ export function downloadStatus(ids: string[]) {
     `${API_URL}/download/status`, ids,
     {
       headers: DEFAULT_HEADERS,
+    }
+  );
+}
+
+export function vectorSearch(text: string, limit: number = 10, offset: number = 0) {
+  return api.get<VectorSearchResponse>(
+    `${API_URL}/vector-search`,
+    {
+      params: { text, limit, offset },
+      headers: APP_JSON,
     }
   );
 }

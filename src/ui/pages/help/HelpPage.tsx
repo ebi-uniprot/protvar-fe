@@ -55,6 +55,7 @@ const HELP_SECTIONS: HelpSection[] = [
     items: [
       { name: 'search-history',           title: 'Search History' },
       { name: 'protvar-links',            title: 'ProtVar Links' },
+      { name: 'semantic-search',          title: 'Semantic Search' },
       { name: 'uniprot-feature-ranking',  title: 'UniProt Feature Ranking' },
       { name: 'api',                      title: 'API' },
       { name: 'further-info',             title: 'Further Information' },

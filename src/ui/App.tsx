@@ -5,7 +5,7 @@ import APIErrorPage from "./pages/APIErrorPage";
 import AboutPage from "./pages/AboutPage";
 import ReleasePage from "./pages/ReleasePage";
 import ContactPage from "./pages/ContactPage";
-import {ABOUT, ACTIVITY, API_ERROR, CONTACT, DOWNLOAD, G_QUERY, HELP, HOME, ID_ENSEMBL, ID_GENE, ID_PDB, ID_REFSEQ, P_QUERY, QUERY, RELEASE, RESULT, SEARCH} from "../constants/BrowserPaths";
+import {ABOUT, ACTIVITY, API_ERROR, CONTACT, DOWNLOAD, G_QUERY, HELP, HOME, ID_ENSEMBL, ID_GENE, ID_PDB, ID_REFSEQ, P_QUERY, QUERY, RELEASE, RESULT, SEARCH, SEMANTIC_SEARCH} from "../constants/BrowserPaths";
 import DownloadPage from "./pages/download/DownloadPage";
 import HelpPage from "./pages/help/HelpPage";
 import {PagedMappingResponse} from "../types/PagedMappingResponse";
@@ -17,6 +17,7 @@ import {StorageProvider} from "../context/StorageContext";
 import {StatsProvider} from "../context/StatsContext";
 import {DEFAULT_PAGE_SIZE} from "../constants/const";
 import NotFoundPage from "./pages/NotFoundPage";
+import SemanticSearchPage from "./pages/semanticsearch/SemanticSearchPage";
 import {MarkdownProvider} from "../context/MarkdownContext";
 import '../styles/index.css';
 import { ToastContainer } from './toast/ToastContainer';
@@ -118,6 +119,7 @@ export default function App() {
           <Route path={ACTIVITY} element={<ActivityPage />} />
           <Route path={DOWNLOAD} element={<DownloadPage />} />
           <Route path={HELP} element={<HelpPage />} />
+          <Route path={SEMANTIC_SEARCH} element={<SemanticSearchPage />} />
 
           {/* Whole-protein / identifier browse: /:accession */}
           <Route path="/:input" element={<ResultPage />} />
