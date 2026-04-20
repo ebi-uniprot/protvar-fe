@@ -52,7 +52,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
     <div className={`search-box ${className}`}>
       <input
         type="text"
-        title="Enter a variant, protein ID, gene name..."
+        title="Enter a supported variant format or identifier to browse..."
         placeholder={placeholder}
         value={searchInput}
         onChange={(e) => setSearchInput(e.target.value)}

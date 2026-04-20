@@ -116,6 +116,9 @@
 }
 
 .method-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
     padding: 0.4rem 0.875rem;
     border: none;
     background: transparent;
@@ -155,22 +158,10 @@
     white-space: nowrap;
 }
 
-.assembly-select {
-    padding: 0.4rem 0.625rem;
-    border: 2px solid var(--color-border-medium);
-    border-radius: var(--radius-md);
-    font-size: var(--font-size-md);
-    background: var(--color-bg-primary);
-    cursor: pointer;
-    min-width: 140px;
-    color: var(--color-text-primary);
-    transition: border-color var(--transition-base), box-shadow var(--transition-base);
-}
-
-.assembly-select:focus {
-    outline: none;
-    border-color: var(--color-brand-light);
-    box-shadow: 0 0 0 3px rgba(1, 67, 115, 0.1);
+/* Compact variant of the segmented toggle used for genome assembly */
+.assembly-toggle .method-btn {
+    padding: 0.3rem 0.6rem;
+    font-size: var(--font-size-sm);
 }
 
 /* ============================================
@@ -402,9 +393,9 @@
 }
 
 .example-tag:hover {
-    background: var(--color-border-light);
-    color: var(--color-text-primary);
-    border-color: var(--color-border-dark);
+    background: var(--color-brand-lightest);
+    color: var(--color-brand);
+    border-color: var(--color-brand-light);
     transform: translateY(-1px);
     box-shadow: var(--shadow-xs);
 }

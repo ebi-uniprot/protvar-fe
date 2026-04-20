@@ -111,7 +111,6 @@ const SearchPage: React.FC = () => {
   const [textInput, setTextInput] = useState('');
   const [genomeAssembly, setGenomeAssembly] = useState<GenomeAssembly>('auto');
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
-  const [resultsVisible, setResultsVisible] = useState(false);
   const [error, setError] = useState('');
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -159,6 +158,7 @@ const SearchPage: React.FC = () => {
   const hasMultipleLines = (str: string): boolean => {
     return str.includes('\n');
   };
+
 
   const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -340,7 +340,6 @@ const SearchPage: React.FC = () => {
     setBrowseInputText('');
     setTextInput('');
     setUploadedFile(null);
-    setResultsVisible(false);
     setError('');
     setLoading(false);
     setSearchFilters(DEFAULT_SEARCH_FILTERS);
@@ -409,30 +408,38 @@ const SearchPage: React.FC = () => {
                   className={`method-btn ${!uploadedFile ? 'active' : ''}`}
                   onClick={() => setUploadedFile(null)}
                 >
-                  Type/Paste Variants
+                  <i className="bi bi-keyboard" /> Type / Paste
                 </button>
                 <button
                   className={`method-btn ${uploadedFile ? 'active' : ''}`}
                   onClick={() => fileInputRef.current?.click()}
                 >
-                  Upload File
+                  <i className="bi bi-file-earmark-arrow-up" /> Upload File
                 </button>
               </div>
 
               <div className="genome-assembly-inline">
                 <span className="assembly-label">
-                  Genome Assembly
+                  Assembly
                   <HelpButton title="" content={<HelpContent name="genomic-assembly-detection" />} />
                 </span>
-                <select
-                  className="assembly-select"
-                  value={genomeAssembly}
-                  onChange={(e) => setGenomeAssembly(e.target.value as GenomeAssembly)}
-                >
-                  <option value="auto">Auto-detect</option>
-                  <option value="grch38">GRCh38/hg38</option>
-                  <option value="grch37">GRCh37/hg19</option>
-                </select>
+                <div className="input-method-toggle assembly-toggle">
+                  <button
+                    className={`method-btn ${genomeAssembly === 'auto' ? 'active' : ''}`}
+                    onClick={() => setGenomeAssembly('auto')}
+                    title="Automatically detect genome assembly from input"
+                  >Auto</button>
+                  <button
+                    className={`method-btn ${genomeAssembly === 'grch38' ? 'active' : ''}`}
+                    onClick={() => setGenomeAssembly('grch38')}
+                    title="GRCh38 / hg38"
+                  >GRCh38</button>
+                  <button
+                    className={`method-btn ${genomeAssembly === 'grch37' ? 'active' : ''}`}
+                    onClick={() => setGenomeAssembly('grch37')}
+                    title="GRCh37 / hg19"
+                  >GRCh37</button>
+                </div>
               </div>
             </div>
 
@@ -609,38 +616,22 @@ const SearchPage: React.FC = () => {
         {/* Action Buttons */}
         <div className="action-buttons">
           <button
-            className="btn btn-brand btn-lg"
+            className="btn btn-brand"
             onClick={handleSearch}
             disabled={isSubmitDisabled() || loading}
             title={activeMode === 'text' ? 'Coming soon' : ''}
           >
-            {activeMode === 'variant' ? 'Submit' : 'Browse'}
+            {activeMode === 'variant'
+              ? <><i className="bi bi-send-fill" /> Submit</>
+              : <><i className="bi bi-search" /> Browse</>
+            }
           </button>
-          <button className="btn btn-secondary btn-lg" onClick={handleClear}>
-            Clear All
+          <button className="btn btn-secondary" onClick={handleClear}>
+            <i className="bi bi-x-lg" /> Clear
           </button>
         </div>
       </div>
 
-      {/* Results Preview */}
-      {resultsVisible && (
-        <div className="results-preview" id="results-preview">
-          <div className="results-header">
-            <div>
-              <h3>Search Results</h3>
-              <div className="results-count">Found 1,247 variants</div>
-            </div>
-            <div className="active-filters">
-              {[].map((filter, index) => (
-                <div key={index} className="filter-chip">
-                  {filter} <span className="remove">×</span>
-                </div>
-              ))}
-            </div>
-          </div>
-          <p>Results would appear here with consistent formatting regardless of input method...</p>
-        </div>
-      )}
     </div>
   );
 };
