@@ -84,9 +84,9 @@ export default function App() {
           <Route path={`${RESULT}/:input`} element={<ResultPage />} />
 
           {/* /search — mode auto-detected: ?q= → variant query, ?id= → multi-id browse, neither → filter-only */}
-          <Route path={SEARCH} element={<ResultPage />} />
+          <Route path={SEARCH} element={<ResultPage queryType="search" />} />
           {/* Backward compat: /query → same handler */}
-          <Route path={QUERY} element={<ResultPage />} />
+          <Route path={QUERY} element={<ResultPage queryType="search" />} />
 
           {/* Type-prefixed identifier browse */}
           <Route path={`${ID_GENE}/:id`} element={<ResultPage idType="gene" />} />
