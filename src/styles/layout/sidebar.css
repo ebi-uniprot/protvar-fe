@@ -86,7 +86,7 @@
     padding: 11px 0;
     color: var(--color-text-secondary);
     text-decoration: none;
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-md);
     white-space: nowrap;
     overflow: hidden;
     /* No transition — instant hover/active response */
@@ -195,6 +195,7 @@
 
 .sidebar-menu-item .map-item {
     color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
 }
 
 .sidebar-menu-item .map-item:hover {

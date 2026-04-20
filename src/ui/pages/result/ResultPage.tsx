@@ -492,22 +492,15 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
       <HelpButton title="" content={<HelpContent name={helpName}/>}/>
     </div>
 
-    {/* ── Colour toggle row ── */}
-    {data && (
-      <div className="result-colour-row">
+    {/* ── Toolbar ── */}
+    <div className="result-toolbar">
+      {data && (
         <label className="toggle-switch" title="Toggle between ProtVar standardised and original source colours">
           <input type="checkbox" checked={appState.stdColor} onChange={() => appState.updateState("stdColor", !appState.stdColor)} />
           <span className="toggle-track"><span className="toggle-thumb"></span></span>
           <span className="toggle-label">ProtVar colours</span>
         </label>
-      </div>
-    )}
-
-    {/* ── Toolbar ── */}
-    <div className="result-toolbar">
-      <div>
-        {!isQueryMode && data && data.totalPages > 1 && <PaginationRow loading={loading} data={data}/>}
-      </div>
+      )}
       {data && (
         <div className="result-toolbar-actions">
           <ShareLink url={shareUrl} linkText="Share" />
@@ -526,16 +519,19 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
              title="View colour legends"
              onClick={() => appState.updateState("drawer", <LegendContent />)}
           > Legends</i>
-          <i className="bi bi-download icon-btn"
-             title="Download results"
-             onClick={() => appState.updateState("drawer",
-               <DownloadPanel
-                 q={isQueryMode ? (resultTitle ?? undefined) : undefined}
-                 resultId={!isQueryMode && inputType === 'input_id' ? input ?? undefined : undefined}
-                 ids={!isQueryMode && inputType !== 'input_id' ? currentBrowseIds : undefined}
-                 historyId={browseHistoryId}
-                 numPages={isQueryMode ? 1 : (data?.totalPages ?? 0)} />)}
-          > Download</i>
+          <button
+            className="btn btn-brand"
+            title="Download results"
+            onClick={() => appState.updateState("drawer",
+              <DownloadPanel
+                q={isQueryMode ? (resultTitle ?? undefined) : undefined}
+                resultId={!isQueryMode && inputType === 'input_id' ? input ?? undefined : undefined}
+                ids={!isQueryMode && inputType !== 'input_id' ? currentBrowseIds : undefined}
+                historyId={browseHistoryId}
+                numPages={isQueryMode ? 1 : (data?.totalPages ?? 0)} />)}
+          >
+            <i className="bi bi-download" /> Download
+          </button>
         </div>
       )}
     </div>
@@ -571,6 +567,11 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
       />
     )}
 
+    {!isQueryMode && data && data.totalPages > 1 && (
+      <div className="result-pre-table">
+        <PaginationRow loading={loading} data={data}/>
+      </div>
+    )}
     <ResultTable key={input} data={data}/>
     {!isQueryMode && data && data.totalPages > 1 && <PaginationRow loading={loading} data={data}/>}
 
