@@ -8,7 +8,6 @@ export interface VectorSearchResult {
 export interface VectorSearchResponse {
   query: string;
   results: VectorSearchResult[];
-  count: number;
   limit: number;
   offset: number;
   model: string;
