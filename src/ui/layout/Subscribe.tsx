@@ -39,15 +39,18 @@ function Subscribe() {
   return (
     <div className="newsletter-form">
       {subscribed ? (
-        <>
-          Thanks for subscribing!{' '}
+        <div className="subscribe-confirmed">
+          <span className="subscribe-confirmed-text">
+            <i className="bi bi-check-circle-fill subscribe-confirmed-icon" />
+            Thanks for subscribing!
+          </span>
           <button
             className="subscribe-again-btn"
             onClick={() => setSubscribed(false)}
           >
-            Subscribe again
+            <i className="bi bi-arrow-counterclockwise" /> Subscribe again
           </button>
-        </>
+        </div>
       ) : (
         <form onSubmit={handleSubmit}>
           <label>Be the first to know about updates on ProtVar</label>
