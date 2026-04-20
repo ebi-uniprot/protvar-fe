@@ -186,9 +186,16 @@
     border: 2px solid var(--color-border-medium);
     border-radius: var(--radius-lg);
     font-size: var(--font-size-md);
+    font-weight: var(--font-weight-normal);
     color: var(--color-text-primary);
     background: var(--color-bg-primary);
     transition: border-color var(--transition-base), box-shadow var(--transition-base);
+}
+
+.input-field::placeholder {
+    font-family: var(--font-family-mono);
+    font-weight: var(--font-weight-normal);
+    color: var(--color-text-tertiary);
 }
 
 .input-field:focus {
@@ -201,7 +208,8 @@
     min-height: 120px;
     resize: vertical;
     font-family: var(--font-family-mono);
-    font-size: var(--font-size-md);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-normal);
     white-space: pre-wrap;
 }
 
