@@ -4,7 +4,7 @@ import EMBLLogo from "../../images/EMBL_logo.svg.png";
 import OTLogo from "../../images/open-targets-logo.png";
 import UniprotLogo from "../../images/uniprot-logo.svg";
 import EnsemblLogo from "../../images/ensembl-logo.png";
-import VEPGif from "../../images/vep.gif";
+import VEPGif from "../../images/vep.jpeg";
 import PDBeLogo from "../../images/pdbe-logo.png";
 import CADDLogo from "../../images/cadd-logo.png";
 import EVELogo from "../../images/eve-logo.svg";
@@ -154,20 +154,24 @@ function AboutPageContent() {
       <section className="about-section about-section--legal">
         <h6 className="about-section-title">Licence &amp; disclaimer</h6>
         <p>
-          Content on this site is licensed under a{' '}
+          Except where otherwise noted, content on this site is licensed under a{' '}
           <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">
             Creative Commons Attribution 4.0 International (CC BY 4.0) License
-          </a>{' '}
-          except where otherwise noted.
+          </a>.
         </p>
         <p>
-          We make no warranties regarding the correctness of the data and disclaim liability for damages
-          resulting from its use. Any medical or genetic information is provided for research and
-          educational purposes only — it is not a substitute for professional medical advice.
+          We make no warranties regarding the correctness of the data, and disclaim liability for damages
+          resulting from its use. We cannot provide unrestricted permission regarding the use of the data,
+          as some data may be covered by patents or other rights.
         </p>
         <p>
-          This website uses cookies and limited personal data processing in order to function. By using
-          the site you agree to our{' '}
+          Any medical or genetic information is provided for research, educational and informational
+          purposes only. It is not in any way intended to be used as a substitute for professional medical
+          advice, diagnosis, treatment or care.
+        </p>
+        <p>
+          This website uses cookies, and the limited processing of your personal data in order to function.
+          By using the site you are agreeing to this as outlined in our{' '}
           <a href="https://www.ebi.ac.uk/data-protection/privacy-notice/embl-ebi-public-website" target="_blank" rel="noreferrer">Privacy Notice</a>
           {' '}and{' '}
           <a href="https://www.ebi.ac.uk/about/terms-of-use" target="_blank" rel="noreferrer">Terms of Use</a>.
