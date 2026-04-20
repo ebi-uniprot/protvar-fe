@@ -57,6 +57,19 @@
     align-items: center;
     justify-content: center;
     gap: 0.4rem;
+    position: relative;
+}
+
+.tab-label-experimental {
+    position: relative;
+}
+
+.experimental-badge {
+    position: absolute;
+    top: -6px;
+    right: -14px;
+    font-size: 0.65rem;
+    opacity: 0.7;
 }
 
 .mode-tab:hover:not(.active) {

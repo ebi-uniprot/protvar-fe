@@ -6,7 +6,7 @@ import {HelpButton} from "../../components/help/HelpButton";
 import {useStorage} from "../../../context/StorageContext";
 import {ResultRecord, submissionExpiresAt} from "../../../types/ResultRecord";
 import {uploadFile, uploadText} from "../../../services/ProtVarService";
-import {API_ERROR, RESULT, SEARCH} from "../../../constants/BrowserPaths";
+import {API_ERROR, RESULT, SEARCH, SEMANTIC_SEARCH} from "../../../constants/BrowserPaths";
 import {readFirstLineFromFile} from "../../../utills/FileUtil";
 import { DEFAULT_SEARCH_FILTERS } from '../../components/search/defaultFilters';
 import SearchFilters, {
@@ -87,7 +87,6 @@ const EXAMPLES: Record<SearchMode, ExampleData[]> = {
   ]
 };
 
-const branch = process.env.REACT_APP_GIT_BRANCH;
 
 const findExampleLabel = (input: string): string | null =>
   Object.values(EXAMPLES)
@@ -206,11 +205,19 @@ const SearchPage: React.FC = () => {
     setError('');
   };
 
+  const handleTextSearch = () => {
+    const q = textInput.trim();
+    if (!q) return;
+    navigate(`${SEMANTIC_SEARCH}?q=${encodeURIComponent(q)}`);
+  };
+
   const handleSearch = () => {
     if (activeMode === 'variant') {
       handleVariantSearch();
     } else if (activeMode === 'browse') {
       handleBrowseSearch();
+    } else if (activeMode === 'text') {
+      handleTextSearch();
     }
   };
 
@@ -360,41 +367,40 @@ const SearchPage: React.FC = () => {
       return !variantInput.trim() && !uploadedFile;
     } else if (activeMode === 'browse') {
       return browseIds.length === 0 && !browseInputText.trim();
+    } else if (activeMode === 'text') {
+      return !textInput.trim();
     }
     return true;
   };
 
   return (
     <div className="search-container">
-      {/* Header */}
-      <div className="search-header">
-        <p>Explore protein variation and its functional consequences</p>
-      </div>
-
       {/* Search Mode Tabs */}
       <div className="search-modes">
         <button
           className={`mode-tab ${activeMode === 'variant' ? 'active' : ''}`}
           onClick={() => handleModeChange('variant')}
         >
-          <span className="icon"><i className="bi bi-list-ul"></i></span>
+          <span className="icon"><i className="bi bi-clipboard-data"></i></span>
           Annotate Variants
         </button>
         <button
           className={`mode-tab ${activeMode === 'browse' ? 'active' : ''}`}
           onClick={() => handleModeChange('browse')}
         >
-          <span className="icon"><i className="bi bi-search"></i></span>
+          <span className="icon"><i className="bi bi-card-list"></i></span>
           Browse by Identifier
         </button>
-        {branch !== "dev" &&
-          <button
-            className={`mode-tab ${activeMode === 'text' ? 'active' : ''}`}
-            onClick={() => handleModeChange('text')}
-          >
-            <span className="icon"><i className="bi bi-chat"></i></span>
-            Text Search
-          </button>}
+        <button
+          className={`mode-tab ${activeMode === 'text' ? 'active' : ''}`}
+          onClick={() => handleModeChange('text')}
+        >
+          <span className="icon"><i className="bi bi-body-text"></i></span>
+          <span className="tab-label-experimental">
+            Semantic Search
+            <i className="bi bi-flask experimental-badge" title="Experimental feature" />
+          </span>
+        </button>
       </div>
 
       {/* Search Panel */}
@@ -563,11 +569,11 @@ const SearchPage: React.FC = () => {
           </div>
         )}
 
-        {/* Text Search Mode */}
-        {activeMode === 'text' && branch !== "dev" && (
+        {/* Semantic Search Mode */}
+        {activeMode === 'text' && (
           <div className="search-content">
             <div className="input-group">
-              <label className="input-label">Search variants by disease, phenotype, or annotation</label>
+              <label className="input-label">Find proteins by disease, phenotype, or functional description</label>
               <input
                 type="text"
                 className="input-field"
@@ -619,10 +625,11 @@ const SearchPage: React.FC = () => {
             className="btn btn-brand"
             onClick={handleSearch}
             disabled={isSubmitDisabled() || loading}
-            title={activeMode === 'text' ? 'Coming soon' : ''}
           >
             {activeMode === 'variant'
               ? <><i className="bi bi-send-fill" /> Submit</>
+              : activeMode === 'text'
+              ? <><i className="bi bi-search" /> Search</>
               : <><i className="bi bi-search" /> Browse</>
             }
           </button>
