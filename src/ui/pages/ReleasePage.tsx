@@ -1,42 +1,77 @@
 import DefaultPageLayout from "../layout/DefaultPageLayout";
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {TITLE} from "../../constants/const";
-import ReleaseNotes from "./release/ReleaseNote";
+import ReleaseNotes, {ReleaseBadge, ReleaseNote} from "./release/ReleaseNote";
 import Statistics from "./release/Statistics";
 
 function ReleasePageContent() {
-  //var today = new Date();
-  //var dd = String(today.getDate()).padStart(2, '0');
-  //var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-  //var yyyy = today.getFullYear();
   useEffect(() => {
     document.title = `Release | ${TITLE}`;
   }, []);
 
-  const [activeTab, setActiveTab] = useState<'release-notes' | 'statistics'>('statistics');
+  return (
+    <>
+      <h5 className="page-header">Release</h5>
 
-  return <><h5>Release</h5>
-  <div className="release-container">
-    <div className="release-tabs">
-      <button
-        className={activeTab === 'statistics' ? 'active' : ''}
-        onClick={() => setActiveTab('statistics')}
-      >
-        Statistics
-      </button>
-      <button
-        className={activeTab === 'release-notes' ? 'active' : ''}
-        onClick={() => setActiveTab('release-notes')}
-      >
-        Release Notes
-      </button>
-    </div>
+      {/* ── Statistics ── */}
+      <Statistics />
 
-    <div className="release-content">
-      {activeTab === 'statistics' && <Statistics/>}
-      {activeTab === 'release-notes' && <ReleaseNotes/>}
-    </div>
-  </div></>
+      {/* ── v2 section ── */}
+      <div className="release-v2">
+        <h6 className="release-version-heading">
+          <span className="release-badge release-badge-version">v2.0</span>
+          ProtVar 2 <small>2025</small>
+        </h6>
+
+        <div className="release-categories">
+          <div className="release-category">
+            <ReleaseBadge type="ui" />
+            <ul>
+              <li>New sidebar navigation with collapsed/expanded states and recent history</li>
+              <li>Redesigned home page with tabbed search modes: Annotate Variants, Browse by Identifier, Text Search</li>
+              <li>Browse variants by protein, gene, Ensembl, RefSeq, or PDB identifier</li>
+              <li>Improved result toolbar: colour toggle, share, legends, and download in one row</li>
+              <li>Redesigned Legend modal with gradient bars and per-category score ranges</li>
+              <li>ProtVar standardised / source colour toggle for all prediction scores</li>
+              <li>Download Panel with independent functional, population, and structural annotation control</li>
+              <li>Consolidated button system and consistent icon usage throughout</li>
+            </ul>
+          </div>
+
+          <div className="release-category">
+            <ReleaseBadge type="api" />
+            <ul>
+              <li>Consistent response models across all mapping endpoints</li>
+              <li>Enhanced filter parameters: CADD, popEVE, stability, allele frequency, domain, PTM</li>
+              <li>Improved HGVS p. and c. notation handling in batch and single-variant queries</li>
+              <li>Sort and order parameters for browsed result sets</li>
+            </ul>
+          </div>
+
+          <div className="release-category">
+            <ReleaseBadge type="data" />
+            <ul>
+              <li>gnomAD allele frequencies: 52M+ coding variants (SNV and multi-SNV)</li>
+              <li>CADD updated to v1.7</li>
+              <li>dbSNP b156: 40M+ new IDs</li>
+              <li>ClinVar updated to 2025-02: 1.2M+ new IDs</li>
+              <li>COSMIC v99: ~200K new IDs</li>
+              <li>Genomic-protein mapping re-run using UniProt 2025_01 &amp; Ensembl 113</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      {/* ── v1 historical notes ── */}
+      <div className="release-v1">
+        <h6 className="release-version-heading">
+          <span className="release-badge release-badge-v1">v1.x</span>
+          Historical Release Notes <small>2023–2025</small>
+        </h6>
+        <ReleaseNotes />
+      </div>
+    </>
+  );
 }
 
 function ReleasePage() {
