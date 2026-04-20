@@ -27,7 +27,7 @@
         auto                  /* 3  codon          */
         auto                  /* 4  cadd           */
         auto                  /* 5  isoform        */
-        1fr                   /* 6  protein-name — takes remaining, clips */
+        minmax(min-content, 16rem)  /* 6  protein-name — bounded, clips at 16rem */
         auto                  /* 7  aa-change      */
         auto                  /* 8  consequence    */
         auto                  /* 9  popeve         */
@@ -61,6 +61,17 @@
 .result-loader-row,
 .result-row-msg {
     grid-column: 1 / -1;
+}
+
+/* Prevent annotation content from expanding outer grid tracks in scroll container.
+   overflow-x: auto tracks size to max-content, so a spanning item's wide content
+   (protein panels, gene sequences) would force all tracks to grow.
+   contain: inline-size breaks the intrinsic sizing chain — the element's width comes
+   from the grid area (sized by data rows), not from its own content.
+   overflow: hidden is kept as belt-and-suspenders for the automatic minimum. */
+.result-annotation {
+    overflow: hidden;
+    contain: inline-size;
 }
 
 /* ============================================

@@ -17,6 +17,7 @@
 
 .annotation-data-container {
     padding: var(--spacing-xl);
+    overflow-x: auto;
 }
 
 /* ============================================
