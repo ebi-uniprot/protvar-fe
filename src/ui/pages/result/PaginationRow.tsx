@@ -1,121 +1,69 @@
-import Button from '../../elements/form/Button';
-import {Dropdown} from 'react-dropdown-now';
-import 'react-dropdown-now/style.css';
-import {useLocation, useNavigate, useSearchParams} from "react-router-dom";
-import {DEFAULT_PAGE, DEFAULT_PAGE_SIZE, PERMITTED_PAGE_SIZES} from "../../../constants/const";
-import {PagedMappingResponse} from "../../../types/PagedMappingResponse";
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE, PERMITTED_PAGE_SIZES } from '../../../constants/const';
+import { PagedMappingResponse } from '../../../types/PagedMappingResponse';
 
 interface PaginationRowProps {
-  loading: boolean
-  data: PagedMappingResponse | null
+  loading: boolean;
+  data: PagedMappingResponse | null;
 }
 
-function PaginationRow(props: PaginationRowProps) {
+function PaginationRow({ loading, data }: PaginationRowProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams] = useSearchParams();
-  const pageSize = searchParams.get("pageSize")
-  const {loading, data} = props;
-
-  function firstPage() {
-    if (data) {
-      changePage(1)
-    }
-  }
-
-  function prevPage() {
-    if (data) {
-      changePage(data.page - 1)
-    }
-  }
-
-  function nextPage() {
-    if (data) {
-      changePage(data.page + 1)
-    }
-  }
-
-  function lastPage() {
-    if (data) {
-      changePage(data.totalPages)
-    }
-  }
 
   function changePage(p: number) {
-    if (data) {
-      //loadData(data.id, assembly, p, pageSize);
-      searchParams.delete("annotation"); // reset any expanded annotation
-      if (p === DEFAULT_PAGE) // page 1
-        searchParams.delete("page");
-      else
-        searchParams.set("page", p.toString());
-
-      const url = `${location.pathname}${searchParams.size > 0 ? `?${searchParams.toString()}` : ``}`
-      navigate(url);
-    }
+    if (!data) return;
+    searchParams.delete('annotation');
+    if (p === DEFAULT_PAGE) searchParams.delete('page');
+    else searchParams.set('page', p.toString());
+    navigate(`${location.pathname}${searchParams.size > 0 ? `?${searchParams.toString()}` : ''}`);
   }
 
-  function changePageSize(newPageSize: any) {
-    if (data && newPageSize !== pageSize) {
-      //setPageSize(newPageSize);
-      //loadData(data.id, assembly, 1, newPageSize);// go back to page 1
-      searchParams.delete("page"); // reset page num
-      searchParams.delete("annotation"); // reset any expanded annotation
-
-      if (newPageSize === DEFAULT_PAGE_SIZE)
-        searchParams.delete("pageSize");
-      else
-        searchParams.set("pageSize", newPageSize.toString());
-
-      const url = `${location.pathname}${searchParams.size > 0 ? `?${searchParams.toString()}` : ``}`
-      navigate(url);
-    }
+  function changePageSize(newPageSize: number) {
+    if (!data) return;
+    searchParams.delete('page');
+    searchParams.delete('annotation');
+    if (newPageSize === DEFAULT_PAGE_SIZE) searchParams.delete('pageSize');
+    else searchParams.set('pageSize', newPageSize.toString());
+    navigate(`${location.pathname}${searchParams.size > 0 ? `?${searchParams.toString()}` : ''}`);
   }
 
-  return <table className="table-header">
-    <tbody>
-    <tr>
-      <td>
-        <Button className="pagination-button" onClick={firstPage} loading={loading}
-                disabled={loading || data === null || data.page === 1}>
-          &laquo; First
-        </Button>
-      </td>
-      <td>
-        <Button className="pagination-button" onClick={prevPage} loading={loading}
-                disabled={loading || data === null || data.page === 1}>
-          &lsaquo; Prev
-        </Button>
-      </td>
-      <td>
-        {data && `${data.page} / ${data.totalPages}`}
-      </td>
+  const disabled = loading || data === null;
+  const atFirst = disabled || data.page === 1;
+  const atLast = disabled || data.last;
 
-      <td>
-        <Button className="pagination-button" onClick={nextPage} loading={loading}
-                disabled={loading || data === null || data.last}>
-          Next &rsaquo;
-        </Button>
-      </td>
-      <td>
-        <Button className="pagination-button" onClick={lastPage} loading={loading}
-                disabled={loading || data === null || data.last}>
-          Last &raquo;
-        </Button>
-      </td>
-      <td>
-        <Dropdown
-          className="pagination-dropdown"
-          placeholder="Pages"
-          options={PERMITTED_PAGE_SIZES}
-          value={data?.pageSize}
-          onChange={(option) => changePageSize(option.value)}
-          disabled={loading || data === null}
-        />
-      </td>
-    </tr>
-    </tbody>
-  </table>
+  return (
+    <div className="pagination-row">
+      <div className="pagination-nav">
+        <button className="btn btn-secondary btn-sm" onClick={() => changePage(1)} disabled={atFirst}>
+          <i className="bi bi-chevron-double-left" />
+        </button>
+        <button className="btn btn-secondary btn-sm" onClick={() => changePage(data!.page - 1)} disabled={atFirst}>
+          <i className="bi bi-chevron-left" />
+        </button>
+        <span className="pagination-info">
+          {data ? `${data.page} / ${data.totalPages}` : '—'}
+        </span>
+        <button className="btn btn-secondary btn-sm" onClick={() => changePage(data!.page + 1)} disabled={atLast}>
+          <i className="bi bi-chevron-right" />
+        </button>
+        <button className="btn btn-secondary btn-sm" onClick={() => changePage(data!.totalPages)} disabled={atLast}>
+          <i className="bi bi-chevron-double-right" />
+        </button>
+      </div>
+      <select
+        className="pagination-page-size"
+        value={data?.pageSize ?? DEFAULT_PAGE_SIZE}
+        onChange={e => changePageSize(Number(e.target.value))}
+        disabled={disabled}
+      >
+        {PERMITTED_PAGE_SIZES.map(s => (
+          <option key={s} value={s}>{s} per page</option>
+        ))}
+      </select>
+    </div>
+  );
 }
 
 export default PaginationRow;

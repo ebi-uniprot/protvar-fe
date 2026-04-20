@@ -16,18 +16,49 @@
     flex-shrink: 0;
 }
 
-.result-toolbar-actions > .toolbar-divider {
-    width: 1px;
-    height: 1.2em;
-    background: #c8d4e8;
-    flex-shrink: 0;
-}
-
 /* ── Pre-table pagination row ── */
 .result-pre-table {
     display: flex;
     justify-content: flex-end;
     padding: 2px 0 4px;
+}
+
+.result-post-table {
+    padding-top: var(--spacing-sm);
+}
+
+.pagination-row {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.pagination-nav {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.pagination-info {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    min-width: 4rem;
+    text-align: center;
+}
+
+.pagination-page-size {
+    font-size: var(--font-size-sm);
+    padding: 3px 6px;
+    border: 1px solid var(--color-border-medium);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    cursor: pointer;
+}
+
+.pagination-page-size:disabled {
+    opacity: 0.5;
+    cursor: default;
 }
 
 /* ── Notices area ── */

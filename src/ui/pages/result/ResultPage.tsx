@@ -273,8 +273,17 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
         if (err.response) {
           if (err.response?.status === 400) {
             const errData = err.response.data;
-            // BE may return a Map<String,String> (object) for validation errors — extract text
-            const msg = typeof errData === 'string' ? errData : 'Invalid input or type mismatch';
+            let msg: string;
+            if (typeof errData === 'string') {
+              msg = errData;
+            } else if (errData && typeof errData === 'object') {
+              // BE returns Map<String,String> for both validation and enum parse errors
+              const entries = Object.entries(errData as Record<string, string>);
+              msg = entries.map(([field, detail]) => `${field}: ${detail}`).join('; ')
+                || 'Invalid input or type mismatch';
+            } else {
+              msg = 'Invalid input or type mismatch';
+            }
             setWarning(msg);
           } else if (err.response.status === 404) {
             setWarning(NO_RESULT);
@@ -505,14 +514,11 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
         <div className="result-toolbar-actions">
           <ShareLink url={shareUrl} linkText="Share" />
           {isBrowseIdentifier && (
-            <>
-              <i
-                className={`bi ${isSaved ? 'bi-bookmark-fill' : 'bi-bookmark'} icon-btn`}
-                title={isSaved ? 'Saved to history' : 'Save to history'}
-                onClick={handleSaveBrowse}
-              > {isSaved ? 'Saved' : 'Save'}</i>
-              <span className="toolbar-divider" />
-            </>
+            <i
+              className={`bi ${isSaved ? 'bi-bookmark-fill' : 'bi-bookmark'} icon-btn`}
+              title={isSaved ? 'Saved to history' : 'Save to history'}
+              onClick={handleSaveBrowse}
+            > {isSaved ? 'Saved' : 'Save'}</i>
           )}
           <i className="bi bi-circle-half icon-btn"
              title="View colour legends"
@@ -572,7 +578,11 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
       </div>
     )}
     <ResultTable key={input} data={data}/>
-    {!isQueryMode && data && data.totalPages > 1 && <PaginationRow loading={loading} data={data}/>}
+    {!isQueryMode && data && data.totalPages > 1 && (
+      <div className="result-pre-table result-post-table">
+        <PaginationRow loading={loading} data={data}/>
+      </div>
+    )}
 
   </div>
 }

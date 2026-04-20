@@ -47,6 +47,11 @@
    ============================================ */
 
 /* Large button modifier — used for prominent action buttons (search submit, etc.) */
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: var(--font-size-sm);
+}
+
 .btn-lg {
     padding: 0.75rem 2rem;
     font-size: 1rem;
