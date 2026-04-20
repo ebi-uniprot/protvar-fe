@@ -60,42 +60,6 @@
     flex-shrink: 0;
 }
 
-.drawer-control-btn,
-.drawer-close-btn {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    padding: 7px 11px;
-    border: none;
-    border-radius: var(--radius-md);
-    cursor: pointer;
-    font-size: var(--font-size-md);
-    font-weight: var(--font-weight-medium);
-    transition: all var(--transition-base);
-    background: transparent;
-    color: var(--color-text-secondary);
-}
-
-.drawer-control-btn i,
-.drawer-close-btn i {
-    font-size: 16px;
-}
-
-.drawer-control-btn:hover {
-    background: var(--color-brand);
-    color: white;
-    transform: translateY(-1px);
-}
-
-.drawer-close-btn {
-    color: var(--color-danger);
-}
-
-.drawer-close-btn:hover {
-    background: var(--color-danger);
-    color: white;
-    transform: translateY(-1px);
-}
 
 /* ============================================
    DRAWER CONTENT
@@ -121,16 +85,6 @@
         padding: 12px 14px;
     }
 
-    .drawer-control-btn,
-    .drawer-close-btn {
-        padding: 6px 10px;
-        font-size: var(--font-size-base);
-    }
-
-    .drawer-control-btn span,
-    .drawer-close-btn span {
-        display: none;
-    }
 }
 
 @media screen and (max-width: 480px) {
