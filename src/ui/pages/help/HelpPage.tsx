@@ -16,7 +16,7 @@ const HELP_SECTIONS: HelpSection[] = [
     label: 'Getting Started',
     icon: 'bi-rocket-takeoff',
     items: [
-      { name: 'submit-variants',             title: 'Submit Variants' },
+      { name: 'annotate-variants',            title: 'Annotate Variants' },
       { name: 'supported-variant-format',    title: 'Supported Formats' },
       { name: 'genomic-assembly-detection',  title: 'Assembly Detection' },
     ],
@@ -25,10 +25,10 @@ const HELP_SECTIONS: HelpSection[] = [
     label: 'Understanding Results',
     icon: 'bi-table',
     items: [
-      { name: 'result-page',              title: 'Result Page' },
-      { name: 'function-annotations',    title: 'Function Annotations' },
-      { name: 'population-observations', title: 'Population Observations' },
-      { name: 'structure-annotations',   title: 'Structure Annotations' },
+      { name: 'results',                 title: 'Results' },
+      { name: 'function-annotations',    title: 'Function' },
+      { name: 'population-observations', title: 'Population' },
+      { name: 'structure-annotations',   title: 'Structure' },
     ],
   },
   {
@@ -53,10 +53,11 @@ const HELP_SECTIONS: HelpSection[] = [
     label: 'Advanced',
     icon: 'bi-gear',
     items: [
-      { name: 'search-history', title: 'Search History' },
-      { name: 'protvar-links',  title: 'ProtVar Links' },
-      { name: 'api',            title: 'API' },
-      { name: 'further-info',   title: 'Further Information' },
+      { name: 'search-history',           title: 'Search History' },
+      { name: 'protvar-links',            title: 'ProtVar Links' },
+      { name: 'uniprot-feature-ranking',  title: 'UniProt Feature Ranking' },
+      { name: 'api',                      title: 'API' },
+      { name: 'further-info',             title: 'Further Information' },
     ],
   },
 ];

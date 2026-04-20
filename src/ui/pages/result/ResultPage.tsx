@@ -416,7 +416,7 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
   const isBrowseIdentifier = mode === 'browse' && !isFilterOnly &&
     !(input && location.pathname.startsWith(RESULT + '/'));
   const shareUrl = `${APP_URL}${location.pathname}${location.search}`
-  const helpName = isQueryMode ? 'protvar-links' : 'result-page';
+  const helpName = isQueryMode ? 'protvar-links' : 'results';
 
   // Determine the browse identifier used as the history record id
   const browseHistoryId = isBrowseIdentifier

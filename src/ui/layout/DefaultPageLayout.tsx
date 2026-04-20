@@ -11,19 +11,22 @@ interface DefaultPageLayoutProps {
   content: React.JSX.Element
 }
 
+const BASE = process.env.PUBLIC_URL ?? '';
+
 const bannerText = (
   <>
-    This version of ProtVar is in active development. Whilst it allows you
-    to take advantage of our latest features, it may also be unstable. Please
-    email{" "}
-    <a href="mailto:protvar@ebi.ac.uk">protvar@ebi.ac.uk</a> with any problems
-    or suggestions, and use the{" "}
-    <a href="https://www.ebi.ac.uk/ProtVar/">stable ProtVar version</a> if you
-    can't retrieve what you need from this one.
-
+    ProtVar 2.0 is in active development — you may occasionally encounter instability.
+    For issues or feedback, email{' '}
+    <a href="mailto:protvar@ebi.ac.uk">protvar@ebi.ac.uk</a> or use the{' '}
+    <a href="https://www.ebi.ac.uk/ProtVar" target="_blank" rel="noreferrer">www.ebi.ac.uk/ProtVar</a>.
     <div>
-      <i className="bi bi-stars banner-new-icon"></i>{' '}
-      <a href="/ProtVar/help#protvar-links">ProtVar Links</a> Structure Tab
+      <i className="bi bi-stars banner-new-icon" />{' '}
+      Explore what's new:{' '}
+      <a href={`${BASE}/help#results`}>Results</a>{' · '}
+      <a href={`${BASE}/help#structure-annotations`}>Structure</a>{' · '}
+      <a href={`${BASE}/help#download-options`}>Download Panel</a>{' · '}
+      <a href={`${BASE}/help#protvar-links`}>ProtVar Links</a>{' · '}
+      <a href={`${BASE}/help#uniprot-feature-ranking`}>Feature Ranking</a>
     </div>
   </>
 );

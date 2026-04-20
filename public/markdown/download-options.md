@@ -1,4 +1,4 @@
-# <a id="download-options"></a>Download Options
+# <a id="download-options"></a>Download Panel
 
 ![ProtVar Download Options](images/download_options.png)  
 **A.** - Users can choose to obtain mappings with annotations or mappings only (which is much faster).  
