@@ -3,7 +3,7 @@
  * Displays features at single positions, amino acid model, and predictions
  */
 
-import React, {useContext} from 'react';
+import React from 'react';
 import {Feature, FunctionalInfo} from "../../../types/FunctionalInfo";
 import {AmScore, TranslatedSequence} from "../../../types/MappingResponse";
 import {EmptyState} from "./common/EmptyState";
@@ -12,7 +12,6 @@ import AminoAcidModel from "./AminoAcidModel";
 import {HelpButton} from "../help/HelpButton";
 import {Prediction} from "./prediction/Prediction";
 import {HelpContent} from "../help/HelpContent";
-import {AppContext} from "../../App";
 
 
 interface ResidueColumnProps {
@@ -29,8 +28,6 @@ interface ResidueColumnProps {
 }
 
 export function ResidueColumn(props: ResidueColumnProps) {
-  const state = useContext(AppContext);
-
   return (
     <div className="residue-annotations">
       <div className="column-header">Variant Residue Position</div>

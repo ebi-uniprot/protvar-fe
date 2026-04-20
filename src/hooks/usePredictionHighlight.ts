@@ -52,7 +52,7 @@ export function usePredictionHighlight() {
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
-  }, [location.search]);
+  }, [location.search, navigate, triggerHighlight]);
 
   return { highlightedPrediction, triggerHighlight };
 }

@@ -22,7 +22,7 @@ interface PopulationDataProps {
 }
 
 function PopulationData(props: PopulationDataProps) {
-  const { annotation, populationObservationsUri, variantAA, genomicVariant } = props;
+  const { populationObservationsUri, variantAA, genomicVariant } = props;
   const [poApiData, setPoApiData] = useState<PopulationObservation>();
   const [selectedVariant, setSelectedVariant] = useState<Variant | null>(null);
 

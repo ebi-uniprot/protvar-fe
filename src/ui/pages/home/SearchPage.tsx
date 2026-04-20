@@ -355,12 +355,6 @@ const SearchPage: React.FC = () => {
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSearch();
-    }
-  };
 
   const isSubmitDisabled = () => {
     if (activeMode === 'variant') {

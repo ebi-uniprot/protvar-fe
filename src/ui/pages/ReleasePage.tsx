@@ -1,7 +1,7 @@
 import DefaultPageLayout from "../layout/DefaultPageLayout";
 import React, {useEffect} from "react";
 import {TITLE} from "../../constants/const";
-import ReleaseNotes, {ReleaseBadge, ReleaseNote} from "./release/ReleaseNote";
+import ReleaseNotes, {ReleaseBadge} from "./release/ReleaseNote";
 import Statistics from "./release/Statistics";
 
 function ReleasePageContent() {

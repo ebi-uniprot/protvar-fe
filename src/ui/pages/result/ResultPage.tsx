@@ -294,7 +294,7 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
           setWarning(UNEXPECTED_ERR);
         }
       }).finally(() => setLoading(false))
-  }, [touchResult, location, setSearchParams])
+  }, [touchResult, location])
 
   // ── Query mode loader (GET /mapping?input=) ─────────────────────────────────
   const loadQueryData = useCallback((q: string, assembly: string | null) => {
@@ -399,7 +399,7 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
       setResultTitle('All variants');
       loadBrowseData({}, page, pageSize, assembly, filters);
     }
-  }, [mode, idType, idParam, idParamValues, input, page, pageSize, assembly, filters, loadBrowseData])
+  }, [mode, idType, idParam, idParamValues, input, location.pathname, page, pageSize, assembly, filters, loadBrowseData])
 
   useEffect(() => {
     setLocalFilters(extractFilters(searchParams));

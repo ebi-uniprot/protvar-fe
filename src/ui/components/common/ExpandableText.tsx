@@ -56,7 +56,7 @@ export const ExpandableText: React.FC<ExpandableTextProps> = ({
       }
     }
     return convertPubMedLinks(displayText);
-  }, [text, charLimit, expanded]);
+  }, [text, charLimit, expanded, isTruncated]);
 
   return (
     <span className="expandable-text">

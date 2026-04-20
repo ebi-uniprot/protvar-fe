@@ -3,7 +3,7 @@ import DefaultPageLayout from '../../layout/DefaultPageLayout'
 import {useSearchParams, useNavigate, NavLink} from 'react-router-dom'
 import {useStorage, STORAGE_CHANGE} from '../../../context/StorageContext'
 import {ResultRecord, lastActivity} from '../../../types/ResultRecord'
-import {DownloadRecord, DOWNLOAD_STATUS_INFO, DownloadStatus} from '../../../types/DownloadRecord'
+import {DownloadRecord, DOWNLOAD_STATUS_INFO} from '../../../types/DownloadRecord'
 import {downloadStatus} from '../../../services/ProtVarService'
 import {getRelativeTime, parseDateString} from '../../../utills/DateUtil'
 import {humanFileSize} from '../../../utills/Util'
@@ -23,7 +23,6 @@ function HistoryTab() {
   const { getHistory, updateResult, deleteResult, clearHistory } = useStorage()
   const [records, setRecords] = useState<ResultRecord[]>(() => getHistory())
   const [editingId, setEditingId] = useState<string | null>(null)
-  const navigate = useNavigate()
 
   useEffect(() => {
     const handler = (e: CustomEvent) => {

@@ -36,13 +36,6 @@ export const Prediction = (props: PredictionProps) => {
   const state = useContext(AppContext);
   const { highlightedPrediction } = usePredictionHighlight();
 
-  const hasPathogenicityPredictions = props.caddScore || props.amScore ||
-    props.functionalData.eveScore || props.functionalData.esmScore ||
-    props.functionalData.popEveScore;
-
-  const hasStructurePredictions = (props.functionalData.foldxs && props.functionalData.foldxs.length > 0) ||
-    props.functionalData.m3dPred;
-
   return (
     <>
       {/* 1. CONSERVATION - Fundamental evolutionary context */}
