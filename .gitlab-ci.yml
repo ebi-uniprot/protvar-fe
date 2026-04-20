@@ -27,7 +27,7 @@ workflow:
     - when: always
 
 .js:
-  image: dockerhub.ebi.ac.uk/uniprot/variation/protvar-deploy/node-22
+  image: dockerhub.ebi.ac.uk/uniprot/variation/protvar-deploy/node
   before_script:
     - node --version
     - npm --version
