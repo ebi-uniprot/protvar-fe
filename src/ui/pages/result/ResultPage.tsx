@@ -504,7 +504,6 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
       {data && (
         <div className="result-toolbar-actions">
           <ShareLink url={shareUrl} linkText="Share" />
-          <span className="toolbar-divider" />
           {isBrowseIdentifier && (
             <>
               <i
