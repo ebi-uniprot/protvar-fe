@@ -44,7 +44,7 @@ const HELP_SECTIONS: HelpSection[] = [
     icon: 'bi-download',
     items: [
       { name: 'result-download',  title: 'Result Download' },
-      { name: 'download-options', title: 'Download Options' },
+      { name: 'download-options', title: 'Download Panel' },
       { name: 'downloads-page',   title: 'Downloads Page' },
       { name: 'download-file',    title: 'Download File Format' },
     ],

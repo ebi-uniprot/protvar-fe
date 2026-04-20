@@ -17,7 +17,7 @@ export const HELP_FILES: HelpFile[] = [
   { name: 'alphafold', md: true, title: 'Alphafold' },
   { name: 'predictions', md: true, title: 'Predictions' },
   { name: 'result-download', md: false, title: 'Result Download' }, // React component
-  { name: 'download-options', md: true, title: 'Download Options' },
+  { name: 'download-options', md: true, title: 'Download Panel' },
   { name: 'downloads-page', md: true, title: 'Downloads Page' },
   { name: 'further-info', md: true, title: 'Further Information' },
   { name: 'download-file', md: true, title: 'Download File Format' },

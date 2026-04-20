@@ -19,7 +19,7 @@ const Button = ({ className = '', type = "button", onClick = () => { }, children
     onClick = () => { }
   }
   return (
-    <button data-icon="=" className={`button-new ${className}`} type={type} onClick={onClick} disabled={disabled} id={id}>
+    <button className={className} type={type} onClick={onClick} disabled={disabled} id={id}>
       {children}
     </button>
   );

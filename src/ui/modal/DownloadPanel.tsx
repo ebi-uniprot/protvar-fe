@@ -123,7 +123,7 @@ export function DownloadPanel(props: DownloadPanelProps) {
 
   return (
     <div>
-      <h6 style={{ marginBottom: '1rem', fontWeight: 600 }}>Download Options</h6>
+      <h6 style={{ marginBottom: '1rem', fontWeight: 600 }}>Download Panel</h6>
       <div className="form-group">
         <div>
           <table>
@@ -212,11 +212,10 @@ export function DownloadPanel(props: DownloadPanelProps) {
         </div>
       </div>
       <div style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem' }}>
-        <Button onClick={handleSubmit} className="window__action-button window__default-close-button button">
-          Submit
+        <Button onClick={handleSubmit} className="btn btn-primary">
+          Generate
         </Button>
-        <Button onClick={() => appState.updateState("drawer", undefined)}
-          className="window__action-button window__default-close-button button">
+        <Button onClick={() => appState.updateState("drawer", undefined)} className="btn btn-secondary">
           Cancel
         </Button>
       </div>

@@ -1,6 +1,17 @@
 /**
- * buttons.css - All button styles
- * Consolidated from common.css, structure.css, function.css
+ * buttons.css — All button styles
+ *
+ * Semantic groups:
+ *   PRIMARY ACTION   .btn .btn-brand      — Submit, Browse, Download
+ *   SECONDARY ACTION .btn .btn-secondary  — Clear All, Cancel
+ *   CONFIRM ACTION   .btn .btn-primary           — Download panel Submit, Apply filters
+ *   EXAMPLE / CHIP   .example-tag                — search page example snippets
+ *   TOOL / CONTEXTUAL .icon-btn                  — Share, Legends, Save, Edit in toolbars
+ *   DANGER           .icon-btn .icon-btn-danger  — Delete actions
+ *   GHOST / EXPAND   .show-btn                   — Show more / Show less
+ *   INLINE           .pubmed-btn                 — tiny inline citation buttons
+ *   VIEWER           .viewer-control-btn         — 3D structure viewer overlay
+ *   TABLE            .table-action-btn           — structure table row actions
  */
 
 /* ============================================
@@ -384,17 +395,6 @@
 }
 
 /* ============================================
-   DISABLED BUTTON STATE (used via Button.tsx)
-   Migrated from _TextAreaSearch.scss
-   ============================================ */
-
-.button-disabled:hover,
-.button-disabled:focus {
-    color: #fefefe;
-    background-color: #879299;
-}
-
-/* ============================================
    DARK MODE SUPPORT
    ============================================ */
 
@@ -476,24 +476,22 @@
 }
 
 /* ============================================
-   FORM BUTTON (migrated from _Button.scss)
-   Used by src/ui/elements/form/Button.tsx
+   EXAMPLE / CHIP BUTTON
+   Search page example snippets — .example-tag
+   Pill shape, subtle background, brand tint on hover.
+   Defined here for reference; styles live in search-page.css
+   because they co-locate with the search layout.
    ============================================ */
 
-.button-new {
-    display: inline-block;
-    padding: 8px;
-    margin: 0 0.1em;
-    outline: 0;
-    background-color: #cfe8ef;
-    border-radius: 2px;
-    cursor: pointer;
-    color: #00709b;
-    border: 1px solid #00709b;
-    font-size: var(--font-size-sm);
-    transition: background var(--transition-base);
-}
+/* ============================================
+   DISABLED STATE HELPER
+   Applied by Button.tsx when loading or disabled.
+   ============================================ */
 
-.button-new:hover {
-    background-color: #b8dde7;
+.button-disabled,
+.button-disabled:hover,
+.button-disabled:focus {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
 }
