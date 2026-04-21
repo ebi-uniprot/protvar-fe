@@ -27,3 +27,15 @@ Click **View variants** on any card to go straight to the variant annotation pag
 - Disease names, phenotype terms (HPO-style), pathway names, and functional roles all work well.
 - If results are too broad, add more context: *"breast cancer tumour suppressor"* is more precise than *"cancer"*.
 - The search covers function, pathway, disease, tissue specificity, and other annotation fields from UniProt Swiss-Prot human proteins.
+
+## Embedding models
+
+The model selector in the toolbar controls which embedding model is used to encode your query. Different models have different strengths:
+
+| Model | Best for |
+|-------|----------|
+| **MPNet** *(default)* | General-purpose query-to-document retrieval |
+| **MiniLM** | Fast, lightweight queries — useful for quick exploration |
+| **BioBERT** | Biomedical NLI tasks, disease and function descriptions |
+
+If you are unsure which model to use, leave the default (MPNet) selected.

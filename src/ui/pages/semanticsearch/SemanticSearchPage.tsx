@@ -1,25 +1,28 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import DefaultPageLayout from '../../layout/DefaultPageLayout';
-import { vectorSearch } from '../../../services/ProtVarService';
-import { GroupedResult, VectorSearchResult } from '../../../types/VectorSearch';
+import { vectorSearch, getSemanticSearchModels } from '../../../services/ProtVarService';
+import { GroupedResult, ModelInfo, VectorSearchResult } from '../../../types/VectorSearch';
 import { TITLE } from '../../../constants/const';
+import { HelpButton } from '../../components/help/HelpButton';
+import { HelpContent } from '../../components/help/HelpContent';
 
 const PAGE_SIZE = 10;
+const DEFAULT_MODEL = 'mpnet';
 
 const SOURCE_TYPE_LABELS: Record<string, { label: string; cls: string }> = {
-  protein_name:                  { label: 'Name',        cls: 'ts-badge--name' },
-  comment_FUNCTION:              { label: 'Function',    cls: 'ts-badge--function' },
-  comment_PATHWAY:               { label: 'Pathway',     cls: 'ts-badge--pathway' },
-  comment_DISEASE:               { label: 'Disease',     cls: 'ts-badge--disease' },
-  comment_TISSUE_SPECIFICITY:    { label: 'Tissue',      cls: 'ts-badge--tissue' },
-  comment_DEVELOPMENTAL_STAGE:   { label: 'Development', cls: 'ts-badge--dev' },
-  comment_SIMILARITY:            { label: 'Similarity',  cls: 'ts-badge--other' },
-  feature_CHAIN:                 { label: 'Chain',       cls: 'ts-badge--other' },
+  protein_name:                  { label: 'Name',        cls: 'annotation-badge--name' },
+  comment_FUNCTION:              { label: 'Function',    cls: 'annotation-badge--function' },
+  comment_PATHWAY:               { label: 'Pathway',     cls: 'annotation-badge--pathway' },
+  comment_DISEASE:               { label: 'Disease',     cls: 'annotation-badge--disease' },
+  comment_TISSUE_SPECIFICITY:    { label: 'Tissue',      cls: 'annotation-badge--tissue' },
+  comment_DEVELOPMENTAL_STAGE:   { label: 'Development', cls: 'annotation-badge--dev' },
+  comment_SIMILARITY:            { label: 'Similarity',  cls: 'annotation-badge--other' },
+  feature_CHAIN:                 { label: 'Chain',       cls: 'annotation-badge--other' },
 };
 
 function sourceTypeInfo(type: string) {
-  return SOURCE_TYPE_LABELS[type] ?? { label: type.replace(/^(comment_|feature_)/, ''), cls: 'ts-badge--other' };
+  return SOURCE_TYPE_LABELS[type] ?? { label: type.replace(/^(comment_|feature_)/, ''), cls: 'annotation-badge--other' };
 }
 
 function groupResults(results: VectorSearchResult[]): GroupedResult[] {
@@ -46,11 +49,11 @@ function groupResults(results: VectorSearchResult[]): GroupedResult[] {
 
 function ScoreBar({ score }: { score: number }) {
   const pct = Math.max(0, Math.min(100, score));
-  const cls = pct >= 80 ? 'ts-score--high' : pct >= 60 ? 'ts-score--mid' : 'ts-score--low';
+  const cls = pct >= 80 ? 'similarity-score--high' : pct >= 60 ? 'similarity-score--mid' : 'similarity-score--low';
   return (
-    <div className={`ts-score ${cls}`}>
-      <div className="ts-score-bar" style={{ width: `${pct}%` }} />
-      <span className="ts-score-label">{score.toFixed(1)}%</span>
+    <div className={`similarity-score ${cls}`}>
+      <div className="similarity-bar" style={{ width: `${pct}%` }} />
+      <span className="similarity-label">{score.toFixed(1)}%</span>
     </div>
   );
 }
@@ -67,28 +70,28 @@ function ResultCard({ result, onView }: { result: GroupedResult; onView: (acc: s
   ).sort((a, b) => a.distance - b.distance);
 
   return (
-    <div className="ts-card">
-      <div className="ts-card-header">
-        <div className="ts-card-title">
-          {result.proteinName && <span className="ts-protein-name">{result.proteinName}</span>}
-          <span className="ts-accession">{result.accession}</span>
+    <div className="protein-card">
+      <div className="protein-card-header">
+        <div className="protein-card-title">
+          {result.proteinName && <span className="protein-name">{result.proteinName}</span>}
+          <span className="protein-accession">{result.accession}</span>
         </div>
       </div>
-      <div className="ts-matches">
+      <div className="annotation-matches">
         {rankedMatches.map(m => {
           const { label, cls } = sourceTypeInfo(m.sourceType);
           const score = Math.round((1 - m.distance) * 1000) / 10;
           return (
-            <div key={m.sourceType} className="ts-match">
-              <span className={`ts-badge ${cls}`}>{label}</span>
-              <p className="ts-match-text">"{m.sourceText}"</p>
+            <div key={m.sourceType} className="annotation-match">
+              <span className={`annotation-badge ${cls}`}>{label}</span>
+              <p className="match-text">"{m.sourceText}"</p>
               <ScoreBar score={score} />
             </div>
           );
         })}
       </div>
-      <div className="ts-card-footer">
-        <button className="btn btn-secondary ts-view-btn" onClick={() => onView(result.accession)}>
+      <div className="protein-card-footer">
+        <button className="btn btn-secondary view-variants-btn" onClick={() => onView(result.accession)}>
           View variants <i className="bi bi-arrow-right" />
         </button>
       </div>
@@ -97,29 +100,49 @@ function ResultCard({ result, onView }: { result: GroupedResult; onView: (acc: s
 }
 
 function SemanticSearchPageContent() {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const query = searchParams.get('q') ?? '';
+  const modelParam = searchParams.get('model') ?? DEFAULT_MODEL;
 
+  const [models, setModels] = useState<ModelInfo[]>([]);
+  const [selectedModel, setSelectedModel] = useState(modelParam);
   const [rawResults, setRawResults] = useState<VectorSearchResult[]>([]);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const prevQueryRef = useRef('');
+  const prevModelRef = useRef('');
 
   const groupedResults = useMemo(() => groupResults(rawResults), [rawResults]);
 
   useEffect(() => {
     document.title = `Semantic Search | ${TITLE}`;
+    getSemanticSearchModels().then(setModels);
   }, []);
+
+  // Sync model param → state when URL changes externally
+  useEffect(() => {
+    setSelectedModel(modelParam);
+  }, [modelParam]);
+
+  function handleModelChange(e: React.ChangeEvent<HTMLSelectElement>) {
+    const next = e.target.value;
+    setSelectedModel(next);
+    const params: Record<string, string> = { q: query, model: next };
+    setSearchParams(params, { replace: true });
+  }
 
   useEffect(() => {
     if (!query) return;
 
-    const isNewQuery = prevQueryRef.current !== query;
-    if (isNewQuery) {
+    const isNewSearch =
+      prevQueryRef.current !== query || prevModelRef.current !== selectedModel;
+
+    if (isNewSearch) {
       prevQueryRef.current = query;
+      prevModelRef.current = selectedModel;
       if (page !== 0) {
         setPage(0);
         setRawResults([]);
@@ -133,7 +156,7 @@ function SemanticSearchPageContent() {
 
     setLoading(true);
     setError(null);
-    vectorSearch(query, PAGE_SIZE, page * PAGE_SIZE)
+    vectorSearch(query, PAGE_SIZE, page * PAGE_SIZE, selectedModel)
       .then(res => {
         const data = res.data;
         if (!data.success) {
@@ -149,42 +172,57 @@ function SemanticSearchPageContent() {
         setError(msg ?? 'Could not reach the search service. Please try again.');
       })
       .finally(() => setLoading(false));
-  }, [query, page]);
+  }, [query, selectedModel, page]);
 
   return (
     <div className="container">
-      <div className="ts-header">
+      <div className="semantic-header">
         <h5 className="page-header">
           {query ? <>Results for <em>"{query}"</em></> : 'Semantic Search'}
         </h5>
-        {!loading && !error && groupedResults.length > 0 && (
-          <span className="ts-count">{groupedResults.length} protein{groupedResults.length !== 1 ? 's' : ''} matched</span>
-        )}
+        <div className="semantic-toolbar">
+          {!loading && !error && groupedResults.length > 0 && (
+            <span className="result-count">{groupedResults.length} protein{groupedResults.length !== 1 ? 's' : ''} matched</span>
+          )}
+          {models.length > 1 && (
+            <select
+              className="model-select"
+              value={selectedModel}
+              onChange={handleModelChange}
+              title="Embedding model"
+            >
+              {models.map(m => (
+                <option key={m.id} value={m.id}>{m.label}</option>
+              ))}
+            </select>
+          )}
+          <HelpButton title="" content={<HelpContent name="semantic-search" />} variant="inline" />
+        </div>
       </div>
 
       {loading && page === 0 && (
-        <div className="ts-state">
-          <i className="bi bi-hourglass-split ts-state-icon" />
+        <div className="search-state">
+          <i className="bi bi-hourglass-split search-state-icon" />
           <p>Searching…</p>
         </div>
       )}
 
       {error && (
-        <div className="ts-state ts-state--error">
-          <i className="bi bi-exclamation-circle ts-state-icon" />
+        <div className="search-state search-state--error">
+          <i className="bi bi-exclamation-circle search-state-icon" />
           <p>{error}</p>
         </div>
       )}
 
       {!loading && !error && groupedResults.length === 0 && query && (
-        <div className="ts-state">
-          <i className="bi bi-search ts-state-icon" />
+        <div className="search-state">
+          <i className="bi bi-search search-state-icon" />
           <p>No results found for <em>"{query}"</em>. Try a different term.</p>
         </div>
       )}
 
       {groupedResults.length > 0 && (
-        <div className="ts-results">
+        <div className="search-results">
           {groupedResults.map(r => (
             <ResultCard
               key={r.accession}
@@ -194,15 +232,15 @@ function SemanticSearchPageContent() {
           ))}
           {!loading && hasMore && (
             <button
-              className="btn btn-secondary ts-load-more"
+              className="btn btn-secondary load-more-btn"
               onClick={() => setPage(p => p + 1)}
             >
               Load more results
             </button>
           )}
           {loading && page > 0 && (
-            <div className="ts-state">
-              <i className="bi bi-hourglass-split ts-state-icon" />
+            <div className="search-state">
+              <i className="bi bi-hourglass-split search-state-icon" />
               <p>Loading more…</p>
             </div>
           )}

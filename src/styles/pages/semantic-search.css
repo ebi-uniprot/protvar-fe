@@ -7,29 +7,51 @@
    PAGE HEADER
    ============================================ */
 
-.ts-header {
+.semantic-header {
     display: flex;
-    align-items: baseline;
+    align-items: center;
+    justify-content: space-between;
     gap: var(--spacing-md);
     margin-bottom: var(--spacing-xl);
     flex-wrap: wrap;
 }
 
-.ts-header .page-header em {
+.semantic-header .page-header em {
     font-style: normal;
     color: var(--color-brand);
 }
 
-.ts-count {
+.semantic-toolbar {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.result-count {
     font-size: var(--font-size-sm);
     color: var(--color-text-tertiary);
+}
+
+.model-select {
+    font-size: var(--font-size-sm);
+    padding: 0.2rem 0.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+    background: var(--color-bg-secondary);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+}
+
+.model-select:focus {
+    outline: none;
+    border-color: var(--color-brand);
 }
 
 /* ============================================
    EMPTY / LOADING / ERROR STATES
    ============================================ */
 
-.ts-state {
+.search-state {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -39,11 +61,11 @@
     font-size: var(--font-size-md);
 }
 
-.ts-state--error {
+.search-state--error {
     color: var(--color-danger);
 }
 
-.ts-state-icon {
+.search-state-icon {
     font-size: 2rem;
     opacity: 0.5;
 }
@@ -52,7 +74,7 @@
    RESULTS LIST
    ============================================ */
 
-.ts-results {
+.search-results {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-md);
@@ -63,7 +85,7 @@
    RESULT CARD
    ============================================ */
 
-.ts-card {
+.protein-card {
     border: 1px solid var(--color-border-light);
     border-radius: var(--radius-lg);
     padding: var(--spacing-lg);
@@ -71,12 +93,12 @@
     transition: border-color var(--transition-base), box-shadow var(--transition-base);
 }
 
-.ts-card:hover {
+.protein-card:hover {
     border-color: var(--color-brand-light);
     box-shadow: 0 2px 8px rgba(1, 67, 115, 0.08);
 }
 
-.ts-card-header {
+.protein-card-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -84,14 +106,14 @@
     margin-bottom: var(--spacing-sm);
 }
 
-.ts-card-title {
+.protein-card-title {
     display: flex;
     flex-direction: column;
     gap: 0.1rem;
     min-width: 0;
 }
 
-.ts-protein-name {
+.protein-name {
     font-size: var(--font-size-base);
     font-weight: var(--font-weight-semibold);
     color: var(--color-text-primary);
@@ -100,7 +122,7 @@
     text-overflow: ellipsis;
 }
 
-.ts-accession {
+.protein-accession {
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-medium);
     color: var(--color-brand);
@@ -111,14 +133,14 @@
    SCORE BAR
    ============================================ */
 
-.ts-score {
+.similarity-score {
     display: flex;
     align-items: center;
     gap: var(--spacing-xs);
     flex-shrink: 0;
 }
 
-.ts-score-bar {
+.similarity-bar {
     height: 6px;
     border-radius: var(--radius-full);
     min-width: 30px;
@@ -126,11 +148,11 @@
     transition: width var(--transition-base);
 }
 
-.ts-score--high .ts-score-bar { background: var(--color-success); }
-.ts-score--mid  .ts-score-bar { background: var(--color-warning); }
-.ts-score--low  .ts-score-bar { background: var(--color-danger); }
+.similarity-score--high .similarity-bar { background: var(--color-success); }
+.similarity-score--mid  .similarity-bar { background: var(--color-warning); }
+.similarity-score--low  .similarity-bar { background: var(--color-danger); }
 
-.ts-score-label {
+.similarity-label {
     font-size: var(--font-size-sm);
     color: var(--color-text-secondary);
     white-space: nowrap;
@@ -142,7 +164,7 @@
    SOURCE TYPE BADGES
    ============================================ */
 
-.ts-badge {
+.annotation-badge {
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-medium);
     padding: 2px 7px;
@@ -153,32 +175,32 @@
     flex-shrink: 0;
 }
 
-.ts-badge--function   { background: #e8f0fb; color: #1a4f9c; }
-.ts-badge--disease    { background: #fdecea; color: #a02020; }
-.ts-badge--pathway    { background: #e6f4ea; color: #1e6b35; }
-.ts-badge--tissue     { background: #e0f5f5; color: #0d6060; }
-.ts-badge--dev        { background: #fff3e0; color: #8a4e00; }
-.ts-badge--name       { background: #f0ebff; color: #5b2d9e; }
-.ts-badge--other      { background: var(--color-bg-secondary); color: var(--color-text-secondary); }
+.annotation-badge--function   { background: #e8f0fb; color: #1a4f9c; }
+.annotation-badge--disease    { background: #fdecea; color: #a02020; }
+.annotation-badge--pathway    { background: #e6f4ea; color: #1e6b35; }
+.annotation-badge--tissue     { background: #e0f5f5; color: #0d6060; }
+.annotation-badge--dev        { background: #fff3e0; color: #8a4e00; }
+.annotation-badge--name       { background: #f0ebff; color: #5b2d9e; }
+.annotation-badge--other      { background: var(--color-bg-secondary); color: var(--color-text-secondary); }
 
 /* ============================================
    MATCHING ANNOTATIONS
    ============================================ */
 
-.ts-matches {
+.annotation-matches {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-xs);
     margin-bottom: var(--spacing-md);
 }
 
-.ts-match {
+.annotation-match {
     display: flex;
     align-items: center;
     gap: var(--spacing-sm);
 }
 
-.ts-match-text {
+.match-text {
     font-size: var(--font-size-sm);
     color: var(--color-text-secondary);
     line-height: var(--line-height-normal);
@@ -193,16 +215,16 @@
    CARD FOOTER
    ============================================ */
 
-.ts-card-footer {
+.protein-card-footer {
     display: flex;
     justify-content: flex-end;
 }
 
-.ts-view-btn {
+.view-variants-btn {
     font-size: var(--font-size-sm);
 }
 
-.ts-load-more {
+.load-more-btn {
     align-self: center;
     margin-top: var(--spacing-sm);
 }

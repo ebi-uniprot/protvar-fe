@@ -12,7 +12,7 @@ import {DownloadResponse, DownloadStatusEntry} from "../types/DownloadRecord";
 import {InputUploadResponse, PagedMappingResponse} from "../types/PagedMappingResponse";
 import {DownloadRequest} from "../types/DownloadRequest";
 import {MappingRequest} from "../types/MappingRequest";
-import {VectorSearchResponse} from "../types/VectorSearch";
+import {ModelInfo, VectorSearchResponse} from "../types/VectorSearch";
 
 export const APP_JSON = {"Content-Type": "application/json"}
 export const TEXT_PLAIN = {"Content-Type": "text/plain"}
@@ -116,12 +116,27 @@ export function downloadStatus(ids: string[]) {
   );
 }
 
-export function vectorSearch(text: string, limit: number = 10, offset: number = 0) {
+export function vectorSearch(text: string, limit: number = 10, offset: number = 0, model?: string) {
   return api.get<VectorSearchResponse>(
-    `${API_URL}/vector-search`,
+    `${API_URL}/semantic-search`,
     {
-      params: { text, limit, offset },
+      params: { text, limit, offset, model },
       headers: APP_JSON,
     }
   );
+}
+
+let _modelsPromise: Promise<ModelInfo[]> | null = null;
+
+export function getSemanticSearchModels(): Promise<ModelInfo[]> {
+  if (!_modelsPromise) {
+    _modelsPromise = api
+      .get<ModelInfo[]>(`${API_URL}/semantic-search/models`, { headers: APP_JSON })
+      .then((r) => r.data)
+      .catch(() => {
+        _modelsPromise = null;
+        return [];
+      });
+  }
+  return _modelsPromise;
 }

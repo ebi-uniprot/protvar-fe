@@ -1,3 +1,10 @@
+export interface ModelInfo {
+  id: string;
+  label: string;
+  description: string;
+  defaultModel: boolean;
+}
+
 export interface VectorSearchResult {
   accession: string;
   sourceType: string;
