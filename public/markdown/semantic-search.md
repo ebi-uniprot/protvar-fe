@@ -1,4 +1,4 @@
-# <a id="semantic-search"></a>Semantic Search
+# <a id="semantic-search"></a>Semantic Search <span class="experimental-text-badge"><i class="bi bi-flask"></i> experimental</span>
 
 Semantic Search lets you find proteins using natural language — disease names, phenotypes, pathways, or any biological description — instead of exact identifiers.
 

@@ -84,93 +84,24 @@
     color: var(--color-primary);
 }
 
+
 /* ============================================
-   CONFIDENCE LEVEL BADGES
+   EXPERIMENTAL FEATURE BADGE
    ============================================ */
 
-.conf-badge {
+.experimental-text-badge {
     display: inline-flex;
     align-items: center;
-    gap: var(--spacing-xs);
+    gap: 0.2rem;
+    font-size: 0.6em;
+    font-weight: 600;
+    color: #9b59b6;
+    background: rgba(155, 89, 182, 0.1);
+    border-radius: 3px;
     padding: 2px 6px;
-    border-radius: var(--radius-sm);
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-semibold);
-}
-
-.conf-badge.conf-vhigh {
-    background: rgba(40, 167, 69, 0.1);
-    color: #28a745;
-}
-
-.conf-badge.conf-high {
-    background: rgba(92, 184, 92, 0.1);
-    color: #5cb85c;
-}
-
-.conf-badge.conf-low {
-    background: rgba(240, 173, 78, 0.1);
-    color: #f0ad4e;
-}
-
-.conf-badge.conf-vlow {
-    background: rgba(217, 83, 79, 0.1);
-    color: #d9534f;
-}
-
-/* ============================================
-   CONFIDENCE ICONS (Without background)
-   ============================================ */
-
-.conf-vhigh {
-    color: #28a745;
-}
-
-.conf-high {
-    color: #5cb85c;
-}
-
-.conf-low {
-    color: #f0ad4e;
-}
-
-.conf-vlow {
-    color: #d9534f;
-}
-
-.conf-vhigh,
-.conf-high,
-.conf-low,
-.conf-vlow {
-    font-size: var(--font-size-md);
-    margin-right: var(--spacing-xs);
-}
-
-/* ============================================
-   ALPHAFOLD CONFIDENCE COLORS (for PAE legend)
-   ============================================ */
-
-.confidence-color {
-    width: 30px;
-    height: 12px;
-    border-radius: 2px;
-    border: 1px solid var(--color-border-dark);
-}
-
-.conf-very-high {
-    background: #0053D6;
-}
-
-.conf-high {
-    background: #65CBF3;
-}
-
-.conf-low {
-    background: #FFDB13;
-}
-
-.conf-very-low {
-    background: #FF7D45;
+    vertical-align: super;
+    margin-left: 0.4em;
+    letter-spacing: 0.02em;
 }
 
 /* ============================================
@@ -262,29 +193,6 @@
         color: var(--color-primary);
     }
 
-    .conf-badge.conf-vhigh {
-        background: rgba(40, 167, 69, 0.2);
-        color: #4ade80;
-    }
-
-    .conf-badge.conf-high {
-        background: rgba(92, 184, 92, 0.2);
-        color: #86efac;
-    }
-
-    .conf-badge.conf-low {
-        background: rgba(240, 173, 78, 0.2);
-        color: #fbbf24;
-    }
-
-    .conf-badge.conf-vlow {
-        background: rgba(217, 83, 79, 0.2);
-        color: #f87171;
-    }
-
-    .confidence-color {
-        border-color: var(--color-border-medium);
-    }
 
     .status-badge.status-success {
         background: rgba(40, 167, 69, 0.2);
