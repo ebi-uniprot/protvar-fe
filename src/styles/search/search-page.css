@@ -345,34 +345,70 @@
     align-items: center;
 }
 
-.browse-input-row .input-field {
+.browse-input-wrapper {
+    position: relative;
     flex: 1;
+}
+
+.browse-input-wrapper .input-field {
+    width: 100%;
     margin: 0;
+    padding-right: 2.5rem;
 }
 
 .browse-add-btn {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    color: var(--color-text-secondary);
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background var(--transition-base), color var(--transition-base);
+}
+
+.browse-add-btn:hover:not(:disabled) {
+    background: var(--color-border-light);
+    color: var(--color-text-primary);
+}
+
+.browse-add-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.browse-go-btn {
     flex-shrink: 0;
     width: 40px;
     height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--color-brand-light);
+    background: var(--color-brand);
     color: white;
     border: none;
     border-radius: var(--radius-lg);
-    font-size: 1.1rem;
+    font-size: 1rem;
     cursor: pointer;
     transition: background var(--transition-base);
 }
 
-.browse-add-btn:hover:not(:disabled) {
-    background: var(--color-brand);
+.browse-go-btn:hover:not(:disabled) {
+    background: var(--color-brand-dark);
 }
 
-.browse-add-btn:disabled {
+.browse-go-btn:disabled {
     background: var(--color-brand-lighter);
     cursor: not-allowed;
+    opacity: 0.6;
 }
 
 /* ============================================

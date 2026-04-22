@@ -156,9 +156,10 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
   return (
     <div className={`search-filters ${className}`}>
       {/* Toggle Header */}
-      <button className="filter-header" onClick={() => setIsExpanded(!isExpanded)}>
-        <span><i className="bi bi-funnel"></i> Search Filters</span>
-        <i className={isExpanded ? 'bi-chevron-down' : 'bi-chevron-up'}></i>
+      <button className="filter-header" onClick={() => setIsExpanded(!isExpanded)} aria-expanded={isExpanded}>
+        <i className={`bi ${isExpanded ? 'bi-chevron-down' : 'bi-chevron-right'}`}></i>
+        <span>Search Filters</span>
+        <i className="bi bi-funnel"></i>
       </button>
 
       {/* Filters Panel */}

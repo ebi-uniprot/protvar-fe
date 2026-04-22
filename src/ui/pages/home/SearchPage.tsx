@@ -526,22 +526,33 @@ const SearchPage: React.FC = () => {
 
               {/* Input row */}
               <div className="browse-input-row">
-                <input
-                  type="text"
-                  className="input-field"
-                  placeholder={browseIds.length > 0 ? "Add another identifier..." : "P68871 or HBB or ENSG00000244734"}
-                  value={browseInputText}
-                  onChange={(e) => setBrowseInputText(e.target.value)}
-                  onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addBrowseId(); } }}
-                />
+                <div className="browse-input-wrapper">
+                  <input
+                    type="text"
+                    className="input-field"
+                    placeholder={browseIds.length > 0 ? "Add another identifier..." : "P68871 or HBB or ENSG00000244734"}
+                    value={browseInputText}
+                    onChange={(e) => setBrowseInputText(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addBrowseId(); } }}
+                  />
+                  <button
+                    type="button"
+                    className="browse-add-btn"
+                    onClick={addBrowseId}
+                    disabled={!browseInputText.trim()}
+                    title="Add identifier"
+                  >
+                    <i className="bi bi-plus-lg"></i>
+                  </button>
+                </div>
                 <button
                   type="button"
-                  className="browse-add-btn"
-                  onClick={addBrowseId}
-                  disabled={!browseInputText.trim()}
-                  title="Add identifier"
+                  className="browse-go-btn"
+                  onClick={handleSearch}
+                  disabled={isSubmitDisabled() || loading}
+                  title="Browse"
                 >
-                  <i className="bi bi-plus-lg"></i>
+                  <i className="bi bi-search"></i>
                 </button>
               </div>
 
