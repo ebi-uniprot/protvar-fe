@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useMarkdown } from '../../../context/MarkdownContext';
 import { ActivityHelp } from './content/ActivityHelp';
 import { AlphaFoldHelp } from './content/AlphaFoldHelp';
+import { PredictionsHelp } from './content/PredictionsHelp';
 
 interface HelpContentProps {
   name: string;
@@ -23,6 +24,9 @@ export const HelpContent: React.FC<HelpContentProps> = ({ name }) => {
           break;
         case 'alphafold':
           setContent(<AlphaFoldHelp />);
+          break;
+        case 'predictions':
+          setContent(<PredictionsHelp />);
           break;
         default:
           const markdown = await getMarkdownContent(name);

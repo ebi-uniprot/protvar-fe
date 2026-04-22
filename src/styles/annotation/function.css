@@ -233,6 +233,30 @@
     margin-top: 24px;
 }
 
+/* ============================================
+   PREDICTION RADAR CHART
+   ============================================ */
+
+.prediction-radar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.5rem 0 0.75rem;
+    border-bottom: 1px solid var(--color-border-light);
+    margin-bottom: 0.5rem;
+}
+
+.prediction-radar svg {
+    overflow: visible;
+}
+
+.radar-tooltip {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-secondary);
+    min-height: 1.4em;
+    text-align: center;
+    padding: 0.1rem 0;
+}
 
 /* Color toggle - before predictions */
 .colour-toggle {

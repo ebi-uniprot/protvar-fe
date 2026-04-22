@@ -3,7 +3,7 @@ import {AlphaMissensePred} from "./AlphaMissensePred";
 //import {EvePred} from "./EvePred";
 import {EsmPred} from "./EsmPred";
 import {FoldxPred} from "./FoldxPred";
-import React, {useContext} from "react";
+import React, {useContext, useState} from "react";
 import {AppContext} from "../../../App";
 import {CaddScorePred} from "./CaddScorePred";
 import {PopEvePred} from "./PopEvePred";
@@ -12,6 +12,7 @@ import {AmScore, TranslatedSequence} from "../../../../types/MappingResponse";
 import {Missense3dPred} from "./Missense3dPred";
 import {usePredictionHighlight} from "../../../../hooks/usePredictionHighlight";
 import {PredictionWrapper} from "./PredictionWrapper";
+import {PredictionRadar} from "./PredictionRadar";
 
 export type PredAttr = {
   text: string,
@@ -35,9 +36,45 @@ export interface PredictionProps {
 export const Prediction = (props: PredictionProps) => {
   const state = useContext(AppContext);
   const { highlightedPrediction } = usePredictionHighlight();
+  const [view, setView] = useState<'chart' | 'table'>('table');
+
+  const hasScores = !!(
+    props.functionalData.conservScore ||
+    props.amScore ||
+    (props.caddScore && props.caddScore !== '-') ||
+    props.functionalData.esmScore ||
+    props.functionalData.popEveScore ||
+    (props.functionalData.foldxs?.length ?? 0) > 0 ||
+    props.functionalData.m3dPred
+  );
 
   return (
     <>
+      {hasScores && (
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '0.5rem' }}>
+          <div className="view-toggle">
+            <button className={view === 'table' ? 'active' : ''} onClick={() => setView('table')}>
+              <i className="bi bi-table" /> Table
+            </button>
+            <button className={view === 'chart' ? 'active' : ''} onClick={() => setView('chart')}>
+              <i className="bi bi-radar" /> Chart<sup><i className="bi bi-flask" title="Experimental feature" /></sup>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {view === 'chart' && <PredictionRadar
+        conservScore={props.functionalData.conservScore}
+        amScore={props.amScore}
+        caddScore={props.caddScore}
+        esmScore={props.functionalData.esmScore}
+        popEveScore={props.functionalData.popEveScore}
+        foldxs={props.functionalData.foldxs}
+        variantAA={props.variantAA}
+        m3dPred={props.functionalData.m3dPred}
+      />}
+
+      {view === 'table' && <>
       {/* 1. CONSERVATION - Fundamental evolutionary context */}
       {/*<div className="prediction-subsection-header">Conservation</div>*/}
       <PredictionWrapper
@@ -109,6 +146,7 @@ export const Prediction = (props: PredictionProps) => {
       >
         <Missense3dPred functionalData={props.functionalData} refAA={props.refAA} variantAA={props.variantAA} />
       </PredictionWrapper>
+      </>}
     </>
   );
 }
