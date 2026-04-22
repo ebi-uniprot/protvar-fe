@@ -18,19 +18,19 @@ export const PAEPanel: React.FC<PAEPanelProps> = ({ isOpen, paeImageUrl, onClose
           <div className="pae-section-title">Model Confidence</div>
           <div className="confidence-legend">
             <div className="confidence-item">
-              <div className="confidence-color conf-very-high"></div>
+              <div className="af-conf very-high"></div>
               <span className="confidence-label">Very high (&gt; 90)</span>
             </div>
             <div className="confidence-item">
-              <div className="confidence-color conf-high"></div>
+              <div className="af-conf high"></div>
               <span className="confidence-label">Confident (90–70)</span>
             </div>
             <div className="confidence-item">
-              <div className="confidence-color conf-low"></div>
+              <div className="af-conf low"></div>
               <span className="confidence-label">Low (70–50)</span>
             </div>
             <div className="confidence-item">
-              <div className="confidence-color conf-very-low"></div>
+              <div className="af-conf very-low"></div>
               <span className="confidence-label">Very low (&lt; 50)</span>
             </div>
           </div>

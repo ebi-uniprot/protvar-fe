@@ -444,7 +444,7 @@ pdbe-molstar {
     font-size: 12px;
 }
 
-.confidence-color {
+.af-conf {
     width: 30px;
     height: 12px;
     border-radius: 2px;
@@ -455,11 +455,11 @@ pdbe-molstar {
     color: #666;
 }
 
-/* AlphaFold confidence colors */
-.conf-very-high { background: #0053D6; }
-.conf-high { background: #65CBF3; }
-.conf-low { background: #FFDB13; }
-.conf-very-low { background: #FF7D45; }
+/* AlphaFold PAE legend confidence colours */
+.af-conf.very-high { background: #0053D6; }
+.af-conf.high      { background: #65CBF3; }
+.af-conf.low       { background: #FFDB13; }
+.af-conf.very-low  { background: #FF7D45; }
 
 
 /* ============================================

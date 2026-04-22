@@ -7,15 +7,12 @@
    CONFIDENCE LEVEL COLOURS
    ============================================ */
 
-.conf-vhigh { color: #1a7a30; }  /* dark green */
-.conf-high  { color: #3aaa5a; }  /* medium green — distinct from dark, no halo */
-.conf-low   { color: #c97a00; }  /* amber — darker than #f0ad4e to avoid halo */
-.conf-vlow  { color: #c0392b; }  /* strong red */
+.pocket-conf.vhigh { color: #1a7a30; }  /* dark green */
+.pocket-conf.high  { color: #3aaa5a; }  /* medium green — distinct from dark, no halo */
+.pocket-conf.low   { color: #c97a00; }  /* amber — darker than #f0ad4e to avoid halo */
+.pocket-conf.vlow  { color: #c0392b; }  /* strong red */
 
-.conf-vhigh,
-.conf-high,
-.conf-low,
-.conf-vlow {
+.pocket-conf {
     font-size: var(--font-size-sm);
     margin-right: 2px;
     -webkit-font-smoothing: antialiased;
@@ -258,8 +255,8 @@
         color: var(--color-primary);
     }
 
-    .conf-vhigh { color: #4ccc74; }
-    .conf-high  { color: #7ddba0; }
-    .conf-low   { color: #f5b840; }
-    .conf-vlow  { color: #e06060; }
+    .pocket-conf.vhigh { color: #4ccc74; }
+    .pocket-conf.high  { color: #7ddba0; }
+    .pocket-conf.low   { color: #f5b840; }
+    .pocket-conf.vlow  { color: #e06060; }
 }
