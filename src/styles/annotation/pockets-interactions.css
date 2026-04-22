@@ -20,24 +20,26 @@
 
 /* ============================================
    POCKET ENTRIES
-   Hover covers the full two-row entry
+   Card-per-entry with gap for clear separation
    ============================================ */
 
 .pocket-entries {
-    border-top: 1px solid var(--color-border-light);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 8px 0 4px;
 }
 
 .pocket-entry {
-    border-bottom: 1px solid var(--color-border-light);
-    transition: background var(--transition-base);
-}
-
-.pocket-entry:last-child {
-    border-bottom: none;
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    transition: border-color var(--transition-base), box-shadow var(--transition-base);
 }
 
 .pocket-entry:hover {
-    background: var(--color-primary-lightest);
+    border-color: var(--color-border-medium);
+    box-shadow: var(--shadow-sm);
 }
 
 /* Row 1: identity + key metrics */
@@ -46,7 +48,7 @@
     align-items: center;
     flex-wrap: wrap;
     gap: var(--spacing-lg);
-    padding: 6px 12px 3px 12px;
+    padding: 8px 12px 6px 12px;
     font-size: var(--font-size-sm);
 }
 
@@ -71,10 +73,11 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    padding: 0 12px 6px 12px;
+    padding: 5px 12px 8px 12px;
     font-size: var(--font-size-xs);
     color: var(--color-text-secondary);
     gap: 0;
+    background: var(--color-bg-tertiary);
 }
 
 .pocket-details span {
@@ -89,7 +92,7 @@
 
 .pocket-detail-label {
     font-weight: var(--font-weight-medium);
-    color: var(--color-text-tertiary);
+    color: var(--color-text-secondary);
     margin-right: 3px;
 }
 
@@ -233,12 +236,23 @@
    ============================================ */
 
 @media (prefers-color-scheme: dark) {
-    .pocket-entry:hover,
+    .pocket-entry {
+        border-color: var(--color-border-light);
+    }
+
+    .pocket-entry:hover {
+        border-color: var(--color-border-medium);
+        box-shadow: none;
+    }
+
+    .pocket-details {
+        background: var(--color-bg-secondary);
+    }
+
     .interaction-row:hover {
         background: rgba(110, 168, 254, 0.08);
     }
 
-    .pocket-entry,
     .interaction-row {
         border-color: var(--color-border-light);
     }
