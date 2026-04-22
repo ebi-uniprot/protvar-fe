@@ -10,6 +10,8 @@ export interface VectorSearchResult {
   sourceType: string;
   sourceText: string;
   distance: number;
+  beginPos: number | null;
+  endPos: number | null;
 }
 
 export interface VectorSearchResponse {

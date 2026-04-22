@@ -81,10 +81,20 @@ function ResultCard({ result, onView }: { result: GroupedResult; onView: (acc: s
         {rankedMatches.map(m => {
           const { label, cls } = sourceTypeInfo(m.sourceType);
           const score = Math.round((1 - m.distance) * 1000) / 10;
+          const posLabel = m.beginPos !== null && m.endPos !== null
+            ? m.beginPos === m.endPos
+              ? `position ${m.beginPos}`
+              : `positions ${m.beginPos}–${m.endPos}`
+            : null;
           return (
             <div key={m.sourceType} className="annotation-match">
               <span className={`annotation-badge ${cls}`}>{label}</span>
               <p className="match-text">"{m.sourceText}"</p>
+              {posLabel && (
+                <span className="match-position">
+                  <a href={`/p/${m.accession}/${m.beginPos}`}>{posLabel}</a>
+                </span>
+              )}
               <ScoreBar score={score} />
             </div>
           );
