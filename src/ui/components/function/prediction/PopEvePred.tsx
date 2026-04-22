@@ -1,6 +1,6 @@
 import {PopEveScore} from "../../../../types/MappingResponse";
-import {PRECISION} from "./PredConstants";
-import {PredAttr} from "./Prediction";
+import {PRECISION} from "./PredictionConstants";
+import {PredictionCategory} from "./Prediction";
 import Spaces from "../../../elements/Spaces";
 import { CopyLink } from '../../common/CopyLink';
 import React from "react";
@@ -54,7 +54,7 @@ export function getPopEveColor(score: number): string {
 /* at a representative score within each range        */
 /* -------------------------------------------------- */
 
-export const POPEVE_SCORE_ATTR: PredAttr[] = [
+export const POPEVE_SCORE_ATTR: PredictionCategory[] = [
   { color: getPopEveColor(-6.0),   stdColor: 'red',       text: 'severe',                 range: '<-5.056' },
   { color: getPopEveColor(-4.837), stdColor: 'lightgrey', text: 'moderately deleterious',  range: '-5.056 to -4.617' },
   { color: getPopEveColor(-2.5),   stdColor: 'blue',      text: 'unlikely deleterious',    range: '>-4.617' },

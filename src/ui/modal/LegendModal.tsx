@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import { v1 as uuidv1 } from 'uuid';
 import AnnotationLegend from './AnnotationLegend'
 import { CADD_SCORE_ATTR } from "../components/function/prediction/CaddScorePred";
-import { PredAttr } from "../components/function/prediction/Prediction";
+import { PredictionCategory } from "../components/function/prediction/Prediction";
 import { AM_SCORE_ATTR } from "../components/function/prediction/AlphaMissensePred";
 import { AF_ATTR } from "../components/population/PopulationAlleleFreq";
 import { POPEVE_SCORE_ATTR, POPEVE_COLORS, POPEVE_MIN, POPEVE_MAX } from "../components/function/prediction/PopEvePred";
@@ -24,7 +24,7 @@ function LegendSection({ title, children }: { title: string; children: React.Rea
   );
 }
 
-function CircleItems({ attrs, stdColor }: { attrs: PredAttr[]; stdColor: boolean }) {
+function CircleItems({ attrs, stdColor }: { attrs: PredictionCategory[]; stdColor: boolean }) {
   return (
     <div className="flex-column">
       {attrs.map((sc) => (
@@ -39,7 +39,7 @@ function CircleItems({ attrs, stdColor }: { attrs: PredAttr[]; stdColor: boolean
   );
 }
 
-function SquareItems({ attrs, stdColor }: { attrs: PredAttr[]; stdColor: boolean }) {
+function SquareItems({ attrs, stdColor }: { attrs: PredictionCategory[]; stdColor: boolean }) {
   return (
     <div className="flex-column">
       {attrs.map((sc) => (

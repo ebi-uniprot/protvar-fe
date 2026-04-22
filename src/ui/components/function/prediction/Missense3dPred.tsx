@@ -3,7 +3,7 @@ import {FunctionalInfo} from "../../../../types/FunctionalInfo";
 import {aminoAcid3to1Letter} from "../../../../utills/Util";
 import { CopyLink } from '../../common/CopyLink';
 import Spaces from "../../../elements/Spaces";
-import {STD_BENIGN_COLOR, STD_PATHOGENIC_COLOR} from "./PredConstants";
+import {STD_BENIGN_COLOR, STD_PATHOGENIC_COLOR} from "./PredictionConstants";
 import {ExtLink} from "../../common/Link";
 
 const M3D_BASE_URL = 'https://missense3d.bc.ic.ac.uk/~missense3d2/results-details.html';

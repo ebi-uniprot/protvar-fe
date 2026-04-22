@@ -1,12 +1,12 @@
 import React from 'react';
 import { PredictionRadar } from '../../function/prediction/PredictionRadar';
-import { PredAttr } from '../../function/prediction/Prediction';
+import { PredictionCategory } from '../../function/prediction/Prediction';
 import { CONSERV_SCORE_ATTR } from '../../function/prediction/ConservPred';
 import { AM_SCORE_ATTR } from '../../function/prediction/AlphaMissensePred';
 import { CADD_SCORE_ATTR } from '../../function/prediction/CaddScorePred';
 import { ESM_SCORE_ATTR } from '../../function/prediction/EsmPred';
 import { POPEVE_SCORE_ATTR } from '../../function/prediction/PopEvePred';
-import { STD_BENIGN_COLOR, STD_PATHOGENIC_COLOR } from '../../function/prediction/PredConstants';
+import { STD_BENIGN_COLOR, STD_PATHOGENIC_COLOR } from '../../function/prediction/PredictionConstants';
 import { CONFIDENCE_LEVELS, ConfidenceBadge } from '../../function/utils/confidenceUtils';
 
 const PATHOGENIC_EXAMPLE = {
@@ -29,7 +29,7 @@ const BENIGN_EXAMPLE = {
   m3dPred:       { prediction: 'non-damaging', damagingFeature: '-' },
 };
 
-const PredCategories: React.FC<{ attrs: PredAttr[] }> = ({ attrs }) => (
+const PredCategories: React.FC<{ attrs: PredictionCategory[] }> = ({ attrs }) => (
   <ul style={{ listStyle: 'none', padding: 0, margin: '0.25rem 0 0.75rem' }}>
     {attrs.map((attr, i) => (
       <li key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.2rem' }}>

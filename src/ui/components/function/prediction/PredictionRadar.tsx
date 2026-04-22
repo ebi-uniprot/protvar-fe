@@ -3,7 +3,7 @@ import RadarChartLib from 'react-svg-radar-chart';
 import 'react-svg-radar-chart/build/css/index.css';
 import { AmScore, ConservScore, EsmScore, M3dPred, PopEveScore } from '../../../../types/MappingResponse';
 import { Foldx } from '../../../../types/Prediction';
-import { STD_BENIGN_COLOR, STD_COLOR_GRADIENT, STD_PATHOGENIC_COLOR, STD_UNCERTAIN_COLOR } from './PredConstants';
+import { STD_BENIGN_COLOR, STD_COLOR_GRADIENT, STD_PATHOGENIC_COLOR, STD_UNCERTAIN_COLOR } from './PredictionConstants';
 import { POPEVE_MIN, POPEVE_MAX, POPEVE_SCORE_ATTR, getPopEveClass } from './PopEvePred';
 import { AM_SCORE_ATTR } from './AlphaMissensePred';
 import { caddScoreAttr } from './CaddScorePred';

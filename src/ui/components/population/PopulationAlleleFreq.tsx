@@ -1,5 +1,5 @@
-import {PredAttr} from "../function/prediction/Prediction";
-import {STD_COLOR_GRADIENT_REVERSE} from "../function/prediction/PredConstants";
+import {PredictionCategory} from "../function/prediction/Prediction";
+import {STD_COLOR_GRADIENT_REVERSE} from "../function/prediction/PredictionConstants";
 import React from "react";
 import {AlleleFreq} from "../../../types/PopulationObservation";
 import {ExtLink} from "../common/Link";
@@ -18,7 +18,7 @@ const buildGnomadUrl = (genomicVariant: string, allele: string): string => {
   return `https://gnomad.broadinstitute.org/variant/${genomicVariant}?dataset=gnomad_r4`;
 };
 
-export const AF_ATTR: PredAttr[] = [
+export const AF_ATTR: PredictionCategory[] = [
   {color: '#FAD0C9', stdColor: STD_COLOR_GRADIENT_REVERSE.rgbAt(0.1).toHexString(), text: 'very rare', range: 'AF < 0.1%', threshold: 0.001 },
   {color: '#A3D8FF', stdColor: STD_COLOR_GRADIENT_REVERSE.rgbAt(0.5).toHexString(), text: 'rare', range: '0.1% ≤ AF < 0.5%', threshold: 0.005 },
   {color: '#B8E1B1', stdColor: STD_COLOR_GRADIENT_REVERSE.rgbAt(0.8).toHexString(), text: 'low frequency', range: '0.5% ≤ AF < 5%', threshold: 0.05 },

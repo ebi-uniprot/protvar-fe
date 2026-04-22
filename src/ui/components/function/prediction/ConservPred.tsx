@@ -1,15 +1,15 @@
 import tinygradient from "tinygradient";
 import {ConservScore} from "../../../../types/MappingResponse";
-import {PredAttr} from "./Prediction";
+import {PredictionCategory} from "./Prediction";
 import Spaces from "../../../elements/Spaces";
 import {
   PRECISION,
   STD_COLOR_GRADIENT
-} from "./PredConstants";
+} from "./PredictionConstants";
 import { CopyLink } from '../../common/CopyLink';
 import React from "react";
 
-export const CONSERV_SCORE_ATTR: PredAttr[] = [
+export const CONSERV_SCORE_ATTR: PredictionCategory[] = [
   {color: '#732faf', stdColor: STD_COLOR_GRADIENT.rgbAt(0).toHexString(),     text: 'very low',    range: '0–0.15',   tip: 'Very low conservation = 0-0.15' },
   {color: '#194888', stdColor: STD_COLOR_GRADIENT.rgbAt(0.166).toHexString(), text: 'low',         range: '0.15–0.3', tip: 'Low conservation = 0.15-0.3' },
   {color: '#277777', stdColor: STD_COLOR_GRADIENT.rgbAt(0.333).toHexString(), text: 'fairly low',  range: '0.3–0.45', tip: 'Fairly low conservation = 0.3-0.45' },

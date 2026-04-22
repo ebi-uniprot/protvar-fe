@@ -14,7 +14,7 @@ import {usePredictionHighlight} from "../../../../hooks/usePredictionHighlight";
 import {PredictionWrapper} from "./PredictionWrapper";
 import {PredictionRadar} from "./PredictionRadar";
 
-export type PredAttr = {
+export type PredictionCategory = {
   text: string,
   color: string,
   stdColor: string,

@@ -1,5 +1,5 @@
 import Spaces from "../../../elements/Spaces";
-import {PRECISION, STD_BENIGN_COLOR, STD_PATHOGENIC_COLOR} from "./PredConstants";
+import {PRECISION, STD_BENIGN_COLOR, STD_PATHOGENIC_COLOR} from "./PredictionConstants";
 import {Foldx} from "../../../../types/Prediction";
 import {aminoAcid3to1Letter} from "../../../../utills/Util";
 import { CopyLink } from '../../common/CopyLink';

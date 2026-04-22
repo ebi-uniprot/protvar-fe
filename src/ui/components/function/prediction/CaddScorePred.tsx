@@ -1,12 +1,12 @@
-import {PredAttr} from "./Prediction";
-import {STD_COLOR_GRADIENT} from "./PredConstants";
+import {PredictionCategory} from "./Prediction";
+import {STD_COLOR_GRADIENT} from "./PredictionConstants";
 import Spaces from "../../../elements/Spaces";
 import { CopyLink } from '../../common/CopyLink';
 import React from "react";
 
 const PRECISION: number = 1 // dp
 
-export const CADD_SCORE_ATTR: PredAttr[] = [
+export const CADD_SCORE_ATTR: PredictionCategory[] = [
   // CADD score range 1 to 99
   // benign (blue) - 15% of lower range
   {color: 'DarkGreen', stdColor: STD_COLOR_GRADIENT.rgbAt(0).toHexString(), text: 'likely benign', range: '<15.0' }, // 15%
