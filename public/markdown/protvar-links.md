@@ -9,7 +9,7 @@ Direct links to ProtVar allow you to share specific queries, results, annotation
 1. [Single Variant Query](#protvar-links:s1)
    - [1a. Free text](#protvar-links:s1a)
    - [1b. Direct genomic URL](#protvar-links:s1b)
-   - [1c. Direct protein variant URL](#protvar-links:s1c)
+   - [1c. Direct protein variant URL (including position range)](#protvar-links:s1c)
    - [1d. Genomic query with named parameters](#protvar-links:s1d)
    - [1e. Protein query with named parameters](#protvar-links:s1e)
 2. [Multi-Variant / Uploaded Results](#protvar-links:s2)
@@ -80,15 +80,18 @@ A single-variant query accepts any ProtVar-supported input format and returns a 
 | Segment | Required | Description |
 |---------|----------|-------------|
 | `accession` | yes | UniProt accession (e.g. `Q4ZIN3`) |
-| `position` | yes | Amino acid position |
-| `reference_AA` | no | Reference amino acid (one- or three-letter) |
-| `variant_AA` | no | Variant amino acid (one- or three-letter) |
+| `position` | yes | Amino acid position (single) or range `<start>-<end>` |
+| `reference_AA` | no | Reference amino acid (one- or three-letter); single position only |
+| `variant_AA` | no | Variant amino acid (one- or three-letter); single position only |
+
+When `position` is a **range** (`<start>-<end>`), the URL opens a browse view showing all variants within that region of the protein. Filters from Section 7 can be appended.
 
 **Examples:**
 
-- [`/ProtVar/p/Q4ZIN3/558/S/R`](/ProtVar/p/Q4ZIN3/558/S/R)
-- [`/ProtVar/p/P22304/205/A/P`](/ProtVar/p/P22304/205/A/P)
-- [`/ProtVar/p/Q4ZIN3/558`](/ProtVar/p/Q4ZIN3/558)
+- [`/ProtVar/p/Q4ZIN3/558/S/R`](/ProtVar/p/Q4ZIN3/558/S/R) — single variant
+- [`/ProtVar/p/P22304/205/A/P`](/ProtVar/p/P22304/205/A/P) — single variant
+- [`/ProtVar/p/Q4ZIN3/558`](/ProtVar/p/Q4ZIN3/558) — single position
+- [`/ProtVar/p/Q4ZIN3/558-600`](/ProtVar/p/Q4ZIN3/558-600) — position range browse
 
 ---
 
@@ -458,6 +461,9 @@ The following URL patterns from previous versions of ProtVar remain supported. P
 
 # Single variant — direct protein
 /ProtVar/p/<accession>/<pos>[/<ref_AA>/<alt_AA>]
+
+# Protein position range browse
+/ProtVar/p/<accession>/<start>-<end>
 
 # Multi-variant result
 /ProtVar/result/<id>[?page=N&pageSize=N]

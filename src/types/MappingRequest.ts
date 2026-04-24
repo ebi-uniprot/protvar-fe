@@ -40,6 +40,10 @@ export interface MappingRequest {
   esm1bMin?: number;
   esm1bMax?: number;
 
+  // Position range filter — single UniProt accession browse only; ignored otherwise
+  startPos?: number;
+  endPos?: number;
+
   // Sorting
   sort?: string;
   order?: 'asc' | 'desc';

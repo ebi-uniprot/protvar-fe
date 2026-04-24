@@ -46,6 +46,7 @@ export const UNEXPECTED_ERR = 'An unexpected error occurred'
 const chromosomeRegex = /^chr([1-9]|1[0-9]|2[0-2]|X|Y|MT)$/;
 const proteinAccessionRegex = /^([OPQ][0-9][A-Z0-9]{3}[0-9]|[A-NR-Z][0-9]([A-Z][A-Z0-9]{2}[0-9]){1,2})$/;
 const positionRegex = /^\d+$/;
+const positionRangeRegex = /^(\d+)-(\d+)$/;
 
 /**
  * Build the canonical new URL for a deprecated URL pattern.
@@ -144,7 +145,12 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
   const idParamValues = useMemo(() => searchParams.getAll('id'), [searchParams]);
   const hasQ = !!(searchParams.get('q') || searchParams.get('search') ||
                   searchParams.get('chromosome') || searchParams.get('accession'));
-  const mode: PageMode = modeProp === 'query' ? 'query'
+  // /p/:acc/:start-:end → browse mode with position range filter
+  const isRangeQuery = queryType === 'protein'
+    && proteinAccessionRegex.test(param1 ?? '')
+    && positionRangeRegex.test(param2 ?? '');
+  const mode: PageMode = isRangeQuery ? 'browse'
+                       : modeProp === 'query' ? 'query'
                        : modeProp === 'browse' ? 'browse'
                        : hasQ ? 'query'
                        : 'browse';
@@ -185,6 +191,8 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
     options: {
       resultId?: string;    // uploaded result ID → resultId path
       ids?: Identifier[];   // identifier browse — single id, multi-id, or empty (filter-only)
+      startPos?: number;     // position range start (for /p/:acc/:start-:end routes)
+      endPos?: number;       // position range end
     },
     page: number,
     pageSize: number,
@@ -370,7 +378,16 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
     if (mode !== 'browse') return;
     setWarning('');
 
-    if (idType && idParam) {
+    if (isRangeQuery && param1 && param2) {
+      // /p/:acc/:start-:end — protein position range browse
+      const match = positionRangeRegex.exec(param2)!;
+      const startPos = parseInt(match[1], 10);
+      const endPos = parseInt(match[2], 10);
+      const [from, to] = startPos <= endPos ? [startPos, endPos] : [endPos, startPos];
+      setResultTitle(`${param1} ${from}–${to}`);
+      loadBrowseData({ ids: [{ type: 'uniprot', value: param1 }], startPos: from, endPos: to }, page, pageSize, assembly, filters);
+
+    } else if (idType && idParam) {
       // Type-prefixed single-ID route: /gene/:id, /pdb/:id, etc.
       const trimmed = idParam.trim();
       setResultTitle(trimmed);
@@ -399,7 +416,7 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
       setResultTitle('All variants');
       loadBrowseData({}, page, pageSize, assembly, filters);
     }
-  }, [mode, idType, idParam, idParamValues, input, location.pathname, page, pageSize, assembly, filters, loadBrowseData])
+  }, [mode, isRangeQuery, param1, param2, idType, idParam, idParamValues, input, location.pathname, page, pageSize, assembly, filters, loadBrowseData])
 
   useEffect(() => {
     setLocalFilters(extractFilters(searchParams));
@@ -469,6 +486,7 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
   // Note: filters can be combined with any browse context (single id, multi-id, or no id).
   // "Browse" as a label covers all identifier-based and filter-driven cases.
   function getContextLabel(): string {
+    if (isRangeQuery) return 'Protein';
     if (isQueryMode) {
       if (queryType === 'genomic') return 'Genomic';
       if (queryType === 'protein') return 'Protein';

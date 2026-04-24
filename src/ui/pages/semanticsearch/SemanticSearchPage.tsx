@@ -92,7 +92,9 @@ function ResultCard({ result, onView }: { result: GroupedResult; onView: (acc: s
               <p className="match-text">"{m.sourceText}"</p>
               {posLabel && (
                 <span className="match-position">
-                  <a href={`/p/${m.accession}/${m.beginPos}`}>{posLabel}</a>
+                  <a href={m.beginPos === m.endPos
+                    ? `/p/${m.accession}/${m.beginPos}`
+                    : `/p/${m.accession}/${m.beginPos}-${m.endPos}`}>{posLabel}</a>
                 </span>
               )}
               <ScoreBar score={score} />
