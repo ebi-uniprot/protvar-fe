@@ -28,6 +28,7 @@ import {
   mapUiStabilityToBackend, mapUiAlleleFreqToBackend
 } from "../../components/search/filterUtils";
 import {parseIdParam} from "../../../utills/InputTypeResolver";
+import {effectiveTotalPages} from "../../../utills/PaginationFormat";
 import {Identifier, IdentifierType, InputType} from "../../../types/InputType";
 import {MappingRequest} from "../../../types/MappingRequest";
 import SearchFilters, {
@@ -268,7 +269,7 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
           } else {
             setData(null); setWarning(NO_RESULT)
           }
-          const totalPages = response.data.totalPages ?? 0
+          const totalPages = effectiveTotalPages(response.data)
           if (page !== DEFAULT_PAGE && page > totalPages) {
             setWarning(MAX_PAGE_EXCEEDED.replace("{totalPages}", totalPages.toString()))
           }

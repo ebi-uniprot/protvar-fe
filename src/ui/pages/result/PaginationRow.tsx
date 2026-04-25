@@ -1,6 +1,7 @@
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE, PERMITTED_PAGE_SIZES } from '../../../constants/const';
 import { PagedMappingResponse } from '../../../types/PagedMappingResponse';
+import { effectiveTotalPages, isTotalCapped } from '../../../utills/PaginationFormat';
 
 interface PaginationRowProps {
   loading: boolean;
@@ -30,8 +31,13 @@ function PaginationRow({ loading, data }: PaginationRowProps) {
   }
 
   const disabled = loading || data === null;
-  const atFirst = disabled || data.page === 1;
-  const atLast = disabled || data.last;
+  const atFirst = disabled || (data?.page ?? 1) === 1;
+
+  // When the BE caps totalItems (filter-only browse), clamp navigation to
+  // floor(totalCap / pageSize) and surface the capped state in the indicator.
+  const totalPages = data ? effectiveTotalPages(data) : 0;
+  const capped = data ? isTotalCapped(data) : false;
+  const atLast = disabled || (data && (data.last || data.page >= totalPages)) || false;
 
   return (
     <div className="pagination-row">
@@ -42,13 +48,13 @@ function PaginationRow({ loading, data }: PaginationRowProps) {
         <button className="btn btn-secondary btn-sm" onClick={() => changePage(data!.page - 1)} disabled={atFirst}>
           <i className="bi bi-chevron-left" />
         </button>
-        <span className="pagination-info">
-          {data ? `${data.page} / ${data.totalPages}` : '—'}
+        <span className="pagination-info" title={capped ? 'Result count capped — refine filters to narrow further' : undefined}>
+          {data ? `${data.page} / ${totalPages}${capped ? '+' : ''}` : '—'}
         </span>
         <button className="btn btn-secondary btn-sm" onClick={() => changePage(data!.page + 1)} disabled={atLast}>
           <i className="bi bi-chevron-right" />
         </button>
-        <button className="btn btn-secondary btn-sm" onClick={() => changePage(data!.totalPages)} disabled={atLast}>
+        <button className="btn btn-secondary btn-sm" onClick={() => changePage(totalPages)} disabled={atLast}>
           <i className="bi bi-chevron-double-right" />
         </button>
       </div>
