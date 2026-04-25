@@ -286,10 +286,14 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
             if (typeof errData === 'string') {
               msg = errData;
             } else if (errData && typeof errData === 'object') {
-              // BE returns Map<String,String> for both validation and enum parse errors
+              // BE returns Map<String,String> for both validation and enum parse errors.
+              // Generic "error" / "message" keys carry a user-facing sentence and
+              // shouldn't be prefixed; field-specific keys (e.g. "cadd") get the
+              // "field: detail" formatting so the user can locate the bad input.
               const entries = Object.entries(errData as Record<string, string>);
-              msg = entries.map(([field, detail]) => `${field}: ${detail}`).join('; ')
-                || 'Invalid input or type mismatch';
+              msg = entries.map(([field, detail]) =>
+                (field === 'error' || field === 'message') ? detail : `${field}: ${detail}`
+              ).join('; ') || 'Invalid input or type mismatch';
             } else {
               msg = 'Invalid input or type mismatch';
             }

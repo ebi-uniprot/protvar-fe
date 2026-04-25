@@ -435,10 +435,13 @@
 }
 
 /* "No other isoforms" hint shown in filter-only browse when the user
-   expands the chevron on a row whose lazy fetch returned no alts. */
+   expands the chevron on a row whose lazy fetch returned no alts.
+   Positioned at the isoform column (col 6+), matching the indent of
+   .result-row-isoform .isoform-cell so it aligns visually with where
+   alt isoforms would render. */
 .result-row-no-alts .no-alts-hint {
-    grid-column: 1 / -1;
-    padding: 6px 12px 6px 36px;
+    grid-column: 6 / -1;
+    padding: 6px 8px 6px 24px;  /* matches isoform-cell padding-left: 24px */
     font-size: var(--font-size-xs);
     color: var(--color-text-muted);
     font-style: italic;

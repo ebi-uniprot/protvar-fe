@@ -254,12 +254,14 @@ const getTableRows = (
 
         // Lazy mode + expanded + nothing more to show: render a hint so the
         // user understands the chevron resolved to "no other isoforms"
-        // rather than appearing to do nothing.
+        // rather than appearing to do nothing. The hint is positioned at
+        // the isoform column (col 6+) by the .no-alts-hint CSS rule,
+        // aligning with where alt isoforms would normally appear.
         if (primaryKey && lazyIsoforms && !isLoadingIsoforms
             && isoformGroupKey === isoformGroupExpanded
             && effectiveIsoforms.length === 1) {
           geneRowEls.push(
-            <div key={`row-${primaryRow}-no-alts`} className="result-row-isoform result-row-no-alts">
+            <div key={`row-${primaryRow}-no-alts`} className="result-row result-row-isoform result-row-no-alts">
               <span className="no-alts-hint">No other isoforms.</span>
             </div>
           );
