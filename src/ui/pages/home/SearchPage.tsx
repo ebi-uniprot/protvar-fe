@@ -14,6 +14,7 @@ import SearchFilters, {
 } from '../../components/search/SearchFilters';
 import {buildFilterParams} from "../../components/search/filterUtils";
 import {parseIdParam} from "../../../utills/InputTypeResolver";
+import {hasPrimaryFilter, PRIMARY_FILTER_PROMPT} from "../../../utills/PrimaryFilter";
 import {ID_GENE, ID_PDB, ID_ENSEMBL, ID_REFSEQ} from "../../../constants/BrowserPaths";
 
 interface ExampleData {
@@ -317,8 +318,8 @@ const SearchPage: React.FC = () => {
       ? [...browseIds, browseInputText.trim()].filter((v, i, a) => a.indexOf(v) === i)
       : browseIds;
 
-    if (allIds.length === 0) {
-      setError('Please enter at least one identifier.');
+    if (allIds.length === 0 && !hasPrimaryFilter(searchFilters)) {
+      setError(PRIMARY_FILTER_PROMPT);
       return;
     }
     setError('');
@@ -330,7 +331,10 @@ const SearchPage: React.FC = () => {
     const filterParams = buildFilterParams(searchFilters);
     const filterStr = filterParams.toString();
 
-    if (allIds.length === 1) {
+    if (allIds.length === 0) {
+      // Filter-only browse: no identifiers, primary filter present
+      navigate(`${SEARCH}${filterStr ? `?${filterStr}` : ''}`);
+    } else if (allIds.length === 1) {
       const url = buildSingleIdUrl(allIds[0]);
       navigate(`${url}${filterStr ? `?${filterStr}` : ''}`);
     } else {
@@ -360,7 +364,7 @@ const SearchPage: React.FC = () => {
     if (activeMode === 'variant') {
       return !variantInput.trim() && !uploadedFile;
     } else if (activeMode === 'browse') {
-      return browseIds.length === 0 && !browseInputText.trim();
+      return browseIds.length === 0 && !browseInputText.trim() && !hasPrimaryFilter(searchFilters);
     } else if (activeMode === 'text') {
       return !textInput.trim();
     }
