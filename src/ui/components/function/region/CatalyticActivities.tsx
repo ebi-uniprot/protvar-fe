@@ -32,7 +32,7 @@ function getRHEA(dbReferences: Array<DbReference>) {
   if (dbReferences) {
     dbReferences.forEach((reference) => {
       if (reference.type === 'Rhea' && reference.id.includes('RHEA:')) {
-        reaIds.push(<ExtLink url={RHEA_URL + reference.id.split(':')[1]} text={reference.id} />);
+        reaIds.push(<ExtLink key={reference.id} url={RHEA_URL + reference.id.split(':')[1]} text={reference.id} />);
       }
     });
   }
