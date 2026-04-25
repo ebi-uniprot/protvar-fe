@@ -281,6 +281,11 @@ export const PredictionRadar: React.FC<PredictionRadarProps> = ({
           : (availableCount < totalAxes ? 'Grey: score not available' : ' ')
         }
       </div>
+      <div className="radar-color-scale">
+        <span className="radar-scale-label">Pathogenic</span>
+        <div className="radar-scale-bar" />
+        <span className="radar-scale-label">Benign</span>
+      </div>
     </div>
   );
 };

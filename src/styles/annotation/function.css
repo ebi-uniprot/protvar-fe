@@ -258,6 +258,28 @@
     padding: 0.1rem 0;
 }
 
+.radar-color-scale {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 80%;
+    margin-top: 4px;
+}
+
+.radar-scale-bar {
+    flex: 1;
+    height: 8px;
+    border-radius: 4px;
+    background: linear-gradient(to right, red, lightgray, blue);
+    border: 1px solid var(--color-border-light);
+}
+
+.radar-scale-label {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    white-space: nowrap;
+}
+
 /* Color toggle - before predictions */
 .colour-toggle {
     margin: 0 0 12px 0;
