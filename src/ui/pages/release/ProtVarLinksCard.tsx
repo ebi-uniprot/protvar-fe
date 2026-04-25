@@ -35,9 +35,9 @@ const TILES: Tile[] = [
   {
     icon: 'bi-list-ul',
     title: 'Browse all variants in a protein',
-    pattern: '/p/{acc}',
-    example: '/p/Q4ZIN3',
-    href: '/p/Q4ZIN3',
+    pattern: '/{acc}',
+    example: '/Q4ZIN3',
+    href: '/Q4ZIN3',
   },
   {
     icon: 'bi-arrows-expand',
