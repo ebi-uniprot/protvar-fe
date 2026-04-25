@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import DefaultPageLayout from '../../layout/DefaultPageLayout';
 import { vectorSearch, getSemanticSearchModels } from '../../../services/ProtVarService';
 import { GroupedResult, ModelInfo, VectorSearchResult } from '../../../types/VectorSearch';
@@ -92,9 +92,9 @@ function ResultCard({ result, onView }: { result: GroupedResult; onView: (acc: s
               <p className="match-text">"{m.sourceText}"</p>
               {posLabel && (
                 <span className="match-position">
-                  <a href={m.beginPos === m.endPos
+                  <Link to={m.beginPos === m.endPos
                     ? `/p/${m.accession}/${m.beginPos}`
-                    : `/p/${m.accession}/${m.beginPos}-${m.endPos}`}>{posLabel}</a>
+                    : `/p/${m.accession}/${m.beginPos}-${m.endPos}`}>{posLabel}</Link>
                 </span>
               )}
               <ScoreBar score={score} />
