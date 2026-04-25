@@ -1,7 +1,7 @@
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE, PERMITTED_PAGE_SIZES } from '../../../constants/const';
 import { PagedMappingResponse } from '../../../types/PagedMappingResponse';
-import { effectiveTotalPages, isTotalCapped } from '../../../utills/PaginationFormat';
+import { effectiveTotalPages, isTotalCapped, isTotalUnknown } from '../../../utills/PaginationFormat';
 
 interface PaginationRowProps {
   loading: boolean;
@@ -33,11 +33,19 @@ function PaginationRow({ loading, data }: PaginationRowProps) {
   const disabled = loading || data === null;
   const atFirst = disabled || (data?.page ?? 1) === 1;
 
-  // When the BE caps totalItems (filter-only browse), clamp navigation to
-  // floor(totalCap / pageSize) and surface the capped state in the indicator.
+  // Pagination state derives from PaginationFormat helpers, which encode the
+  // three BE counting modes (exact / capped / unknown). When the total is
+  // unknown (filter-only COUNT timeout), totalPages is null — we render
+  // "Page N" only and rely on data.last for the Next button. When capped,
+  // navigation clamps to floor(totalCap / pageSize). When exact, behaves
+  // exactly as before.
   const totalPages = data ? effectiveTotalPages(data) : 0;
   const capped = data ? isTotalCapped(data) : false;
-  const atLast = disabled || (data && (data.last || data.page >= totalPages)) || false;
+  const unknown = data ? isTotalUnknown(data) : false;
+  const atLast = disabled
+    || (data && data.last)
+    || (data && totalPages != null && data.page >= totalPages)
+    || false;
 
   return (
     <div className="pagination-row">
@@ -48,15 +56,26 @@ function PaginationRow({ loading, data }: PaginationRowProps) {
         <button className="btn btn-secondary btn-sm" onClick={() => changePage(data!.page - 1)} disabled={atFirst}>
           <i className="bi bi-chevron-left" />
         </button>
-        <span className="pagination-info" title={capped ? 'Result count capped — refine filters to narrow further' : undefined}>
-          {data ? `${data.page} / ${totalPages}${capped ? '+' : ''}` : '—'}
+        <span
+          className="pagination-info"
+          title={
+            capped ? 'Result count capped — refine filters to narrow further' :
+            unknown ? 'Total result count not available — use Next/Prev to navigate' :
+            undefined
+          }
+        >
+          {!data ? '—'
+            : unknown ? `Page ${data.page}`
+            : `${data.page} / ${totalPages}${capped ? '+' : ''}`}
         </span>
         <button className="btn btn-secondary btn-sm" onClick={() => changePage(data!.page + 1)} disabled={atLast}>
           <i className="bi bi-chevron-right" />
         </button>
-        <button className="btn btn-secondary btn-sm" onClick={() => changePage(totalPages)} disabled={atLast}>
-          <i className="bi bi-chevron-double-right" />
-        </button>
+        {!unknown && (
+          <button className="btn btn-secondary btn-sm" onClick={() => changePage(totalPages!)} disabled={atLast}>
+            <i className="bi bi-chevron-double-right" />
+          </button>
+        )}
       </div>
       <select
         className="pagination-page-size"

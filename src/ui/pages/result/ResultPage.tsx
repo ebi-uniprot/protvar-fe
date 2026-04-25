@@ -270,7 +270,7 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
             setData(null); setWarning(NO_RESULT)
           }
           const totalPages = effectiveTotalPages(response.data)
-          if (page !== DEFAULT_PAGE && page > totalPages) {
+          if (totalPages != null && page !== DEFAULT_PAGE && page > totalPages) {
             setWarning(MAX_PAGE_EXCEEDED.replace("{totalPages}", totalPages.toString()))
           }
         } else {
