@@ -3,6 +3,7 @@ import React, {useEffect} from "react";
 import {TITLE} from "../../constants/const";
 import ReleaseNotes, {ReleaseBadge} from "./release/ReleaseNote";
 import Statistics from "./release/Statistics";
+import { ProtVarLinksCard } from "./release/ProtVarLinksCard";
 
 function ReleasePageContent() {
   useEffect(() => {
@@ -12,6 +13,9 @@ function ReleasePageContent() {
   return (
     <>
       <h5 className="page-header">Release</h5>
+
+      {/* ── Direct-links card ── */}
+      <ProtVarLinksCard />
 
       {/* ── Statistics ── */}
       <Statistics />
