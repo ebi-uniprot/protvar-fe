@@ -5,6 +5,7 @@ import {
   CLINVAR_RCV_URL, CLINVAR_VCV_URL, COSMIC_URL,
   DBSNP_URL,
   ENSEMBL_CHRM_URL,
+  ENSEMBL_GENE_URL,
   ENSEMBL_VIEW_URL,
   UNIPROT_ACCESSION_URL
 } from "../../../constants/ExternalUrls";
@@ -151,7 +152,16 @@ export const getNewPrimaryRow = (
           </Tool>
         </span>
 
-        {/* 3: Codon (strand) — card-sep adds dot separator before it in mobile */}
+        {/* 3: Gene (linked to Ensembl when ensg available) */}
+        <span className="card-sep cell-gene">
+          {gene.geneName && (
+            gene.ensg
+              ? <Tool tip="View gene in Ensembl"><TextLink url={ENSEMBL_GENE_URL + gene.ensg} text={gene.geneName} /></Tool>
+              : <span>{gene.geneName}</span>
+          )}
+        </span>
+
+        {/* 4: Codon (strand) — card-sep adds dot separator before it in mobile */}
         <span className="card-sep">
           {codon && (
             <div className="flex">
@@ -163,23 +173,25 @@ export const getNewPrimaryRow = (
           )}
         </span>
 
-        {/* 4: CADD v1.7 */}
-        <span data-card-label="CADD">
-          <Tool
-            className="score-box"
-            style={{ backgroundColor: stdColor ? caddAttr?.stdColor : caddAttr?.color }}
-            tip={`${caddAttr?.range} ${caddAttr?.text}`}
-          >
-            <a href={CADD_INFO_URL} target="_blank" rel="noopener noreferrer">
-              {formatCaddScore(gene.caddScore?.toString())}
-            </a>
-          </Tool>
+        {/* 5: CADD v1.7 — empty span when no score lets the .na-badge:empty::after rule render the NA pill */}
+        <span data-card-label="CADD" className="cell-cadd na-badge">
+          {caddAttr && (
+            <Tool
+              className="score-box"
+              style={{ backgroundColor: stdColor ? caddAttr.stdColor : caddAttr.color }}
+              tip={`${caddAttr.range} ${caddAttr.text}`}
+            >
+              <a href={CADD_INFO_URL} target="_blank" rel="noopener noreferrer">
+                {formatCaddScore(gene.caddScore?.toString())}
+              </a>
+            </Tool>
+          )}
         </span>
       </div>
 
       {/* Card row 2 — protein + scores (cols 5–10: isoform, name, aa-change, conseq, popEVE, AM) */}
       <div className="card-row card-row-protein">
-        {/* 5: Isoform — toggle chevron + canonical icon + accession */}
+        {/* 6: Isoform — toggle chevron + canonical icon + accession */}
         <span className={`isoform-cell ${isProteinInput ? 'cell-protein-input' : ''}`}>
           {hasAltIsoForm && (
             <Tool
@@ -204,23 +216,23 @@ export const getNewPrimaryRow = (
           </Tool>
         </span>
 
-        {/* 6: Protein name */}
+        {/* 7: Protein name */}
         <span className="card-sep">
           <Tool tip={isoform.proteinName}>{getProteinName(isoform.proteinName)}</Tool>
         </span>
 
-        {/* 7: AA Change — card-sep adds dot separator before it in mobile */}
+        {/* 8: AA Change — card-sep adds dot separator before it in mobile */}
         <span className={`card-sep cell-aa-change${isProteinInput ? ' cell-protein-input' : ''}`}>
           <Tool tip={aaChangeTip(aaChange)}>{aaChangeFormatted}</Tool>
         </span>
 
-        {/* 8: Consequence(s) */}
+        {/* 9: Consequence(s) */}
         <span className="card-sep cell-consequence">
           <Tool tip={getConsequenceFullName(isoform.consequences)} pos="up-right"><ConsequenceBadge consequence={isoform.consequences} /></Tool>
         </span>
 
-        {/* 9: popEVE */}
-        <span className="cell-popeve" data-card-label="popEVE">
+        {/* 10: popEVE */}
+        <span className="cell-popeve na-badge" data-card-label="popEVE">
           {isoform.popEveScore && (
             <Tool
               className="score-box"
@@ -236,17 +248,19 @@ export const getNewPrimaryRow = (
           )}
         </span>
 
-        {/* 10: AlphaMissense */}
-        <span data-card-label="AM">
-          <Tool
-            className="score-box"
-            style={{ backgroundColor: stdColor ? amAttr?.stdColor : amAttr?.color }}
-            tip={`${isoform.amScore?.amPathogenicity} ${amAttr?.text}`}
-          >
-            <a href={AM_INFO_URL} target="_blank" rel="noopener noreferrer">
-              {formatAMScore(isoform.amScore)}
-            </a>
-          </Tool>
+        {/* 11: AlphaMissense — same NA pattern as CADD */}
+        <span data-card-label="AM" className="cell-am na-badge">
+          {amAttr && (
+            <Tool
+              className="score-box"
+              style={{ backgroundColor: stdColor ? amAttr.stdColor : amAttr.color }}
+              tip={`${isoform.amScore?.amPathogenicity} ${amAttr.text}`}
+            >
+              <a href={AM_INFO_URL} target="_blank" rel="noopener noreferrer">
+                {formatAMScore(isoform.amScore)}
+              </a>
+            </Tool>
+          )}
         </span>
       </div>
 
@@ -278,7 +292,7 @@ export const getNewPrimaryRow = (
 
       {/* Card row 3 — annotation buttons (col 11) */}
       <div className="card-row card-row-details">
-        {/* 11: Annotation buttons */}
+        {/* 12: Annotation buttons */}
         <span className="details-cell">
           <AnnotationButton rowKey={functionalKey}  label="FUN" canonical={isoform.canonical} annotationExpanded={annotationExpanded} toggleAnnotation={toggleAnnotation} />
           <AnnotationButton rowKey={populationKey}  label="POP" canonical={isoform.canonical} annotationExpanded={annotationExpanded} toggleAnnotation={toggleAnnotation} />

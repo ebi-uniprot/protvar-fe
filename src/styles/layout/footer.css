@@ -267,41 +267,45 @@
 
 .carousel-controls {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
+    gap: 0.75rem;
     margin-top: auto;
     padding-top: 0.5rem;
 }
 
-.carousel-dots {
-    display: flex;
-    gap: 6px;
-}
-
-.carousel-dot {
-    height: 6px;
-    width: 6px;
-    border-radius: var(--radius-full);
+/* Prev/Next buttons that flank the counter */
+.carousel-nav {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
     border: none;
-    background: var(--color-border-dark);
+    background: transparent;
+    color: var(--color-text-tertiary);
     cursor: pointer;
-    transition: width var(--transition-slow), background var(--transition-slow);
     padding: 0;
+    border-radius: var(--radius-full);
+    transition: background var(--transition-fast), color var(--transition-fast);
 }
 
-.carousel-dot:hover {
-    background: var(--color-brand-light);
+.carousel-nav:hover:not(:disabled) {
+    background: var(--color-bg-tertiary);
+    color: var(--color-brand);
 }
 
-.carousel-dot.active {
-    width: 24px;
-    background: var(--color-brand);
+.carousel-nav:disabled {
+    cursor: default;
+    opacity: 0.4;
 }
 
 .carousel-counter {
     font-size: var(--font-size-xs);
     color: var(--color-text-tertiary);
     font-weight: var(--font-weight-medium);
+    min-width: 2.5rem;
+    text-align: center;
 }
 
 /* ============================================

@@ -153,7 +153,7 @@ function ResultTable(props: ResultTableProps) {
       <div className="result-header">
         <div className="result-group-header">
           <Tool el="span" tip="Gene and nucleotide level annotations">
-            GENOMIC <span className="col-hints">· ID · position · codon · CADD</span>
+            GENOMIC <span className="col-hints">· ID · position · gene · codon · CADD</span>
           </Tool>
           <Tool el="span" tip="Amino acid / protein level annotations">
             PROTEIN <span className="col-hints">· isoform · name · AA change · consequence · popEVE · AlphaMissense</span>

@@ -49,15 +49,16 @@ export function getAlternateIsoFormRow(isoformKey: string, index: number, isofor
 
   return (
     <div key={isoformKey} className={`result-row result-row-isoform ${index % 2 === 0 ? 'row-even' : 'row-odd'}`}>
-      {/* Card row 1: genomic (cols 1–4) — empty/hidden for alt isoforms */}
+      {/* Card row 1: genomic (cols 1–5) — empty/hidden for alt isoforms */}
       <div className="card-row card-row-genomic">
+        <span className="cell-genomic" />
         <span className="cell-genomic" />
         <span className="cell-genomic" />
         <span className="cell-genomic" />
         <span className="cell-genomic" />
       </div>
 
-      {/* Card row 2: protein + scores (cols 5–10) */}
+      {/* Card row 2: protein + scores (cols 6–11) */}
       <div className="card-row card-row-protein">
         <span className="isoform-cell">
           <CanonicalIcon isCanonical={false} />
@@ -72,7 +73,7 @@ export function getAlternateIsoFormRow(isoformKey: string, index: number, isofor
         <span />
       </div>
 
-      {/* Card row 3: detail buttons (col 11) — empty for alt isoforms */}
+      {/* Card row 3: detail buttons (col 12) — empty for alt isoforms */}
       <div className="card-row card-row-details">
         <span />
       </div>

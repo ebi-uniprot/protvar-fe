@@ -2,15 +2,15 @@
  * result-grid.css
  * CSS Grid layout for the main results table.
  *
- * Column order (11 cols):
- *   Genomic: user-id | genomic-pos | codon | cadd           (cols 1–4)
- *   Protein: isoform | protein-name | aa-change | consequence | popeve | alphamiss  (cols 5–10)
- *   Annotations: details                                     (col 11)
+ * Column order (12 cols):
+ *   Genomic: user-id | genomic-pos | gene | codon | cadd     (cols 1–5)
+ *   Protein: isoform | protein-name | aa-change | consequence | popeve | alphamiss  (cols 6–11)
+ *   Annotations: details                                     (col 12)
  */
 
 /* ============================================
    RESULT TABLE — SINGLE GRID CONTAINER
-   .result-table owns the 11-column grid.
+   .result-table owns the 12-column grid.
    Every row type uses grid-column: 1/-1 and
    grid-template-columns: subgrid so all cells
    participate in the same track-sizing algorithm.
@@ -24,15 +24,16 @@
     grid-template-columns:
         auto                  /* 1  id             */
         auto                  /* 2  genomic-pos    */
-        auto                  /* 3  codon          */
-        auto                  /* 4  cadd           */
-        auto                  /* 5  isoform        */
-        minmax(min-content, 16rem)  /* 6  protein-name — bounded, clips at 16rem */
-        auto                  /* 7  aa-change      */
-        auto                  /* 8  consequence    */
-        auto                  /* 9  popeve         */
-        auto                  /* 10 alphamiss      */
-        auto;                 /* 11 details        */
+        auto                  /* 3  gene           */
+        auto                  /* 4  codon          */
+        auto                  /* 5  cadd           */
+        auto                  /* 6  isoform        */
+        auto                  /* 7  protein-name — sizes to content, capped via .protein-name-cell max-width */
+        auto                  /* 8  aa-change      */
+        auto                  /* 9  consequence    */
+        auto                  /* 10 popeve         */
+        auto                  /* 11 alphamiss      */
+        auto;                 /* 12 details        */
     column-gap: 6px;
     font-size: var(--font-size-md);
     overflow-x: auto;
@@ -121,9 +122,9 @@
 }
 
 /* Group spans */
-.result-group-header > :nth-child(1) { grid-column: 1 / 5; }    /* Genomic: user-id…cadd */
-.result-group-header > :nth-child(2) { grid-column: 5 / 11; }   /* Protein: isoform…alphamiss */
-.result-group-header > :nth-child(3) { grid-column: 11 / 12; }  /* Annotations: details */
+.result-group-header > :nth-child(1) { grid-column: 1 / 6; }    /* Genomic: user-id…cadd */
+.result-group-header > :nth-child(2) { grid-column: 6 / 12; }   /* Protein: isoform…alphamiss */
+.result-group-header > :nth-child(3) { grid-column: 12 / 13; }  /* Annotations: details */
 
 /* Dividers between groups */
 .result-group-header > :nth-child(2) {
@@ -189,19 +190,19 @@
    Numeric scores, short badges, action buttons: center.
    ============================================ */
 
-/* Score columns: CADD (col 4), popEVE (col 9), AM (col 10) */
+/* Score columns: CADD (col 5), popEVE (col 10), AM (col 11) */
 [data-card-label="CADD"],
 .cell-popeve,
 [data-card-label="AM"] {
     text-align: center;
 }
 
-/* Consequence badge (col 8) */
+/* Consequence badge (col 9) */
 .cell-consequence {
     text-align: center;
 }
 
-/* Action buttons (col 11) — left+right borders mirror group-header dividers */
+/* Action buttons (col 12) — left+right borders mirror group-header dividers */
 .details-cell {
     justify-content: center;
     border-left: 1px solid #c8d4e8;
@@ -333,12 +334,18 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 100%;
+    /* Hard cap so long names clip with ellipsis. The grid track is `auto`,
+       so it sizes to this max and the column doesn't claim spare space. */
+    max-width: 14rem;
     display: block;
 }
 
-/* PopEVE — N/A: plain gray fill, no border — clearly not a score */
-.cell-popeve:empty::after {
+/* Reusable "NA" pill for missing inline scores. Apply .na-badge to any
+   score cell that may be empty (CADD / AM / popEVE today). The pseudo-
+   element only fires when the cell is empty, so it stays out of the way
+   when there's a real score. Light gray + slightly darker text — distinct
+   from the solid darker gray used by the AM "ambiguous" score class. */
+.na-badge:empty::after {
     content: 'NA';
     display: inline-flex;
     align-items: center;
@@ -348,8 +355,8 @@
     border-radius: 3px;
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-medium);
-    color: #bbb;
-    background: #f0f0f0;
+    color: #aaa;
+    background: #f5f5f5;
 }
 
 
@@ -547,8 +554,8 @@
         white-space: normal;
     }
 
-    /* Hide empty spans */
-    .card-row > span:empty:not(.cell-popeve) {
+    /* Hide empty spans, but keep .na-badge cells so the pill can render. */
+    .card-row > span:empty:not(.na-badge) {
         display: none;
     }
 
@@ -602,7 +609,7 @@
         vertical-align: middle;
     }
 
-    /* popEVE NA badge — inherits desktop style */
+    /* .na-badge pill — inherits desktop style */
 
     /* ── Row 3: annotation actions ─────────────── */
     .card-row-details {

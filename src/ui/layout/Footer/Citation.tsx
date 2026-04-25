@@ -125,6 +125,9 @@ const Citation: React.FC = () => {
   };
 
   const formattedText = formatCitation(entry);
+  const total = citations.length;
+  const goPrev = () => setCurrentIndex((prev) => (prev - 1 + total) % total);
+  const goNext = () => setCurrentIndex((prev) => (prev + 1) % total);
 
   return (
     <div className="citation-carousel">
@@ -138,17 +141,25 @@ const Citation: React.FC = () => {
           <p className="carousel-citation-text" dangerouslySetInnerHTML={{ __html: formattedText }} />
         )}
         <div className="carousel-controls">
-          <div className="carousel-dots">
-            {citations.map((_, idx) => (
-              <button
-                key={idx}
-                onClick={() => setCurrentIndex(idx)}
-                className={`carousel-dot ${idx === currentIndex ? 'active' : ''}`}
-                aria-label={`Go to citation ${idx + 1}`}
-              />
-            ))}
-          </div>
-          <span className="carousel-counter">{currentIndex + 1} / {citations.length}</span>
+          <button
+            type="button"
+            className="carousel-nav"
+            onClick={goPrev}
+            disabled={total < 2}
+            aria-label="Previous citation"
+          >
+            <i className="bi bi-chevron-left" />
+          </button>
+          <span className="carousel-counter">{currentIndex + 1} / {total}</span>
+          <button
+            type="button"
+            className="carousel-nav"
+            onClick={goNext}
+            disabled={total < 2}
+            aria-label="Next citation"
+          >
+            <i className="bi bi-chevron-right" />
+          </button>
         </div>
       </div>
     </div>

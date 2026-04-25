@@ -28,7 +28,7 @@ import {
   mapUiStabilityToBackend, mapUiAlleleFreqToBackend
 } from "../../components/search/filterUtils";
 import {parseIdParam} from "../../../utills/InputTypeResolver";
-import {effectiveTotalPages} from "../../../utills/PaginationFormat";
+import {effectiveTotalPages, formatTotalCount} from "../../../utills/PaginationFormat";
 import {Identifier, IdentifierType, InputType} from "../../../types/InputType";
 import {MappingRequest} from "../../../types/MappingRequest";
 import SearchFilters, {
@@ -262,7 +262,7 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
               const displayLabel = options.ids?.map(i => i.value).join(', ') ?? '';
               // Only update lastViewed if already saved — browse is not auto-saved
               if (displayLabel) touchResult(displayLabel, location.pathname + location.search);
-              setResultTitle(`${displayLabel} (${response.data.totalItems} variants)`);
+              setResultTitle(displayLabel);
               setTitleFlash(true);
               setTimeout(() => setTitleFlash(false), 600);
             }
@@ -510,15 +510,21 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
 
   const sep = <i className="bi bi-chevron-compact-right"></i>;
   const contextLabel = getContextLabel();
+  // Only show the separator + title when there's actually a title to show.
+  // For filter-only browse, resultTitle is empty — render just the context label.
+  const titleSuffix = resultTitle ? <> {sep} {resultTitle}</> : null;
   const pageTitle = isQueryMode
-    ? <>{contextLabel} {sep} {resultTitle}</>
-    : <span className={titleFlash ? 'title-sparkle' : ''}>{contextLabel} {sep} {resultTitle}</span>;
+    ? <>{contextLabel}{titleSuffix}</>
+    : <span className={titleFlash ? 'title-sparkle' : ''}>{contextLabel}{titleSuffix}</span>;
 
   return <div>
     <div className="page-header-row" ref={resultsTopRef}>
       <h5 className="page-header">{pageTitle}</h5>
       <HelpButton title="" content={<HelpContent name={helpName}/>}/>
     </div>
+    {data && !isQueryMode && (
+      <div className="page-header-count">{formatTotalCount(data)} variants</div>
+    )}
 
     {/* ── Toolbar ── */}
     <div className="result-toolbar">

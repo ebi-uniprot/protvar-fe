@@ -75,8 +75,22 @@ th[aria-label][data-balloon-pos] {
     flex-wrap: wrap;
 }
 
+/* Hug the count to the header when both are present. */
+.page-header-row:has(+ .page-header-count) {
+    margin-bottom: 0.1rem;
+}
+
 .page-header {
     margin: 0;
+}
+
+/* Subtle result count under the page header — replaces the
+   "(N variants)" suffix inside the title for a cleaner header. */
+.page-header-count {
+    margin: 0 0 0.75rem 0;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    font-weight: var(--font-weight-normal);
 }
 
 /* Responsive content container — replaces Foundation's .row/.container */
