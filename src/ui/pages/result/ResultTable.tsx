@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import { PagedMappingResponse } from "../../../types/PagedMappingResponse";
-import { Message, GenomicVariant } from "../../../types/MappingResponse";
+import { Message, GenomicVariant, Isoform } from "../../../types/MappingResponse";
 import { StringVoidFun } from "../../../constants/CommonTypes";
 import { getAlternateIsoFormRow } from "./AlternateIsoFormRow";
-import { getNewPrimaryRow, AnnotationPanels } from "./PrimaryRow";
+import { getNewPrimaryRow, AnnotationPanels, ToggleIsoformGroupFn } from "./PrimaryRow";
+import { singleVariant } from "../../../services/ProtVarService";
 import { AppContext } from "../../App";
 import MsgRow from "./MsgRow";
 import Tool from "../../elements/Tool";
@@ -16,13 +17,36 @@ import {
   clearAnnotationSpecificParams
 } from "./annotationUrl";
 
-function ResultTable(props: { data: PagedMappingResponse | null }) {
+interface ResultTableProps {
+  data: PagedMappingResponse | null;
+  // True when the BE response only includes canonical isoforms (filter-only
+  // browse). The chevron then triggers a single-variant lookup on first
+  // expand to fetch the alt-isoform list on demand.
+  lazyIsoforms?: boolean;
+}
+
+function ResultTable(props: ResultTableProps) {
   const stdColor = useContext(AppContext).stdColor;
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams] = useSearchParams();
   const [isoformGroupExpanded, setIsoformGroupExpanded] = useState('');
   const [annotationExpanded, setAnnotationExpanded] = useState('');
+  // Lazy-fetched isoform lists, keyed "${gvStr}|${geneName}".
+  // Replaces gene.isoforms during render when present. Network-level
+  // dedup is handled by axios-cache-interceptor on singleVariant().
+  const [fetchedIsoforms, setFetchedIsoforms] = useState<Record<string, Isoform[]>>({});
+  // True while a single-variant fetch is in flight. Keyed by gvStr —
+  // one request per genomic variant covers all genes at that position.
+  const [loadingVariants, setLoadingVariants] = useState<Record<string, boolean>>({});
+
+  // Reset on-demand state when the underlying data changes (page change,
+  // new query). Axios still has the responses cached behind the scenes, so
+  // re-expanding any unchanged variant on the new page is instant.
+  useEffect(() => {
+    setFetchedIsoforms({});
+    setLoadingVariants({});
+  }, [props.data]);
 
   useEffect(() => {
     const annotationParam = searchParams.get('annotation');
@@ -43,9 +67,46 @@ function ResultTable(props: { data: PagedMappingResponse | null }) {
     }
   }, [searchParams]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  function toggleIsoformGroup(key: string) {
-    setIsoformGroupExpanded(isoformGroupExpanded === key ? '' : key);
-  }
+  const toggleIsoformGroup: ToggleIsoformGroupFn = (key, gvStr) => {
+    const willExpand = isoformGroupExpanded !== key;
+
+    // Lazy mode: kick off a single-variant fetch on first expand. Subsequent
+    // expands of the same gvStr are skipped if we already have data in
+    // local state; if not (e.g. genes that returned no isoforms), the call
+    // is fired again and resolved instantly by the axios cache. The
+    // expanded panel renders a "No other isoforms" hint in that case.
+    if (willExpand && props.lazyIsoforms && gvStr && !loadingVariants[gvStr]) {
+      const alreadyInState = Object.keys(fetchedIsoforms).some(k => k.startsWith(`${gvStr}|`));
+      if (!alreadyInState) {
+        setLoadingVariants(prev => ({ ...prev, [gvStr]: true }));
+        singleVariant(gvStr)
+          .then(response => {
+            const next: Record<string, Isoform[]> = {};
+            response.data.content?.inputs?.forEach(inp => {
+              inp.derivedGenomicVariants?.forEach(gv => {
+                const k = `${gv.chromosome}-${gv.position}-${gv.refBase}-${gv.altBase}`;
+                if (k !== gvStr) return;
+                gv.genes?.forEach(g => {
+                  if (g.isoforms?.length) next[`${gvStr}|${g.geneName}`] = g.isoforms;
+                });
+              });
+            });
+            setFetchedIsoforms(prev => ({ ...prev, ...next }));
+          })
+          .catch(err => {
+            console.error('Failed to fetch isoforms for', gvStr, err);
+          })
+          .finally(() => {
+            setLoadingVariants(prev => {
+              const { [gvStr]: _, ...rest } = prev;
+              return rest;
+            });
+          });
+      }
+    }
+
+    setIsoformGroupExpanded(willExpand ? key : '');
+  };
 
   function toggleAnnotation(key: string) {
     const newAnnotation = annotationExpanded === key ? '' : key;
@@ -81,6 +142,9 @@ function ResultTable(props: { data: PagedMappingResponse | null }) {
     annotationExpanded,
     toggleAnnotation,
     stdColor,
+    !!props.lazyIsoforms,
+    fetchedIsoforms,
+    loadingVariants,
   );
 
   return (
@@ -113,10 +177,13 @@ const NO_MAPPING: Message = { type: 'ERROR', text: 'No mapping found' };
 const getTableRows = (
   data: PagedMappingResponse | null,
   isoformGroupExpanded: string,
-  toggleIsoformGroup: StringVoidFun,
+  toggleIsoformGroup: ToggleIsoformGroupFn,
   annotationExpanded: string,
   toggleAnnotation: StringVoidFun,
   stdColor: boolean,
+  lazyIsoforms: boolean,
+  fetchedIsoforms: Record<string, Isoform[]>,
+  loadingVariants: Record<string, boolean>,
 ) => {
   const rows: Array<React.JSX.Element> = [];
 
@@ -141,11 +208,22 @@ const getTableRows = (
       genomicVariant.genes.forEach((gene, geneIdx) => {
         const isoformGroupKey = `input-${inputIndex}-${genIndex}-gene-${geneIdx}-isoform`;
         const genomicVariantStr = `${genomicVariant.chromosome}-${genomicVariant.position}-${genomicVariant.refBase}-${genomicVariant.altBase}`;
-        let primaryIsoform = gene.isoforms[0];
+
+        // Effective isoforms: prefer the lazy-fetched list when available,
+        // otherwise the BE-pre-fetched list on gene.isoforms.
+        const fetched = fetchedIsoforms[`${genomicVariantStr}|${gene.geneName}`];
+        const effectiveIsoforms = fetched ?? gene.isoforms;
+        const isLoadingIsoforms = !!loadingVariants[genomicVariantStr];
+        // In lazy mode the chevron is always visible — clicking it triggers
+        // a single-variant fetch (instant on cached repeats) and either
+        // reveals alt isoforms or shows a "No other isoforms" hint.
+        const hasAltIsoForm = effectiveIsoforms.length > 1 || lazyIsoforms;
+
+        let primaryIsoform = effectiveIsoforms[0];
         let primaryKey = '';
         const geneRowEls: React.JSX.Element[] = [];
 
-        gene.isoforms.forEach((isoform, isoformIdx) => {
+        effectiveIsoforms.forEach((isoform, isoformIdx) => {
           if (isoformIdx === 0) {
             primaryRow++;
             altRow = 0;
@@ -163,15 +241,29 @@ const getTableRows = (
               toggleIsoformGroup,
               annotationExpanded,
               toggleAnnotation,
-              gene.isoforms.length > 1,
+              hasAltIsoForm,
               stdColor,
-              isoformGroupKey === isoformGroupExpanded ? gene.isoforms.slice(1) : [],
+              isoformGroupKey === isoformGroupExpanded ? effectiveIsoforms.slice(1) : [],
+              isLoadingIsoforms,
             ));
           } else if (isoformGroupKey === isoformGroupExpanded) {
             altRow++;
             geneRowEls.push(getAlternateIsoFormRow(`row-${primaryRow}-${altRow}`, inputIndex, isoform));
           }
         });
+
+        // Lazy mode + expanded + nothing more to show: render a hint so the
+        // user understands the chevron resolved to "no other isoforms"
+        // rather than appearing to do nothing.
+        if (primaryKey && lazyIsoforms && !isLoadingIsoforms
+            && isoformGroupKey === isoformGroupExpanded
+            && effectiveIsoforms.length === 1) {
+          geneRowEls.push(
+            <div key={`row-${primaryRow}-no-alts`} className="result-row-isoform result-row-no-alts">
+              <span className="no-alts-hint">No other isoforms.</span>
+            </div>
+          );
+        }
 
         if (primaryKey) {
           // Wrap in display:contents div — guarantees Primary → Alt Isoforms → Annotation Panel

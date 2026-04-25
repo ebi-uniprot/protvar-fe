@@ -76,6 +76,13 @@ function AnnotationButton(props: {
   );
 }
 
+/**
+ * Toggle handler for the isoform-group chevron. The optional gvStr lets the
+ * parent ResultTable kick off a single-variant lookup on first expand when
+ * isoforms weren't pre-fetched (filter-only browse).
+ */
+export type ToggleIsoformGroupFn = (key: string, gvStr?: string) => void;
+
 export const getNewPrimaryRow = (
   isoformKey: string,
   isoformGroup: string,
@@ -85,12 +92,13 @@ export const getNewPrimaryRow = (
   input: VariantInput,
   gene: Gene,
   isoform: Isoform,
-  toggleIsoFormGroup: StringVoidFun,
+  toggleIsoFormGroup: ToggleIsoformGroupFn,
   annotationExpanded: string,
   toggleAnnotation: StringVoidFun,
   hasAltIsoForm: boolean,
   stdColor: boolean,
   altIsoforms: Isoform[] = [],
+  isLoadingIsoforms: boolean = false,
 ) => {
   const caddAttr = caddScoreAttr(gene.caddScore?.toString());
   const amAttr   = amScoreAttr(isoform.amScore?.amClass);
@@ -176,13 +184,18 @@ export const getNewPrimaryRow = (
           {hasAltIsoForm && (
             <Tool
               el="button"
-              onClick={() => toggleIsoFormGroup(isoformGroup)}
+              onClick={() => toggleIsoFormGroup(isoformGroup, genomicPos)}
               className="button button--toggle-isoforms"
-              tip={isoformGroupExpanded !== isoformGroup ? "Show more isoforms" : "Hide isoforms"}
+              disabled={isLoadingIsoforms}
+              tip={isLoadingIsoforms
+                ? "Loading isoforms…"
+                : (isoformGroupExpanded !== isoformGroup ? "Show more isoforms" : "Hide isoforms")}
             >
-              {isoformGroupExpanded !== isoformGroup
-                ? <ChevronDownIcon className="toggle-isoforms" />
-                : <ChevronUpIcon  className="toggle-isoforms" />}
+              {isLoadingIsoforms
+                ? <span className="toggle-isoforms-loading" aria-label="loading" />
+                : (isoformGroupExpanded !== isoformGroup
+                    ? <ChevronDownIcon className="toggle-isoforms" />
+                    : <ChevronUpIcon  className="toggle-isoforms" />)}
             </Tool>
           )}
           <CanonicalIcon isCanonical={isoform.canonical} />

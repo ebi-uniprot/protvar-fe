@@ -596,7 +596,7 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
         <PaginationRow loading={loading} data={data}/>
       </div>
     )}
-    <ResultTable key={input} data={data}/>
+    <ResultTable key={input} data={data} lazyIsoforms={isFilterOnly}/>
     {!isQueryMode && data && data.totalPages > 1 && (
       <div className="result-pre-table result-post-table">
         <PaginationRow loading={loading} data={data}/>
