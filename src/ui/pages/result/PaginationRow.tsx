@@ -47,6 +47,12 @@ function PaginationRow({ loading, data }: PaginationRowProps) {
     || (data && totalPages != null && data.page >= totalPages)
     || false;
 
+  // Hover-explanation for the disabled Next/Last buttons. Helps the user
+  // understand why they can't navigate further (cap reached vs. real end).
+  const lastHint = capped ? 'Showing the first 10,000 results — refine filters to see more'
+                  : unknown ? 'End of available results'
+                  : 'On the last page';
+
   return (
     <div className="pagination-row">
       <div className="pagination-nav">
@@ -68,11 +74,21 @@ function PaginationRow({ loading, data }: PaginationRowProps) {
             : unknown ? `Page ${data.page}`
             : `${data.page} / ${totalPages}${capped ? '+' : ''}`}
         </span>
-        <button className="btn btn-secondary btn-sm" onClick={() => changePage(data!.page + 1)} disabled={atLast}>
+        <button
+          className="btn btn-secondary btn-sm"
+          onClick={() => changePage(data!.page + 1)}
+          disabled={atLast}
+          title={atLast ? lastHint : undefined}
+        >
           <i className="bi bi-chevron-right" />
         </button>
         {!unknown && (
-          <button className="btn btn-secondary btn-sm" onClick={() => changePage(totalPages!)} disabled={atLast}>
+          <button
+            className="btn btn-secondary btn-sm"
+            onClick={() => changePage(totalPages!)}
+            disabled={atLast}
+            title={atLast ? lastHint : undefined}
+          >
             <i className="bi bi-chevron-double-right" />
           </button>
         )}

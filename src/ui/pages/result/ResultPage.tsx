@@ -414,7 +414,9 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
 
     } else {
       // Filter-only browse: /search with no q= and no id=
-      setResultTitle('All variants');
+      // Empty title — header shows just the "Browse" context label, and the
+      // count subtitle + active filters convey what's being shown.
+      setResultTitle('');
       loadBrowseData({}, page, pageSize, assembly, filters);
     }
   }, [mode, isRangeQuery, param1, param2, idType, idParam, idParamValues, input, location.pathname, page, pageSize, assembly, filters, loadBrowseData])
@@ -597,13 +599,13 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
       />
     )}
 
-    {!isQueryMode && data && data.totalPages > 1 && (
+    {!isQueryMode && data && (data.totalPages > 1 || data.page > 1 || !data.last) && (
       <div className="result-pre-table">
         <PaginationRow loading={loading} data={data}/>
       </div>
     )}
     <ResultTable key={input} data={data} lazyIsoforms={isFilterOnly}/>
-    {!isQueryMode && data && data.totalPages > 1 && (
+    {!isQueryMode && data && (data.totalPages > 1 || data.page > 1 || !data.last) && (
       <div className="result-pre-table result-post-table">
         <PaginationRow loading={loading} data={data}/>
       </div>
