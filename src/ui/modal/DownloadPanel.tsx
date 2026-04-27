@@ -70,8 +70,13 @@ export function DownloadPanel(props: DownloadPanelProps) {
     Notify.sucs(`Job "${label}" submitted. Check the Downloads page.`)
   }
 
-  const handleErr = () => {
-    Notify.err(`Job ${form.jobName || jobNamePlaceholder} failed. Please try again.`)
+  const handleErr = (err: any) => {
+    const serverMsg: string | undefined = err?.response?.data?.error
+    if (serverMsg) {
+      Notify.err(serverMsg)
+    } else {
+      Notify.err(`Job ${form.jobName || jobNamePlaceholder} failed. Please try again.`)
+    }
   }
 
   const handleSubmit = () => {
