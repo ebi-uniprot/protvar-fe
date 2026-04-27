@@ -76,7 +76,7 @@ export const ActivityHelp = () => (
     <ul>
       <li><span className={DOWNLOAD_STATUS_INFO.ready.icon} /> <em>{DOWNLOAD_STATUS_INFO.ready.text}:</em> File is prepared and available for download.</li>
       <li><span className={DOWNLOAD_STATUS_INFO.processing.icon} /> <em>{DOWNLOAD_STATUS_INFO.processing.text}:</em> File is being generated — check back shortly.</li>
-      <li><span className={DOWNLOAD_STATUS_INFO.pending.icon} /> <em>{DOWNLOAD_STATUS_INFO.pending.text}:</em> Job is queued, generation will begin soon.</li>
+      <li><span className={DOWNLOAD_STATUS_INFO.queued.icon} /> <em>{DOWNLOAD_STATUS_INFO.queued.text}:</em> Job is queued, generation will begin soon.</li>
     </ul>
 
     <p>

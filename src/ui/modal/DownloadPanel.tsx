@@ -8,6 +8,7 @@ import {useStorage} from "../../hooks/useStorage";
 import {useLocation, useSearchParams} from "react-router-dom";
 import {DownloadRequest} from "../../types/DownloadRequest";
 import {Identifier} from "../../types/InputType";
+import {autoJobName} from "../../utills/autoJobName";
 import {AppContext} from "../App";
 
 interface DownloadForm {
@@ -45,10 +46,13 @@ export function DownloadPanel(props: DownloadPanelProps) {
 
   useEffect(() => {
     const historyId = props.historyId ?? props.resultId
-    if (!historyId) return
-    const saved = getHistory().find(r => r.id === historyId)
-    if (saved?.name) setJobNamePlaceholder(saved.name)
-  }, [props.historyId, props.resultId, getHistory])
+    const saved = historyId ? getHistory().find(r => r.id === historyId) : undefined
+    if (saved?.name) {
+      setJobNamePlaceholder(saved.name)
+      return
+    }
+    setJobNamePlaceholder(autoJobName({ q: props.q, ids: props.ids, searchParams }))
+  }, [props.historyId, props.resultId, props.q, props.ids, searchParams, getHistory])
 
   const updateForm = useCallback((key: string, value: any) => {
     setForm(prev => ({ ...prev, [key]: value }));

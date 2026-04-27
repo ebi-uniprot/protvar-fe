@@ -231,6 +231,9 @@ function DownloadsTab() {
                       <td>
                         <span className={statusInfo.icon} /> {statusInfo.text}
                         {dl.size && dl.size > 0 ? ` (${humanFileSize(dl.size)})` : ''}
+                        {dl.status === 'failed' && dl.message && (
+                          <div className="activity-error-msg" title={dl.message}>{dl.message}</div>
+                        )}
                       </td>
                       <td className="col-center">
                         <button

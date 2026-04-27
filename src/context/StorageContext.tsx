@@ -9,14 +9,22 @@ import { DownloadRecord, DownloadStatus, DownloadStatusEntry } from '../types/Do
 
 // ── Schema migration ───────────────────────────────────────────────────────────
 //
-// v1 is the baseline — no migration needed.
 // To add a future migration:
 //   1. Increment CURRENT_VERSION
 //   2. Add an entry to migrations: { [newVersion]: () => { /* transform localStorage data */ } }
 //
-const CURRENT_VERSION = 1
+const CURRENT_VERSION = 2
 type Migration = () => void
-const migrations: Partial<Record<number, Migration>> = {}
+const migrations: Partial<Record<number, Migration>> = {
+  // v2: rollover for the download/status redesign + BE storage reset.
+  // Old IDs (content-addressed filenames, old Redis input cache keys) no
+  // longer resolve on the new BE, so prior records would orphan as PENDING.
+  // Prefs and user state are kept.
+  2: () => {
+    localStorage.removeItem(STORE_DOWNLOADS)
+    localStorage.removeItem(STORE_HISTORY)
+  },
+}
 
 function runMigrations(): void {
   const raw = localStorage.getItem(STORE_SCHEMA)
@@ -155,7 +163,13 @@ export const StorageProvider: React.FC<{ children: ReactNode }> = ({ children })
     const updated = downloads.map(d => {
       const s = statusMap[d.id]
       if (!s) return d
-      return { ...d, status: s.status as DownloadStatus, size: s.size }
+      return {
+        ...d,
+        status: s.state as DownloadStatus,
+        message: s.message,
+        size: s.size,
+        finishedAt: s.finishedAt,
+      }
     })
     write(STORE_DOWNLOADS, updated)
   }

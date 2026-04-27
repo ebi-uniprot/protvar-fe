@@ -188,6 +188,16 @@
     font-size: 13px;
 }
 
+.activity-error-msg {
+    color: var(--color-danger);
+    font-size: 12px;
+    margin-top: 2px;
+    max-width: 24rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 /* ── Grouped view ── */
 
 .grouped-view {
