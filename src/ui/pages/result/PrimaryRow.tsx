@@ -144,7 +144,7 @@ export const getNewPrimaryRow = (
 
         {/* 2: Genomic position (chr-pos-ref-alt) */}
         <span className={`cell-genomic${isGenomicInput ? ' cell-genomic-input' : ''}`} title={`Input: ${input.inputStr}`}>
-          <Tool tip="Click to see region detail from Ensembl" pos="up-left">
+          <Tool tip="Click to see region detail from Ensembl">
             {isGenomicInput && 'isLiftedFrom37' in input && input.isLiftedFrom37 && (
               <span className="h37">37&rarr;38</span>
             )}

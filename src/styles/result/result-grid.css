@@ -505,15 +505,21 @@
    MISC
    ============================================ */
 
-/* hGRCh37→38 lift-over badge */
+/* GRCh37→38 lift-over badge — anchored top-left of the genomic cell so it
+   doesn't push the coordinate inline. */
+.cell-genomic { position: relative; overflow: visible; }
 .h37 {
-    font-size: 0.65rem;
+    position: absolute;
+    top: -8px;
+    left: -2px;
+    font-size: 0.55rem;
+    line-height: 1;
     background: #f0ad4e;
     color: white;
-    padding: 0 3px;
+    padding: 1px 3px;
     border-radius: 3px;
-    margin-right: 2px;
     white-space: nowrap;
+    pointer-events: none;
 }
 
 /* ============================================
