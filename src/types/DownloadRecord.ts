@@ -3,11 +3,11 @@ export type DownloadStatus = 'queued' | 'processing' | 'ready' | 'failed' | 'exp
 export interface StatusInfo { text: string; icon: string }
 
 export const DOWNLOAD_STATUS_INFO: Record<DownloadStatus, StatusInfo> = {
-  ready:      { text: 'Ready',      icon: 'download-ready' },
-  processing: { text: 'Processing', icon: 'download-nr'    },
-  queued:     { text: 'Queued',     icon: 'download-nr'    },
-  failed:     { text: 'Failed',     icon: 'download-nr'    },
-  expired:    { text: 'Expired',    icon: 'download-nr'    },
+  queued:     { text: 'Queued',     icon: 'bi bi-hourglass-split status-muted'  },
+  processing: { text: 'Processing', icon: 'bi bi-arrow-clockwise status-info' },
+  ready:      { text: 'Ready',      icon: 'bi bi-check-circle-fill status-success' },
+  failed:     { text: 'Failed',     icon: 'bi bi-x-circle-fill status-danger' },
+  expired:    { text: 'Expired',    icon: 'bi bi-slash-circle status-muted' },
 }
 
 // Lifecycle status — matches BE DownloadStatus DTO. Used both as the per-id

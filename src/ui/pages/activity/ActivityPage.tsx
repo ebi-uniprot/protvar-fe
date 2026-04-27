@@ -179,7 +179,7 @@ function DownloadsTab() {
                 <tr>
                   <th>Requested</th>
                   <th>Job name</th>
-                  <th className="col-center">Input</th>
+                  <th className="col-center">ID</th>
                   <th>Options</th>
                   <th className="col-center">Annotations</th>
                   <th>Status</th>

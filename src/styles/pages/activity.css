@@ -198,6 +198,12 @@
     white-space: nowrap;
 }
 
+/* Download status icon colours — hook into existing palette vars. */
+.status-success { color: var(--color-success); }
+.status-danger  { color: var(--color-danger); }
+.status-info    { color: var(--color-primary); }
+.status-muted   { color: var(--color-text-muted); }
+
 /* ── Grouped view ── */
 
 .grouped-view {
