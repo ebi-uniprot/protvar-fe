@@ -44,39 +44,40 @@ export const ActivityHelp = () => (
       The same options apply regardless of input type.
     </p>
 
-    <p><strong>Download ID format</strong></p>
+    <p><strong>Job name</strong></p>
     <p>
-      Each download is assigned a unique ID based on the full request — input source,
-      annotations, pagination, assembly, and active filters.
-      The same request always produces the same ID, so existing files are served directly
-      without regeneration.
+      Each submission has an optional <em>job name</em>. If you leave it blank, a default is
+      suggested based on what you're downloading — e.g. <code>BRCA1</code> for a gene browse,
+      <code>P22304, 6ioz</code> for a multi-identifier browse, the variant string for a single
+      query, or labels like <code>Pocket browse</code> / <code>Known variants</code> for filter-only
+      downloads. You can override this with anything more meaningful for your records.
     </p>
-    <p>Format: <code>PREFIX[-fun][-pop][-str][-PAGE-PAGESIZE][-ASSEMBLY][-filterHash]</code></p>
-    <p><strong>PREFIX</strong> by input type:</p>
-    <ul>
-      <li><strong>Single variant query</strong> — short hash of the query string</li>
-      <li><strong>Uploaded result</strong> — first 8 characters of the result ID</li>
-      <li><strong>Identifier browse</strong> (UniProt, Gene, PDB, Ensembl, RefSeq) — the identifier value,
-        multiple joined with <code>_</code> (e.g. <code>P22304_6ioz</code>)</li>
-      <li><strong>Filter-only browse</strong> — <code>all</code></li>
-    </ul>
-    <p><strong>Annotation flags:</strong> <code>-fun</code> functional · <code>-pop</code> population · <code>-str</code> structural</p>
-    <p><strong>Pagination</strong> (current page only): <code>-PAGE-PAGESIZE</code> e.g. <code>-1-50</code></p>
-    <p><strong>Assembly</strong> (when set explicitly): e.g. <code>-GRCh38</code></p>
-    <p><strong>Filter hash</strong>: 6-character hash appended when advanced filters are active</p>
+    <p>
+      The download itself is identified internally by a server-allocated job ID (UUID).
+      The job ID isn't shown by default — the job name and the page snapshot in the row are what
+      you'll recognise it by.
+    </p>
 
-    <p><strong>Examples</strong></p>
-    <ul>
-      <li><code>P22304-fun-pop</code></li>
-      <li><code>abc12345-str-GRCh38</code></li>
-      <li><code>BRCA2-fun-pop-str-1-100-ab12cd</code></li>
-    </ul>
+    <p><strong>Size limit</strong></p>
+    <p>
+      Full downloads (all pages) are capped at 100,000 rows. Larger requests are rejected at
+      submit time with a message asking you to refine your filters. For bulk pre-computed
+      datasets, use the FTP site link at the top of the Downloads tab.
+    </p>
+
+    <p><strong>Retention</strong></p>
+    <p>
+      Generated files and their status are kept for 7 days. After that, the entry shows as{' '}
+      <em>Expired</em> and you can clear it with <i className="bi bi-trash" />.
+    </p>
 
     <p><strong>Download status</strong></p>
     <ul>
-      <li><span className={DOWNLOAD_STATUS_INFO.ready.icon} /> <em>{DOWNLOAD_STATUS_INFO.ready.text}:</em> File is prepared and available for download.</li>
+      <li><span className={DOWNLOAD_STATUS_INFO.queued.icon} /> <em>{DOWNLOAD_STATUS_INFO.queued.text}:</em> Job submitted, awaiting a worker.</li>
       <li><span className={DOWNLOAD_STATUS_INFO.processing.icon} /> <em>{DOWNLOAD_STATUS_INFO.processing.text}:</em> File is being generated — check back shortly.</li>
-      <li><span className={DOWNLOAD_STATUS_INFO.queued.icon} /> <em>{DOWNLOAD_STATUS_INFO.queued.text}:</em> Job is queued, generation will begin soon.</li>
+      <li><span className={DOWNLOAD_STATUS_INFO.ready.icon} /> <em>{DOWNLOAD_STATUS_INFO.ready.text}:</em> File is prepared and available for download.</li>
+      <li><span className={DOWNLOAD_STATUS_INFO.failed.icon} /> <em>{DOWNLOAD_STATUS_INFO.failed.text}:</em> Generation didn't complete; the row shows a brief reason.</li>
+      <li><span className={DOWNLOAD_STATUS_INFO.expired.icon} /> <em>{DOWNLOAD_STATUS_INFO.expired.text}:</em> Past the 7-day retention window — file no longer available.</li>
     </ul>
 
     <p>
