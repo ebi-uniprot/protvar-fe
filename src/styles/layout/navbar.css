@@ -1,0 +1,257 @@
+/**
+ * navbar.css
+ * Top navigation bar inside the dark masthead.
+ * VersionInfo badge is positioned absolute within .navbar (position:relative).
+ */
+
+/* ============================================
+   NAVBAR CONTAINER
+   ============================================ */
+
+.navbar {
+    position: relative;         /* anchor for VersionInfo badge */
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.75rem 1.5rem 0.75rem 1.5rem;
+    gap: 1rem;
+}
+
+/* ============================================
+   BRAND (logo + tagline)
+   ============================================ */
+
+.navbar-brand {
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 auto;
+    gap: 6px;
+}
+
+.brand-link {
+    color: white;
+    text-decoration: none;
+    line-height: 0;
+}
+
+.brand-link:hover {
+    opacity: 0.9;
+}
+
+.brand-logo {
+    max-width: 140px;
+    height: auto;
+}
+
+.brand-tagline {
+    font-size: var(--font-size-sm);
+    color: rgba(255,255,255,0.65);
+    text-decoration: none;
+    padding-left: 2px;
+    white-space: nowrap;
+}
+
+.brand-tagline:hover {
+    color: white;
+}
+
+/* ============================================
+   RIGHT SECTION (search + nav links)
+   ============================================ */
+
+.navbar-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.4rem;
+    flex: 1;
+}
+
+/* ============================================
+   NAV BUTTONS
+   ============================================ */
+
+.navbar-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 2px;
+}
+
+.nav-button {
+    color: white;
+    padding: 7px 10px;
+    text-decoration: none;
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: background var(--transition-base);
+    white-space: nowrap;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.nav-button:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+}
+
+.nav-button.active {
+    background: rgba(255, 255, 255, 0.2);
+    font-weight: var(--font-weight-semibold);
+}
+
+.nav-button:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.6);
+    outline-offset: 2px;
+}
+
+.nav-button i {
+    font-size: 14px;
+    opacity: 0.85;
+}
+
+/* Small "Show banner" restore link — top-right of masthead, only when banner is dismissed */
+.navbar-banner-restore {
+    position: absolute;
+    top: 6px;
+    right: 12px;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.45);
+    font-size: 11px;
+    font-family: inherit;
+    cursor: pointer;
+    padding: 2px 4px;
+    line-height: 1;
+}
+
+.navbar-banner-restore:hover {
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: underline;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media screen and (max-width: 900px) {
+    .navbar {
+        flex-direction: column;
+        align-items: center;
+        padding: 0.75rem 1rem;
+        gap: 0.6rem;
+    }
+
+    .navbar-brand {
+        align-items: center;
+    }
+
+    .brand-tagline {
+        padding-left: 0;
+    }
+
+    .navbar-right {
+        align-items: center;
+        width: 100%;
+    }
+
+    .navbar-links {
+        justify-content: center;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .nav-button {
+        padding: 7px 8px;
+        font-size: var(--font-size-sm);
+    }
+
+    .nav-button i {
+        font-size: 13px;
+    }
+}
+
+/* ============================================
+   BRAND LOGO WRAP + VERSION BADGE
+   ============================================ */
+
+.brand-logo-wrap {
+    position: relative;
+    display: inline-block;
+}
+
+.version-info {
+    position: absolute;
+    top: 62px;
+    right: 44px;
+    line-height: normal;
+    font-size: var(--font-size-xs);
+    z-index: var(--z-dropdown);
+}
+
+.version-badge {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(255,255,255,0.22);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: var(--radius-full);
+    padding: 1px 7px;
+    font-size: 10px;
+    font-weight: var(--font-weight-semibold);
+    cursor: default;
+    white-space: nowrap;
+    user-select: none;
+    backdrop-filter: blur(2px);
+}
+
+.version-panel {
+    display: none;
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    line-height: var(--line-height-normal);
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border-medium);
+    border-radius: 0 var(--radius-md) var(--radius-md) var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    padding: 6px 4px;
+    min-width: 160px;
+    white-space: nowrap;
+    z-index: var(--z-dropdown);
+}
+
+.version-info:hover .version-panel {
+    display: block;
+}
+
+.version-panel > div {
+    padding: 3px 8px;
+    font-size: var(--font-size-xs);
+    color: var(--color-text-secondary);
+    border-radius: var(--radius-sm);
+}
+
+.version-panel > div:hover {
+    background: var(--color-bg-tertiary);
+}
+
+.version-panel hr {
+    margin: 4px 8px;
+    border: none;
+    border-top: 1px solid var(--color-border-light);
+}
+
+/* Use higher-specificity selector to avoid !important */
+.version-panel > div.data-header {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-xs);
+}
+

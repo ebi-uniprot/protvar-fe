@@ -8,10 +8,11 @@ import {
 import {FunctionalInfo} from "../types/FunctionalInfo";
 import {PopulationObservation} from "../types/PopulationObservation";
 import {PdbeStructure} from "../types/PdbeStructure";
-import {DownloadResponse} from "../types/DownloadRecord";
+import {DownloadResponse, DownloadStatusEntry} from "../types/DownloadRecord";
 import {InputUploadResponse, PagedMappingResponse} from "../types/PagedMappingResponse";
 import {DownloadRequest} from "../types/DownloadRequest";
 import {MappingRequest} from "../types/MappingRequest";
+import {ModelInfo, VectorSearchResponse} from "../types/VectorSearch";
 
 export const APP_JSON = {"Content-Type": "application/json"}
 export const TEXT_PLAIN = {"Content-Type": "text/plain"}
@@ -51,29 +52,13 @@ export function uploadFile(file: File, assembly?: string) {
 
 // Mapping
 
-// GET /mapping
-// Single variant mapping (used in QueryPage/direct link)
-export function singleVariant(input: string, assembly?: string) {
+// GET /mapping?q=...
+// Single variant mapping (used for direct /search, /g/, /p/ queries)
+export function singleVariant(q: string, assembly?: string) {
   return api.get<PagedMappingResponse>(
     `${API_URL}/mapping`,
     {
-      params: {input, assembly},
-      headers: APP_JSON,
-    }
-  );
-}
-
-// GET /mapping/{inputId}
-// Used on page redirect after inputText/File upload
-// Used for URL /result/:inputId
-export function inputIdMapping(inputId: string,
-                               page?: number,
-                               pageSize?: number,
-                               assembly?: string) {
-  return api.get<PagedMappingResponse>(
-    `${API_URL}/mapping/${inputId}`,
-    {
-      params: {page, pageSize, assembly},
+      params: {q, assembly},
       headers: APP_JSON,
     }
   );
@@ -123,10 +108,35 @@ export function downloadPost(request: DownloadRequest) {
 }
 
 export function downloadStatus(ids: string[]) {
-  return api.post(
+  return api.post<Record<string, DownloadStatusEntry>>(
     `${API_URL}/download/status`, ids,
     {
       headers: DEFAULT_HEADERS,
     }
   );
+}
+
+export function vectorSearch(text: string, limit: number = 10, offset: number = 0, model?: string) {
+  return api.get<VectorSearchResponse>(
+    `${API_URL}/semantic-search`,
+    {
+      params: { text, limit, offset, model },
+      headers: APP_JSON,
+    }
+  );
+}
+
+let _modelsPromise: Promise<ModelInfo[]> | null = null;
+
+export function getSemanticSearchModels(): Promise<ModelInfo[]> {
+  if (!_modelsPromise) {
+    _modelsPromise = api
+      .get<ModelInfo[]>(`${API_URL}/semantic-search/models`, { headers: APP_JSON })
+      .then((r) => r.data)
+      .catch(() => {
+        _modelsPromise = null;
+        return [];
+      });
+  }
+  return _modelsPromise;
 }

@@ -1,14 +1,12 @@
 /**
- * Individual feature item with collapsible details
- * Displays feature type, description, position, and evidences
+ * Individual feature item — compact single-line display within a feature group.
+ * Type badge is shown at the group level; this shows description + position + evidences.
  */
 
 import React from 'react';
-import { v1 as uuidv1 } from 'uuid';
 import { Feature } from '../../../../types/FunctionalInfo';
-import { ReactComponent as ChevronDownIcon } from '../../../../images/chevron-down.svg';
-import Evidences from '../Evidences';
-import {getPositionLabel} from "../utils/featureUtils";
+import { getPositionLabel } from '../utils/featureUtils';
+import Evidences from '../../common/Evidences';
 
 interface FeatureItemProps {
   itemKey: string;
@@ -18,29 +16,37 @@ interface FeatureItemProps {
 }
 
 export function FeatureItem({ itemKey, feature, isExpanded, onToggle }: FeatureItemProps) {
-  return (
-    <>
-      <button
-        type="button"
-        className="collapsible"
-        onClick={() => onToggle(itemKey)}
-      >
-        <span className="badge" style={{ margin: "0 5 0 5" }}>
-          {feature.type.toLowerCase()}
-        </span>
-        {feature.description ?? 'Unnamed'}
-        <ChevronDownIcon className="chevronicon" />
-      </button>
+  const hasEvidences = feature.evidences && feature.evidences.length > 0;
 
-      {isExpanded && (
-        <ul style={{ listStyleType: 'none', display: 'inline-block' }}>
-          <li key={uuidv1()}>
-            {getPositionLabel(feature.begin, feature.end, feature.type)}
-            <br />
+  return (
+    <div className="feature-item">
+      <div className="feature-item-row">
+        <span className="feature-description" title={feature.description ?? ''}>
+          {feature.description || <em className="feature-no-desc">No description</em>}
+        </span>
+        <span className="feature-pos-inline">
+          {getPositionLabel(feature.begin, feature.end, feature.type)}
+        </span>
+        {hasEvidences && (
+          <button
+            type="button"
+            className="feature-evidence-toggle"
+            onClick={() => onToggle(itemKey)}
+            aria-expanded={isExpanded}
+            title={isExpanded ? 'Hide evidences' : 'Show evidences'}
+          >
+            <i className={`bi bi-${isExpanded ? 'journal-text' : 'journal'}`}></i>
+          </button>
+        )}
+      </div>
+
+      {hasEvidences && (
+        <div className={`collapsible-anim${isExpanded ? ' open' : ''}`}>
+          <div className="feature-evidence-panel">
             <Evidences evidences={feature.evidences} />
-          </li>
-        </ul>
+          </div>
+        </div>
       )}
-    </>
+    </div>
   );
 }

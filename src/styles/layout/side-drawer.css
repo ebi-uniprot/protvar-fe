@@ -1,0 +1,94 @@
+/**
+ * side-drawer.css
+ * Right-side slide-in drawer — always position:fixed (overlay only, never docked).
+ * Replaces local SideDrawer.css.
+ */
+
+/* ============================================
+   DRAWER PANEL
+   ============================================ */
+
+.side-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    background: var(--color-bg-primary);
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+    border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+    z-index: var(--z-modal);
+    transform: translateX(100%);
+    transition: transform var(--transition-slow);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.side-drawer.open {
+    transform: translateX(0);
+}
+
+/* ============================================
+   BACKDROP OVERLAY
+   ============================================ */
+
+.drawer-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: calc(var(--z-modal) - 1);
+    opacity: 0;
+    animation: drawer-fade-in 0.3s ease forwards;
+}
+
+@keyframes drawer-fade-in {
+    to { opacity: 1; }
+}
+
+/* ============================================
+   DRAWER HEADER
+   ============================================ */
+
+.drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--color-brand-lightest);
+    background: var(--color-brand-lightest);
+    min-height: 56px;
+    flex-shrink: 0;
+}
+
+
+/* ============================================
+   DRAWER CONTENT
+   ============================================ */
+
+.drawer-content {
+    flex: 1;
+    padding: 18px;
+    overflow-y: auto;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media screen and (max-width: 768px) {
+    .side-drawer {
+        width: 100vw !important;
+        border-radius: 0;
+    }
+
+    .drawer-header {
+        padding: 12px 14px;
+    }
+
+}
+
+@media screen and (max-width: 480px) {
+    .drawer-content {
+        padding: 14px;
+    }
+}

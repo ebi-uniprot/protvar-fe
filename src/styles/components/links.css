@@ -1,0 +1,237 @@
+/**
+ * links.css - Link styles
+ * External links, ProtVar links, and special link variants
+ */
+
+/* ============================================
+   SHARED BASE: ext-link + text-link
+   ============================================ */
+
+.ext-link,
+.text-link {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 4px;
+    color: var(--color-primary);
+    text-decoration: none !important;
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-base);
+}
+
+.ext-link:hover,
+.text-link:hover {
+    background: var(--color-primary-lightest);
+    color: var(--color-primary-dark);
+    text-decoration: none !important;
+}
+
+.ext-link:focus,
+.text-link:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* ============================================
+   EXTERNAL LINK (with arrow icon)
+   ============================================ */
+
+.ext-link .ext-arrow {
+    font-size: 0.85em;
+    margin-left: 1px;
+    opacity: 0.75;
+    line-height: 1;
+}
+
+/* ============================================
+   PROTVAR LINK (Two-tone Brand Colors)
+   ============================================ */
+
+.protvar-link {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 4px;
+    text-decoration: none !important;
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-base);
+    margin-left: var(--spacing-sm);
+}
+
+.protvar-link:hover {
+    background: var(--color-gray-200);
+    text-decoration: none !important;
+}
+
+.protvar-link:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.protvar-link:active,
+.protvar-link:visited {
+    text-decoration: none !important;
+}
+
+.protvar-label {
+    position: relative;
+    display: inline-block;
+    font-size: 10px;
+    font-weight: var(--font-weight-bold);
+    letter-spacing: 0.3px;
+    line-height: 1;
+    padding-right: 7px;
+}
+
+.protvar-label .p-letter {
+    color: #9fccaf;
+}
+
+.protvar-label .v-letter {
+    color: #ff9901;
+}
+
+.protvar-label .pv-arrow {
+    position: absolute;
+    top: -2px;
+    right: 0;
+    font-family: monospace;
+    font-size: 8px;
+    color: var(--color-text-muted);
+}
+
+.protvar-link:hover .pv-arrow {
+    color: var(--color-text-primary);
+}
+
+/* ============================================
+   PREDICTION EXTERNAL LINK (inline)
+   ============================================ */
+
+.ml-auto {
+    margin-left: auto;
+}
+
+/* ============================================
+   VIEW STRUCTURE BUTTON/LINK
+   ============================================ */
+
+.view-structure-button {
+    background: none;
+    border: none;
+    color: var(--color-primary);
+    cursor: pointer;
+    padding: 0;
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    transition: all var(--transition-base);
+}
+
+.view-structure-button:hover {
+    color: var(--color-primary-dark);
+    text-decoration: underline;
+}
+
+.view-structure-button:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+
+.view-structure-button .bi-eye {
+    font-size: var(--font-size-md);
+}
+
+
+/* ============================================
+   PUBMED LINK (inline text references)
+   ============================================ */
+
+.pubmed-link {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+.pubmed-link:hover {
+    text-decoration: underline;
+}
+
+/* ============================================
+   COPY LINK BUTTON (inline, prediction headers)
+   ============================================ */
+
+.copy-link {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 1px 2px;
+    font-size: 12px;
+    color: var(--color-text-muted);
+    line-height: 1;
+    border-radius: var(--radius-sm);
+    transition: color var(--transition-base);
+}
+
+.copy-link:hover {
+    color: var(--color-text-secondary);
+}
+
+
+
+/* ============================================
+   REF LINK (inline references — Footer, DownloadPage, error pages)
+   Migrated from _TextAreaSearch.scss
+   ============================================ */
+
+.ref-link,
+.ref-link:visited {
+    color: #6987C3;
+    border-bottom-style: none;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.ref-link:hover {
+    color: rgb(0, 124, 130);
+    border-bottom-style: solid;
+    opacity: 0.9;
+    outline-width: 0;
+}
+
+/* ============================================
+   DARK MODE SUPPORT
+   ============================================ */
+
+@media (prefers-color-scheme: dark) {
+    .ext-link,
+    .text-link {
+        color: var(--color-primary);
+    }
+
+    .ext-link:hover,
+    .text-link:hover {
+        background: rgba(110, 168, 254, 0.1);
+        color: var(--color-primary-light);
+    }
+
+    .protvar-link:hover {
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    .protvar-link .pv-arrow {
+        color: var(--color-text-tertiary);
+    }
+
+    .protvar-link:hover .pv-arrow {
+        color: var(--color-text-primary);
+    }
+
+    .view-structure-button {
+        color: var(--color-primary);
+    }
+
+    .view-structure-button:hover {
+        color: var(--color-primary-light);
+    }
+}

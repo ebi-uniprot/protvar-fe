@@ -1,11 +1,11 @@
 import {AmScore} from "../../../../types/MappingResponse";
-import {PredAttr} from "./Prediction";
+import {PredictionCategory} from "./Prediction";
 import Spaces from "../../../elements/Spaces";
-import {PRECISION, STD_BENIGN_COLOR, STD_PATHOGENIC_COLOR, STD_UNCERTAIN_COLOR} from "./PredConstants";
-import {SharePredictionLink} from "./SharePredictionLink";
+import {PRECISION, STD_BENIGN_COLOR, STD_PATHOGENIC_COLOR, STD_UNCERTAIN_COLOR} from "./PredictionConstants";
+import { CopyLink } from '../../common/CopyLink';
 import React from "react";
 
-export const AM_SCORE_ATTR: {[key: string]: PredAttr} = {
+export const AM_SCORE_ATTR: {[key: string]: PredictionCategory} = {
   BENIGN: { color: '#3853a4', stdColor: STD_BENIGN_COLOR, text: 'benign' },
   AMBIGUOUS: { color: '#a8a9ad', stdColor: STD_UNCERTAIN_COLOR, text: 'ambiguous' },
   PATHOGENIC: { color: '#ed1e24', stdColor: STD_PATHOGENIC_COLOR, text: 'pathogenic' }
@@ -13,10 +13,8 @@ export const AM_SCORE_ATTR: {[key: string]: PredAttr} = {
 
 export const AlphaMissensePred = (props: { am?: AmScore, stdColor: boolean }) => {
   if (props.am) {
-    return <div className="aa-pred">
-      <div>AlphaMissense
-        <SharePredictionLink predictionType="alphamissense" />
-      </div>
+    return <div className="prediction-row">
+      <div><CopyLink predictionType="alphamissense" /> AlphaMissense</div>
       <div>{formatAMScore(props.am)}</div>
       <AlphaMissensePredIcon {...props} />
     </div>
@@ -30,7 +28,7 @@ export function formatAMScore(amScore?: AmScore) {
 
 function AlphaMissensePredIcon(props: { am?: AmScore, stdColor: boolean }) {
   if (props.am) {
-    let cls = props.am.amClass as keyof PredAttr
+    let cls = props.am.amClass as keyof PredictionCategory
     return <div>
       <i className="bi bi-circle-fill" style={{color: (props.stdColor ? AM_SCORE_ATTR[cls].stdColor : AM_SCORE_ATTR[cls].color)}}></i>
       <Spaces/>{AM_SCORE_ATTR[cls].text}

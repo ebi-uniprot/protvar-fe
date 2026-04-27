@@ -24,7 +24,7 @@ export const AFLegend = () => {
 }
 
 export const AFLegendShortText = () => {
-  return <div style={{padding: '5px'}}>
+  return <div className="af-legend-short">
     {
       Object.values(ALPHAFOLD_CONF).map(c => {
         return <div key={uuidv1()}>

@@ -27,7 +27,7 @@ workflow:
     - when: always
 
 .js:
-  image: dockerhub.ebi.ac.uk/uniprot/variation/protvar-deploy/cached/node-18.20
+  image: dockerhub.ebi.ac.uk/uniprot/variation/protvar-deploy/cached/node-22
   before_script:
     - node --version
     - npm --version
@@ -59,8 +59,9 @@ build_docker_image:
   stage: build_docker_image
 
 int-deploy:
-  only:
-    refs: [int]
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "int"'
+      when: manual
   extends: .deploy
   stage: deploy
   script:

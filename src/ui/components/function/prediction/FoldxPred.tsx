@@ -1,8 +1,8 @@
 import Spaces from "../../../elements/Spaces";
-import {PRECISION, STD_BENIGN_COLOR, STD_PATHOGENIC_COLOR} from "./PredConstants";
+import {PRECISION, STD_BENIGN_COLOR, STD_PATHOGENIC_COLOR} from "./PredictionConstants";
 import {Foldx} from "../../../../types/Prediction";
 import {aminoAcid3to1Letter} from "../../../../utills/Util";
-import {SharePredictionLink} from "./SharePredictionLink";
+import { CopyLink } from '../../common/CopyLink';
 import React from "react";
 
 export const FoldxPred = (props: { foldxs: Array<Foldx>, variantAA: string }) => {
@@ -12,19 +12,21 @@ export const FoldxPred = (props: { foldxs: Array<Foldx>, variantAA: string }) =>
     : props.foldxs;
 
   if (filteredFoldxs && filteredFoldxs.length > 0) {
-    return <div>
-      <div className="aa-pred">
-        <div>FoldX - Stability change (ΔΔG)
-          <SharePredictionLink predictionType="foldx" />
-          {filteredFoldxs[0].numFragments > 1 && <small>
-          <br/>(using AlphaFold fragment {filteredFoldxs[0].afId})
-        </small>}</div>
-        <div>{formatFoldxScore(filteredFoldxs[0])}</div>
-        <FoldxPredIcon foldx={filteredFoldxs[0]}/>
+    return (
+      <div>
+        <div className="prediction-row">
+          <div><CopyLink predictionType="foldx" /> FoldX - Stability change (ΔΔG)
+            {filteredFoldxs[0].numFragments > 1 && <small>
+            <br/>(using AlphaFold fragment {filteredFoldxs[0].afId})
+          </small>}
+          </div>
+          <div>{formatFoldxScore(filteredFoldxs[0])}</div>
+          <FoldxPredIcon foldx={filteredFoldxs[0]}/>
+        </div>
       </div>
-    </div>
+    );
   }
-  return <div>No predictions available for this variant</div>
+  return <></>;
 }
 
 export function formatFoldxScore(foldx?: Foldx) {

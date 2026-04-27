@@ -1,57 +1,79 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 
 interface ExpandableTextProps {
   text: string;
   charLimit?: number;
 }
 
-export const ExpandableText: React.FC<ExpandableTextProps> = ({ text, charLimit = 300 }) => {
+export const ExpandableText: React.FC<ExpandableTextProps> = ({
+                                                                text,
+                                                                charLimit = 300
+                                                              }) => {
   const [expanded, setExpanded] = useState(false);
 
-  // Convert PubMed references to links
   const convertPubMedLinks = (input: string): (string | React.JSX.Element)[] => {
     const regex = /PubMed:(\d+)/g;
     const parts: (string | React.JSX.Element)[] = [];
     let lastIndex = 0;
     let match;
+    let keyCounter = 0;
 
     while ((match = regex.exec(input)) !== null) {
-      const before = input.substring(lastIndex, match.index);
-      const pubmedId = match[1];
-      parts.push(before + 'PubMed:');
-      parts.push(<a
-          key={match.index}
-          href={`https://pubmed.ncbi.nlm.nih.gov/${pubmedId}`}
+      if (match.index > lastIndex) {
+        parts.push(input.substring(lastIndex, match.index));
+      }
+      parts.push('PubMed:');
+      parts.push(
+        <a
+          key={`pubmed-${match[1]}-${keyCounter++}`}
+          href={`https://pubmed.ncbi.nlm.nih.gov/${match[1]}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-blue-600 hover:underline"
+          className="pubmed-link"
         >
-          {pubmedId}
+          {match[1]}
         </a>
       );
       lastIndex = regex.lastIndex;
     }
 
-    parts.push(input.substring(lastIndex)); // Add the rest of the string
+    if (lastIndex < input.length) {
+      parts.push(input.substring(lastIndex));
+    }
+
     return parts;
   };
 
   const isTruncated = text.length > charLimit;
 
-  const displayedText = expanded || !isTruncated ? text : text.substring(0, charLimit) + '...';
+  const displayContent = useMemo(() => {
+    let displayText = text;
+    if (!expanded && isTruncated) {
+      displayText = text.substring(0, charLimit);
+      const lastSpaceIndex = displayText.lastIndexOf(' ');
+      if (lastSpaceIndex > charLimit - 20) {
+        displayText = displayText.substring(0, lastSpaceIndex);
+      }
+    }
+    return convertPubMedLinks(displayText);
+  }, [text, charLimit, expanded, isTruncated]);
 
   return (
-    <div className="text-sm text-gray-800">
-      <span>{convertPubMedLinks(displayedText)}</span>
+    <span className="expandable-text">
+      <span className="expandable-text-content">{displayContent}</span>
       {isTruncated && (
         <button
           onClick={() => setExpanded(!expanded)}
-          className="ml-2 text-primary border-0 bg-transparent p-0 align-baseline"
+          className="expandable-text-toggle"
+          aria-label={expanded ? 'Show less' : 'Show more'}
           title={expanded ? 'Show less' : 'Show more'}
         >
-          <i className={`bi ${expanded ? 'bi-chevron-up' : 'bi-chevron-down'}`}></i>
+          {expanded
+            ? <i className="bi bi-chevron-bar-up" />
+            : <i className="bi bi-three-dots" />
+          }
         </button>
       )}
-    </div>
+    </span>
   );
 };

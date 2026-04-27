@@ -1,6 +1,5 @@
 // RangeSlider.tsx
 import React, { useState } from 'react';
-import './RangeSlider.css';
 
 interface RangeSliderProps {
   label: string;

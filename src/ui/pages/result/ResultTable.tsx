@@ -1,14 +1,14 @@
-import {GENOMIC_COLS, PROTEIN_COLS} from "../../../constants/SearchResultTable";
-import Tool from "../../elements/Tool";
-import React, {useContext, useEffect, useState} from "react";
-import {PagedMappingResponse} from "../../../types/PagedMappingResponse";
-import {Message, GenomicVariant} from "../../../types/MappingResponse";
-import {StringVoidFun} from "../../../constants/CommonTypes";
-import {getAlternateIsoFormRow} from "./AlternateIsoFormRow";
-import {getNewPrimaryRow} from "./PrimaryRow";
-import {AppContext} from "../../App";
+import React, { useContext, useEffect, useState } from "react";
+import { PagedMappingResponse } from "../../../types/PagedMappingResponse";
+import { Message, GenomicVariant, Isoform } from "../../../types/MappingResponse";
+import { StringVoidFun } from "../../../constants/CommonTypes";
+import { getAlternateIsoFormRow } from "./AlternateIsoFormRow";
+import { getNewPrimaryRow, AnnotationPanels, ToggleIsoformGroupFn } from "./PrimaryRow";
+import { singleVariant } from "../../../services/ProtVarService";
+import { AppContext } from "../../App";
 import MsgRow from "./MsgRow";
-import {useLocation, useNavigate, useSearchParams} from "react-router-dom";
+import Tool from "../../elements/Tool";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import {
   parseAnnotationParam,
   buildAnnotationKey,
@@ -17,184 +17,220 @@ import {
   clearAnnotationSpecificParams
 } from "./annotationUrl";
 
-function ResultTable(props: { data: PagedMappingResponse | null }) {
-  const stdColor = useContext(AppContext).stdColor
+interface ResultTableProps {
+  data: PagedMappingResponse | null;
+  // True when the BE response only includes canonical isoforms (filter-only
+  // browse). The chevron then triggers a single-variant lookup on first
+  // expand to fetch the alt-isoform list on demand.
+  lazyIsoforms?: boolean;
+}
+
+function ResultTable(props: ResultTableProps) {
+  const stdColor = useContext(AppContext).stdColor;
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams] = useSearchParams();
-  const [isoformGroupExpanded, setIsoformGroupExpanded] = useState('')
-  const [annotationExpanded, setAnnotationExpanded] = useState('')
+  const [isoformGroupExpanded, setIsoformGroupExpanded] = useState('');
+  const [annotationExpanded, setAnnotationExpanded] = useState('');
+  // Lazy-fetched isoform lists, keyed "${gvStr}|${geneName}".
+  // Replaces gene.isoforms during render when present. Network-level
+  // dedup is handled by axios-cache-interceptor on singleVariant().
+  const [fetchedIsoforms, setFetchedIsoforms] = useState<Record<string, Isoform[]>>({});
+  // True while a single-variant fetch is in flight. Keyed by gvStr —
+  // one request per genomic variant covers all genes at that position.
+  const [loadingVariants, setLoadingVariants] = useState<Record<string, boolean>>({});
 
-  // Initialize annotation from URL on mount and when searchParams change
+  // Reset on-demand state when the underlying data changes (page change,
+  // new query). Axios still has the responses cached behind the scenes, so
+  // re-expanding any unchanged variant on the new page is instant.
+  useEffect(() => {
+    setFetchedIsoforms({});
+    setLoadingVariants({});
+  }, [props.data]);
+
   useEffect(() => {
     const annotationParam = searchParams.get('annotation');
-    if (!annotationParam) {
-      setAnnotationExpanded('');
-      return;
-    }
-
+    if (!annotationParam) { setAnnotationExpanded(''); return; }
     const parsed = parseAnnotationParam(annotationParam);
     if (parsed) {
-      const key = buildAnnotationKey(parsed.type, parsed.rowNumber);
-      setAnnotationExpanded(key);
+      const canonical = buildAnnotationParam(parsed.type, parsed.rowNumber, true);
+      if (canonical !== annotationParam) {
+        // Long form (e.g. "functional-row-1") → redirect to short canonical form ("fun")
+        const newParams = new URLSearchParams(searchParams);
+        newParams.set('annotation', canonical);
+        navigate(`${location.pathname}?${newParams.toString()}`, { replace: true });
+        return;
+      }
+      setAnnotationExpanded(buildAnnotationKey(parsed.type, parsed.rowNumber));
     } else {
       setAnnotationExpanded('');
     }
-  }, [searchParams]);
+  }, [searchParams]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  function toggleIsoformGroup(key: string) {
-    setIsoformGroupExpanded(isoformGroupExpanded === key ? '' : key);
-  }
+  const toggleIsoformGroup: ToggleIsoformGroupFn = (key, gvStr) => {
+    const willExpand = isoformGroupExpanded !== key;
+
+    // Lazy mode: kick off a single-variant fetch on first expand. Subsequent
+    // expands of the same gvStr are skipped if we already have data in
+    // local state; if not (e.g. genes that returned no isoforms), the call
+    // is fired again and resolved instantly by the axios cache. The
+    // expanded panel renders a "No other isoforms" hint in that case.
+    if (willExpand && props.lazyIsoforms && gvStr && !loadingVariants[gvStr]) {
+      const alreadyInState = Object.keys(fetchedIsoforms).some(k => k.startsWith(`${gvStr}|`));
+      if (!alreadyInState) {
+        setLoadingVariants(prev => ({ ...prev, [gvStr]: true }));
+        singleVariant(gvStr)
+          .then(response => {
+            const next: Record<string, Isoform[]> = {};
+            response.data.content?.inputs?.forEach(inp => {
+              inp.derivedGenomicVariants?.forEach(gv => {
+                const k = `${gv.chromosome}-${gv.position}-${gv.refBase}-${gv.altBase}`;
+                if (k !== gvStr) return;
+                gv.genes?.forEach(g => {
+                  if (g.isoforms?.length) next[`${gvStr}|${g.geneName}`] = g.isoforms;
+                });
+              });
+            });
+            setFetchedIsoforms(prev => ({ ...prev, ...next }));
+          })
+          .catch(err => {
+            console.error('Failed to fetch isoforms for', gvStr, err);
+          })
+          .finally(() => {
+            setLoadingVariants(prev => {
+              const { [gvStr]: _, ...rest } = prev;
+              return rest;
+            });
+          });
+      }
+    }
+
+    setIsoformGroupExpanded(willExpand ? key : '');
+  };
 
   function toggleAnnotation(key: string) {
     const newAnnotation = annotationExpanded === key ? '' : key;
     const oldAnnotation = annotationExpanded;
     setAnnotationExpanded(newAnnotation);
 
-    // Update URL
     const newParams = new URLSearchParams(searchParams);
-
     if (newAnnotation) {
       const parsed = parseAnnotationKey(newAnnotation);
       if (parsed) {
-        // Build the URL parameter (omit row number if it's 1)
         const param = buildAnnotationParam(parsed.type, parsed.rowNumber, true);
         newParams.set("annotation", param);
-
-        // Clear tab-specific parameters when:
-        // 1. Switching to a different annotation type, OR
-        // 2. Switching to a different row (even same type - each row has different structures)
         const oldParsed = oldAnnotation ? parseAnnotationKey(oldAnnotation) : null;
-        const isDifferentType = !oldParsed || parsed.type !== oldParsed.type;
-        const isDifferentRow = oldParsed && parsed.rowNumber !== oldParsed.rowNumber;
-
-        if (isDifferentType || isDifferentRow) {
+        if (!oldParsed || parsed.type !== oldParsed.type || parsed.rowNumber !== oldParsed.rowNumber) {
           clearAnnotationSpecificParams(newParams, parsed.type);
         }
       }
     } else {
-      // When closing all tabs, clear everything
       newParams.delete("annotation");
       clearAnnotationSpecificParams(newParams, null);
     }
 
-    const url = `${location.pathname}${newParams.size > 0 ? `?${newParams.toString()}` : ``}`;
+    const url = `${location.pathname}${newParams.size > 0 ? `?${newParams.toString()}` : ''}`;
     navigate(url, { replace: true });
   }
 
-  if (!props.data)
-    return null
+  if (!props.data) return null;
 
-  const tableRows = getTableRows(
+  const rows = getTableRows(
     props.data,
     isoformGroupExpanded,
     toggleIsoformGroup,
     annotationExpanded,
     toggleAnnotation,
-    stdColor
+    stdColor,
+    !!props.lazyIsoforms,
+    fetchedIsoforms,
+    loadingVariants,
   );
 
-  return <table className="" cellPadding="0" cellSpacing="0" id="resultTable">
-    <thead>
-    <tr>
-      <Tool el="th" colSpan={GENOMIC_COLS} tip="Gene and nucleotide level annotations">GENOMIC</Tool>
-      <Tool el="th" colSpan={PROTEIN_COLS} tip="Amino acid/protein level annotations">PROTEIN</Tool>
-      <Tool el="th" tip="Three types of annotations; functional, co-located variants and structural"
-            pos="up-right">ANNOTATIONS</Tool>
-    </tr>
-    <tr>
-      {/* <th className="sticky"><Tool tip="Chromosome" pos="up-left">Chr</Tool></th> */}
-      <Tool el="th" className="sticky" tip="Chromosome" pos="up-left">Chr.</Tool>
-      <Tool el="th" className="sticky" tip="Genomic coordinate">Coordinate</Tool>
-      <Tool el="th" className="sticky" tip="User entered variant identifier">ID</Tool>
-      <Tool el="th" className="sticky" tip="Reference allele">Ref.</Tool>
-      <Tool el="th" className="sticky" tip="Alternative allele">Alt.</Tool>
-      <Tool el="th" className="sticky" tip="HGNC short gene name">Gene</Tool>
-      <Tool el="th" className="sticky"
-            tip="Change of the codon containing the variant nucleotide the position of which is capitalised">Codon
-        (strand)</Tool>
-      <Tool el="th" className="sticky"
-            tip="CADD (Combined Annotation Dependent Depletion) phred-like score. Colours are defined in the legends. Source: PubMed PMID 30371827">CADD
-        v1.7</Tool>
-      <Tool el="th" className="sticky" tip="The protein isoform the variant is mapped to.
-        By default this is the UniProt canonical isoform, however other isoforms are shown if necessary.
-        Alternative isoforms can be shown by expanding the arrow to the right of the isoform"
-            tSize="xlarge">Isoform</Tool>
-      <Tool el="th" className="sticky" tip="Full protein name from UniProt">Protein name</Tool>
-      <Tool el="th" className="sticky" tip="Position of the amino acid containing the variant in the displayed isoform">AA
-        pos.</Tool>
-      <Tool el="th" className="sticky" tip="Three letter amino acid code for the reference and alternative alleles">AA
-        change</Tool>
-      <Tool el="th" className="sticky" tip="A description of the consequence of the variant">Consequence(s)</Tool>
-      <Tool el="th" className="sticky"
-            tip="AlphaMissense prediction. Colours are defined in the legends. Source: PubMed PMID 37733863">AlphaMiss.
-        pred.</Tool>
-      <th className="sticky">Click for details</th>
-    </tr>
-    </thead>
-    <tbody>
-    {tableRows}
-    </tbody>
-  </table>
+  return (
+    <div className="result-table">
+      {/* ── Sticky two-row header ── */}
+      <div className="result-header">
+        <div className="result-group-header">
+          <Tool el="span" tip="Gene and nucleotide level annotations">
+            GENOMIC <span className="col-hints">· ID · position · gene · codon · CADD</span>
+          </Tool>
+          <Tool el="span" tip="Amino acid / protein level annotations">
+            PROTEIN <span className="col-hints">· isoform · name · AA change · consequence · popEVE · AlphaMissense</span>
+          </Tool>
+          <Tool el="span" tip="Functional, population and structural annotations" pos="up-right">
+            ANNOTATIONS
+          </Tool>
+        </div>
+      </div>
+
+      {/* ── Data rows ── */}
+      <div className="result-body">
+        {rows}
+      </div>
+    </div>
+  );
 }
 
-export const rowBg = (index: number) => {
-  const rowColor = {backgroundColor: "#F4F3F3"}
-  const altRowColor = {backgroundColor: "#FFFFFF"}
-  return (index % 2 === 0) ? altRowColor : rowColor;
-}
+const NO_MAPPING: Message = { type: 'ERROR', text: 'No mapping found' };
 
-const NO_MAPPING: Message = {type: 'ERROR', text: 'No mapping found'}
-
-// Process and convert paged mapping response into table rows
 const getTableRows = (
   data: PagedMappingResponse | null,
   isoformGroupExpanded: string,
-  toggleIsoformGroup: StringVoidFun,
+  toggleIsoformGroup: ToggleIsoformGroupFn,
   annotationExpanded: string,
   toggleAnnotation: StringVoidFun,
-  stdColor: boolean
+  stdColor: boolean,
+  lazyIsoforms: boolean,
+  fetchedIsoforms: Record<string, Isoform[]>,
+  loadingVariants: Record<string, boolean>,
 ) => {
-  const tableRows: Array<React.JSX.Element> = [];
+  const rows: Array<React.JSX.Element> = [];
 
-  // whole-input messages
-  data?.content.messages?.forEach((message, messageIndex) => {
-    tableRows.push(<MsgRow key={`message-${messageIndex}`} message={message}/>)
-  });
-
-  let primaryRow = 0 // ensures similar or duplicate inputs do not lead to conflicting key
-  let altRow = 0
+  let primaryRow = 0;
+  let altRow = 0;
 
   data?.content.inputs?.forEach((input, inputIndex) => {
-
-    // each user input messages
-    input.messages.forEach((message, messageIndex) => {
-      tableRows.push(<MsgRow key={`input-${inputIndex}-message-${messageIndex}`} index={inputIndex} message={message}
-                             input={input}/>)
+    input.messages.forEach((message, i) => {
+      rows.push(
+        <MsgRow key={`input-${inputIndex}-message-${i}`} index={inputIndex} message={message} input={input} />
+      );
     });
 
     input.derivedGenomicVariants.forEach((genomicVariant: GenomicVariant, genIndex: number) => {
-      /*gInput.messages.forEach((message, messageIndex) => {
-        tableRows.push(<MsgRow index={inputIndex} key={`input-${inputIndex}-${genIndex}-message-${messageIndex}`} message={message} input={input} />)
-      });*/
-      // IT SEEMS WE MAY NOT BE TAKING THE ORIGINAL AND DERIVED GEN INPUT
-      // INTO ACCOUNT SOMEWHERE...
-
-      if (genomicVariant.genes.length === 0 && input.messages.length === 0) { // no message
-        tableRows.push(<MsgRow key={`input-${inputIndex}-${genIndex}-nomapping`} index={inputIndex} message={NO_MAPPING}
-                               input={input} genomicVariant={genomicVariant}/>)
-        return
+      if (genomicVariant.genes.length === 0 && input.messages.length === 0) {
+        rows.push(
+          <MsgRow key={`input-${inputIndex}-${genIndex}-nomapping`} index={inputIndex} message={NO_MAPPING} input={input} genomicVariant={genomicVariant} />
+        );
+        return;
       }
 
       genomicVariant.genes.forEach((gene, geneIdx) => {
-        const isoformGroupKey = `input-${inputIndex}-${genIndex}-gene-${geneIdx}-isoform`
-        gene.isoforms.forEach((isoform, isoformIdx) => {
+        const isoformGroupKey = `input-${inputIndex}-${genIndex}-gene-${geneIdx}-isoform`;
+        const genomicVariantStr = `${genomicVariant.chromosome}-${genomicVariant.position}-${genomicVariant.refBase}-${genomicVariant.altBase}`;
+
+        // Effective isoforms: prefer the lazy-fetched list when available,
+        // otherwise the BE-pre-fetched list on gene.isoforms.
+        const fetched = fetchedIsoforms[`${genomicVariantStr}|${gene.geneName}`];
+        const effectiveIsoforms = fetched ?? gene.isoforms;
+        const isLoadingIsoforms = !!loadingVariants[genomicVariantStr];
+        // In lazy mode the chevron is always visible — clicking it triggers
+        // a single-variant fetch (instant on cached repeats) and either
+        // reveals alt isoforms or shows a "No other isoforms" hint.
+        const hasAltIsoForm = effectiveIsoforms.length > 1 || lazyIsoforms;
+
+        let primaryIsoform = effectiveIsoforms[0];
+        let primaryKey = '';
+        const geneRowEls: React.JSX.Element[] = [];
+
+        effectiveIsoforms.forEach((isoform, isoformIdx) => {
           if (isoformIdx === 0) {
             primaryRow++;
-            altRow = 0; // reset
-
-            tableRows.push(getNewPrimaryRow(
-              `row-${primaryRow}`,
+            altRow = 0;
+            primaryKey = `row-${primaryRow}`;
+            primaryIsoform = isoform;
+            geneRowEls.push(getNewPrimaryRow(
+              primaryKey,
               isoformGroupKey,
               isoformGroupExpanded,
               inputIndex,
@@ -205,19 +241,59 @@ const getTableRows = (
               toggleIsoformGroup,
               annotationExpanded,
               toggleAnnotation,
-              gene.isoforms.length > 1,
-              stdColor
-            ))
+              hasAltIsoForm,
+              stdColor,
+              isoformGroupKey === isoformGroupExpanded ? effectiveIsoforms.slice(1) : [],
+              isLoadingIsoforms,
+            ));
           } else if (isoformGroupKey === isoformGroupExpanded) {
             altRow++;
-            tableRows.push(getAlternateIsoFormRow(`row-${primaryRow}-${altRow}`, inputIndex, isoform))
+            geneRowEls.push(getAlternateIsoFormRow(`row-${primaryRow}-${altRow}`, inputIndex, isoform));
           }
-        })
-      })
-    })
+        });
+
+        // Lazy mode + expanded + nothing more to show: render a hint so the
+        // user understands the chevron resolved to "no other isoforms"
+        // rather than appearing to do nothing. The hint is positioned at
+        // the isoform column (col 6+) by the .no-alts-hint CSS rule,
+        // aligning with where alt isoforms would normally appear.
+        if (primaryKey && lazyIsoforms && !isLoadingIsoforms
+            && isoformGroupKey === isoformGroupExpanded
+            && effectiveIsoforms.length === 1) {
+          geneRowEls.push(
+            <div key={`row-${primaryRow}-no-alts`} className="result-row result-row-isoform result-row-no-alts">
+              <span className="no-alts-hint">No other isoforms.</span>
+            </div>
+          );
+        }
+
+        if (primaryKey) {
+          // Wrap in display:contents div — guarantees Primary → Alt Isoforms → Annotation Panel
+          // order regardless of React reconciliation behaviour.
+          rows.push(
+            <div key={`group-${primaryKey}`} className="result-gene-group">
+              {geneRowEls}
+              <AnnotationPanels
+                isoformKey={primaryKey}
+                annotationExpanded={annotationExpanded}
+                gene={gene}
+                isoform={primaryIsoform}
+                genomicVariantStr={genomicVariantStr}
+              />
+            </div>
+          );
+        }
+      });
+    });
   });
 
-  return tableRows;
+  return rows;
+};
+
+export const rowBg = (index: number) => {
+  const rowColor    = { backgroundColor: "#F4F3F3" };
+  const altRowColor = { backgroundColor: "#FFFFFF" };
+  return (index % 2 === 0) ? altRowColor : rowColor;
 };
 
 export default ResultTable;

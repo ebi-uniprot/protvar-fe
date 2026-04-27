@@ -1,11 +1,11 @@
 /**
- * Card component for displaying protein-protein interaction
- * Shows partner protein with confidence score and link to structure viewer
+ * Compact row for a single protein-protein interaction entry
  */
 
 import React from 'react';
 import { Interaction } from '../../../../types/Prediction';
 import { getInteractionConfidence, ConfidenceBadge } from '../utils/confidenceUtils';
+import structureIcon from '../../../../images/structures-3d.svg';
 
 interface InteractionCardProps {
   interaction: Interaction;
@@ -14,41 +14,23 @@ interface InteractionCardProps {
   onViewInStructure: (interaction: Interaction) => void;
 }
 
-export function InteractionCard({
-                                  interaction,
-                                  currentAccession,
-                                  index,
-                                  onViewInStructure
-                                }: InteractionCardProps) {
-  // Determine which protein is the interaction partner
-  const partnerProtein = currentAccession === interaction.a
-    ? interaction.b
-    : interaction.a;
-
+export function InteractionCard({ interaction, currentAccession, index, onViewInStructure }: InteractionCardProps) {
+  const partnerProtein = currentAccession === interaction.a ? interaction.b : interaction.a;
   const confidence = getInteractionConfidence(interaction.pdockq);
 
   return (
-    <div key={`interaction-${index + 1}`} className="interaction-grid">
-      {/* Partner protein with view link */}
-      <div>
+    <div className="interaction-row">
+      <span>
         <button
           onClick={() => onViewInStructure(interaction)}
           className="view-structure-button"
           title="View in 3D structure tab"
         >
-          <i className="bi bi-eye" /> {partnerProtein}
+          <img src={structureIcon} alt="" className="structure-icon-sm" /> {partnerProtein}
         </button>
-      </div>
-
-      {/* pDockQ score */}
-      <div className="pdockq-score">
-        {interaction.pdockq.toFixed(3)}
-      </div>
-
-      {/* Confidence badge */}
-      <div>
-        <ConfidenceBadge level={confidence} />
-      </div>
+      </span>
+      <span className="pdockq-score">{interaction.pdockq.toFixed(3)}</span>
+      <span><ConfidenceBadge level={confidence} /></span>
     </div>
   );
 }

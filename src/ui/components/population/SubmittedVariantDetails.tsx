@@ -1,29 +1,36 @@
-import XRefDetail from "./common/XRefDetail";
 import {Variant} from "../../../types/PopulationObservation";
 import React from "react";
 
 interface SubmittedVariantDetailsProps {
-  variants: Array<Variant>
+  variants: Variant[];
+  selectedVariant: Variant | null;
+  onSelect: (variant: Variant) => void;
 }
-function SubmittedVariantDetails(props: SubmittedVariantDetailsProps) {
-  if (props.variants.length <= 0) {
-    return <label><b>The variant has not been reported before</b></label>
+
+function SubmittedVariantDetails({ variants, selectedVariant, onSelect }: SubmittedVariantDetailsProps) {
+  if (variants.length <= 0) {
+    return <div className="submitted-variant-no-data">The variant has not been reported before</div>;
   }
 
-  let variant = props.variants[0];
-  let change = variant.wildType + '>' + variant.alternativeSequence;
+  const variant = variants[0];
+  const change = variant.wildType + ' > ' + variant.alternativeSequence;
+  const isSelected = selectedVariant === variant;
 
   return (
-    <ul>
-      <li>
-        <b>Change:</b> {change}
-      </li>
-      <li>
-        <b>Genomic Location:</b> {variant.genomicLocation?.[0]}
-      </li>
-      <XRefDetail xrefs={variant.xrefs} populationFrequencies={variant.populationFrequencies}
-                  clinicalSignificances={variant.clinicalSignificances}/>
-    </ul>
+    <div>
+      <div
+        className={`variant-item${isSelected ? ' variant-item--selected' : ''}`}
+        onClick={() => onSelect(variant)}
+        role="button"
+        tabIndex={0}
+        onKeyDown={e => e.key === 'Enter' && onSelect(variant)}
+      >
+        <span className="variant-change">{change}</span>
+        {variant.genomicLocation?.[0] && (
+          <span className="variant-location">{variant.genomicLocation[0]}</span>
+        )}
+      </div>
+    </div>
   );
 }
 

@@ -1,13 +1,17 @@
-import {InputType} from "./InputType";
-//import {CaddCategory} from "./CaddCategory";
-//import {AmClass} from "./AmClass";
+import {Identifier} from "./InputType";
 
+// Requests use one of:
+//   q         — single variant query (any supported format)
+//   resultId  — uploaded result (32-char hex from POST /input/text or /input/file)
+//   ids       — biological identifier browse (single or multi)
+//   neither   — filter-only browse (no identifier constraint)
 export interface MappingRequest {
-  input: string;
-  type?: InputType;
+  q?: string;
+  resultId?: string;
+  ids?: Identifier[];
   page?: number | null;
   pageSize?: number | null;
-  assembly?: string | null; //'auto' | 'grch38' | 'grch37'
+  assembly?: string | null;
 
   // Variant Type
   known?: boolean;
@@ -35,6 +39,10 @@ export interface MappingRequest {
   popeve?: string[];
   esm1bMin?: number;
   esm1bMax?: number;
+
+  // Position range filter — single UniProt accession browse only; ignored otherwise
+  startPos?: number;
+  endPos?: number;
 
   // Sorting
   sort?: string;

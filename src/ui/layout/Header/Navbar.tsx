@@ -2,21 +2,28 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ABOUT, CONTACT, HELP, HOME, RELEASE } from '../../../constants/BrowserPaths';
 import { API_URL } from '../../../constants/const';
-import './Navbar.css';
 import SearchBox from "../../components/search/SearchBox";
+import VersionInfo from '../VersionInfo';
 
-const Navbar: React.FC = () => {
+interface NavbarProps {
+  onShowBanner?: () => void;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ onShowBanner }) => {
   return (
     <nav className="navbar">
       <div className="navbar-brand">
-        <Link to={HOME} title="ProtVar homepage" className="brand-link">
-          <img
-            src={"ProtVar_logo.png"}
-            alt="ProtVar logo"
-            width="140"
-            className="brand-logo"
-          />
-        </Link>
+        <div className="brand-logo-wrap">
+          <Link to={HOME} title="ProtVar homepage" className="brand-link">
+            <img
+              src={"ProtVar_logo.png"}
+              alt="ProtVar logo"
+              width="140"
+              className="brand-logo"
+            />
+          </Link>
+          <VersionInfo />
+        </div>
         <Link to={HOME} title="ProtVar homepage" className="brand-tagline">
           Contextualising human missense variation
         </Link>
@@ -50,8 +57,16 @@ const Navbar: React.FC = () => {
             <i className="bi bi-envelope"></i>
             Contact
           </Link>
+
         </div>
+
+      {onShowBanner && (
+        <button className="navbar-banner-restore" onClick={onShowBanner}>
+          Show banner
+        </button>
+      )}
       </div>
+
     </nav>
   );
 };

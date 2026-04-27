@@ -1,0 +1,95 @@
+/* ── Result toolbar (colour toggle left + actions right) ── */
+.result-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 4px 0 6px;
+    margin-bottom: 6px;
+}
+
+.result-toolbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+/* ── Pre-table pagination row ── */
+.result-pre-table {
+    display: flex;
+    justify-content: flex-end;
+    padding: 2px 0 4px;
+}
+
+.result-post-table {
+    padding-top: var(--spacing-sm);
+}
+
+.pagination-row {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.pagination-nav {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.pagination-info {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    min-width: 4rem;
+    text-align: center;
+}
+
+.pagination-page-size {
+    font-size: var(--font-size-sm);
+    padding: 3px 6px;
+    border: 1px solid var(--color-border-medium);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    cursor: pointer;
+}
+
+.pagination-page-size:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+/* ── Notices area ── */
+.result-notices {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 6px;
+}
+
+.result-notice {
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+.result-notice--warn  { background: #fff8e1; border-left: 3px solid #ffc107; color: #6b4c00; }
+.result-notice--error { background: #fef2f2; border-left: 3px solid #dc3545; color: #6d1a23; }
+.result-notice--info  { background: #e8f4fd; border-left: 3px solid #0dcaf0; color: #0c5460; }
+
+/* Sparkle/flash on "Result" heading when filters are active */
+.title-sparkle {
+    display: inline-block;
+    animation: textSparkle 0.6s ease-in-out;
+}
+
+@keyframes textSparkle {
+    0%, 100% { text-shadow: none; transform: scale(1); }
+    25%  { text-shadow: 0 0 8px rgba(100,150,255,0.4), 0 0 12px rgba(100,150,255,0.3); transform: scale(1.01); }
+    50%  { text-shadow: 0 0 10px rgba(100,150,255,0.5), 0 0 18px rgba(100,150,255,0.4), 0 0 25px rgba(100,150,255,0.2); transform: scale(1.02); }
+    75%  { text-shadow: 0 0 8px rgba(100,150,255,0.4), 0 0 12px rgba(100,150,255,0.3); transform: scale(1.01); }
+}

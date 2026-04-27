@@ -1,0 +1,53 @@
+/**
+ * contact.css
+ * Styles for the Contact page.
+ */
+
+.contact-intro {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-2xl);
+    margin-bottom: var(--spacing-2xl);
+    flex-wrap: wrap;
+}
+
+.contact-intro-text {
+    flex: 1;
+    min-width: 200px;
+    font-size: var(--font-size-md);
+    color: var(--color-text-secondary);
+    line-height: var(--line-height-normal);
+}
+
+.contact-alt {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    margin-top: var(--spacing-sm);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+}
+
+.contact-alt a {
+    color: var(--color-brand);
+}
+
+.contact-alt a:hover {
+    color: var(--color-brand-dark);
+    text-decoration: underline;
+}
+
+.contact-form-wrapper {
+    width: 100%;
+    max-width: 800px;
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--color-bg-primary);
+}
+
+.contact-form-wrapper iframe {
+    display: block;
+    width: 100%;
+    border: none;
+}

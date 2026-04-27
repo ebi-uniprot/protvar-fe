@@ -1,20 +1,21 @@
 // SearchPage.tsx
 import React, { useState, useRef, ChangeEvent } from 'react';
-import './SearchPage.css';
 import {useNavigate} from "react-router-dom";
 import {HelpContent} from "../../components/help/HelpContent";
 import {HelpButton} from "../../components/help/HelpButton";
-import useLocalStorage from "../../../hooks/useLocalStorage";
-import {ResultRecord} from "../../../types/ResultRecord";
-import {LOCAL_RESULTS} from "../../../constants/const";
+import {useStorage} from "../../../context/StorageContext";
+import {ResultRecord, submissionExpiresAt} from "../../../types/ResultRecord";
 import {uploadFile, uploadText} from "../../../services/ProtVarService";
-import {API_ERROR, QUERY, RESULT} from "../../../constants/BrowserPaths";
+import {API_ERROR, RESULT, SEARCH, SEMANTIC_SEARCH} from "../../../constants/BrowserPaths";
 import {readFirstLineFromFile} from "../../../utills/FileUtil";
 import { DEFAULT_SEARCH_FILTERS } from '../../components/search/defaultFilters';
 import SearchFilters, {
   SearchFilterParams
 } from '../../components/search/SearchFilters';
 import {buildFilterParams} from "../../components/search/filterUtils";
+import {parseIdParam} from "../../../utills/InputTypeResolver";
+import {hasPrimaryFilter, PRIMARY_FILTER_PROMPT} from "../../../utills/PrimaryFilter";
+import {ID_GENE, ID_PDB, ID_ENSEMBL, ID_REFSEQ} from "../../../constants/BrowserPaths";
 
 interface ExampleData {
   label: string;
@@ -22,7 +23,7 @@ interface ExampleData {
   tip?: string;
 }
 
-type SearchMode = 'variant' | 'browse' | 'text'; // browse=id(identifier) input
+type SearchMode = 'variant' | 'browse' | 'text'; // variant=annotate variants; browse=browse by biological identifier
 export type GenomeAssembly = 'auto' | 'grch38' | 'grch37';
 
 const EXAMPLES: Record<SearchMode, ExampleData[]> = {
@@ -87,7 +88,6 @@ const EXAMPLES: Record<SearchMode, ExampleData[]> = {
   ]
 };
 
-const branch = process.env.REACT_APP_GIT_BRANCH;
 
 const findExampleLabel = (input: string): string | null =>
   Object.values(EXAMPLES)
@@ -106,15 +106,15 @@ const SearchPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [activeMode, setActiveMode] = useState<SearchMode>('variant');
   const [variantInput, setVariantInput] = useState('');
-  const [browseInput, setBrowseInput] = useState('');
+  const [browseIds, setBrowseIds] = useState<string[]>([]);
+  const [browseInputText, setBrowseInputText] = useState('');
   const [textInput, setTextInput] = useState('');
   const [genomeAssembly, setGenomeAssembly] = useState<GenomeAssembly>('auto');
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
-  const [resultsVisible, setResultsVisible] = useState(false);
   const [error, setError] = useState('');
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { getItem, setItem } = useLocalStorage();
+  const { saveResult } = useStorage();
 
   const [searchFilters, setSearchFilters] = useState<SearchFilterParams>(DEFAULT_SEARCH_FILTERS);
 
@@ -122,6 +122,29 @@ const SearchPage: React.FC = () => {
     setActiveMode(mode);
     setError('');
   };
+
+  const addBrowseId = () => {
+    const trimmed = browseInputText.trim();
+    if (trimmed && !browseIds.includes(trimmed)) {
+      setBrowseIds(prev => [...prev, trimmed]);
+    }
+    setBrowseInputText('');
+  };
+
+  const removeBrowseId = (index: number) => {
+    setBrowseIds(prev => prev.filter((_, i) => i !== index));
+  };
+
+  function buildSingleIdUrl(raw: string): string {
+    const { type, value } = parseIdParam(raw);
+    switch (type) {
+      case 'gene':    return `${ID_GENE}/${value}`;
+      case 'pdb':     return `${ID_PDB}/${value}`;
+      case 'ensembl': return `${ID_ENSEMBL}/${value}`;
+      case 'refseq':  return `${ID_REFSEQ}/${value}`;
+      default:        return `/${value}`; // uniprot and fallback — bare accession path
+    }
+  }
 
   const cleanInput = (input: string): string => {
     return input
@@ -135,6 +158,7 @@ const SearchPage: React.FC = () => {
   const hasMultipleLines = (str: string): boolean => {
     return str.includes('\n');
   };
+
 
   const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -170,7 +194,10 @@ const SearchPage: React.FC = () => {
         setUploadedFile(null); // Clear file if text example is used
         break;
       case 'browse':
-        setBrowseInput(example.value);
+        // Add as chip if not already present
+        if (!browseIds.includes(example.value)) {
+          setBrowseIds(prev => [...prev, example.value]);
+        }
         break;
       case 'text':
         setTextInput(example.value);
@@ -179,41 +206,34 @@ const SearchPage: React.FC = () => {
     setError('');
   };
 
+  const handleTextSearch = () => {
+    const q = textInput.trim();
+    if (!q) return;
+    navigate(`${SEMANTIC_SEARCH}?q=${encodeURIComponent(q)}`);
+  };
+
   const handleSearch = () => {
     if (activeMode === 'variant') {
       handleVariantSearch();
     } else if (activeMode === 'browse') {
       handleBrowseSearch();
+    } else if (activeMode === 'text') {
+      handleTextSearch();
     }
   };
 
   const submittedRecord = async (id: string, url: string) => {
-    // Always get latest data to avoid stale cache issues
-    const savedRecords: ResultRecord[] = getItem<ResultRecord[]>(LOCAL_RESULTS) ?? [];
-    const now = new Date().toISOString();
-
-    const existingIndex = savedRecords.findIndex(record => record.id === id);
-    let updatedRecords: ResultRecord[];
-
-    if (existingIndex !== -1) {
-      // Update existing record
-      updatedRecords = [...savedRecords];
-      updatedRecords[existingIndex] = {
-        ...updatedRecords[existingIndex],
-        lastSubmitted: now, //lastViewed: now
-      };
-    } else {
-      // Determine the name
-      const name = await getRecordName(id);
-      // Add new record at the start
-      const newRecord: ResultRecord = {
-        id, url, name,
-        firstSubmitted: now, //lastSubmitted: now, lastViewed: now
-      };
-      updatedRecords = [newRecord, ...savedRecords];
+    const name = await getRecordName(id)
+    const record: ResultRecord = {
+      id,
+      type: 'submission',
+      inputType: 'input_id',
+      url,
+      name,
+      savedAt: new Date().toISOString(),
+      expiresAt: submissionExpiresAt(),
     }
-
-    setItem(LOCAL_RESULTS, updatedRecords);
+    saveResult(record)
   };
 
   // New helper to decide the name
@@ -259,7 +279,7 @@ const SearchPage: React.FC = () => {
           await handleUpload(() => uploadText(cleanText, genomeAssembly));
         } else {
           // --- Direct single variant query ---
-          let directQuery = `/${QUERY}?search=${encodeURIComponent(cleanText)}`;
+          let directQuery = `${SEARCH}?q=${encodeURIComponent(cleanText)}`;
           if (genomeAssembly === 'grch37') {
             directQuery += `&assembly=${genomeAssembly}`;
           }
@@ -293,60 +313,44 @@ const SearchPage: React.FC = () => {
   }
 
   const handleBrowseSearch = () => {
-    const trimmedInput = browseInput.trim();
-    if (!trimmedInput) {
-      setError('Input value cannot be empty.');
+    // Flush any partially typed text before submitting
+    const allIds = browseInputText.trim()
+      ? [...browseIds, browseInputText.trim()].filter((v, i, a) => a.indexOf(v) === i)
+      : browseIds;
+
+    if (allIds.length === 0 && !hasPrimaryFilter(searchFilters)) {
+      setError(PRIMARY_FILTER_PROMPT);
       return;
     }
-
     setError('');
-    /*
-    const detectedType = resolve(trimmedInput);
-
-    // If user explicitly selected a type, validate input against that type's regex
-    if (selectedType) {
-      // Backend and client should agree on these type strings or add a mapping if different
-      if (!detectedType) {
-        setError(`Input does not match any supported type.`);
-        return;
-      }
-      // If user picked UniProt but detectedType isn't UNIPROT, error out
-      if (selectedType !== detectedType) {
-        setError(`Input does not match the selected type ${selectedType}.`);
-        return;
-      }
+    if (browseInputText.trim()) {
+      setBrowseIds(allIds);
+      setBrowseInputText('');
     }
 
-    // Navigate and pass type param only if specified
-    const effectiveType = selectedType || detectedType;
-    const normalized = normalize(trimmedInput, effectiveType || '');
-    const typeParam = effectiveType ? `?type=${effectiveType.toLowerCase()}` : '';
-    //navigate(`/search?input=${normalized}&type=${effectiveType.toLowerCase()}`);
-    navigate(`${normalized}${typeParam}`);
+    const filterParams = buildFilterParams(searchFilters);
+    const filterStr = filterParams.toString();
 
-    // Simply navigate with input and optional type hint
-    // Let the backend resolve and validate
-    const typeParam = selectedType ? `?type=${selectedType}` : '';
-    navigate(`${trimmedInput}${typeParam}`);
-    */
-
-    // Create URL search params with the current filter values
-    // Note: We don't add sort/order from SearchPage since sorting is only for ResultsPage
-
-    // Use shared utility to build filter params
-    const params = buildFilterParams(searchFilters);
-
-    // Build the final URL
-    const queryString = params.toString();
-    navigate(`${trimmedInput}${queryString ? `?${queryString}` : ''}`);
+    if (allIds.length === 0) {
+      // Filter-only browse: no identifiers, primary filter present
+      navigate(`${SEARCH}${filterStr ? `?${filterStr}` : ''}`);
+    } else if (allIds.length === 1) {
+      const url = buildSingleIdUrl(allIds[0]);
+      navigate(`${url}${filterStr ? `?${filterStr}` : ''}`);
+    } else {
+      const params = new URLSearchParams();
+      allIds.forEach(id => params.append('id', id));
+      filterParams.forEach((v, k) => params.append(k, v));
+      navigate(`${SEARCH}?${params.toString()}`);
+    }
   };
 
   const handleClear = () => {
     setVariantInput('');
-    setBrowseInput('');
+    setBrowseIds([]);
+    setBrowseInputText('');
     setTextInput('');
     setUploadedFile(null);
-    setResultsVisible(false);
     setError('');
     setLoading(false);
     setSearchFilters(DEFAULT_SEARCH_FILTERS);
@@ -355,63 +359,46 @@ const SearchPage: React.FC = () => {
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSearch();
-    }
-  };
 
   const isSubmitDisabled = () => {
     if (activeMode === 'variant') {
       return !variantInput.trim() && !uploadedFile;
     } else if (activeMode === 'browse') {
-      return !browseInput.trim();
+      return browseIds.length === 0 && !browseInputText.trim() && !hasPrimaryFilter(searchFilters);
+    } else if (activeMode === 'text') {
+      return !textInput.trim();
     }
     return true;
   };
-/*
-  const getActiveFilters = () => {
-    const active = [];
-    if (filters_.caddScore > 0) active.push(`CADD ≥ ${filters_.caddScore}`);
-    if (filters_.potential && !filters_.known) active.push('Potential variants only');
-    if (!filters_.potential && filters_.known) active.push('Known variants only');
-    if (filters_.pathogenic) active.push('Pathogenic');
-    if (filters_.clinvar) active.push('ClinVar annotated');
-    return active;
-  };
-*/
+
   return (
     <div className="search-container">
-      {/* Header */}
-      <div className="search-header">
-        <p>Explore protein variation and its functional consequences</p>
-      </div>
-
       {/* Search Mode Tabs */}
       <div className="search-modes">
         <button
           className={`mode-tab ${activeMode === 'variant' ? 'active' : ''}`}
           onClick={() => handleModeChange('variant')}
         >
-          <span className="icon"><i className="bi bi-list-ul"></i></span>
-          Variant List
+          <span className="icon"><i className="bi bi-clipboard-data"></i></span>
+          Annotate Variants
         </button>
         <button
           className={`mode-tab ${activeMode === 'browse' ? 'active' : ''}`}
           onClick={() => handleModeChange('browse')}
         >
-          <span className="icon"><i className="bi bi-search"></i></span>
-          Browse by ID
+          <span className="icon"><i className="bi bi-card-list"></i></span>
+          Browse by Identifier
         </button>
-        {branch !== "dev" &&
-          <button
-            className={`mode-tab ${activeMode === 'text' ? 'active' : ''}`}
-            onClick={() => handleModeChange('text')}
-          >
-            <span className="icon"><i className="bi bi-chat"></i></span>
-            Text Search
-          </button>}
+        <button
+          className={`mode-tab ${activeMode === 'text' ? 'active' : ''}`}
+          onClick={() => handleModeChange('text')}
+        >
+          <span className="icon"><i className="bi bi-body-text"></i></span>
+          <span className="tab-label-experimental">
+            Semantic Search
+            <i className="bi bi-flask experimental-badge" title="Experimental feature" />
+          </span>
+        </button>
       </div>
 
       {/* Search Panel */}
@@ -425,30 +412,38 @@ const SearchPage: React.FC = () => {
                   className={`method-btn ${!uploadedFile ? 'active' : ''}`}
                   onClick={() => setUploadedFile(null)}
                 >
-                  Type/Paste Variants
+                  <i className="bi bi-keyboard" /> Type / Paste
                 </button>
                 <button
                   className={`method-btn ${uploadedFile ? 'active' : ''}`}
                   onClick={() => fileInputRef.current?.click()}
                 >
-                  Upload File
+                  <i className="bi bi-file-earmark-arrow-up" /> Upload File
                 </button>
               </div>
 
               <div className="genome-assembly-inline">
                 <span className="assembly-label">
-                  Genome Assembly
+                  Assembly
                   <HelpButton title="" content={<HelpContent name="genomic-assembly-detection" />} />
                 </span>
-                <select
-                  className="assembly-select"
-                  value={genomeAssembly}
-                  onChange={(e) => setGenomeAssembly(e.target.value as GenomeAssembly)}
-                >
-                  <option value="auto">Auto-detect</option>
-                  <option value="grch38">GRCh38/hg38</option>
-                  <option value="grch37">GRCh37/hg19</option>
-                </select>
+                <div className="input-method-toggle assembly-toggle">
+                  <button
+                    className={`method-btn ${genomeAssembly === 'auto' ? 'active' : ''}`}
+                    onClick={() => setGenomeAssembly('auto')}
+                    title="Automatically detect genome assembly from input"
+                  >Auto</button>
+                  <button
+                    className={`method-btn ${genomeAssembly === 'grch38' ? 'active' : ''}`}
+                    onClick={() => setGenomeAssembly('grch38')}
+                    title="GRCh38 / hg38"
+                  >GRCh38</button>
+                  <button
+                    className={`method-btn ${genomeAssembly === 'grch37' ? 'active' : ''}`}
+                    onClick={() => setGenomeAssembly('grch37')}
+                    title="GRCh37 / hg19"
+                  >GRCh37</button>
+                </div>
               </div>
             </div>
 
@@ -514,15 +509,57 @@ const SearchPage: React.FC = () => {
         {activeMode === 'browse' && (
           <div className="search-content">
             <div className="input-group">
-              <label className="input-label">Browse all variants for a protein, gene, or identifier</label>
-              <input
-                type="text"
-                className="input-field"
-                placeholder="P68871 or HBB or ENSG00000244734"
-                value={browseInput}
-                onChange={(e) => setBrowseInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-              />
+              <label className="input-label">Browse all mapped variants for a protein, gene, or other biological identifier</label>
+
+              {/* Chips */}
+              {browseIds.length > 0 && (
+                <div className="browse-chips">
+                  {browseIds.map((id, index) => (
+                    <span key={index} className="browse-chip">
+                      {id}
+                      <button
+                        type="button"
+                        className="browse-chip-remove"
+                        onClick={() => removeBrowseId(index)}
+                        aria-label={`Remove ${id}`}
+                      >×</button>
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              {/* Input row */}
+              <div className="browse-input-row">
+                <div className="browse-input-wrapper">
+                  <input
+                    type="text"
+                    className="input-field"
+                    placeholder={browseIds.length > 0 ? "Add another identifier..." : "P68871 or HBB or ENSG00000244734"}
+                    value={browseInputText}
+                    onChange={(e) => setBrowseInputText(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addBrowseId(); } }}
+                  />
+                  <button
+                    type="button"
+                    className="browse-add-btn"
+                    onClick={addBrowseId}
+                    disabled={!browseInputText.trim()}
+                    title="Add identifier"
+                  >
+                    <i className="bi bi-plus-lg"></i>
+                  </button>
+                </div>
+                <button
+                  type="button"
+                  className="browse-go-btn"
+                  onClick={handleSearch}
+                  disabled={isSubmitDisabled() || loading}
+                  title="Browse"
+                >
+                  <i className="bi bi-search"></i>
+                </button>
+              </div>
+
               <div className="examples">
                 <h6>Try these examples</h6>
                 <div className="example-tags">
@@ -541,11 +578,11 @@ const SearchPage: React.FC = () => {
           </div>
         )}
 
-        {/* Text Search Mode */}
-        {activeMode === 'text' && branch !== "dev" && (
+        {/* Semantic Search Mode */}
+        {activeMode === 'text' && (
           <div className="search-content">
             <div className="input-group">
-              <label className="input-label">Search variants by disease, phenotype, or annotation</label>
+              <label className="input-label">Find proteins by disease, phenotype, or functional description</label>
               <input
                 type="text"
                 className="input-field"
@@ -578,10 +615,10 @@ const SearchPage: React.FC = () => {
         {activeMode === 'browse' && (
           <SearchFilters
             filters={searchFilters}
-            onFiltersChange={setSearchFilters} // todo: reset page to 1!
-            showSorting={false} // No sorting on search page
-          />)
-      }
+            onFiltersChange={setSearchFilters}
+            showSorting={false}
+          />
+        )}
 
         {/* Error Display */}
         {error && (
@@ -594,38 +631,23 @@ const SearchPage: React.FC = () => {
         {/* Action Buttons */}
         <div className="action-buttons">
           <button
-            className={`btn btn-primary ${isSubmitDisabled() ? 'disabled' : ''}`}
+            className="btn btn-brand"
             onClick={handleSearch}
             disabled={isSubmitDisabled() || loading}
-            title={activeMode === 'text' ? 'Coming soon' : ''}
           >
-            {activeMode === 'variant' ? 'Submit' : 'Search'}
+            {activeMode === 'variant'
+              ? <><i className="bi bi-send-fill" /> Submit</>
+              : activeMode === 'text'
+              ? <><i className="bi bi-search" /> Search</>
+              : <><i className="bi bi-search" /> Browse</>
+            }
           </button>
           <button className="btn btn-secondary" onClick={handleClear}>
-            Clear All
+            <i className="bi bi-x-lg" /> Clear
           </button>
         </div>
       </div>
 
-      {/* Results Preview */}
-      {resultsVisible && (
-        <div className="results-preview" id="results-preview">
-          <div className="results-header">
-            <div>
-              <h3>Search Results</h3>
-              <div className="results-count">Found 1,247 variants</div>
-            </div>
-            <div className="active-filters">
-              {/*getActiveFilters()*/[].map((filter, index) => (
-                <div key={index} className="filter-chip">
-                  {filter} <span className="remove">×</span>
-                </div>
-              ))}
-            </div>
-          </div>
-          <p>Results would appear here with consistent formatting regardless of input method...</p>
-        </div>
-      )}
     </div>
   );
 };

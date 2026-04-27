@@ -9,5 +9,9 @@ interface EmptyStateProps {
 }
 
 export function EmptyState({ message }: EmptyStateProps) {
-  return <div className="empty-state">{message}</div>;
+  return (
+    <div className="empty-state-wrapper">
+      <span className="empty-state">{message}</span>
+    </div>
+  );
 }

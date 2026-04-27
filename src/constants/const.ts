@@ -12,11 +12,4 @@ export const DEFAULT_PAGE_SIZE = 25
 // Request and response content types
 export const DEFAULT_HEADERS = {"Content-Type": "application/json", Accept: "*"};
 
-// Local storage keys
-export const LOCAL_DOWNLOADS='PV_downloads';
-export const LOCAL_RESULTS='PV_results';
-export const LOCAL_BANNER = 'PV_banner';
-export const LOCAL_SIDEBAR = 'PV_sidebar';
-
-// TODO resubscribe option - clears the localData
-export const LOCAL_SUBSCRIBED = 'PV_subscribed';
+// Storage keys are defined in src/constants/storage.ts

@@ -1,32 +1,30 @@
 import tinygradient from "tinygradient";
 import {ConservScore} from "../../../../types/MappingResponse";
-import {PredAttr} from "./Prediction";
+import {PredictionCategory} from "./Prediction";
 import Spaces from "../../../elements/Spaces";
 import {
   PRECISION,
   STD_COLOR_GRADIENT
-} from "./PredConstants";
-import {SharePredictionLink} from "./SharePredictionLink";
+} from "./PredictionConstants";
+import { CopyLink } from '../../common/CopyLink';
 import React from "react";
 
-export const CONSERV_SCORE_ATTR: PredAttr[] = [
-  {color: '#732faf', stdColor: STD_COLOR_GRADIENT.rgbAt(0).toHexString(), text: 'very low', tip: 'Very low conservation = 0-0.15' },
-  {color: '#194888', stdColor: STD_COLOR_GRADIENT.rgbAt(0.166).toHexString(), text: 'low', tip: 'Low conservation = 0.15-0.3' },
-  {color: '#277777', stdColor: STD_COLOR_GRADIENT.rgbAt(0.333).toHexString(), text: 'fairly low', tip: 'Fairly low conservation = 0.3-0.45' },
-  {color: '#72cb5d', stdColor: STD_COLOR_GRADIENT.rgbAt(0.5).toHexString(), text: 'moderate', tip: 'Moderate conservation = 0.45-0.6' },
-  {color: '#bab518', stdColor: STD_COLOR_GRADIENT.rgbAt(0.666).toHexString(), text: 'fairly high', tip: 'Fairly high conservation = 0.6-0.75' },
-  {color: '#c46307', stdColor: STD_COLOR_GRADIENT.rgbAt(0.833).toHexString(), text: 'high', tip: 'High conservation = 0.75-0.9' },
-  {color: '#9d0101', stdColor: STD_COLOR_GRADIENT.rgbAt(1).toHexString(), text: 'very high', tip: 'Very high conservation = 0.9-1.0' }
+export const CONSERV_SCORE_ATTR: PredictionCategory[] = [
+  {color: '#732faf', stdColor: STD_COLOR_GRADIENT.rgbAt(0).toHexString(),     text: 'very low',    range: '0–0.15',   tip: 'Very low conservation = 0-0.15' },
+  {color: '#194888', stdColor: STD_COLOR_GRADIENT.rgbAt(0.166).toHexString(), text: 'low',         range: '0.15–0.3', tip: 'Low conservation = 0.15-0.3' },
+  {color: '#277777', stdColor: STD_COLOR_GRADIENT.rgbAt(0.333).toHexString(), text: 'fairly low',  range: '0.3–0.45', tip: 'Fairly low conservation = 0.3-0.45' },
+  {color: '#72cb5d', stdColor: STD_COLOR_GRADIENT.rgbAt(0.5).toHexString(),   text: 'moderate',    range: '0.45–0.6', tip: 'Moderate conservation = 0.45-0.6' },
+  {color: '#bab518', stdColor: STD_COLOR_GRADIENT.rgbAt(0.666).toHexString(), text: 'fairly high', range: '0.6–0.75', tip: 'Fairly high conservation = 0.6-0.75' },
+  {color: '#c46307', stdColor: STD_COLOR_GRADIENT.rgbAt(0.833).toHexString(), text: 'high',        range: '0.75–0.9', tip: 'High conservation = 0.75-0.9' },
+  {color: '#9d0101', stdColor: STD_COLOR_GRADIENT.rgbAt(1).toHexString(),     text: 'very high',   range: '0.9–1.0',  tip: 'Very high conservation = 0.9-1.0' },
 ]
 
 export const CONSERV_COLOUR_GRADIENT = tinygradient(CONSERV_SCORE_ATTR.map(s => s.color));
 
 export const ConservPred = (props: { conserv?: ConservScore, stdColor: boolean }) => {
   if (props.conserv) {
-  return <div className="aa-pred">
-    <div>Conservation
-      <SharePredictionLink predictionType="conserv" />
-    </div>
+  return <div className="prediction-row">
+    <div><CopyLink predictionType="conserv" /> Conservation</div>
     <div>{formatConservScore(props.conserv)}</div>
     <ConservPredIcon {...props}/>
   </div>}

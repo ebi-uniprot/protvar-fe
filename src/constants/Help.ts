@@ -15,14 +15,12 @@ export const HELP_FILES: HelpFile[] = [
   { name: 'population-observations', md: true, title: 'Population Observations' },
   { name: 'structure-annotations', md: true, title: 'Structure Annotations' },
   { name: 'alphafold', md: true, title: 'Alphafold' },
-  { name: 'predictions', md: true, title: 'Predictions' },
+  { name: 'predictions', md: false, title: 'Predictions' },
   { name: 'result-download', md: false, title: 'Result Download' }, // React component
-  { name: 'download-options', md: true, title: 'Download Options' },
+  { name: 'download-options', md: true, title: 'Download Panel' },
   { name: 'downloads-page', md: true, title: 'Downloads Page' },
   { name: 'further-info', md: true, title: 'Further Information' },
   { name: 'download-file', md: true, title: 'Download File Format' },
-  { name: 'direct-queries', md: true, title: 'Direct Queries' },
+  { name: 'protvar-links', md: true, title: 'ProtVar Links' },
   { name: 'api', md: true, title: 'API' },
-  { name: 'annotation-linking', md: true, title: 'Annotation Linking' },
-  { name: 'structure-linking', md: true, title: 'Structure Linking' },
 ];

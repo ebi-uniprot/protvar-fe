@@ -1,12 +1,12 @@
-import {PredAttr} from "./Prediction";
-import {STD_COLOR_GRADIENT} from "./PredConstants";
+import {PredictionCategory} from "./Prediction";
+import {STD_COLOR_GRADIENT} from "./PredictionConstants";
 import Spaces from "../../../elements/Spaces";
-import {SharePredictionLink} from "./SharePredictionLink";
+import { CopyLink } from '../../common/CopyLink';
 import React from "react";
 
 const PRECISION: number = 1 // dp
 
-export const CADD_SCORE_ATTR: PredAttr[] = [
+export const CADD_SCORE_ATTR: PredictionCategory[] = [
   // CADD score range 1 to 99
   // benign (blue) - 15% of lower range
   {color: 'DarkGreen', stdColor: STD_COLOR_GRADIENT.rgbAt(0).toHexString(), text: 'likely benign', range: '<15.0' }, // 15%
@@ -19,10 +19,8 @@ export const CADD_SCORE_ATTR: PredAttr[] = [
 
 export const CaddScorePred = (props: { cadd?: string, stdColor: boolean }) => {
   if (props.cadd) {
-  return <div className="aa-pred">
-    <div>CADD
-      <SharePredictionLink predictionType="cadd" />
-    </div>
+  return <div className="prediction-row">
+    <div><CopyLink predictionType="cadd" /> CADD</div>
   <div>{formatCaddScore(props.cadd)}</div>
   <CADDIcon {...props} />
   </div>}

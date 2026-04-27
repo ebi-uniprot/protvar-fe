@@ -13,10 +13,8 @@ const HomePageContent = () => {
     <>
       <div>
         <p style={{fontSize: '1rem'}}>
-          ProtVar (<strong>Prot</strong>ein <strong>Var</strong>iation) helps you explore human missense
-          single‑nucleotide variants (SNVs)
-          by bringing together annotations to support variant interpretation. {/*It does not cover insertions
-          or deletions (indels).*/}
+          ProtVar (<strong>Prot</strong>ein <strong>Var</strong>iation) helps you explore human missense single‑nucleotide variants (SNVs) by bringing together structural, functional, population, and disease annotations to support variant interpretation.
+          Submit variants in genomic or protein notation, browse proteins by identifier, or find proteins by biological description.
         </p>
       </div>
 

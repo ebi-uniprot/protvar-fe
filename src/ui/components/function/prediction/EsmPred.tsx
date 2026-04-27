@@ -1,18 +1,18 @@
 import tinygradient from "tinygradient";
 import {EsmScore} from "../../../../types/MappingResponse";
-import {PredAttr} from "./Prediction";
+import {PredictionCategory} from "./Prediction";
 import Spaces from "../../../elements/Spaces";
-import {STD_BENIGN_COLOR, STD_PATHOGENIC_COLOR, STD_UNCERTAIN_COLOR} from "./PredConstants";
-import {SharePredictionLink} from "./SharePredictionLink";
+import {STD_BENIGN_COLOR, STD_PATHOGENIC_COLOR, STD_UNCERTAIN_COLOR} from "./PredictionConstants";
+import { CopyLink } from '../../common/CopyLink';
 import React from "react";
 
 const PRECISION: number = 1 // dp
 
 // likely pathogenic (yellow) -25 <------> 0 likely benign (blue)
-export const ESM_SCORE_ATTR: PredAttr[] = [
-  {color: '#460556', stdColor: STD_BENIGN_COLOR , text: 'benign', tip: '-5 to 0 likely benign' },  // 5x4=20%
-  {color: '#218c8f', stdColor: STD_UNCERTAIN_COLOR, text: 'uncertain', tip: '-10 to -5 uncertain significance' },  // 5x4=20%
-  {color: '#f9e725', stdColor: STD_PATHOGENIC_COLOR, text: 'pathogenic', tip: '-25 to -10 likely pathogenic' } // 15x4=60%
+export const ESM_SCORE_ATTR: PredictionCategory[] = [
+  {color: '#460556', stdColor: STD_BENIGN_COLOR,    text: 'benign',     range: '0 to −5',   tip: '-5 to 0 likely benign' },
+  {color: '#218c8f', stdColor: STD_UNCERTAIN_COLOR, text: 'uncertain',  range: '−5 to −10', tip: '-10 to -5 uncertain significance' },
+  {color: '#f9e725', stdColor: STD_PATHOGENIC_COLOR,text: 'pathogenic', range: '−10 to −25',tip: '-25 to -10 likely pathogenic' },
 ]
 
 export const ESM_MAX_SCORE = -25
@@ -21,10 +21,8 @@ export const ESM_COLOR_GRADIENT = tinygradient(ESM_SCORE_ATTR.map(s => s.color))
 
 export const EsmPred = (props: { esm?: EsmScore, stdColor: boolean }) => {
   if (props.esm) {
-  return <div className="aa-pred">
-    <div>ESM-1b
-      <SharePredictionLink predictionType="esm" />
-    </div>
+  return <div className="prediction-row">
+    <div><CopyLink predictionType="esm" /> ESM-1b</div>
     <div>{formatEsmScore(props.esm)}</div>
     <EsmPredIcon {...props}/>
   </div>}

@@ -1,4 +1,4 @@
-# <a id="function-annotations"></a>Function Annotations
+# <a id="function-annotations"></a>Function
 
 ![ProtVar Function Annotations](images/function_annotations.png)  
 **A.** This page contains the [function annotations](#further-info:function-annotations) relating to the variant position in the protein.  

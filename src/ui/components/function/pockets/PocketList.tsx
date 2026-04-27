@@ -1,81 +1,66 @@
 /**
- * List component for pockets with filtering and pagination
+ * List component for pockets with filtering and expandable show more/less
  */
 
-import React, { Fragment, useState } from 'react';
+import React, { useState } from 'react';
 import { Pocket } from '../../../../types/Prediction';
-import { ReactComponent as ChevronDownIcon } from '../../../../images/chevron-down.svg';
 import { PocketCard } from './PocketCard';
 import { PocketFilter } from './PocketFilter';
-import { PaginatedList } from '../common/PaginatedList';
 import { EmptyState } from '../common/EmptyState';
+import { ExpandableList } from '../../common/ExpandableList';
+import structureIcon from '../../../../images/structures-3d.svg';
 
 interface PocketListProps {
   pockets: Pocket[];
-  expandedSection: string;
+  expandedSections: Set<string>;
   onToggle: (key: string) => void;
   onViewInStructure: (pocket: Pocket) => void;
 }
 
 const SECTION_KEY = 'pockets-0';
-const PAGE_SIZE = 2;
 
-export function PocketList({
-                             pockets,
-                             expandedSection,
-                             onToggle,
-                             onViewInStructure
-                           }: PocketListProps) {
+export function PocketList({ pockets, expandedSections, onToggle, onViewInStructure }: PocketListProps) {
   const [filteredPockets, setFilteredPockets] = useState(pockets);
-  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   if (pockets.length === 0) {
     return <EmptyState message="Variant not predicted to be in a pocket" />;
   }
 
-  const handleFilter = (filteredList: Pocket[]) => {
-    setFilteredPockets(filteredList);
-    setVisibleCount(PAGE_SIZE); // Reset pagination when filtering
-  };
+  const isExpanded = expandedSections.has(SECTION_KEY);
 
   return (
-    <Fragment key={SECTION_KEY}>
+    <div className="struct-pred-section">
       <button
         type="button"
         className="collapsible"
         onClick={() => onToggle(SECTION_KEY)}
+        aria-expanded={isExpanded}
       >
-        Pockets containing variant
-        <ChevronDownIcon className="chevronicon" />
+        <i className="bi bi-chevron-right chevron-icon" />
+        <span>Pockets containing variant <span className="count-badge">{pockets.length}</span></span>
       </button>
 
-      {expandedSection === SECTION_KEY && (
-        <div className="struct-pred">
-          <PocketFilter
-            pockets={pockets}
-            onFilter={handleFilter}
-          />
+      <div className={`collapsible-anim${isExpanded ? ' open' : ''}`}>
+        <div className="struct-pred-content">
+          <PocketFilter pockets={pockets} onFilter={setFilteredPockets} />
 
-          <PaginatedList
+          <ExpandableList
             items={filteredPockets}
-            visibleCount={visibleCount}
-            pageSize={PAGE_SIZE}
-            onShowMore={() => setVisibleCount(prev =>
-              Math.min(prev + PAGE_SIZE, filteredPockets.length)
-            )}
-            onShowLess={() => setVisibleCount(prev =>
-              Math.max(prev - PAGE_SIZE, PAGE_SIZE)
-            )}
+            className="pocket-entries"
             renderItem={(pocket) => (
               <PocketCard
-                key={`pocket-${pocket.pocketId}`}
+                key={pocket.pocketId}
                 pocket={pocket}
                 onViewInStructure={onViewInStructure}
               />
             )}
           />
+
+          <p className="struct-pred-help">
+            Click <img src={structureIcon} alt="3D structure" className="structure-icon-sm" /> to view in the structure tab.
+          </p>
         </div>
-      )}
-    </Fragment>
+      </div>
+    </div>
   );
 }

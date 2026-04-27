@@ -1,6 +1,5 @@
 // StatsTable.tsx
 import React from 'react';
-import "./StatsTable.css"
 import {useStats} from "../../../context/StatsContext";
 
 const StatsTable: React.FC = () => {

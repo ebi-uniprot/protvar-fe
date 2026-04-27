@@ -1,28 +1,38 @@
-import { v1 as uuidv1 } from 'uuid';
 import {PopulationFrequency} from "../../../../types/PopulationObservation";
+
 interface PopulationFrequencyDetailsProps {
-  populationFrequencies: Array<PopulationFrequency>
+  populationFrequencies: PopulationFrequency[];
 }
-function PopulationFrequencyDetails(props: PopulationFrequencyDetailsProps) {
-  if (!props.populationFrequencies?.length) return <></>;
-  const frequencies = props.populationFrequencies.map(getPopFrequency);
+
+function PopulationFrequencyDetails({ populationFrequencies }: PopulationFrequencyDetailsProps) {
+  if (!populationFrequencies?.length) return null;
+
+  const grouped = populationFrequencies.reduce((acc, freq) => {
+    const key = freq.sourceName || '_';
+    if (!acc[key]) acc[key] = [];
+    acc[key].push(freq);
+    return acc;
+  }, {} as Record<string, PopulationFrequency[]>);
+
   return (
-    <li key={uuidv1()}>
-      <b>Population Freuencies:</b> {frequencies}
-    </li>
-  );
-}
-function getPopFrequency(frequency: PopulationFrequency) {
-  return (
-    <>
-      <ul>
-        <li key={uuidv1()}>{frequency.sourceName}</li>
-        <ul>
-          <li key={uuidv1()}>{frequency.populationName}-{frequency.frequency}</li>
-        </ul>
-      </ul>
-      <hr />
-    </>
+    <div className="population-freq-section">
+      <div className="section-title">Population Frequencies</div>
+      <div className="pop-freq-groups">
+        {Object.entries(grouped).map(([source, freqs]) => (
+          <div key={source} className="pop-freq-source-group">
+            {source !== '_' && (
+              <span className="pop-freq-source-name">{source}</span>
+            )}
+            {freqs.map((freq, i) => (
+              <div key={i} className="pop-freq-row">
+                <span className="pop-freq-population">{freq.populationName}</span>
+                <span className="pop-freq-value">{freq.frequency.toExponential(2)}</span>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 

@@ -1,126 +1,91 @@
-import '../../styles/index.scss';
 import React, {useEffect, useState} from 'react'
-import {LOCAL_BANNER, LOCAL_DOWNLOADS, LOCAL_RESULTS, LOCAL_SIDEBAR} from '../../constants/const'
+import {SESSION_BANNER, STORE_DOWNLOADS, STORE_HISTORY} from '../../constants/storage'
 import DefaultPageContent from './DefaultPageContent'
 import {SideDrawer} from "./Drawer/SideDrawer";
-import DockableSidebar from "./Sidebar/DockableSidebar";
+import Sidebar from "./Sidebar/Sidebar";
 import Navbar from "./Header/Navbar";
 import Footer from "./Footer/Footer";
-import VersionInfo from "./VersionInfo";
-import useLocalStorage from "../../hooks/useLocalStorage";
-import {SET_ITEM} from "../../context/LocalStorageContext";
+import {useStorage, STORAGE_CHANGE} from "../../context/StorageContext";
 
 interface DefaultPageLayoutProps {
   content: React.JSX.Element
 }
 
+const BASE = process.env.PUBLIC_URL ?? '';
+
 const bannerText = (
   <>
-    This version of ProtVar is in active development. Whilst it allows you
-    to take advantage of our latest features, it may also be unstable. Please
-    email{" "}
-    <a href="mailto:protvar@ebi.ac.uk">protvar@ebi.ac.uk</a> with any problems
-    or suggestions, and use the{" "}
-    <a href="https://www.ebi.ac.uk/ProtVar/">stable ProtVar version</a> if you
-    can’t retrieve what you need from this one.
-
+    ProtVar 2.0 is in active development — you may occasionally encounter instability.
+    For issues or feedback, email{' '}
+    <a href="mailto:protvar@ebi.ac.uk">protvar@ebi.ac.uk</a> or use the{' '}
+    <a href="https://www.ebi.ac.uk/ProtVar" target="_blank" rel="noreferrer">www.ebi.ac.uk/ProtVar</a>.
     <div>
-      <i className="bi bi-stars banner-new-icon"></i>{' '}
-      <a href="/ProtVar/help#structure-linking">Structure</a> Tab Direct Linking
+      <i className="bi bi-stars banner-new-icon" />{' '}
+      Explore what's new:{' '}
+      <a href={`${BASE}/help#results`}>Results</a>{' · '}
+      <a href={`${BASE}/help#structure-annotations`}>Structure</a>{' · '}
+      <a href={`${BASE}/help#download-options`}>Download Panel</a>{' · '}
+      <a href={`${BASE}/help#protvar-links`}>ProtVar Links</a>{' · '}
+      <a href={`${BASE}/help#uniprot-feature-ranking`}>Feature Ranking</a>
     </div>
   </>
 );
 
-function DefaultPageLayout(props: DefaultPageLayoutProps) {
+function DefaultPageLayout({ content }: DefaultPageLayoutProps) {
   const [showBanner, setShowBanner] = useState(bannerText != null);
-  // to re-enable banner, uncomment state above, and the lines within
-  // the handleDismiss function
-  //const showBanner = false
-  const [isDocked, setIsDocked] = useState(false);
-  const { getItem } = useLocalStorage();
-  const [numResults, setNumResults] = useState<number>((getItem<any[]>(LOCAL_RESULTS) || []).length)
-  const [numDownloads, setNumDownloads] = useState<number | null>((getItem<any[]>(LOCAL_DOWNLOADS) || []).length)
+  const { getHistory, getDownloads, getPrefs } = useStorage()
+  const [isExpanded, setIsExpanded] = useState(() => getPrefs().sidebarExpanded)
+  const [numResults, setNumResults] = useState<number>(() => getHistory().length)
+  const [numDownloads, setNumDownloads] = useState<number>(() => getDownloads().length)
 
   useEffect(() => {
-    const win: any = window
-    if (win.ebiFrameworkInvokeScripts) {
-      win.ebiFrameworkInvokeScripts()
-    }
-
-    const bannerDismissed = sessionStorage.getItem(LOCAL_BANNER);
-    if (bannerDismissed) {
-      setShowBanner(false);
-    }
-
-    // Check if sidebar was docked on page load
-    const savedState = localStorage.getItem(LOCAL_SIDEBAR);
-    if (savedState === 'docked') {
-      setIsDocked(true);
+    if (sessionStorage.getItem(SESSION_BANNER)) {
+      setShowBanner(false)
     }
   }, [])
 
   useEffect(() => {
     const handleStorageChange = (e: CustomEvent) => {
-      if (e.detail === LOCAL_RESULTS)
-        setNumResults((getItem<any[]>(LOCAL_RESULTS) || []).length);
-      else if (e.detail === LOCAL_DOWNLOADS)
-        setNumDownloads((getItem<any[]>(LOCAL_DOWNLOADS) || []).length)
-    };
-
-    window.addEventListener(SET_ITEM, handleStorageChange as EventListener);
-    return () => {
-      window.removeEventListener(SET_ITEM, handleStorageChange as EventListener);
-    };
-  }, [getItem]);
-
-  const {content} = props;
+      if (e.detail === STORE_HISTORY)
+        setNumResults(getHistory().length)
+      else if (e.detail === STORE_DOWNLOADS)
+        setNumDownloads(getDownloads().length)
+    }
+    window.addEventListener(STORAGE_CHANGE, handleStorageChange as EventListener)
+    return () => window.removeEventListener(STORAGE_CHANGE, handleStorageChange as EventListener)
+  }, [getHistory, getDownloads])
 
   const handleDismiss = () => {
-    sessionStorage.setItem(LOCAL_BANNER, 'true');
-    setShowBanner(false);
-  }
-
-  const handleDockChange = (docked: boolean) => {
-    setIsDocked(docked);
+    sessionStorage.setItem(SESSION_BANNER, 'true')
+    setShowBanner(false)
   }
 
   return (
     <>
-      <VersionInfo />
-
       <div id="content" className="content">
         <div id="masthead" className="masthead">
-          <div className="masthead-inner row">
-            <Navbar />
+          <div className="masthead-inner">
+            <Navbar onShowBanner={!showBanner ? () => { sessionStorage.removeItem(SESSION_BANNER); setShowBanner(true); } : undefined} />
           </div>
         </div>
 
-        <main className={`row ${isDocked ? 'layout-with-docked-sidebar' : 'layout-without-docked-sidebar'}`} role="main">
-          {showBanner && (
-            <div className="banner">
-              <button className="dismiss-button" onClick={handleDismiss}>
-                ×
-              </button>
-              <div className="banner-content">{bannerText}</div>
-            </div>
-          )}
-
-          <div className="default-page-layout">
-            {/* Dockable left sidebar for navigation */}
-            <DockableSidebar
+        <main role="main">
+          <div className={`default-page-layout${isExpanded ? ' sidebar-expanded' : ''}`}>
+            <Sidebar
               numResults={numResults}
               numDownloads={numDownloads}
-              onDockChange={handleDockChange}
+              onExpandChange={setIsExpanded}
             />
 
-            {/* Right drawer for dynamic content */}
             <SideDrawer/>
 
-            <DefaultPageContent isDocked={isDocked}>{content}</DefaultPageContent>
+            <DefaultPageContent banner={showBanner ? { text: bannerText, onDismiss: handleDismiss } : null}>
+              {content}
+            </DefaultPageContent>
           </div>
         </main>
       </div>
-      <Footer/>
+      <Footer />
     </>
   )
 }

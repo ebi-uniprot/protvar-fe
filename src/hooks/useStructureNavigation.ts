@@ -41,10 +41,10 @@ export function useStructureNavigation() {
     params.set('annotation', `str${rowNumber}`);
 
     // Set structure to AlphaFold prediction
-    params.set('structure', 'prediction');
+    params.set('structure', 'alphafold');
 
     // Highlight the specific pocket
-    params.set('highlight_pocket', `p${pocket.pocketId}`);
+    params.set('highlightPocket', `p${pocket.pocketId}`);
 
     // Navigate and scroll
     const newUrl = `${location.pathname}?${params.toString()}`;
@@ -68,7 +68,7 @@ export function useStructureNavigation() {
     params.set('structure', `interaction:${interactionId}`);
 
     // Highlight the interface
-    params.set('highlight_interface', '');
+    params.set('highlightInterface', 'true');
 
     // Navigate and scroll
     const newUrl = `${location.pathname}?${params.toString()}`;

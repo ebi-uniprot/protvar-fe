@@ -1,17 +1,18 @@
 import { MappingResponse } from "./MappingResponse";
-import {InputType} from "./InputType";
 
 export interface PagedMappingResponse {
   content: MappingResponse
-  input: string
-  type: InputType
   page: number
   pageSize: number
   assembly?: string
   totalItems: number
   totalPages: number
+  // Upper bound on totalItems. Set on the filter-only browse path (where the
+  // BE caps COUNT(*) to bound query cost); null on identifier / variant /
+  // uploaded-result paths. If totalItems > totalCap, the actual count is
+  // "more than totalCap" — display as e.g. "10,000+".
+  totalCap?: number | null
   last: boolean
-  //ttl: number
 }
 
 export interface InputUploadResponse {

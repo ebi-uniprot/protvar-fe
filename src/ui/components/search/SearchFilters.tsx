@@ -1,6 +1,5 @@
 // Reorganized SearchFilters.tsx
 import React, { useState, useEffect } from 'react';
-import './SearchFilters.css';
 import {
   CADD_CATEGORIES,
   ALPHAMISSENSE_CATEGORIES,
@@ -157,13 +156,14 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
   return (
     <div className={`search-filters ${className}`}>
       {/* Toggle Header */}
-      <button className="filter-header" onClick={() => setIsExpanded(!isExpanded)}>
-        <span><i className="bi bi-funnel"></i> Search Filters</span>
-        <i className={isExpanded ? 'bi-chevron-down' : 'bi-chevron-up'}></i>
+      <button className="filter-header" onClick={() => setIsExpanded(!isExpanded)} aria-expanded={isExpanded}>
+        <i className={`bi ${isExpanded ? 'bi-chevron-down' : 'bi-chevron-right'}`}></i>
+        <span>Search Filters</span>
+        <i className="bi bi-funnel"></i>
       </button>
 
       {/* Filters Panel */}
-      {isExpanded && (
+      <div className={`collapsible-anim${isExpanded ? ' open' : ''}`}>
         <div className="filter-panel">
 
           {/* 1. Variant Type - Radio Buttons */}
@@ -464,7 +464,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
             </div>
           )}
         </div>
-      )}
+      </div>
     </div>
   );
 };

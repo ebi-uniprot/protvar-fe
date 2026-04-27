@@ -1,7 +1,6 @@
 import React from 'react';
 import { FC, AllHTMLAttributes } from 'react';
 import 'balloon-css';
-import './tool.scss'
 
 type Props = {
   pos?: string;

@@ -2,9 +2,9 @@ import { useCallback } from "react";
 
 // URL parameter keys - aligned with James's suggestion
 const STR_PARAM = "structure";
-const CHAIN_PARAM = "highlight_chain";
-const POCKET_PARAM = "highlight_pocket";
-const INTERFACE_PARAM = "highlight_interface";
+const CHAIN_PARAM = "highlightChain";
+const POCKET_PARAM = "highlightPocket";
+const INTERFACE_PARAM = "highlightInterface";
 const ZOOM_PARAM = "zoom";
 
 export interface StructureUrlParams {
@@ -15,7 +15,7 @@ export interface StructureUrlParams {
   zoom: boolean;
 }
 
-export type StructureType = "pdb" | "prediction" | "interaction";
+export type StructureType = "pdb" | "alphafold" | "alphafill" | "interaction";
 
 export function useStructureUrl() {
   // Parse URL parameters
@@ -99,8 +99,8 @@ export function useStructureUrl() {
       // PDB only supports chain highlighting
       updates.pocket = null;
       updates.interface = null;
-    } else if (type === "prediction") {
-      // AlphaFold only supports pocket highlighting
+    } else if (type === "alphafold" || type === "alphafill") {
+      // Predicted structures only support pocket highlighting
       updates.chain = null;
       updates.interface = null;
     } else if (type === "interaction") {
@@ -112,10 +112,23 @@ export function useStructureUrl() {
     updateActions(updates);
   }, [updateActions]);
 
+  // Remove all structure-specific URL params (used when requested structure isn't found)
+  const clearStructureParams = useCallback(() => {
+    const params = new URLSearchParams(window.location.search);
+    params.delete(STR_PARAM);
+    params.delete(CHAIN_PARAM);
+    params.delete(POCKET_PARAM);
+    params.delete(INTERFACE_PARAM);
+    params.delete(ZOOM_PARAM);
+    const newUrl = `${window.location.pathname}?${params.toString()}`;
+    window.history.replaceState({}, "", newUrl);
+  }, []);
+
   return {
     getParams,
     setStructure,
     updateActions,
     clearIncompatibleActions,
+    clearStructureParams,
   };
 }

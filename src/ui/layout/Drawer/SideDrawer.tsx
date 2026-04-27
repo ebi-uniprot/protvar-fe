@@ -1,5 +1,4 @@
 import React, {useContext, useEffect, useState} from "react";
-import "./SideDrawer.css";
 import {AppContext} from "../../App";
 
 export const SideDrawer = () => {
@@ -34,20 +33,20 @@ export const SideDrawer = () => {
       <div className={`side-drawer ${state.drawer ? 'open' : ''}`} style={{width}}>
         <div className="drawer-header">
           <button
-            className="drawer-control-btn"
+            className="btn btn-secondary"
             onClick={handleToggleWidth}
             title={width === '50%' ? 'Expand drawer' : 'Collapse drawer'}
           >
             <i className={`bi bi-${width === '50%' ? 'arrows-angle-expand' : 'arrows-angle-contract'}`}></i>
-            <span>{width === '50%' ? 'Expand' : 'Collapse'}</span>
+            {width === '50%' ? 'Expand' : 'Collapse'}
           </button>
           <button
-            className="drawer-close-btn"
+            className="btn btn-secondary"
             onClick={() => state.updateState("drawer", undefined)}
             title="Close drawer"
           >
             <i className="bi bi-x-lg"></i>
-            <span>Close</span>
+            Close
           </button>
         </div>
 

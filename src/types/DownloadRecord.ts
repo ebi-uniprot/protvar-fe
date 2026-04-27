@@ -1,36 +1,64 @@
+export type DownloadStatus = 'queued' | 'processing' | 'ready' | 'failed' | 'expired'
+
+export interface StatusInfo { text: string; icon: string }
+
+export const DOWNLOAD_STATUS_INFO: Record<DownloadStatus, StatusInfo> = {
+  queued:     { text: 'Queued',     icon: 'bi bi-hourglass-split status-muted'  },
+  processing: { text: 'Processing', icon: 'bi bi-arrow-clockwise status-info' },
+  ready:      { text: 'Ready',      icon: 'bi bi-check-circle-fill status-success' },
+  failed:     { text: 'Failed',     icon: 'bi bi-x-circle-fill status-danger' },
+  expired:    { text: 'Expired',    icon: 'bi bi-slash-circle status-muted' },
+}
+
+// Lifecycle status — matches BE DownloadStatus DTO. Used both as the per-id
+// entry in POST /download/status and as the nested `status` field in
+// DownloadResponse.
+export interface DownloadStatusEntry {
+  state: DownloadStatus
+  message?: string       // present on FAILED, optional info on READY
+  size?: number          // file size in bytes (present on READY)
+  queuedAt?: string      // server ISO timestamp
+  startedAt?: string
+  finishedAt?: string
+}
+
+// Submit response shape — matches the backend DTO exactly
 export interface DownloadResponse {
-    requested: string // "requested": "2024-06-20T22:02:31.157133154" in json
-    downloadId: string // corresponds to the download file name (without ext): <id>[-fun][-pop][-str][-PAGE][-PAGE_SIZE][-ASSEMBLY]
-    jobName: string
-    url: string
-    status: number // -1 (default, not available), 0 (not ready), 1 (ready)
+  id: string            // server-allocated UUID; also the download file name stem
+  jobName: string
+  fileUrl: string       // full file download URL
+  status: DownloadStatusEntry
 }
 
-export const recordFromResponse = (response: DownloadResponse) : DownloadRecord => {
-    return {
-        ...response
-    }
+// Client-side record stored in localStorage
+export interface DownloadRecord {
+  id: string               // = server's id (UUID)
+  jobName: string
+  fileUrl: string          // = server's fileUrl
+  status: DownloadStatus
+  message?: string         // populated on FAILED
+  serverRequestedAt: string // server's "queuedAt" timestamp
+  requestedAt: string      // client-side ISO timestamp
+  finishedAt?: string      // server ISO timestamp
+  resultId?: string        // cross-ref to ResultRecord.id
+  resultUrl?: string       // relative URL to navigate back to the originating result page
+  size?: number            // file size in bytes when status=ready
+  fun?: boolean
+  pop?: boolean
+  str?: boolean
+  assembly?: string
+  page?: number
+  pageSize?: number
 }
 
-export interface DownloadRecord extends DownloadResponse {
-    // API DownloadResponse properties inherited
-
-    // new properties, optional to allow backward compatibility (for existing DownloadRecords saved
-    // in localStorage)
-    // from DownloadStatus (status already present)
-    size?: number
-    //ttl?: number
-
-    // from DownloadRequest
-    page?: string
-    pageSize?: string
-    assembly?: string
-    fun?: boolean
-    pop?: boolean
-    str?: boolean
-
-    // new
-    resultUrl?: string // to navigate to result from download list
-
-    clientRequested?: string // recently added as this may be different from the server "requested" time attribute
-}
+export const recordFromResponse = (
+  response: DownloadResponse,
+  requestedAt: string
+): DownloadRecord => ({
+  id: response.id,
+  jobName: response.jobName,
+  fileUrl: response.fileUrl,
+  status: response.status?.state ?? 'queued',
+  serverRequestedAt: response.status?.queuedAt ?? requestedAt,
+  requestedAt,
+})
