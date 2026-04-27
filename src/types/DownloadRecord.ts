@@ -58,7 +58,7 @@ export const recordFromResponse = (
   id: response.id,
   jobName: response.jobName,
   fileUrl: response.fileUrl,
-  status: response.status.state,
-  serverRequestedAt: response.status.queuedAt ?? requestedAt,
+  status: response.status?.state ?? 'queued',
+  serverRequestedAt: response.status?.queuedAt ?? requestedAt,
   requestedAt,
 })
