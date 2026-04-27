@@ -67,7 +67,7 @@ export const ActivityHelp = () => (
 
     <p><strong>Retention</strong></p>
     <p>
-      Generated files and their status are kept for 7 days. After that, the entry shows as{' '}
+      Generated files and their status are kept for 14 days. After that, the entry shows as{' '}
       <em>Expired</em> and you can clear it with <i className="bi bi-trash" />.
     </p>
 
@@ -77,7 +77,7 @@ export const ActivityHelp = () => (
       <li><span className={DOWNLOAD_STATUS_INFO.processing.icon} /> <em>{DOWNLOAD_STATUS_INFO.processing.text}:</em> File is being generated — check back shortly.</li>
       <li><span className={DOWNLOAD_STATUS_INFO.ready.icon} /> <em>{DOWNLOAD_STATUS_INFO.ready.text}:</em> File is prepared and available for download.</li>
       <li><span className={DOWNLOAD_STATUS_INFO.failed.icon} /> <em>{DOWNLOAD_STATUS_INFO.failed.text}:</em> Generation didn't complete; the row shows a brief reason.</li>
-      <li><span className={DOWNLOAD_STATUS_INFO.expired.icon} /> <em>{DOWNLOAD_STATUS_INFO.expired.text}:</em> Past the 7-day retention window — file no longer available.</li>
+      <li><span className={DOWNLOAD_STATUS_INFO.expired.icon} /> <em>{DOWNLOAD_STATUS_INFO.expired.text}:</em> Past the 14-day retention window — file no longer available.</li>
     </ul>
 
     <p>
