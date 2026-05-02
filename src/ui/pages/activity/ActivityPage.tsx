@@ -359,6 +359,36 @@ function GroupedView() {
   )
 }
 
+// ── Retention banner ──────────────────────────────────────────────────────────
+// Reminds users of expiry windows. Dismissal persisted in user prefs.
+
+function RetentionBanner() {
+  const { getPrefs, setPrefs } = useStorage()
+  const [dismissed, setDismissed] = useState(() => getPrefs().activityRetentionDismissed)
+
+  if (dismissed) return null
+
+  const dismiss = () => {
+    setPrefs({ activityRetentionDismissed: true })
+    setDismissed(true)
+  }
+
+  return (
+    <div className="activity-retention-banner" role="note">
+      <span>
+        <i className="bi bi-info-circle" /> Submitted entries are kept for{' '}
+        <strong>90 days</strong>; download files for <strong>30 days</strong>.
+      </span>
+      <button
+        className="bi bi-x-lg icon-btn"
+        title="Don't show this again"
+        onClick={dismiss}
+        aria-label="Dismiss retention notice"
+      />
+    </div>
+  )
+}
+
 // ── Page ───────────────────────────────────────────────────────────────────────
 
 function ActivityPageContent() {
@@ -384,6 +414,8 @@ function ActivityPageContent() {
         <h5 className="page-header">Activity</h5>
         <HelpButton title="" content={<ActivityHelp />} />
       </div>
+
+      <RetentionBanner />
 
       <div className="activity-tabs">
         <button
