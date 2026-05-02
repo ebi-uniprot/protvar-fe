@@ -255,3 +255,28 @@
     font-size: var(--font-size-xs);
 }
 
+.navbar-status {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 4px;
+    padding: 4px;
+    border-radius: 50%;
+    text-decoration: none;
+}
+
+.navbar-status:hover {
+    background: var(--color-bg-tertiary);
+}
+
+.navbar-status-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--color-text-tertiary);
+}
+
+.navbar-status.status-up .navbar-status-dot      { background: var(--color-success); }
+.navbar-status.status-down .navbar-status-dot    { background: var(--color-danger); }
+.navbar-status.status-unknown .navbar-status-dot { background: var(--color-warning); }
+

@@ -13,6 +13,7 @@ import {InputUploadResponse, PagedMappingResponse} from "../types/PagedMappingRe
 import {DownloadRequest} from "../types/DownloadRequest";
 import {MappingRequest} from "../types/MappingRequest";
 import {ModelInfo, VectorSearchResponse} from "../types/VectorSearch";
+import {StatusResponse} from "../types/StatusResponse";
 
 export const APP_JSON = {"Content-Type": "application/json"}
 export const TEXT_PLAIN = {"Content-Type": "text/plain"}
@@ -113,6 +114,13 @@ export function downloadStatus(ids: string[]) {
     {
       headers: DEFAULT_HEADERS,
     }
+  );
+}
+
+export function getServiceStatus() {
+  return api.get<StatusResponse>(
+    `${API_URL}/status`,
+    { headers: APP_JSON, cache: false }
   );
 }
 
