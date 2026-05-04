@@ -1,10 +1,11 @@
 import React, {createContext, ReactNode, useCallback, useContext, useEffect, useRef, useState} from 'react'
-import {getServiceStatus} from '../services/ProtVarService'
-import {StatusResponse} from '../types/StatusResponse'
+import {getMcpStatus, getServiceStatus} from '../services/ProtVarService'
+import {ServiceState, StatusResponse} from '../types/StatusResponse'
 
 interface StatusContextValue {
   status: StatusResponse | null
   error: boolean
+  hasBackendData: boolean
   refresh: () => Promise<void>
   /**
    * Start active polling. Pauses when the tab is hidden, resumes on visibility,
@@ -16,17 +17,38 @@ interface StatusContextValue {
 
 const StatusContext = createContext<StatusContextValue | null>(null)
 
+// When the BE is unreachable, surface what we *can* probe directly so the
+// page is still informative. api is the BE itself (so: down). db/cache/queue
+// are cluster-internal — we genuinely don't know.
+function synthesize(mcp: ServiceState): StatusResponse {
+  return {
+    api: 'down',
+    db: 'unknown',
+    queue: 'unknown',
+    cache: 'unknown',
+    mcp,
+    embeddings: {},
+    checked: new Date().toISOString(),
+  }
+}
+
 export function StatusProvider({children}: {children: ReactNode}) {
-  const [status, setStatus] = useState<StatusResponse | null>(null)
+  const [beStatus, setBeStatus] = useState<StatusResponse | null>(null)
   const [error, setError] = useState<boolean>(false)
+  const [mcpDirect, setMcpDirect] = useState<ServiceState | null>(null)
   const inFlight = useRef<Promise<void> | null>(null)
 
   const refresh = useCallback(async () => {
     if (inFlight.current) return inFlight.current
-    inFlight.current = getServiceStatus()
-      .then(res => { setStatus(res.data); setError(false) })
+    const be = getServiceStatus()
+      .then(res => { setBeStatus(res.data); setError(false) })
       .catch(() => { setError(true) })
-      .finally(() => { inFlight.current = null })
+    const mcp = getMcpStatus()
+      .then(() => setMcpDirect('up'))
+      .catch(() => setMcpDirect('down'))
+    inFlight.current = Promise.allSettled([be, mcp]).then(() => {
+      inFlight.current = null
+    })
     return inFlight.current
   }, [])
 
@@ -75,8 +97,16 @@ export function StatusProvider({children}: {children: ReactNode}) {
     }
   }, [refresh])
 
+  // Best-effort merged view: BE-reported state, with mcp overridden by the
+  // direct probe (it answers "can the user reach MCP through the gateway",
+  // not just "can the BE see MCP from inside the cluster"). Synthesize a
+  // partial response when BE is unreachable so the page still has content.
+  const status: StatusResponse | null = beStatus
+    ? {...beStatus, mcp: mcpDirect ?? beStatus.mcp}
+    : (error ? synthesize(mcpDirect ?? 'unknown') : null)
+
   return (
-    <StatusContext.Provider value={{status, error, refresh, startPolling}}>
+    <StatusContext.Provider value={{status, error, hasBackendData: beStatus !== null, refresh, startPolling}}>
       {children}
     </StatusContext.Provider>
   )

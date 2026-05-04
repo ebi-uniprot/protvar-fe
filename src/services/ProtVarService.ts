@@ -124,6 +124,15 @@ export function getServiceStatus() {
   );
 }
 
+// Direct probe of the MCP server, sibling to the BE under /ProtVar/mcp.
+// Lets the FE distinguish "MCP is up" from "BE can't tell us about MCP".
+const MCP_STATUS_URL = API_URL?.replace(/\/api$/, '/mcp/status');
+
+export function getMcpStatus() {
+  if (!MCP_STATUS_URL) return Promise.reject(new Error('MCP URL not configured'));
+  return api.get<string>(MCP_STATUS_URL, { cache: false });
+}
+
 export function vectorSearch(text: string, limit: number = 10, offset: number = 0, model?: string) {
   return api.get<VectorSearchResponse>(
     `${API_URL}/semantic-search`,

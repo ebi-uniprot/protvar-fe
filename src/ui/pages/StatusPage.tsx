@@ -34,7 +34,7 @@ function ServiceCard({name, state, hint}: {name: string; state: ServiceState; hi
 }
 
 function StatusPageContent() {
-  const {status, error, startPolling} = useStatus()
+  const {status, error, hasBackendData, startPolling} = useStatus()
 
   useEffect(() => {
     document.title = `Status | ${TITLE}`
@@ -43,17 +43,6 @@ function StatusPageContent() {
   // Active polling while this page is open. Pauses on hidden tabs; gives up
   // after MAX_POLL_DURATION_MS so a forgotten tab stops hammering the BE.
   useEffect(() => startPolling(POLL_INTERVAL_MS, MAX_POLL_DURATION_MS), [startPolling])
-
-  if (error && !status) {
-    return (
-      <div className="container">
-        <h5 className="page-header">Status</h5>
-        <div className="status-error">
-          <i className="bi bi-exclamation-triangle-fill" /> Could not reach the API. The backend may be unavailable.
-        </div>
-      </div>
-    )
-  }
 
   if (!status) {
     return (
@@ -74,9 +63,15 @@ function StatusPageContent() {
         pauses in background tabs.
       </p>
 
-      {error && (
+      {error && hasBackendData && (
         <div className="status-error status-error--inline">
           <i className="bi bi-exclamation-triangle-fill" /> Last refresh failed. Showing the previous successful check.
+        </div>
+      )}
+      {error && !hasBackendData && (
+        <div className="status-error status-error--inline">
+          <i className="bi bi-exclamation-triangle-fill" /> Backend unreachable. Database, submissions and downloads
+          run inside the cluster and can only be checked through the API — their state is unknown until the API is back.
         </div>
       )}
 
@@ -86,19 +81,15 @@ function StatusPageContent() {
         <ServiceCard name="Database"            state={status.db} />
         <ServiceCard name="Submissions & cache" state={status.cache} hint="Redis" />
         <ServiceCard name="Download processing" state={status.queue} hint="RabbitMQ" />
-        <ServiceCard name="AI tools"            state={status.mcp}   hint="protvar-mcp" />
       </div>
 
-      {embeddings.length > 0 && (
-        <>
-          <h6 className="status-section-header">Semantic search models</h6>
-          <div className="status-grid">
-            {embeddings.map(([model, state]) => (
-              <ServiceCard key={model} name={model} state={state} />
-            ))}
-          </div>
-        </>
-      )}
+      <h6 className="status-section-header">AI tools</h6>
+      <div className="status-grid">
+        <ServiceCard name="MCP server" state={status.mcp} hint="protvar-mcp" />
+        {embeddings.map(([model, state]) => (
+          <ServiceCard key={model} name={`Semantic search · ${model}`} state={state} />
+        ))}
+      </div>
     </div>
   )
 }

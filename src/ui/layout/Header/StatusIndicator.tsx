@@ -2,12 +2,13 @@ import React from 'react'
 import {Link} from 'react-router-dom'
 import {STATUS} from '../../../constants/BrowserPaths'
 import {useStatus} from '../../../context/StatusContext'
-import {overallState, ServiceState, StatusResponse} from '../../../types/StatusResponse'
+import {OverallState, overallState, StatusResponse} from '../../../types/StatusResponse'
 
-const STATE_LABEL: Record<ServiceState, string> = {
-  up:      'All systems operational',
-  down:    'Service degraded',
-  unknown: 'Status unknown',
+const STATE_LABEL: Record<OverallState, string> = {
+  up:        'All systems operational',
+  degraded:  'Some features unavailable',
+  down:      'Service unavailable',
+  unknown:   'Status unknown',
 }
 
 function tooltip(s: StatusResponse): string {
@@ -16,7 +17,7 @@ function tooltip(s: StatusResponse): string {
     `Database ${s.db}`,
     `Submissions ${s.cache}`,
     `Downloads ${s.queue}`,
-    `AI tools ${s.mcp}`,
+    `MCP ${s.mcp}`,
   ]
   for (const [model, state] of Object.entries(s.embeddings)) {
     parts.push(`search:${model} ${state}`)
@@ -25,14 +26,15 @@ function tooltip(s: StatusResponse): string {
 }
 
 export default function StatusIndicator() {
-  const {status, error} = useStatus()
+  const {status} = useStatus()
 
   // Pre-load: don't render anything; avoids a flash of "unknown" before
-  // the first response.
-  if (!status && !error) return null
+  // the first response. Once we have status (real or synthesized after a
+  // BE failure) we always have something useful to show.
+  if (!status) return null
 
-  const overall: ServiceState = error || !status ? 'down' : overallState(status)
-  const title = status ? `${STATE_LABEL[overall]} — ${tooltip(status)}` : 'Status: backend unreachable'
+  const overall: OverallState = overallState(status)
+  const title = `${STATE_LABEL[overall]} — ${tooltip(status)}`
 
   return (
     <Link to={STATUS} className={`navbar-status status-${overall}`} title={title} aria-label={STATE_LABEL[overall]}>

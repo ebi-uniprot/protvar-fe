@@ -256,10 +256,12 @@
 }
 
 .navbar-status {
+    width: 24px;
+    height: 24px;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     margin-left: 4px;
-    padding: 4px;
     border-radius: 50%;
     text-decoration: none;
 }
@@ -276,7 +278,8 @@
     background: var(--color-text-tertiary);
 }
 
-.navbar-status.status-up .navbar-status-dot      { background: var(--color-success); }
-.navbar-status.status-down .navbar-status-dot    { background: var(--color-danger); }
-.navbar-status.status-unknown .navbar-status-dot { background: var(--color-warning); }
+.navbar-status.status-up .navbar-status-dot       { background: var(--color-success); }
+.navbar-status.status-degraded .navbar-status-dot { background: var(--color-warning); }
+.navbar-status.status-down .navbar-status-dot     { background: var(--color-danger); }
+.navbar-status.status-unknown .navbar-status-dot  { background: var(--color-text-tertiary); }
 
