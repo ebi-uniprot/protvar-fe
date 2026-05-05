@@ -5,7 +5,7 @@ import APIErrorPage from "./pages/APIErrorPage";
 import AboutPage from "./pages/AboutPage";
 import ReleasePage from "./pages/ReleasePage";
 import ContactPage from "./pages/ContactPage";
-import {ABOUT, ACTIVITY, API_ERROR, CONTACT, DOWNLOAD, G_QUERY, HELP, HOME, ID_ENSEMBL, ID_GENE, ID_PDB, ID_REFSEQ, P_QUERY, QUERY, RELEASE, RESULT, SEARCH, SEMANTIC_SEARCH} from "../constants/BrowserPaths";
+import {ABOUT, ACTIVITY, API_ERROR, CONTACT, DOWNLOAD, G_QUERY, HELP, HOME, ID_ENSEMBL, ID_GENE, ID_PDB, ID_REFSEQ, P_QUERY, QUERY, RELEASE, RESULT, SEARCH, SEMANTIC_SEARCH, STATUS} from "../constants/BrowserPaths";
 import DownloadPage from "./pages/download/DownloadPage";
 import HelpPage from "./pages/help/HelpPage";
 import {PagedMappingResponse} from "../types/PagedMappingResponse";
@@ -13,8 +13,10 @@ import ResultPage from "./pages/result/ResultPage";
 import "bootstrap-icons/font/bootstrap-icons.css"
 import ResultListPage from "./pages/result/ResultListPage";
 import ActivityPage from "./pages/activity/ActivityPage";
+import StatusPage from "./pages/StatusPage";
 import {StorageProvider} from "../context/StorageContext";
 import {StatsProvider} from "../context/StatsContext";
+import {StatusProvider} from "../context/StatusContext";
 import {DEFAULT_PAGE_SIZE} from "../constants/const";
 import NotFoundPage from "./pages/NotFoundPage";
 import SemanticSearchPage from "./pages/semanticsearch/SemanticSearchPage";
@@ -76,6 +78,7 @@ export default function App() {
     <StorageProvider>
       <MarkdownProvider>
         <StatsProvider>
+        <StatusProvider>
         <ToastContainer />
         <Routes>
           <Route path={HOME} element={<HomePage />} />
@@ -119,6 +122,7 @@ export default function App() {
           <Route path={ACTIVITY} element={<ActivityPage />} />
           <Route path={DOWNLOAD} element={<DownloadPage />} />
           <Route path={HELP} element={<HelpPage />} />
+          <Route path={STATUS} element={<StatusPage />} />
           <Route path={SEMANTIC_SEARCH} element={<SemanticSearchPage />} />
 
           {/* Whole-protein / identifier browse: /:accession */}
@@ -127,6 +131,7 @@ export default function App() {
           {/* Catch-all route for anything not matched above */}
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
+        </StatusProvider>
         </StatsProvider>
       </MarkdownProvider>
       </StorageProvider>

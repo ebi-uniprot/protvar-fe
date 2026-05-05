@@ -5,60 +5,76 @@ import {TITLE} from "../../../constants/const";
 import {HelpContent} from "../../components/help/HelpContent";
 import {HELP} from "../../../constants/BrowserPaths";
 
+interface HelpItem {
+  name: string;
+  title: string;
+  children?: HelpItem[];
+}
+
 interface HelpSection {
   label: string;
   icon: string;
-  items: { name: string; title: string }[];
+  items: HelpItem[];
 }
 
-const HELP_SECTIONS: HelpSection[] = [
+export const HELP_SECTIONS: HelpSection[] = [
   {
     label: 'Getting Started',
     icon: 'bi-rocket-takeoff',
     items: [
-      { name: 'annotate-variants',            title: 'Annotate Variants' },
-      { name: 'supported-variant-format',    title: 'Supported Formats' },
-      { name: 'genomic-assembly-detection',  title: 'Assembly Detection' },
+      {
+        name: 'annotate',
+        title: 'Annotate Variants',
+        children: [
+          { name: 'input-formats',      title: 'Supported Formats' },
+          { name: 'assembly-detection', title: 'Assembly Detection' },
+        ],
+      },
+      { name: 'browse',          title: 'Browse by Identifier' },
+      { name: 'semantic-search', title: 'Semantic Search' },
     ],
   },
   {
     label: 'Understanding Results',
     icon: 'bi-table',
     items: [
-      { name: 'results',                 title: 'Results' },
-      { name: 'function-annotations',    title: 'Function' },
-      { name: 'population-observations', title: 'Population' },
-      { name: 'structure-annotations',   title: 'Structure' },
+      { name: 'results',    title: 'Results' },
+      { name: 'function',   title: 'Function' },
+      { name: 'population', title: 'Population' },
+      { name: 'structure',  title: 'Structure' },
     ],
   },
   {
     label: 'Predictions & Tools',
     icon: 'bi-cpu',
     items: [
-      { name: 'predictions', title: 'Predictions' },
-      { name: 'alphafold',   title: 'AlphaFold' },
+      { name: 'predictions',     title: 'Predictions' },
+      { name: 'alphafold',       title: 'AlphaFold' },
+      { name: 'feature-ranking', title: 'UniProt Feature Ranking' },
     ],
   },
   {
-    label: 'Downloads',
+    label: 'Downloads & Activity',
     icon: 'bi-download',
     items: [
-      { name: 'result-download',  title: 'Result Download' },
-      { name: 'download-options', title: 'Download Panel' },
-      { name: 'downloads-page',   title: 'Downloads Page' },
-      { name: 'download-file',    title: 'Download File Format' },
+      { name: 'download-panel',  title: 'Download Panel' },
+      { name: 'download-format', title: 'Download File Format' },
+      { name: 'activity',        title: 'Activity' },
     ],
   },
   {
-    label: 'Advanced',
-    icon: 'bi-gear',
+    label: 'URL Linking & Sharing',
+    icon: 'bi-link-45deg',
     items: [
-      { name: 'search-history',           title: 'Search History' },
-      { name: 'protvar-links',            title: 'ProtVar Links' },
-      { name: 'semantic-search',          title: 'Semantic Search' },
-      { name: 'uniprot-feature-ranking',  title: 'UniProt Feature Ranking' },
-      { name: 'api',                      title: 'API' },
-      { name: 'further-info',             title: 'Further Information' },
+      { name: 'protvar-links', title: 'ProtVar Links' },
+    ],
+  },
+  {
+    label: 'Reference',
+    icon: 'bi-book',
+    items: [
+      { name: 'glossary',     title: 'Glossary' },
+      { name: 'further-info', title: 'Further Information' },
     ],
   },
 ];
@@ -100,6 +116,20 @@ function HelpPageContent() {
                   >
                     {item.title}
                   </Link>
+                  {item.children && (
+                    <ul className="help-nav-items help-nav-children">
+                      {item.children.map((child) => (
+                        <li key={child.name}>
+                          <Link
+                            to={`${HELP}#${child.name}`}
+                            className={`help-nav-item help-nav-child ${id === child.name ? 'active' : ''}`}
+                          >
+                            {child.title}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </li>
               ))}
             </ul>

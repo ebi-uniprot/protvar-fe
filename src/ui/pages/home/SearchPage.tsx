@@ -425,7 +425,7 @@ const SearchPage: React.FC = () => {
               <div className="genome-assembly-inline">
                 <span className="assembly-label">
                   Assembly
-                  <HelpButton title="" content={<HelpContent name="genomic-assembly-detection" />} />
+                  <HelpButton title="" content={<HelpContent name="assembly-detection" />} />
                 </span>
                 <div className="input-method-toggle assembly-toggle">
                   <button
@@ -477,7 +477,7 @@ const SearchPage: React.FC = () => {
                 <div className="examples">
                   <h6>
                     Try these examples
-                    <HelpButton title="" content={<HelpContent name="supported-variant-format" />} />
+                    <HelpButton title="" content={<HelpContent name="input-formats" />} />
                   </h6>
                   <div className="example-tags">
                     {EXAMPLES[activeMode].map((example, index) => (

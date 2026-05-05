@@ -4,6 +4,7 @@ import { ABOUT, CONTACT, HELP, HOME, RELEASE } from '../../../constants/BrowserP
 import { API_URL } from '../../../constants/const';
 import SearchBox from "../../components/search/SearchBox";
 import VersionInfo from '../VersionInfo';
+import StatusIndicator from './StatusIndicator';
 
 interface NavbarProps {
   onShowBanner?: () => void;
@@ -57,6 +58,8 @@ const Navbar: React.FC<NavbarProps> = ({ onShowBanner }) => {
             <i className="bi bi-envelope"></i>
             Contact
           </Link>
+
+          <StatusIndicator />
 
         </div>
 

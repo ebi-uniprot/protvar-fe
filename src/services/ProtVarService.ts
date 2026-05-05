@@ -13,6 +13,7 @@ import {InputUploadResponse, PagedMappingResponse} from "../types/PagedMappingRe
 import {DownloadRequest} from "../types/DownloadRequest";
 import {MappingRequest} from "../types/MappingRequest";
 import {ModelInfo, VectorSearchResponse} from "../types/VectorSearch";
+import {StatusResponse} from "../types/StatusResponse";
 
 export const APP_JSON = {"Content-Type": "application/json"}
 export const TEXT_PLAIN = {"Content-Type": "text/plain"}
@@ -114,6 +115,22 @@ export function downloadStatus(ids: string[]) {
       headers: DEFAULT_HEADERS,
     }
   );
+}
+
+export function getServiceStatus() {
+  return api.get<StatusResponse>(
+    `${API_URL}/status`,
+    { headers: APP_JSON, cache: false }
+  );
+}
+
+// Direct probe of the MCP server, sibling to the BE under /ProtVar/mcp.
+// Lets the FE distinguish "MCP is up" from "BE can't tell us about MCP".
+const MCP_STATUS_URL = API_URL?.replace(/\/api$/, '/mcp/status');
+
+export function getMcpStatus() {
+  if (!MCP_STATUS_URL) return Promise.reject(new Error('MCP URL not configured'));
+  return api.get<string>(MCP_STATUS_URL, { cache: false });
 }
 
 export function vectorSearch(text: string, limit: number = 10, offset: number = 0, model?: string) {

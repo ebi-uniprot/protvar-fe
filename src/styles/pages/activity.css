@@ -281,3 +281,21 @@
     color: var(--color-text-tertiary);
     margin-bottom: 8px;
 }
+
+.activity-retention-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 12px;
+    margin: 8px 0 12px;
+    background: var(--color-bg-tertiary);
+    border-left: 3px solid var(--color-text-tertiary);
+    border-radius: 4px;
+    font-size: 12px;
+    color: var(--color-text-secondary);
+}
+
+.activity-retention-banner .bi-info-circle {
+    margin-right: 6px;
+}

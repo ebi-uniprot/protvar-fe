@@ -39,7 +39,7 @@ export function ResidueColumn(props: ResidueColumnProps) {
             <span className="count-badge" style={{ marginLeft: 6 }}>{props.residues.length}</span>
           )}
         </span>
-        <HelpButton variant="inline" title="" content={<HelpContent name="uniprot-feature-ranking" />} />
+        <HelpButton variant="inline" title="" content={<HelpContent name="feature-ranking" />} />
       </div>
 
       {props.residues.length === 0 ? (

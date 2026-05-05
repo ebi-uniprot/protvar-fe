@@ -37,7 +37,7 @@ export function RegionColumn(props: RegionColumnProps) {
             <span className="count-badge" style={{ marginLeft: 6 }}>{props.regions.length}</span>
           )}
         </span>
-        <HelpButton variant="inline" title="" content={<HelpContent name="uniprot-feature-ranking" />} />
+        <HelpButton variant="inline" title="" content={<HelpContent name="feature-ranking" />} />
       </div>
 
       {props.regions.length === 0 ? (

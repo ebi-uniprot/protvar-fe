@@ -386,7 +386,7 @@ function StructureData(props: StructureDataProps) {
               )}
             </div>
             <div className="annotation-actions">
-              <HelpButton title="" content={<HelpContent name="structure-annotations"/>}/>
+              <HelpButton title="" content={<HelpContent name="structure"/>}/>
               <ShareAnnotationIcon annotation={props.annotation}/>
             </div>
           </div>
