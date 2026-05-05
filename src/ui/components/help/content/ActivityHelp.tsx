@@ -1,5 +1,7 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import { DOWNLOAD_STATUS_INFO } from '../../../../types/DownloadRecord'
+import { HELP } from '../../../../constants/BrowserPaths'
 
 export const ActivityHelp = () => (
   <div className="help-content">
@@ -12,20 +14,23 @@ export const ActivityHelp = () => (
     </p>
 
     <h2 id="activity-history">History</h2>
+    <img src={`${process.env.PUBLIC_URL}/images/history.png`} alt="Activity History tab" />
     <p>
       History records two kinds of entries:
     </p>
     <ul>
       <li>
         <strong>Submitted</strong> — variant inputs uploaded as a file or pasted as text.
-        These are saved automatically when you submit. Submitted entries expire 90 days
+        Saved automatically when you submit; the entry links back to the{' '}
+        <Link to={`${HELP}#results`}>result page</Link>. Submitted entries expire 90 days
         after submission and are then removed automatically.
       </li>
       <li>
-        <strong>Browse</strong> — results explored by biological identifier (UniProt, Gene, PDB,
-        Ensembl, RefSeq). These are <em>not</em> saved automatically — use the{' '}
-        <i className="bi bi-bookmark" /> <strong>Save</strong> button in the result page toolbar
-        to add them to your history. Saved browse entries are kept until you delete them.
+        <strong>Browse</strong> — <Link to={`${HELP}#results`}>result pages</Link> reached by
+        biological identifier (UniProt, Gene, PDB, Ensembl, RefSeq). These are <em>not</em>{' '}
+        saved automatically — use the <i className="bi bi-bookmark" /> <strong>Save</strong>{' '}
+        button in the result page toolbar to add them to your history. Saved browse entries
+        are kept until you delete them.
       </li>
     </ul>
     <p>
@@ -38,10 +43,12 @@ export const ActivityHelp = () => (
     </p>
 
     <h2 id="activity-downloads">Downloads</h2>
+    <img src={`${process.env.PUBLIC_URL}/images/activity_downloads.png`} alt="Activity Downloads tab" />
     <p>
-      Downloads can be requested from any result page using the{' '}
-      <i className="bi bi-download" /> <strong>Download</strong> button in the toolbar.
-      The same options apply regardless of input type.
+      Downloads can be requested from any <Link to={`${HELP}#results`}>result page</Link>{' '}
+      using the <i className="bi bi-download" /> <strong>Download</strong> button in the
+      toolbar — see <Link to={`${HELP}#download-panel`}>Download Panel</Link> for the
+      full set of options.
     </p>
 
     <p><strong>Job name</strong></p>

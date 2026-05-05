@@ -2,6 +2,8 @@
 
 Semantic Search lets you find proteins using natural language — disease names, phenotypes, pathways, or any biological description — instead of exact identifiers.
 
+![Semantic Search tab](images/semantic_search.png)
+
 ## How it works
 
 Unlike a keyword search, which looks for exact word matches, semantic search understands the *meaning* of your query. It uses machine learning embeddings to compare your input against millions of protein annotation texts from UniProt (function descriptions, disease associations, pathway memberships, and more). Proteins whose annotations are conceptually similar to your query are ranked by relevance.
@@ -12,6 +14,8 @@ This means:
 - Synonyms and related concepts are recognised automatically.
 
 ## What each result shows
+
+![Semantic search results for "warfarin sensitivity"](images/semantic_search_result.png)
 
 Each result card shows:
 - **Protein name & accession** — the recommended name and UniProt accession of the matched protein

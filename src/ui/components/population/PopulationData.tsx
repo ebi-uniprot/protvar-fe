@@ -95,7 +95,7 @@ function PopulationData(props: PopulationDataProps) {
               )}
             </div>
             <div className="annotation-actions">
-              <HelpButton title="" content={<HelpContent name="population-observations"/>}/>
+              <HelpButton title="" content={<HelpContent name="population"/>}/>
               <ShareAnnotationIcon annotation={props.annotation}/>
             </div>
           </div>

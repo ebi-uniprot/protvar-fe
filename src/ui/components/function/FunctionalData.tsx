@@ -108,7 +108,7 @@ function FunctionalData(props: FunctionalDataProps) {
           )}
         </div>
         <div className="annotation-actions">
-          <HelpButton title="" content={<HelpContent name="function-annotations" />} />
+          <HelpButton title="" content={<HelpContent name="function" />} />
           <ShareAnnotationIcon annotation={annotation} />
         </div>
       </div>

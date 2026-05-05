@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useMarkdown } from '../../../context/MarkdownContext';
+import { HELP } from '../../../constants/BrowserPaths';
 import { ActivityHelp } from './content/ActivityHelp';
 import { AlphaFoldHelp } from './content/AlphaFoldHelp';
 import { PredictionsHelp } from './content/PredictionsHelp';
@@ -8,7 +10,16 @@ interface HelpContentProps {
   name: string;
 }
 
-// Main HelpContent component
+const HelpNotFound: React.FC<{ name: string }> = ({ name }) => (
+  <div className="help-content">
+    <h1>Topic not found</h1>
+    <p>
+      We couldn't find a help topic called <code>{name}</code>.{' '}
+      <Link to={HELP}>See all help topics</Link>.
+    </p>
+  </div>
+);
+
 export const HelpContent: React.FC<HelpContentProps> = ({ name }) => {
   const { getMarkdownContent } = useMarkdown();
   const [content, setContent] = useState<React.JSX.Element | null>(null);
@@ -16,10 +27,9 @@ export const HelpContent: React.FC<HelpContentProps> = ({ name }) => {
 
   useEffect(() => {
     const loadContent = async () => {
+      setLoading(true);
       switch (name) {
         case 'activity':
-        case 'search-history':   // backward compat
-        case 'result-download':  // backward compat
           setContent(<ActivityHelp />);
           break;
         case 'alphafold':
@@ -30,7 +40,7 @@ export const HelpContent: React.FC<HelpContentProps> = ({ name }) => {
           break;
         default:
           const markdown = await getMarkdownContent(name);
-          setContent(markdown);
+          setContent(markdown ?? <HelpNotFound name={name} />);
       }
       setLoading(false);
     };

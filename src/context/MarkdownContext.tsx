@@ -46,15 +46,15 @@ export const MarkdownProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
     try {
       const response = await fetch(filePath + fileName + fileExt);
+      if (!response.ok) return null;
+      // Dev server (and some prod static servers) serve index.html as SPA fallback for
+      // unknown paths — so a 404 markdown request comes back 200 with HTML. Reject it.
+      if ((response.headers.get('content-type') || '').includes('text/html')) return null;
       const text = await response.text();
       if (!text) return null;
 
-      // Fix internal anchor links to include /help#
-      //const processedText = text.replace(/href="#/g, `href="${HELP}#`);
-
       const html = marked.parse(text, { gfm: true, breaks: true, renderer });
 
-      // Wrap in help-content for isolated styling
       const markdownElement = (
         <div className="help-content" dangerouslySetInnerHTML={{ __html: html }} />
       );
@@ -64,7 +64,7 @@ export const MarkdownProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       return markdownElement;
     } catch (error) {
       console.error('Error fetching markdown file:', error);
-      return <div className="help-content"><p>Help content not available.</p></div>;
+      return null;
     }
   };
 

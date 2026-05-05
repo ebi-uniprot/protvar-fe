@@ -97,7 +97,10 @@
 .help-content img {
     display: block;
     margin: 10px auto;
-    max-width: 90%;
+    /* Fluid up to 1100px; screenshots captured at retina resolution would
+       otherwise display far larger than their intended visual size. */
+    max-width: min(100%, 1100px);
+    height: auto;
 }
 
 .help-content table {
@@ -207,6 +210,10 @@
     padding: 0 0 4px 0;
 }
 
+.help-nav-children {
+    padding-bottom: 0;
+}
+
 .help-nav-item {
     display: block;
     padding: 5px 16px 5px 28px;
@@ -215,6 +222,11 @@
     text-decoration: none;
     transition: background var(--transition-fast), color var(--transition-fast);
     border-left: 2px solid transparent;
+}
+
+.help-nav-item.help-nav-child {
+    padding-left: 44px;
+    font-size: var(--font-size-xs);
 }
 
 .help-nav-item:hover {

@@ -23,10 +23,10 @@ const bannerText = (
       <i className="bi bi-stars banner-new-icon" />{' '}
       Explore what's new:{' '}
       <a href={`${BASE}/help#results`}>Results</a>{' · '}
-      <a href={`${BASE}/help#structure-annotations`}>Structure</a>{' · '}
-      <a href={`${BASE}/help#download-options`}>Download Panel</a>{' · '}
+      <a href={`${BASE}/help#structure`}>Structure</a>{' · '}
+      <a href={`${BASE}/help#download-panel`}>Download Panel</a>{' · '}
       <a href={`${BASE}/help#protvar-links`}>ProtVar Links</a>{' · '}
-      <a href={`${BASE}/help#uniprot-feature-ranking`}>Feature Ranking</a>
+      <a href={`${BASE}/help#feature-ranking`}>Feature Ranking</a>
     </div>
   </>
 );
