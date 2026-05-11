@@ -22,7 +22,7 @@ const SECTION_KEY = 'pockets-0';
 export function PocketList({ pockets, expandedSections, onToggle, onViewInStructure }: PocketListProps) {
   const [filteredPockets, setFilteredPockets] = useState(pockets);
 
-  if (pockets.length === 0) {
+  if (!pockets || pockets.length === 0) {
     return <EmptyState message="Variant not predicted to be in a pocket" />;
   }
 
