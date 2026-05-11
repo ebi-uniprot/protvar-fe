@@ -13,6 +13,10 @@ function getSubcellularLocation(comment: Comment) {
   const locationList: string[] = [];
   const topologyList: string[] = [];
 
+  if (!locations) {
+    return EmptyElement;
+  }
+
   locations.forEach((location) => {
     if (location.location) {
       locationList.push(location.location.value);
