@@ -59,9 +59,8 @@ build_docker_image:
   stage: build_docker_image
 
 int-deploy:
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "int"'
-      when: manual
+  only:
+    refs: [int]
   extends: .deploy
   stage: deploy
   script:
@@ -80,5 +79,6 @@ main-deploy:
     refs: [main]
   extends: .deploy
   stage: deploy
+  when: manual  # Example: require manual trigger for production
   script:
     - ./protvar-deploy/scripts/deploy.sh "pub" "protvar-fe" "${CI_COMMIT_SHORT_SHA}"
