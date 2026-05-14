@@ -197,12 +197,9 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
           <div className="filter-section">
             <h4 className="section-title">Functional</h4>
 
-            {branch !== "dev" &&
             <div className="checkbox-group">
               <label className="checkbox-label">
                 <input
-                  disabled={true}
-                  title={"COMING SOON"}
                   type="checkbox"
                   checked={filters.ptm === true}
                   onChange={(e) => handleBooleanChange('ptm', e.target.checked)}
@@ -212,8 +209,6 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
 
               <label className="checkbox-label">
                 <input
-                  disabled={true}
-                  title={"COMING SOON"}
                   type="checkbox"
                   checked={filters.mutagen === true}
                   onChange={(e) => handleBooleanChange('mutagen', e.target.checked)}
@@ -223,15 +218,13 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
 
               <label className="checkbox-label">
                 <input
-                  disabled={true}
-                  title={"COMING SOON"}
                   type="checkbox"
                   checked={filters.domain === true}
                   onChange={(e) => handleBooleanChange('domain', e.target.checked)}
                 />
                 <span>Functional Domain</span>
               </label>
-            </div>}
+            </div>
 
             <div className="filter-row" style={{marginTop: '1rem'}}>
               <RangeSlider
