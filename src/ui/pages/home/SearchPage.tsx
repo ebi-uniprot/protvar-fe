@@ -628,6 +628,14 @@ const SearchPage: React.FC = () => {
           </div>
         )}
 
+        {/* Why the Browse button is disabled — a disabled button gives no
+            feedback on its own, so explain the requirement right above it. */}
+        {activeMode === 'browse' && isSubmitDisabled() && !loading && (
+          <p className="browse-hint">
+            <i className="bi bi-info-circle"></i> {PRIMARY_FILTER_PROMPT}
+          </p>
+        )}
+
         {/* Action Buttons */}
         <div className="action-buttons">
           <button

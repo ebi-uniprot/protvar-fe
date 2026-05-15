@@ -9,10 +9,28 @@
    ============================================ */
 
 .search-filters {
-    border: 1px solid var(--color-brand-lightest);
     border-radius: var(--radius-lg);
     background: var(--color-brand-lightest);
     margin-bottom: 1rem;
+    /* overflow:hidden lets the container's border-radius clip every child
+       (chips / header / panel) uniformly — they need no border-radius of
+       their own, so corners stay consistent however the children reorder. */
+    overflow: hidden;
+    /* Subtle elevation traces the rounded outline uniformly — so all four
+       corners read as rounded regardless of which section (white chips /
+       panel vs brand-tinted header) sits against them. */
+    box-shadow: var(--shadow-sm);
+    /* Collapsed: a short sticky bar — stays pinned while results scroll
+       underneath (navbar is position:relative, so top:0 pins to viewport). */
+    position: sticky;
+    top: 0;
+    z-index: 30;
+}
+
+/* Expanded: drop out of sticky into normal flow, so the growing panel
+   pushes the results table down instead of overlapping it. */
+.search-filters.expanded {
+    position: static;
 }
 
 /* ============================================
@@ -31,7 +49,6 @@
     justify-content: space-between;
     align-items: center;
     color: var(--color-text-primary);
-    border-radius: var(--radius-lg);
     transition: background-color var(--transition-base);
 }
 
@@ -59,7 +76,13 @@
     border-top: 1px solid var(--color-border-light);
     padding: 1rem;
     background: var(--color-bg-primary);
-    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+}
+
+/* Update Results button — pinned top-right inside the panel. */
+.filter-panel-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 0.65rem;
 }
 
 /* ============================================
@@ -261,16 +284,112 @@
 }
 
 /* ============================================
-   APPLY BUTTON AREA
+   ACTIVE-FILTER CHIPS
    ============================================ */
 
-.filter-actions {
-    border-top: 1px solid var(--color-border-light);
-    padding-top: 0.65rem;
-    margin-top: 0.65rem;
+.filter-chips {
     display: flex;
-    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    align-items: center;
+    padding: 0.5rem 0.875rem;
+    /* White, distinct from the brand-tinted collapse header below it —
+       the colour change is the separator, no border needed. */
+    background: var(--color-bg-primary);
 }
+
+.filter-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    /* Match the .filter-button pill (CADD/AM/etc. chips): same font, fill,
+       border, radius — just less left padding to seat the × on the left. */
+    font-size: var(--font-size-sm);
+    padding: 0.275rem 0.6rem 0.275rem 0.35rem;
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border-medium);
+    border-radius: var(--radius-full);
+    font-weight: var(--font-weight-medium);
+    white-space: nowrap;
+}
+
+/* Staged for removal — greyed + struck through until the user reloads. */
+.filter-chip--staged {
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-secondary);
+    border-color: var(--color-border-medium);
+    text-decoration: line-through;
+    opacity: 0.7;
+}
+
+.filter-chip__x {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: inherit;
+    padding: 0.1rem;
+    border-radius: var(--radius-full);
+    font-size: 0.7rem;
+    line-height: 1;
+}
+
+.filter-chip__x:hover {
+    background: rgba(0, 0, 0, 0.12);
+}
+
+.filter-chip-clear {
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+    text-decoration: underline;
+    padding: 0.2rem 0.4rem;
+}
+
+.filter-chip-clear:hover {
+    color: var(--color-text-primary);
+}
+
+/* Manual "apply staged changes + reload" — pushed to the right of the bar. */
+.filter-chip-reload {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    width: 1.9rem;
+    height: 1.9rem;
+    border: 1px solid var(--color-border-medium);
+    border-radius: var(--radius-full);
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.filter-chip-reload:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Highlighted when there are staged changes waiting to be applied. */
+.filter-chip-reload--pending {
+    background: var(--color-brand);
+    border-color: var(--color-brand);
+    color: #fff;
+}
+
+.filter-chip-reload--pending:hover {
+    background: var(--color-brand-dark);
+}
+
+/* ============================================
+   APPLY BUTTON
+   ============================================ */
 
 .apply-button {
     background: var(--color-brand);
@@ -302,13 +421,15 @@
    FOCUS STATES
    ============================================ */
 
-.filter-button:focus,
-.apply-button:focus,
-.filter-header:focus,
-.radio-label input[type="radio"]:focus,
-.checkbox-label input[type="checkbox"]:focus {
+/* :focus-visible — outline shows for keyboard nav, not on mouse click.
+   Inset (negative offset) so the container's overflow:hidden never clips it. */
+.filter-button:focus-visible,
+.apply-button:focus-visible,
+.filter-header:focus-visible,
+.radio-label input[type="radio"]:focus-visible,
+.checkbox-label input[type="checkbox"]:focus-visible {
     outline: 2px solid var(--color-brand-light);
-    outline-offset: 2px;
+    outline-offset: -2px;
 }
 
 /* ============================================
@@ -340,14 +461,6 @@
     .filter-section {
         padding-bottom: 0.65rem;
         margin-bottom: 0.65rem;
-    }
-
-    .filter-actions {
-        justify-content: stretch;
-    }
-
-    .apply-button {
-        width: 100%;
     }
 
     .radio-group {

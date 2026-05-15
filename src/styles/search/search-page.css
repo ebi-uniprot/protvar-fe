@@ -345,6 +345,22 @@
     align-items: center;
 }
 
+/* Hint explaining why the Browse button is disabled. */
+.browse-hint {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.4rem;
+    margin: 0.5rem 0 0;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+}
+
+.browse-hint i {
+    color: var(--color-brand);
+    margin-top: 0.1rem;
+    flex-shrink: 0;
+}
+
 .browse-input-wrapper {
     position: relative;
     flex: 1;

@@ -172,6 +172,12 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
   // Track browse identifiers so DownloadPanel and Save button can reference them
   const [currentBrowseIds, setCurrentBrowseIds] = useState<Identifier[] | undefined>()
 
+  // On first load / refresh, smooth-scroll to the top — browsers can restore
+  // a stale scroll position on refresh, leaving the user mid-page.
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
   // Show redirect toast when we arrive after being redirected from a deprecated URL.
   useEffect(() => {
     if (sessionStorage.getItem(SESSION_REDIRECT)) {
@@ -599,6 +605,7 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
     {(!isQueryMode || isFilterOnly) && inputType !== 'input_id' && inputType !== 'variant' && (
       <SearchFilters
         filters={localFilters}
+        appliedFilters={filters}
         onFiltersChange={setLocalFilters}
         onApply={handleApplyFilters}
         loading={loading}
@@ -611,7 +618,14 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
         <PaginationRow loading={loading} data={data}/>
       </div>
     )}
-    <ResultTable key={input} data={data} lazyIsoforms={isFilterOnly}/>
+    <div className="result-table-wrap">
+      {loading && data && (
+        <div className="result-table-loading" aria-live="polite" aria-label="Updating results">
+          <Loader className="result-table-loader"/>
+        </div>
+      )}
+      <ResultTable key={input} data={data} lazyIsoforms={isFilterOnly}/>
+    </div>
     {!isQueryMode && data && (data.totalPages > 1 || data.page > 1 || !data.last) && (
       <div className="result-pre-table result-post-table">
         <PaginationRow loading={loading} data={data}/>

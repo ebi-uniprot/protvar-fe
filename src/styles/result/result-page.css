@@ -93,3 +93,28 @@
     50%  { text-shadow: 0 0 10px rgba(100,150,255,0.5), 0 0 18px rgba(100,150,255,0.4), 0 0 25px rgba(100,150,255,0.2); transform: scale(1.02); }
     75%  { text-shadow: 0 0 8px rgba(100,150,255,0.4), 0 0 12px rgba(100,150,255,0.3); transform: scale(1.01); }
 }
+
+/* ============================================
+   RESULT TABLE — re-fetch loading overlay
+   ============================================
+   On a filter re-apply the table already has (stale) data, so the
+   first-load <Loader/> doesn't show. Dim the table + overlay a spinner
+   so the user sees the update is in flight. */
+.result-table-wrap {
+    position: relative;
+}
+
+.result-table-loading {
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.65);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 3rem;
+    z-index: 25;
+}
+
+.result-table-loader {
+    transform: scale(0.6);
+}
