@@ -42,15 +42,18 @@ export const extractFilters = (searchParams: URLSearchParams): SearchFilterParam
   // Functional
   ptm: parseBooleanParam(searchParams, "ptm"),
   mutagen: parseBooleanParam(searchParams, "mutagen"),
+  domain: parseBooleanParam(searchParams, "domain"),
+  binding: parseBooleanParam(searchParams, "binding"),
+  actsite: parseBooleanParam(searchParams, "actsite"),
   consMin: parseNumberParam(searchParams, "consMin"),
   consMax: parseNumberParam(searchParams, "consMax"),
-  domain: parseBooleanParam(searchParams, "domain"),
 
   // Population
   disease: parseBooleanParam(searchParams, "disease"),
   freq: normalizeFilterValues(searchParams.getAll("freq"), VALID_ALLELE_FREQ_VALUES),
 
   // Structural
+  transmem: parseBooleanParam(searchParams, "transmem"),
   expModel: parseBooleanParam(searchParams, "expModel"),
   interact: parseBooleanParam(searchParams, "interact"),
   pocket: parseBooleanParam(searchParams, "pocket"),
@@ -78,9 +81,11 @@ export const buildFilterParams = (filters: SearchFilterParams): URLSearchParams 
   // Functional
   if (filters.ptm === true) params.set("ptm", "true");
   if (filters.mutagen === true) params.set("mutagen", "true");
+  if (filters.domain === true) params.set("domain", "true");
+  if (filters.binding === true) params.set("binding", "true");
+  if (filters.actsite === true) params.set("actsite", "true");
   if (filters.consMin !== undefined) params.set("consMin", filters.consMin.toString());
   if (filters.consMax !== undefined) params.set("consMax", filters.consMax.toString());
-  if (filters.domain === true) params.set("domain", "true");
 
   // Population
   if (filters.disease === true) params.set("disease", "true");
@@ -88,6 +93,7 @@ export const buildFilterParams = (filters: SearchFilterParams): URLSearchParams 
   normalizedFreq.forEach(val => params.append("freq", val));
 
   // Structural
+  if (filters.transmem === true) params.set("transmem", "true");
   if (filters.expModel === true) params.set("expModel", "true");
   if (filters.interact === true) params.set("interact", "true");
   if (filters.pocket === true) params.set("pocket", "true");

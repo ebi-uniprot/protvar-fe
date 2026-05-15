@@ -16,15 +16,18 @@ export interface SearchFilterParams {
   // Functional
   ptm?: boolean;
   mutagen?: boolean;
+  domain?: boolean;
+  binding?: boolean;
+  actsite?: boolean;
   consMin?: number;
   consMax?: number;
-  domain?: boolean;
 
   // Population
   disease?: boolean;
   freq: string[];
 
   // Structural
+  transmem?: boolean;
   expModel?: boolean;
   interact?: boolean;
   pocket?: boolean;
@@ -68,11 +71,14 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
     filters.variant !== undefined ||
     filters.ptm !== undefined ||
     filters.mutagen !== undefined ||
+    filters.domain !== undefined ||
+    filters.binding !== undefined ||
+    filters.actsite !== undefined ||
     filters.consMin !== undefined ||
     filters.consMax !== undefined ||
-    filters.domain !== undefined ||
     filters.disease !== undefined ||
     filters.freq.length > 0 ||
+    filters.transmem !== undefined ||
     filters.expModel !== undefined ||
     filters.interact !== undefined ||
     filters.pocket !== undefined ||
@@ -224,6 +230,24 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                 />
                 <span>Functional Domain</span>
               </label>
+
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={filters.binding === true}
+                  onChange={(e) => handleBooleanChange('binding', e.target.checked)}
+                />
+                <span>Binding Site</span>
+              </label>
+
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={filters.actsite === true}
+                  onChange={(e) => handleBooleanChange('actsite', e.target.checked)}
+                />
+                <span>Active Site</span>
+              </label>
             </div>
 
             <div className="filter-row" style={{marginTop: '1rem'}}>
@@ -283,6 +307,15 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
             <h4 className="section-title">Structural</h4>
 
             <div className="checkbox-group">
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={filters.transmem === true}
+                  onChange={(e) => handleBooleanChange('transmem', e.target.checked)}
+                />
+                <span>Transmembrane Region</span>
+              </label>
+
               <label className="checkbox-label">
                 <input
                   type="checkbox"

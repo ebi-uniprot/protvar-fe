@@ -51,15 +51,18 @@ export const DEFAULT_FILTERS: Readonly<SearchFilterParams> = Object.freeze({
   // Functional
   ptm: undefined,
   mutagen: undefined,
+  domain: undefined,
+  binding: undefined,
+  actsite: undefined,
   consMin: undefined,
   consMax: undefined,
-  domain: undefined,
 
   // Population
   disease: undefined,
   freq: [],
 
   // Structural
+  transmem: undefined,
   expModel: undefined,
   interact: undefined,
   pocket: undefined,

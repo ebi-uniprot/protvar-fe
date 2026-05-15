@@ -20,6 +20,9 @@ export interface MappingRequest {
   ptm?: boolean;
   mutagen?: boolean;
   domain?: boolean;
+  binding?: boolean;
+  actsite?: boolean;
+  transmem?: boolean;
   conservationMin?: number;
   conservationMax?: number;
 
