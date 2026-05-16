@@ -5,6 +5,7 @@ export interface ModelInfo {
   defaultModel: boolean;
 }
 
+// Function-corpus hit.
 export interface VectorSearchResult {
   accession: string;
   sourceType: string;
@@ -14,9 +15,19 @@ export interface VectorSearchResult {
   endPos: number | null;
 }
 
+// Population-corpus hit — one per variant; sourceText is the composite snippet.
+export interface PopulationVectorSearchResult {
+  accession: string;
+  position: number | null;
+  sourceText: string;
+  distance: number;
+}
+
+// Side-by-side response — two corpora, no merged ranking (scores not comparable).
 export interface VectorSearchResponse {
   query: string;
-  results: VectorSearchResult[];
+  functionResults: VectorSearchResult[];
+  populationResults: PopulationVectorSearchResult[];
   limit: number;
   offset: number;
   model: string;
@@ -31,4 +42,10 @@ export interface GroupedResult {
   bestText: string;
   sourceTypes: string[];
   matches: VectorSearchResult[];
+}
+
+export interface GroupedPopulationResult {
+  accession: string;
+  score: number;           // (1 - min distance) * 100, rounded to 1dp
+  matches: PopulationVectorSearchResult[];
 }
