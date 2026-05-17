@@ -2,19 +2,20 @@ import React, {useEffect} from 'react'
 import DefaultPageLayout from '../layout/DefaultPageLayout'
 import {TITLE} from '../../constants/const'
 import {useStatus} from '../../context/StatusContext'
-import {ServiceState} from '../../types/StatusResponse'
+import {OverallState, ServiceState} from '../../types/StatusResponse'
 import {getRelativeTime, parseDateString} from '../../utills/DateUtil'
 
 const POLL_INTERVAL_MS = 30_000
 const MAX_POLL_DURATION_MS = 15 * 60 * 1000   // give up after 15 min of an idle/forgotten tab
 
-const STATE_INFO: Record<ServiceState, { label: string; cls: string; icon: string }> = {
-  up:      { label: 'Operational', cls: 'status-up',      icon: 'bi bi-check-circle-fill' },
-  down:    { label: 'Down',        cls: 'status-down',    icon: 'bi bi-x-circle-fill' },
-  unknown: { label: 'Unknown',     cls: 'status-unknown', icon: 'bi bi-question-circle-fill' },
+const STATE_INFO: Record<OverallState, { label: string; cls: string; icon: string }> = {
+  up:       { label: 'Operational', cls: 'status-up',       icon: 'bi bi-check-circle-fill' },
+  degraded: { label: 'Degraded',    cls: 'status-degraded', icon: 'bi bi-exclamation-circle-fill' },
+  down:     { label: 'Down',        cls: 'status-down',      icon: 'bi bi-x-circle-fill' },
+  unknown:  { label: 'Unknown',     cls: 'status-unknown',   icon: 'bi bi-question-circle-fill' },
 }
 
-function StateIndicator({state}: {state: ServiceState}) {
+function StateIndicator({state}: {state: OverallState}) {
   const info = STATE_INFO[state] ?? STATE_INFO.unknown
   return (
     <span className={`status-pill ${info.cls}`}>
@@ -29,6 +30,45 @@ function ServiceCard({name, state, hint}: {name: string; state: ServiceState; hi
       <div className="status-card-name">{name}</div>
       <StateIndicator state={state} />
       {hint && <div className="status-card-hint">{hint}</div>}
+    </div>
+  )
+}
+
+function modelsOverall(states: ServiceState[]): OverallState {
+  if (states.length === 0) return 'unknown'
+  if (states.every(s => s === 'up')) return 'up'
+  if (states.every(s => s === 'down')) return 'down'
+  return 'degraded'   // some — but not all — models down/unknown
+}
+
+// Display order for the semantic-search models — matches the model-guidance
+// table in public/markdown/semantic-search.md. Unlisted models sort last.
+const MODEL_ORDER = ['biobert', 'bge', 'biolord', 'mpnet', 'minilm']
+
+// One card for all semantic-search models: an overall state pill plus the
+// model list, each model individually marked (down/unknown stand out). Single
+// card rather than one-per-model — same shape as the MCP server card.
+function SemanticSearchCard({embeddings}: {embeddings: [string, ServiceState][]}) {
+  const rank = (id: string) => {
+    const i = MODEL_ORDER.indexOf(id)
+    return i === -1 ? MODEL_ORDER.length : i
+  }
+  const ordered = [...embeddings].sort(([a], [b]) => rank(a) - rank(b))
+  const overall = modelsOverall(ordered.map(([, state]) => state))
+  return (
+    <div className="status-card">
+      <div className="status-card-name">Semantic search</div>
+      <StateIndicator state={overall} />
+      <div className="status-card-hint status-card-models">
+        {ordered.map(([model, state], i) => (
+          <React.Fragment key={model}>
+            {i > 0 && <span className="model-sep"> · </span>}
+            <span className={`model-state model-${state}`} title={`${model}: ${STATE_INFO[state].label}`}>
+              {model}
+            </span>
+          </React.Fragment>
+        ))}
+      </div>
     </div>
   )
 }
@@ -86,9 +126,7 @@ function StatusPageContent() {
       <h6 className="status-section-header">AI tools</h6>
       <div className="status-grid">
         <ServiceCard name="MCP server" state={status.mcp} hint="protvar-mcp" />
-        {embeddings.map(([model, state]) => (
-          <ServiceCard key={model} name={`Semantic search · ${model}`} state={state} />
-        ))}
+        <SemanticSearchCard embeddings={embeddings} />
       </div>
     </div>
   )

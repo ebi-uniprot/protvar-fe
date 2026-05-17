@@ -11,7 +11,7 @@ import { HelpButton } from '../../components/help/HelpButton';
 import { HelpContent } from '../../components/help/HelpContent';
 
 const PAGE_SIZE = 10;
-const DEFAULT_MODEL = 'mpnet';
+const DEFAULT_MODEL = 'biobert';
 
 const SOURCE_TYPE_LABELS: Record<string, { label: string; cls: string }> = {
   protein_name:                  { label: 'Name',        cls: 'annotation-badge--name' },

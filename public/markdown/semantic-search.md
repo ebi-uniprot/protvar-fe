@@ -43,12 +43,14 @@ Click **View variants** to go straight to the variant annotation page for that p
 
 ## Embedding models
 
-The model selector in the toolbar controls which embedding model is used to encode your query. Different models have different strengths:
+The model selector in the toolbar chooses which embedding model encodes your query. Models behave differently — the **same query can return different proteins** depending on the model, so the choice matters:
 
 | Model | Best for |
 |-------|----------|
-| **MPNet** *(default)* | General-purpose query-to-document retrieval |
-| **MiniLM** | Fast, lightweight queries — useful for quick exploration |
-| **BioBERT** | Biomedical NLI tasks, disease and function descriptions |
+| **BioBERT** *(default)* | Disease and function queries — a biomedical model, and the most consistent all-rounder |
+| **BGE** | Loosely-phrased or conceptual queries — strong at matching meaning over exact wording |
+| **BioLORD** | Phenotype and clinical-feature descriptions (HPO-style terms) |
+| **MPNet** | General question-to-document retrieval — broader, but weaker on biomedical specifics |
+| **MiniLM** | Fast and lightweight — handy for quick exploration; lowest quality |
 
-If you are unsure which model to use, leave the default (MPNet) selected.
+As a rule of thumb: a biomedical model (BioBERT, BioLORD) understands disease and phenotype language more precisely; a general model (BGE, MPNet) is broader but less attuned to clinical terms. If you are unsure, leave the default (BioBERT) selected.
