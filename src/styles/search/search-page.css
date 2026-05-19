@@ -453,22 +453,25 @@
     gap: 0.4rem;
 }
 
+/* Brand-tinted at rest (navy text on a pale-blue pill) so the example
+   formats read clearly; fills solid brand on hover. Uses --color-brand*
+   tokens only — theming / dark mode carry through. */
 .example-tag {
-    background: var(--color-bg-tertiary);
-    color: var(--color-text-secondary);
+    background: var(--color-brand-lightest);
+    color: var(--color-brand);
     padding: 0.35rem 0.65rem;
     border-radius: var(--radius-full);
     font-size: var(--font-size-sm);
     cursor: pointer;
     transition: all var(--transition-base);
     user-select: none;
-    border: 1px solid var(--color-border-medium);
+    border: 1px solid var(--color-brand-light);
 }
 
 .example-tag:hover {
-    background: var(--color-brand-lightest);
-    color: var(--color-brand);
-    border-color: var(--color-brand-light);
+    background: var(--color-brand);
+    color: #fff;
+    border-color: var(--color-brand);
     transform: translateY(-1px);
     box-shadow: var(--shadow-xs);
 }
