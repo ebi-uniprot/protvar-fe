@@ -4,6 +4,7 @@ import {TITLE} from '../../constants/const'
 import {useStatus} from '../../context/StatusContext'
 import {OverallState, ServiceState} from '../../types/StatusResponse'
 import {getRelativeTime, parseDateString} from '../../utills/DateUtil'
+import {modelRank} from '../../constants/semanticSearch'
 
 const POLL_INTERVAL_MS = 30_000
 const MAX_POLL_DURATION_MS = 15 * 60 * 1000   // give up after 15 min of an idle/forgotten tab
@@ -41,19 +42,11 @@ function modelsOverall(states: ServiceState[]): OverallState {
   return 'degraded'   // some — but not all — models down/unknown
 }
 
-// Display order for the semantic-search models — matches the model-guidance
-// table in public/markdown/semantic-search.md. Unlisted models sort last.
-const MODEL_ORDER = ['biobert', 'bge', 'biolord', 'mpnet', 'minilm']
-
 // One card for all semantic-search models: an overall state pill plus the
 // model list, each model individually marked (down/unknown stand out). Single
 // card rather than one-per-model — same shape as the MCP server card.
 function SemanticSearchCard({embeddings}: {embeddings: [string, ServiceState][]}) {
-  const rank = (id: string) => {
-    const i = MODEL_ORDER.indexOf(id)
-    return i === -1 ? MODEL_ORDER.length : i
-  }
-  const ordered = [...embeddings].sort(([a], [b]) => rank(a) - rank(b))
+  const ordered = [...embeddings].sort(([a], [b]) => modelRank(a) - modelRank(b))
   const overall = modelsOverall(ordered.map(([, state]) => state))
   return (
     <div className="status-card">

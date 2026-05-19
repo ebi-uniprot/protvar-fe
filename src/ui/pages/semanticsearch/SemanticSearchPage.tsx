@@ -7,6 +7,7 @@ import {
   VectorSearchResult, PopulationVectorSearchResult,
 } from '../../../types/VectorSearch';
 import { TITLE } from '../../../constants/const';
+import { modelRank } from '../../../constants/semanticSearch';
 import { HelpButton } from '../../components/help/HelpButton';
 import { HelpContent } from '../../components/help/HelpContent';
 
@@ -178,6 +179,11 @@ function SemanticSearchPageContent() {
 
   const functionGrouped = useMemo(() => groupResults(rawFunctionResults), [rawFunctionResults]);
   const populationGrouped = useMemo(() => groupPopulationResults(rawPopulationResults), [rawPopulationResults]);
+  // Dropdown follows the documented best-first order, not the API's order.
+  const orderedModels = useMemo(
+    () => [...models].sort((a, b) => modelRank(a.id) - modelRank(b.id)),
+    [models]
+  );
   const totalProteins = functionGrouped.length + populationGrouped.length;
 
   useEffect(() => {
@@ -255,14 +261,14 @@ function SemanticSearchPageContent() {
               {populationGrouped.length} variant group{populationGrouped.length !== 1 ? 's' : ''}
             </span>
           )}
-          {models.length > 1 && (
+          {orderedModels.length > 1 && (
             <select
               className="model-select"
               value={selectedModel}
               onChange={handleModelChange}
               title="Embedding model"
             >
-              {models.map(m => (
+              {orderedModels.map(m => (
                 <option key={m.id} value={m.id}>{m.label}</option>
               ))}
             </select>
