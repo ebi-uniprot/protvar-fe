@@ -88,6 +88,35 @@ export function ConfidenceBadge({ level }: ConfidenceBadgeProps) {
 }
 
 /**
+ * Legend bands for pocket confidence — keep in lock-step with
+ * getPocketConfidence above. Shaped as HelpCategoryItem (icon-marker variant)
+ * so the predictions help can render these through <HelpCategories> alongside
+ * the other prediction legends.
+ */
+const fromLevel = (range: string, level: ConfidenceLevel) => ({
+  range,
+  text: level.label,
+  icon: level.icon,
+  iconClass: level.className,
+});
+
+export const POCKET_CONFIDENCE_BANDS = [
+  fromLevel('>900',    CONFIDENCE_LEVELS.VERY_HIGH),
+  fromLevel('800–900', CONFIDENCE_LEVELS.HIGH),
+  fromLevel('<800',    CONFIDENCE_LEVELS.LOW),
+];
+
+/**
+ * Legend bands for protein–protein interface (pDockQ) — keep in lock-step
+ * with getInteractionConfidence above.
+ */
+export const INTERACTION_CONFIDENCE_BANDS = [
+  fromLevel('>0.5',     CONFIDENCE_LEVELS.VERY_HIGH),
+  fromLevel('0.23–0.5', CONFIDENCE_LEVELS.HIGH),
+  fromLevel('<0.23',    CONFIDENCE_LEVELS.LOW),
+];
+
+/**
  * Filter options for pocket confidence dropdown
  */
 export const POCKET_FILTER_OPTIONS = [

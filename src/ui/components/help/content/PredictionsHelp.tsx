@@ -7,7 +7,7 @@ import { ESM_SCORE_ATTR } from '../../function/prediction/EsmPred';
 import { POPEVE_SCORE_ATTR } from '../../function/prediction/PopEvePred';
 import { FOLDX_SCORE_ATTR } from '../../function/prediction/FoldxPred';
 import { M3D_SCORE_ATTR } from '../../function/prediction/Missense3dPred';
-import { CONFIDENCE_LEVELS, ConfidenceBadge } from '../../function/utils/confidenceUtils';
+import { POCKET_CONFIDENCE_BANDS, INTERACTION_CONFIDENCE_BANDS } from '../../function/utils/confidenceUtils';
 import { HelpCategories } from '../shared/HelpCategories';
 
 const PATHOGENIC_EXAMPLE = {
@@ -140,11 +140,7 @@ export const PredictionsHelp: React.FC = () => {
       </p>
       <ul>
         <li><strong>Pocket confidence:</strong> Filter pockets containing the variant according to confidence that the pocket exists.
-          <ul>
-            <li><em>&gt;900</em> — <ConfidenceBadge level={CONFIDENCE_LEVELS.VERY_HIGH} /></li>
-            <li><em>800–900</em> — <ConfidenceBadge level={CONFIDENCE_LEVELS.HIGH} /></li>
-            <li><em>&lt;800</em> — <ConfidenceBadge level={CONFIDENCE_LEVELS.LOW} /></li>
-          </ul>
+          <HelpCategories attrs={POCKET_CONFIDENCE_BANDS} />
         </li>
         <li><strong>Combined score:</strong> Used to measure the confidence level of the pocket prediction.</li>
         <li><strong>Pocket pLDDT mean:</strong> The mean per-residue model confidence for the amino acids predicted to form the pocket from AlphaFold.</li>
@@ -162,11 +158,7 @@ export const PredictionsHelp: React.FC = () => {
       </p>
       <ul>
         <li><strong>pDockQ:</strong> Interface confidence score based on the pLDDT model confidence and the number of residues at the interface.
-          <ul>
-            <li><em>&gt;0.5</em> — <ConfidenceBadge level={CONFIDENCE_LEVELS.VERY_HIGH} /></li>
-            <li><em>0.23–0.5</em> — <ConfidenceBadge level={CONFIDENCE_LEVELS.HIGH} /></li>
-            <li><em>&lt;0.23</em> — <ConfidenceBadge level={CONFIDENCE_LEVELS.LOW} /></li>
-          </ul>
+          <HelpCategories attrs={INTERACTION_CONFIDENCE_BANDS} />
         </li>
       </ul>
     </div>
