@@ -1,4 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { Link } from 'react-router-dom';
+import { AppContext } from '../../../App';
+import { HELP } from '../../../../constants/BrowserPaths';
 import { PredictionRadar } from '../../function/prediction/PredictionRadar';
 import { CONSERV_SCORE_ATTR } from '../../function/prediction/ConservPred';
 import { AM_SCORE_ATTR } from '../../function/prediction/AlphaMissensePred';
@@ -31,11 +34,45 @@ const BENIGN_EXAMPLE = {
 };
 
 export const PredictionsHelp: React.FC = () => {
+  const { stdColor, updateState } = useContext(AppContext);
+
   return (
     <div className="help-content">
       <h1 id="predictions">Predictions</h1>
 
-      <h2>
+      <label className="toggle-switch" title="Toggle between ProtVar standardised and original source colours">
+        <input type="checkbox" checked={stdColor} onChange={() => updateState('stdColor', !stdColor)} />
+        <span className="toggle-track"><span className="toggle-thumb"></span></span>
+        <span className="toggle-label">ProtVar colours</span>
+      </label>
+
+      <hr />
+
+      <h2>Contents</h2>
+      <ol>
+        <li><Link to={`${HELP}#predictions:radar`}>Score Radar</Link></li>
+        <li><Link to={`${HELP}#predictions:conservation`}>Conservation</Link></li>
+        <li><Link to={`${HELP}#predictions:pathogenicity`}>Pathogenicity Predictions</Link>
+          <ul>
+            <li><Link to={`${HELP}#predictions:am`}>AlphaMissense</Link></li>
+            <li><Link to={`${HELP}#predictions:cadd`}>CADD</Link></li>
+            <li><Link to={`${HELP}#predictions:esm`}>ESM-1b</Link></li>
+            <li><Link to={`${HELP}#predictions:popeve`}>PopEVE</Link></li>
+          </ul>
+        </li>
+        <li><Link to={`${HELP}#predictions:structure`}>Structure Predictions</Link>
+          <ul>
+            <li><Link to={`${HELP}#predictions:foldx`}>FoldX — Stability Change (ΔΔG)</Link></li>
+            <li><Link to={`${HELP}#predictions:m3d`}>Missense3D</Link></li>
+          </ul>
+        </li>
+        <li><Link to={`${HELP}#predictions:pockets`}>Pockets Containing the Variant</Link></li>
+        <li><Link to={`${HELP}#predictions:interfaces`}>Protein–Protein Interfaces Containing the Variant</Link></li>
+      </ol>
+
+      <hr />
+
+      <h2 id="predictions:radar">
         ProtVar Score Radar{' '}
         <span className="experimental-text-badge">
           <i className="bi bi-flask" /> experimental
@@ -70,69 +107,69 @@ export const PredictionsHelp: React.FC = () => {
         </li>
       </ul>
 
-      <h2>Conservation</h2>
+      <h2 id="predictions:conservation">Conservation</h2>
       <p>
         Inter-species amino acid conservation based on UniRef90 sequence alignments using the ScoreCons
         algorithm (<a href="https://pubmed.ncbi.nlm.nih.gov/11093265" target="_blank" rel="noreferrer">PubMed 11093265</a>).
         Scored from 0 (no conservation) to 1 (complete conservation).
       </p>
-      <HelpCategories attrs={CONSERV_SCORE_ATTR} />
+      <HelpCategories attrs={CONSERV_SCORE_ATTR} stdColor={stdColor} />
 
-      <h2>Pathogenicity Predictions</h2>
+      <h2 id="predictions:pathogenicity">Pathogenicity Predictions</h2>
       <p>Predictions relating to the probability that the variant has a pathogenic or benign consequence.</p>
 
-      <h3>AlphaMissense</h3>
+      <h3 id="predictions:am">AlphaMissense</h3>
       <p>
         A deep learning model based on structural context and population frequencies
         (<a href="https://pubmed.ncbi.nlm.nih.gov/37733863" target="_blank" rel="noreferrer">PubMed 37733863</a>).
         Scores range from 0 (least deleterious) to 1 (most deleterious). Category ranges vary and are
         provided by AlphaMissense.
       </p>
-      <HelpCategories attrs={Object.values(AM_SCORE_ATTR)} />
+      <HelpCategories attrs={Object.values(AM_SCORE_ATTR)} stdColor={stdColor} />
 
-      <h3>CADD</h3>
+      <h3 id="predictions:cadd">CADD</h3>
       <p>
         Scaled Combined Annotation-Dependent Depletion scores
         (<a href="https://pubmed.ncbi.nlm.nih.gov/30371827" target="_blank" rel="noreferrer">PubMed 30371827</a>).
         An integrative annotation score built from genomic features. Scores are relative to all other
         scores, log10-scaled, with higher values representing a more deleterious variant consequence.
       </p>
-      <HelpCategories attrs={CADD_SCORE_ATTR} />
+      <HelpCategories attrs={CADD_SCORE_ATTR} stdColor={stdColor} />
 
-      <h3>ESM-1b</h3>
+      <h3 id="predictions:esm">ESM-1b</h3>
       <p>
         Evolutionary Scaled Model (<a href="https://pubmed.ncbi.nlm.nih.gov/33876751" target="_blank" rel="noreferrer">PubMed 33876751</a>).
         A deep contextual language model built across a diverse range of species.
         Scores range from −25 (most deleterious) to 0 (least deleterious).
       </p>
-      <HelpCategories attrs={ESM_SCORE_ATTR} />
+      <HelpCategories attrs={ESM_SCORE_ATTR} stdColor={stdColor} />
 
-      <h3>PopEVE</h3>
+      <h3 id="predictions:popeve">PopEVE</h3>
       <p>
         Population-based EVE score integrating evolutionary and population genetics signals. Scores
         are negative; more negative values indicate greater predicted deleteriousness.
       </p>
-      <HelpCategories attrs={POPEVE_SCORE_ATTR} />
+      <HelpCategories attrs={POPEVE_SCORE_ATTR} stdColor={stdColor} />
 
-      <h2>Structure Predictions</h2>
+      <h2 id="predictions:structure">Structure Predictions</h2>
 
-      <h3>FoldX — Stability Change (ΔΔG)</h3>
+      <h3 id="predictions:foldx">FoldX — Stability Change (ΔΔG)</h3>
       <p>
         The predicted free energy change in the protein when the reference amino acid is replaced with
         the variant, calculated using FoldX v5.0 on the AlphaFold2 structure
         (<a href="https://pubmed.ncbi.nlm.nih.gov/15980494" target="_blank" rel="noreferrer">PubMed 15980494</a>).
       </p>
-      <HelpCategories attrs={FOLDX_SCORE_ATTR} />
+      <HelpCategories attrs={FOLDX_SCORE_ATTR} stdColor={stdColor} />
 
-      <h3>Missense3D</h3>
+      <h3 id="predictions:m3d">Missense3D</h3>
       <p>
         Structural annotation of missense variant consequences. Missense3D classifies variants as
         <em> damaging</em> or <em>non-damaging</em> based on structural features of the AlphaFold2 model,
         such as changes to buried residues, secondary structure disruption, or clashes.
       </p>
-      <HelpCategories attrs={M3D_SCORE_ATTR} />
+      <HelpCategories attrs={M3D_SCORE_ATTR} stdColor={stdColor} />
 
-      <h2>Pockets Containing the Variant</h2>
+      <h2 id="predictions:pockets">Pockets Containing the Variant</h2>
       <p>
         Predicted protein pockets containing the variant position and other amino acids involved in
         the pocket, with prediction confidence
@@ -149,7 +186,7 @@ export const PredictionsHelp: React.FC = () => {
         <li><strong>Residues:</strong> The amino acids predicted to compose the pocket.</li>
       </ul>
 
-      <h2>Protein–Protein Interfaces Containing the Variant</h2>
+      <h2 id="predictions:interfaces">Protein–Protein Interfaces Containing the Variant</h2>
       <p>
         Predicted protein–protein interfaces containing the variant position with information about
         the quality of the interface and the proteins involved
@@ -161,6 +198,10 @@ export const PredictionsHelp: React.FC = () => {
           <HelpCategories attrs={INTERACTION_CONFIDENCE_BANDS} />
         </li>
       </ul>
+
+      <p className="help-see-also">
+        See also: <Link to={`${HELP}#protvar-links`}>ProtVar Links</Link> for sharing or deep-linking to a specific result view.
+      </p>
     </div>
   );
 };

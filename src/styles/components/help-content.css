@@ -106,6 +106,16 @@
     flex-shrink: 0;
 }
 
+/* ── "See also" trailer (cross-link to another help topic) ───────────────── */
+
+.help-see-also {
+    margin-top: 1.5rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--color-border-medium);
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+}
+
 /* ── Tool group (MCP "Available tools" sections) ─────────────────────────── */
 
 .help-tool-group {
