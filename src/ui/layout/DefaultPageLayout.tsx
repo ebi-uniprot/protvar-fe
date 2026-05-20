@@ -27,7 +27,8 @@ const bannerText = (
       <a href={`${BASE}/help#protvar-links`}>ProtVar Links</a>{' · '}
       <a href={`${BASE}/help#predictions`}>Score Radar</a>{' · '}
       <a href={`${BASE}/help#feature-ranking`}>Feature Ranking</a>{' · '}
-      <a href={`${BASE}/help#activity`}>Activity</a>
+      <a href={`${BASE}/help#activity`}>Activity</a>{' · '}
+      <a href={`${BASE}/help#mcp`}>ProtVar MCP</a>
     </div>
   </>
 );

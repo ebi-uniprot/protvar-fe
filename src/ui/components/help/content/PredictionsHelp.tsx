@@ -1,13 +1,14 @@
 import React from 'react';
 import { PredictionRadar } from '../../function/prediction/PredictionRadar';
-import { PredictionCategory } from '../../function/prediction/Prediction';
 import { CONSERV_SCORE_ATTR } from '../../function/prediction/ConservPred';
 import { AM_SCORE_ATTR } from '../../function/prediction/AlphaMissensePred';
 import { CADD_SCORE_ATTR } from '../../function/prediction/CaddScorePred';
 import { ESM_SCORE_ATTR } from '../../function/prediction/EsmPred';
 import { POPEVE_SCORE_ATTR } from '../../function/prediction/PopEvePred';
-import { STD_BENIGN_COLOR, STD_PATHOGENIC_COLOR } from '../../function/prediction/PredictionConstants';
+import { FOLDX_SCORE_ATTR } from '../../function/prediction/FoldxPred';
+import { M3D_SCORE_ATTR } from '../../function/prediction/Missense3dPred';
 import { CONFIDENCE_LEVELS, ConfidenceBadge } from '../../function/utils/confidenceUtils';
+import { HelpCategories } from '../shared/HelpCategories';
 
 const PATHOGENIC_EXAMPLE = {
   conservScore:  { score: 0.93 },
@@ -29,21 +30,6 @@ const BENIGN_EXAMPLE = {
   m3dPred:       { prediction: 'non-damaging', damagingFeature: '-' },
 };
 
-const PredCategories: React.FC<{ attrs: PredictionCategory[] }> = ({ attrs }) => (
-  <ul style={{ listStyle: 'none', padding: 0, margin: '0.25rem 0 0.75rem' }}>
-    {attrs.map((attr, i) => (
-      <li key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.2rem' }}>
-        <span style={{
-          display: 'inline-block', width: 10, height: 10, borderRadius: '50%',
-          background: attr.stdColor, flexShrink: 0,
-        }} />
-        {attr.range && <><em>{attr.range}</em> —</>}
-        {attr.text}
-      </li>
-    ))}
-  </ul>
-);
-
 export const PredictionsHelp: React.FC = () => {
   return (
     <div className="help-content">
@@ -61,14 +47,14 @@ export const PredictionsHelp: React.FC = () => {
         evidence for pathogenicity that tool provides.
       </p>
 
-      <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap', margin: '1rem 0' }}>
-        <div style={{ textAlign: 'center' }}>
+      <div className="help-radar-row">
+        <div className="help-radar-item">
           <PredictionRadar {...PATHOGENIC_EXAMPLE} size={160} />
-          <p style={{ fontSize: '0.8rem', color: '#555', marginTop: '0.25rem' }}>Likely pathogenic</p>
+          <p className="help-radar-label">Likely pathogenic</p>
         </div>
-        <div style={{ textAlign: 'center' }}>
+        <div className="help-radar-item">
           <PredictionRadar {...BENIGN_EXAMPLE} size={160} />
-          <p style={{ fontSize: '0.8rem', color: '#555', marginTop: '0.25rem' }}>Likely benign</p>
+          <p className="help-radar-label">Likely benign</p>
         </div>
       </div>
 
@@ -90,7 +76,7 @@ export const PredictionsHelp: React.FC = () => {
         algorithm (<a href="https://pubmed.ncbi.nlm.nih.gov/11093265" target="_blank" rel="noreferrer">PubMed 11093265</a>).
         Scored from 0 (no conservation) to 1 (complete conservation).
       </p>
-      <PredCategories attrs={CONSERV_SCORE_ATTR} />
+      <HelpCategories attrs={CONSERV_SCORE_ATTR} />
 
       <h2>Pathogenicity Predictions</h2>
       <p>Predictions relating to the probability that the variant has a pathogenic or benign consequence.</p>
@@ -102,7 +88,7 @@ export const PredictionsHelp: React.FC = () => {
         Scores range from 0 (least deleterious) to 1 (most deleterious). Category ranges vary and are
         provided by AlphaMissense.
       </p>
-      <PredCategories attrs={Object.values(AM_SCORE_ATTR)} />
+      <HelpCategories attrs={Object.values(AM_SCORE_ATTR)} />
 
       <h3>CADD</h3>
       <p>
@@ -111,7 +97,7 @@ export const PredictionsHelp: React.FC = () => {
         An integrative annotation score built from genomic features. Scores are relative to all other
         scores, log10-scaled, with higher values representing a more deleterious variant consequence.
       </p>
-      <PredCategories attrs={CADD_SCORE_ATTR} />
+      <HelpCategories attrs={CADD_SCORE_ATTR} />
 
       <h3>ESM-1b</h3>
       <p>
@@ -119,14 +105,14 @@ export const PredictionsHelp: React.FC = () => {
         A deep contextual language model built across a diverse range of species.
         Scores range from −25 (most deleterious) to 0 (least deleterious).
       </p>
-      <PredCategories attrs={ESM_SCORE_ATTR} />
+      <HelpCategories attrs={ESM_SCORE_ATTR} />
 
       <h3>PopEVE</h3>
       <p>
         Population-based EVE score integrating evolutionary and population genetics signals. Scores
         are negative; more negative values indicate greater predicted deleteriousness.
       </p>
-      <PredCategories attrs={POPEVE_SCORE_ATTR} />
+      <HelpCategories attrs={POPEVE_SCORE_ATTR} />
 
       <h2>Structure Predictions</h2>
 
@@ -136,16 +122,7 @@ export const PredictionsHelp: React.FC = () => {
         the variant, calculated using FoldX v5.0 on the AlphaFold2 structure
         (<a href="https://pubmed.ncbi.nlm.nih.gov/15980494" target="_blank" rel="noreferrer">PubMed 15980494</a>).
       </p>
-      <ul style={{ listStyle: 'none', padding: 0, margin: '0.25rem 0 0.75rem' }}>
-        <li style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.2rem' }}>
-          <span style={{ display: 'inline-block', width: 10, height: 10, borderRadius: '50%', background: STD_PATHOGENIC_COLOR, flexShrink: 0 }} />
-          <><em>ΔΔG &gt; 2 kcal/mol</em> — destabilising</>
-        </li>
-        <li style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-          <span style={{ display: 'inline-block', width: 10, height: 10, borderRadius: '50%', background: STD_BENIGN_COLOR, flexShrink: 0 }} />
-          <><em>ΔΔG ≤ 2 kcal/mol</em> — stabilising / neutral</>
-        </li>
-      </ul>
+      <HelpCategories attrs={FOLDX_SCORE_ATTR} />
 
       <h3>Missense3D</h3>
       <p>
@@ -153,16 +130,7 @@ export const PredictionsHelp: React.FC = () => {
         <em> damaging</em> or <em>non-damaging</em> based on structural features of the AlphaFold2 model,
         such as changes to buried residues, secondary structure disruption, or clashes.
       </p>
-      <ul style={{ listStyle: 'none', padding: 0, margin: '0.25rem 0 0.75rem' }}>
-        <li style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.2rem' }}>
-          <span style={{ display: 'inline-block', width: 10, height: 10, borderRadius: '50%', background: STD_PATHOGENIC_COLOR, flexShrink: 0 }} />
-          damaging
-        </li>
-        <li style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-          <span style={{ display: 'inline-block', width: 10, height: 10, borderRadius: '50%', background: STD_BENIGN_COLOR, flexShrink: 0 }} />
-          non-damaging
-        </li>
-      </ul>
+      <HelpCategories attrs={M3D_SCORE_ATTR} />
 
       <h2>Pockets Containing the Variant</h2>
       <p>

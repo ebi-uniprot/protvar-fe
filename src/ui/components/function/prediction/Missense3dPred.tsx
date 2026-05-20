@@ -4,9 +4,17 @@ import {aminoAcid3to1Letter} from "../../../../utills/Util";
 import { CopyLink } from '../../common/CopyLink';
 import Spaces from "../../../elements/Spaces";
 import {STD_BENIGN_COLOR, STD_PATHOGENIC_COLOR} from "./PredictionConstants";
+import {PredictionCategory} from "./Prediction";
 import {ExtLink} from "../../common/Link";
 
 const M3D_BASE_URL = 'https://missense3d.bc.ic.ac.uk/~missense3d2/results-details.html';
+
+// Legend bands for Missense3D — binary class, matching the prediction values
+// returned by the API ("damaging" / "non-damaging"). No separate non-std colour.
+export const M3D_SCORE_ATTR: PredictionCategory[] = [
+  { color: STD_PATHOGENIC_COLOR, stdColor: STD_PATHOGENIC_COLOR, text: 'damaging' },
+  { color: STD_BENIGN_COLOR,     stdColor: STD_BENIGN_COLOR,     text: 'non-damaging' },
+];
 
 interface Missense3dPredProps {
   functionalData: FunctionalInfo

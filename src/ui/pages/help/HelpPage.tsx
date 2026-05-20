@@ -70,6 +70,13 @@ export const HELP_SECTIONS: HelpSection[] = [
     ],
   },
   {
+    label: 'AI Access',
+    icon: 'bi-robot',
+    items: [
+      { name: 'mcp', title: 'ProtVar MCP' },
+    ],
+  },
+  {
     label: 'Reference',
     icon: 'bi-book',
     items: [
@@ -90,11 +97,18 @@ function HelpPageContent() {
     const [section, subsection] = hash.split(':');
     setId(section);
     setContent(<HelpContent name={section} />);
-    setTimeout(() => {
-      if (subsection) {
+    if (subsection) {
+      // Wait for the new content to render, then scroll the subsection
+      // anchor into view.
+      setTimeout(() => {
         document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }, 500);
+      }, 500);
+    } else {
+      // Top-level topic click — smooth-scroll back to the top so the user
+      // lands at the start of the new content rather than wherever they
+      // were scrolled in the previous one.
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   }, [location]);
 
   return (
