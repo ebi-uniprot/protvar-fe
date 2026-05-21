@@ -9,7 +9,7 @@ The **3D Structures** panel shows the variant in the context of available protei
 Three tables list structures that contain the variant position:
 
 - **PDBe Experimental Structure** — every PDB entry whose sequence covers the variant, with chain, residue position, resolution and experimental method.
-- **Predicted Structure based on AlphaFold** — the [AlphaFold](#alphafold) model for the protein, plus AlphaFill where ligand-augmented models exist. The POCKETS column flags predicted pockets that contain the variant.
+- **Predicted Structure based on AlphaFold** — the [AlphaFold](#predictions:alphafold) model for the protein, plus AlphaFill where ligand-augmented models exist. The POCKETS column flags predicted pockets that contain the variant.
 - **Predicted Interacting Structure** — partners predicted to interact at an interface containing the variant, with the [pDockQ](#glossary:protein-protein-interfaces) confidence score.
 
 Selecting a row loads that structure into the [Mol\* viewer](#glossary:3d-structure-viewer) on the right. Click the variant residue to see surrounding residues; click empty space to zoom out. Use **Zoom to variant** to recentre, and the chain buttons (e.g. **Chain A**, **C**) to isolate single chains in multi-chain structures.
@@ -18,7 +18,7 @@ Selecting a row loads that structure into the [Mol\* viewer](#glossary:3d-struct
 
 ![AlphaFold model with confidence and PAE](images/alphafold.png)
 
-Selecting an AlphaFold row colours the structure by per-residue model confidence (pLDDT). The **Model Confidence** legend maps colours to confidence bands; the **Predicted Aligned Error** heatmap indicates AlphaFold's confidence in the relative positions of residue pairs — useful for assessing inter-domain accuracy. See [AlphaFold](#alphafold) for the full description.
+Selecting an AlphaFold row colours the structure by per-residue model confidence (pLDDT). The **Model Confidence** legend maps colours to confidence bands; the **Predicted Aligned Error** heatmap indicates AlphaFold's confidence in the relative positions of residue pairs — useful for assessing inter-domain accuracy. See [AlphaFold](#predictions:alphafold) for the full description.
 
 ## Pockets
 

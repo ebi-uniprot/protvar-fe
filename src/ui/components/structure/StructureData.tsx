@@ -17,7 +17,7 @@ import {ALPHAFILL_URL, hasAlphafillStructure} from "../../../services/AlphafillS
 import {Interaction, Pocket} from "../../../types/Prediction";
 import {useMolstarController} from "./useMolstarController";
 import {useStructureUrl} from "./useStructureUrl";
-import {PAEPanel} from "./viewer/PAEPanel";
+import {AFConfidencePanel} from "./viewer/AFConfidencePanel";
 
 
 
@@ -458,7 +458,7 @@ function StructureData(props: StructureDataProps) {
                 pdbeRef={molstar.ref}
                 controlActions={getViewerActions()}
               />
-              <PAEPanel
+              <AFConfidencePanel
                 isOpen={isPaeOpen}
                 paeImageUrl={paeUrl}
                 onClose={() => setIsPaeOpen(false)}

@@ -12,6 +12,7 @@ import { FOLDX_SCORE_ATTR } from '../../function/prediction/FoldxPred';
 import { M3D_SCORE_ATTR } from '../../function/prediction/Missense3dPred';
 import { POCKET_CONFIDENCE_BANDS, INTERACTION_CONFIDENCE_BANDS } from '../../function/utils/confidenceUtils';
 import { HelpCategories } from '../shared/HelpCategories';
+import { AFConfidenceLegend } from '../../structure/alphafoldConfidence';
 
 const PATHOGENIC_EXAMPLE = {
   conservScore:  { score: 0.93 },
@@ -32,6 +33,40 @@ const BENIGN_EXAMPLE = {
   foldxs:        [{ proteinAcc: '', position: 0, afId: '', afPos: 0, wildType: 'A', mutatedType: 'g', foldxDdg: 0.4, plddt: 80, numFragments: 1 }],
   m3dPred:       { prediction: 'non-damaging', damagingFeature: '-' },
 };
+
+// AlphaFold help body — used inline under the AlphaFold H3 in PredictionsHelp,
+// and (wrapped by AlphaFoldHelp below) in the drawer triggered from the
+// structure viewer's AF confidence panel. Intro is phrased to make sense in
+// both contexts.
+export const AlphaFoldHelpContent: React.FC = () => (
+  <>
+    <p>
+      AlphaFold is the predicted protein structure that ProtVar's structure-based annotations are
+      built on. Two confidence layers accompany it: pLDDT (per-residue) and PAE (per-residue-pair).
+    </p>
+    <h4>Model Confidence</h4>
+    <p>
+      AlphaFold produces a per-residue confidence score (pLDDT) between 0 and 100. Some regions with
+      low pLDDT may be unstructured in isolation.
+    </p>
+    <AFConfidenceLegend />
+    <h4>Predicted Aligned Error (PAE)</h4>
+    <p>
+      The colour at position (x, y) indicates AlphaFold's expected position error at residue x, when
+      the predicted and true structures are aligned on residue y. This is useful for assessing
+      inter-domain accuracy.
+    </p>
+  </>
+);
+
+// Drawer-ready wrapper — H1 + help-content container. Triggered from
+// AFConfidencePanel's "?" button next to "Predicted Aligned Error".
+export const AlphaFoldHelp: React.FC = () => (
+  <div className="help-content">
+    <h1>AlphaFold</h1>
+    <AlphaFoldHelpContent />
+  </div>
+);
 
 export const PredictionsHelp: React.FC = () => {
   const { stdColor, updateState } = useContext(AppContext);
@@ -60,14 +95,15 @@ export const PredictionsHelp: React.FC = () => {
             <li><Link to={`${HELP}#predictions:popeve`}>PopEVE</Link></li>
           </ul>
         </li>
-        <li><Link to={`${HELP}#predictions:structure`}>Structure Predictions</Link>
+        <li><Link to={`${HELP}#predictions:structure`}>Structure-based Annotations</Link>
           <ul>
+            <li><Link to={`${HELP}#predictions:alphafold`}>AlphaFold</Link></li>
             <li><Link to={`${HELP}#predictions:foldx`}>FoldX — Stability Change (ΔΔG)</Link></li>
             <li><Link to={`${HELP}#predictions:m3d`}>Missense3D</Link></li>
+            <li><Link to={`${HELP}#predictions:pockets`}>Pockets containing the variant</Link></li>
+            <li><Link to={`${HELP}#predictions:interfaces`}>Protein–Protein interfaces containing the variant</Link></li>
           </ul>
         </li>
-        <li><Link to={`${HELP}#predictions:pockets`}>Pockets Containing the Variant</Link></li>
-        <li><Link to={`${HELP}#predictions:interfaces`}>Protein–Protein Interfaces Containing the Variant</Link></li>
       </ol>
 
       <hr />
@@ -151,7 +187,14 @@ export const PredictionsHelp: React.FC = () => {
       </p>
       <HelpCategories attrs={POPEVE_SCORE_ATTR} stdColor={stdColor} />
 
-      <h2 id="predictions:structure">Structure Predictions</h2>
+      <h2 id="predictions:structure">Structure-based Annotations</h2>
+      <p>
+        Annotations and predictions derived from the AlphaFold2 structural model — starting with the
+        model itself and the per-residue and contextual analyses built on top of it.
+      </p>
+
+      <h3 id="predictions:alphafold">AlphaFold</h3>
+      <AlphaFoldHelpContent />
 
       <h3 id="predictions:foldx">FoldX — Stability Change (ΔΔG)</h3>
       <p>
@@ -169,7 +212,7 @@ export const PredictionsHelp: React.FC = () => {
       </p>
       <HelpCategories attrs={M3D_SCORE_ATTR} stdColor={stdColor} />
 
-      <h2 id="predictions:pockets">Pockets Containing the Variant</h2>
+      <h3 id="predictions:pockets">Pockets Containing the Variant</h3>
       <p>
         Predicted protein pockets containing the variant position and other amino acids involved in
         the pocket, with prediction confidence
@@ -186,7 +229,7 @@ export const PredictionsHelp: React.FC = () => {
         <li><strong>Residues:</strong> The amino acids predicted to compose the pocket.</li>
       </ul>
 
-      <h2 id="predictions:interfaces">Protein–Protein Interfaces Containing the Variant</h2>
+      <h3 id="predictions:interfaces">Protein–Protein Interfaces Containing the Variant</h3>
       <p>
         Predicted protein–protein interfaces containing the variant position with information about
         the quality of the interface and the proteins involved

@@ -49,7 +49,6 @@ export const HELP_SECTIONS: HelpSection[] = [
     icon: 'bi-cpu',
     items: [
       { name: 'predictions',     title: 'Predictions' },
-      { name: 'alphafold',       title: 'AlphaFold' },
       { name: 'feature-ranking', title: 'UniProt Feature Ranking' },
     ],
   },

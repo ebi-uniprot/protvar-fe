@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { useMarkdown } from '../../../context/MarkdownContext';
 import { HELP } from '../../../constants/BrowserPaths';
 import { ActivityHelp } from './content/ActivityHelp';
-import { AlphaFoldHelp } from './content/AlphaFoldHelp';
 import { PredictionsHelp } from './content/PredictionsHelp';
 import { McpHelp } from './content/McpHelp';
 
@@ -32,9 +31,6 @@ export const HelpContent: React.FC<HelpContentProps> = ({ name }) => {
       switch (name) {
         case 'activity':
           setContent(<ActivityHelp />);
-          break;
-        case 'alphafold':
-          setContent(<AlphaFoldHelp />);
           break;
         case 'predictions':
           setContent(<PredictionsHelp />);
