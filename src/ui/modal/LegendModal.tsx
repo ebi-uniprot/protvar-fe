@@ -172,10 +172,10 @@ export function LegendContent() {
         <LegendSection title="popEVE score">
           <GradientBar
             gradient={stdColor
-              ? 'linear-gradient(to right, red 0%, red 34%, lightgrey 34%, lightgrey 41%, blue 41%, blue 100%)'
-              : `linear-gradient(to right, ${POPEVE_COLORS.join(',')})`
+              ? 'linear-gradient(to right, blue 0%, blue 59%, lightgray 59%, lightgray 66%, red 66%, red 100%)'
+              : `linear-gradient(to right, ${[...POPEVE_COLORS].reverse().join(',')})`
             }
-            labels={[String(POPEVE_MIN), '≥ ' + String(POPEVE_MAX)]}
+            labels={['≥ ' + String(POPEVE_MAX), String(POPEVE_MIN)]}
           />
           <CircleItems attrs={Object.values(POPEVE_SCORE_ATTR)} stdColor={stdColor} />
           <div style={{ fontSize: '0.75em', fontStyle: 'italic', marginTop: '0.4em', color: '#666' }}>

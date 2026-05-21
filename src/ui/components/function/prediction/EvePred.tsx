@@ -5,7 +5,7 @@ import {PRECISION, STD_BENIGN_COLOR, STD_PATHOGENIC_COLOR, STD_UNCERTAIN_COLOR} 
 
 export const EVE_SCORE_ATTR: {[key: string]: PredictionCategory} = {
   BENIGN: { color: 'blue', stdColor: STD_BENIGN_COLOR, text: 'benign' },
-  UNCERTAIN: { color: 'lightgrey', stdColor: STD_UNCERTAIN_COLOR, text: 'uncertain' },
+  UNCERTAIN: { color: 'lightgray', stdColor: STD_UNCERTAIN_COLOR, text: 'uncertain' },
   PATHOGENIC: { color: 'red', stdColor: STD_PATHOGENIC_COLOR, text: 'pathogenic' }
 }
 
