@@ -73,13 +73,22 @@ export function getInteractionConfidence(pdockq: number): ConfidenceLevel {
 }
 
 /**
- * Reusable confidence badge component
+ * Reusable confidence badge component. `compact` hides the inline label and
+ * surfaces it as a hover tooltip instead — tighter row layout.
  */
 interface ConfidenceBadgeProps {
   level: ConfidenceLevel;
+  compact?: boolean;
 }
 
-export function ConfidenceBadge({ level }: ConfidenceBadgeProps) {
+export function ConfidenceBadge({ level, compact }: ConfidenceBadgeProps) {
+  if (compact) {
+    return (
+      <span title={level.label}>
+        <i className={`bi ${level.icon} ${level.className}`}></i>
+      </span>
+    );
+  }
   return (
     <>
       <i className={`bi ${level.icon} ${level.className}`}></i> {level.label}

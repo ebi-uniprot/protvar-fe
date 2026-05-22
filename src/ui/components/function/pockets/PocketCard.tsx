@@ -52,12 +52,12 @@ export function PocketCard({ pocket, onViewInStructure }: PocketCardProps) {
         <span className="pocket-metric">
           <span className="pocket-detail-label">Score</span>
           <span className="pocket-score">{pocket.score.toFixed(0)}</span>
-          <ConfidenceBadge level={pocketConf} />
+          <ConfidenceBadge level={pocketConf} compact />
         </span>
         <span className="pocket-metric">
           <span className="pocket-detail-label">pLDDT</span>
           <span className="pocket-score">{pocket.meanPlddt.toFixed(0)}</span>
-          <ConfidenceBadge level={modelConf} />
+          <ConfidenceBadge level={modelConf} compact />
         </span>
       </div>
 
