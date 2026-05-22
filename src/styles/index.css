@@ -32,6 +32,7 @@
 @import './components/range-slider.css';
 @import './components/help-content.css';
 @import './components/legend.css';
+@import './components/legend-categories.css';
 
 /* ==============================================
    3. ANNOTATION SYSTEM - Shared patterns

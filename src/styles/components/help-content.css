@@ -68,43 +68,9 @@
     color: var(--color-brand-light);
 }
 
-/* ── Categories (HelpCategories.tsx) ─────────────────────────────────────── */
-
-.help-categories {
-    list-style: none;
-    padding: 0;
-    margin: 0.25rem 0 0.75rem;
-}
-
-/* Three-column grid per row: marker | range | text.
-   Range column is sized to fit the widest range within THIS legend, so all
-   rows in one legend line up but legends don't try to align cross-prediction. */
-.help-category-item {
-    display: grid;
-    grid-template-columns: auto max-content 1fr;
-    align-items: center;
-    column-gap: 0.75rem;
-    margin-bottom: 0.2rem;
-}
-
-.help-category-item:last-child {
-    margin-bottom: 0;
-}
-
-.help-category-range {
-    /* Italic comes from the <em>; nothing extra needed here yet. */
-}
-
-/* Bullet colour comes from the data (`--bullet-color` inline custom property)
-   so the bullet stays in CSS while the colour stays with the prediction attr. */
-.help-category-bullet {
-    display: inline-block;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: var(--bullet-color, var(--color-text-secondary));
-    flex-shrink: 0;
-}
+/* Per-prediction score categories in the help (and the legend drawer) are
+   now styled in components/legend-categories.css via the shared
+   <LegendCategories> component. */
 
 /* ── "See also" trailer (cross-link to another help topic) ───────────────── */
 

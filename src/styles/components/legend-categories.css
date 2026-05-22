@@ -1,0 +1,30 @@
+/*
+ * Shared "marker · range · text" category-list used by both the legend drawer
+ * (src/ui/modal/LegendContent.tsx) and the predictions help
+ * (src/ui/components/help/content/PredictionsHelp.tsx).
+ *
+ * The UL is the grid; each LI uses display:contents so its three children
+ * (marker, range, text) become the three cells of that row in the parent
+ * grid. The range column auto-sizes to the widest range, keeping the text
+ * column edge aligned across rows.
+ */
+
+.legend-categories {
+    list-style: none;
+    padding: 0;
+    margin: 0.25rem 0 0.75rem;
+    display: grid;
+    grid-template-columns: auto max-content 1fr;
+    column-gap: 0.5rem;
+    row-gap: 2px;
+    align-items: center;
+}
+
+.legend-category {
+    display: contents;
+}
+
+.legend-category-range {
+    color: #666;
+    font-size: 0.85em;
+}

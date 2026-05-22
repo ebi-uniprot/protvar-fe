@@ -1,8 +1,8 @@
 /*
  * Styles for the result-page legend drawer (src/ui/modal/LegendContent.tsx).
- * The shared "marker · range · text" grid pattern also lines up visually
- * with .help-categories in help-content.css; the two could be unified in a
- * future pass.
+ * The per-prediction category lists themselves use the shared <LegendCategories>
+ * component (see components/legend-categories.css); this file owns only the
+ * legend drawer's outer scaffolding.
  */
 
 /* Outer container of the legend drawer body. */
@@ -34,21 +34,6 @@
 .legend-section-title {
     display: block;
     margin-bottom: 0.4rem;
-}
-
-/* 3-column grid: marker · range · text. Range column auto-sizes to the
-   widest range so columns align within each legend. */
-.legend-items {
-    display: grid;
-    grid-template-columns: auto max-content 1fr;
-    column-gap: 0.5rem;
-    row-gap: 2px;
-    align-items: center;
-}
-
-.legend-item-range {
-    color: #666;
-    font-size: 0.85em;
 }
 
 /* popEVE "low confidence when gap freq > 0.5" footnote. */

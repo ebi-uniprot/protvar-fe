@@ -89,9 +89,9 @@ export function ConfidenceBadge({ level }: ConfidenceBadgeProps) {
 
 /**
  * Legend bands for pocket confidence — keep in lock-step with
- * getPocketConfidence above. Shaped as HelpCategoryItem (icon-marker variant)
- * so the predictions help can render these through <HelpCategories> alongside
- * the other prediction legends.
+ * getPocketConfidence above. Shaped as LegendCategory (icon-marker variant)
+ * so the predictions help and the legend drawer can render these through
+ * <LegendCategories> alongside the other prediction legends.
  */
 const fromLevel = (range: string, level: ConfidenceLevel) => ({
   range,

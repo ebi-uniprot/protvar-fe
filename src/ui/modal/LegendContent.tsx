@@ -1,8 +1,6 @@
 import React, { useContext } from 'react'
-import { v1 as uuidv1 } from 'uuid';
 import AnnotationLegend from './AnnotationLegend'
 import { CADD_SCORE_ATTR } from "../components/function/prediction/CaddScorePred";
-import { PredictionCategory } from "../components/function/prediction/Prediction";
 import { AM_SCORE_ATTR } from "../components/function/prediction/AlphaMissensePred";
 import { AF_ATTR } from "../components/population/PopulationAlleleFreq";
 import { POPEVE_SCORE_ATTR, POPEVE_COLORS, POPEVE_MIN, POPEVE_MAX } from "../components/function/prediction/PopEvePred";
@@ -10,6 +8,7 @@ import { ESM_SCORE_ATTR } from "../components/function/prediction/EsmPred";
 import { CONSERV_SCORE_ATTR } from "../components/function/prediction/ConservPred";
 import { AppContext } from "../App";
 import { FEATURE_RANKING, FeaturePriority } from "../components/function/utils/featureRanking";
+import { LegendCategories } from "../components/common/LegendCategories";
 
 interface CommonLegendProps {
   stdColor: boolean
@@ -20,23 +19,6 @@ function LegendSection({ title, children }: { title: string; children: React.Rea
     <div className="legend-section">
       <strong className="legend-section-title">{title}</strong>
       {children}
-    </div>
-  );
-}
-
-// All prediction legends share this 3-column grid: marker · range · text.
-// Range is italicised and muted; text is regular weight. Within one legend
-// the columns auto-align so ranges of different widths still read cleanly.
-function LegendItems({ attrs, stdColor }: { attrs: PredictionCategory[]; stdColor: boolean }) {
-  return (
-    <div className="legend-items">
-      {attrs.map((sc) => (
-        <React.Fragment key={uuidv1()}>
-          <i className="bi bi-circle-fill" style={{ color: stdColor ? sc.stdColor : sc.color }}></i>
-          {sc.range ? <em className="legend-item-range">{sc.range}</em> : <span />}
-          <span>{sc.text}</span>
-        </React.Fragment>
-      ))}
     </div>
   );
 }
@@ -66,7 +48,7 @@ function ConservLegend({ stdColor }: CommonLegendProps) {
   return (
     <>
       <GradientBar gradient={gradient} labels={['Low', 'High']} />
-      <LegendItems attrs={CONSERV_SCORE_ATTR} stdColor={stdColor} />
+      <LegendCategories attrs={CONSERV_SCORE_ATTR} stdColor={stdColor} />
     </>
   );
 }
@@ -78,7 +60,7 @@ function EsmLegend({ stdColor }: CommonLegendProps) {
   return (
     <>
       <GradientBar gradient={gradient} labels={['0', '-5', '-10', '-15', '-20', '-25']} />
-      <LegendItems attrs={ESM_SCORE_ATTR} stdColor={stdColor} />
+      <LegendCategories attrs={ESM_SCORE_ATTR} stdColor={stdColor} />
     </>
   );
 }
@@ -145,11 +127,11 @@ export function LegendContent() {
       <div className="legend-grid">
 
         <LegendSection title="CADD phred-like score">
-          <LegendItems attrs={Object.values(CADD_SCORE_ATTR)} stdColor={stdColor} />
+          <LegendCategories attrs={Object.values(CADD_SCORE_ATTR)} stdColor={stdColor} />
         </LegendSection>
 
         <LegendSection title="AlphaMissense score">
-          <LegendItems attrs={Object.values(AM_SCORE_ATTR)} stdColor={stdColor} />
+          <LegendCategories attrs={Object.values(AM_SCORE_ATTR)} stdColor={stdColor} />
         </LegendSection>
 
         <LegendSection title="ESM1b LLR score">
@@ -164,7 +146,7 @@ export function LegendContent() {
             }
             labels={['≥ ' + String(POPEVE_MAX), String(POPEVE_MIN)]}
           />
-          <LegendItems attrs={Object.values(POPEVE_SCORE_ATTR)} stdColor={stdColor} />
+          <LegendCategories attrs={Object.values(POPEVE_SCORE_ATTR)} stdColor={stdColor} />
           <div className="legend-footnote">
             Low confidence when gap freq &gt; 0.5
           </div>
@@ -175,7 +157,7 @@ export function LegendContent() {
         </LegendSection>
 
         <LegendSection title="GnomAD allele frequency">
-          <LegendItems attrs={Object.values(AF_ATTR)} stdColor={false} />
+          <LegendCategories attrs={Object.values(AF_ATTR)} stdColor={false} />
         </LegendSection>
 
       </div>

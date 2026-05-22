@@ -11,7 +11,7 @@ import { POPEVE_SCORE_ATTR } from '../../function/prediction/PopEvePred';
 import { FOLDX_SCORE_ATTR } from '../../function/prediction/FoldxPred';
 import { M3D_SCORE_ATTR } from '../../function/prediction/Missense3dPred';
 import { POCKET_CONFIDENCE_BANDS, INTERACTION_CONFIDENCE_BANDS } from '../../function/utils/confidenceUtils';
-import { HelpCategories } from '../shared/HelpCategories';
+import { LegendCategories } from '../../common/LegendCategories';
 import { AFConfidenceLegend } from '../../structure/alphafoldConfidence';
 
 const PATHOGENIC_EXAMPLE = {
@@ -149,7 +149,7 @@ export const PredictionsHelp: React.FC = () => {
         algorithm (<a href="https://pubmed.ncbi.nlm.nih.gov/11093265" target="_blank" rel="noreferrer">PubMed 11093265</a>).
         Scored from 0 (no conservation) to 1 (complete conservation).
       </p>
-      <HelpCategories attrs={CONSERV_SCORE_ATTR} stdColor={stdColor} />
+      <LegendCategories attrs={CONSERV_SCORE_ATTR} stdColor={stdColor} />
 
       <h2 id="predictions:pathogenicity">Pathogenicity Predictions</h2>
       <p>Predictions relating to the probability that the variant has a pathogenic or benign consequence.</p>
@@ -161,7 +161,7 @@ export const PredictionsHelp: React.FC = () => {
         Scores range from 0 (least deleterious) to 1 (most deleterious). Category ranges vary and are
         provided by AlphaMissense.
       </p>
-      <HelpCategories attrs={Object.values(AM_SCORE_ATTR)} stdColor={stdColor} />
+      <LegendCategories attrs={Object.values(AM_SCORE_ATTR)} stdColor={stdColor} />
 
       <h3 id="predictions:cadd">CADD</h3>
       <p>
@@ -170,7 +170,7 @@ export const PredictionsHelp: React.FC = () => {
         An integrative annotation score built from genomic features. Scores are relative to all other
         scores, log10-scaled, with higher values representing a more deleterious variant consequence.
       </p>
-      <HelpCategories attrs={CADD_SCORE_ATTR} stdColor={stdColor} />
+      <LegendCategories attrs={CADD_SCORE_ATTR} stdColor={stdColor} />
 
       <h3 id="predictions:esm">ESM-1b</h3>
       <p>
@@ -178,14 +178,14 @@ export const PredictionsHelp: React.FC = () => {
         A deep contextual language model built across a diverse range of species.
         Scores range from −25 (most deleterious) to 0 (least deleterious).
       </p>
-      <HelpCategories attrs={ESM_SCORE_ATTR} stdColor={stdColor} />
+      <LegendCategories attrs={ESM_SCORE_ATTR} stdColor={stdColor} />
 
       <h3 id="predictions:popeve">PopEVE</h3>
       <p>
         Population-based EVE score integrating evolutionary and population genetics signals. Scores
         are negative; more negative values indicate greater predicted deleteriousness.
       </p>
-      <HelpCategories attrs={POPEVE_SCORE_ATTR} stdColor={stdColor} />
+      <LegendCategories attrs={POPEVE_SCORE_ATTR} stdColor={stdColor} />
 
       <h2 id="predictions:structure">Structure-based Annotations</h2>
       <p>
@@ -202,7 +202,7 @@ export const PredictionsHelp: React.FC = () => {
         the variant, calculated using FoldX v5.0 on the AlphaFold2 structure
         (<a href="https://pubmed.ncbi.nlm.nih.gov/15980494" target="_blank" rel="noreferrer">PubMed 15980494</a>).
       </p>
-      <HelpCategories attrs={FOLDX_SCORE_ATTR} stdColor={stdColor} />
+      <LegendCategories attrs={FOLDX_SCORE_ATTR} stdColor={stdColor} />
 
       <h3 id="predictions:m3d">Missense3D</h3>
       <p>
@@ -210,7 +210,7 @@ export const PredictionsHelp: React.FC = () => {
         <em> damaging</em> or <em>non-damaging</em> based on structural features of the AlphaFold2 model,
         such as changes to buried residues, secondary structure disruption, or clashes.
       </p>
-      <HelpCategories attrs={M3D_SCORE_ATTR} stdColor={stdColor} />
+      <LegendCategories attrs={M3D_SCORE_ATTR} stdColor={stdColor} />
 
       <h3 id="predictions:pockets">Pockets Containing the Variant</h3>
       <p>
@@ -220,7 +220,7 @@ export const PredictionsHelp: React.FC = () => {
       </p>
       <ul>
         <li><strong>Pocket confidence:</strong> Filter pockets containing the variant according to confidence that the pocket exists.
-          <HelpCategories attrs={POCKET_CONFIDENCE_BANDS} />
+          <LegendCategories attrs={POCKET_CONFIDENCE_BANDS} />
         </li>
         <li><strong>Combined score:</strong> Used to measure the confidence level of the pocket prediction.</li>
         <li><strong>Pocket pLDDT mean:</strong> The mean per-residue model confidence for the amino acids predicted to form the pocket from AlphaFold.</li>
@@ -238,7 +238,7 @@ export const PredictionsHelp: React.FC = () => {
       </p>
       <ul>
         <li><strong>pDockQ:</strong> Interface confidence score based on the pLDDT model confidence and the number of residues at the interface.
-          <HelpCategories attrs={INTERACTION_CONFIDENCE_BANDS} />
+          <LegendCategories attrs={INTERACTION_CONFIDENCE_BANDS} />
         </li>
       </ul>
 
