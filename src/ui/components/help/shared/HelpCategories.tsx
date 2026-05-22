@@ -17,9 +17,8 @@ import React from 'react';
 // (attr.color, when provided). Icon-marker items ignore the toggle —
 // their colour comes from a CSS class.
 //
-// NOTE: a similar pattern exists in modal/LegendModal.tsx (CircleItems /
-// SquareItems) with slight format differences — consolidating the three into
-// one shared component is a deliberate follow-up; see review notes.
+// NOTE: a similar pattern exists in modal/LegendContent.tsx (LegendItems) —
+// consolidating the two into one shared component is a deliberate follow-up.
 
 export type HelpCategoryItem = {
   range?: string;

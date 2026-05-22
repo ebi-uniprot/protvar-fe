@@ -1,5 +1,5 @@
 import DefaultPageLayout from "../../layout/DefaultPageLayout";
-import {LegendContent} from "../../modal/LegendModal";
+import {LegendContent} from "../../modal/LegendContent";
 import {useLocation, useNavigate, useParams, useSearchParams} from "react-router-dom";
 import ResultTable from "./ResultTable";
 import React, {useCallback, useContext, useEffect, useMemo, useRef, useState} from "react";

@@ -10,9 +10,9 @@ const PRECISION: number = 1 // dp
 
 // likely pathogenic (yellow) -25 <------> 0 likely benign (blue)
 export const ESM_SCORE_ATTR: PredictionCategory[] = [
-  {color: '#460556', stdColor: STD_BENIGN_COLOR,    text: 'benign',     range: '0 to −5',   tip: '-5 to 0 likely benign' },
-  {color: '#218c8f', stdColor: STD_UNCERTAIN_COLOR, text: 'uncertain',  range: '−5 to −10', tip: '-10 to -5 uncertain significance' },
-  {color: '#f9e725', stdColor: STD_PATHOGENIC_COLOR,text: 'pathogenic', range: '−10 to −25',tip: '-25 to -10 likely pathogenic' },
+  {color: '#460556', stdColor: STD_BENIGN_COLOR,    text: 'benign',     range: '0 to -5',   tip: '-5 to 0 likely benign' },
+  {color: '#218c8f', stdColor: STD_UNCERTAIN_COLOR, text: 'uncertain',  range: '-5 to -10', tip: '-10 to -5 uncertain significance' },
+  {color: '#f9e725', stdColor: STD_PATHOGENIC_COLOR,text: 'pathogenic', range: '-10 to -25',tip: '-25 to -10 likely pathogenic' },
 ]
 
 export const ESM_MAX_SCORE = -25

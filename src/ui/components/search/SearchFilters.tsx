@@ -340,8 +340,6 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
             <div className="checkbox-group">
               <label className="checkbox-label">
                 <input
-                  disabled={true}
-                  title={"COMING SOON"}
                   type="checkbox"
                   checked={filters.disease === true}
                   onChange={(e) => handleBooleanChange('disease', e.target.checked)}

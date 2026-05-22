@@ -17,38 +17,25 @@ interface CommonLegendProps {
 
 function LegendSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div style={{ marginBottom: '1.25rem' }}>
-      <strong style={{ display: 'block', marginBottom: '0.4rem' }}>{title}</strong>
+    <div className="legend-section">
+      <strong className="legend-section-title">{title}</strong>
       {children}
     </div>
   );
 }
 
-function CircleItems({ attrs, stdColor }: { attrs: PredictionCategory[]; stdColor: boolean }) {
+// All prediction legends share this 3-column grid: marker · range · text.
+// Range is italicised and muted; text is regular weight. Within one legend
+// the columns auto-align so ranges of different widths still read cleanly.
+function LegendItems({ attrs, stdColor }: { attrs: PredictionCategory[]; stdColor: boolean }) {
   return (
-    <div className="flex-column">
+    <div className="legend-items">
       {attrs.map((sc) => (
-        <div key={uuidv1()} className="flex" style={{ alignItems: 'center', marginBottom: 2 }}>
-          <span className="padding-left-right-1x">
-            <i className="bi bi-circle-fill" style={{ color: stdColor ? sc.stdColor : sc.color }}></i>
-          </span>
-          <div className="flex1">{sc.text}{sc.range ? ` (${sc.range})` : ''}</div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function SquareItems({ attrs, stdColor }: { attrs: PredictionCategory[]; stdColor: boolean }) {
-  return (
-    <div className="flex-column">
-      {attrs.map((sc) => (
-        <div key={uuidv1()} className="flex" style={{ alignItems: 'center', marginBottom: 2 }}>
-          <span className="padding-left-right-1x">
-            <i className="bi bi-square-fill" style={{ color: stdColor ? sc.stdColor : sc.color }}></i>
-          </span>
-          <div className="flex1">{sc.range} {sc.text}</div>
-        </div>
+        <React.Fragment key={uuidv1()}>
+          <i className="bi bi-circle-fill" style={{ color: stdColor ? sc.stdColor : sc.color }}></i>
+          {sc.range ? <em className="legend-item-range">{sc.range}</em> : <span />}
+          <span>{sc.text}</span>
+        </React.Fragment>
       ))}
     </div>
   );
@@ -79,7 +66,7 @@ function ConservLegend({ stdColor }: CommonLegendProps) {
   return (
     <>
       <GradientBar gradient={gradient} labels={['Low', 'High']} />
-      <CircleItems attrs={CONSERV_SCORE_ATTR} stdColor={stdColor} />
+      <LegendItems attrs={CONSERV_SCORE_ATTR} stdColor={stdColor} />
     </>
   );
 }
@@ -90,8 +77,8 @@ function EsmLegend({ stdColor }: CommonLegendProps) {
     : 'linear-gradient(to right, #460556, #218c8f, #f9e725)';
   return (
     <>
-      <GradientBar gradient={gradient} labels={['0', '−5', '−10', '−15', '−20', '−25']} />
-      <CircleItems attrs={ESM_SCORE_ATTR} stdColor={stdColor} />
+      <GradientBar gradient={gradient} labels={['0', '-5', '-10', '-15', '-20', '-25']} />
+      <LegendItems attrs={ESM_SCORE_ATTR} stdColor={stdColor} />
     </>
   );
 }
@@ -142,9 +129,9 @@ export function LegendContent() {
   const { stdColor, updateState } = state;
 
   return (
-    <div style={{ padding: '0 4px' }}>
+    <div className="legend-content">
       {/* Colour toggle at the very top */}
-      <div style={{ marginBottom: '1rem' }}>
+      <div className="legend-toggle-wrap">
         <label className="toggle-switch" title="Toggle between ProtVar standardised and original source colours">
           <input type="checkbox" checked={stdColor} onChange={() => updateState("stdColor", !stdColor)} />
           <span className="toggle-track"><span className="toggle-thumb"></span></span>
@@ -152,17 +139,17 @@ export function LegendContent() {
         </label>
       </div>
 
-      <h6 style={{ marginBottom: '1.25rem', fontWeight: 600 }}>Result Legends</h6>
+      <h6 className="legend-content-title">Result Legends</h6>
 
       {/* Two-column grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 2rem' }}>
+      <div className="legend-grid">
 
         <LegendSection title="CADD phred-like score">
-          <SquareItems attrs={Object.values(CADD_SCORE_ATTR)} stdColor={stdColor} />
+          <LegendItems attrs={Object.values(CADD_SCORE_ATTR)} stdColor={stdColor} />
         </LegendSection>
 
         <LegendSection title="AlphaMissense score">
-          <CircleItems attrs={Object.values(AM_SCORE_ATTR)} stdColor={stdColor} />
+          <LegendItems attrs={Object.values(AM_SCORE_ATTR)} stdColor={stdColor} />
         </LegendSection>
 
         <LegendSection title="ESM1b LLR score">
@@ -177,8 +164,8 @@ export function LegendContent() {
             }
             labels={['≥ ' + String(POPEVE_MAX), String(POPEVE_MIN)]}
           />
-          <CircleItems attrs={Object.values(POPEVE_SCORE_ATTR)} stdColor={stdColor} />
-          <div style={{ fontSize: '0.75em', fontStyle: 'italic', marginTop: '0.4em', color: '#666' }}>
+          <LegendItems attrs={Object.values(POPEVE_SCORE_ATTR)} stdColor={stdColor} />
+          <div className="legend-footnote">
             Low confidence when gap freq &gt; 0.5
           </div>
         </LegendSection>
@@ -188,18 +175,18 @@ export function LegendContent() {
         </LegendSection>
 
         <LegendSection title="GnomAD allele frequency">
-          <CircleItems attrs={Object.values(AF_ATTR)} stdColor={false} />
+          <LegendItems attrs={Object.values(AF_ATTR)} stdColor={false} />
         </LegendSection>
 
       </div>
 
       {/* Annotation icons — AnnotationLegend has its own heading */}
-      <div style={{ marginTop: '0.5rem' }}>
+      <div className="legend-annotation-wrap">
         <AnnotationLegend />
       </div>
 
       {/* UniProt feature ranking */}
-      <div style={{ marginTop: '1rem' }}>
+      <div className="legend-feature-ranking-wrap">
         <LegendSection title="UniProt feature ranking">
           <FeatureRankingLegend />
         </LegendSection>
