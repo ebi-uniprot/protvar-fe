@@ -2,7 +2,7 @@
  * Two-row pocket entry: key metrics + supplementary detail below
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Pocket } from '../../../../types/Prediction';
 import { formatRange } from '../../../../utills/Util';
 import { getPocketConfidence, getModelConfidence, ConfidenceBadge } from '../utils/confidenceUtils';
@@ -11,6 +11,26 @@ import structureIcon from '../../../../images/structures-3d.svg';
 interface PocketCardProps {
   pocket: Pocket;
   onViewInStructure: (pocket: Pocket) => void;
+}
+
+// Pocket residue lists run long (often 30+ positions). Show the count by
+// default with an inline chevron to reveal the full formatRange'd list.
+function PocketResidues({ resid }: { resid: number[] }) {
+  const [expanded, setExpanded] = useState(false);
+  return (
+    <>
+      {resid.length}
+      <button
+        type="button"
+        className="pocket-residues-toggle"
+        onClick={() => setExpanded(e => !e)}
+        title={expanded ? 'Hide residues' : 'Show residues'}
+      >
+        <i className={`bi ${expanded ? 'bi-chevron-up' : 'bi-chevron-down'}`} />
+      </button>
+      {expanded && <span className="pocket-residues-list">{formatRange(resid)}</span>}
+    </>
+  );
 }
 
 export function PocketCard({ pocket, onViewInStructure }: PocketCardProps) {
@@ -46,7 +66,7 @@ export function PocketCard({ pocket, onViewInStructure }: PocketCardProps) {
         <span><span className="pocket-detail-label">Energy/vol</span>{pocket.energyPerVol.toFixed(2)} kcal/mol</span>
         <span><span className="pocket-detail-label">Buriedness</span>{pocket.buriedness.toFixed(2)}</span>
         <span><span className="pocket-detail-label">Gyration</span>{pocket.radGyration.toFixed(2)} Å</span>
-        <span><span className="pocket-detail-label">Residues</span>{formatRange(pocket.resid)}</span>
+        <span><span className="pocket-detail-label">Residues</span><PocketResidues resid={pocket.resid} /></span>
       </div>
     </div>
   );
