@@ -73,19 +73,57 @@ export function getInteractionConfidence(pdockq: number): ConfidenceLevel {
 }
 
 /**
- * Reusable confidence badge component
+ * Reusable confidence badge component. `compact` hides the inline label and
+ * surfaces it as a hover tooltip instead — tighter row layout.
  */
 interface ConfidenceBadgeProps {
   level: ConfidenceLevel;
+  compact?: boolean;
 }
 
-export function ConfidenceBadge({ level }: ConfidenceBadgeProps) {
+export function ConfidenceBadge({ level, compact }: ConfidenceBadgeProps) {
+  if (compact) {
+    return (
+      <span title={level.label}>
+        <i className={`bi ${level.icon} ${level.className}`}></i>
+      </span>
+    );
+  }
   return (
     <>
       <i className={`bi ${level.icon} ${level.className}`}></i> {level.label}
     </>
   );
 }
+
+/**
+ * Legend bands for pocket confidence — keep in lock-step with
+ * getPocketConfidence above. Shaped as LegendCategory (icon-marker variant)
+ * so the predictions help and the legend drawer can render these through
+ * <LegendCategories> alongside the other prediction legends.
+ */
+const fromLevel = (range: string, level: ConfidenceLevel) => ({
+  range,
+  text: level.label,
+  icon: level.icon,
+  iconClass: level.className,
+});
+
+export const POCKET_CONFIDENCE_BANDS = [
+  fromLevel('>900',    CONFIDENCE_LEVELS.VERY_HIGH),
+  fromLevel('800–900', CONFIDENCE_LEVELS.HIGH),
+  fromLevel('<800',    CONFIDENCE_LEVELS.LOW),
+];
+
+/**
+ * Legend bands for protein–protein interface (pDockQ) — keep in lock-step
+ * with getInteractionConfidence above.
+ */
+export const INTERACTION_CONFIDENCE_BANDS = [
+  fromLevel('>0.5',     CONFIDENCE_LEVELS.VERY_HIGH),
+  fromLevel('0.23–0.5', CONFIDENCE_LEVELS.HIGH),
+  fromLevel('<0.23',    CONFIDENCE_LEVELS.LOW),
+];
 
 /**
  * Filter options for pocket confidence dropdown

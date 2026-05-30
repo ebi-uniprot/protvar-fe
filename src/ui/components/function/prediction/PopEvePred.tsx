@@ -54,10 +54,11 @@ export function getPopEveColor(score: number): string {
 /* at a representative score within each range        */
 /* -------------------------------------------------- */
 
+// Ordered benign → pathogenic to match the other prediction legends.
 export const POPEVE_SCORE_ATTR: PredictionCategory[] = [
-  { color: getPopEveColor(-6.0),   stdColor: 'red',       text: 'severe',                 range: '<-5.056' },
-  { color: getPopEveColor(-4.837), stdColor: 'lightgrey', text: 'moderately deleterious',  range: '-5.056 to -4.617' },
-  { color: getPopEveColor(-2.5),   stdColor: 'blue',      text: 'unlikely deleterious',    range: '>-4.617' },
+  { color: getPopEveColor(-2.5),   stdColor: 'blue',      text: 'unlikely deleterious',    range: '>-4.61' },
+  { color: getPopEveColor(-4.837), stdColor: 'lightgray', text: 'moderately deleterious',  range: '-5.05 to -4.61' },
+  { color: getPopEveColor(-6.0),   stdColor: 'red',       text: 'severe',                 range: '<-5.05' },
 ]
 
 export const PopEvePred = (props: { popeve?: PopEveScore, stdColor: boolean }) => {
@@ -75,9 +76,11 @@ export function formatPopEveScore(popeve?: PopEveScore) {
 }
 
 export function getPopEveClass(score: number): number {
-  if (score < -5.056) return 0; // severe
-  if (score < -4.617) return 1; // moderately deleterious
-  return 2; // unlikely deleterious
+  // Indices match POPEVE_SCORE_ATTR (ordered benign → pathogenic):
+  //   0 = unlikely deleterious, 1 = moderately deleterious, 2 = severe
+  if (score < -5.056) return 2;
+  if (score < -4.617) return 1;
+  return 0;
 }
 
 function PopEvePredIcon(props: { popeve?: PopEveScore, stdColor: boolean }) {

@@ -16,12 +16,15 @@ export interface MappingRequest {
   // Variant Type
   known?: boolean;
 
-  // Functional (to be implemented)
+  // Functional — wired to BE filters on function_feature.type (via FeatureGroup)
   ptm?: boolean;
-  mutagenesis?: boolean;
+  mutagen?: boolean;
+  domain?: boolean;
+  binding?: boolean;
+  actsite?: boolean;
+  transmem?: boolean;
   conservationMin?: number;
   conservationMax?: number;
-  functionalDomain?: boolean;
 
   // Population (to be implemented)
   diseaseAssociation?: boolean;

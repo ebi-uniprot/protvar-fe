@@ -96,9 +96,25 @@
     margin-right: 3px;
 }
 
-/* Residues: normal font, can wrap */
-.pocket-residues-value {
+/* Residue list collapses to a count + chevron by default; expands inline. */
+.pocket-residues-toggle {
+    background: none;
+    border: 0;
+    padding: 0 4px;
+    margin: 0;
+    cursor: pointer;
+    color: var(--color-text-secondary);
     font-size: var(--font-size-xs);
+    line-height: 1;
+    vertical-align: baseline;
+}
+
+.pocket-residues-toggle:hover {
+    color: var(--color-text-primary);
+}
+
+.pocket-residues-list {
+    margin-left: 4px;
     word-break: break-word;
     white-space: normal;
 }

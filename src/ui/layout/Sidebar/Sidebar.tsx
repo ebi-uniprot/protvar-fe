@@ -25,6 +25,13 @@ const Sidebar: React.FC<SidebarProps> = ({
   const historyActive = onActivity && !isDownloadsTab
   const downloadsActive = onActivity && isDownloadsTab
 
+  // The home page hosts three search modes, mirrored in ?tab= (see SearchPage)
+  const onHome = location.pathname === HOME
+  const homeTab = new URLSearchParams(location.search).get('tab')
+  const annotateActive = onHome && (!homeTab || homeTab === 'annotate')
+  const browseActive = onHome && homeTab === 'browse'
+  const semanticActive = onHome && homeTab === 'semantic'
+
   useEffect(() => {
     setPrefs({ sidebarExpanded: isExpanded })
     onExpandChange?.(isExpanded)
@@ -36,8 +43,23 @@ const Sidebar: React.FC<SidebarProps> = ({
     <>
       {/* Mobile icon strip */}
       <nav className="mobile-nav-strip" aria-label="Mobile navigation">
-        <NavLink to={HOME} className="mobile-nav-item">
-          <i className="bi bi-search" />
+        <NavLink
+          to={HOME}
+          className={() => `mobile-nav-item${annotateActive ? ' active' : ''}`}
+        >
+          <i className="bi bi-clipboard-data" />
+        </NavLink>
+        <NavLink
+          to={`${HOME}?tab=browse`}
+          className={() => `mobile-nav-item${browseActive ? ' active' : ''}`}
+        >
+          <i className="bi bi-card-list" />
+        </NavLink>
+        <NavLink
+          to={`${HOME}?tab=semantic`}
+          className={() => `mobile-nav-item${semanticActive ? ' active' : ''}`}
+        >
+          <i className="bi bi-body-text" />
         </NavLink>
         <NavLink
           to={ACTIVITY}
@@ -73,9 +95,32 @@ const Sidebar: React.FC<SidebarProps> = ({
         <nav className="sidebar-nav">
           <ul className="sidebar-menu-list">
             <li className="sidebar-menu-item">
-              <NavLink to={HOME} className="sidebar-link">
-                <i className="bi bi-search" />
-                <span className="sidebar-label">Search</span>
+              <NavLink
+                to={HOME}
+                className={() => `sidebar-link${annotateActive ? ' active' : ''}`}
+              >
+                <i className="bi bi-clipboard-data" />
+                <span className="sidebar-label">Annotate</span>
+              </NavLink>
+            </li>
+
+            <li className="sidebar-menu-item">
+              <NavLink
+                to={`${HOME}?tab=browse`}
+                className={() => `sidebar-link${browseActive ? ' active' : ''}`}
+              >
+                <i className="bi bi-card-list" />
+                <span className="sidebar-label">Browse</span>
+              </NavLink>
+            </li>
+
+            <li className="sidebar-menu-item">
+              <NavLink
+                to={`${HOME}?tab=semantic`}
+                className={() => `sidebar-link${semanticActive ? ' active' : ''}`}
+              >
+                <i className="bi bi-body-text" />
+                <span className="sidebar-label">Semantic Search</span>
               </NavLink>
             </li>
 

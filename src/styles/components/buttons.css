@@ -483,7 +483,7 @@
 /* ============================================
    EXAMPLE / CHIP BUTTON
    Search page example snippets — .example-tag
-   Pill shape, subtle background, brand tint on hover.
+   Pill shape, brand-tinted at rest, solid brand fill on hover.
    Defined here for reference; styles live in search-page.css
    because they co-locate with the search layout.
    ============================================ */

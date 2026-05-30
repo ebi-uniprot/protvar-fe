@@ -2,13 +2,17 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import DefaultPageLayout from '../../layout/DefaultPageLayout';
 import { vectorSearch, getSemanticSearchModels } from '../../../services/ProtVarService';
-import { GroupedResult, ModelInfo, VectorSearchResult } from '../../../types/VectorSearch';
+import {
+  GroupedResult, GroupedPopulationResult, ModelInfo,
+  VectorSearchResult, PopulationVectorSearchResult,
+} from '../../../types/VectorSearch';
 import { TITLE } from '../../../constants/const';
+import { modelRank } from '../../../constants/semanticSearch';
 import { HelpButton } from '../../components/help/HelpButton';
 import { HelpContent } from '../../components/help/HelpContent';
 
 const PAGE_SIZE = 10;
-const DEFAULT_MODEL = 'mpnet';
+const DEFAULT_MODEL = 'biobert';
 
 const SOURCE_TYPE_LABELS: Record<string, { label: string; cls: string }> = {
   protein_name:                  { label: 'Name',        cls: 'annotation-badge--name' },
@@ -25,6 +29,8 @@ function sourceTypeInfo(type: string) {
   return SOURCE_TYPE_LABELS[type] ?? { label: type.replace(/^(comment_|feature_)/, ''), cls: 'annotation-badge--other' };
 }
 
+const score1dp = (distance: number) => Math.round((1 - distance) * 1000) / 10;
+
 function groupResults(results: VectorSearchResult[]): GroupedResult[] {
   const map = new Map<string, VectorSearchResult[]>();
   for (const r of results) {
@@ -38,10 +44,28 @@ function groupResults(results: VectorSearchResult[]): GroupedResult[] {
       return {
         accession,
         proteinName: nameMatch?.sourceText ?? null,
-        score: Math.round((1 - best.distance) * 1000) / 10,
+        score: score1dp(best.distance),
         bestText: best.sourceText,
         sourceTypes: Array.from(new Set(matches.map(m => m.sourceType))),
         matches,
+      };
+    })
+    .sort((a, b) => b.score - a.score);
+}
+
+function groupPopulationResults(results: PopulationVectorSearchResult[]): GroupedPopulationResult[] {
+  const map = new Map<string, PopulationVectorSearchResult[]>();
+  for (const r of results) {
+    if (!map.has(r.accession)) map.set(r.accession, []);
+    map.get(r.accession)!.push(r);
+  }
+  return Array.from(map.entries())
+    .map(([accession, matches]) => {
+      const best = matches.reduce((a, b) => a.distance < b.distance ? a : b);
+      return {
+        accession,
+        score: score1dp(best.distance),
+        matches: [...matches].sort((a, b) => a.distance - b.distance),
       };
     })
     .sort((a, b) => b.score - a.score);
@@ -80,7 +104,6 @@ function ResultCard({ result, onView }: { result: GroupedResult; onView: (acc: s
       <div className="annotation-matches">
         {rankedMatches.map(m => {
           const { label, cls } = sourceTypeInfo(m.sourceType);
-          const score = Math.round((1 - m.distance) * 1000) / 10;
           const posLabel = m.beginPos !== null && m.endPos !== null
             ? m.beginPos === m.endPos
               ? `position ${m.beginPos}`
@@ -97,7 +120,7 @@ function ResultCard({ result, onView }: { result: GroupedResult; onView: (acc: s
                     : `/p/${m.accession}/${m.beginPos}-${m.endPos}`}>{posLabel}</Link>
                 </span>
               )}
-              <ScoreBar score={score} />
+              <ScoreBar score={score1dp(m.distance)} />
             </div>
           );
         })}
@@ -111,6 +134,32 @@ function ResultCard({ result, onView }: { result: GroupedResult; onView: (acc: s
   );
 }
 
+function PopulationResultCard({ result }: { result: GroupedPopulationResult }) {
+  return (
+    <div className="protein-card">
+      <div className="protein-card-header">
+        <div className="protein-card-title">
+          <span className="protein-accession">{result.accession}</span>
+        </div>
+      </div>
+      <div className="annotation-matches">
+        {result.matches.map((m, i) => (
+          <div key={i} className="annotation-match">
+            <span className="annotation-badge annotation-badge--disease">Variant</span>
+            <p className="match-text">"{m.sourceText}"</p>
+            {m.position != null && (
+              <span className="match-position">
+                <Link to={`/p/${m.accession}/${m.position}`}>position {m.position}</Link>
+              </span>
+            )}
+            <ScoreBar score={score1dp(m.distance)} />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function SemanticSearchPageContent() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -119,7 +168,8 @@ function SemanticSearchPageContent() {
 
   const [models, setModels] = useState<ModelInfo[]>([]);
   const [selectedModel, setSelectedModel] = useState(modelParam);
-  const [rawResults, setRawResults] = useState<VectorSearchResult[]>([]);
+  const [rawFunctionResults, setRawFunctionResults] = useState<VectorSearchResult[]>([]);
+  const [rawPopulationResults, setRawPopulationResults] = useState<PopulationVectorSearchResult[]>([]);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -127,7 +177,14 @@ function SemanticSearchPageContent() {
   const prevQueryRef = useRef('');
   const prevModelRef = useRef('');
 
-  const groupedResults = useMemo(() => groupResults(rawResults), [rawResults]);
+  const functionGrouped = useMemo(() => groupResults(rawFunctionResults), [rawFunctionResults]);
+  const populationGrouped = useMemo(() => groupPopulationResults(rawPopulationResults), [rawPopulationResults]);
+  // Dropdown follows the documented best-first order, not the API's order.
+  const orderedModels = useMemo(
+    () => [...models].sort((a, b) => modelRank(a.id) - modelRank(b.id)),
+    [models]
+  );
+  const totalProteins = functionGrouped.length + populationGrouped.length;
 
   useEffect(() => {
     document.title = `Semantic Search | ${TITLE}`;
@@ -142,8 +199,7 @@ function SemanticSearchPageContent() {
   function handleModelChange(e: React.ChangeEvent<HTMLSelectElement>) {
     const next = e.target.value;
     setSelectedModel(next);
-    const params: Record<string, string> = { q: query, model: next };
-    setSearchParams(params, { replace: true });
+    setSearchParams({ q: query, model: next }, { replace: true });
   }
 
   useEffect(() => {
@@ -157,12 +213,14 @@ function SemanticSearchPageContent() {
       prevModelRef.current = selectedModel;
       if (page !== 0) {
         setPage(0);
-        setRawResults([]);
+        setRawFunctionResults([]);
+        setRawPopulationResults([]);
         setHasMore(false);
         setError(null);
         return;
       }
-      setRawResults([]);
+      setRawFunctionResults([]);
+      setRawPopulationResults([]);
       setHasMore(false);
     }
 
@@ -174,9 +232,12 @@ function SemanticSearchPageContent() {
         if (!data.success) {
           setError(data.error ?? 'Search failed.');
         } else {
-          const newResults: VectorSearchResult[] = data.results ?? [];
-          setRawResults(prev => page === 0 ? newResults : [...prev, ...newResults]);
-          setHasMore(newResults.length >= PAGE_SIZE);
+          const fn: VectorSearchResult[] = data.functionResults ?? [];
+          const pop: PopulationVectorSearchResult[] = data.populationResults ?? [];
+          setRawFunctionResults(prev => page === 0 ? fn : [...prev, ...fn]);
+          setRawPopulationResults(prev => page === 0 ? pop : [...prev, ...pop]);
+          // More to load if either corpus filled a page.
+          setHasMore(fn.length >= PAGE_SIZE || pop.length >= PAGE_SIZE);
         }
       })
       .catch((err: any) => {
@@ -193,17 +254,21 @@ function SemanticSearchPageContent() {
           {query ? <>Results for <em>"{query}"</em></> : 'Semantic Search'}
         </h5>
         <div className="semantic-toolbar">
-          {!loading && !error && groupedResults.length > 0 && (
-            <span className="result-count">{groupedResults.length} protein{groupedResults.length !== 1 ? 's' : ''} matched</span>
+          {!loading && !error && totalProteins > 0 && (
+            <span className="result-count">
+              {functionGrouped.length} protein{functionGrouped.length !== 1 ? 's' : ''}
+              {' · '}
+              {populationGrouped.length} variant group{populationGrouped.length !== 1 ? 's' : ''}
+            </span>
           )}
-          {models.length > 1 && (
+          {orderedModels.length > 1 && (
             <select
               className="model-select"
               value={selectedModel}
               onChange={handleModelChange}
               title="Embedding model"
             >
-              {models.map(m => (
+              {orderedModels.map(m => (
                 <option key={m.id} value={m.id}>{m.label}</option>
               ))}
             </select>
@@ -226,22 +291,43 @@ function SemanticSearchPageContent() {
         </div>
       )}
 
-      {!loading && !error && groupedResults.length === 0 && query && (
+      {!loading && !error && totalProteins === 0 && query && (
         <div className="search-state">
           <i className="bi bi-search search-state-icon" />
           <p>No results found for <em>"{query}"</em>. Try a different term.</p>
         </div>
       )}
 
-      {groupedResults.length > 0 && (
-        <div className="search-results">
-          {groupedResults.map(r => (
-            <ResultCard
-              key={r.accession}
-              result={r}
-              onView={acc => navigate(`/${acc}`)}
-            />
-          ))}
+      {totalProteins > 0 && (
+        <>
+          {/* Function corpus — protein-level descriptive matches */}
+          {functionGrouped.length > 0 && (
+            <section className="search-results-section">
+              <h6 className="results-section-title">
+                <i className="bi bi-diagram-3" /> Protein function
+              </h6>
+              <div className="search-results">
+                {functionGrouped.map(r => (
+                  <ResultCard key={r.accession} result={r} onView={acc => navigate(`/${acc}`)} />
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Population corpus — variant-level matches (residue + disease) */}
+          {populationGrouped.length > 0 && (
+            <section className="search-results-section">
+              <h6 className="results-section-title">
+                <i className="bi bi-geo-alt" /> Variants
+              </h6>
+              <div className="search-results">
+                {populationGrouped.map(r => (
+                  <PopulationResultCard key={r.accession} result={r} />
+                ))}
+              </div>
+            </section>
+          )}
+
           {!loading && hasMore && (
             <button
               className="btn btn-secondary load-more-btn"
@@ -256,7 +342,7 @@ function SemanticSearchPageContent() {
               <p>Loading more…</p>
             </div>
           )}
-        </div>
+        </>
       )}
     </div>
   );

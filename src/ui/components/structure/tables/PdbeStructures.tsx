@@ -31,6 +31,8 @@ function PdbeStructures({ isoFormAccession, pdbeData, selectedPdbId, setSelected
     );
   }
 
+  // pdbeData is pre-sorted by resolution in StructureData.tsx, so iterating
+  // the grouped keys in insertion order preserves that ordering here.
   for (let id in grouped) {
     const chains = grouped[id].sort((a, b) => a.chainId.localeCompare(b.chainId));
     const first = chains[0];

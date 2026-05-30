@@ -190,7 +190,7 @@
     flex-direction: column;
     align-items: center;
     gap: 4px;
-    min-width: 100px;
+    min-width: 140px;
 }
 
 .aa-model-label {
@@ -200,19 +200,17 @@
 }
 
 .img-size {
-    max-width: 100px;
+    max-width: 140px;
     height: auto;
     display: block;
 }
 
 .icon-arrow {
-    font-size: 40px;
-    margin: 0 4px;
+    font-size: 32px;
+    margin: 54px 4px 0;
     color: #00709b;
-    transform: scale(.5, 1);
     flex-shrink: 0;
     align-self: flex-start;
-    margin-top: 30px;
 }
 
 /* Legacy */
@@ -509,12 +507,12 @@
     }
 
     .img-size {
-        max-width: 90px;
+        max-width: 120px;
     }
 
     .icon-arrow {
-        font-size: 32px;
-        margin: 0 8px;
+        font-size: 28px;
+        margin: 46px 8px 0;
     }
 
 }

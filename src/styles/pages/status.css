@@ -49,9 +49,15 @@
     font-weight: 500;
 }
 
-.status-pill.status-up      { color: var(--color-success); }
-.status-pill.status-down    { color: var(--color-danger); }
-.status-pill.status-unknown { color: var(--color-text-tertiary); }
+.status-pill.status-up       { color: var(--color-success); }
+.status-pill.status-down     { color: var(--color-danger); }
+.status-pill.status-unknown  { color: var(--color-text-tertiary); }
+.status-pill.status-degraded { color: var(--color-warning); }
+
+/* Semantic-search card — model list; down/unknown stand out, up stays quiet */
+.status-card-models .model-down    { color: var(--color-danger); font-weight: 500; }
+.status-card-models .model-unknown { color: var(--color-warning); }
+.status-card-models .model-sep     { color: var(--color-text-tertiary); }
 
 .status-error {
     display: flex;

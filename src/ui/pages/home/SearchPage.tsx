@@ -1,6 +1,6 @@
 // SearchPage.tsx
 import React, { useState, useRef, ChangeEvent } from 'react';
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useSearchParams} from "react-router-dom";
 import {HelpContent} from "../../components/help/HelpContent";
 import {HelpButton} from "../../components/help/HelpButton";
 import {useStorage} from "../../../context/StorageContext";
@@ -23,11 +23,17 @@ interface ExampleData {
   tip?: string;
 }
 
-type SearchMode = 'variant' | 'browse' | 'text'; // variant=annotate variants; browse=browse by biological identifier
+type SearchMode = 'annotate' | 'browse' | 'semantic'; // annotate=variant annotation; browse=by identifier; semantic=free-text search
 export type GenomeAssembly = 'auto' | 'grch38' | 'grch37';
 
+// The active mode is mirrored in the URL (?tab=) so sidebar links can deep-link
+// into a mode — same pattern as the Activity page's ?tab=downloads.
+const TAB_PARAM = 'tab';
+const tabToMode = (tab: string | null): SearchMode =>
+  tab === 'browse' || tab === 'semantic' ? tab : 'annotate';
+
 const EXAMPLES: Record<SearchMode, ExampleData[]> = {
-  variant: [
+  annotate: [
     {
       label: 'VCF / Genomic',
       value: 'X\t149498202\t.\tC\tG\n' +
@@ -79,7 +85,7 @@ const EXAMPLES: Record<SearchMode, ExampleData[]> = {
     { label: 'RefSeq ID', value: 'NM_007294.4' },
     { label: 'PDB ID', value: '1JNX' }
   ],
-  text: [
+  semantic: [
     { label: 'Disease Terms', value: 'sickle cell anemia' },
     { label: 'Phenotypes', value: 'intellectual disability' },
     { label: 'Pathways', value: 'DNA repair pathway' },
@@ -103,8 +109,9 @@ const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
 const SearchPage: React.FC = () => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [loading, setLoading] = useState(false);
-  const [activeMode, setActiveMode] = useState<SearchMode>('variant');
+  const activeMode: SearchMode = tabToMode(searchParams.get(TAB_PARAM));
   const [variantInput, setVariantInput] = useState('');
   const [browseIds, setBrowseIds] = useState<string[]>([]);
   const [browseInputText, setBrowseInputText] = useState('');
@@ -119,8 +126,11 @@ const SearchPage: React.FC = () => {
   const [searchFilters, setSearchFilters] = useState<SearchFilterParams>(DEFAULT_SEARCH_FILTERS);
 
   const handleModeChange = (mode: SearchMode) => {
-    setActiveMode(mode);
     setError('');
+    const next = new URLSearchParams(searchParams);
+    if (mode === 'annotate') next.delete(TAB_PARAM);
+    else next.set(TAB_PARAM, mode);
+    setSearchParams(next, { replace: true });
   };
 
   const addBrowseId = () => {
@@ -189,7 +199,7 @@ const SearchPage: React.FC = () => {
 
   const handleExampleClick = (example: ExampleData) => {
     switch (activeMode) {
-      case 'variant':
+      case 'annotate':
         setVariantInput(example.value);
         setUploadedFile(null); // Clear file if text example is used
         break;
@@ -199,7 +209,7 @@ const SearchPage: React.FC = () => {
           setBrowseIds(prev => [...prev, example.value]);
         }
         break;
-      case 'text':
+      case 'semantic':
         setTextInput(example.value);
         break;
     }
@@ -213,11 +223,11 @@ const SearchPage: React.FC = () => {
   };
 
   const handleSearch = () => {
-    if (activeMode === 'variant') {
+    if (activeMode === 'annotate') {
       handleVariantSearch();
     } else if (activeMode === 'browse') {
       handleBrowseSearch();
-    } else if (activeMode === 'text') {
+    } else if (activeMode === 'semantic') {
       handleTextSearch();
     }
   };
@@ -361,11 +371,11 @@ const SearchPage: React.FC = () => {
 
 
   const isSubmitDisabled = () => {
-    if (activeMode === 'variant') {
+    if (activeMode === 'annotate') {
       return !variantInput.trim() && !uploadedFile;
     } else if (activeMode === 'browse') {
       return browseIds.length === 0 && !browseInputText.trim() && !hasPrimaryFilter(searchFilters);
-    } else if (activeMode === 'text') {
+    } else if (activeMode === 'semantic') {
       return !textInput.trim();
     }
     return true;
@@ -376,8 +386,8 @@ const SearchPage: React.FC = () => {
       {/* Search Mode Tabs */}
       <div className="search-modes">
         <button
-          className={`mode-tab ${activeMode === 'variant' ? 'active' : ''}`}
-          onClick={() => handleModeChange('variant')}
+          className={`mode-tab ${activeMode === 'annotate' ? 'active' : ''}`}
+          onClick={() => handleModeChange('annotate')}
         >
           <span className="icon"><i className="bi bi-clipboard-data"></i></span>
           Annotate Variants
@@ -390,8 +400,8 @@ const SearchPage: React.FC = () => {
           Browse by Identifier
         </button>
         <button
-          className={`mode-tab ${activeMode === 'text' ? 'active' : ''}`}
-          onClick={() => handleModeChange('text')}
+          className={`mode-tab ${activeMode === 'semantic' ? 'active' : ''}`}
+          onClick={() => handleModeChange('semantic')}
         >
           <span className="icon"><i className="bi bi-body-text"></i></span>
           <span className="tab-label-experimental">
@@ -404,7 +414,7 @@ const SearchPage: React.FC = () => {
       {/* Search Panel */}
       <div className="search-panel">
         {/* Variant List Mode */}
-        {activeMode === 'variant' && (
+        {activeMode === 'annotate' && (
           <div className="search-content">
             <div className="variant-controls-row">
               <div className="input-method-toggle">
@@ -579,7 +589,7 @@ const SearchPage: React.FC = () => {
         )}
 
         {/* Semantic Search Mode */}
-        {activeMode === 'text' && (
+        {activeMode === 'semantic' && (
           <div className="search-content">
             <div className="input-group">
               <label className="input-label">Find proteins by disease, phenotype, or functional description</label>
@@ -628,6 +638,14 @@ const SearchPage: React.FC = () => {
           </div>
         )}
 
+        {/* Why the Browse button is disabled — a disabled button gives no
+            feedback on its own, so explain the requirement right above it. */}
+        {activeMode === 'browse' && isSubmitDisabled() && !loading && (
+          <p className="browse-hint">
+            <i className="bi bi-info-circle"></i> {PRIMARY_FILTER_PROMPT}
+          </p>
+        )}
+
         {/* Action Buttons */}
         <div className="action-buttons">
           <button
@@ -635,9 +653,9 @@ const SearchPage: React.FC = () => {
             onClick={handleSearch}
             disabled={isSubmitDisabled() || loading}
           >
-            {activeMode === 'variant'
+            {activeMode === 'annotate'
               ? <><i className="bi bi-send-fill" /> Submit</>
-              : activeMode === 'text'
+              : activeMode === 'semantic'
               ? <><i className="bi bi-search" /> Search</>
               : <><i className="bi bi-search" /> Browse</>
             }

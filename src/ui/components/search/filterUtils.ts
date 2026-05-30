@@ -42,15 +42,18 @@ export const extractFilters = (searchParams: URLSearchParams): SearchFilterParam
   // Functional
   ptm: parseBooleanParam(searchParams, "ptm"),
   mutagen: parseBooleanParam(searchParams, "mutagen"),
+  domain: parseBooleanParam(searchParams, "domain"),
+  binding: parseBooleanParam(searchParams, "binding"),
+  actsite: parseBooleanParam(searchParams, "actsite"),
   consMin: parseNumberParam(searchParams, "consMin"),
   consMax: parseNumberParam(searchParams, "consMax"),
-  domain: parseBooleanParam(searchParams, "domain"),
 
   // Population
   disease: parseBooleanParam(searchParams, "disease"),
   freq: normalizeFilterValues(searchParams.getAll("freq"), VALID_ALLELE_FREQ_VALUES),
 
   // Structural
+  transmem: parseBooleanParam(searchParams, "transmem"),
   expModel: parseBooleanParam(searchParams, "expModel"),
   interact: parseBooleanParam(searchParams, "interact"),
   pocket: parseBooleanParam(searchParams, "pocket"),
@@ -78,9 +81,11 @@ export const buildFilterParams = (filters: SearchFilterParams): URLSearchParams 
   // Functional
   if (filters.ptm === true) params.set("ptm", "true");
   if (filters.mutagen === true) params.set("mutagen", "true");
+  if (filters.domain === true) params.set("domain", "true");
+  if (filters.binding === true) params.set("binding", "true");
+  if (filters.actsite === true) params.set("actsite", "true");
   if (filters.consMin !== undefined) params.set("consMin", filters.consMin.toString());
   if (filters.consMax !== undefined) params.set("consMax", filters.consMax.toString());
-  if (filters.domain === true) params.set("domain", "true");
 
   // Population
   if (filters.disease === true) params.set("disease", "true");
@@ -88,6 +93,7 @@ export const buildFilterParams = (filters: SearchFilterParams): URLSearchParams 
   normalizedFreq.forEach(val => params.append("freq", val));
 
   // Structural
+  if (filters.transmem === true) params.set("transmem", "true");
   if (filters.expModel === true) params.set("expModel", "true");
   if (filters.interact === true) params.set("interact", "true");
   if (filters.pocket === true) params.set("pocket", "true");
@@ -111,6 +117,91 @@ export const buildFilterParams = (filters: SearchFilterParams): URLSearchParams 
   if (filters.order) params.set("order", filters.order);
 
   return params;
+};
+
+// ---- Active-filter chips (for the collapsed filter bar) ----------------
+
+export interface FilterChip {
+  id: string;    // stable id — also encodes how to remove the atom
+  label: string; // display text
+}
+
+// One label per boolean filter.
+const BOOLEAN_CHIP_LABELS: [keyof SearchFilterParams, string][] = [
+  ['ptm', 'PTM'],
+  ['mutagen', 'Mutagenesis'],
+  ['domain', 'Functional Domain'],
+  ['binding', 'Binding Site'],
+  ['actsite', 'Active Site'],
+  ['transmem', 'Transmembrane'],
+  ['disease', 'Disease Association'],
+  ['expModel', 'Experimental Model'],
+  ['interact', 'P-P Interface'],
+  ['pocket', 'Predicted Pocket'],
+];
+
+// Prefix per multi-select array filter — one chip per selected value.
+const ARRAY_CHIP_PREFIXES: [keyof SearchFilterParams, string][] = [
+  ['cadd', 'CADD'],
+  ['am', 'AlphaMissense'],
+  ['popeve', 'popEVE'],
+  ['stability', 'Stability'],
+  ['freq', 'Allele Freq'],
+];
+
+const prettyValue = (v: string): string =>
+  v.replace(/_/g, ' ').replace(/^\w/, c => c.toUpperCase());
+
+// Flat list of chips for the active filters in `f` — one chip per value.
+export const describeFilters = (f: SearchFilterParams): FilterChip[] => {
+  const chips: FilterChip[] = [];
+
+  if (f.variant === 'potential') chips.push({ id: 'variant', label: 'Potential variants' });
+
+  for (const [key, label] of BOOLEAN_CHIP_LABELS) {
+    if (f[key] === true) chips.push({ id: key as string, label });
+  }
+
+  for (const [key, prefix] of ARRAY_CHIP_PREFIXES) {
+    for (const v of ((f[key] as string[] | undefined) ?? [])) {
+      chips.push({ id: `${key}:${v}`, label: `${prefix}: ${prettyValue(v)}` });
+    }
+  }
+
+  if (f.consMin !== undefined || f.consMax !== undefined)
+    chips.push({ id: 'conservation', label: `Conservation ${f.consMin ?? 0}–${f.consMax ?? 1}` });
+  if (f.esmMin !== undefined || f.esmMax !== undefined)
+    chips.push({ id: 'esm1b', label: `ESM-1b ${f.esmMin ?? -25}–${f.esmMax ?? 0}` });
+
+  return chips;
+};
+
+// Remove the filter atom identified by `id` from `f`.
+export const removeChip = (f: SearchFilterParams, id: string): SearchFilterParams => {
+  if (id === 'variant') return { ...f, variant: 'known' };
+  if (id === 'conservation') return { ...f, consMin: undefined, consMax: undefined };
+  if (id === 'esm1b') return { ...f, esmMin: undefined, esmMax: undefined };
+  if (id.includes(':')) {
+    const [key, val] = id.split(':');
+    const cur = (f as unknown as Record<string, string[]>)[key] ?? [];
+    return { ...f, [key]: cur.filter(v => v !== val) };
+  }
+  return { ...f, [id]: undefined };
+};
+
+// Restore the filter atom `id` into `local`, taking its value from `applied`.
+export const restoreChip = (
+  local: SearchFilterParams, applied: SearchFilterParams, id: string
+): SearchFilterParams => {
+  if (id === 'variant') return { ...local, variant: applied.variant };
+  if (id === 'conservation') return { ...local, consMin: applied.consMin, consMax: applied.consMax };
+  if (id === 'esm1b') return { ...local, esmMin: applied.esmMin, esmMax: applied.esmMax };
+  if (id.includes(':')) {
+    const [key, val] = id.split(':');
+    const cur = (local as unknown as Record<string, string[]>)[key] ?? [];
+    return { ...local, [key]: cur.includes(val) ? cur : [...cur, val] };
+  }
+  return { ...local, [id]: true };
 };
 
 // Mapping functions: UI categories -> Backend categories

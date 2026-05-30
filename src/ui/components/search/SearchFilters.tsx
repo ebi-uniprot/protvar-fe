@@ -1,5 +1,5 @@
 // Reorganized SearchFilters.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
 import {
   CADD_CATEGORIES,
   ALPHAMISSENSE_CATEGORIES,
@@ -7,6 +7,7 @@ import {
   STABILITY_CATEGORIES,
   ALLELE_FREQ_CATEGORIES
 } from "./filterConstants";
+import { describeFilters, removeChip, restoreChip } from "./filterUtils";
 import RangeSlider from "./RangeSlider";
 
 export interface SearchFilterParams {
@@ -16,15 +17,18 @@ export interface SearchFilterParams {
   // Functional
   ptm?: boolean;
   mutagen?: boolean;
+  domain?: boolean;
+  binding?: boolean;
+  actsite?: boolean;
   consMin?: number;
   consMax?: number;
-  domain?: boolean;
 
   // Population
   disease?: boolean;
   freq: string[];
 
   // Structural
+  transmem?: boolean;
   expModel?: boolean;
   interact?: boolean;
   pocket?: boolean;
@@ -43,7 +47,8 @@ export interface SearchFilterParams {
 }
 
 interface SearchFiltersProps {
-  filters: SearchFilterParams;
+  filters: SearchFilterParams;             // staged (locally edited) filters
+  appliedFilters?: SearchFilterParams;     // filters the current results reflect
   onFiltersChange: (filters: SearchFilterParams) => void;
   loading?: boolean;
   onApply?: () => void;
@@ -53,44 +58,66 @@ interface SearchFiltersProps {
 
 const SORT_FIELDS = ["cadd", "am", "popeve", "esm1b"]
 
-const branch = process.env.REACT_APP_GIT_BRANCH;
-
 const SearchFilters: React.FC<SearchFiltersProps> = ({
                                                        filters,
+                                                       appliedFilters,
                                                        onFiltersChange,
                                                        loading = false,
                                                        onApply,
                                                        showSorting = false,
                                                        className = ''
                                                      }) => {
-  // Auto-expand if any filters are active
-  const isAnyFilterActive =
-    filters.variant !== undefined ||
-    filters.ptm !== undefined ||
-    filters.mutagen !== undefined ||
-    filters.consMin !== undefined ||
-    filters.consMax !== undefined ||
-    filters.domain !== undefined ||
-    filters.disease !== undefined ||
-    filters.freq.length > 0 ||
-    filters.expModel !== undefined ||
-    filters.interact !== undefined ||
-    filters.pocket !== undefined ||
-    filters.stability.length > 0 ||
-    filters.cadd.length > 0 ||
-    filters.am.length > 0 ||
-    filters.popeve.length > 0 ||
-    filters.esmMin !== undefined ||
-    filters.esmMax !== undefined ||
-    filters.sort !== undefined;
+  // Panel stays collapsed by default — the chip bar shows what's active, so
+  // the user only opens the tall panel to add a new selection.
+  const [isExpanded, setIsExpanded] = useState(false);
 
-  const [isExpanded, setIsExpanded] = useState(isAnyFilterActive);
+  // Measure the panel's true height so the expand/collapse animates max-height
+  // to an exact px target — no overshoot, so it's smooth rather than abrupt.
+  const panelRef = useRef<HTMLDivElement>(null);
+  const [panelHeight, setPanelHeight] = useState(0);
+  useLayoutEffect(() => {
+    if (panelRef.current) setPanelHeight(panelRef.current.scrollHeight);
+  }, [isExpanded, showSorting]);
 
-  useEffect(() => {
-    if (isAnyFilterActive) {
-      setIsExpanded(true);
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  // Collapsed → sticky bar; expanded → normal flow (so the growing panel
+  // pushes the results table down rather than overlapping it). On expand,
+  // scroll the panel into view so it doesn't vanish upward if the user was
+  // scrolled down while it was stuck.
+  const toggleExpanded = () => {
+    const next = !isExpanded;
+    setIsExpanded(next);
+    if (next) {
+      requestAnimationFrame(() =>
+        rootRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
     }
-  }, [isAnyFilterActive]);
+  };
+
+  // "Applied" = filters the current results reflect (falls back to staged).
+  const applied = appliedFilters ?? filters;
+
+  // Active-filter chips: union of staged + applied, keyed by id. A chip is
+  // "staged for removal" (greyed) when it's applied but no longer staged.
+  const localChips = describeFilters(filters);
+  const localIds = new Set(localChips.map(c => c.id));
+  const chipMap = new Map<string, { id: string; label: string; staged: boolean }>();
+  describeFilters(applied).forEach(c => chipMap.set(c.id, { ...c, staged: !localIds.has(c.id) }));
+  localChips.forEach(c => chipMap.set(c.id, { ...c, staged: false }));
+  const chips = Array.from(chipMap.values());
+
+  const hasPendingChanges = JSON.stringify(filters) !== JSON.stringify(applied);
+
+  // × on a chip stages a removal (greys it); × on a greyed chip restores it.
+  const toggleChip = (id: string, staged: boolean) => {
+    onFiltersChange(staged ? restoreChip(filters, applied, id) : removeChip(filters, id));
+  };
+
+  const handleClearAll = () => {
+    let cleared = filters;
+    describeFilters(filters).forEach(c => { cleared = removeChip(cleared, c.id); });
+    onFiltersChange(cleared);
+  };
 
   const handleCheckboxChange = (key: "cadd" | "am" | "popeve" | "stability" | "freq", value: string) => {
     const lowerValue = value.toLowerCase();
@@ -154,17 +181,63 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
   const isFreqSelected = (value: string) => filters.freq.includes(value.toLowerCase());
 
   return (
-    <div className={`search-filters ${className}`}>
-      {/* Toggle Header */}
-      <button className="filter-header" onClick={() => setIsExpanded(!isExpanded)} aria-expanded={isExpanded}>
+    <div ref={rootRef} className={`search-filters ${isExpanded ? 'expanded' : ''} ${className}`}>
+      {/* Active-filter chips — shown only while the panel is collapsed; they
+          summarise the selection. When expanded, the panel itself shows it. */}
+      {!isExpanded && chips.length > 0 && (
+        <div className="filter-chips">
+          {chips.map(c => (
+            <span key={c.id} className={`filter-chip${c.staged ? ' filter-chip--staged' : ''}`}>
+              <button
+                type="button"
+                className="filter-chip__x"
+                onClick={() => toggleChip(c.id, c.staged)}
+                aria-label={`${c.staged ? 'Restore' : 'Remove'} ${c.label}`}
+                title={c.staged ? 'Restore' : 'Remove'}
+              >
+                <i className={`bi ${c.staged ? 'bi-arrow-counterclockwise' : 'bi-x-lg'}`}></i>
+              </button>
+              <span className="filter-chip__label">{c.label}</span>
+            </span>
+          ))}
+          <button type="button" className="filter-chip-clear" onClick={handleClearAll}>Clear all</button>
+          {onApply && (
+            <button
+              type="button"
+              className={`filter-chip-reload${hasPendingChanges ? ' filter-chip-reload--pending' : ''}`}
+              onClick={onApply}
+              disabled={loading || !hasPendingChanges}
+              aria-label="Apply filter changes and reload results"
+              title={hasPendingChanges ? 'Apply changes' : 'No pending changes'}
+            >
+              <i className="bi bi-arrow-clockwise"></i>
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Collapse toggle — funnel + label grouped left, chevron (disclosure) right */}
+      <button className="filter-header" onClick={toggleExpanded} aria-expanded={isExpanded}>
+        <span><i className="bi bi-funnel"></i>Search Filters</span>
         <i className={`bi ${isExpanded ? 'bi-chevron-down' : 'bi-chevron-right'}`}></i>
-        <span>Search Filters</span>
-        <i className="bi bi-funnel"></i>
       </button>
 
-      {/* Filters Panel */}
-      <div className={`collapsible-anim${isExpanded ? ' open' : ''}`}>
-        <div className="filter-panel">
+      {/* Filters Panel — max-height animates to the measured panel height
+          (exact target → smooth, no max-height overshoot). */}
+      <div
+        className={`collapsible-anim${isExpanded ? ' open' : ''}`}
+        style={{ maxHeight: isExpanded ? panelHeight : 0 }}
+      >
+        <div className="filter-panel" ref={panelRef}>
+
+          {/* Update Results — top-right of the panel */}
+          {onApply && (
+            <div className="filter-panel-actions">
+              <button className="apply-button" onClick={onApply} disabled={loading || !hasPendingChanges}>
+                <i className="bi bi-arrow-clockwise"></i> {loading ? 'Loading…' : 'Update'}
+              </button>
+            </div>
+          )}
 
           {/* 1. Variant Type - Radio Buttons */}
           <div className="filter-section">
@@ -197,12 +270,9 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
           <div className="filter-section">
             <h4 className="section-title">Functional</h4>
 
-            {branch !== "dev" &&
             <div className="checkbox-group">
               <label className="checkbox-label">
                 <input
-                  disabled={true}
-                  title={"COMING SOON"}
                   type="checkbox"
                   checked={filters.ptm === true}
                   onChange={(e) => handleBooleanChange('ptm', e.target.checked)}
@@ -212,8 +282,6 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
 
               <label className="checkbox-label">
                 <input
-                  disabled={true}
-                  title={"COMING SOON"}
                   type="checkbox"
                   checked={filters.mutagen === true}
                   onChange={(e) => handleBooleanChange('mutagen', e.target.checked)}
@@ -223,15 +291,31 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
 
               <label className="checkbox-label">
                 <input
-                  disabled={true}
-                  title={"COMING SOON"}
                   type="checkbox"
                   checked={filters.domain === true}
                   onChange={(e) => handleBooleanChange('domain', e.target.checked)}
                 />
                 <span>Functional Domain</span>
               </label>
-            </div>}
+
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={filters.binding === true}
+                  onChange={(e) => handleBooleanChange('binding', e.target.checked)}
+                />
+                <span>Binding Site</span>
+              </label>
+
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={filters.actsite === true}
+                  onChange={(e) => handleBooleanChange('actsite', e.target.checked)}
+                />
+                <span>Active Site</span>
+              </label>
+            </div>
 
             <div className="filter-row" style={{marginTop: '1rem'}}>
               <RangeSlider
@@ -247,15 +331,12 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
           </div>
 
           {/* 3. Population */}
-          {branch !== "dev" &&
           <div className="filter-section">
             <h4 className="section-title">Population</h4>
 
             <div className="checkbox-group">
               <label className="checkbox-label">
                 <input
-                  disabled={true}
-                  title={"COMING SOON"}
                   type="checkbox"
                   checked={filters.disease === true}
                   onChange={(e) => handleBooleanChange('disease', e.target.checked)}
@@ -283,13 +364,22 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                 </div>
               </div>
             </div>
-          </div>}
+          </div>
 
           {/* 4. Structural */}
           <div className="filter-section">
             <h4 className="section-title">Structural</h4>
 
             <div className="checkbox-group">
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={filters.transmem === true}
+                  onChange={(e) => handleBooleanChange('transmem', e.target.checked)}
+                />
+                <span>Transmembrane Region</span>
+              </label>
+
               <label className="checkbox-label">
                 <input
                   type="checkbox"
@@ -455,14 +545,6 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
             </div>
           )}
 
-          {/* Apply Filters Button */}
-          {onApply && (
-            <div className="filter-actions">
-              <button className="apply-button" onClick={onApply} disabled={loading}>
-                {loading ? 'Loading...' : 'Update Results'}
-              </button>
-            </div>
-          )}
         </div>
       </div>
     </div>

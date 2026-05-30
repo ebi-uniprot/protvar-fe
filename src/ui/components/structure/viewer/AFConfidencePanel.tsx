@@ -1,14 +1,14 @@
 import React from "react";
 import {HelpButton} from "../../help/HelpButton";
-import {AlphaFoldHelp} from "../../help/content/AlphaFoldHelp";
+import {AlphaFoldHelp} from "../../help/content/PredictionsHelp";
 
-interface PAEPanelProps {
+interface AFConfidencePanelProps {
   isOpen: boolean;
   paeImageUrl: string;
   onClose: () => void;
 }
 
-export const PAEPanel: React.FC<PAEPanelProps> = ({ isOpen, paeImageUrl, onClose }) => {
+export const AFConfidencePanel: React.FC<AFConfidencePanelProps> = ({ isOpen, paeImageUrl, onClose }) => {
   return (
     <div className={`pae-panel ${isOpen ? 'open' : ''}`}>
       <button className="pae-panel-close" onClick={onClose} title="Close">×</button>
@@ -39,7 +39,7 @@ export const PAEPanel: React.FC<PAEPanelProps> = ({ isOpen, paeImageUrl, onClose
         {/* PAE Image */}
         <div className="pae-section">
           <div className="pae-section-title">
-            Predicted Aligned Error <HelpButton variant="inline" title="" content={<AlphaFoldHelp />} />
+            Predicted Aligned Error <HelpButton variant="inline" title="AlphaFold help" content={<AlphaFoldHelp />} />
           </div>
           <div className="pae-image-container">
             <div className="pae-y-axis">Aligned residue</div>

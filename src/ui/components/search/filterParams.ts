@@ -10,9 +10,12 @@ export const FILTER_PARAM_KEYS = [
   // Functional
   'ptm',
   'mutagen',
+  'domain',
+  'binding',
+  'actsite',
+  'transmem',
   'consMin',
   'consMax',
-  'domain',
 
   // Population
   'disease',

@@ -1,0 +1,113 @@
+/*
+ * Shared styles for TSX-rendered help content (src/ui/components/help/content/).
+ * Markdown-rendered help (public/markdown/*.md) is covered by page-layout.css.
+ * This file is the visual vocabulary for the interactive help components in
+ * src/ui/components/help/shared/.
+ */
+
+/* ── CopyButton (HelpCopyButton.tsx) ─────────────────────────────────────── */
+
+.help-copy-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.15rem 0.5rem;
+    font-size: 0.75rem;
+    background: var(--color-bg-primary);
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border-medium);
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.help-copy-btn--copied {
+    color: var(--color-success);
+}
+
+/* ── CommandBlock (HelpCommandBlock.tsx) ─────────────────────────────────── */
+
+.help-cmd-block {
+    position: relative;
+    margin: 0.5rem 0;
+    padding: 0.7rem 5rem 0.7rem 0.9rem;
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border-medium);
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 0.82rem;
+    overflow-x: auto;
+}
+
+.help-cmd-block code {
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+/* The copy button is absolutely positioned inside the command block. */
+.help-cmd-block .help-copy-btn {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+}
+
+/* ── PromptCard (HelpPromptCard.tsx) ─────────────────────────────────────── */
+
+.help-prompt-card {
+    margin: 0.45rem 0;
+    padding: 0.55rem 0.85rem;
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border-medium);
+    border-left: 3px solid var(--color-brand-light);
+    border-radius: 6px;
+}
+
+.help-prompt-card-icon {
+    margin-right: 0.5rem;
+    color: var(--color-brand-light);
+}
+
+/* Per-prediction score categories in the help (and the legend drawer) are
+   now styled in components/legend-categories.css via the shared
+   <LegendCategories> component. */
+
+/* ── "See also" trailer (cross-link to another help topic) ───────────────── */
+
+.help-see-also {
+    margin-top: 1.5rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--color-border-medium);
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+}
+
+/* ── Tool group (MCP "Available tools" sections) ─────────────────────────── */
+
+.help-tool-group {
+    margin-bottom: 0.75rem;
+}
+
+.help-tool-group ul {
+    margin: 0.25rem 0;
+}
+
+/* ── Radar row (PredictionsHelp pathogenic / benign comparison) ──────────── */
+
+.help-radar-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    margin: 1rem 0;
+}
+
+.help-radar-item {
+    text-align: center;
+}
+
+.help-radar-label {
+    margin-top: 0.25rem;
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+}

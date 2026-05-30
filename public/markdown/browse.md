@@ -18,13 +18,15 @@ Each resolves to its UniProt protein(s); variants are returned across all matchi
 
 ## Search filters
 
-Filters can be combined; an empty pane (with an identifier) returns everything for that target.
+Filters can be combined — each one further narrows the result; an empty pane (with an identifier) returns everything for that target.
 
 - **Variant Type** — *Known variants* (reported in databases) or *Potential variants* (every possible missense substitution).
-- **Functional** — Conservation slider, 0–1.
-- **Structural** — *Experimental Model*, *Protein-Protein Interface*, *Predicted Pocket* checkboxes.
+- **Functional** — checkboxes restricting to variants that fall within a UniProt-annotated feature: *PTM* (post-translational modification site), *Mutagenesis* (experimentally altered site), *Functional Domain* (domain, region, motif or notable site), *Binding Site*, *Active Site*. Plus a Conservation slider, 0–1.
+- **Structural** — *Transmembrane Region*, *Experimental Model*, *Protein-Protein Interface*, *Predicted Pocket* checkboxes.
 - **Stability** — toggle FoldX-derived classes *Likely Destabilising* / *Unlikely to Destabilise*.
 - **Consequence** — chip groups for [CADD](#glossary:cadd), [AlphaMissense, popEVE and ESM-1b](#predictions) categories; ESM-1b also has a numeric range slider.
+
+The feature checkboxes (PTM, Mutagenesis, Functional Domain, Binding Site, Active Site, Transmembrane Region) were chosen for **variant-interpretation relevance** — each marks a region where an amino-acid change is more likely to be functionally consequential: a modified or catalytic residue, a ligand-binding site, a structural domain, a membrane-spanning segment. UniProt feature types with little standalone interpretive value — secondary-structure elements, sequence-conflict annotations and the like — are intentionally not offered as filters.
 
 ### Filter-only browse
 

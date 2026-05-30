@@ -22,11 +22,13 @@ const bannerText = (
     <div>
       <i className="bi bi-stars banner-new-icon" />{' '}
       Explore what's new:{' '}
-      <a href={`${BASE}/help#results`}>Results</a>{' · '}
-      <a href={`${BASE}/help#structure`}>Structure</a>{' · '}
-      <a href={`${BASE}/help#download-panel`}>Download Panel</a>{' · '}
+      <a href={`${BASE}/help#browse`}>Advanced Search</a>{' · '}
+      <a href={`${BASE}/help#semantic-search`}>Semantic Search</a>{' · '}
       <a href={`${BASE}/help#protvar-links`}>ProtVar Links</a>{' · '}
-      <a href={`${BASE}/help#feature-ranking`}>Feature Ranking</a>
+      <a href={`${BASE}/help#predictions`}>Score Radar</a>{' · '}
+      <a href={`${BASE}/help#feature-ranking`}>Feature Ranking</a>{' · '}
+      <a href={`${BASE}/help#activity`}>Activity</a>{' · '}
+      <a href={`${BASE}/help#mcp`}>ProtVar MCP</a>
     </div>
   </>
 );
