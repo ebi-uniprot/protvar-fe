@@ -7,7 +7,7 @@ import { getNewPrimaryRow, AnnotationPanels, ToggleIsoformGroupFn } from "./Prim
 import { singleVariant } from "../../../services/ProtVarService";
 import { AppContext } from "../../App";
 import MsgRow from "./MsgRow";
-import Tool from "../../elements/Tool";
+import Tool from "../../elements/Tooltip";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import {
   parseAnnotationParam,
@@ -152,13 +152,13 @@ function ResultTable(props: ResultTableProps) {
       {/* ── Sticky two-row header ── */}
       <div className="result-header">
         <div className="result-group-header">
-          <Tool el="span" tip="Gene and nucleotide level annotations">
+          <Tool el="span" tip="Gene- and nucleotide-level columns: variant ID, genomic position, gene, codon, CADD">
             GENOMIC <span className="col-hints">· ID · position · gene · codon · CADD</span>
           </Tool>
-          <Tool el="span" tip="Amino acid / protein level annotations">
+          <Tool el="span" tip="Amino-acid / protein-level columns: isoform, protein name, AA change, consequence, popEVE, AlphaMissense">
             PROTEIN <span className="col-hints">· isoform · name · AA change · consequence · popEVE · AlphaMissense</span>
           </Tool>
-          <Tool el="span" tip="Functional, population and structural annotations" pos="up-right">
+          <Tool el="span" tip="Functional, population and structural annotations — click an icon to expand" pos="up-right">
             ANNOTATIONS
           </Tool>
         </div>

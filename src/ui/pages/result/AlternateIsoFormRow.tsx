@@ -3,7 +3,7 @@ import { UNIPROT_ACCESSION_URL } from "../../../constants/ExternalUrls";
 import { TextLink } from "../../components/common/Link";
 import { CONSEQUENCES } from "../../../constants/SearchResultTable";
 import { fullAminoAcidName } from "../../../utills/Util";
-import Tool from "../../elements/Tool";
+import Tool from "../../elements/Tooltip";
 import { EmptyElement } from "../../../constants/ConstElement";
 import { Isoform } from "../../../types/MappingResponse";
 import { aaChangeStr } from "./PrimaryRow";
@@ -18,7 +18,7 @@ export function ConsequenceBadge({ consequence }: { consequence?: string }) {
 }
 
 export function aaChangeTip(change: string | undefined) {
-  return "Amino acid change " + fullAminoAcidName(change?.split("/")[0]) + " -> " + fullAminoAcidName(change?.split("/")[1]);
+  return "Amino acid change: " + fullAminoAcidName(change?.split("/")[0]) + " → " + fullAminoAcidName(change?.split("/")[1]);
 }
 
 export function getConsequenceFullName(consequence?: string): string {
