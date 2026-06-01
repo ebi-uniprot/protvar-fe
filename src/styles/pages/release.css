@@ -149,11 +149,6 @@
     color: white;
 }
 
-.release-badge-v1 {
-    background: var(--color-border-dark);
-    color: var(--color-text-secondary);
-}
-
 .release-badge-ui {
     background: #dbeafe;
     color: #1d4ed8;
@@ -169,36 +164,57 @@
     color: #6d28d9;
 }
 
-/* ── Version section headings ── */
-.release-version-heading {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin: 1.5rem 0 0.75rem;
-    font-size: var(--font-size-xl);
-    color: var(--color-text-primary);
-    font-weight: var(--font-weight-semibold);
-}
-
-.release-version-heading small {
-    font-size: var(--font-size-sm);
-    color: var(--color-text-tertiary);
-    font-weight: var(--font-weight-normal);
-}
-
-/* ── v2 section ── */
-.release-v2 {
-    margin-bottom: 2rem;
-    border: 1px solid var(--color-border-light);
-    border-radius: var(--radius-xl);
-    padding: 1.25rem 1.5rem;
-    background: var(--color-bg-secondary);
-}
-
 .release-categories {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1.25rem;
+}
+
+.release-intro {
+    margin: 0.25rem 0 1.25rem;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+}
+
+/* ── Release page tabs ── */
+.release-tabs {
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+    border-bottom: 2px solid var(--color-border-medium);
+    margin-bottom: 1.25rem;
+}
+
+.release-tab {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.release-tab:hover {
+    color: var(--color-brand);
+}
+
+.release-tab.active {
+    color: var(--color-brand);
+    border-bottom-color: var(--color-brand);
+}
+
+.release-data-note {
+    margin: 1rem 0 0;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-tertiary);
+    font-style: italic;
 }
 
 .release-category {
@@ -221,12 +237,7 @@
     margin-bottom: 0.4rem;
 }
 
-/* ── v1 historical section ── */
-.release-v1 {
-    margin-bottom: 2rem;
-}
-
-/* ── Release notes accordion ── */
+/* ── Release notes / version collapsibles ── */
 .release-notes {
     display: flex;
     flex-direction: column;
@@ -374,6 +385,21 @@
     color: var(--color-text-secondary);
 }
 
+/* Labelled group separator rows within the stats table */
+.stats-table tr.stats-group td {
+    background: var(--color-brand-lightest);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-brand);
+    border-bottom: 1px solid var(--color-border-light);
+}
+
+.stats-table tbody tr:not(.stats-group):hover {
+    background: var(--color-bg-tertiary);
+}
+
 .stats-container {}
 
 .section {
@@ -394,9 +420,5 @@
 @media (max-width: 600px) {
     .grid-container {
         grid-template-columns: 1fr;
-    }
-
-    .release-v2 {
-        padding: 1rem;
     }
 }
