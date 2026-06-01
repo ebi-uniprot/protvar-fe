@@ -17,13 +17,12 @@ const Navbar: React.FC<NavbarProps> = ({ onShowBanner }) => {
         <div className="brand-logo-wrap">
           <Link to={HOME} title="ProtVar homepage" className="brand-link">
             <img
-              src={"ProtVar_logo.png"}
+              src={"ProtVar_logo.svg"}
               alt="ProtVar logo"
               width="140"
               className="brand-logo"
             />
           </Link>
-          <VersionInfo />
         </div>
         <Link to={HOME} title="ProtVar homepage" className="brand-tagline">
           Contextualising human missense variation
@@ -31,6 +30,7 @@ const Navbar: React.FC<NavbarProps> = ({ onShowBanner }) => {
       </div>
 
       <div className="navbar-right">
+        <VersionInfo />
         <SearchBox placeholder="Search ProtVar..." />
 
         <div className="navbar-links">

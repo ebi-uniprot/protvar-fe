@@ -1,7 +1,7 @@
 /**
  * navbar.css
  * Top navigation bar inside the dark masthead.
- * VersionInfo badge is positioned absolute within .navbar (position:relative).
+ * VersionInfo badges sit at the top of .navbar-right and link to the release page.
  */
 
 /* ============================================
@@ -186,40 +186,44 @@
     display: inline-block;
 }
 
+/* Subtle version pill, flush to the very top-right corner of the masthead */
 .version-info {
     position: absolute;
-    top: 62px;
-    right: 44px;
+    top: 0;
+    right: 0;
     line-height: normal;
     font-size: var(--font-size-xs);
     z-index: var(--z-dropdown);
 }
 
-.version-badge {
-    display: inline-flex;
-    align-items: center;
-    background: rgba(255,255,255,0.22);
-    color: white;
-    border: 1px solid rgba(255,255,255,0.3);
-    border-radius: var(--radius-full);
-    padding: 1px 7px;
+.version-pill {
+    display: inline-block;
+    padding: 3px 10px;
     font-size: 10px;
-    font-weight: var(--font-weight-semibold);
-    cursor: default;
+    font-weight: var(--font-weight-medium);
     white-space: nowrap;
-    user-select: none;
-    backdrop-filter: blur(2px);
+    color: rgba(255, 255, 255, 0.78);
+    background: rgba(255, 255, 255, 0.1);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.version-pill:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    text-decoration: none;
 }
 
 .version-panel {
     display: none;
     position: absolute;
     top: calc(100% + 4px);
-    left: 0;
+    right: 0;
+    left: auto;
     line-height: var(--line-height-normal);
     background: var(--color-bg-elevated);
     border: 1px solid var(--color-border-medium);
-    border-radius: 0 var(--radius-md) var(--radius-md) var(--radius-md);
+    border-radius: var(--radius-md) 0 var(--radius-md) var(--radius-md);
     box-shadow: var(--shadow-lg);
     padding: 6px 4px;
     min-width: 160px;
