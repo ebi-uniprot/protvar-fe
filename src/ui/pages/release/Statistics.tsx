@@ -9,16 +9,9 @@ const Statistics: React.FC = () => {
   return (
     <div className="statistics">
       <h5>
-        ProtVar {process.env.REACT_APP_PV} <small>{process.env.REACT_APP_UNIPROT}</small>
+        ProtVar {process.env.REACT_APP_PV}
       </h5>
 
-      <h6>Highlights</h6>
-      <ul>
-        <li>Genomic-Protein Mapping Entries: 170M genomic coordinates mapped to protein position</li>
-        <li>SwissProt Protein Coverage: &gt;93%</li>
-        <li>New Variant IDs: 40 million+ (dbSNP, ClinVar, COSMIC) lookups</li>
-        <li>gnomAD Allele Frequencies: 52 million+ coding variants (SNV and multi-SNV)</li>
-      </ul>
       <StatsGrid />
       <StatsTable/>
       <StatsDisplayGroup groupBy={"type" as keyof Stats} />
