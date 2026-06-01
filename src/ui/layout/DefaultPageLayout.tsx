@@ -15,19 +15,17 @@ const BASE = process.env.PUBLIC_URL ?? '';
 
 const bannerText = (
   <>
-    ProtVar 2.0 is in active development — you may occasionally encounter instability.
-    For issues or feedback, email{' '}
-    <a href="mailto:protvar@ebi.ac.uk">protvar@ebi.ac.uk</a> or use the{' '}
-    <a href="https://www.ebi.ac.uk/ProtVar" target="_blank" rel="noreferrer">www.ebi.ac.uk/ProtVar</a>.
+    ProtVar 2 is live — new search modes, and more ways to filter and explore variants.
+    Questions or feedback? Email{' '}
+    <a href="mailto:protvar@ebi.ac.uk">protvar@ebi.ac.uk</a>.
     <div>
       <i className="bi bi-stars banner-new-icon" />{' '}
       Explore what's new:{' '}
-      <a href={`${BASE}/help#browse`}>Advanced Search</a>{' · '}
+      <a href={`${BASE}/help#browse`}>Advanced Filtering</a>{' · '}
       <a href={`${BASE}/help#semantic-search`}>Semantic Search</a>{' · '}
       <a href={`${BASE}/help#protvar-links`}>ProtVar Links</a>{' · '}
       <a href={`${BASE}/help#predictions`}>Score Radar</a>{' · '}
       <a href={`${BASE}/help#feature-ranking`}>Feature Ranking</a>{' · '}
-      <a href={`${BASE}/help#activity`}>Activity</a>{' · '}
       <a href={`${BASE}/help#mcp`}>ProtVar MCP</a>
     </div>
   </>
