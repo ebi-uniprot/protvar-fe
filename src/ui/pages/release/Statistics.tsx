@@ -1,6 +1,5 @@
 // Statistics.tsx
 import React from 'react';
-import Spaces from "../../elements/Spaces";
 import StatsTable from "./StatsTable";
 import {StatsDisplayGroup} from "./StatsDisplay";
 import {Stats} from "../../../types/Stats";
@@ -21,35 +20,30 @@ const Statistics: React.FC = () => {
 
 export function StatsGrid() {
   return <div className="grid-container">
-    <StatsCard main={<>Genomic-protein mapping</>} subt="169,448,264" change={<><br/><i
-      className="bi bi-caret-up-fill up-col"></i> 3M+</>}/> {/*"166,077,832"*/}
-    <StatsCard main={<>SwissProt proteins mapped</>} subt="19,198 (>93%)" change={<><br/><i
-      className="bi bi-caret-up-fill up-col"></i> 160</>}/> {/*"119,038 (>93%)"*/}
-    <StatsCard main={<>Stability predictions</>} subt="208,792,558"/>
-    <StatsCard main={<>Protein-protein interactions</>} subt="68,756"/> {/*af2complexes_interaction*/}
-    <StatsCard main={<>Pocket predictions</>} subt={<>109,599 / 547,401<br/><small>High
-      Confidence / Total</small></>}/> {/*pocket_v2*/}
+    <StatsCard label="Genomic–protein mapping" value="169,448,264" change="3M+" /> {/*"166,077,832"*/}
+    <StatsCard label="SwissProt proteins mapped" value="19,198" sub=">93% coverage" change="160" /> {/*"119,038"*/}
+    <StatsCard label="Variant IDs" value="1,005,152,518" sub="dbSNP · ClinVar · COSMIC" change="40M+" />
+    <StatsCard label="gnomAD allele frequencies" value="52,176,766" sub="coding SNV and multi-SNV" />
+    <StatsCard label="Stability predictions" value="208,792,558" />
+    <StatsCard label="Protein–protein interactions" value="68,756" /> {/*af2complexes_interaction*/}
+    <StatsCard label="Pocket predictions" value="109,599 / 547,401" sub="high confidence / total" /> {/*pocket_v2*/}
   </div>
 }
 
 interface StatsCardProps {
-  main: React.ReactNode;
-  subt: React.ReactNode;
+  label: React.ReactNode;
+  value: React.ReactNode;
+  sub?: React.ReactNode;
   change?: React.ReactNode;
 }
 
-export function StatsCard(props: StatsCardProps) {
-  return <div className="stats">
-    <div className="content">
-      <div className="main">{props.main}</div>
-      <div className="sub">{props.subt}
-        {props.change ?? <>
-          <br/><Spaces count={2}/>
-          {props.change}
-        </>}
-      </div>
-    </div>
-  </div>
+export function StatsCard({label, value, sub, change}: StatsCardProps) {
+  return <div className="stat-card">
+    <div className="stat-card-label">{label}</div>
+    <div className="stat-card-value">{value}</div>
+    {sub && <div className="stat-card-sub">{sub}</div>}
+    {change && <div className="stat-card-change"><i className="bi bi-caret-up-fill" /> {change}</div>}
+  </div>;
 }
 
 export default Statistics;
