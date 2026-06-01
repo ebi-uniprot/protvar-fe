@@ -1,6 +1,7 @@
 import DefaultPageLayout from '../../layout/DefaultPageLayout'
 import {TITLE} from '../../../constants/const'
 import SearchPage from "./SearchPage";
+import {ProtVarLinksCard} from "../help/ProtVarLinksCard";
 import React, {useEffect} from "react";
 
 const HomePageContent = () => {
@@ -19,6 +20,10 @@ const HomePageContent = () => {
       </div>
 
       <SearchPage/>
+
+      <div className="search-container">
+        <ProtVarLinksCard/>
+      </div>
 
     </>
   )
