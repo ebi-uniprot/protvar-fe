@@ -178,6 +178,72 @@
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
+/* 2D/3D segmented toggle + (when 3D) spin/sync options, stacked top-left */
+.aa-model-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    margin-bottom: 8px;
+}
+
+/* The shared .view-toggle pushes itself right (margin-left:auto); keep it left here. */
+.aa-model-header .view-toggle {
+    margin-left: 0;
+}
+
+.aa-3d-options {
+    display: flex;
+    gap: 6px;
+}
+
+/* Spin/Sync as toggle buttons (active = app light blue) */
+.aa-3d-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 9px;
+    font-size: var(--font-size-xs);
+    color: var(--color-text-secondary);
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.aa-3d-toggle:hover {
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.aa-3d-toggle.active {
+    background: var(--color-primary-lightest);
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.aa-3d-loading {
+    text-align: center;
+    padding: 24px;
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+}
+
+/* Soft fade when switching between the 2D and 3D views (re-keyed on toggle) */
+.aa-model-body {
+    animation: aaViewFade 0.25s ease;
+}
+
+@keyframes aaViewFade {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .aa-model-body { animation: none; }
+}
+
 .aa-model-images {
     display: flex;
     align-items: flex-end;
@@ -205,10 +271,11 @@
     display: block;
 }
 
-.icon-arrow {
-    font-size: 32px;
-    margin: 0 4px;
-    color: #00709b;
+/* Chevron denoting the ref -> alt amino-acid change (2D and 3D views) */
+.aa-change-arrow {
+    font-size: 1.15rem;
+    margin: 0 6px;
+    color: var(--color-primary);
     flex-shrink: 0;
     align-self: center;
 }
@@ -501,9 +568,9 @@
         max-width: 140px;
     }
 
-    .icon-arrow {
-        font-size: 28px;
-        margin: 46px 8px 0;
+    .aa-change-arrow {
+        font-size: 1.05rem;
+        margin: 0 6px;
     }
 
 }
