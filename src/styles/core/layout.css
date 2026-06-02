@@ -49,19 +49,6 @@ a:focus-visible {
     outline-offset: 2px;
 }
 
-/* balloon.css tooltips default to z-index:10 which goes under sticky headers (z-index:100).
-   Override to always float above all page chrome. */
-[aria-label][data-balloon-pos]::after,
-[aria-label][data-balloon-pos]::before {
-    z-index: 1100 !important;
-}
-
-/* Suppress pointer cursor on tooltip-decorated spans/th — they're not interactive */
-span[aria-label][data-balloon-pos],
-th[aria-label][data-balloon-pos] {
-    cursor: unset;
-}
-
 /* ============================================
    PAGE STRUCTURE
    ============================================ */

@@ -27,7 +27,7 @@ const TILES: Tile[] = [
   },
   {
     icon: 'bi-search',
-    title: 'Free-text variant search',
+    title: 'Single-variant search',
     pattern: '/search?q={variant}',
     example: '/search?q=rs864622779',
     href: '/search?q=rs864622779',
@@ -61,7 +61,7 @@ export const ProtVarLinksCard: React.FC = () => (
     <div className="pv-links-header">
       <i className="bi bi-link-45deg" />
       <span>Direct Access Patterns</span>
-      <span className="pv-links-sub">Bookmark or share these URLs to jump straight to any ProtVar view</span>
+      <span className="pv-links-sub">Bookmark or share these URL patterns to open a variant, protein or search directly</span>
     </div>
     <div className="pv-links-grid">
       {TILES.map((tile) => (

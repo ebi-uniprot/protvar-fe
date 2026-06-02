@@ -51,8 +51,8 @@ export const Prediction = (props: PredictionProps) => {
   return (
     <>
       {hasScores && (
-        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '0.5rem' }}>
-          <div className="view-toggle">
+        <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: '0.5rem' }}>
+          <div className="view-toggle" style={{ marginLeft: 0 }}>
             <button className={view === 'table' ? 'active' : ''} onClick={() => setView('table')}>
               <i className="bi bi-table" /> Table
             </button>

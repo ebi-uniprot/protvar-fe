@@ -8,6 +8,10 @@
        COLORS - Primary Palette
        ============================================ */
 
+    /* Logo/Icon colors */
+    --color-protvar-green: #9fcbaf;
+    --color-protvar-orange: #ff9901;
+
     /* Primary Blue (component accent) */
     --color-primary: #4a90e2;
     --color-primary-dark: #357abd;

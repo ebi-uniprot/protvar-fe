@@ -9,7 +9,7 @@ import {
   ENSEMBL_VIEW_URL,
   UNIPROT_ACCESSION_URL
 } from "../../../constants/ExternalUrls";
-import Tool from "../../elements/Tool";
+import Tool from "../../elements/Tooltip";
 import { TextLink } from "../../components/common/Link";
 import { caddScoreAttr, formatCaddScore } from "../../components/function/prediction/CaddScorePred";
 import { amScoreAttr, formatAMScore } from "../../components/function/prediction/AlphaMissensePred";
@@ -57,13 +57,13 @@ function AnnotationButton(props: {
   const isActive = props.rowKey === props.annotationExpanded;
   const btnClass = isActive ? 'button click-icon-btn significance' : 'button click-icon-btn';
 
-  let tip = "Click for functional information";
+  let tip = "Functional annotations (click to expand)";
   let icon = <img src={ProteinIcon} className="click-icon" alt="protein icon" />;
   if (props.label === 'POP') {
-    tip  = "Click for population observation";
+    tip  = "Population observations (click to expand)";
     icon = <img src={PopulationIcon} className="click-icon" alt="population icon" />;
   } else if (props.label === 'STR') {
-    tip  = "Click for 3D structure";
+    tip  = "3D structure (click to expand)";
     icon = <img src={StructureIcon} className="click-icon" alt="structure icon" />;
   }
 
@@ -143,8 +143,8 @@ export const getNewPrimaryRow = (
         </span>
 
         {/* 2: Genomic position (chr-pos-ref-alt) */}
-        <span className={`cell-genomic${isGenomicInput ? ' cell-genomic-input' : ''}`} title={`Input: ${input.inputStr}`}>
-          <Tool tip="Click to see region detail from Ensembl">
+        <span className={`cell-genomic${isGenomicInput ? ' cell-genomic-input' : ''}`}>
+          <Tool tip={`Genomic coordinate (chr-pos-ref-alt) for input "${input.inputStr}" — click to view the region in Ensembl`}>
             {isGenomicInput && 'isLiftedFrom37' in input && input.isLiftedFrom37 && (
               <span className="h37">37&rarr;38</span>
             )}
@@ -156,7 +156,7 @@ export const getNewPrimaryRow = (
         <span className="card-sep cell-gene">
           {gene.geneName && (
             gene.ensg
-              ? <Tool tip="View gene in Ensembl"><TextLink url={ENSEMBL_GENE_URL + gene.ensg} text={gene.geneName} /></Tool>
+              ? <Tool tip="Gene — click to view in Ensembl"><TextLink url={ENSEMBL_GENE_URL + gene.ensg} text={gene.geneName} /></Tool>
               : <span>{gene.geneName}</span>
           )}
         </span>
@@ -166,7 +166,7 @@ export const getNewPrimaryRow = (
           {codon && (
             <div className="flex">
               {codon}&nbsp;
-              <Tool tip={`Codon change in ${strand === '(+)' ? 'positive' : 'negative'}-sense strand gene`}>
+              <Tool tip={`Codon change ${codon} on the ${strand === '(+)' ? 'positive' : 'negative'}-sense strand`}>
                 {strand}
               </Tool>
             </div>
@@ -179,7 +179,7 @@ export const getNewPrimaryRow = (
             <Tool
               className="score-box"
               style={{ backgroundColor: stdColor ? caddAttr.stdColor : caddAttr.color }}
-              tip={`${caddAttr.range} ${caddAttr.text}`}
+              tip={`CADD ${formatCaddScore(gene.caddScore?.toString())} — ${caddAttr.text} (${caddAttr.range})`}
             >
               <a href={CADD_INFO_URL} target="_blank" rel="noopener noreferrer">
                 {formatCaddScore(gene.caddScore?.toString())}
@@ -241,7 +241,7 @@ export const getNewPrimaryRow = (
                   ? POPEVE_SCORE_ATTR[getPopEveClass(isoform.popEveScore.popeve)].stdColor
                   : getPopEveColor(isoform.popEveScore.popeve)
               }}
-              tip={`${formatPopEveScore(isoform.popEveScore)} popEVE`}
+              tip={`popEVE ${formatPopEveScore(isoform.popEveScore)}`}
             >
               {formatPopEveScore(isoform.popEveScore)}
             </Tool>
@@ -254,7 +254,7 @@ export const getNewPrimaryRow = (
             <Tool
               className="score-box"
               style={{ backgroundColor: stdColor ? amAttr.stdColor : amAttr.color }}
-              tip={`${isoform.amScore?.amPathogenicity} ${amAttr.text}`}
+              tip={`AlphaMissense ${isoform.amScore?.amPathogenicity} — ${amAttr.text}`}
             >
               <a href={AM_INFO_URL} target="_blank" rel="noopener noreferrer">
                 {formatAMScore(isoform.amScore)}

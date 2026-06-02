@@ -178,6 +178,12 @@
     margin-bottom: 0;
 }
 
+.association-name {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin-bottom: 2px;
+}
+
 
 /* pocket-card, interaction-grid, pred-card → moved to pockets-interactions.css as compact rows */
 
@@ -220,6 +226,12 @@
     color: var(--color-text-primary);
 }
 
+.pdb-card-pos {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+    text-align: left;
+}
+
 .pdb-card-chain {
     color: var(--color-text-secondary);
     white-space: nowrap;
@@ -245,9 +257,9 @@
 
 .predicted-interaction-card {
     display: grid;
-    grid-template-columns: 1fr 1fr 4.5rem;
+    grid-template-columns: 1fr 1fr 1fr;
     align-items: center;
-    gap: var(--spacing-md);
+    gap: var(--spacing-sm);
     padding: 5px 12px;
     border: 1px solid var(--color-border-light);
     border-radius: var(--radius-sm);
@@ -283,7 +295,7 @@
 .interaction-pdockq {
     font-weight: var(--font-weight-semibold);
     color: var(--color-primary);
-    text-align: right;
+    text-align: left;
     white-space: nowrap;
 }
 
@@ -365,7 +377,7 @@
 /* Predicted Structure Card - grid row (matches predicted-col-header) */
 .predicted-structure-card {
     display: grid;
-    grid-template-columns: 1fr 3.5rem auto;
+    grid-template-columns: 1fr 3.5rem 1fr;
     align-items: center;
     gap: var(--spacing-sm);
     padding: 5px 12px;
@@ -420,7 +432,7 @@
 .predicted-card-pos {
     color: var(--color-text-secondary);
     font-size: var(--font-size-xs);
-    text-align: center;
+    text-align: left;
 }
 
 /* Pockets column */

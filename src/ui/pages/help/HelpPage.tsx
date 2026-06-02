@@ -3,6 +3,7 @@ import React, {useEffect, useState} from "react";
 import {Link, useLocation} from 'react-router-dom';
 import {TITLE} from "../../../constants/const";
 import {HelpContent} from "../../components/help/HelpContent";
+import {ProtVarLinksCard} from "./ProtVarLinksCard";
 import {HELP} from "../../../constants/BrowserPaths";
 
 interface HelpItem {
@@ -156,7 +157,8 @@ function HelpPageContent() {
         ) : (
           <div className="help-welcome">
             <h5>ProtVar Help</h5>
-            <p>Select a topic from the left to get started.</p>
+            <p>Select a topic from the left to get started, or jump straight in with a direct link:</p>
+            <ProtVarLinksCard />
           </div>
         )}
       </div>

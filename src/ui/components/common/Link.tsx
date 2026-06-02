@@ -8,7 +8,9 @@ interface LinkProps {
 
 export const PVLink = ({ url,
                      title = "View in ProtVar"} : LinkProps) => {
-  return <a href={url} className="protvar-link" title={title}>
+  return <a href={url} className="protvar-link"
+            title={title} aria-label={title}
+            target="_blank" rel="noopener noreferrer">
     <span className="protvar-label">
       <span className="p-letter">P</span>
       <span className="v-letter">V</span>
@@ -19,13 +21,11 @@ export const PVLink = ({ url,
 
 // External link with arrow icon
 export const ExtLink = ({ url, title, text} : LinkProps) => {
-  return <a
-      href={url}
+  return <a href={url} className="ext-link"
       title={title}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="ext-link"
-    >{text && `${text} `}<span className="ext-arrow">↗</span>
+      target="_blank" rel="noopener noreferrer">
+    {text && `${text} `}
+    <span className="ext-arrow">↗</span>
   </a>
 }
 

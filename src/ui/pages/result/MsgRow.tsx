@@ -1,6 +1,6 @@
 import React from 'react';
 import { VariantInput, Message, GenomicVariant } from "../../../types/MappingResponse";
-import Tool from "../../elements/Tool";
+import Tool from "../../elements/Tooltip";
 import { getEnsemblViewUrl, getIdUrl, getIdValue } from "./PrimaryRow";
 import { TextLink } from "../../components/common/Link";
 
@@ -42,7 +42,7 @@ const MsgRow = ({ message, input, genomicVariant, index }: MsgRowProps) => {
         </span>
         {/* col 2: genomic-pos */}
         <span>
-          <Tool tip="Click to see region detail from Ensembl" pos="up-left">
+          <Tool tip="Genomic coordinate — click to view the region in Ensembl" pos="up-left">
             <TextLink url={getEnsemblViewUrl(genomicVariant.chromosome, genomicVariant.position)} text={genomicPos} />
           </Tool>
         </span>

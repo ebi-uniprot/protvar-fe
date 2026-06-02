@@ -34,6 +34,11 @@
     font-size: var(--font-size-sm);
 }
 
+/* Cross-reference id with no URL (e.g. NCI-TCGA case UUIDs) — plain text, not a link */
+.id-plain {
+    color: var(--color-text-secondary);
+}
+
 /* ============================================
    EVIDENCE CONTAINER
    ============================================ */

@@ -78,20 +78,20 @@
     font-weight: var(--font-weight-bold);
     letter-spacing: 0.3px;
     line-height: 1;
-    padding-right: 7px;
+    padding-right: 8px;
 }
 
 .protvar-label .p-letter {
-    color: #9fccaf;
+    color: var(--color-protvar-green);
 }
 
 .protvar-label .v-letter {
-    color: #ff9901;
+    color: var(--color-protvar-orange);
 }
 
 .protvar-label .pv-arrow {
     position: absolute;
-    top: -2px;
+    top: -1px;
     right: 0;
     font-family: monospace;
     font-size: 8px;
@@ -174,7 +174,12 @@
 }
 
 .copy-link:hover {
-    color: var(--color-text-secondary);
+    color: var(--color-brand);
+}
+
+.copy-link--copied,
+.copy-link--copied:hover {
+    color: var(--color-success);
 }
 
 

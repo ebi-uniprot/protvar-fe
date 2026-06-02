@@ -18,6 +18,7 @@ import VarSiteLogo from "../../images/VarSiteLogo.png";
 import DecipherLogo from "../../images/decipher.png";
 import {TITLE} from "../../constants/const";
 import {ExtLink} from "../components/common/Link";
+import {StatsGrid} from "./release/Statistics";
 
 function AboutPageContent() {
   useEffect(() => {
@@ -37,6 +38,12 @@ function AboutPageContent() {
           structure and function as well as structural insights and predictions to better understand
           the potential effects of missense variation on humans.
         </p>
+      </section>
+
+      {/* ProtVar in numbers */}
+      <section className="about-section">
+        <h6 className="about-section-title">ProtVar in numbers</h6>
+        <StatsGrid />
       </section>
 
       {/* Resources */}

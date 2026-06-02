@@ -52,6 +52,7 @@ export function InteractionList({ interactions, accession, expandedSections, onT
 
           <ExpandableList
             items={interactions}
+            className="interaction-rows"
             renderItem={(interaction, index) => (
               <InteractionCard
                 key={`interaction-${index}`}

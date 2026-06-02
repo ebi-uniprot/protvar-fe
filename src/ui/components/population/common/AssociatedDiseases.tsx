@@ -28,11 +28,14 @@ function AssociatedDiseases({ associations }: AssociatedDiseasesProps) {
 }
 
 function AssociationCard({ association }: { association: VariantAssociation }) {
-  const text = (association.description || association.name).replace(/α/g, "Alpha");
+  const name = association.name?.replace(/α/g, "Alpha");
+  const description = association.description?.replace(/α/g, "Alpha");
+  const showDescription = description && description !== name;
 
   return (
     <div className="association-card">
-      <ExpandableText text={text} charLimit={150} />
+      {name && <div className="association-name">{name}</div>}
+      {showDescription && <ExpandableText text={description} charLimit={150} />}
       <Evidences evidences={association.evidences} />
     </div>
   );

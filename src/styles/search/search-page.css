@@ -469,9 +469,9 @@
 }
 
 .example-tag:hover {
-    background: var(--color-brand);
-    color: #fff;
-    border-color: var(--color-brand);
+    background: var(--color-primary-lightest);
+    color: var(--color-brand);
+    border-color: var(--color-brand-light);
     transform: translateY(-1px);
     box-shadow: var(--shadow-xs);
 }

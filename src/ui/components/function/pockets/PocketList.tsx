@@ -44,6 +44,12 @@ export function PocketList({ pockets, expandedSections, onToggle, onViewInStruct
         <div className="struct-pred-content">
           <PocketFilter pockets={pockets} onFilter={setFilteredPockets} />
 
+          <div className="structure-col-header pocket-list-col-header">
+            <span>Pocket</span>
+            <span>Score</span>
+            <span>pLDDT</span>
+          </div>
+
           <ExpandableList
             items={filteredPockets}
             className="pocket-entries"

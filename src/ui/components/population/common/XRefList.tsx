@@ -12,6 +12,14 @@ const COSMIC_PREFIXES = ['COSV', 'COSM', 'COSN'];
 
 const isRsId = (id: string): boolean => /^rs\d+$/i.test(id);
 
+const isUuid = (id: string): boolean =>
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+
+// NCI-TCGA xrefs carry a bare case UUID with no url that resolves nowhere public —
+// drop them from the id list (keep the source summary + count) rather than show junk ids.
+const isDisplayableXref = (xref: DbReferenceObject): boolean =>
+  Boolean(xref.url) || !isUuid(xref.id);
+
 const isClinVarId = (id: string): boolean =>
   CLINVAR_PREFIXES.some(prefix => id.toUpperCase().startsWith(prefix));
 
@@ -64,6 +72,7 @@ function XRefList({xrefs, populationFrequencies, clinicalSignificances}: XRefLis
         {sortedGroups.map(([source, sourceXrefs]) => {
           const significance = significanceMap.get(source);
           const popFreq = popFreqMap.get(source);
+          const displayXrefs = sourceXrefs.filter(isDisplayableXref);
 
           return (
             <div key={source} className="xref-source-group">
@@ -81,19 +90,23 @@ function XRefList({xrefs, populationFrequencies, clinicalSignificances}: XRefLis
                   </span>
                 )}
               </div>
-              <ExpandableList
-                items={sourceXrefs}
-                defaultCount={XREF_SHOW_LIMIT}
-                className="id-list"
-                renderItem={(xref, idx) => (
-                  <span key={idx} className="id-chip">
-                    <ExtLink url={xref.url} text={xref.id} />
-                    {shouldShowProtVarLink(xref.id, source) &&
-                      <PVLink url={buildProtVarUrl(xref.id)} />
-                    }
-                  </span>
-                )}
-              />
+              {displayXrefs.length > 0 && (
+                <ExpandableList
+                  items={displayXrefs}
+                  defaultCount={XREF_SHOW_LIMIT}
+                  className="id-list"
+                  renderItem={(xref, idx) => (
+                    <span key={idx} className="id-chip">
+                      {xref.url
+                        ? <ExtLink url={xref.url} text={xref.id} />
+                        : <span className="id-plain">{xref.id}</span>}
+                      {shouldShowProtVarLink(xref.id, source) &&
+                        <PVLink url={buildProtVarUrl(xref.id)} />
+                      }
+                    </span>
+                  )}
+                />
+              )}
             </div>
           );
         })}

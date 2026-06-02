@@ -39,7 +39,7 @@ export function PocketCard({ pocket, onViewInStructure }: PocketCardProps) {
 
   return (
     <div className="pocket-entry">
-      {/* Row 1 — identity + key metrics */}
+      {/* Row 1 — identity + key metrics (grid aligned to .pocket-list-col-header) */}
       <div className="pocket-row">
         <button
           onClick={() => onViewInStructure(pocket)}
@@ -50,12 +50,10 @@ export function PocketCard({ pocket, onViewInStructure }: PocketCardProps) {
           <span>P{pocket.pocketId}</span>
         </button>
         <span className="pocket-metric">
-          <span className="pocket-detail-label">Score</span>
           <span className="pocket-score">{pocket.score.toFixed(0)}</span>
           <ConfidenceBadge level={pocketConf} compact />
         </span>
         <span className="pocket-metric">
-          <span className="pocket-detail-label">pLDDT</span>
           <span className="pocket-score">{pocket.meanPlddt.toFixed(0)}</span>
           <ConfidenceBadge level={modelConf} compact />
         </span>

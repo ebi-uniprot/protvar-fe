@@ -178,9 +178,75 @@
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
+/* 2D/3D segmented toggle + (when 3D) spin/sync options, stacked top-left */
+.aa-model-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    margin-bottom: 8px;
+}
+
+/* The shared .view-toggle pushes itself right (margin-left:auto); keep it left here. */
+.aa-model-header .view-toggle {
+    margin-left: 0;
+}
+
+.aa-3d-options {
+    display: flex;
+    gap: 6px;
+}
+
+/* Spin/Sync as toggle buttons (active = app light blue) */
+.aa-3d-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 9px;
+    font-size: var(--font-size-xs);
+    color: var(--color-text-secondary);
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.aa-3d-toggle:hover {
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.aa-3d-toggle.active {
+    background: var(--color-primary-lightest);
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.aa-3d-loading {
+    text-align: center;
+    padding: 24px;
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+}
+
+/* Soft fade when switching between the 2D and 3D views (re-keyed on toggle) */
+.aa-model-body {
+    animation: aaViewFade 0.25s ease;
+}
+
+@keyframes aaViewFade {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .aa-model-body { animation: none; }
+}
+
 .aa-model-images {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: center;
     gap: 4px;
 }
@@ -200,17 +266,18 @@
 }
 
 .img-size {
-    max-width: 140px;
+    max-width: 170px;
     height: auto;
     display: block;
 }
 
-.icon-arrow {
-    font-size: 32px;
-    margin: 54px 4px 0;
-    color: #00709b;
+/* Chevron denoting the ref -> alt amino-acid change (2D and 3D views) */
+.aa-change-arrow {
+    font-size: 1.15rem;
+    margin: 0 6px;
+    color: var(--color-primary);
     flex-shrink: 0;
-    align-self: flex-start;
+    align-self: center;
 }
 
 /* Legacy */
@@ -364,47 +431,34 @@
     margin-bottom: 2px;
     padding: 0;
     border-radius: var(--radius-sm);
-    border: 2px solid transparent;
-    transition: padding 0.3s ease, background 0.3s ease, border-color 0.3s ease;
+    border: 0;
 }
 
-.prediction-item.prediction-highlighted {
-    padding: 8px;
-    margin: 4px 0;
+/* Highlighted prediction — same subtle look as a selected pop/structure row:
+   light-blue fill + thin primary border (no thick left accent). Shown ~3s then cleared. */
+.prediction-item.prediction-highlighted .prediction-row,
+.prediction-item.prediction-highlighted .prediction-row:hover {
     background: var(--color-primary-lightest);
     border-color: var(--color-primary);
-    animation: predictionFlash 1.2s ease-out forwards;
-}
-
-@keyframes predictionFlash {
-    0%   { background: rgba(105, 135, 195, 0.25); border-color: var(--color-primary); }
-    40%  { background: rgba(105, 135, 195, 0.18); }
-    100% { background: var(--color-primary-lightest); border-color: var(--color-primary); }
 }
 
 /* 3-column grid row: name | score | interpretation */
 .prediction-row {
     display: grid;
-    grid-template-columns: 1fr 4rem 1fr;
+    grid-template-columns: 1fr 4rem 1fr auto;
     align-items: center;
     gap: 8px;
     background: white;
     border: 1px solid var(--color-border-light);
-    border-left: 3px solid transparent;
     border-radius: var(--radius-sm);
     padding: 5px 10px;
     font-size: var(--font-size-sm);
-    transition: border-color 0.2s ease;
+    transition: border-color 0.2s ease, background 0.3s ease;
 }
 
 .prediction-row:hover {
+    background: var(--color-gray-50);
     border-color: var(--color-border-medium);
-    border-left-color: transparent;
-}
-
-.prediction-row:focus-within {
-    outline: 2px solid var(--color-primary);
-    outline-offset: 2px;
 }
 
 /* Prediction name (+ copy link) */
@@ -426,7 +480,7 @@
 }
 
 /* Prediction interpretation (icon + text) */
-.prediction-row > div:last-child {
+.prediction-row > div:nth-child(3) {
     display: flex;
     align-items: center;
     gap: 6px;
@@ -434,17 +488,21 @@
     color: var(--color-text-secondary);
 }
 
+/* Copy-link icon — right-most cell */
+.prediction-row > .copy-link {
+    justify-self: end;
+    align-self: center;
+}
+
+/* Missense3D damaging-feature detail — secondary, inline after the prediction */
+.m3d-feature {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-tertiary);
+}
+
 .prediction-row .bi-circle-fill {
     font-size: 10px;
     flex-shrink: 0;
-}
-
-/* Inner row inherits highlighted wrapper's background — keep borders minimal */
-.prediction-item.prediction-highlighted .prediction-row,
-.prediction-item.prediction-highlighted .prediction-row:hover {
-    border-color: var(--color-border-light);
-    border-left-color: transparent;
-    background-color: transparent;
 }
 
 /* No predictions message */
@@ -507,12 +565,12 @@
     }
 
     .img-size {
-        max-width: 120px;
+        max-width: 140px;
     }
 
-    .icon-arrow {
-        font-size: 28px;
-        margin: 46px 8px 0;
+    .aa-change-arrow {
+        font-size: 1.05rem;
+        margin: 0 6px;
     }
 
 }
@@ -592,6 +650,7 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
+    padding-left: 0.75rem;
 }
 
 .info-row {

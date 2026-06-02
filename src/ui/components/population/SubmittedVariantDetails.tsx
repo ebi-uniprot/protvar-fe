@@ -9,7 +9,11 @@ interface SubmittedVariantDetailsProps {
 
 function SubmittedVariantDetails({ variants, selectedVariant, onSelect }: SubmittedVariantDetailsProps) {
   if (variants.length <= 0) {
-    return <div className="submitted-variant-no-data">The variant has not been reported before</div>;
+    return (
+      <div className="empty-state-wrapper">
+        <span className="empty-state">The variant has not been reported before</span>
+      </div>
+    );
   }
 
   const variant = variants[0];
