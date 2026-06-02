@@ -15,7 +15,7 @@ const BASE = process.env.PUBLIC_URL ?? '';
 
 const bannerText = (
   <>
-    ProtVar 2 is live — new search modes, and more ways to filter and explore variants.
+    ProtVar 2.0 is live — new search modes, and more ways to filter and explore variants.
     Questions or feedback? Email{' '}
     <a href="mailto:protvar@ebi.ac.uk">protvar@ebi.ac.uk</a>.
     <div>

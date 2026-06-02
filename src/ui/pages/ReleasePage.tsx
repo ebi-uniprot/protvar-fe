@@ -50,7 +50,7 @@ function ReleasePageContent() {
 
       {activeTab === 'notes' && <div className="release-notes">
       {/* ── v2.0 ── */}
-      <ReleaseNote isDefaultOpen title={<><span className="release-badge release-badge-version">v2.0</span> ProtVar 2 <small>2026</small></>}>
+      <ReleaseNote isDefaultOpen title={<><span className="release-badge release-badge-version">v2.0</span> ProtVar 2.0 <small>2026</small></>}>
         <div className="release-categories">
           <div className="release-category">
             <ReleaseBadge type="ui" />
