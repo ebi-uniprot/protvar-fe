@@ -96,7 +96,7 @@
 
 /* Predicted: (empty) | Pos | Pockets */
 .predicted-col-header {
-    grid-template-columns: 1fr 3.5rem auto;
+    grid-template-columns: 1fr 3.5rem 1fr;
 }
 
 /* Interactions: Chain A | Chain B | pDockQ */
