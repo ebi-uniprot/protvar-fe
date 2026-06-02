@@ -21,3 +21,12 @@
   cosmic→v103 and allelefreq→gnomad_allele_freq, upsert + source_version.
   FE: rebuild `StatsTable` into the 5 groups with granular metrics as
   sub-rows, and delete `StatsDisplayGroup` (the raw dump becomes redundant).
+
+- [ ] **Animated / rotating 3D amino-acid models (fun tab)**
+  Replace the static aa PNGs with a model rotating around an axis for a 3D feel.
+  Can't be derived from the current single-view PNGs (no depth) — needs
+  re-rendering from the 3D structures (PyMOL / RDKit / 3Dmol.js) into per-frame
+  animation. Format options: GIF (simple, limited colour/size), APNG or
+  animated WebP (better quality + alpha), short MP4/WebM, or an interactive
+  3Dmol.js / Mol* viewer (true draggable 3D). Recommend WebP/APNG or an
+  interactive viewer over GIF.
