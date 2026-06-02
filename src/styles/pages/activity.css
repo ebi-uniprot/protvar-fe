@@ -60,13 +60,13 @@
 }
 
 .view-toggle button.active {
-    background: var(--color-brand);
-    color: white;
+    background: var(--color-primary-lightest);
+    color: var(--color-primary);
 }
 
 .view-toggle button:not(.active):hover {
     background: var(--color-bg-tertiary);
-    color: var(--color-brand);
+    color: var(--color-primary);
 }
 
 .activity-panel {
