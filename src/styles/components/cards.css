@@ -178,6 +178,12 @@
     margin-bottom: 0;
 }
 
+.association-name {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin-bottom: 2px;
+}
+
 
 /* pocket-card, interaction-grid, pred-card → moved to pockets-interactions.css as compact rows */
 
