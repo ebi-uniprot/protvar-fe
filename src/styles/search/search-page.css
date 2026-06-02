@@ -1,0 +1,559 @@
+/**
+ * search-page.css
+ * Layout and components for the search/home page (SearchPage.tsx).
+ * Replaces the local SearchPage.css — no global reset here.
+ */
+
+/* ============================================
+   SEARCH CONTAINER
+   ============================================ */
+
+.search-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    color: var(--color-text-primary);
+    line-height: var(--line-height-relaxed);
+}
+
+/* ============================================
+   SEARCH HEADER
+   ============================================ */
+
+.search-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.search-header p {
+    color: var(--color-text-secondary);
+    font-size: 1.1rem;
+}
+
+/* ============================================
+   SEARCH MODE TABS
+   ============================================ */
+
+.search-modes {
+    display: flex;
+    background: var(--color-brand-lightest);
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    padding: 0.25rem;
+    gap: 0.125rem;
+}
+
+.mode-tab {
+    flex: 1;
+    padding: 0.875rem 1.25rem;
+    text-align: center;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    color: var(--color-text-secondary);
+    font-weight: var(--font-weight-medium);
+    transition: all var(--transition-base);
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    position: relative;
+}
+
+.tab-label-experimental {
+    position: relative;
+}
+
+.experimental-badge {
+    position: absolute;
+    top: -6px;
+    right: -14px;
+    font-size: 0.65rem;
+    opacity: 0.7;
+}
+
+.mode-tab:hover:not(.active) {
+    background: rgba(255, 255, 255, 0.8);
+    color: var(--color-text-primary);
+}
+
+.mode-tab.active {
+    background: var(--color-brand-gradient);
+    color: white;
+    box-shadow: 0 2px 8px rgba(1, 67, 115, 0.3);
+}
+
+.mode-tab .icon {
+    font-size: 1rem;
+    line-height: 1;
+}
+
+/* ============================================
+   SEARCH PANEL (white card below tabs)
+   ============================================ */
+
+.search-panel {
+    background: var(--color-bg-primary);
+    border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+    padding: 1.5rem;
+    border: 1px solid var(--color-brand-lightest);
+    border-top: none;
+}
+
+.search-content {
+    margin-bottom: 1rem;
+}
+
+/* ============================================
+   VARIANT CONTROLS ROW
+   (type/paste toggle + assembly select)
+   ============================================ */
+
+.variant-controls-row {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 1.25rem;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+/* Input method toggle (Type/Paste vs Upload) */
+.input-method-toggle {
+    display: flex;
+    background: var(--color-brand-lightest);
+    border-radius: var(--radius-lg);
+    padding: 0.25rem;
+    gap: 0.125rem;
+}
+
+.method-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.4rem 0.875rem;
+    border: none;
+    background: transparent;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-medium);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    white-space: nowrap;
+}
+
+.method-btn.active {
+    background: var(--color-brand);
+    color: white;
+}
+
+.method-btn:hover:not(.active) {
+    background: rgba(255, 255, 255, 0.7);
+    color: var(--color-text-primary);
+}
+
+/* Genome assembly inline */
+.genome-assembly-inline {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+}
+
+.assembly-label {
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    white-space: nowrap;
+}
+
+/* Compact variant of the segmented toggle used for genome assembly */
+.assembly-toggle .method-btn {
+    padding: 0.3rem 0.6rem;
+    font-size: var(--font-size-sm);
+}
+
+/* ============================================
+   INPUT GROUP
+   ============================================ */
+
+.input-group {
+    margin-bottom: 1rem;
+}
+
+.input-label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-md);
+    color: var(--color-text-primary);
+}
+
+.input-field {
+    width: 100%;
+    padding: 0.625rem 0.75rem;
+    border: 2px solid var(--color-border-medium);
+    border-radius: var(--radius-lg);
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-normal);
+    color: var(--color-text-primary);
+    background: var(--color-bg-primary);
+    transition: border-color var(--transition-base), box-shadow var(--transition-base);
+}
+
+.input-field::placeholder {
+    font-family: var(--font-family-mono);
+    font-weight: var(--font-weight-normal);
+    color: var(--color-text-tertiary);
+}
+
+.input-field:focus {
+    outline: none;
+    border-color: var(--color-brand-light);
+    box-shadow: 0 0 0 3px rgba(1, 67, 115, 0.1);
+}
+
+.input-field.textarea {
+    min-height: 120px;
+    resize: vertical;
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-normal);
+    white-space: pre-wrap;
+}
+
+/* ============================================
+   FILE UPLOAD
+   ============================================ */
+
+.file-upload-display {
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.uploaded-file {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: var(--color-bg-tertiary);
+    border: 2px solid var(--color-border-medium);
+    border-radius: var(--radius-lg);
+    padding: 0.875rem 1.25rem;
+    max-width: 420px;
+}
+
+.file-info {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    flex: 1;
+}
+
+.file-icon {
+    font-size: 1.4rem;
+}
+
+.file-name {
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-primary);
+}
+
+.file-size {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+}
+
+.remove-file-btn {
+    background: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    flex-shrink: 0;
+    transition: background-color var(--transition-base);
+}
+
+.remove-file-btn:hover {
+    background: #dc2626;
+}
+
+.file-help {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    text-align: center;
+}
+
+/* ============================================
+   BROWSE MODE — CHIP INPUT
+   ============================================ */
+
+.browse-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 0.4rem;
+}
+
+.browse-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.2rem 0.55rem;
+    background: var(--color-brand-lightest);
+    border: 1px solid var(--color-brand-lighter);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-md);
+    color: var(--color-brand);
+    font-weight: var(--font-weight-medium);
+}
+
+.browse-chip-remove {
+    background: none;
+    border: none;
+    padding: 0;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--color-brand-light);
+    font-size: 1rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+
+.browse-chip-remove:hover {
+    color: #c0392b;
+}
+
+.browse-input-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+/* Hint explaining why the Browse button is disabled. */
+.browse-hint {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.4rem;
+    margin: 0.5rem 0 0;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+}
+
+.browse-hint i {
+    color: var(--color-brand);
+    margin-top: 0.1rem;
+    flex-shrink: 0;
+}
+
+.browse-input-wrapper {
+    position: relative;
+    flex: 1;
+}
+
+.browse-input-wrapper .input-field {
+    width: 100%;
+    margin: 0;
+    padding-right: 2.5rem;
+}
+
+.browse-add-btn {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    color: var(--color-text-secondary);
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background var(--transition-base), color var(--transition-base);
+}
+
+.browse-add-btn:hover:not(:disabled) {
+    background: var(--color-border-light);
+    color: var(--color-text-primary);
+}
+
+.browse-add-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.browse-go-btn {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-brand);
+    color: white;
+    border: none;
+    border-radius: var(--radius-lg);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background var(--transition-base);
+}
+
+.browse-go-btn:hover:not(:disabled) {
+    background: var(--color-brand-dark);
+}
+
+.browse-go-btn:disabled {
+    background: var(--color-brand-lighter);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* ============================================
+   EXAMPLE TAGS
+   ============================================ */
+
+.examples {
+    margin-top: 1.25rem;
+}
+
+.examples h6 {
+    margin: 0 0 0.625rem 0;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.example-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+/* Brand-tinted at rest (navy text on a pale-blue pill) so the example
+   formats read clearly; fills solid brand on hover. Uses --color-brand*
+   tokens only — theming / dark mode carry through. */
+.example-tag {
+    background: var(--color-brand-lightest);
+    color: var(--color-brand);
+    padding: 0.35rem 0.65rem;
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    user-select: none;
+    border: 1px solid var(--color-brand-light);
+}
+
+.example-tag:hover {
+    background: var(--color-primary-lightest);
+    color: var(--color-brand);
+    border-color: var(--color-brand-light);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-xs);
+}
+
+/* ============================================
+   ERROR MESSAGE
+   ============================================ */
+
+.error-message {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: var(--radius-lg);
+    padding: 0.875rem 1rem;
+    margin-bottom: 1rem;
+    color: #dc2626;
+    font-size: var(--font-size-md);
+}
+
+/* ============================================
+   ACTION BUTTONS
+   ============================================ */
+
+.action-buttons {
+    display: flex;
+    gap: 0.875rem;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 768px) {
+    .search-container {
+        padding: 1rem;
+    }
+
+    .search-modes {
+        flex-direction: column;
+    }
+
+    .variant-controls-row {
+        flex-direction: column;
+        gap: 0.75rem;
+        align-items: stretch;
+    }
+
+    .genome-assembly-inline {
+        justify-content: space-between;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .action-buttons .btn {
+        text-align: center;
+        justify-content: center;
+    }
+
+    .example-tags {
+        justify-content: flex-start;
+    }
+
+    .example-tag {
+        flex: 1;
+        text-align: center;
+        min-width: calc(50% - 0.2rem);
+    }
+}
+
+@media (max-width: 480px) {
+    .search-panel {
+        padding: 1rem;
+    }
+
+    .uploaded-file {
+        max-width: 100%;
+    }
+}

@@ -1,0 +1,711 @@
+/**
+ * cards.css - Card component styles
+ * Consolidated card patterns from function, population, structure, and predictions
+ */
+
+/* Shared selection flash — brief pulse then settles to light-blue selected bg */
+@keyframes selectedItemFlash {
+    0%   { background: rgba(105, 135, 195, 0.22); }
+    100% { background: var(--color-primary-lightest); }
+}
+
+/* ============================================
+   BASE CARD
+   ============================================ */
+
+.card {
+    background: white;
+    border: 1px solid var(--color-border-medium);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--transition-base);
+}
+
+.card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+/* ============================================
+   CARD WITH GRADIENT HEADER
+   ============================================ */
+
+.card-with-header {
+    background: var(--color-bg-secondary);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+}
+
+.card-header {
+    background: var(--gradient-blue);
+    color: white;
+    padding: var(--spacing-lg) var(--spacing-xl);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.card-header a {
+    color: white;
+    opacity: 0.9;
+    text-decoration: none;
+    transition: opacity var(--transition-base);
+}
+
+.card-header a:hover {
+    opacity: 1;
+}
+
+.card-body {
+    padding: var(--spacing-xl);
+}
+
+/* ============================================
+   ALLELE FREQUENCY CARD
+   ============================================ */
+
+.allele-freq-card {
+    background: white;
+    border: 1px solid var(--color-border-medium);
+    border-radius: var(--radius-md);
+    padding: 10px 12px;
+    transition: box-shadow var(--transition-base);
+}
+
+.allele-freq-card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.allele-freq-top {
+    display: flex;
+    align-items: baseline;
+    gap: var(--spacing-sm);
+    margin-bottom: 6px;
+}
+
+.allele-name {
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+}
+
+.allele-value {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-primary);
+    font-family: var(--font-family-mono);
+}
+
+.allele-freq-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+    font-size: var(--font-size-sm);
+}
+
+.allele-classification {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--color-text-secondary);
+    font-style: italic;
+}
+
+.allele-classification .bi-circle-fill {
+    font-size: 10px;
+}
+
+.allele-count {
+    color: var(--color-text-muted);
+    font-family: var(--font-family-mono);
+}
+
+/* ============================================
+   PROTEIN CHANGE CARD
+   ============================================ */
+
+.protein-change-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-lg);
+    padding: 14px 16px;
+    background: white;
+    border: 1px solid var(--color-border-medium);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--spacing-lg);
+    transition: box-shadow var(--transition-base);
+}
+
+.protein-change-card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.protein-change {
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    flex-shrink: 0;
+}
+
+.genomic-location {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-normal);
+    color: var(--color-text-muted);
+    font-family: var(--font-family-mono);
+    text-align: right;
+    word-break: break-all;
+}
+
+/* ============================================
+   ASSOCIATION CARD
+   ============================================ */
+
+.association-card {
+    background: var(--color-bg-tertiary);
+    padding: 10px 12px;
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--spacing-sm);
+    font-size: var(--font-size-base);
+}
+
+.association-card:last-child {
+    margin-bottom: 0;
+}
+
+.association-name {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin-bottom: 2px;
+}
+
+
+/* pocket-card, interaction-grid, pred-card → moved to pockets-interactions.css as compact rows */
+
+/* ============================================
+   PDB STRUCTURE CARDS (compact row layout)
+   ============================================ */
+
+.pdb-structure-card {
+    display: grid;
+    grid-template-columns: 3.5rem 4.5rem 3rem 4rem 1fr;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: 5px 12px;
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-sm);
+    margin-bottom: 2px;
+    cursor: pointer;
+    transition: background var(--transition-fast), border-color var(--transition-fast);
+    font-size: var(--font-size-sm);
+}
+
+.pdb-structure-card:hover {
+    background: var(--color-gray-50);
+    border-color: var(--color-border-medium);
+}
+
+.pdb-structure-card.active {
+    background: var(--color-primary-lightest);
+    border-color: var(--color-primary);
+    animation: selectedItemFlash 0.8s ease-out;
+}
+
+.pdb-structure-card:last-child {
+    margin-bottom: 0;
+}
+
+.pdb-card-id {
+    font-weight: var(--font-weight-bold);
+    font-family: var(--font-family-mono);
+    color: var(--color-text-primary);
+}
+
+.pdb-card-pos {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+    text-align: left;
+}
+
+.pdb-card-chain {
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.pdb-card-resolution {
+    color: var(--color-text-muted);
+    font-family: var(--font-family-mono);
+}
+
+.pdb-card-method {
+    color: var(--color-text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ============================================
+   PREDICTED INTERACTION CARDS (compact row)
+   ============================================ */
+
+.predicted-interaction-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: 5px 12px;
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-sm);
+    margin-bottom: 2px;
+    cursor: pointer;
+    transition: background var(--transition-fast), border-color var(--transition-fast);
+    font-size: var(--font-size-sm);
+}
+
+.predicted-interaction-card:hover {
+    background: var(--color-gray-50);
+    border-color: var(--color-border-medium);
+}
+
+.predicted-interaction-card.active {
+    background: var(--color-primary-lightest);
+    border-color: var(--color-primary);
+    animation: selectedItemFlash 0.8s ease-out;
+}
+
+.predicted-interaction-card:last-child {
+    margin-bottom: 0;
+}
+
+.interaction-protein {
+    color: var(--color-text-primary);
+    font-size: var(--font-size-xs);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.interaction-pdockq {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-primary);
+    text-align: left;
+    white-space: nowrap;
+}
+
+/* ============================================
+   STRUCTURE CARDS (legacy, kept for reference)
+   ============================================ */
+
+.structure-card {
+    background: white;
+    border: 2px solid var(--color-border-medium);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.structure-card:hover {
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-primary-sm);
+}
+
+.structure-card.active {
+    background: var(--color-primary-lightest);
+    border-color: var(--color-primary);
+    border-width: 2px;
+    box-shadow: var(--shadow-primary-md);
+}
+
+.structure-card:last-child {
+    margin-bottom: 0;
+}
+
+/* Structure Card Header - PDB ID and metadata */
+.structure-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-sm);
+}
+
+.structure-card-id {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+}
+
+.structure-card-metadata {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+    font-weight: var(--font-weight-medium);
+}
+
+.structure-card-metadata .separator {
+    color: var(--color-gray-500);
+}
+
+/* Structure Card Details */
+.structure-card-details {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+}
+
+.structure-card-chain {
+    font-weight: var(--font-weight-medium);
+}
+
+.structure-card-position {
+    font-family: var(--font-family-mono);
+    color: var(--color-text-muted);
+}
+
+/* Predicted Structure Card - grid row (matches predicted-col-header) */
+.predicted-structure-card {
+    display: grid;
+    grid-template-columns: 1fr 3.5rem 1fr;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: 5px 12px;
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-sm);
+    margin-bottom: 2px;
+    cursor: pointer;
+    transition: background var(--transition-fast), border-color var(--transition-fast);
+    font-size: var(--font-size-sm);
+}
+
+.predicted-structure-card:hover {
+    background: var(--color-gray-50);
+    border-color: var(--color-border-medium);
+}
+
+.predicted-structure-card.active {
+    background: var(--color-primary-lightest);
+    border-color: var(--color-primary);
+    animation: selectedItemFlash 0.8s ease-out;
+}
+
+/* Name column */
+.predicted-card-name {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    overflow: hidden;
+}
+
+.predicted-card-type {
+    color: var(--color-text-primary);
+    flex-shrink: 0;
+}
+
+.predicted-card-id {
+    color: var(--color-text-muted);
+    font-size: var(--font-size-xs);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.predicted-card-note {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    font-style: italic;
+    flex-shrink: 0;
+}
+
+/* Position column */
+.predicted-card-pos {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+    text-align: left;
+}
+
+/* Pockets column */
+.predicted-card-pockets {
+    color: var(--color-text-muted);
+    font-size: var(--font-size-xs);
+}
+
+.pockets-none {
+    color: var(--color-text-muted);
+    font-size: var(--font-size-xs);
+}
+
+.pockets-label {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+}
+
+/* ============================================
+   PUBMED ARTICLE CARD
+   ============================================ */
+
+.pubmed-article-card {
+    margin-top: 6px;
+    margin-left: 20px;
+    padding: 10px 12px;
+    background: var(--color-bg-tertiary);
+    border-left: 3px solid var(--color-primary);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-base);
+    animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.pubmed-article-title {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin-bottom: 6px;
+    line-height: var(--line-height-normal);
+    display: flex;
+    gap: 6px;
+}
+
+.pubmed-article-title i {
+    margin-top: 2px;
+    flex-shrink: 0;
+    color: var(--color-primary);
+}
+
+.pubmed-article-authors {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    display: flex;
+    gap: 6px;
+    line-height: var(--line-height-normal);
+}
+
+.pubmed-article-authors i {
+    margin-top: 2px;
+    flex-shrink: 0;
+    color: var(--color-text-muted);
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+    .card {
+        padding: var(--spacing-md);
+    }
+
+    .card-header {
+        padding: var(--spacing-md) var(--spacing-lg);
+        font-size: var(--font-size-md);
+    }
+
+    .card-body {
+        padding: var(--spacing-lg);
+    }
+
+    .protein-change-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-sm);
+        padding: 12px 14px;
+    }
+
+    .protein-change {
+        font-size: var(--font-size-lg);
+    }
+
+    .genomic-location {
+        font-size: var(--font-size-sm);
+        text-align: left;
+    }
+
+    .allele-freq-card {
+        padding: var(--spacing-sm) 10px;
+    }
+
+    .association-card {
+        padding: 10px 12px;
+        font-size: var(--font-size-sm);
+    }
+
+    .interaction-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-sm);
+    }
+
+    .structure-card,
+    .predicted-structure-card {
+        padding: 12px 14px;
+    }
+
+    .pubmed-article-card {
+        margin-left: 16px;
+        padding: var(--spacing-sm) 10px;
+        font-size: var(--font-size-sm);
+    }
+}
+
+/* ============================================
+   DARK MODE SUPPORT
+   ============================================ */
+
+@media (prefers-color-scheme: dark) {
+    .card,
+    .allele-freq-card,
+    .protein-change-card,
+    .pred-card,
+    .pocket-card,
+    .interaction-grid,
+    .structure-card,
+    .predicted-structure-card {
+        background: var(--color-bg-secondary);
+        border-color: var(--color-border-light);
+    }
+
+    .card:hover,
+    .allele-freq-card:hover,
+    .protein-change-card:hover,
+    .pred-card:hover,
+    .pocket-card:hover,
+    .interaction-grid:hover {
+        box-shadow: var(--shadow-md);
+    }
+
+    .card-with-header {
+        background: var(--color-bg-primary);
+    }
+
+    .card-header {
+        background: var(--gradient-blue-dark);
+    }
+
+    .structure-card:hover,
+    .predicted-structure-card:hover,
+    .interaction-grid:hover {
+        border-color: var(--color-primary);
+        box-shadow: var(--shadow-primary-sm);
+    }
+
+    .structure-card.active,
+    .predicted-structure-card.active,
+    .interaction-grid.active {
+        background: #2a4a5a;
+        border-color: var(--color-primary);
+    }
+
+    .pdb-structure-card,
+    .predicted-interaction-card,
+    .predicted-structure-card {
+        border-color: var(--color-border-light);
+    }
+
+    .pdb-structure-card:hover,
+    .predicted-interaction-card:hover,
+    .predicted-structure-card:hover {
+        background: var(--color-bg-tertiary);
+        border-color: var(--color-border-medium);
+    }
+
+    .pdb-structure-card.active,
+    .predicted-interaction-card.active,
+    .predicted-structure-card.active {
+        background: #2a4a5a;
+        border-color: var(--color-primary);
+    }
+
+    .pdb-card-id {
+        color: var(--color-text-primary);
+    }
+
+    .pdb-card-chain,
+    .pdb-card-resolution,
+    .pdb-card-method {
+        color: var(--color-text-tertiary);
+    }
+
+    .interaction-protein {
+        color: var(--color-text-secondary);
+    }
+
+    .interaction-pdockq {
+        color: var(--color-primary);
+    }
+
+    .predicted-card-note,
+    .pockets-label {
+        color: var(--color-text-muted);
+    }
+
+    .allele-name,
+    .protein-change,
+    .association-name,
+    .pocket-score,
+    .pdockq-score,
+    .structure-card-id,
+    .predicted-card-model {
+        color: var(--color-text-primary);
+    }
+
+    .allele-value {
+        color: var(--color-primary);
+    }
+
+    .allele-classification,
+    .structure-card-metadata,
+    .structure-card-details {
+        color: var(--color-text-tertiary);
+    }
+
+    .allele-count,
+    .genomic-location,
+    .structure-card-position {
+        color: var(--color-text-tertiary);
+    }
+
+    .association-card {
+        background: var(--color-bg-secondary);
+        border-color: var(--color-border-light);
+    }
+
+    .pubmed-article-card {
+        background: var(--color-bg-secondary);
+        border-left-color: var(--color-primary);
+    }
+
+    .pubmed-article-title {
+        color: var(--color-text-primary);
+    }
+
+    .pubmed-article-title i {
+        color: var(--color-primary);
+    }
+
+    .pubmed-article-authors {
+        color: var(--color-text-tertiary);
+    }
+
+    .pubmed-article-authors i {
+        color: var(--color-text-muted);
+    }
+}

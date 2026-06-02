@@ -1,35 +1,20 @@
 import { MappingResponse } from "./MappingResponse";
-import {DEFAULT_PAGE, DEFAULT_PAGE_SIZE} from "../constants/const";
 
-// InputType          Mapping endpoint        Download endpoint   Cache   Response
-// ID                 /mapping/input/${id}    /download           Y       PagedMappingResponse
-// PROTEIN_ACCESSION  /mapping/accession/${id}  /download           N       PagedMappingResponse
-// SINGLE_VARIANT     /mappings               ?                   N       MappingResponse
-export enum InputType {ID, PROTEIN_ACCESSION, SINGLE_VARIANT}
 export interface PagedMappingResponse {
   content: MappingResponse
-  id: string
   page: number
   pageSize: number
   assembly?: string
   totalItems: number
   totalPages: number
+  // Upper bound on totalItems. Set on the filter-only browse path (where the
+  // BE caps COUNT(*) to bound query cost); null on identifier / variant /
+  // uploaded-result paths. If totalItems > totalCap, the actual count is
+  // "more than totalCap" — display as e.g. "10,000+".
+  totalCap?: number | null
   last: boolean
-  ttl: number
 }
 
-export const toPagedMappingResponse = (mappingResponse: MappingResponse): PagedMappingResponse => {
-  return {content: mappingResponse,
-    id: "",
-    page: DEFAULT_PAGE,
-    pageSize: DEFAULT_PAGE_SIZE,
-    totalItems: 1,
-    totalPages: 1,
-    last: true,
-    ttl: 0
-  }
-}
-
-export interface IDResponse {
-  id: string
+export interface InputUploadResponse {
+  inputId: string
 }

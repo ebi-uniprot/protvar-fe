@@ -1,8 +1,9 @@
 include:
   - project: uniprot/variation/protvar-deploy
-    ref: master
+    ref: main
     file: /ci-templates/gitlab-ci-template.yml
 
+# Default
 variables:
   BE_API: "https://wwwdev.ebi.ac.uk/ProtVar/api"
 
@@ -14,19 +15,23 @@ stages:
 
 workflow:
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: '$CI_COMMIT_BRANCH == "main"'
       variables:
         BE_API: "https://www.ebi.ac.uk/ProtVar/api"
-    - when: always # Run the pipeline in other cases
+    - if: '$CI_COMMIT_BRANCH == "dev"'
+      variables:
+        BE_API: "https://wwwdev.ebi.ac.uk/ProtVar/api"
+    - if: '$CI_COMMIT_BRANCH == "int"'
+      variables:
+        BE_API: "https://wwwint.ebi.ac.uk/ProtVar/api"
+    - when: always
 
 .js:
-  image: node:18.20
+  image: dockerhub.ebi.ac.uk/uniprot/variation/protvar-deploy/cached/node-22
   before_script:
     - node --version
     - npm --version
     - yarn --version
-    - pwd
-    - ls
     - yarn install
 
 #test:
@@ -36,14 +41,12 @@ workflow:
 
 build_static_assets:
   only:
-    refs:
-      - main
-      - dev
-      - test
+    refs: [main, dev, int]
   extends: .js
   stage: build_static_assets
   script:
-    - echo "REACT_APP_API_BASE_URL=${BE_API}" > .env.local
+    - echo "REACT_APP_GIT_BRANCH=${CI_COMMIT_BRANCH}" >> .env.local
+    - echo "REACT_APP_API_BASE_URL=${BE_API}" >> .env.local
     - yarn build
   artifacts:
     paths:
@@ -51,37 +54,31 @@ build_static_assets:
 
 build_docker_image:
   only:
-    refs:
-      - main
-      - dev
-      - test
+    refs: [main, dev, int]
   extends: .build_docker
   stage: build_docker_image
 
+int-deploy:
+  only:
+    refs: [int]
+  extends: .deploy
+  stage: deploy
+  script:
+    - ./protvar-deploy/scripts/deploy.sh "int" "protvar-fe" "${CI_COMMIT_SHORT_SHA}"
+
 dev-deploy:
   only:
-    refs:
-      - dev
+    refs: [dev]
   extends: .deploy
   stage: deploy
   script:
-    - ./protvar-deploy/scripts/deploy.sh ENV=DV APP_NAME=protvar-fe K8S_NAMESPACE=protvar-dev imageTag="${CI_COMMIT_SHORT_SHA}"
-
-test-deploy:
-  only:
-    refs:
-      - test
-  extends: .deploy
-  stage: deploy
-  script:
-    - ./protvar-deploy/scripts/deploy.sh ENV=DV APP_NAME=protvar-fe K8S_NAMESPACE=protvar-test imageTag="${CI_COMMIT_SHORT_SHA}"
+    - ./protvar-deploy/scripts/deploy.sh "dev" "protvar-fe" "${CI_COMMIT_SHORT_SHA}"
 
 main-deploy:
   only:
-    refs:
-      - main
+    refs: [main]
   extends: .deploy
   stage: deploy
+  when: manual  # manual gate for public/live deploy
   script:
-    - ./protvar-deploy/scripts/deploy.sh ENV=FB APP_NAME=protvar-fe K8S_NAMESPACE=protvar imageTag="${CI_COMMIT_SHORT_SHA}"
-    - ./protvar-deploy/scripts/deploy.sh ENV=PB APP_NAME=protvar-fe K8S_NAMESPACE=protvar imageTag="${CI_COMMIT_SHORT_SHA}"
+    - ./protvar-deploy/scripts/deploy.sh "pub" "protvar-fe" "${CI_COMMIT_SHORT_SHA}"

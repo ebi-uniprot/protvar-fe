@@ -1,0 +1,17 @@
+# Normalize all text files to LF in the repository.
+# Developers on Windows will get LF on checkout (not CRLF).
+* text=auto eol=lf
+
+# Explicitly binary — never touch line endings
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.woff binary
+*.woff2 binary
+*.ttf  binary
+*.eot  binary
+
+# SVG is XML text
+*.svg  text eol=lf

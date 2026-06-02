@@ -1,135 +1,83 @@
-export type CustomInput = GenomicInput|ProteinInput|IDInput|CodingInput
+// Types matching the Java model for `Type`, `Format`, etc.
+export type VariantType = "GENOMIC" | "CODING_DNA" | "PROTEIN" | "VARIANT_ID" | "INVALID";
+export type VariantFormat =
+  // HGVS formats
+  "HGVS_GENOMIC" | "HGVS_CODING" | "HGVS_PROTEIN" |
+  // Internal formats
+  "INTERNAL_GENOMIC" | "INTERNAL_PROTEIN" |
+  // External formats
+  "VCF" | "GNOMAD" |
+  // ID-based formats
+  "DBSNP" | "CLINVAR" | "COSMIC" |
+  "INVALID";
+export type MessageType = "INFO" | "WARN" | "ERROR";
+
+// Base interface for all user inputs
+export interface VariantInput {
+  originalIndex: number;
+  inputStr: string;
+  format: VariantFormat;
+  type: VariantType;
+  messages: Message[];
+  derivedGenomicVariants: GenomicVariant[];
+  // Genomic fields only
+  id?:string // VCF ID field
+  isLiftedFrom37?:boolean // CrossMapped 37->38
+}
+
+export interface GenomicVariant {
+  chromosome:string
+  position:number
+  refBase:string
+  altBase:string
+  genes: Gene[]
+}
+
 
 export interface MappingResponse {
-  inputs: Array<CustomInput>
-  messages: Array<Message>
+  inputs: VariantInput[]
+  messages: Message[]
 }
 
 export interface Message {
-  type: string
+  type: MessageType
   text: string
 }
 
-export const INPUT_GEN = 'GENOMIC'
-export const INPUT_PRO = 'PROTEIN'
-export const INPUT_CDNA = 'CODING'
-export const INPUT_ID = 'ID'
-
-export const INFO = 'INFO'
-export const WARN = 'WARN'
-export const ERROR = 'ERROR'
-
-export interface UserInput {
-  inputStr: string
-  messages: Array<Message>
-  type: string
-  format: string
-  //valid: boolean
-}
-
-export interface Message {
-  type: string
-  text: string
-}
-
-export interface GenomicInput extends UserInput {
-  chr:string
-  pos:number
-  ref:string
-  alt:string
-  id:string
-  converted:boolean
-  mappings:Array<GenomeProteinMapping>
-}
-
-export interface ProteinInput extends UserInput {
-  acc:string
-  pos:number
-  ref:string
-  alt:string
-  derivedGenomicInputs:Array<GenomicInput>
-}
-
-export interface IDInput extends UserInput {
-  id:string
-  derivedGenomicInputs:Array<GenomicInput>
-}
-
-// for HGVSc input
-export interface CodingInput extends UserInput {
-  acc:string
-  pos:number
-  ref:string
-  alt:string
-
-  gene:string
-  protRef:string
-  protAlt:string
-  protPos:number
-
-  derivedUniprotAcc:string
-  derivedProtPos:number
-  derivedCodonPos:number
-
-  derivedGenomicInputs:Array<GenomicInput>
-}
-
-export interface GenomeProteinMapping {
-  //chromosome: string;
-  //geneCoordinateStart: number;
-  //geneCoordinateEnd: number;
-  //id: string;
-  //userAllele: string;
-  //variantAllele: string;
-  genes: Array<Gene>;
-  //input: string;
-}
 export interface Gene {
   ensg: string;
   reverseStrand: boolean;
   geneName: string;
   refAllele: string;
   altAllele: string;
-  isoforms: Array<IsoFormMapping>;
+  isoforms: Isoform[];
   caddScore: number;
-  alleleFreq: number;
 }
+
 // TODO clean up unused commented properties below
-export interface IsoFormMapping {
+export interface Isoform {
   accession: string;
   canonical: boolean;
   canonicalAccession: string;
   isoformPosition: number;
   refCodon: string;
-//  userCodon: string;
-  cdsPosition: number;
+  codonPosition: number;
   refAA: string;
-//  userAA: string;
   variantAA: string;
   variantCodon: string;
   consequences: string;
   proteinName: string;
-  translatedSequences: Array<Ensp>;
-//  populationObservations: any;
-  populationObservationsUri: string;
-//  referenceFunction: any;
-  referenceFunctionUri: string;
-//  experimentalEvidence: Array<any>;
-//  evolutionalInference: any;
-//  evolutionalInferenceUri: string;
-//  proteinStructure: Array<any>;
-  proteinStructureUri: string;
-  conservScore: ConservScore;
-  amScore: AMScore;
-  eveScore: EVEScore;
-  esmScore: ESMScore;
-}
-interface Ensp {
-  ensp: string;
   transcripts: Array<Transcript>;
+  populationObservationsUri: string;
+  referenceFunctionUri: string;
+  proteinStructureUri: string;
+  amScore: AmScore;
+  popEveScore?: PopEveScore;
 }
+
 interface Transcript {
   enst: string;
+  ensp: string;
   ense: string;
 }
 
@@ -142,18 +90,30 @@ export interface ConservScore {
   score:number
 }
 
-export interface EVEScore {
+export interface EveScore {
   score:number
   eveClass:string
 }
 
-export interface ESMScore {
+export interface EsmScore {
   score:number
 }
 
-export interface AMScore {
+export interface AmScore {
   amPathogenicity:number
   amClass:string
 }
 
-export default MappingResponse;
+export interface PopEveScore {
+  gapFreq: number,
+  popeve: number,
+  poppedEve: number,
+  poppedEsm1v: number,
+  eve: number,
+  esm1v: number
+}
+
+export interface M3dPred {
+  prediction:string
+  damagingFeature:string
+}

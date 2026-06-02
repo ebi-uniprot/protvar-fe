@@ -1,0 +1,471 @@
+/* ============================================
+   FOOTER CONTENT SECTION (citation + twitter)
+   ============================================ */
+
+.footer-content-section {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+    padding: 2rem 1.5rem;
+    background-color: var(--color-bg-tertiary);
+    border-top: 1px solid var(--color-border-medium);
+}
+
+.citation-container h5,
+.twitter-container h5 {
+    color: var(--color-brand);
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-semibold);
+    margin-bottom: 0.75rem;
+    letter-spacing: 0.01em;
+}
+
+.citation-text {
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-relaxed);
+    margin-bottom: 1rem;
+    color: var(--color-text-primary);
+}
+
+.footer-links {
+    margin-top: 1rem;
+}
+
+.footer-links p {
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+    margin: 0.4rem 0;
+    line-height: var(--line-height-normal);
+}
+
+.ref-link {
+    color: var(--color-brand);
+    text-decoration: underline;
+}
+
+.ref-link:hover {
+    color: var(--color-brand-dark);
+}
+
+.twitter-content {
+    background: var(--color-bg-primary);
+    border-radius: var(--radius-lg);
+    padding: 1rem;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+}
+
+/* Shown when Twitter widget fails to load; hidden once iframe appears */
+.twitter-fallback {
+    display: block;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    padding: 1rem 0 0.5rem;
+    text-align: center;
+}
+
+.twitter-fallback a {
+    color: var(--color-brand);
+}
+
+.twitter-content:has(iframe) .twitter-fallback {
+    display: none;
+}
+
+/* ============================================
+   PARTNERS + SOCIAL
+   ============================================ */
+
+.pv-footer {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 1.5rem;
+    background-color: var(--color-bg-primary);
+    border-top: 1px solid var(--color-border-light);
+}
+
+.partners-heading {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-text-tertiary);
+    margin: 0 0 0.75rem 0;
+}
+
+.partner-logos {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.collaborator-img {
+    height: 32px;
+    width: auto;
+    transition: opacity var(--transition-slow);
+}
+
+.partner-logos a:hover .collaborator-img {
+    opacity: 0.75;
+}
+
+/* Follow + Subscribe — now inside twitter-container, below the feed */
+.social-signup-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--color-border-light);
+}
+
+/* ============================================
+   EBI INSTITUTIONAL FOOTER
+   ============================================ */
+
+.ebi-footer {
+    background: #333;
+    color: #ccc;
+    font-size: 11px;
+}
+
+.ebi-footer-inner {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    padding: 0.75rem 1.5rem;
+}
+
+.ebi-footer-logo img {
+    filter: brightness(0) invert(1);
+    opacity: 0.85;
+    display: block;
+}
+
+.ebi-footer-logo:hover img {
+    opacity: 1;
+}
+
+.ebi-footer-tagline {
+    margin: 0;
+    flex: 1;
+    min-width: 200px;
+    color: #aaa;
+}
+
+.ebi-footer-copyright {
+    width: 100%;
+    margin: 0;
+    color: #aaa;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0 0.5rem;
+}
+
+.ebi-footer-copyright a {
+    color: #ccc;
+    text-decoration: none;
+}
+
+.ebi-footer-copyright a:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+.ebi-footer-sep {
+    color: #555;
+    user-select: none;
+}
+
+.ebi-footer-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+}
+
+.ebi-footer-nav a {
+    color: #ccc;
+    text-decoration: none;
+}
+
+.ebi-footer-nav a:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+/* ============================================
+   COOKIE NOTICE
+   ============================================ */
+
+.cookie-notice {
+    color: white;
+    font-size: var(--font-size-sm);
+}
+
+.cookie-notice a {
+    color: #87ceeb;
+    text-decoration: underline;
+}
+
+.cookie-notice a:hover {
+    color: white;
+}
+
+/* ============================================
+   CITATION CAROUSEL
+   ============================================ */
+
+.citation-carousel {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-border-light);
+}
+
+.citation-carousel h5 {
+    color: var(--color-brand);
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-semibold);
+    margin-bottom: 0.75rem;
+}
+
+.carousel-content {
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.carousel-citation-link {
+    text-decoration: none;
+    display: block;
+    transition: opacity var(--transition-base);
+}
+
+.carousel-citation-link:hover {
+    opacity: 0.85;
+}
+
+.carousel-citation-link:hover .carousel-citation-text {
+    color: var(--color-brand-dark);
+}
+
+.carousel-citation-text {
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-relaxed);
+    margin-bottom: 0.75rem;
+    color: var(--color-text-primary);
+    transition: color var(--transition-base);
+}
+
+.carousel-citation-link .carousel-citation-text {
+    cursor: pointer;
+}
+
+.carousel-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: auto;
+    padding-top: 0.5rem;
+}
+
+/* Prev/Next buttons that flank the counter */
+.carousel-nav {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: none;
+    background: transparent;
+    color: var(--color-text-tertiary);
+    cursor: pointer;
+    padding: 0;
+    border-radius: var(--radius-full);
+    transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.carousel-nav:hover:not(:disabled) {
+    background: var(--color-bg-tertiary);
+    color: var(--color-brand);
+}
+
+.carousel-nav:disabled {
+    cursor: default;
+    opacity: 0.4;
+}
+
+.carousel-counter {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-tertiary);
+    font-weight: var(--font-weight-medium);
+    min-width: 2.5rem;
+    text-align: center;
+}
+
+/* ============================================
+   SUBSCRIBE FORM
+   ============================================ */
+
+.newsletter-form {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+    max-width: 280px;
+}
+
+.newsletter-form label {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-secondary);
+    line-height: var(--line-height-normal);
+}
+
+.subscription-input {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.email-input {
+    width: 100%;
+    height: 34px;
+    padding: 7px 80px 7px 14px;
+    background: white;
+    border: 1px solid var(--color-border-medium);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-sm);
+    font-family: inherit;
+    color: var(--color-text-primary);
+    transition: border-color var(--transition-base), box-shadow var(--transition-base);
+    outline: none;
+    box-sizing: border-box;
+}
+
+.email-input:hover {
+    border-color: var(--color-border-dark);
+}
+
+.email-input:focus {
+    border-color: var(--color-brand-light);
+    box-shadow: 0 0 0 3px var(--color-brand-lightest);
+}
+
+.email-input::placeholder {
+    color: var(--color-text-muted);
+}
+
+.subscribe-button {
+    position: absolute;
+    right: 3px;
+    top: 3px;
+    height: 28px;
+    padding: 0 12px;
+    background: var(--color-brand);
+    color: white;
+    border: none;
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background var(--transition-base);
+}
+
+.subscribe-button:hover {
+    background: var(--color-brand-dark);
+}
+
+.subscribe-confirmed {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.subscribe-confirmed-text {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-primary);
+}
+
+.subscribe-confirmed-icon {
+    color: #22c55e;
+    font-size: 1.1em;
+    flex-shrink: 0;
+}
+
+.subscribe-again-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: none;
+    border: 1px solid var(--color-border-medium);
+    color: var(--color-brand);
+    font-size: var(--font-size-xs);
+    font-family: inherit;
+    cursor: pointer;
+    padding: 3px 8px;
+    border-radius: var(--radius-full);
+    transition: background var(--transition-base), border-color var(--transition-base);
+    width: fit-content;
+}
+
+.subscribe-again-btn:hover {
+    background: var(--color-brand-lightest);
+    border-color: var(--color-brand);
+    color: var(--color-brand-dark);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media screen and (max-width: 768px) {
+    .footer-content-section {
+        grid-template-columns: 1fr;
+        padding: 1.5rem 1rem;
+    }
+
+    .pv-footer {
+        padding: 1rem;
+    }
+
+    .carousel-content {
+        min-height: 130px;
+    }
+
+    .carousel-citation-text {
+        font-size: var(--font-size-sm);
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .ebi-footer-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+        padding: 1rem;
+    }
+
+    .ebi-footer-tagline {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .footer-content-section {
+        padding: 1rem;
+    }
+
+    .collaborator-img {
+        width: 110px;
+    }
+}

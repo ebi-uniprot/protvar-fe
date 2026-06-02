@@ -1,0 +1,220 @@
+/**
+ * badges.css - Badge and label components
+ * Tags, labels, badges, and status indicators
+ */
+
+/* ============================================
+   BASE BADGE
+   ============================================ */
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 6px;
+    background: var(--color-gray-200);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+}
+
+/* Compact numeric count indicator */
+.count-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    padding: 1px 5px;
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-muted);
+    line-height: 1.4;
+}
+
+/* ============================================
+   DATA RICHNESS BADGE
+   ============================================ */
+
+.data-richness-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: 3px 8px;
+    background: rgba(74, 144, 226, 0.1);
+    border: 1px solid rgba(74, 144, 226, 0.2);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-primary);
+    margin-left: var(--spacing-sm);
+}
+
+.data-richness-badge i {
+    font-size: 10px;
+}
+
+/* ============================================
+   POCKET BADGE
+   ============================================ */
+
+.pocket-badge {
+    background: var(--color-primary-lightest);
+    color: var(--color-primary);
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+}
+
+/* ============================================
+   STRUCTURE BADGE (Resolution, Method)
+   ============================================ */
+
+.structure-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 6px;
+    background: var(--color-gray-100);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-primary);
+}
+
+
+/* ============================================
+   EXPERIMENTAL FEATURE BADGE
+   ============================================ */
+
+.experimental-text-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    font-size: 0.6em;
+    font-weight: 600;
+    color: #9b59b6;
+    background: rgba(155, 89, 182, 0.1);
+    border-radius: 3px;
+    padding: 2px 6px;
+    vertical-align: super;
+    margin-left: 0.4em;
+    letter-spacing: 0.02em;
+}
+
+/* ============================================
+   STATUS BADGES
+   ============================================ */
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+}
+
+.status-badge.status-success {
+    background: rgba(40, 167, 69, 0.1);
+    color: #28a745;
+}
+
+.status-badge.status-warning {
+    background: rgba(255, 193, 7, 0.1);
+    color: #ffc107;
+}
+
+.status-badge.status-danger {
+    background: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+}
+
+.status-badge.status-info {
+    background: rgba(23, 162, 184, 0.1);
+    color: #17a2b8;
+}
+
+/* ============================================
+   XREF SIGNIFICANCE BADGE
+   ============================================ */
+
+.xref-significance {
+    font-style: italic;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+    .badge,
+    .pocket-badge,
+    .structure-badge,
+    .conf-badge,
+    .status-badge {
+        font-size: 10px;
+        padding: 2px 5px;
+    }
+
+    .data-richness-badge {
+        font-size: 10px;
+        padding: 2px 6px;
+    }
+}
+
+/* ============================================
+   DARK MODE SUPPORT
+   ============================================ */
+
+@media (prefers-color-scheme: dark) {
+    .badge {
+        background: var(--color-bg-tertiary);
+        color: var(--color-text-primary);
+    }
+
+    .data-richness-badge {
+        background: rgba(110, 168, 254, 0.15);
+        border-color: rgba(110, 168, 254, 0.3);
+        color: var(--color-primary);
+    }
+
+    .pocket-badge {
+        background: rgba(110, 168, 254, 0.15);
+        color: var(--color-primary);
+    }
+
+    .structure-badge {
+        background: rgba(110, 168, 254, 0.15);
+        color: var(--color-primary);
+    }
+
+
+    .status-badge.status-success {
+        background: rgba(40, 167, 69, 0.2);
+        color: #4ade80;
+    }
+
+    .status-badge.status-warning {
+        background: rgba(255, 193, 7, 0.2);
+        color: #fbbf24;
+    }
+
+    .status-badge.status-danger {
+        background: rgba(220, 53, 69, 0.2);
+        color: #f87171;
+    }
+
+    .status-badge.status-info {
+        background: rgba(23, 162, 184, 0.2);
+        color: #38bdf8;
+    }
+
+    .xref-significance {
+        color: var(--color-text-tertiary);
+    }
+}

@@ -1,0 +1,307 @@
+/**
+ * pockets-interactions.css
+ * Pocket and PPI rows — styled to match structure table row pattern
+ */
+
+/* ============================================
+   CONFIDENCE LEVEL COLOURS
+   ============================================ */
+
+.pocket-conf.vhigh { color: #1a7a30; }  /* dark green */
+.pocket-conf.high  { color: #3aaa5a; }  /* medium green — distinct from dark, no halo */
+.pocket-conf.low   { color: #c97a00; }  /* amber — darker than #f0ad4e to avoid halo */
+.pocket-conf.vlow  { color: #c0392b; }  /* strong red */
+
+.pocket-conf {
+    font-size: var(--font-size-sm);
+    margin-right: 2px;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================
+   POCKET ENTRIES
+   Card-per-entry with gap for clear separation
+   ============================================ */
+
+.pocket-entries {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    /* 3px top matches the structure tables' .structure-rows-scroll inset */
+    padding: 3px 0 4px;
+}
+
+.pocket-entry {
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    transition: border-color var(--transition-base), box-shadow var(--transition-base);
+}
+
+.pocket-entry:hover {
+    border-color: var(--color-border-medium);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Row 1: identity + key metrics — shares grid columns with .pocket-list-col-header */
+.pocket-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: 8px 12px 6px 12px;
+    font-size: var(--font-size-sm);
+}
+
+.pocket-id-btn {
+    min-width: 3.5rem;
+    font-weight: var(--font-weight-semibold);
+}
+
+.pocket-metric {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.pocket-score {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+}
+
+/* Row 2: supplementary metrics — dot-separated, muted */
+.pocket-details {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 5px 12px 8px 12px;
+    font-size: var(--font-size-xs);
+    color: var(--color-text-secondary);
+    gap: 0;
+    background: var(--color-bg-tertiary);
+}
+
+.pocket-details span {
+    white-space: nowrap;
+}
+
+.pocket-details span + span::before {
+    content: '·';
+    margin: 0 var(--spacing-sm);
+    color: var(--color-text-muted);
+}
+
+.pocket-detail-label {
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
+    margin-right: 3px;
+}
+
+/* Residue list collapses to a count + chevron by default; expands inline. */
+.pocket-residues-toggle {
+    background: none;
+    border: 0;
+    padding: 0 4px;
+    margin: 0;
+    cursor: pointer;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+    line-height: 1;
+    vertical-align: baseline;
+}
+
+.pocket-residues-toggle:hover {
+    color: var(--color-text-primary);
+}
+
+/* Higher specificity than `.pocket-details span` (nowrap) so the expanded list
+   wraps instead of overflowing and being clipped by `.pocket-entry overflow:hidden`. */
+.pocket-details span.pocket-residues-list {
+    margin-left: 4px;
+    word-break: break-word;
+    white-space: normal;
+}
+
+/* ============================================
+   POCKET FILTER — confidence-level pills
+   ============================================ */
+
+.pocket-filter-pills-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    padding: 5px 12px;
+    border-bottom: 1px solid var(--color-border-light);
+    font-size: var(--font-size-xs);
+}
+
+.pocket-filter-label {
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+    font-weight: var(--font-weight-medium);
+    margin-right: 2px;
+}
+
+.pocket-filter-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 2px 8px;
+    border: 1px solid var(--color-border-medium);
+    border-radius: 10px;
+    background: none;
+    font-size: var(--font-size-xs);
+    cursor: pointer;
+    color: var(--color-text-secondary);
+    transition: border-color var(--transition-base), background var(--transition-base), color var(--transition-base);
+}
+
+.pocket-filter-pill:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    background: var(--color-primary-lightest);
+}
+
+.pocket-filter-pill.active {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    background: var(--color-primary-lightest);
+    font-weight: var(--font-weight-medium);
+}
+
+.pocket-filter-clear {
+    background: none;
+    border: none;
+    padding: 0 4px;
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: color var(--transition-base);
+}
+
+.pocket-filter-clear:hover {
+    color: var(--color-text-secondary);
+}
+
+/* ============================================
+   INTERACTION ROWS
+   Must share grid-template-columns with .interaction-col-header
+   ============================================ */
+
+/* 3px top matches the structure tables' .structure-rows-scroll inset */
+.interaction-rows {
+    padding-top: 3px;
+}
+
+/* Mirrors the structure tab's .predicted-interaction-card (cards.css) so the
+   same interaction data reads consistently across the function & structure tabs.
+   Shares grid-template-columns with .interaction-col-header (1fr 1fr 1fr). */
+.interaction-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: 5px 12px;
+    font-size: var(--font-size-sm);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-sm);
+    margin-bottom: 2px;
+    transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.interaction-row:last-child {
+    margin-bottom: 0;
+}
+
+.interaction-row:hover {
+    background: var(--color-gray-50);
+    border-color: var(--color-border-medium);
+}
+
+.pdockq-score {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-primary);
+    text-align: left;
+    white-space: nowrap;
+}
+
+/* ============================================
+   SHARED: VIEW STRUCTURE BUTTON
+   ============================================ */
+
+.view-structure-button {
+    background: none;
+    border: none;
+    color: var(--color-primary);
+    cursor: pointer;
+    padding: 0;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-normal);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: color var(--transition-base);
+}
+
+.view-structure-button:hover {
+    color: var(--color-primary-dark);
+    text-decoration: underline;
+}
+
+.view-structure-button:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+}
+
+.structure-icon-sm {
+    width: 14px;
+    height: 14px;
+    vertical-align: middle;
+    opacity: 0.8;
+}
+
+/* ============================================
+   DARK MODE
+   ============================================ */
+
+@media (prefers-color-scheme: dark) {
+    .pocket-entry {
+        border-color: var(--color-border-light);
+    }
+
+    .pocket-entry:hover {
+        border-color: var(--color-border-medium);
+        box-shadow: none;
+    }
+
+    .pocket-details {
+        background: var(--color-bg-secondary);
+    }
+
+    .interaction-row:hover {
+        background: rgba(110, 168, 254, 0.08);
+    }
+
+    .interaction-row {
+        border-color: var(--color-border-light);
+    }
+
+    .pocket-filter-pill {
+        border-color: var(--color-border-medium);
+        color: var(--color-text-tertiary);
+    }
+
+    .pocket-filter-pill:hover,
+    .pocket-filter-pill.active {
+        background: rgba(110, 168, 254, 0.1);
+        border-color: var(--color-primary);
+        color: var(--color-primary);
+    }
+
+    .pocket-conf.vhigh { color: #4ccc74; }
+    .pocket-conf.high  { color: #7ddba0; }
+    .pocket-conf.low   { color: #f5b840; }
+    .pocket-conf.vlow  { color: #e06060; }
+}

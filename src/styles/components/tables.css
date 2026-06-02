@@ -1,0 +1,423 @@
+/**
+ * tables.css - Table and structure list styles
+ */
+
+/* ============================================
+   STRUCTURE TABLES STACK
+   Each structure type is its own separate card
+   ============================================ */
+
+.structure-tables-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
+}
+
+/* Matches .annotation-column */
+.structure-type-section {
+    background: var(--color-bg-secondary);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+/* ============================================
+   SECTION HEADER — matches .column-header
+   ============================================ */
+
+.structure-section-header {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 12px;
+    background: #e8eaed;
+    border-bottom: 1px solid var(--color-border-light);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+}
+
+/* Inline help icon — borderless blue filled i, pushed to far right in section header */
+.help-icon-inline {
+    margin-left: auto;
+    font-size: 13px;
+    color: var(--color-primary);
+    cursor: pointer;
+    flex-shrink: 0;
+    opacity: 0.8;
+    transition: opacity 0.15s ease;
+}
+
+.help-icon-inline:hover {
+    opacity: 1;
+}
+
+/* Count badge inside section header */
+.count-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    background: var(--color-primary);
+    color: white;
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: var(--font-weight-bold);
+    line-height: 1;
+    margin-left: 2px;
+}
+
+/* ============================================
+   COLUMN HEADERS
+   Must share grid-template-columns with their card counterparts
+   ============================================ */
+
+.structure-col-header {
+    display: grid;
+    align-items: center;
+    gap: var(--spacing-sm);
+    /* 1px transparent border + 11px padding = 12px total, matching card's 12px padding inside 1px border */
+    padding: 3px 11px;
+    border: 1px solid transparent;
+    border-bottom-color: var(--color-border-light);
+    font-size: 10px;
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+/* PDB: ID | Chain | Pos | Res (Å) | Method */
+.pdb-col-header {
+    grid-template-columns: 3.5rem 4.5rem 3rem 4rem 1fr;
+}
+
+/* Predicted: (empty) | Pos | Pockets */
+.predicted-col-header {
+    grid-template-columns: 1fr 3.5rem 1fr;
+}
+
+/* Interactions: Chain A | Chain B | pDockQ */
+.interaction-col-header {
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+/* Function-tab pockets list: Pocket | Score | pLDDT (matches .pocket-row) */
+.pocket-list-col-header {
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+/* Pockets: Pocket | Score | pLDDT | Residues */
+.pocket-col-header {
+    grid-template-columns: 5rem 7rem 6rem 1fr;
+}
+
+/* ============================================
+   SCROLLABLE ROW AREA
+   CSS scroll-shadow trick: shows shadow at top/bottom when overflowing
+   ============================================ */
+
+.structure-rows-scroll {
+    max-height: 152px;
+    overflow-y: auto;
+    /* No horizontal padding: cards sit at the same left inset as the column
+       header (which lives outside this wrapper), so the 1fr columns line up
+       with their labels — same as the function-tab PPI list. */
+    padding: 3px 0;
+    /* scroll-shadow: fades content at edges, stronger shadow shows overflow */
+    background:
+        linear-gradient(white 30%, transparent),
+        linear-gradient(transparent, white 70%) 0 100%,
+        radial-gradient(farthest-side at 50% 0, rgba(0,0,0,.12), transparent),
+        radial-gradient(farthest-side at 50% 100%, rgba(0,0,0,.18), transparent) 0 100%;
+    background-repeat: no-repeat;
+    background-size: 100% 32px, 100% 32px, 100% 14px, 100% 14px;
+    background-attachment: local, local, scroll, scroll;
+    /* Firefox scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-gray-400) transparent;
+}
+
+/* Thin scrollbar for row areas */
+.structure-rows-scroll::-webkit-scrollbar {
+    width: 5px;
+}
+.structure-rows-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+.structure-rows-scroll::-webkit-scrollbar-thumb {
+    background: var(--color-gray-400);
+    border-radius: 3px;
+}
+.structure-rows-scroll::-webkit-scrollbar-thumb:hover {
+    background: var(--color-gray-600);
+}
+
+/* For sections with few items (no scroll needed) */
+.structure-rows-noscroll {
+    padding: 3px 0;
+}
+
+/* ============================================
+   MODEL CONFIDENCE PANEL (AlphaFold/Fill)
+   Slides in when a predicted structure is selected
+   ============================================ */
+
+.model-conf-panel {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease, opacity 0.25s ease;
+    border-top: 1px solid var(--color-border-light);
+}
+
+.model-conf-panel.show {
+    max-height: 500px;
+    opacity: 1;
+}
+
+.model-conf-grid {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--spacing-md) var(--spacing-xl);
+    padding: var(--spacing-sm) var(--spacing-md) var(--spacing-md);
+    font-size: var(--font-size-sm);
+}
+
+.model-conf-title {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* ============================================
+   TABLE ACTIONS (contextual buttons below selected row)
+   ============================================ */
+
+.table-actions {
+    padding: 5px 12px;
+    background: var(--color-bg-tertiary);
+    border-top: 1px solid var(--color-border-light);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+/* ============================================
+   EMPTY STATE
+   ============================================ */
+
+.no-structures-msg {
+    padding: 10px 12px;
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+    font-style: italic;
+}
+
+/* ============================================
+   VIEWER CONTROLS BAR (below viewer, not overlaid)
+   ============================================ */
+
+.viewer-controls-bar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 5px;
+    padding: 6px 10px;
+    background: white;
+    border-top: 1px solid var(--color-border-light);
+    min-height: 36px;
+}
+
+/* Override absolute positioning for controls inside the bar */
+.viewer-controls-bar .viewer-controls {
+    position: static;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+/* Smaller, more subtle buttons in the bar */
+.viewer-controls-bar .viewer-control-btn {
+    font-size: var(--font-size-xs);
+    padding: 4px 10px;
+    background: var(--color-bg-tertiary);
+    border-color: var(--color-border-dark);
+    box-shadow: none;
+    color: var(--color-text-secondary);
+}
+
+.viewer-controls-bar .viewer-control-btn:hover {
+    background: white;
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    box-shadow: none;
+}
+
+.viewer-controls-bar .viewer-control-btn.btn-primary {
+    background: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+}
+
+.viewer-controls-bar .viewer-control-btn.btn-primary:hover {
+    background: var(--color-primary-dark);
+    border-color: var(--color-primary-dark);
+}
+
+.viewer-controls-bar .viewer-control-btn.btn-reset {
+    background: var(--color-gray-200);
+    border-color: var(--color-gray-500);
+    color: var(--color-text-secondary);
+}
+
+/* ============================================
+   POCKET GRID (Label-Value Grid)
+   ============================================ */
+
+.pocket-grid {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: var(--spacing-sm) var(--spacing-lg);
+    align-items: center;
+    font-size: var(--font-size-base);
+    margin-bottom: var(--spacing-md);
+}
+
+.pocket-grid label,
+.pocket-grid > div:nth-child(odd):not(.pocket-confidence-dropdown) {
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
+}
+
+/* ============================================
+   LEGACY - keep for backward compat
+   ============================================ */
+
+.structure-table-card {
+    background: var(--color-bg-secondary);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+}
+
+.structure-table-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: 8px 12px;
+    background: var(--color-bg-secondary);
+    border-bottom: 2px solid var(--color-primary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+}
+
+.structure-cards-container {
+    max-height: 400px;
+    overflow-y: auto;
+    padding: var(--spacing-md);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 768px) {
+    .structure-rows-scroll {
+        max-height: 120px;
+    }
+
+    .pdb-col-header {
+        grid-template-columns: 3rem 4rem 2.5rem 3.5rem 1fr;
+    }
+
+    .table-actions {
+        gap: 4px;
+        padding: 4px 10px;
+    }
+}
+
+/* ============================================
+   DARK MODE
+   ============================================ */
+
+@media (prefers-color-scheme: dark) {
+    .structure-type-section {
+        background: var(--color-bg-secondary);
+    }
+
+    .structure-section-header {
+        background: var(--color-bg-tertiary);
+        border-color: var(--color-border-light);
+        color: var(--color-text-primary);
+    }
+
+    .structure-col-header {
+        color: var(--color-text-muted);
+        border-color: var(--color-border-light);
+    }
+
+    .structure-rows-scroll {
+        background:
+            linear-gradient(var(--color-bg-primary) 30%, transparent),
+            linear-gradient(transparent, var(--color-bg-primary) 70%) 0 100%,
+            radial-gradient(farthest-side at 50% 0, rgba(255,255,255,.04), transparent),
+            radial-gradient(farthest-side at 50% 100%, rgba(255,255,255,.04), transparent) 0 100%;
+        background-repeat: no-repeat;
+        background-size: 100% 32px, 100% 32px, 100% 10px, 100% 10px;
+        background-attachment: local, local, scroll, scroll;
+    }
+
+    .structure-rows-scroll::-webkit-scrollbar-thumb {
+        background: var(--color-gray-600);
+    }
+
+    .model-conf-panel {
+        border-color: var(--color-border-light);
+    }
+
+    .model-conf-title {
+        color: var(--color-text-secondary);
+    }
+
+    .table-actions {
+        background: var(--color-bg-secondary);
+        border-color: var(--color-border-light);
+    }
+
+    .no-structures-msg {
+        color: var(--color-text-muted);
+    }
+
+    .viewer-controls-bar {
+        background: var(--color-bg-primary);
+        border-color: var(--color-border-light);
+    }
+
+    .viewer-controls-bar .viewer-control-btn {
+        background: var(--color-bg-secondary);
+        border-color: var(--color-border-medium);
+        color: var(--color-text-secondary);
+    }
+
+    .viewer-controls-bar .viewer-control-btn:hover {
+        background: var(--color-bg-tertiary);
+        border-color: var(--color-primary);
+        color: var(--color-primary);
+    }
+
+    .pocket-grid label,
+    .pocket-grid > div:nth-child(odd):not(.pocket-confidence-dropdown) {
+        color: var(--color-text-secondary);
+    }
+}

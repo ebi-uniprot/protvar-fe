@@ -1,0 +1,77 @@
+.status-meta {
+    color: var(--color-text-secondary);
+    font-size: 12px;
+    margin-bottom: 16px;
+}
+
+.status-section-header {
+    margin-top: 24px;
+    margin-bottom: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 11px;
+    color: var(--color-text-tertiary);
+}
+
+.status-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+}
+
+.status-card {
+    border: 1px solid var(--color-border-medium);
+    border-radius: 6px;
+    padding: 12px 14px;
+    background: var(--color-bg-elevated);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.status-card-name {
+    font-weight: 500;
+    color: var(--color-text-primary);
+    font-size: 13px;
+}
+
+.status-card-hint {
+    font-size: 11px;
+    color: var(--color-text-tertiary);
+}
+
+.status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.status-pill.status-up       { color: var(--color-success); }
+.status-pill.status-down     { color: var(--color-danger); }
+.status-pill.status-unknown  { color: var(--color-text-tertiary); }
+.status-pill.status-degraded { color: var(--color-warning); }
+
+/* Semantic-search card — model list; down/unknown stand out, up stays quiet */
+.status-card-models .model-down    { color: var(--color-danger); font-weight: 500; }
+.status-card-models .model-unknown { color: var(--color-warning); }
+.status-card-models .model-sep     { color: var(--color-text-tertiary); }
+
+.status-error {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--color-bg-tertiary);
+    border-left: 3px solid var(--color-danger);
+    color: var(--color-text-secondary);
+    padding: 10px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    margin: 12px 0;
+}
+
+.status-error--inline {
+    margin-top: 0;
+}

@@ -1,0 +1,289 @@
+/**
+ * navbar.css
+ * Top navigation bar inside the dark masthead.
+ * VersionInfo badges sit at the top of .navbar-right and link to the release page.
+ */
+
+/* ============================================
+   NAVBAR CONTAINER
+   ============================================ */
+
+.navbar {
+    position: relative;         /* anchor for VersionInfo badge */
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.75rem 1.5rem 0.75rem 1.5rem;
+    gap: 1rem;
+}
+
+/* ============================================
+   BRAND (logo + tagline)
+   ============================================ */
+
+.navbar-brand {
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 auto;
+    gap: 6px;
+}
+
+.brand-link {
+    color: white;
+    text-decoration: none;
+    line-height: 0;
+}
+
+.brand-link:hover {
+    opacity: 0.9;
+}
+
+.brand-logo {
+    max-width: 140px;
+    height: auto;
+}
+
+.brand-tagline {
+    font-size: var(--font-size-sm);
+    color: rgba(255,255,255,0.65);
+    text-decoration: none;
+    padding-left: 2px;
+    white-space: nowrap;
+}
+
+.brand-tagline:hover {
+    color: white;
+}
+
+/* ============================================
+   RIGHT SECTION (search + nav links)
+   ============================================ */
+
+.navbar-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.4rem;
+    flex: 1;
+}
+
+/* ============================================
+   NAV BUTTONS
+   ============================================ */
+
+.navbar-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 2px;
+}
+
+.nav-button {
+    color: white;
+    padding: 7px 10px;
+    text-decoration: none;
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: background var(--transition-base);
+    white-space: nowrap;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.nav-button:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+}
+
+.nav-button.active {
+    background: rgba(255, 255, 255, 0.2);
+    font-weight: var(--font-weight-semibold);
+}
+
+.nav-button:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.6);
+    outline-offset: 2px;
+}
+
+.nav-button i {
+    font-size: 14px;
+    opacity: 0.85;
+}
+
+/* Small "Show banner" restore link — top-right of masthead, only when banner is dismissed */
+.navbar-banner-restore {
+    position: absolute;
+    top: 6px;
+    right: 12px;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.45);
+    font-size: 11px;
+    font-family: inherit;
+    cursor: pointer;
+    padding: 2px 4px;
+    line-height: 1;
+}
+
+.navbar-banner-restore:hover {
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: underline;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media screen and (max-width: 900px) {
+    .navbar {
+        flex-direction: column;
+        align-items: center;
+        padding: 0.75rem 1rem;
+        gap: 0.6rem;
+    }
+
+    .navbar-brand {
+        align-items: center;
+    }
+
+    .brand-tagline {
+        padding-left: 0;
+    }
+
+    .navbar-right {
+        align-items: center;
+        width: 100%;
+    }
+
+    .navbar-links {
+        justify-content: center;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .nav-button {
+        padding: 7px 8px;
+        font-size: var(--font-size-sm);
+    }
+
+    .nav-button i {
+        font-size: 13px;
+    }
+}
+
+/* ============================================
+   BRAND LOGO WRAP + VERSION BADGE
+   ============================================ */
+
+.brand-logo-wrap {
+    position: relative;
+    display: inline-block;
+}
+
+/* Subtle version pill, flush to the very top-right corner of the masthead */
+.version-info {
+    position: absolute;
+    top: 0;
+    right: 0;
+    line-height: normal;
+    font-size: var(--font-size-xs);
+    z-index: var(--z-dropdown);
+}
+
+.version-pill {
+    display: inline-block;
+    padding: 3px 10px;
+    font-size: 10px;
+    font-weight: var(--font-weight-medium);
+    white-space: nowrap;
+    color: rgba(255, 255, 255, 0.78);
+    background: rgba(255, 255, 255, 0.1);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.version-pill:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    text-decoration: none;
+}
+
+.version-panel {
+    display: none;
+    position: absolute;
+    top: calc(100% + 4px);
+    right: 0;
+    left: auto;
+    line-height: var(--line-height-normal);
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border-medium);
+    border-radius: var(--radius-md) 0 var(--radius-md) var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    padding: 6px 4px;
+    min-width: 160px;
+    white-space: nowrap;
+    z-index: var(--z-dropdown);
+}
+
+.version-info:hover .version-panel {
+    display: block;
+}
+
+.version-panel > div {
+    padding: 3px 8px;
+    font-size: var(--font-size-xs);
+    color: var(--color-text-secondary);
+    border-radius: var(--radius-sm);
+}
+
+.version-panel > div:hover {
+    background: var(--color-bg-tertiary);
+}
+
+.version-panel hr {
+    margin: 4px 8px;
+    border: none;
+    border-top: 1px solid var(--color-border-light);
+}
+
+/* Use higher-specificity selector to avoid !important */
+.version-panel > div.data-header {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-xs);
+}
+
+.navbar-status {
+    width: 24px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 4px;
+    border-radius: 50%;
+    text-decoration: none;
+}
+
+.navbar-status:hover {
+    background: var(--color-bg-tertiary);
+}
+
+.navbar-status-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--color-text-tertiary);
+}
+
+.navbar-status.status-up .navbar-status-dot       { background: var(--color-success); }
+.navbar-status.status-degraded .navbar-status-dot { background: var(--color-warning); }
+.navbar-status.status-down .navbar-status-dot     { background: var(--color-danger); }
+.navbar-status.status-unknown .navbar-status-dot  { background: var(--color-text-tertiary); }
+

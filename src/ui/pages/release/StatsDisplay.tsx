@@ -1,7 +1,8 @@
-import React, {useState} from "react";
+import React from "react";
 import { useStats } from "../../../context/StatsContext";
 import {Stats} from "../../../types/Stats";
 import {formatNumber} from "./StatsTable";
+import {ReleaseNote} from "./ReleaseNote";
 
 // Define the GroupedStats type explicitly
 type GroupedStats = Record<string, Stats[]>;
@@ -24,24 +25,15 @@ export const StatsDisplayGroup: React.FC<StatsDisplayGroupProps> = ({ groupBy })
     return groups;
   }, {});
 
-  // State to track expanded groups
-  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
-  const toggleGroup = (groupKey: string) => {
-    setExpandedGroups((prev) => ({
-      ...prev,
-      [groupKey]: !prev[groupKey],
-    }));
-  };
-
   return (
     <div className="stats-container">
-      <h6>Stats Grouped by {groupBy}</h6>
-      {Object.entries(groupedStats).map(([groupKey, stats]) => (
-        <div key={groupKey} className="group-section">
-          <h6 className="group-header" onClick={() => toggleGroup(groupKey)} style={{ cursor: "pointer", color: "gray" }}>
-            {groupKey} {expandedGroups[groupKey] ? "▼" : "▶"}
-          </h6>
-          {expandedGroups[groupKey] && (
+      <h6>All statistics by {String(groupBy)}</h6>
+      <div className="release-notes">
+        {Object.entries(groupedStats).map(([groupKey, stats]) => (
+          <ReleaseNote
+            key={groupKey}
+            title={<>{groupKey} <small>{stats.length}</small></>}
+          >
             <table className="stats-table">
               <thead>
               <tr>
@@ -62,9 +54,9 @@ export const StatsDisplayGroup: React.FC<StatsDisplayGroupProps> = ({ groupBy })
               ))}
               </tbody>
             </table>
-          )}
-        </div>
-      ))}
+          </ReleaseNote>
+        ))}
+      </div>
     </div>
   );
 };

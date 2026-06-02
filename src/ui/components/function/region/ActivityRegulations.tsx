@@ -1,30 +1,24 @@
 import RegionProteinProps from "./RegionProteinProps";
-import {Comment} from "../../../../types/FunctionalResponse";
-import Evidences from "../Evidences";
-import RegionProteinAccordion from "./RegionProteinAccordion";
+import Evidences from "../../common/Evidences";
+import RegionProtein from "./RegionProtein";
 import { EmptyElement } from "../../../../constants/ConstElement";
+import {Comment} from "../../../../types/Comment";
 
 function ActivityRegulations(props: RegionProteinProps) {
-  return <RegionProteinAccordion title="Activity Regulation" detailComponentGenerator={getActivityRegulation} {...props} />
+  return <RegionProtein title="Activity Regulation" detailComponentGenerator={getActivityRegulation} {...props} />
 }
 
-export function getActivityRegulation(regulation: Comment) {
-  if (regulation && regulation.text && regulation.text.length > 0) {
-    let text = regulation.text[0];
+export function getActivityRegulation(comment: Comment) {
+  if ('text' in comment && Array.isArray(comment.text) && comment.text.length > 0) {
+    const text = comment.text[0];
     return (
-      <div key={text.value}>
-        <ul>
-          <li>{text.value}</li>
-        </ul>
-        <ul>
-          <li>
-            <Evidences evidences={text.evidences} />
-          </li>
-        </ul>
-        <hr />
+      <div key={text.value} className="protein-info-detail">
+        <p>{text.value}</p>
+        <Evidences evidences={text.evidences} />
       </div>
     );
   }
-  return EmptyElement
+  return EmptyElement;
 }
+
 export default ActivityRegulations;

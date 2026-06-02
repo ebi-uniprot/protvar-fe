@@ -1,0 +1,90 @@
+/**
+ * index.css - Main CSS Entry Point
+ * Import this file in your App.tsx or index.tsx
+ *
+ * Usage:
+ *   import './styles/new/index.css';
+ *
+ * Import order matters! Core → Components → Annotations → Features
+ */
+
+/* ==============================================
+   1. CORE - Variables, Reset, Typography
+   ============================================== */
+
+@import './core/variables.css';
+@import './core/layout.css';
+@import './core/page-layout.css';
+
+/* ==============================================
+   2. COMPONENTS - Shared UI elements
+   ============================================== */
+
+@import './components/buttons.css';
+@import './components/links.css';
+@import './components/collapsibles.css';
+@import './components/cards.css';
+@import './components/tables.css';
+@import './components/badges.css';
+@import './components/search-box.css';
+@import './components/loader.css';
+@import './components/toast.css';
+@import './components/range-slider.css';
+@import './components/help-content.css';
+@import './components/legend.css';
+@import './components/legend-categories.css';
+
+/* ==============================================
+   3. ANNOTATION SYSTEM - Shared patterns
+   ============================================== */
+
+@import './annotation/annotation-base.css';
+@import './annotation/annotation-header.css';
+
+/* ==============================================
+   4. ANNOTATION TYPES
+   ============================================== */
+
+@import './annotation/function.css';
+@import './annotation/population.css';
+@import './annotation/structure.css';
+@import './annotation/evidences.css';
+@import './annotation/pockets-interactions.css';
+
+/* ==============================================
+   5. RESULT
+   ============================================== */
+
+@import './result/result-grid.css';
+@import './result/result-page.css';
+@import './result/recent-activity.css';
+
+/* ==============================================
+   6. LAYOUT — Sidebar, Navbar, Drawer, Footer
+   ============================================== */
+
+@import './layout/navbar.css';
+@import './layout/sidebar.css';
+@import './layout/side-drawer.css';
+@import './layout/download-panel.css';
+@import './layout/footer.css';
+
+/* ==============================================
+   7. SEARCH / HOME PAGE
+   ============================================== */
+
+@import './search/search-page.css';
+@import './search/search-filters.css';
+
+/* ==============================================
+   8. PAGES
+   ============================================== */
+
+@import './pages/about.css';
+@import './pages/activity.css';
+@import './pages/contact.css';
+@import './pages/error-page.css';
+@import './pages/help.css';
+@import './pages/release.css';
+@import './pages/semantic-search.css';
+@import './pages/status.css';

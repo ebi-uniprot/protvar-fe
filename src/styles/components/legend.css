@@ -1,0 +1,54 @@
+/*
+ * Styles for the result-page legend drawer (src/ui/modal/LegendContent.tsx).
+ * The per-prediction category lists themselves use the shared <LegendCategories>
+ * component (see components/legend-categories.css); this file owns only the
+ * legend drawer's outer scaffolding.
+ */
+
+/* Outer container of the legend drawer body. */
+.legend-content {
+    padding: 0 4px;
+}
+
+.legend-content-title {
+    margin-bottom: 1.25rem;
+    font-weight: 600;
+}
+
+.legend-toggle-wrap {
+    margin-bottom: 1rem;
+}
+
+/* Two-column grid that holds the per-prediction LegendSections. */
+.legend-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 2rem;
+}
+
+/* One per-prediction section: bold title + items below. */
+.legend-section {
+    margin-bottom: 1.25rem;
+}
+
+.legend-section-title {
+    display: block;
+    margin-bottom: 0.4rem;
+}
+
+/* popEVE "low confidence when gap freq > 0.5" footnote. */
+.legend-footnote {
+    font-size: 0.75em;
+    font-style: italic;
+    margin-top: 0.4em;
+    color: #666;
+}
+
+/* Sections appended after the per-prediction grid. */
+.legend-annotation-wrap {
+    margin-top: 0.5rem;
+}
+
+.legend-feature-ranking-wrap {
+    margin-top: 1rem;
+}

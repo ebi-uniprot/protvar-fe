@@ -1,0 +1,301 @@
+.activity-tabs {
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+    border-bottom: 2px solid var(--color-border-medium);
+    margin-bottom: 1rem;
+}
+
+.activity-tab {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.activity-tab:hover {
+    color: var(--color-brand);
+}
+
+.activity-tab.active {
+    color: var(--color-brand);
+    border-bottom-color: var(--color-brand);
+}
+
+.view-toggle {
+    margin-left: auto;
+    display: flex;
+    border: 1px solid var(--color-border-medium);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    margin-bottom: 3px;
+}
+
+.view-toggle button {
+    background: none;
+    border: none;
+    border-right: 1px solid var(--color-border-medium);
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--color-text-secondary);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.view-toggle button:last-child {
+    border-right: none;
+}
+
+.view-toggle button.active {
+    background: var(--color-primary-lightest);
+    color: var(--color-primary);
+}
+
+.view-toggle button:not(.active):hover {
+    background: var(--color-bg-tertiary);
+    color: var(--color-primary);
+}
+
+.activity-panel {
+    min-height: 200px;
+}
+
+.activity-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 0 8px;
+    font-size: 13px;
+    color: var(--color-text-secondary);
+}
+
+.table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-md);
+    scrollbar-width: thin;
+    scrollbar-color: #c5d0e0 transparent;
+}
+
+.activity-table {
+    font-size: 13px;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.activity-table thead tr {
+    background: var(--color-bg-tertiary);
+    border-bottom: 2px solid var(--color-border-medium);
+}
+
+.activity-table th {
+    padding: 8px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+    text-align: left;
+}
+
+.activity-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--color-border-light);
+    vertical-align: middle;
+}
+
+.activity-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.activity-table tbody tr:hover {
+    background: var(--color-bg-tertiary);
+}
+
+.activity-table .col-center {
+    text-align: center;
+}
+
+.edit-name {
+    border: 1px solid var(--color-border-medium);
+    border-radius: var(--radius-sm);
+    padding: 2px 6px;
+    font-size: 13px;
+    width: 100%;
+    max-width: 220px;
+}
+
+.activity-type-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+}
+
+.activity-type-submission {
+    background: var(--color-brand-lightest);
+    color: var(--color-brand-dark);
+}
+
+.activity-type-browse {
+    background: #e8f4e8;
+    color: #2d6a2d;
+}
+
+.activity-result-link {
+    color: var(--color-brand);
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.activity-result-link:hover {
+    text-decoration: underline;
+}
+
+.activity-name-cell {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.activity-ftp-note {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.activity-error {
+    color: var(--color-danger);
+    font-size: 13px;
+}
+
+.activity-error-msg {
+    color: var(--color-danger);
+    font-size: 12px;
+    margin-top: 2px;
+    max-width: 24rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Download status icon colours — hook into existing palette vars. */
+.status-success { color: var(--color-success); }
+.status-danger  { color: var(--color-danger); }
+.status-info    { color: var(--color-primary); }
+.status-muted   { color: var(--color-text-muted); }
+
+/* ── Grouped view ── */
+
+.grouped-view {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.grouped-item {
+    border: 1px solid var(--color-border-medium);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.grouped-item-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: var(--color-bg-tertiary);
+    font-size: 13px;
+}
+
+.grouped-item-title {
+    flex: 1;
+    font-weight: 500;
+}
+
+.grouped-item-date {
+    font-size: 11px;
+    color: var(--color-text-tertiary);
+    white-space: nowrap;
+}
+
+.grouped-downloads {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.grouped-download-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 14px 7px 24px;
+    font-size: 12px;
+    border-top: 1px solid var(--color-border-light);
+}
+
+.grouped-download-name {
+    flex: 1;
+    font-weight: 500;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.grouped-download-meta,
+.grouped-download-date {
+    font-size: 11px;
+    color: var(--color-text-tertiary);
+    white-space: nowrap;
+}
+
+.grouped-orphans {
+    margin-top: 8px;
+}
+
+.grouped-orphans h6 {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-text-tertiary);
+    margin-bottom: 8px;
+}
+
+.activity-retention-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 12px;
+    margin: 8px 0 12px;
+    background: var(--color-bg-tertiary);
+    border-left: 3px solid var(--color-text-tertiary);
+    border-radius: 4px;
+    font-size: 12px;
+    color: var(--color-text-secondary);
+}
+
+.activity-retention-banner .bi-info-circle {
+    margin-right: 6px;
+}

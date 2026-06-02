@@ -22,7 +22,7 @@ enum ShareType {
 }
 */
 
-export const ShareLink = (props: {url: string, linkText?: string}) => {
+export const ShareLink = (props: {url: string, linkText?: string, disabled?: boolean}) => {
   const state = useContext(AppContext)
   return <i className="bi bi-share icon-btn" title="Share"
             onClick={() => {

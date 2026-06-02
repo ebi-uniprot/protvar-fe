@@ -1,0 +1,261 @@
+/**
+ * collapsibles.css - Collapsible section styles
+ * Consolidated from annotation.css and pockets-interactions.css
+ */
+
+/* ============================================
+   STANDARD COLLAPSIBLE
+   ============================================ */
+
+.collapsible {
+    width: 100%;
+    background-color: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+    cursor: pointer;
+    padding: 10px 12px;
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-md);
+    text-align: left;
+    outline: none;
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+    transition: all var(--transition-base);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.collapsible:hover {
+    background-color: var(--color-gray-200);
+    border-color: var(--color-border-dark);
+}
+
+.collapsible:focus {
+    outline: none;
+}
+
+.collapsible:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.collapsible .chevron-icon {
+    font-size: var(--font-size-md);
+    color: var(--color-text-secondary);
+    flex-shrink: 0;
+    transition: transform var(--transition-base);
+}
+
+.collapsible b,
+.collapsible strong {
+    flex: 1;
+    font-weight: var(--font-weight-semibold);
+}
+
+/* Seamless connection when expanded */
+.collapsible[aria-expanded="true"] {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom: none;
+}
+
+.collapsible[aria-expanded="true"] .chevron-icon {
+    transform: rotate(90deg);
+}
+
+/* ============================================
+   SMOOTH EXPAND / COLLAPSE ANIMATION
+   Uses CSS Grid row-height trick: grid-template-rows 0fr→1fr.
+   Works for both expand (open) and collapse (back to closed).
+   Wrap any conditional content div with .collapsible-anim and
+   toggle the .open class instead of conditional rendering.
+   ============================================ */
+
+.collapsible-anim {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition: max-height 0.35s ease-in-out, opacity 0.22s ease;
+}
+
+.collapsible-anim.open {
+    max-height: 1500px;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* ============================================
+   COLLAPSIBLE CONTENT
+   ============================================ */
+
+.collapsible-content {
+    padding: 14px;
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border-light);
+    border-top: none;
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+}
+
+/* ============================================
+   STRUCTURE PREDICTION COLLAPSIBLES
+   ============================================ */
+
+.struct-pred-section .collapsible span {
+    flex: 1;
+}
+
+/* Structure prediction content */
+.struct-pred-content {
+    padding: 14px;
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border-light);
+    border-top: none;
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+}
+
+.struct-pred-description {
+    margin: 0 0 12px 0;
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+    line-height: var(--line-height-normal);
+}
+
+.struct-pred-help {
+    margin: 12px 0 0 0;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    font-style: italic;
+}
+
+.struct-pred-help .bi-eye {
+    color: var(--color-primary);
+}
+
+/* ============================================
+   GENOMIC LOCATION COLLAPSIBLES
+   ============================================ */
+
+.genomic-location-section {
+    margin-bottom: var(--spacing-sm);
+}
+
+.genomic-location-content,
+.colocated-variant-content,
+.colocated-variant-xrefs {
+    padding: 10px 12px;
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border-light);
+    border-top: none;
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+    margin-bottom: var(--spacing-sm);
+}
+
+/* ============================================
+   COLOCATED VARIANT SECTIONS
+   ============================================ */
+
+.colocated-variant-section {
+    margin-bottom: var(--spacing-sm);
+}
+
+/* ============================================
+   EXPANDABLE TEXT (inline expand/collapse)
+   ============================================ */
+
+.expandable-text {
+    font-size: var(--font-size-base);
+    color: var(--color-text-primary);
+    line-height: var(--line-height-normal);
+}
+
+.expandable-text-content {
+    line-height: var(--line-height-normal);
+}
+
+.expandable-text-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 4px;
+    padding: 1px 5px;
+    border: 1px solid var(--color-border-medium);
+    border-radius: 10px;
+    background: var(--color-bg-secondary);
+    color: var(--color-primary);
+    cursor: pointer;
+    font-size: var(--font-size-sm);
+    vertical-align: middle;
+    line-height: 1;
+    transition: background var(--transition-base), border-color var(--transition-base), color var(--transition-base);
+}
+
+.expandable-text-toggle:hover {
+    background: var(--color-primary-lightest);
+    border-color: var(--color-primary);
+    color: var(--color-primary-dark);
+}
+
+.expandable-text-toggle i {
+    font-size: var(--font-size-sm);
+    line-height: 1;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+    .collapsible {
+        font-size: var(--font-size-base);
+        padding: var(--spacing-sm) 10px;
+    }
+
+    .collapsible-content,
+    .struct-pred-content,
+    .feature-content,
+    .protein-info-content {
+        padding: 10px 12px;
+    }
+}
+
+/* ============================================
+   DARK MODE SUPPORT
+   ============================================ */
+
+@media (prefers-color-scheme: dark) {
+    .collapsible {
+        background: var(--color-bg-primary);
+        border-color: var(--color-border-light);
+        color: var(--color-text-primary);
+    }
+
+    .collapsible:hover {
+        background: var(--color-bg-tertiary);
+        border-color: var(--color-border-medium);
+    }
+
+    .collapsible .chevron-icon {
+        color: var(--color-text-tertiary);
+    }
+
+    .collapsible-content,
+    .struct-pred-content,
+    .feature-content,
+    .protein-info-content {
+        background: var(--color-bg-tertiary);
+        border-color: var(--color-border-light);
+    }
+
+    .struct-pred-description,
+    .struct-pred-help {
+        color: var(--color-text-secondary);
+    }
+
+    .genomic-location-content,
+    .colocated-variant-content,
+    .colocated-variant-xrefs {
+        background: var(--color-bg-tertiary);
+        border-color: var(--color-border-light);
+    }
+}

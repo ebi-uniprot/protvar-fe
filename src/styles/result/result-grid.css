@@ -1,0 +1,717 @@
+/**
+ * result-grid.css
+ * CSS Grid layout for the main results table.
+ *
+ * Column order (12 cols):
+ *   Genomic: user-id | genomic-pos | gene | codon | cadd     (cols 1–5)
+ *   Protein: isoform | protein-name | aa-change | consequence | popeve | alphamiss  (cols 6–11)
+ *   Annotations: details                                     (col 12)
+ */
+
+/* ============================================
+   RESULT TABLE — SINGLE GRID CONTAINER
+   .result-table owns the 12-column grid.
+   Every row type uses grid-column: 1/-1 and
+   grid-template-columns: subgrid so all cells
+   participate in the same track-sizing algorithm.
+   Header rows and data rows are guaranteed to be
+   pixel-perfectly aligned.
+   ============================================ */
+
+.result-table {
+    animation: resultFadeIn 0.18s ease;
+    display: grid;
+    grid-template-columns:
+        auto                  /* 1  id             */
+        auto                  /* 2  genomic-pos    */
+        auto                  /* 3  gene           */
+        auto                  /* 4  codon          */
+        auto                  /* 5  cadd           */
+        auto                  /* 6  isoform        */
+        auto                  /* 7  protein-name — sizes to content, capped via .protein-name-cell max-width */
+        auto                  /* 8  aa-change      */
+        auto                  /* 9  consequence    */
+        auto                  /* 10 popeve         */
+        auto                  /* 11 alphamiss      */
+        auto;                 /* 12 details        */
+    column-gap: 6px;
+    font-size: var(--font-size-md);
+    overflow-x: auto;
+    min-width: 0;
+    /* Thin scrollbar so the bottom bar is unobtrusive */
+    scrollbar-width: thin;
+    scrollbar-color: #c5d0e0 transparent;
+}
+
+/*
+ * All subgrid row containers: each spans the full 11-column table
+ * grid and uses subgrid so their cells feed into the parent's
+ * track-sizing algorithm — the same track widths everywhere.
+ */
+.result-row,
+.result-col-header,
+.result-group-header {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+    align-items: center;
+}
+
+/* Full-width non-subgrid rows (annotation panels, messages, loader) */
+.result-annotation,
+.result-loader-row,
+.result-row-msg {
+    grid-column: 1 / -1;
+}
+
+/* Prevent annotation content from expanding outer grid tracks in scroll container.
+   overflow-x: auto tracks size to max-content, so a spanning item's wide content
+   (protein panels, gene sequences) would force all tracks to grow.
+   contain: inline-size breaks the intrinsic sizing chain — the element's width comes
+   from the grid area (sized by data rows), not from its own content.
+   overflow: hidden is kept as belt-and-suspenders for the automatic minimum. */
+.result-annotation {
+    overflow: hidden;
+    contain: inline-size;
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
+
+.result-header {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-template-rows: auto;
+    border-bottom: 2px solid #6987C3;
+}
+
+/* Group header row: Genomic | Protein | Annotations */
+.result-group-header {
+    background: #6987C3;
+    color: white;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.04em;
+}
+
+.result-group-header > * {
+    padding: 3px 8px;
+    text-transform: uppercase;
+    min-width: 0;       /* prevents spanning cell from forcing minimum on col 1 */
+    overflow: hidden;
+}
+
+/* Subdued column hints within the group header */
+.col-hints {
+    font-size: 10px;
+    font-weight: var(--font-weight-normal);
+    opacity: 0.8;
+    letter-spacing: 0.02em;
+    text-transform: none;
+}
+
+/* Annotation icons in the group header — displayed inline, no text transform */
+.annotation-icons-header {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 4px;
+    text-transform: none;
+}
+
+/* Group spans */
+.result-group-header > :nth-child(1) { grid-column: 1 / 6; }    /* Genomic: user-id…cadd */
+.result-group-header > :nth-child(2) { grid-column: 6 / 12; }   /* Protein: isoform…alphamiss */
+.result-group-header > :nth-child(3) { grid-column: 12 / 13; }  /* Annotations: details */
+
+/* Dividers between groups */
+.result-group-header > :nth-child(2) {
+    border-left: 1px solid rgba(255,255,255,0.3);
+}
+.result-group-header > :nth-child(3) {
+    border-left: 1px solid rgba(255,255,255,0.3);
+}
+
+
+/* ============================================
+   DATA ROWS
+   ============================================ */
+
+/* Dissolve result-body and result-gene-group so data rows become direct grid items */
+.result-body,
+.result-gene-group {
+    display: contents;
+}
+
+/* Icons shown only in card view — hidden in desktop grid */
+.card-row-icon {
+    display: none;
+}
+
+/* Inline alt isoform rows — only visible in mobile card view */
+.card-isoform-inline {
+    display: none;
+}
+
+.result-row {
+    border-bottom: 1px dotted #ccc;
+    transition: background var(--transition-base);
+    min-height: 2rem;
+}
+
+.result-row.row-even:hover,
+.result-row.row-odd:hover {
+    background: #eef3ff;
+}
+
+/* Card-row wrappers are transparent to the grid — their children become grid items.
+   This allows grouping spans for the mobile card view without breaking subgrid alignment. */
+.card-row {
+    display: contents;
+}
+
+/* Cell padding — spans are DOM grandchildren (inside card-row) but grid-direct children */
+.card-row > * {
+    padding: 4px 8px;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+/* Empty cells contribute no width — lets sparse columns (e.g. ID) collapse */
+.card-row > :empty {
+    padding-inline: 0;
+}
+
+/* ============================================
+   COLUMN ALIGNMENT
+   Text/link columns: left (default).
+   Numeric scores, short badges, action buttons: center.
+   ============================================ */
+
+/* Score columns: CADD (col 5), popEVE (col 10), AM (col 11) */
+[data-card-label="CADD"],
+.cell-popeve,
+[data-card-label="AM"] {
+    text-align: center;
+}
+
+/* Consequence badge (col 9) */
+.cell-consequence {
+    text-align: center;
+}
+
+/* Action buttons (col 12) — left+right borders mirror group-header dividers */
+.details-cell {
+    justify-content: center;
+    border-left: 1px solid #c8d4e8;
+    border-right: 1px solid #c8d4e8;
+}
+
+
+
+/* isoform-cell must stay visible so the chevron isn't clipped by the column boundary */
+.card-row > .isoform-cell {
+    overflow: visible;
+}
+
+/* Alternating row backgrounds */
+.result-row.row-even { background: #ffffff; }
+.result-row.row-odd  { background: #F4F3F3; }
+
+/* No underlines on any links inside result rows or annotation panels */
+.result-row a,
+.result-annotation a {
+    text-decoration: none !important;
+}
+
+/* ── Block old SCSS .button border bleeding onto new button classes ──
+   _Button.scss has: .button { border-style: solid; border-width: thin; }
+   (single-class selector). Override with double-class for higher specificity. */
+.button.button--toggle-isoforms {
+    border: none;
+    margin-right: 0;
+    font-weight: inherit;
+}
+
+/* ============================================
+   ISOFORM ROW (alternate isoforms)
+   Genomic cells are empty; protein cols filled.
+   ============================================ */
+
+.result-row-isoform {
+    border-bottom: 1px dotted #e0e0e0;  /* subtler than primary row — within same input */
+}
+
+/* Indent isoform rows under the canonical toggle chevron */
+.result-row-isoform .isoform-cell {
+    padding-left: 24px;
+}
+
+.result-row-isoform .cell-genomic {
+    /* empty but maintains grid column position */
+    visibility: hidden;
+}
+
+/* ============================================
+   MESSAGE / ERROR ROWS
+   ============================================ */
+
+.result-row-msg {
+    border-bottom: 1px dotted #ccc;
+    padding: 4px 6px;
+    font-size: var(--font-size-sm);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+/* Message cell spanning: full width or partial */
+.result-row-msg .msg-content-full {
+    grid-column: 1 / -1;
+    padding: 4px 8px;
+}
+
+.result-row-msg .msg-content-partial {
+    grid-column: 3 / -1;
+    padding: 4px 8px;
+}
+
+/* ============================================
+   ANNOTATION PANEL ROW (FunctionalData etc.)
+   Full-width block below the triggering row.
+   ============================================ */
+
+.result-annotation {
+    border-bottom: 1px solid var(--color-border-light);
+    min-width: 0;        /* prevent wide annotation content from forcing the grid wider */
+    overflow-x: auto;   /* annotation panels (tables, viewer) scroll independently */
+}
+
+.annotation-loader {
+    padding: 12px;
+    display: flex;
+    justify-content: center;
+}
+
+/* ============================================
+   LOADER ROW
+   ============================================ */
+
+.result-loader-row {
+    padding: 8px;
+    display: flex;
+    justify-content: center;
+    border-bottom: 1px dotted #ccc;
+}
+
+/* ============================================
+   SCORE BOX (CADD, AlphaMissense)
+   ============================================ */
+
+.score-box {
+    display: inline-block;
+    width: 2.2rem;
+    text-align: center;
+    padding: 1px 3px;
+    border-radius: 0.75rem;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    color: white;
+    cursor: default;
+}
+
+.score-box a {
+    color: white;
+    text-decoration: none !important;
+}
+
+/* ============================================
+   PROTEIN NAME TRUNCATION
+   ============================================ */
+
+.protein-name-cell {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* Hard cap so long names clip with ellipsis. The grid track is `auto`,
+       so it sizes to this max and the column doesn't claim spare space. */
+    max-width: 14rem;
+    display: block;
+}
+
+/* Reusable "NA" pill for missing inline scores. Apply .na-badge to any
+   score cell that may be empty (CADD / AM / popEVE today). The pseudo-
+   element only fires when the cell is empty, so it stays out of the way
+   when there's a real score. Light gray + slightly darker text — distinct
+   from the solid darker gray used by the AM "ambiguous" score class. */
+.na-badge:empty::after {
+    content: 'NA';
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    padding: 1px 4px;
+    border-radius: 3px;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    color: #aaa;
+    background: #f5f5f5;
+}
+
+
+/* ============================================
+   ISOFORM CELL
+   ============================================ */
+
+.isoform-cell {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    white-space: nowrap;
+    overflow: visible;
+    line-height: 1;
+}
+
+/* Ensure Tool wrapper spans inside isoform-cell don't add extra height */
+.isoform-cell > span {
+    display: inline-flex;
+    align-items: center;
+}
+
+.protein-type-icon {
+    font-size: 0.65rem;
+    font-weight: var(--font-weight-bold);
+    padding: 1px 4px;
+    border-radius: 3px;
+    flex-shrink: 0;
+}
+
+.protein-type-icon--canonical {
+    background: #6987C3;
+    color: white;
+}
+
+.protein-type-icon--isoform {
+    background: #9ab0d8;
+    color: white;
+}
+
+.button--toggle-isoforms {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0 2px;
+    color: var(--color-primary);
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+}
+
+.toggle-isoforms {
+    width: 12px;
+    height: 12px;
+}
+
+/* Spinner shown while alt isoforms are being fetched on demand
+   (filter-only browse: chevron triggers a single-variant lookup). */
+.toggle-isoforms-loading {
+    width: 12px;
+    height: 12px;
+    border: 2px solid var(--color-border-light);
+    border-top-color: var(--color-primary);
+    border-radius: 50%;
+    display: inline-block;
+    animation: toggle-isoforms-spin 0.7s linear infinite;
+}
+
+@keyframes toggle-isoforms-spin {
+    to { transform: rotate(360deg); }
+}
+
+.button--toggle-isoforms:disabled {
+    cursor: progress;
+    opacity: 0.7;
+}
+
+/* "No other isoforms" hint shown in filter-only browse when the user
+   expands the chevron on a row whose lazy fetch returned no alts.
+   Positioned at the isoform column (col 6+), matching the indent of
+   .result-row-isoform .isoform-cell so it aligns visually with where
+   alt isoforms would render. */
+.result-row-no-alts .no-alts-hint {
+    grid-column: 6 / -1;
+    padding: 6px 8px 6px 24px;  /* matches isoform-cell padding-left: 24px */
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    font-style: italic;
+}
+
+/* ============================================
+   CLICK FOR DETAILS BUTTONS
+   ============================================ */
+
+.details-cell {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.button.click-icon-btn {
+    background: none;
+    border: 1px solid transparent;
+    margin-right: 0;
+    padding: 2px 4px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: border-color var(--transition-base), background var(--transition-base);
+}
+
+.button.click-icon-btn:hover {
+    border-color: var(--color-primary);
+    background: var(--color-primary-lightest);
+}
+
+.button.significance {
+    border-color: var(--color-primary);
+    background: var(--color-primary-lightest);
+}
+
+.click-icon {
+    width: 24px;
+    height: 24px;
+    vertical-align: middle;
+}
+
+/* ============================================
+   CONSEQUENCE BADGES
+   ============================================ */
+
+.consequence-badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-variant: small-caps;
+    font-weight: var(--font-weight-bold);
+    padding: 1px 5px;
+    border-radius: 3px;
+    letter-spacing: 0.04em;
+}
+
+.conseq-miss  { background: #fff3cd; color: #856404; }
+.conseq-syn   { background: #d1e7dd; color: #0f5132; }
+.conseq-stop  { background: #f8d7da; color: #842029; }
+
+/* ============================================
+   MISC
+   ============================================ */
+
+/* GRCh37→38 lift-over badge — anchored top-left of the genomic cell so it
+   doesn't push the coordinate inline. */
+.cell-genomic { position: relative; overflow: visible; }
+.h37 {
+    position: absolute;
+    top: -8px;
+    left: -2px;
+    font-size: 0.55rem;
+    line-height: 1;
+    background: #f0ad4e;
+    color: white;
+    padding: 1px 3px;
+    border-radius: 3px;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+/* ============================================
+   RESPONSIVE — CARD LAYOUT (≤ 900px)
+   Three-row card per result:
+     Row 1 (genomic): ID · chr-pos-ref-alt · codon · CADD
+     Row 2 (protein): accession · protein name · AA change · consequence · popEVE · AM
+     Row 3 (actions): isoform toggle (if any) + FUN/POP/STR buttons
+   Values are self-descriptive — no explicit field labels needed.
+   ============================================ */
+
+@media (max-width: 900px) {
+    .result-header {
+        display: none;
+    }
+
+    /* Card: vertical stack of three rows */
+    .result-row {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;    /* override desktop grid's align-items: center */
+        padding: 8px 12px;
+        border-bottom: 2px solid var(--color-brand-lightest, #e8f0f7);
+        gap: 4px;
+        min-height: unset;
+    }
+
+    /* Each card-row: horizontal flex */
+    .card-row {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 5px;
+        padding: 0;
+        overflow: visible;
+    }
+
+    .card-row > * {
+        padding: 0;
+        overflow: visible;
+        white-space: normal;
+    }
+
+    /* Hide empty spans, but keep .na-badge cells so the pill can render. */
+    .card-row > span:empty:not(.na-badge) {
+        display: none;
+    }
+
+    /* ── Row labels ────────────────────────────── */
+    .card-row-genomic::before,
+    .card-row-protein::before,
+    .card-row-details::before {
+        font-size: 9px;
+        font-weight: var(--font-weight-semibold);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #6987C3;
+        opacity: 0.85;
+        flex-shrink: 0;
+        align-self: center;
+        padding-right: 2px;
+    }
+
+    .card-row-genomic::before { content: 'GENOMIC'; }
+    .card-row-protein::before { content: 'PROTEIN'; }
+    .card-row-details::before { content: 'DETAILS'; }
+
+    /* ── Row 1: genomic ────────────────────────── */
+    .card-row-genomic {
+        font-size: var(--font-size-base);
+        color: var(--color-text-secondary);
+    }
+
+    /* Score boxes — compact inline badge */
+    .card-row .score-box {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2rem;
+        margin: 0;
+    }
+
+    /* ── Row 2: protein + scores ───────────────── */
+    .card-row-protein {
+        font-size: var(--font-size-md);
+    }
+
+    /* Protein name: inline-block keeps it on the same line as the dot separator */
+    .card-row-protein .protein-name-cell,
+    .card-isoform-inline .protein-name-cell {
+        display: inline-block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: min(220px, 42vw);
+        vertical-align: middle;
+    }
+
+    /* .na-badge pill — inherits desktop style */
+
+    /* ── Row 3: annotation actions ─────────────── */
+    .card-row-details {
+        align-items: center;
+        gap: 4px;
+    }
+
+    .card-row-details .details-cell {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+
+    /* ── Dot separator (·) before codon and AA change ── */
+    .card-sep:not(:empty)::before {
+        content: '·';
+        color: var(--color-text-muted, #bbb);
+        font-size: 1em;
+        margin-right: 3px;
+    }
+
+    /* Fix codon: the inner .flex div is block by default inside a flex item.
+       Force inline-flex so it stays inline with sibling items. */
+    .card-row-genomic .card-sep .flex {
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+    }
+
+    /* ── Score labels (CADD / popEVE / AM) — include · separator ── */
+    [data-card-label]::before {
+        content: '· ' attr(data-card-label) ' ';
+        font-size: var(--font-size-xs);
+        color: var(--color-text-muted, #999);
+        font-weight: var(--font-weight-medium);
+    }
+
+    /* Hide separate isoform rows in mobile — shown inline inside primary card instead */
+    .result-row-isoform {
+        display: none;
+    }
+
+    /* Inline alt isoform rows within the primary card (between protein and buttons rows) */
+    .card-isoform-inline {
+        display: flex;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 5px;
+        font-size: var(--font-size-base);
+        padding-top: 3px;
+    }
+
+    .card-isoform-inline > * {
+        padding: 0;
+        overflow: visible;
+        white-space: normal;
+    }
+
+    .result-row-msg {
+        padding: 8px 12px;
+    }
+}
+
+/* ============================================
+   DARK MODE
+   ============================================ */
+
+@media (prefers-color-scheme: dark) {
+    .result-header {
+        background: var(--color-bg-primary);
+        border-bottom-color: #4a6ab0;
+    }
+
+    .result-group-header {
+        background: #3a5080;
+    }
+
+    .result-col-header {
+        background: #4a6090;
+    }
+
+    .result-row.row-even:hover,
+    .result-row.row-odd:hover {
+        background: rgba(110, 168, 254, 0.1);
+    }
+
+    .result-row.row-even { background: var(--color-bg-primary); }
+    .result-row.row-odd  { background: var(--color-bg-secondary); }
+}
+
+@keyframes resultFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}

@@ -1,0 +1,334 @@
+/**
+ * annotation-base.css - Shared annotation patterns
+ * Common styles used across Function, Population, and Structure annotations
+ */
+
+/* ============================================
+   EXPANDED ROW CONTAINER
+   ============================================ */
+
+.expanded-row {
+    padding: 0;
+}
+
+/* ============================================
+   ANNOTATION DATA CONTAINER
+   ============================================ */
+
+.annotation-data-container {
+    padding: var(--spacing-xl);
+    overflow-x: auto;
+}
+
+/* ============================================
+   ANNOTATION CONTENT LAYOUTS
+   ============================================ */
+
+.annotation-content {
+    /* Base content area */
+    margin-top: var(--spacing-xl);
+}
+
+/* Grid layout for two-column annotations */
+.annotation-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-xl);
+    margin: var(--spacing-xl) 0;
+}
+
+/* Structure-specific layout (tables left, viewer right) */
+.annotation-content.structure-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-xl);
+    margin: var(--spacing-xl) 0;
+}
+
+/* ============================================
+   ANNOTATION COLUMNS
+   ============================================ */
+
+.annotation-column {
+    background: var(--color-bg-secondary);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+}
+
+/* Column header - main section heading */
+.column-header {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    padding: 8px 12px;
+    background: #e8eaed;
+    border-bottom: 1px solid var(--color-border-light);
+    margin: 0;
+}
+
+/* Content padding below header */
+.annotation-column > *:not(.column-header) {
+    padding-left: var(--spacing-xl);
+    padding-right: var(--spacing-xl);
+}
+
+.annotation-column > .column-header + * {
+    padding-top: var(--spacing-xl);
+}
+
+.annotation-column > *:last-child {
+    padding-bottom: var(--spacing-xl);
+}
+
+/* ============================================
+   STRUCTURE LAYOUT SPECIFIC COLUMNS
+   ============================================ */
+
+/* Tables column (left side) */
+.annotation-tables-column,
+.structure-tables-column {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    overflow-y: auto;
+    max-height: 800px;
+}
+
+/* Viewer column (right side) */
+.annotation-viewer-column,
+.structure-viewer-column {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    min-width: 0;   /* allow shrinking in grid; viewer-wrapper has its own min-width */
+}
+
+/* ============================================
+   SECTION TITLES & CONTENT
+   ============================================ */
+
+.section-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-secondary);
+    margin: var(--spacing-lg) 0 var(--spacing-sm) 0;
+    padding: 4px 8px;
+    background: var(--color-bg-secondary);
+    border-radius: var(--radius-sm);
+}
+
+.section-title:first-child {
+    margin-top: 0;
+}
+
+/* Content area below section title */
+.section-content {
+    background: white;
+    border: 1px solid var(--color-border-light);
+    border-top: none;
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+    padding: 14px;
+}
+
+/* ============================================
+   SECTION WRAPPERS
+   ============================================ */
+
+.allele-freq-section {
+    margin-bottom: var(--spacing-lg);
+}
+
+.association-section {
+    margin-top: 0;
+}
+
+.population-freq-section {
+    margin-top: var(--spacing-md);
+}
+
+.struct-pred-section {
+    margin-bottom: var(--spacing-md);
+}
+
+.struct-pred-section:last-child {
+    margin-bottom: 0;
+}
+
+/* ============================================
+   NO DATA / EMPTY STATES
+   ============================================ */
+
+/* Full-panel no-data (used by NoAnnotationData for entire annotation tabs) */
+.no-data-message {
+    padding: var(--spacing-xl);
+    text-align: center;
+    color: var(--color-text-tertiary);
+    font-style: italic;
+    background: var(--color-bg-secondary);
+    border-radius: var(--radius-md);
+    border: 1px dashed var(--color-border-dark);
+}
+
+/* Inline empty state (used within sub-sections, e.g. no interactions/pockets) */
+.empty-state-wrapper {
+    display: block;
+    margin-bottom: 6px;
+}
+
+.empty-state {
+    display: inline-block;
+    padding: 5px 10px;
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+    font-style: italic;
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-sm);
+}
+
+.no-structure-message {
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-md);
+}
+
+/* ============================================
+   NESTED LISTS
+   ============================================ */
+
+.nested-list {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.nested-list li {
+    margin: 6px 0;
+}
+
+.nested-list ul {
+    list-style: disc;
+    padding-left: 20px;
+    margin: var(--spacing-xs) 0;
+}
+
+.nested-list b {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-secondary);
+}
+
+/* ============================================
+   INTRO TEXT
+   ============================================ */
+
+.colocated-variants-intro {
+    margin-bottom: var(--spacing-md);
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+    line-height: var(--line-height-normal);
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 1200px) {
+    .annotation-grid,
+    .annotation-content.structure-layout {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
+
+    /* On mobile, show viewer first (above tables) */
+    .annotation-content.structure-layout .annotation-viewer-column,
+    .annotation-content.structure-layout .structure-viewer-column {
+        order: -1;
+    }
+
+    .annotation-tables-column,
+    .structure-tables-column {
+        max-height: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .annotation-data-container {
+        padding: var(--spacing-lg);
+    }
+
+    .annotation-grid,
+    .annotation-content.structure-layout {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
+
+    .annotation-column > *:not(.column-header) {
+        padding-left: var(--spacing-lg);
+        padding-right: var(--spacing-lg);
+    }
+
+    .annotation-column > .column-header + * {
+        padding-top: var(--spacing-lg);
+    }
+
+    .annotation-column > *:last-child {
+        padding-bottom: var(--spacing-lg);
+    }
+
+    .section-title {
+        font-size: var(--font-size-xs);
+    }
+
+    .no-data-message {
+        padding: var(--spacing-lg);
+    }
+}
+
+/* ============================================
+   DARK MODE SUPPORT
+   ============================================ */
+
+@media (prefers-color-scheme: dark) {
+    .annotation-column {
+        background: var(--color-bg-primary);
+    }
+
+    .column-header {
+        background: var(--color-bg-secondary);
+        color: var(--color-text-primary);
+        border-color: var(--color-border-light);
+    }
+
+    .section-title {
+        color: var(--color-text-secondary);
+        border-color: var(--color-border-light);
+    }
+
+    .section-content {
+        background: var(--color-bg-secondary);
+        border-color: var(--color-border-light);
+    }
+
+    .no-data-message,
+    .no-structure-message {
+        background: var(--color-bg-secondary);
+        border-color: var(--color-border-light);
+        color: var(--color-text-tertiary);
+    }
+
+    .nested-list b {
+        color: var(--color-text-secondary);
+    }
+
+    .colocated-variants-intro {
+        color: var(--color-text-tertiary);
+    }
+}

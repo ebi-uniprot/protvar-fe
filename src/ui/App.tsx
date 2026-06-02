@@ -5,32 +5,36 @@ import APIErrorPage from "./pages/APIErrorPage";
 import AboutPage from "./pages/AboutPage";
 import ReleasePage from "./pages/ReleasePage";
 import ContactPage from "./pages/ContactPage";
-import {ABOUT, API_ERROR, CONTACT, DOWNLOAD, HELP, HOME, QUERY, RELEASE, RESULT} from "../constants/BrowserPaths";
-import QueryPage from "./pages/query/QueryPage";
-import {Assembly} from "../constants/CommonTypes";
+import {ABOUT, ACTIVITY, API_ERROR, CONTACT, DOWNLOAD, G_QUERY, HELP, HOME, ID_ENSEMBL, ID_GENE, ID_PDB, ID_REFSEQ, P_QUERY, QUERY, RELEASE, RESULT, SEARCH, SEMANTIC_SEARCH, STATUS} from "../constants/BrowserPaths";
 import DownloadPage from "./pages/download/DownloadPage";
 import HelpPage from "./pages/help/HelpPage";
-import {InputType, PagedMappingResponse} from "../types/PagedMappingResponse";
+import {PagedMappingResponse} from "../types/PagedMappingResponse";
 import ResultPage from "./pages/result/ResultPage";
 import "bootstrap-icons/font/bootstrap-icons.css"
 import ResultListPage from "./pages/result/ResultListPage";
-import {LocalStorageProvider} from "../context/LocalStorageContext";
+import ActivityPage from "./pages/activity/ActivityPage";
+import StatusPage from "./pages/StatusPage";
+import {StorageProvider} from "../context/StorageContext";
 import {StatsProvider} from "../context/StatsContext";
+import {StatusProvider} from "../context/StatusContext";
 import {DEFAULT_PAGE_SIZE} from "../constants/const";
 import NotFoundPage from "./pages/NotFoundPage";
+import SemanticSearchPage from "./pages/semanticsearch/SemanticSearchPage";
 import {MarkdownProvider} from "../context/MarkdownContext";
+import '../styles/index.css';
+import { ToastContainer } from './toast/ToastContainer';
 
 const empty: ReactElement = <></>;
 
 export interface AppState {
-  drawer?: JSX.Element
+  drawer?: React.JSX.Element
   stdColor: boolean
   showModal: boolean
-  modalContent: JSX.Element
+  modalContent: React.JSX.Element
   // V2
-  textInput: string
-  file: File | null
-  assembly: Assembly
+  //textInput: string
+  //file: File | null
+  //assembly: GenomeAssembly
   pageSize: number
   response: PagedMappingResponse | null
   updateState: (key: string, value: any) => void
@@ -42,9 +46,9 @@ export const initialState = {
   showModal: false,
   modalContent: empty,
   // V2
-  textInput: "",
-  file: null,
-  assembly: Assembly.AUTO,
+  //textInput: '',
+  //file: null,
+  //assembly: 'auto',
   pageSize: DEFAULT_PAGE_SIZE, // needs to be localStore, not appState
   response: null,
   updateState: (key: string, value: any) => {}
@@ -71,37 +75,65 @@ export default function App() {
   });
 
   return (<AppContext.Provider value={appState}>
-    <LocalStorageProvider>
+    <StorageProvider>
       <MarkdownProvider>
         <StatsProvider>
+        <StatusProvider>
+        <ToastContainer />
         <Routes>
           <Route path={HOME} element={<HomePage />} />
           <Route path={`${RESULT}`} element={<ResultListPage />} />
-          <Route path={`${RESULT}/:id`} element={<ResultPage inputType={InputType.ID} />} />
-          <Route path={QUERY} element={<QueryPage queryType="search" />} />
+
+          {/* Route for user inputId - result/{inputId} */}
+          <Route path={`${RESULT}/:input`} element={<ResultPage />} />
+
+          {/* /search — mode auto-detected: ?q= → variant query, ?id= → multi-id browse, neither → filter-only */}
+          <Route path={SEARCH} element={<ResultPage queryType="search" />} />
+          {/* Backward compat: /query → same handler */}
+          <Route path={QUERY} element={<ResultPage queryType="search" />} />
+
+          {/* Type-prefixed identifier browse */}
+          <Route path={`${ID_GENE}/:id`} element={<ResultPage idType="gene" />} />
+          <Route path={`${ID_PDB}/:id`} element={<ResultPage idType="pdb" />} />
+          <Route path={`${ID_ENSEMBL}/:id`} element={<ResultPage idType="ensembl" />} />
+          <Route path={`${ID_REFSEQ}/:id`} element={<ResultPage idType="refseq" />} />
+
+          {/* Direct genomic path: /g/:chr/:pos[/:ref/:alt] */}
+          <Route
+            path={`${G_QUERY}/:param1/:param2/:param3?/:param4?`}
+            element={<ResultPage mode="query" queryType="genomic" />}
+          />
+          {/* Direct protein path: /p/:acc/:pos[/:ref/:alt] */}
+          <Route
+            path={`${P_QUERY}/:param1/:param2/:param3?/:param4?`}
+            element={<ResultPage mode="query" queryType="protein" />}
+          />
+
+          {/* Backward compat: old /:chr/:pos and /:acc/:pos path forms */}
+          <Route
+            path="/:param1/:param2/:param3?/:param4?"
+            element={<ResultPage mode="query" queryType="chromosome_protein" />}
+          />
+
           <Route path={API_ERROR} element={<APIErrorPage />} />
           <Route path={ABOUT} element={<AboutPage />} />
           <Route path={RELEASE} element={<ReleasePage />} />
           <Route path={CONTACT} element={<ContactPage />} />
+          <Route path={ACTIVITY} element={<ActivityPage />} />
           <Route path={DOWNLOAD} element={<DownloadPage />} />
           <Route path={HELP} element={<HelpPage />} />
+          <Route path={STATUS} element={<StatusPage />} />
+          <Route path={SEMANTIC_SEARCH} element={<SemanticSearchPage />} />
 
-          {/* Dynamic routes for chromosome and protein queries
-            - /:chromosome/:position/:ref_allele?/:alt_allele?
-            - /:protein_accession/:position/:ref_amino_acid?/:alt_amino_acid?
-          */}
-          <Route
-            path="/:param1/:param2/:param3?/:param4?"
-            element={<QueryPage queryType="chromosome_protein" />}
-          />
-          {/* Route for protein accession */}
-          <Route path="/:id" element={<ResultPage  inputType={InputType.PROTEIN_ACCESSION} />} />
+          {/* Whole-protein / identifier browse: /:accession */}
+          <Route path="/:input" element={<ResultPage />} />
 
           {/* Catch-all route for anything not matched above */}
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
+        </StatusProvider>
         </StatsProvider>
       </MarkdownProvider>
-      </LocalStorageProvider>
+      </StorageProvider>
     </AppContext.Provider>);
 }

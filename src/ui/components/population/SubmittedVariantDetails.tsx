@@ -1,35 +1,40 @@
-import XRefDetail from "./common/XRefDetail";
-import {ProteinColocatedVariant} from "../../../types/PopulationObservationResponse";
-import {AlleleFreq} from "./AlleleFreq";
-
+import {Variant} from "../../../types/PopulationObservation";
+import React from "react";
 
 interface SubmittedVariantDetailsProps {
-  variants: Array<ProteinColocatedVariant>
-  alleleFreq: number
-  gnomadCoord: string
+  variants: Variant[];
+  selectedVariant: Variant | null;
+  onSelect: (variant: Variant) => void;
 }
-function SubmittedVariantDetails(props: SubmittedVariantDetailsProps) {
-  if (props.variants.length <= 0) {
-    return <label><b>The variant has not been reported before</b></label>
+
+function SubmittedVariantDetails({ variants, selectedVariant, onSelect }: SubmittedVariantDetailsProps) {
+  if (variants.length <= 0) {
+    return (
+      <div className="empty-state-wrapper">
+        <span className="empty-state">The variant has not been reported before</span>
+      </div>
+    );
   }
 
-  let variant = props.variants[0];
-  let change = variant.wildType + '>' + variant.alternativeSequence;
+  const variant = variants[0];
+  const change = variant.wildType + ' > ' + variant.alternativeSequence;
+  const isSelected = selectedVariant === variant;
 
   return (
-    <ul>
-      {props.alleleFreq && <li>
-        <AlleleFreq af={props.alleleFreq} gnomadCoord={props.gnomadCoord} stdColor={false} />
-      </li>}
-      <li>
-        <b>Genomic Location:</b> {variant.genomicLocation}
-      </li>
-      <li>
-        <b>Change:</b> {change}
-      </li>
-      <XRefDetail xrefs={variant.xrefs} populationFrequencies={variant.populationFrequencies}
-                  clinicalSignificances={variant.clinicalSignificances}/>
-    </ul>
+    <div>
+      <div
+        className={`variant-item${isSelected ? ' variant-item--selected' : ''}`}
+        onClick={() => onSelect(variant)}
+        role="button"
+        tabIndex={0}
+        onKeyDown={e => e.key === 'Enter' && onSelect(variant)}
+      >
+        <span className="variant-change">{change}</span>
+        {variant.genomicLocation?.[0] && (
+          <span className="variant-location">{variant.genomicLocation[0]}</span>
+        )}
+      </div>
+    </div>
   );
 }
 

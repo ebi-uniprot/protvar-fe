@@ -1,0 +1,339 @@
+/**
+ * Styling for evidence and cross-reference display components
+ */
+
+/* ============================================
+   SHARED: SOURCE LABEL, ID LIST, ID CHIP
+   Used by both Evidences and XRefDetail
+   ============================================ */
+
+.source-label {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-secondary);
+    display: block;
+    margin-top: var(--spacing-sm);
+    margin-bottom: 4px;
+}
+
+/* Flex-wrap row of ID chips */
+.id-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px 4px;
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+/* Individual ID chip — no border, links handle their own hover */
+.id-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 1px;
+    font-size: var(--font-size-sm);
+}
+
+/* Cross-reference id with no URL (e.g. NCI-TCGA case UUIDs) — plain text, not a link */
+.id-plain {
+    color: var(--color-text-secondary);
+}
+
+/* ============================================
+   EVIDENCE CONTAINER
+   ============================================ */
+
+.evidences-container {
+    margin-top: var(--spacing-sm);
+}
+
+/* ============================================
+   PUBMED LIST CONTAINER
+   ============================================ */
+
+.pubmed-list-container {
+    margin: 4px 0 var(--spacing-sm) 0;
+}
+
+/* ============================================
+   PUBMED INLINE CHIPS ROW
+   ============================================ */
+
+.pubmed-ids-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 6px;
+}
+
+/* Each chip: ID link + toggle icon, grouped visually */
+.pubmed-id-chip {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+}
+
+.pubmed-id-chip .ext-link {
+    padding: 2px 4px;
+    border-radius: 0;
+    font-size: var(--font-size-xs);
+}
+
+.pubmed-chip-toggle {
+    background: none;
+    border: none;
+    border-left: 1px solid var(--color-border-light);
+    padding: 2px 5px;
+    cursor: pointer;
+    color: var(--color-text-muted);
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    transition: all var(--transition-base);
+}
+
+.pubmed-chip-toggle:hover {
+    background: var(--color-bg-secondary);
+    color: var(--color-primary);
+}
+
+.pubmed-id-chip--active {
+    border-color: var(--color-primary);
+}
+
+.pubmed-id-chip--active .pubmed-chip-toggle {
+    background: var(--color-primary-lightest);
+    color: var(--color-primary);
+    border-left-color: var(--color-primary);
+}
+
+/* PMID label inside expanded article card */
+.pubmed-article-pmid {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    margin-bottom: 6px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--color-border-light);
+}
+
+/* ============================================
+   ARTICLE CARD
+   ============================================ */
+
+.pubmed-article-card {
+    margin-top: 6px;
+    padding: 10px 12px;
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-sm);
+    animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================
+   ARTICLE STATES
+   ============================================ */
+
+.pubmed-article-loading {
+    color: var(--color-text-secondary);
+    font-style: italic;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.pubmed-article-loading i {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.pubmed-article-error {
+    color: var(--color-error, #dc3545);
+    font-style: italic;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* ============================================
+   ARTICLE CONTENT
+   ============================================ */
+
+.pubmed-article-title {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin-bottom: 6px;
+    line-height: 1.4;
+    display: flex;
+    gap: 6px;
+}
+
+.pubmed-article-title i {
+    margin-top: 2px;
+    flex-shrink: 0;
+    color: var(--color-primary);
+}
+
+.pubmed-article-authors {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    display: flex;
+    gap: 6px;
+    line-height: 1.4;
+}
+
+.pubmed-article-authors i {
+    margin-top: 2px;
+    flex-shrink: 0;
+    color: var(--color-text-tertiary);
+}
+
+/* ============================================
+   CROSS-REFERENCES
+   ============================================ */
+
+.xref-section {
+    margin-top: var(--spacing-sm);
+}
+
+.xref-groups {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 6px;
+    padding-left: 8px;
+}
+
+/* Each source group as a grid cell */
+.xref-source-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 6px 8px;
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-sm);
+}
+
+/* Meta row: source name + count + significance + pop-freq */
+.xref-source-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.xref-source-name {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    font-weight: var(--font-weight-semibold);
+}
+
+.xref-pop-freq {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+}
+
+.xref-pop-freq-inline {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    font-style: italic;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+    .id-chip {
+        font-size: var(--font-size-xs);
+        padding: 2px 6px;
+    }
+
+    .pubmed-article-card {
+        padding: 8px 10px;
+    }
+
+    .xref-groups {
+        grid-template-columns: 1fr;
+    }
+
+    .pubmed-article-title {
+        font-size: var(--font-size-sm);
+    }
+
+    .pubmed-article-authors,
+    .pubmed-expand-label {
+        font-size: var(--font-size-xs);
+    }
+}
+
+/* ============================================
+   DARK MODE SUPPORT
+   ============================================ */
+
+@media (prefers-color-scheme: dark) {
+    .source-label {
+        color: var(--color-text-secondary);
+    }
+
+    .pubmed-article-card {
+        background: var(--color-bg-secondary);
+        border-color: var(--color-border-light);
+    }
+
+    .pubmed-article-title {
+        color: var(--color-text-primary);
+    }
+
+    .pubmed-article-title i {
+        color: var(--color-primary);
+    }
+
+    .pubmed-article-authors {
+        color: var(--color-text-secondary);
+    }
+
+    .pubmed-article-authors i {
+        color: var(--color-text-tertiary);
+    }
+
+    .pubmed-id-chip {
+        border-color: var(--color-border-medium);
+    }
+
+    .pubmed-chip-toggle {
+        border-left-color: var(--color-border-medium);
+    }
+
+    .pubmed-id-chip--active {
+        border-color: var(--color-primary);
+    }
+
+    .pubmed-article-loading {
+        color: var(--color-text-secondary);
+    }
+
+    .pubmed-article-error {
+        color: #f8717c;
+    }
+
+    .xref-pop-freq,
+    .xref-pop-freq-inline {
+        color: var(--color-text-tertiary);
+    }
+}

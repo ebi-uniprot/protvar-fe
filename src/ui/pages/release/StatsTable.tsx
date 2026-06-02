@@ -1,6 +1,5 @@
 // StatsTable.tsx
 import React from 'react';
-import "./StatsTable.css"
 import {useStats} from "../../../context/StatsContext";
 
 const StatsTable: React.FC = () => {
@@ -19,6 +18,9 @@ const StatsTable: React.FC = () => {
         </tr>
         </thead>
         <tbody>
+        <tr className="stats-group">
+          <td colSpan={5}>Sequences &amp; mappings</td>
+        </tr>
         <tr>
           <td>UniProt</td>
           <td>{process.env.REACT_APP_UNIPROT}</td>
@@ -48,8 +50,8 @@ const StatsTable: React.FC = () => {
           <td>{formatDate(getStat("refseq_id_count")?.created)}</td>
         </tr>
 
-        <tr>
-          <td colSpan={5}></td>
+        <tr className="stats-group">
+          <td colSpan={5}>Variant identifiers &amp; frequencies</td>
         </tr>
 
         <tr>
@@ -81,8 +83,8 @@ const StatsTable: React.FC = () => {
           <td>{formatDate(getStat("allele_freq_count")?.created)}</td>
         </tr>
 
-        <tr>
-          <td colSpan={5}></td>
+        <tr className="stats-group">
+          <td colSpan={5}>Scores</td>
         </tr>
 
 
@@ -118,8 +120,8 @@ const StatsTable: React.FC = () => {
           <td>{formatDate(getStat("conservation_count")?.created)}</td>
         </tr>
 
-        <tr>
-          <td colSpan={5}></td>
+        <tr className="stats-group">
+          <td colSpan={5}>Predictions</td>
         </tr>
 
         <tr>

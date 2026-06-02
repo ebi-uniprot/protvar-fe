@@ -1,7 +1,6 @@
 import { FC, HTMLAttributes } from 'react';
 import cn from 'classnames';
 import { ReactComponent as ProteinIcon } from '../../images/protein.svg';
-import './loader.scss';
 
 type Props = {
   progress?: number;

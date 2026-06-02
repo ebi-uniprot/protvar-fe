@@ -1,0 +1,67 @@
+/**
+ * loader.css
+ * Animated SVG spinner and delayed-appearance container.
+ */
+
+.loader-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    animation: delayed-appearance 200ms ease-in-out 500ms 1 both;
+}
+
+.loader-container__progress {
+    animation: delayed-appearance 2s ease-in-out 4s 1 both;
+}
+
+.loader-container progress {
+    opacity: 0.75;
+}
+
+@keyframes delayed-appearance {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+svg.loader {
+    animation: dash 2s ease infinite;
+    stroke-dasharray: 110;
+}
+
+svg.loader circle                  { animation: circle1-hide 3s ease infinite alternate; }
+svg.loader circle:nth-of-type(2)   { animation-name: circle2-hide; }
+svg.loader circle:nth-of-type(3)   { animation-name: circle3-hide; }
+svg.loader circle:nth-of-type(4)   { animation-name: circle4-hide; }
+svg.loader circle:nth-of-type(5)   { animation-name: circle5-hide; }
+
+@keyframes dash {
+    60%  { stroke-dashoffset: 0;    }
+    100% { stroke-dashoffset: -220; }
+}
+
+@keyframes circle1-hide {
+    60%  { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@keyframes circle2-hide {
+    20% { opacity: 1; }
+    80% { opacity: 0; }
+}
+
+@keyframes circle3-hide {
+    40%  { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+@keyframes circle4-hide {
+    20% { opacity: 0; }
+    60% { opacity: 1; }
+}
+
+@keyframes circle5-hide {
+    40% { opacity: 0; }
+    80% { opacity: 1; }
+}

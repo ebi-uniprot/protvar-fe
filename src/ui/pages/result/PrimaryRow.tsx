@@ -1,5 +1,4 @@
-import './PrimaryRow.css';
-import {Fragment, lazy, Suspense} from "react";
+import { lazy, Suspense } from "react";
 import { StringVoidFun } from "../../../constants/CommonTypes";
 import {
   CADD_INFO_URL, AM_INFO_URL,
@@ -10,240 +9,375 @@ import {
   ENSEMBL_VIEW_URL,
   UNIPROT_ACCESSION_URL
 } from "../../../constants/ExternalUrls";
-import { ALLELE, CONSEQUENCES } from "../../../constants/SearchResultTable";
-import Spaces from "../../elements/Spaces";
-import Tool from "../../elements/Tool";
-import {caddScoreAttr, formatCaddScore} from "../../components/function/prediction/CaddScorePred";
-import {amScoreAttr, formatAMScore} from "../../components/function/prediction/AlphaMissensePred";
+import Tool from "../../elements/Tooltip";
+import { TextLink } from "../../components/common/Link";
+import { caddScoreAttr, formatCaddScore } from "../../components/function/prediction/CaddScorePred";
+import { amScoreAttr, formatAMScore } from "../../components/function/prediction/AlphaMissensePred";
+import { formatPopEveScore, getPopEveColor, getPopEveClass, POPEVE_SCORE_ATTR } from "../../components/function/prediction/PopEvePred";
 import ProteinIcon from '../../../images/proteins.svg';
 import StructureIcon from '../../../images/structures-3d.svg';
 import PopulationIcon from '../../../images/human.svg';
 import LoaderRow from "./LoaderRow";
-import { ReactComponent as ChevronDownIcon } from "../../../images/chevron-down.svg"
-import { ReactComponent as ChevronUpIcon } from "../../../images/chevron-up.svg"
+import { ReactComponent as ChevronDownIcon } from "../../../images/chevron-down.svg";
+import { ReactComponent as ChevronUpIcon } from "../../../images/chevron-up.svg";
 import { EmptyElement } from "../../../constants/ConstElement";
-import {aaChangeTip, CanonicalIcon, getProteinName} from "./AlternateIsoFormRow";
-import {
-  INPUT_GEN,
-  INPUT_PRO,
-  INPUT_ID,
-  INPUT_CDNA,
-  GenomicInput,
-  Gene,
-  IsoFormMapping,
-  CustomInput, TranslatedSequence
-} from "../../../types/MappingResponse";
-import {rowBg} from "./ResultTable";
+import { aaChangeTip, CanonicalIcon, ConsequenceBadge, getProteinName, getConsequenceFullName } from "./AlternateIsoFormRow";
+import { Gene, Isoform, VariantInput, GenomicVariant } from "../../../types/MappingResponse";
 
-const StructuralDetail = lazy(() => import(/* webpackChunkName: "StructuralDetail" */ "../../components/structure/StructuralDetail"));
-const PopulationDetail = lazy(() => import(/* webpackChunkName: "PopulationDetail" */ "../../components/population/PopulationDetail"));
-const FunctionalDetail = lazy(() => import(/* webpackChunkName: "FunctionalDetail" */ "../../components/function/FunctionalDetail"));
+const StructureData   = lazy(() => import(/* webpackChunkName: "StructureData"   */ "../../components/structure/./StructureData"));
+const PopulationData  = lazy(() => import(/* webpackChunkName: "PopulationData"  */ "../../components/population/./PopulationData"));
+const FunctionalData  = lazy(() => import(/* webpackChunkName: "FunctionalData"  */ "../../components/function/./FunctionalData"));
 
-export const getIdUrl = (id:string) => {
+export const getIdUrl = (id: string) => {
   if (id) {
-    let idLowerCase = id.toLowerCase()
-    let idUpperCase = id.toUpperCase()
-    if (idLowerCase.startsWith("rs")) {
-      return DBSNP_URL + id;
-    } else if (idUpperCase.startsWith("RCV")) {
-      return CLINVAR_RCV_URL + id;
-    } else if (idUpperCase.startsWith("VCV")) {
-      return CLINVAR_VCV_URL + id;
-    } else if (idUpperCase.startsWith("COSV") || idUpperCase.startsWith("COSM") || idUpperCase.startsWith("COSN")) {
-      return COSMIC_URL + id;
-    }
+    const lower = id.toLowerCase();
+    const upper = id.toUpperCase();
+    if (lower.startsWith("rs"))   return DBSNP_URL + id;
+    if (upper.startsWith("RCV"))  return CLINVAR_RCV_URL + id;
+    if (upper.startsWith("VCV"))  return CLINVAR_VCV_URL + id;
+    if (upper.startsWith("COSV") || upper.startsWith("COSM") || upper.startsWith("COSN")) return COSMIC_URL + id;
   }
   return "";
-}
+};
 
-function getSignificancesButton(rowKey: string, buttonLabel: string, canonical: boolean | undefined,
-  annotationExpanded: string, toggleAnnotation: StringVoidFun) {
-  if (!canonical) return EmptyElement;
-  const buttonCss = rowKey === annotationExpanded ? 'button significance' : 'button';
-  var toolTip = "Click for functional information"
-  var buttonTag = <img src={ProteinIcon} className="click-icon" alt="protein icon" />
-  if (buttonLabel === 'POP') {
-    buttonTag = <img src={PopulationIcon} className="click-icon" alt="population icon" />
-    toolTip = "Click for population observation"
+export const aaChangeStr = (ref: string, alt: string) => `${ref}/${alt}`;
+
+export const getEnsemblChrUrl  = (chr: string) => ENSEMBL_CHRM_URL + chr;
+export const getEnsemblViewUrl = (chr: string, pos: number) => ENSEMBL_VIEW_URL + chr + ':' + pos + '-' + pos;
+
+function AnnotationButton(props: {
+  rowKey: string;
+  label: 'FUN' | 'POP' | 'STR';
+  canonical: boolean | undefined;
+  annotationExpanded: string;
+  toggleAnnotation: StringVoidFun;
+}) {
+  if (!props.canonical) return EmptyElement;
+
+  const isActive = props.rowKey === props.annotationExpanded;
+  const btnClass = isActive ? 'button click-icon-btn significance' : 'button click-icon-btn';
+
+  let tip = "Functional annotations (click to expand)";
+  let icon = <img src={ProteinIcon} className="click-icon" alt="protein icon" />;
+  if (props.label === 'POP') {
+    tip  = "Population observations (click to expand)";
+    icon = <img src={PopulationIcon} className="click-icon" alt="population icon" />;
+  } else if (props.label === 'STR') {
+    tip  = "3D structure (click to expand)";
+    icon = <img src={StructureIcon} className="click-icon" alt="structure icon" />;
   }
-  else if (buttonLabel === 'STR') {
-    buttonTag = <img src={StructureIcon} className="click-icon" alt="structure icon" />
-    toolTip = "Click for 3D structure"
-  }
+
   return (
-    <Tool el="button" tip={toolTip} pos="up-right"
-      onClick={() => toggleAnnotation(rowKey)}
-      className={buttonCss}
-      style={{ marginRight: "0.1rem" }}
+    <Tool el="button" tip={tip} pos="up-right"
+      onClick={() => props.toggleAnnotation(props.rowKey)}
+      className={btnClass}
     >
-      {buttonTag}
+      {icon}
     </Tool>
   );
 }
 
-export const aaChangeStr = (ref: string, alt: string) => {
-  return `${ref}/${alt}`
-}
+/**
+ * Toggle handler for the isoform-group chevron. The optional gvStr lets the
+ * parent ResultTable kick off a single-variant lookup on first expand when
+ * isoforms weren't pre-fetched (filter-only browse).
+ */
+export type ToggleIsoformGroupFn = (key: string, gvStr?: string) => void;
 
-export const getEnsemblChrUrl = (chr: string) => {
-  return ENSEMBL_CHRM_URL + chr;
-}
+export const getNewPrimaryRow = (
+  isoformKey: string,
+  isoformGroup: string,
+  isoformGroupExpanded: string,
+  index: number,
+  genomicVariant: GenomicVariant,
+  input: VariantInput,
+  gene: Gene,
+  isoform: Isoform,
+  toggleIsoFormGroup: ToggleIsoformGroupFn,
+  annotationExpanded: string,
+  toggleAnnotation: StringVoidFun,
+  hasAltIsoForm: boolean,
+  stdColor: boolean,
+  altIsoforms: Isoform[] = [],
+  isLoadingIsoforms: boolean = false,
+) => {
+  const caddAttr = caddScoreAttr(gene.caddScore?.toString());
+  const amAttr   = amScoreAttr(isoform.amScore?.amClass);
 
-export const getEnsemblViewUrl = (chr: string, pos: number) => {
-  return ENSEMBL_VIEW_URL + chr + ':' + pos + '-' + pos;
-}
+  // Combined genomic position: chr-pos-ref-alt
+  const genomicPos = `${genomicVariant.chromosome}-${genomicVariant.position}-${genomicVariant.refBase}-${genomicVariant.altBase}`;
 
-export const getNewPrimaryRow = (isoformKey: string, isoformGroup: string, isoformGroupExpanded: string,
-                                 index: number, input: GenomicInput, originalInput: CustomInput,
-                                 gene: Gene, isoform: IsoFormMapping,
-                                 toggleIsoFormGroup: StringVoidFun,
-                                 annotationExpanded: string, toggleAnnotation: StringVoidFun,
-                                 hasAltIsoForm: boolean, stdColor: boolean) => {
+  const strand = gene.reverseStrand ? '(-)' : '(+)';
+  const codon  = isoform.refCodon && isoform.variantCodon
+    ? `${isoform.refCodon}/${isoform.variantCodon}`
+    : '';
 
-  const caddAttr = caddScoreAttr(gene.caddScore?.toString())
-  const amAttr = amScoreAttr(isoform.amScore?.amClass)
-  const gnomadCoord = `${input.chr}-${input.pos}-${input.ref}-${input.alt}`
+  // Input type highlighting
+  const isGenomicInput  = input.type === "GENOMIC";
+  const isProteinInput  = input.type === "PROTEIN" || input.type === "CODING_DNA";
+  const isIdInput       = input.type === "VARIANT_ID";
 
-  let strand = gene.reverseStrand ? '(-)' : '(+)';
-  let codon = isoform.refCodon + '/' + isoform.variantCodon;
-  if (!codon) {
-    strand = '';
-  }
-  let inputStyle = {
-    gen: {
-      backgroundColor: originalInput.type === INPUT_GEN ? "#F8EDF0" : ""
-    },
-    pro: {
-      backgroundColor: (originalInput.type === INPUT_PRO || originalInput.type === INPUT_CDNA)? "#F8EDF0" : ""
-    },
-    rs: {
-      backgroundColor: originalInput.type === INPUT_ID ? "#F8EDF0" : ""
-    }
-  }
+  const functionalKey  = 'functional-'  + isoformKey;
+  const structuralKey  = 'structural-'  + isoformKey;
+  const populationKey  = 'population-'  + isoformKey;
 
-  const functionalKey = 'functional-' + isoformKey;
-  const structuralKey = 'structural-' + isoformKey;
-  const populationKey = 'population-' + isoformKey;
+  // AA change in Ala205Pro format
+  const aaChange = aaChangeStr(isoform.refAA, isoform.variantAA);
+  const aaChangeFormatted = `${isoform.refAA}${isoform.isoformPosition}${isoform.variantAA}`;
 
-  let aaChange = aaChangeStr(isoform.refAA, isoform.variantAA)
+  const idValue = getIdValue(input);
+  const rowClass = `result-row ${index % 2 === 0 ? 'row-even' : 'row-odd'}`;
 
-  let ensp: Array<TranslatedSequence> = [];
-  if (isoform.translatedSequences !== undefined && isoform.translatedSequences.length > 0) {
-    var ensps: Array<TranslatedSequence> = [];
-    isoform.translatedSequences.forEach((translatedSeq) => {
-      var ensts: Array<string> = [];
-      translatedSeq.transcripts.forEach((transcript) => ensts.push(transcript.enst));
-      ensps.push({ensp: translatedSeq.ensp, ensts: ensts.join()});
-    });
-    ensp = ensps;
-  }
-  return <Fragment key={isoformKey}>
-    <tr style={rowBg(index)} title={'Input: ' + input.inputStr}>
-      <td style={inputStyle.gen}>
-        <Tool tip="Click to see the a summary for this chromosome from Ensembl" pos="up-left">
-          <a href={getEnsemblChrUrl(input.chr)} target="_blank" rel="noopener noreferrer">
-            {input.chr}
-          </a>
-        </Tool>
-      </td>
-      <td style={inputStyle.gen}>
-        <Tool tip="Click to see the region detail for this genomic coordinate from Ensembl" pos="up-left">
-          {input.converted && <span className="h37">37&rarr;38</span>}
-          <a href={getEnsemblViewUrl(input.chr, input.pos)} target="_blank" rel="noopener noreferrer">
-            {input.pos}
-          </a>
-        </Tool>
-      </td>
-      <td style={inputStyle.rs}><Tool tip="Variant ID provided by the user">
-        <a href={getIdUrl(input.id)} target="_blank" rel="noopener noreferrer">{input.id}</a>
-      </Tool></td>
-      <td><Tool tip={ALLELE.get(input.ref)}>{input.ref}</Tool></td>
-      <td><Tool tip={ALLELE.get(gene.altAllele)}>{gene.altAllele}</Tool></td>
-      <td>
-        <Tool tip="Click here for gene information from Ensembl">
-          <a href={ENSEMBL_GENE_URL + gene.geneName} target="_blank" rel="noopener noreferrer">{gene.geneName}</a>
-        </Tool>
-      </td>
-      <td>
-        <div className="flex">
-          {codon}<Spaces /><Tool tip={"Codon change in " + (strand === "(+)" ? " positive" : "negative") + "-sense strand gene"}>{strand}</Tool>
-        </div>
-      </td>
-      <td>
-        <Tool className="score-box" style={{ backgroundColor: (stdColor ? caddAttr?.stdColor : caddAttr?.color) }} tip={`${caddAttr?.range} ${caddAttr?.text}`}>
-          <a href={CADD_INFO_URL} target="_blank" rel="noopener noreferrer" style={{color: 'white'}}>
-            {formatCaddScore(gene.caddScore?.toString())}
-          </a>
-        </Tool>
-      </td>
-      <td style={inputStyle.pro}>
-        <div className="flex">
-          <CanonicalIcon isCanonical={isoform.canonical}/>
-          <Spaces/>
-          <Tool tip="Click to see the UniProt page for this accession">
-            <a href={UNIPROT_ACCESSION_URL + isoform.accession} target="_blank"
-               rel="noopener noreferrer">{isoform.accession}</a>
+  return (
+    <div key={isoformKey} className={rowClass}>
+
+      {/* Card row 1 — genomic (cols 1–4: ID, genomic-pos, codon, CADD) */}
+      <div className="card-row card-row-genomic">
+        {/* 1: User ID */}
+        <span className={isIdInput ? 'cell-id-input' : ''}>
+          {idValue && (
+            <Tool tip="Variant ID provided by the user">
+              <TextLink url={getIdUrl(idValue)} text={idValue} />
+            </Tool>
+          )}
+        </span>
+
+        {/* 2: Genomic position (chr-pos-ref-alt) */}
+        <span className={`cell-genomic${isGenomicInput ? ' cell-genomic-input' : ''}`}>
+          <Tool tip={`Genomic coordinate (chr-pos-ref-alt) for input "${input.inputStr}" — click to view the region in Ensembl`}>
+            {isGenomicInput && 'isLiftedFrom37' in input && input.isLiftedFrom37 && (
+              <span className="h37">37&rarr;38</span>
+            )}
+            <TextLink url={getEnsemblViewUrl(genomicVariant.chromosome, genomicVariant.position)} text={genomicPos} />
           </Tool>
-          {hasAltIsoForm && <>
-            <Spaces/>
+        </span>
+
+        {/* 3: Gene (linked to Ensembl when ensg available) */}
+        <span className="card-sep cell-gene">
+          {gene.geneName && (
+            gene.ensg
+              ? <Tool tip="Gene — click to view in Ensembl"><TextLink url={ENSEMBL_GENE_URL + gene.ensg} text={gene.geneName} /></Tool>
+              : <span>{gene.geneName}</span>
+          )}
+        </span>
+
+        {/* 4: Codon (strand) — card-sep adds dot separator before it in mobile */}
+        <span className="card-sep">
+          {codon && (
+            <div className="flex">
+              {codon}&nbsp;
+              <Tool tip={`Codon change ${codon} on the ${strand === '(+)' ? 'positive' : 'negative'}-sense strand`}>
+                {strand}
+              </Tool>
+            </div>
+          )}
+        </span>
+
+        {/* 5: CADD v1.7 — empty span when no score lets the .na-badge:empty::after rule render the NA pill */}
+        <span data-card-label="CADD" className="cell-cadd na-badge">
+          {caddAttr && (
+            <Tool
+              className="score-box"
+              style={{ backgroundColor: stdColor ? caddAttr.stdColor : caddAttr.color }}
+              tip={`CADD ${formatCaddScore(gene.caddScore?.toString())} — ${caddAttr.text} (${caddAttr.range})`}
+            >
+              <a href={CADD_INFO_URL} target="_blank" rel="noopener noreferrer">
+                {formatCaddScore(gene.caddScore?.toString())}
+              </a>
+            </Tool>
+          )}
+        </span>
+      </div>
+
+      {/* Card row 2 — protein + scores (cols 5–10: isoform, name, aa-change, conseq, popEVE, AM) */}
+      <div className="card-row card-row-protein">
+        {/* 6: Isoform — toggle chevron + canonical icon + accession */}
+        <span className={`isoform-cell ${isProteinInput ? 'cell-protein-input' : ''}`}>
+          {hasAltIsoForm && (
             <Tool
               el="button"
-              onClick={() => toggleIsoFormGroup(isoformGroup) }
+              onClick={() => toggleIsoFormGroup(isoformGroup, genomicPos)}
               className="button button--toggle-isoforms"
-              tip={isoformGroupExpanded !== isoformGroup ? "Show more isoforms" : "Hide isoforms"}
+              disabled={isLoadingIsoforms}
+              tip={isLoadingIsoforms
+                ? "Loading isoforms…"
+                : (isoformGroupExpanded !== isoformGroup ? "Show more isoforms" : "Hide isoforms")}
             >
-              {isoformGroupExpanded !== isoformGroup ?
-                <ChevronDownIcon className="toggle-isoforms"/> : <ChevronUpIcon className="toggle-isoforms"/>}
+              {isLoadingIsoforms
+                ? <span className="toggle-isoforms-loading" aria-label="loading" />
+                : (isoformGroupExpanded !== isoformGroup
+                    ? <ChevronDownIcon className="toggle-isoforms" />
+                    : <ChevronUpIcon  className="toggle-isoforms" />)}
             </Tool>
-          </>}
-        </div>
-      </td>
-      <td>
-        <Tool tip={isoform.proteinName}>{getProteinName(isoform.proteinName)}</Tool>
-      </td>
-      <td style={inputStyle.pro}><Tool tip="The amino acid position in this isoform">{isoform.isoformPosition}</Tool></td>
-      <td><Tool tip={aaChangeTip(aaChange)}>{aaChange}</Tool></td>
-      <td><Tool tip={CONSEQUENCES.get(isoform.consequences!)} pos="up-right">{isoform.consequences}</Tool></td>
-      <td>
-        <Tool className="score-box" style={{ backgroundColor: (stdColor ? amAttr?.stdColor : amAttr?.color) }} tip={`${isoform.amScore?.amPathogenicity} ${amAttr?.text}`}>
-          <a href={AM_INFO_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'white' }}>
-            {formatAMScore(isoform.amScore)}
-          </a>
-        </Tool>
-      </td>
-      <td>
-        <div className="flex">
-          {!isoform.canonical && <><br/><br/></>}
-          {getSignificancesButton(functionalKey, 'FUN', isoform.canonical, annotationExpanded, toggleAnnotation)}
-          {getSignificancesButton(populationKey, 'POP', isoform.canonical, annotationExpanded, toggleAnnotation)}
-          {getSignificancesButton(structuralKey, 'STR', isoform.canonical, annotationExpanded, toggleAnnotation)}
-        </div>
-      </td>
-    </tr>
+          )}
+          <CanonicalIcon isCanonical={isoform.canonical} />
+          <Tool tip="Click to see the UniProt page for this accession">
+            <TextLink url={UNIPROT_ACCESSION_URL + isoform.accession} text={isoform.accession} />
+          </Tool>
+        </span>
 
-    {populationKey === annotationExpanded &&
-      <Suspense fallback={<LoaderRow />}>
-        <PopulationDetail annotation={annotationExpanded} populationObservationsUri={isoform.populationObservationsUri!} variantAA={isoform.variantAA!} alleleFreq={gene.alleleFreq} gnomadCoord={gnomadCoord} />
-      </Suspense>
-    }
-    {structuralKey === annotationExpanded &&
-      <Suspense fallback={<LoaderRow />}>
-        <StructuralDetail annotation={annotationExpanded} isoFormAccession={isoform.accession!} aaPosition={isoform.isoformPosition!} variantAA={isoform.variantAA!} proteinStructureUri={isoform.proteinStructureUri!}/>
-      </Suspense>
-    }
-    {functionalKey === annotationExpanded &&
-      <Suspense fallback={<LoaderRow />}>
-        <FunctionalDetail
-          annotation={annotationExpanded}
-          caddScore={gene.caddScore?.toString()}
-          conservScore={isoform.conservScore}
-          amScore={isoform.amScore}
-          eveScore={isoform.eveScore}
-          esmScore={isoform.esmScore}
-          refAA={isoform.refAA!} variantAA={isoform.variantAA!}
-          ensg={gene.ensg!} ensp={ensp!} referenceFunctionUri={isoform.referenceFunctionUri!} />
-      </Suspense>
-    }
+        {/* 7: Protein name */}
+        <span className="card-sep">
+          <Tool tip={isoform.proteinName}>{getProteinName(isoform.proteinName)}</Tool>
+        </span>
 
-  </Fragment>
+        {/* 8: AA Change — card-sep adds dot separator before it in mobile */}
+        <span className={`card-sep cell-aa-change${isProteinInput ? ' cell-protein-input' : ''}`}>
+          <Tool tip={aaChangeTip(aaChange)}>{aaChangeFormatted}</Tool>
+        </span>
+
+        {/* 9: Consequence(s) */}
+        <span className="card-sep cell-consequence">
+          <Tool tip={getConsequenceFullName(isoform.consequences)} pos="up-right"><ConsequenceBadge consequence={isoform.consequences} /></Tool>
+        </span>
+
+        {/* 10: popEVE */}
+        <span className="cell-popeve na-badge" data-card-label="popEVE">
+          {isoform.popEveScore && (
+            <Tool
+              className="score-box"
+              style={{
+                backgroundColor: stdColor
+                  ? POPEVE_SCORE_ATTR[getPopEveClass(isoform.popEveScore.popeve)].stdColor
+                  : getPopEveColor(isoform.popEveScore.popeve)
+              }}
+              tip={`popEVE ${formatPopEveScore(isoform.popEveScore)}`}
+            >
+              {formatPopEveScore(isoform.popEveScore)}
+            </Tool>
+          )}
+        </span>
+
+        {/* 11: AlphaMissense — same NA pattern as CADD */}
+        <span data-card-label="AM" className="cell-am na-badge">
+          {amAttr && (
+            <Tool
+              className="score-box"
+              style={{ backgroundColor: stdColor ? amAttr.stdColor : amAttr.color }}
+              tip={`AlphaMissense ${isoform.amScore?.amPathogenicity} — ${amAttr.text}`}
+            >
+              <a href={AM_INFO_URL} target="_blank" rel="noopener noreferrer">
+                {formatAMScore(isoform.amScore)}
+              </a>
+            </Tool>
+          )}
+        </span>
+      </div>
+
+      {/* Mobile-only: alt isoform rows inline between protein and buttons.
+          Desktop uses separate result-row-isoform elements; these are hidden there. */}
+      {altIsoforms.map((altIso) => {
+        const altAaChange = aaChangeStr(altIso.refAA, altIso.variantAA);
+        const altAaFormatted = `${altIso.refAA}${altIso.isoformPosition}${altIso.variantAA}`;
+        return (
+          <div key={altIso.accession} className="card-isoform-inline">
+            <span className="isoform-cell">
+              <CanonicalIcon isCanonical={false} />
+              <Tool tip="Click to see the UniProt page for this accession">
+                <TextLink url={UNIPROT_ACCESSION_URL + altIso.accession} text={altIso.accession} />
+              </Tool>
+            </span>
+            <span className="card-sep">{getProteinName(altIso.proteinName)}</span>
+            <span className="card-sep">
+              <Tool tip={aaChangeTip(altAaChange)}>{altAaFormatted}</Tool>
+            </span>
+            <span className="card-sep cell-consequence">
+              <Tool tip={getConsequenceFullName(altIso.consequences)} pos="up-right">
+                <ConsequenceBadge consequence={altIso.consequences} />
+              </Tool>
+            </span>
+          </div>
+        );
+      })}
+
+      {/* Card row 3 — annotation buttons (col 11) */}
+      <div className="card-row card-row-details">
+        {/* 12: Annotation buttons */}
+        <span className="details-cell">
+          <AnnotationButton rowKey={functionalKey}  label="FUN" canonical={isoform.canonical} annotationExpanded={annotationExpanded} toggleAnnotation={toggleAnnotation} />
+          <AnnotationButton rowKey={populationKey}  label="POP" canonical={isoform.canonical} annotationExpanded={annotationExpanded} toggleAnnotation={toggleAnnotation} />
+          <AnnotationButton rowKey={structuralKey}  label="STR" canonical={isoform.canonical} annotationExpanded={annotationExpanded} toggleAnnotation={toggleAnnotation} />
+        </span>
+      </div>
+
+    </div>
+  );
+};
+
+export function AnnotationPanels({
+  isoformKey,
+  annotationExpanded,
+  gene,
+  isoform,
+  genomicVariantStr,
+}: {
+  isoformKey: string;
+  annotationExpanded: string;
+  gene: Gene;
+  isoform: Isoform;
+  genomicVariantStr: string;
+}) {
+  const functionalKey  = 'functional-'  + isoformKey;
+  const structuralKey  = 'structural-'  + isoformKey;
+  const populationKey  = 'population-'  + isoformKey;
+
+  const enspMap = new Map<string, string[]>();
+  isoform.transcripts?.forEach(({ ensp, enst }) => {
+    if (!enspMap.has(ensp)) enspMap.set(ensp, []);
+    enspMap.get(ensp)!.push(enst);
+  });
+  const ensp = Array.from(enspMap.entries()).map(([ensp, ensts]) => ({ ensp, ensts: ensts.join(',') }));
+
+  return (
+    <>
+      {populationKey === annotationExpanded && (
+        <div className="result-annotation">
+          <Suspense fallback={<LoaderRow />}>
+            <PopulationData
+              annotation={annotationExpanded}
+              populationObservationsUri={isoform.populationObservationsUri!}
+              variantAA={isoform.variantAA!}
+              genomicVariant={genomicVariantStr}
+            />
+          </Suspense>
+        </div>
+      )}
+      {structuralKey === annotationExpanded && (
+        <div className="result-annotation">
+          <Suspense fallback={<LoaderRow />}>
+            <StructureData
+              annotation={annotationExpanded}
+              isoFormAccession={isoform.accession!}
+              aaPosition={isoform.isoformPosition!}
+              variantAA={isoform.variantAA!}
+              proteinStructureUri={isoform.proteinStructureUri!}
+            />
+          </Suspense>
+        </div>
+      )}
+      {functionalKey === annotationExpanded && (
+        <div className="result-annotation">
+          <Suspense fallback={<LoaderRow />}>
+            <FunctionalData
+              annotation={annotationExpanded}
+              caddScore={gene.caddScore?.toString()}
+              amScore={isoform.amScore}
+              refAA={isoform.refAA!}
+              variantAA={isoform.variantAA!}
+              ensg={gene.ensg!}
+              ensp={ensp!}
+              referenceFunctionUri={isoform.referenceFunctionUri!}
+            />
+          </Suspense>
+        </div>
+      )}
+    </>
+  );
+}
+
+export const getIdValue = (input?: VariantInput) => {
+  let val: string | null | undefined = null;
+  if (input?.type === "VARIANT_ID") val = input.inputStr;
+  else if (input?.type === "GENOMIC" && 'id' in input) val = input.id as string;
+  return val && val !== '.' ? val : null;
 };
