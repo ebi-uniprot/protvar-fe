@@ -251,7 +251,7 @@
 
 .predicted-interaction-card {
     display: grid;
-    grid-template-columns: 1fr 1fr 4.5rem;
+    grid-template-columns: 1fr 1fr 1fr;
     align-items: center;
     gap: var(--spacing-sm);
     padding: 5px 12px;

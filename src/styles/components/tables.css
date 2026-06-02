@@ -101,7 +101,7 @@
 
 /* Interactions: Chain A | Chain B | pDockQ */
 .interaction-col-header {
-    grid-template-columns: 1fr 1fr 4.5rem;
+    grid-template-columns: 1fr 1fr 1fr;
 }
 
 /* Pockets: Pocket | Score | pLDDT | Residues */
