@@ -59,3 +59,6 @@ export function usePredictionHighlight() {
 
   return { highlightedPrediction, triggerHighlight };
 }
+
+/** CSS class PredictionWrapper applies for the highlight flash. */
+export const PREDICTION_HIGHLIGHT_CLASS = 'prediction-highlighted';

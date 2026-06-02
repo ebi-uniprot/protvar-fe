@@ -15,6 +15,8 @@ interface PredictionWrapperProps {
 export function PredictionWrapper({ predictionType, isHighlighted, children }: PredictionWrapperProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
 
+  // Scroll into view only on URL-load highlight. Copy-link clicks flash the row
+  // directly (no highlightedPrediction state change), so they never scroll.
   useEffect(() => {
     if (isHighlighted && wrapperRef.current) {
       setTimeout(() => {
