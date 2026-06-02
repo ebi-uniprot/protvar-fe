@@ -84,7 +84,7 @@ interface ConfidenceBadgeProps {
 export function ConfidenceBadge({ level, compact }: ConfidenceBadgeProps) {
   if (compact) {
     return (
-      <span title={level.label}>
+      <span title={`${level.label} confidence`}>
         <i className={`bi ${level.icon} ${level.className}`}></i>
       </span>
     );
