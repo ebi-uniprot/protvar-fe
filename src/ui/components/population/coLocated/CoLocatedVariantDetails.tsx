@@ -9,7 +9,11 @@ interface CoLocatedVariantDetailsProps {
 
 function CoLocatedVariantDetails({ coLocatedVariants, selectedVariant, onSelect }: CoLocatedVariantDetailsProps) {
   if (coLocatedVariants.length <= 0) {
-    return <div className="submitted-variant-no-data">No co-located variants to report</div>;
+    return (
+      <div className="empty-state-wrapper">
+        <span className="empty-state">No co-located variants to report</span>
+      </div>
+    );
   }
 
   return (

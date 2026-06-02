@@ -117,13 +117,6 @@
     word-break: break-all;
 }
 
-.submitted-variant-no-data {
-    font-weight: var(--font-weight-semibold);
-    color: var(--color-text-secondary);
-    font-style: italic;
-    padding: 12px 0;
-}
-
 /* ============================================
    CO-LOCATED VARIANTS
    ============================================ */
@@ -256,10 +249,6 @@
 
     .allele-freq-count {
         color: var(--color-text-muted);
-    }
-
-    .submitted-variant-no-data {
-        color: var(--color-text-tertiary);
     }
 
     .colocated-variants-intro {

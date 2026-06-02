@@ -193,13 +193,6 @@
     border-radius: var(--radius-sm);
 }
 
-.submitted-variant-no-data {
-    font-weight: var(--font-weight-semibold);
-    color: var(--color-text-secondary);
-    font-style: italic;
-    padding: var(--spacing-md) 0;
-}
-
 .no-structure-message {
     padding: 40px 20px;
     text-align: center;
@@ -325,7 +318,6 @@
     }
 
     .no-data-message,
-    .submitted-variant-no-data,
     .no-structure-message {
         background: var(--color-bg-secondary);
         border-color: var(--color-border-light);
