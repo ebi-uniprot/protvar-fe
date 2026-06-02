@@ -24,7 +24,13 @@ export class ResidueViewer {
     ]);
     this.up = linAlg.Vec3.create(0, 1, 0);
     this.dir = linAlg.Vec3.create(0, 0, -1);
-    const plugin = new PluginContext(DefaultPluginSpec());
+    // Trim behaviors: we only render a static ball-and-stick, so the computed
+    // custom-prop behaviors (ASA, interactions, …) aren't needed. Dropping them
+    // also avoids the "Symbol … already added" warnings that come from two
+    // plugin instances re-registering the same global symbols, and speeds init.
+    const spec = DefaultPluginSpec();
+    spec.behaviors = [];
+    const plugin = new PluginContext(spec);
     await plugin.init();
     if (!plugin.initViewer(canvas, container)) {
       plugin.dispose();
