@@ -29,7 +29,7 @@ export function CopyLink({ predictionType, title }: CopyLinkProps) {
     });
 
     setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
+    setTimeout(() => setCopied(false), 2500);
 
     navigate({ search: params.toString() }, { replace: true });
   };
