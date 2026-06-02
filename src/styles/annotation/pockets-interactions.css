@@ -26,8 +26,9 @@
 .pocket-entries {
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    padding: 8px 0 4px;
+    gap: 2px;
+    /* 3px top matches the structure tables' .structure-rows-scroll inset */
+    padding: 3px 0 4px;
 }
 
 .pocket-entry {
@@ -42,12 +43,12 @@
     box-shadow: var(--shadow-sm);
 }
 
-/* Row 1: identity + key metrics */
+/* Row 1: identity + key metrics — shares grid columns with .pocket-list-col-header */
 .pocket-row {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
     align-items: center;
-    flex-wrap: wrap;
-    gap: var(--spacing-lg);
+    gap: var(--spacing-sm);
     padding: 8px 12px 6px 12px;
     font-size: var(--font-size-sm);
 }
@@ -113,7 +114,9 @@
     color: var(--color-text-primary);
 }
 
-.pocket-residues-list {
+/* Higher specificity than `.pocket-details span` (nowrap) so the expanded list
+   wraps instead of overflowing and being clipped by `.pocket-entry overflow:hidden`. */
+.pocket-details span.pocket-residues-list {
     margin-left: 4px;
     word-break: break-word;
     white-space: normal;
@@ -186,29 +189,41 @@
    Must share grid-template-columns with .interaction-col-header
    ============================================ */
 
+/* 3px top matches the structure tables' .structure-rows-scroll inset */
+.interaction-rows {
+    padding-top: 3px;
+}
+
+/* Mirrors the structure tab's .predicted-interaction-card (cards.css) so the
+   same interaction data reads consistently across the function & structure tabs.
+   Shares grid-template-columns with .interaction-col-header (1fr 1fr 1fr). */
 .interaction-row {
     display: grid;
-    grid-template-columns: 1fr 5rem auto;
+    grid-template-columns: 1fr 1fr 1fr;
     align-items: center;
     gap: var(--spacing-sm);
     padding: 5px 12px;
     font-size: var(--font-size-sm);
-    border-bottom: 1px solid var(--color-border-light);
-    transition: background var(--transition-base);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-sm);
+    margin-bottom: 2px;
+    transition: background var(--transition-fast), border-color var(--transition-fast);
 }
 
 .interaction-row:last-child {
-    border-bottom: none;
+    margin-bottom: 0;
 }
 
 .interaction-row:hover {
-    background: var(--color-primary-lightest);
+    background: var(--color-gray-50);
+    border-color: var(--color-border-medium);
 }
 
 .pdockq-score {
     font-weight: var(--font-weight-semibold);
-    color: var(--color-text-primary);
-    font-family: var(--font-family-mono);
+    color: var(--color-primary);
+    text-align: left;
+    white-space: nowrap;
 }
 
 /* ============================================
