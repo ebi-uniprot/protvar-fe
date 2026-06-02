@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { PredictionType } from '../../../hooks/usePredictionHighlight';
 import { toast } from '../../toast/toast';
@@ -11,6 +11,7 @@ interface CopyLinkProps {
 export function CopyLink({ predictionType, title }: CopyLinkProps) {
   const location = useLocation();
   const navigate = useNavigate();
+  const [copied, setCopied] = useState(false);
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -27,17 +28,20 @@ export function CopyLink({ predictionType, title }: CopyLinkProps) {
       toast.error('Failed to copy link');
     });
 
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+
     navigate({ search: params.toString() }, { replace: true });
   };
 
   return (
     <button
       onClick={handleClick}
-      className="copy-link"
+      className={`copy-link${copied ? ' copy-link--copied' : ''}`}
       title={title || `Copy link to ${predictionType} prediction`}
-      aria-label={`Share ${predictionType} prediction`}
+      aria-label={`Copy link to ${predictionType} prediction`}
     >
-      <i className="bi bi-link-45deg" />
+      <i className={`bi ${copied ? 'bi-check2' : 'bi-link-45deg'}`} />
     </button>
   );
 }

@@ -20,9 +20,10 @@ export const CADD_SCORE_ATTR: PredictionCategory[] = [
 export const CaddScorePred = (props: { cadd?: string, stdColor: boolean }) => {
   if (props.cadd) {
   return <div className="prediction-row">
-    <div><CopyLink predictionType="cadd" /> CADD</div>
+    <div>CADD</div>
   <div>{formatCaddScore(props.cadd)}</div>
   <CADDIcon {...props} />
+  <CopyLink predictionType="cadd" />
   </div>}
   return <></>
 }

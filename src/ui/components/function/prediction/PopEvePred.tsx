@@ -64,9 +64,10 @@ export const POPEVE_SCORE_ATTR: PredictionCategory[] = [
 export const PopEvePred = (props: { popeve?: PopEveScore, stdColor: boolean }) => {
   if (props.popeve) {
   return <div className="prediction-row">
-    <div><CopyLink predictionType="popeve" /> popEVE</div>
+    <div>popEVE</div>
     <div>{formatPopEveScore(props.popeve)}</div>
     <PopEvePredIcon {...props} />
+    <CopyLink predictionType="popeve" />
   </div>}
   return <></>
 }

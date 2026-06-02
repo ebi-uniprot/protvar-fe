@@ -368,43 +368,30 @@
     transition: padding 0.3s ease, background 0.3s ease, border-color 0.3s ease;
 }
 
-.prediction-item.prediction-highlighted {
-    padding: 8px;
-    margin: 4px 0;
+/* Highlighted prediction — same subtle look as a selected pop/structure row:
+   light-blue fill + thin primary border (no thick left accent). Shown ~3s then cleared. */
+.prediction-item.prediction-highlighted .prediction-row,
+.prediction-item.prediction-highlighted .prediction-row:hover {
     background: var(--color-primary-lightest);
     border-color: var(--color-primary);
-    animation: predictionFlash 1.2s ease-out forwards;
-}
-
-@keyframes predictionFlash {
-    0%   { background: rgba(105, 135, 195, 0.25); border-color: var(--color-primary); }
-    40%  { background: rgba(105, 135, 195, 0.18); }
-    100% { background: var(--color-primary-lightest); border-color: var(--color-primary); }
 }
 
 /* 3-column grid row: name | score | interpretation */
 .prediction-row {
     display: grid;
-    grid-template-columns: 1fr 4rem 1fr;
+    grid-template-columns: 1fr 4rem 1fr auto;
     align-items: center;
     gap: 8px;
     background: white;
     border: 1px solid var(--color-border-light);
-    border-left: 3px solid transparent;
     border-radius: var(--radius-sm);
     padding: 5px 10px;
     font-size: var(--font-size-sm);
-    transition: border-color 0.2s ease;
+    transition: border-color 0.2s ease, background 0.3s ease;
 }
 
 .prediction-row:hover {
     border-color: var(--color-border-medium);
-    border-left-color: transparent;
-}
-
-.prediction-row:focus-within {
-    outline: 2px solid var(--color-primary);
-    outline-offset: 2px;
 }
 
 /* Prediction name (+ copy link) */
@@ -426,7 +413,7 @@
 }
 
 /* Prediction interpretation (icon + text) */
-.prediction-row > div:last-child {
+.prediction-row > div:nth-child(3) {
     display: flex;
     align-items: center;
     gap: 6px;
@@ -434,17 +421,21 @@
     color: var(--color-text-secondary);
 }
 
+/* Copy-link icon — right-most cell */
+.prediction-row > .copy-link {
+    justify-self: end;
+    align-self: center;
+}
+
+/* Missense3D damaging-feature detail — secondary, inline after the prediction */
+.m3d-feature {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-tertiary);
+}
+
 .prediction-row .bi-circle-fill {
     font-size: 10px;
     flex-shrink: 0;
-}
-
-/* Inner row inherits highlighted wrapper's background — keep borders minimal */
-.prediction-item.prediction-highlighted .prediction-row,
-.prediction-item.prediction-highlighted .prediction-row:hover {
-    border-color: var(--color-border-light);
-    border-left-color: transparent;
-    background-color: transparent;
 }
 
 /* No predictions message */

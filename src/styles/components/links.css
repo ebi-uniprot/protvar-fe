@@ -174,7 +174,12 @@
 }
 
 .copy-link:hover {
-    color: var(--color-text-secondary);
+    color: var(--color-brand);
+}
+
+.copy-link--copied,
+.copy-link--copied:hover {
+    color: var(--color-success);
 }
 
 

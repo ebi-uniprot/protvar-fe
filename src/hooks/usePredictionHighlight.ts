@@ -48,11 +48,14 @@ export function usePredictionHighlight() {
         navigate({ search: params.toString() }, { replace: true });
       }
     }
-
-    return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    };
   }, [location.search, navigate, triggerHighlight]);
+
+  // Clear any pending highlight timer on unmount only. (Keeping this in the
+  // effect above would cancel the 3s auto-clear the moment we strip ?pred=,
+  // since that changes location.search and re-runs the effect.)
+  useEffect(() => () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+  }, []);
 
   return { highlightedPrediction, triggerHighlight };
 }

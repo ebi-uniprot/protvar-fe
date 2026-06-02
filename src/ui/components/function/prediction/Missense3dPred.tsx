@@ -42,18 +42,16 @@ export const Missense3dPred = ({functionalData, refAA, variantAA}: Missense3dPre
 
   return (
     <div className="prediction-row">
-      <div><CopyLink predictionType="m3d" /> Missense3D</div>
+      <div>Missense3D <ExtLink url={m3dUrl} title="View in Missense3D" /></div>
       <div></div>
       <div>
         <i className="bi bi-circle-fill" style={{color: predColor}}></i>
         <Spaces/>{predText}
-        <span className="ml-auto"><ExtLink url={m3dUrl} title="View in Missense3D" /></span>
         {displayText !== '-' && (
-          <div title={isTruncated ? formattedText : undefined}>
-            {displayText}
-          </div>
+          <span className="m3d-feature" title={isTruncated ? formattedText : undefined}>{displayText}</span>
         )}
       </div>
+      <CopyLink predictionType="m3d" />
     </div>
   );
 };
