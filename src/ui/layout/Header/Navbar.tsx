@@ -17,7 +17,7 @@ const Navbar: React.FC<NavbarProps> = ({ onShowBanner }) => {
         <div className="brand-logo-wrap">
           <Link to={HOME} title="ProtVar homepage" className="brand-link">
             <img
-              src={"ProtVar2_logo.svg"}
+              src={"ProtVar_logo.svg"}
               alt="ProtVar logo"
               width="140"
               className="brand-logo"
