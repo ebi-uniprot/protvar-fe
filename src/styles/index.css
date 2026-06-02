@@ -83,6 +83,7 @@
 @import './pages/about.css';
 @import './pages/activity.css';
 @import './pages/contact.css';
+@import './pages/error-page.css';
 @import './pages/help.css';
 @import './pages/release.css';
 @import './pages/semantic-search.css';
