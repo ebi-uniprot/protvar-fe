@@ -17,6 +17,23 @@
     margin-bottom: 6px;
 }
 
+/* "not observed in gnomAD" anchor row when the submitted variant has no AF */
+.allele-freq-none {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    font-style: italic;
+}
+
+/* Secondary block — "other alleles at this position" under the submitted AF */
+.allele-freq-section--muted {
+    margin-top: 12px;
+    opacity: 0.7;
+}
+
+.allele-freq-section--muted .allele-freq-header {
+    font-weight: var(--font-weight-normal);
+}
+
 .allele-freq-content {
     display: flex;
     flex-direction: column;
