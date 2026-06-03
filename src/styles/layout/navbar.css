@@ -47,13 +47,8 @@
 .brand-tagline {
     font-size: var(--font-size-sm);
     color: rgba(255,255,255,0.65);
-    text-decoration: none;
     padding-left: 2px;
     white-space: nowrap;
-}
-
-.brand-tagline:hover {
-    color: white;
 }
 
 /* ============================================
@@ -76,6 +71,7 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-end;
+    align-items: center;
     gap: 2px;
 }
 
@@ -112,7 +108,7 @@
 }
 
 .nav-button i {
-    font-size: 14px;
+    font-size: 15px;
     opacity: 0.85;
 }
 
@@ -124,7 +120,7 @@
     background: none;
     border: none;
     color: rgba(255, 255, 255, 0.45);
-    font-size: 11px;
+    font-size: 12px;
     font-family: inherit;
     cursor: pointer;
     padding: 2px 4px;
@@ -173,7 +169,7 @@
     }
 
     .nav-button i {
-        font-size: 13px;
+        font-size: 14px;
     }
 }
 
@@ -186,30 +182,41 @@
     display: inline-block;
 }
 
-/* Subtle version pill, flush to the very top-right corner of the masthead */
+/* Right-side utility row: live status + version, separated from the nav links */
+.navbar-utility {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+/* Subtle version pill — in the utility cluster; panel anchors to it */
 .version-info {
-    position: absolute;
-    top: 0;
-    right: 0;
+    position: relative;
     line-height: normal;
     font-size: var(--font-size-xs);
     z-index: var(--z-dropdown);
 }
 
 .version-pill {
-    display: inline-block;
-    padding: 3px 10px;
-    font-size: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 11px;
+    font-size: 11px;
     font-weight: var(--font-weight-medium);
     white-space: nowrap;
-    color: rgba(255, 255, 255, 0.78);
-    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 999px;
     text-decoration: none;
     cursor: pointer;
+    transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
 }
 
 .version-pill:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.22);
+    border-color: rgba(255, 255, 255, 0.4);
     color: #fff;
     text-decoration: none;
 }

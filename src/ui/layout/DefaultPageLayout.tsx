@@ -1,5 +1,7 @@
 import React, {useEffect, useState} from 'react'
+import {Link} from 'react-router-dom'
 import {SESSION_BANNER, STORE_DOWNLOADS, STORE_HISTORY} from '../../constants/storage'
+import {HELP, RELEASE} from '../../constants/BrowserPaths'
 import DefaultPageContent from './DefaultPageContent'
 import {SideDrawer} from "./Drawer/SideDrawer";
 import Sidebar from "./Sidebar/Sidebar";
@@ -11,22 +13,24 @@ interface DefaultPageLayoutProps {
   content: React.JSX.Element
 }
 
-const BASE = process.env.PUBLIC_URL ?? '';
-
 const bannerText = (
   <>
-    ProtVar 2.0 is live — new search modes, and more ways to filter and explore variants.
+    <span className="banner-lead">
+      <i className="bi bi-rocket-takeoff-fill banner-new-icon" /> ProtVar 2.0 is live — new search modes,
+      and more ways to filter and explore variants. See the{' '}
+      <Link to={RELEASE}>release notes</Link> for details.
+    </span>{' '}
     Questions or feedback? Email{' '}
     <a href="mailto:protvar@ebi.ac.uk">protvar@ebi.ac.uk</a>.
     <div>
       <i className="bi bi-stars banner-new-icon" />{' '}
       Explore what's new:{' '}
-      <a href={`${BASE}/help#browse`}>Advanced Filtering</a>{' · '}
-      <a href={`${BASE}/help#semantic-search`}>Semantic Search</a>{' · '}
-      <a href={`${BASE}/help#protvar-links`}>ProtVar Links</a>{' · '}
-      <a href={`${BASE}/help#predictions`}>Score Radar</a>{' · '}
-      <a href={`${BASE}/help#feature-ranking`}>Feature Ranking</a>{' · '}
-      <a href={`${BASE}/help#mcp`}>ProtVar MCP</a>
+      <Link to={`${HELP}#browse`}>Advanced Filtering</Link>{' · '}
+      <Link to={`${HELP}#semantic-search`}>Semantic Search</Link>{' · '}
+      <Link to={`${HELP}#protvar-links`}>ProtVar Links</Link>{' · '}
+      <Link to={`${HELP}#predictions`}>Score Radar</Link>{' · '}
+      <Link to={`${HELP}#feature-ranking`}>Feature Ranking</Link>{' · '}
+      <Link to={`${HELP}#mcp`}>ProtVar MCP</Link>
     </div>
   </>
 );
