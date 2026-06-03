@@ -13,6 +13,8 @@ const VersionInfo: React.FC = () => {
         <div>UniProt {process.env.REACT_APP_UNIPROT}</div>
         <div>Ensembl {process.env.REACT_APP_ENSEMBL}</div>
         <div>CADD {process.env.REACT_APP_CADD}</div>
+        <div>popEVE {process.env.REACT_APP_POPEVE}</div>
+        <div>Missense3D {process.env.REACT_APP_M3D}</div>
         <div>dbSNP {process.env.REACT_APP_DBSNP}</div>
         <div>COSMIC {process.env.REACT_APP_COSMIC}</div>
         <div>ClinVar {process.env.REACT_APP_CLINVAR}</div>
