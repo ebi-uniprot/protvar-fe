@@ -24,13 +24,12 @@ const Navbar: React.FC<NavbarProps> = ({ onShowBanner }) => {
             />
           </Link>
         </div>
-        <Link to={HOME} title="ProtVar homepage" className="brand-tagline">
+        <span className="brand-tagline">
           Contextualising human missense variation
-        </Link>
+        </span>
       </div>
 
       <div className="navbar-right">
-        <VersionInfo />
         <SearchBox placeholder="Search ProtVar..." />
 
         <div className="navbar-links">
@@ -45,7 +44,7 @@ const Navbar: React.FC<NavbarProps> = ({ onShowBanner }) => {
           </Link>
 
           <a href={API_URL} title="ProtVar API" target="_blank" rel="noopener noreferrer" className="nav-button">
-            <i className="bi bi-box"></i>
+            <i className="bi bi-file-earmark-code"></i>
             API Docs
           </a>
 
@@ -58,9 +57,11 @@ const Navbar: React.FC<NavbarProps> = ({ onShowBanner }) => {
             <i className="bi bi-envelope"></i>
             Contact
           </Link>
+        </div>
 
+        <div className="navbar-utility">
           <StatusIndicator />
-
+          <VersionInfo />
         </div>
 
       {onShowBanner && (
