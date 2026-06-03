@@ -161,12 +161,13 @@ export const getNewPrimaryRow = (
           )}
         </span>
 
-        {/* 4: Codon (strand) — card-sep adds dot separator before it in mobile */}
+        {/* 4: codon (mRNA / coding strand — labelled "mRNA codon" in the group
+             header) + strand. card-sep adds dot separator before it in mobile. */}
         <span className="card-sep">
           {codon && (
             <div className="flex">
               {codon}&nbsp;
-              <Tool tip={`Codon change ${codon} on the ${strand === '(+)' ? 'positive' : 'negative'}-sense strand`}>
+              <Tool tip={`mRNA codon change ${codon} on the ${strand === '(+)' ? 'positive' : 'negative'}-sense strand`}>
                 {strand}
               </Tool>
             </div>

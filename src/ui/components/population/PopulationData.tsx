@@ -65,10 +65,22 @@ function PopulationData(props: PopulationDataProps) {
   const isValid = parts.length === 4;
   const alt = isValid ? parts[3] : null;
 
+  // freqMap holds gnomAD AF for every alt allele observed at the submitted
+  // variant's genomic *nucleotide* position (chr:pos). The submitted alt's AF
+  // belongs with the submitted variant; the rest are sibling SNVs at the same
+  // nucleotide — NOT residue-level colocated variants — so they get their own
+  // "other alleles" block rather than sitting under the co-located column.
   const mainFreqMap = alt && poApiData.freqMap ? { ...(poApiData.freqMap[alt] ? { [alt]: poApiData.freqMap[alt] } : {}) } : {};
   const otherFreqMap = poApiData.freqMap && alt
     ? Object.fromEntries(Object.entries(poApiData.freqMap).filter(([allele]) => allele !== alt))
     : {};
+
+  // The submitted nucleotide change (ref>alt); used to anchor the gnomAD section
+  // even when the submitted variant has no AF, so absence reads as "not observed"
+  // rather than a blank, and the "Other alleles" list keeps a clear antecedent.
+  const ref = isValid ? parts[2] : null;
+  const submittedChange = ref && alt ? `${ref}>${alt}` : null;
+  const hasSubmittedAF = Object.keys(mainFreqMap).length > 0;
 
   const selectedChange = selectedVariant
     ? `${selectedVariant.wildType} > ${selectedVariant.alternativeSequence}`
@@ -109,6 +121,26 @@ function PopulationData(props: PopulationDataProps) {
                 genomicVariant={props.genomicVariant}
                 stdColor={false}
               />
+              {/* Submitted variant has no gnomAD AF — state it explicitly so the
+                  absence is clear and "Other alleles" below has an antecedent. */}
+              {!hasSubmittedAF && submittedChange && (
+                <div className="allele-freq-section">
+                  <div className="allele-freq-header">GnomAD Allele Frequency</div>
+                  <div className="allele-freq-none">{submittedChange} — not observed in gnomAD</div>
+                </div>
+              )}
+              {/* Other alts at the same nucleotide (multi-allelic sites): sibling
+                  SNVs, shown muted beneath the submitted variant's gnomAD AF —
+                  not residue-level colocated variants. */}
+              {Object.keys(otherFreqMap).length > 0 && (
+                <PopulationAlleleFreq
+                  freqMap={otherFreqMap}
+                  genomicVariant={props.genomicVariant}
+                  stdColor={false}
+                  header="Other alleles at this position"
+                  muted
+                />
+              )}
               <SubmittedVariantDetails
                 variants={submittedVariants}
                 selectedVariant={selectedVariant}
@@ -119,11 +151,6 @@ function PopulationData(props: PopulationDataProps) {
             {/* Right Column: Co-located Variants */}
             <div className="annotation-column">
               <div className="column-header">Co-located Variants at Residue Level</div>
-              <PopulationAlleleFreq
-                freqMap={otherFreqMap}
-                genomicVariant={props.genomicVariant}
-                stdColor={false}
-              />
               <CoLocatedVariantDetails
                 coLocatedVariants={colocatedVariants}
                 selectedVariant={selectedVariant}

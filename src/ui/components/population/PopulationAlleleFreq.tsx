@@ -29,14 +29,18 @@ interface PopulationAlleleFreqProps {
   freqMap: { [key: string]: AlleleFreq };
   genomicVariant: string;
   stdColor: boolean;
+  // Section sub-header; pass "" to suppress it (e.g. when a column-header already labels the block).
+  header?: string;
+  // Dim the block — used for the secondary "other alleles at this position" list.
+  muted?: boolean;
 }
 
-export const PopulationAlleleFreq = ({ freqMap, genomicVariant, stdColor }: PopulationAlleleFreqProps) => {
+export const PopulationAlleleFreq = ({ freqMap, genomicVariant, stdColor, header = 'GnomAD Allele Frequency', muted = false }: PopulationAlleleFreqProps) => {
   if (!freqMap || Object.keys(freqMap).length === 0) return null;
 
   return (
-    <div className="allele-freq-section">
-      <div className="allele-freq-header">GnomAD Allele Frequency</div>
+    <div className={`allele-freq-section${muted ? ' allele-freq-section--muted' : ''}`}>
+      {header && <div className="allele-freq-header">{header}</div>}
       <div className="allele-freq-content">
         {Object.entries(freqMap).map(([allele, freq]) => (
           <AlleleFreqCard
@@ -64,10 +68,15 @@ function AlleleFreqCard({ allele, freq, genomicVariant, stdColor }: AlleleFreqCa
   const showAcAn = freq.ac !== undefined && freq.an !== undefined;
   const gnomadUrl = buildGnomadUrl(genomicVariant, allele);
   const accentColor = stdColor ? classification.stdColor : classification.color;
+  // Explicit nucleotide change "ref>alt" (e.g. C>T); fall back to the bare alt
+  // if the genomic coordinate isn't in the expected chr-pos-ref-alt form.
+  const parts = genomicVariant.split("-");
+  const refBase = parts.length === 4 ? parts[2] : null;
+  const change = refBase ? `${refBase}>${allele}` : allele;
 
   return (
     <div className="allele-freq-row" style={{ borderLeftColor: accentColor }}>
-      <span className="allele-freq-name">{allele}</span>
+      <span className="allele-freq-name">{change}</span>
       <span className="allele-freq-value" title={freq.af.toString()}>{freq.af.toFixed(PRECISION)}</span>
       <span className="allele-freq-class" title={classification.range}>{classification.text}</span>
       {showAcAn && (
