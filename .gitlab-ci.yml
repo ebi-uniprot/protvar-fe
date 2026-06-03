@@ -81,4 +81,4 @@ main-deploy:
   stage: deploy
   when: manual  # manual gate for public/live deploy
   script:
-    - ./protvar-deploy/scripts/deploy.sh "pub" "protvar-fe" "${CI_COMMIT_SHORT_SHA}"
+    - ./protvar-deploy/scripts/deploy.sh "main" "protvar-fe" "${CI_COMMIT_SHORT_SHA}"
