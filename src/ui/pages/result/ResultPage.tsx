@@ -171,6 +171,12 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
   const [warning, setWarning] = useState('')
   const { touchResult, saveResult, getHistory } = useStorage()
   const resultsTopRef = useRef<HTMLDivElement>(null);
+  // De-dupe identical consecutive data loads. Annotation panels keep their
+  // open/closed state in the URL (?annotation=…), so toggling one navigates and
+  // re-runs the data effects — but with unchanged data inputs. Skipping the
+  // refetch when the load key matches avoids a spurious reload + loader flash;
+  // a real change (ids/filters/page/assembly/query) yields a new key and loads.
+  const lastLoadKeyRef = useRef<string | null>(null);
   // Track browse identifiers so DownloadPanel and Save button can reference them
   const [currentBrowseIds, setCurrentBrowseIds] = useState<Identifier[] | undefined>()
 
@@ -208,6 +214,9 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
     assembly: string | null,
     filters?: SearchFilterParams
   ) => {
+    const loadKey = `browse|${JSON.stringify(options)}|${page}|${pageSize}|${assembly}|${JSON.stringify(filters ?? {})}`;
+    if (loadKey === lastLoadKeyRef.current) return;
+    lastLoadKeyRef.current = loadKey;
     setLoading(true)
 
     const pageIsValid = !isNaN(page) && page > 0;
@@ -322,6 +331,9 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
 
   // ── Query mode loader (GET /mapping?input=) ─────────────────────────────────
   const loadQueryData = useCallback((q: string, assembly: string | null) => {
+    const loadKey = `query|${q}|${assembly}`;
+    if (loadKey === lastLoadKeyRef.current) return;
+    lastLoadKeyRef.current = loadKey;
     setLoading(true)
     singleVariant(q, assembly ?? undefined)
       .then((response) => {
