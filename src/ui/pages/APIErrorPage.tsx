@@ -1,8 +1,11 @@
 import { Link } from 'react-router-dom';
 import { CONTACT, HOME } from '../../constants/BrowserPaths';
 import DefaultPageLayout from '../layout/DefaultPageLayout';
+import { useNoindex } from '../../hooks/useNoindex';
 
-const APIErrorContent = () => (
+const APIErrorContent = () => {
+  useNoindex();
+  return (
   <div className="error-page">
     <i className="bi bi-exclamation-circle error-page-icon" />
     <h4 className="error-page-title">Something went wrong</h4>
@@ -16,7 +19,8 @@ const APIErrorContent = () => (
       <Link to={HOME} className="btn btn-primary">Back to search</Link>
     </div>
   </div>
-);
+  );
+};
 
 const APIErrorPage = () => (
   <DefaultPageLayout
