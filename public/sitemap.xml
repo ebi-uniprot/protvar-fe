@@ -4,21 +4,24 @@
         <loc>https://www.ebi.ac.uk/ProtVar/</loc>
     </url>
     <url>
-        <loc>https://www.ebi.ac.uk/ProtVar/contact</loc>
+        <loc>https://www.ebi.ac.uk/ProtVar/about</loc>
     </url>
     <url>
-        <loc>https://www.ebi.ac.uk/ProtVar/api/swagger-ui/index.html?configUrl=/ProtVar/api/v3/api-docs/swagger-config</loc>
+        <loc>https://www.ebi.ac.uk/ProtVar/release</loc>
     </url>
     <url>
         <loc>https://www.ebi.ac.uk/ProtVar/help</loc>
     </url>
     <url>
-        <loc>https://www.ebi.ac.uk/ProtVar/about</loc>
-    </url>
-    <url>
         <loc>https://www.ebi.ac.uk/ProtVar/download</loc>
     </url>
     <url>
-        <loc>https://www.ebi.ac.uk/ProtVar/query</loc>
+        <loc>https://www.ebi.ac.uk/ProtVar/semantic-search</loc>
+    </url>
+    <url>
+        <loc>https://www.ebi.ac.uk/ProtVar/contact</loc>
+    </url>
+    <url>
+        <loc>https://www.ebi.ac.uk/ProtVar/api/swagger-ui/index.html?configUrl=/ProtVar/api/v3/api-docs/swagger-config</loc>
     </url>
 </urlset>

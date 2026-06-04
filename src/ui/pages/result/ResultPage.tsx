@@ -4,9 +4,9 @@ import {useLocation, useNavigate, useParams, useSearchParams} from "react-router
 import ResultTable from "./ResultTable";
 import React, {useCallback, useContext, useEffect, useMemo, useRef, useState} from "react";
 import PaginationRow from "./PaginationRow";
-import {DEFAULT_PAGE, DEFAULT_PAGE_SIZE, PERMITTED_PAGE_SIZES, TITLE} from "../../../constants/const";
+import {DEFAULT_PAGE, DEFAULT_PAGE_SIZE, PERMITTED_PAGE_SIZES} from "../../../constants/const";
 import {SESSION_REDIRECT} from "../../../constants/storage";
-import {RESULT} from "../../../constants/BrowserPaths";
+import {HOME, RESULT} from "../../../constants/BrowserPaths";
 import {DownloadPanel} from "../../modal/DownloadPanel";
 import {getMapping, singleVariant} from "../../../services/ProtVarService";
 import {PagedMappingResponse} from "../../../types/PagedMappingResponse";
@@ -18,12 +18,14 @@ import {APP_URL} from "../../App";
 import {HelpButton} from "../../components/help/HelpButton";
 import {HelpContent} from "../../components/help/HelpContent";
 import {ShareLink} from "../../components/common/ShareLink";
+import {usePageMeta} from "../../../hooks/usePageMeta";
 import Loader from "../../elements/Loader";
 import {AppContext} from "../../App";
 import { FILTER_PARAM_KEYS } from "../../components/search/filterParams";
 import {
   extractFilters,
   buildFilterParams,
+  describeFilters,
   mapUiCaddToBackend, mapUiPopeveToBackend,
   mapUiStabilityToBackend, mapUiAlleleFreqToBackend
 } from "../../components/search/filterUtils";
@@ -169,6 +171,12 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
   const [warning, setWarning] = useState('')
   const { touchResult, saveResult, getHistory } = useStorage()
   const resultsTopRef = useRef<HTMLDivElement>(null);
+  // De-dupe identical consecutive data loads. Annotation panels keep their
+  // open/closed state in the URL (?annotation=…), so toggling one navigates and
+  // re-runs the data effects — but with unchanged data inputs. Skipping the
+  // refetch when the load key matches avoids a spurious reload + loader flash;
+  // a real change (ids/filters/page/assembly/query) yields a new key and loads.
+  const lastLoadKeyRef = useRef<string | null>(null);
   // Track browse identifiers so DownloadPanel and Save button can reference them
   const [currentBrowseIds, setCurrentBrowseIds] = useState<Identifier[] | undefined>()
 
@@ -206,6 +214,9 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
     assembly: string | null,
     filters?: SearchFilterParams
   ) => {
+    const loadKey = `browse|${JSON.stringify(options)}|${page}|${pageSize}|${assembly}|${JSON.stringify(filters ?? {})}`;
+    if (loadKey === lastLoadKeyRef.current) return;
+    lastLoadKeyRef.current = loadKey;
     setLoading(true)
 
     const pageIsValid = !isNaN(page) && page > 0;
@@ -320,6 +331,9 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
 
   // ── Query mode loader (GET /mapping?input=) ─────────────────────────────────
   const loadQueryData = useCallback((q: string, assembly: string | null) => {
+    const loadKey = `query|${q}|${assembly}`;
+    if (loadKey === lastLoadKeyRef.current) return;
+    lastLoadKeyRef.current = loadKey;
     setLoading(true)
     singleVariant(q, assembly ?? undefined)
       .then((response) => {
@@ -438,9 +452,6 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
     setLocalFilters(extractFilters(searchParams));
   }, [searchParams]);
 
-  useEffect(() => {
-    document.title = `${resultTitle} | ${TITLE}`;
-  }, [resultTitle]);
 
   const handleApplyFilters = () => {
     const newSearchParams = new URLSearchParams(searchParams);
@@ -531,6 +542,68 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
   const pageTitle = isQueryMode
     ? <>{contextLabel}{titleSuffix}</>
     : <span className={titleFlash ? 'title-sparkle' : ''}>{contextLabel}{titleSuffix}</span>;
+
+  // ── SEO/social meta ─────────────────────────────────────────────────────────
+  // <title> is "{subject} | EMBL-EBI ProtVar" — subject-first, dropping the
+  // breadcrumb's context label. Subject = resultTitle, except the composite
+  // browse views (multi-id, filter-only) which summarise to "first few + N more".
+  // Index the linkable resources (one identifier or one variant); noindex the
+  // constructed/transient views (/result/{id}, composite browse) and no-data
+  // URLs (else flagged as Soft 404s).
+  const isUploadedResult = location.pathname.startsWith(RESULT);
+  const isComposite = idParamValues.length > 1 || isFilterOnly;
+  const TITLE_LIST_MAX = 3;
+  const summarise = (items: string[]): string =>
+    items.slice(0, TITLE_LIST_MAX).join(', ')
+      + (items.length > TITLE_LIST_MAX ? ` +${items.length - TITLE_LIST_MAX} more` : '');
+  let subject: string;
+  if (idParamValues.length > 1) {
+    subject = summarise(idParamValues.map(v => parseIdParam(v).value));
+  } else if (isFilterOnly) {
+    subject = summarise(describeFilters(filters).map(c => c.label));
+  } else {
+    subject = (resultTitle ?? '').trim();
+  }
+  // Description only on single-subject pages (composite views have no subject).
+  const isSingleSubject = !isUploadedResult && !isComposite && !!subject;
+  // Canonical minus filter + page params, so filtered/paginated views
+  // (/gene/TP53?am=high&page=2) fold onto the base resource (/gene/TP53).
+  const canonicalParams = new URLSearchParams(location.search);
+  FILTER_PARAM_KEYS.forEach(key => canonicalParams.delete(key));
+  canonicalParams.delete('page');
+  const canonicalQuery = canonicalParams.toString();
+  usePageMeta({
+    title: subject ? `${subject} | EMBL-EBI ProtVar` : `${contextLabel} | EMBL-EBI ProtVar`,
+    description: isSingleSubject
+      ? `Structural, functional, population and disease annotations for ${subject} — ProtVar.`
+      : undefined,
+    canonical: isUploadedResult
+      ? undefined
+      : `${APP_URL}${location.pathname}${canonicalQuery ? `?${canonicalQuery}` : ''}`,
+    noindex: isUploadedResult || isComposite || (!loading && !data),
+  });
+
+  // No data (bad/unresolvable id or unrecognised query): a centred "not found"
+  // like the error/404 pages, not an empty toolbar + table. Already noindex.
+  if (!loading && !data) {
+    const isInvalid = warning === INVALID_QUERY;
+    return (
+      <div className="error-page">
+        <i className={`bi ${isInvalid ? 'bi-question-circle' : 'bi-search'} error-page-icon`} />
+        <h4 className="error-page-title">{isInvalid ? 'Unrecognised query' : 'No results found'}</h4>
+        <p className="error-page-text">
+          {isInvalid
+            ? "We couldn't recognise that query. Check the format and try a new search."
+            : subject
+              ? <>We couldn&apos;t find variant data for <strong>{subject}</strong>. Double-check the identifier, or try a new search.</>
+              : "We couldn't find any matching variant data. Try a different search."}
+        </p>
+        <div className="error-page-actions">
+          <button className="btn btn-primary" onClick={() => navigate(HOME)}>Back to search</button>
+        </div>
+      </div>
+    );
+  }
 
   return <div>
     <div className="page-header-row" ref={resultsTopRef}>
