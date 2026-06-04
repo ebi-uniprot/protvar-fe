@@ -149,14 +149,24 @@
    SHARED VARIANT DETAIL PANEL (below both columns)
    ============================================ */
 
-@keyframes panelHighlight {
-    0%   { box-shadow: 0 0 0 2px var(--color-primary); }
-    100% { box-shadow: var(--shadow-sm); }
-}
-
 .variant-detail-panel {
     margin-top: var(--spacing-xl);
-    animation: panelHighlight 0.5s ease-out;
+}
+
+/* Selection highlight — on each new selection (the panel's key remounts it) the
+   header background washes from the brand tint, holds briefly, then dissolves
+   gently back to the header's own bg (implicit end keyframe). */
+@keyframes panelHeaderWash {
+    0%, 30% { background-color: var(--color-primary-lightest); }
+}
+.variant-detail-panel .column-header {
+    animation: panelHeaderWash 1.1s ease-in-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .variant-detail-panel .column-header {
+        animation: none;
+    }
 }
 
 .variant-detail-location {
