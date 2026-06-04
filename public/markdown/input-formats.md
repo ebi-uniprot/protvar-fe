@@ -39,7 +39,12 @@ Protein input should follow one of the specified formats.
 **ACC:** UniProt accession  
 **POS:** Amino acid position (integer)  
 **REF:** Reference amino acid (1- or 3-letter code)  
-**ALT:** Alternative amino acid (1- or 3-letter code, TER, *, =)
+**ALT:** Alternative amino acid (1- or 3-letter code) or one of:
+  - `*` or `Ter` — stop codon
+  - `=` — no change / silent (same as the reference amino acid)
+  - `?` — unknown variant amino acid (e.g. HGVS `p.Met1?`); treated as unspecified, so results are position- but not variant-specific
+
+_The same `*`/`Ter`, `=` and `?` notations are also accepted in the alternative amino acid of HGVS protein (p.) input._
 
 ## HGVS
 
