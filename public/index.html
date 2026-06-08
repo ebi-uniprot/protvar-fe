@@ -54,6 +54,21 @@
   <!-- If you link to any other sites frequently, consider optimising performance with a DNS prefetch -->
   <link rel="dns-prefetch" href="//embl.de" />
 
+  <!-- Apply saved theme/font-size before first paint to avoid a flash.
+       Mirrors UserPrefs (light/md defaults) read from the 'pv:prefs' key. -->
+  <script>
+    (function () {
+      try {
+        var p = JSON.parse(localStorage.getItem('pv:prefs') || '{}');
+        var el = document.documentElement;
+        el.setAttribute('data-theme', p.theme === 'dark' ? 'dark' : 'light');
+        el.setAttribute('data-font-size', ['sm', 'lg'].indexOf(p.fontSize) > -1 ? p.fontSize : 'md');
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+
 </head>
 
 <body>
