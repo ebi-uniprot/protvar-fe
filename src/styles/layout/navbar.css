@@ -200,8 +200,10 @@
 .version-pill {
     display: inline-flex;
     align-items: center;
+    height: 22px;
+    box-sizing: border-box;
     gap: 5px;
-    padding: 3px 11px;
+    padding: 0 11px;
     font-size: 11px;
     font-weight: var(--font-weight-medium);
     white-space: nowrap;
@@ -293,4 +295,77 @@
 .navbar-status.status-degraded .navbar-status-dot { background: var(--color-warning); }
 .navbar-status.status-down .navbar-status-dot     { background: var(--color-danger); }
 .navbar-status.status-unknown .navbar-status-dot  { background: var(--color-text-tertiary); }
+
+/* ============================================
+   APPEARANCE CONTROLS (theme toggle + AAA size)
+   Sits in .navbar-utility on the dark masthead — grouped into a translucent
+   pill that mirrors the version-pill aesthetic.
+   ============================================ */
+
+/* Explicit height matches .version-pill exactly (both border-box 22px). */
+.navbar-appearance {
+    display: inline-flex;
+    align-items: center;
+    height: 22px;
+    box-sizing: border-box;
+    gap: 1px;
+    padding: 0 3px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 999px;
+}
+
+/* Uniform fixed boxes: the glyph is centred, so different A font sizes (and the
+   active highlight) never change the box or shift vertically. */
+.navbar-appearance-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    padding: 0;
+    border: none;
+    border-radius: 999px;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1;
+    cursor: pointer;
+    transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.navbar-appearance-btn:hover {
+    background: rgba(255, 255, 255, 0.22);
+    color: #fff;
+}
+
+.theme-toggle i {
+    font-size: 13px;
+}
+
+.navbar-appearance-sep {
+    width: 1px;
+    height: 12px;
+    margin: 0 1px;
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.navbar-font-sizes {
+    display: inline-flex;
+    align-items: center;
+    gap: 1px;
+}
+
+.navbar-font-btn {
+    font-weight: var(--font-weight-semibold);
+}
+
+/* The three A's are sized sm / md / lg to telegraph what they do */
+.navbar-font-btn.font-sm { font-size: 10px; }
+.navbar-font-btn.font-md { font-size: 12px; }
+.navbar-font-btn.font-lg { font-size: 14px; }
+
+.navbar-font-btn.active {
+    background: rgba(255, 255, 255, 0.28);
+    color: #fff;
+}
 

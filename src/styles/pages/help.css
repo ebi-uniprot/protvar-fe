@@ -246,6 +246,24 @@
     min-width: 0;
 }
 
+.help-update-notice {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 24px;
+    padding: 10px 14px;
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+    background: #fff8e6;
+    border: 1px solid var(--color-warning);
+    border-radius: 6px;
+}
+
+.help-update-notice i {
+    color: var(--color-warning);
+    flex-shrink: 0;
+}
+
 .help-welcome h5 {
     font-size: var(--font-size-xl);
     color: var(--color-brand);

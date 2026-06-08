@@ -152,6 +152,10 @@ function HelpPageContent() {
       </aside>
 
       <div className="help-main">
+        <div className="help-update-notice" role="status">
+          <i className="bi bi-info-circle-fill" />
+          <span>These help pages are being updated to reflect the new features and capabilities in the latest ProtVar release — updates are in progress, with more coming soon.</span>
+        </div>
         {id ? (
           content
         ) : (
