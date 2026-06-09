@@ -156,7 +156,7 @@
 }
 
 .result-row {
-    border-bottom: 1px dotted #ccc;
+    border-bottom: 1px dotted var(--color-border-dark);
     transition: background var(--transition-base);
     min-height: 2rem;
 }
@@ -205,8 +205,8 @@
 /* Action buttons (col 12) — left+right borders mirror group-header dividers */
 .details-cell {
     justify-content: center;
-    border-left: 1px solid #c8d4e8;
-    border-right: 1px solid #c8d4e8;
+    border-left: 1px solid var(--color-border-light);
+    border-right: 1px solid var(--color-border-light);
 }
 
 
@@ -217,7 +217,7 @@
 }
 
 /* Alternating row backgrounds */
-.result-row.row-even { background: #ffffff; }
+.result-row.row-even { background: var(--color-bg-elevated); }
 .result-row.row-odd  { background: #F4F3F3; }
 
 /* No underlines on any links inside result rows or annotation panels */
@@ -241,7 +241,7 @@
    ============================================ */
 
 .result-row-isoform {
-    border-bottom: 1px dotted #e0e0e0;  /* subtler than primary row — within same input */
+    border-bottom: 1px dotted var(--color-border-medium);  /* subtler than primary row — within same input */
 }
 
 /* Indent isoform rows under the canonical toggle chevron */
@@ -259,7 +259,7 @@
    ============================================ */
 
 .result-row-msg {
-    border-bottom: 1px dotted #ccc;
+    border-bottom: 1px dotted var(--color-border-dark);
     padding: 4px 6px;
     font-size: var(--font-size-sm);
     word-wrap: break-word;
@@ -302,7 +302,7 @@
     padding: 8px;
     display: flex;
     justify-content: center;
-    border-bottom: 1px dotted #ccc;
+    border-bottom: 1px dotted var(--color-border-dark);
 }
 
 /* ============================================
@@ -688,27 +688,28 @@
    DARK MODE
    ============================================ */
 
-@media (prefers-color-scheme: dark) {
-    .result-header {
+:root[data-theme="dark"] .result-header {
         background: var(--color-bg-primary);
         border-bottom-color: #4a6ab0;
-    }
+}
 
-    .result-group-header {
+:root[data-theme="dark"] .result-group-header {
         background: #3a5080;
-    }
+}
 
-    .result-col-header {
+:root[data-theme="dark"] .result-col-header {
         background: #4a6090;
-    }
+}
 
-    .result-row.row-even:hover,
-    .result-row.row-odd:hover {
+:root[data-theme="dark"] .result-row.row-even:hover,
+:root[data-theme="dark"] .result-row.row-odd:hover {
         background: rgba(110, 168, 254, 0.1);
-    }
+}
 
-    .result-row.row-even { background: var(--color-bg-primary); }
-    .result-row.row-odd  { background: var(--color-bg-secondary); }
+:root[data-theme="dark"] .result-row.row-even { background: var(--color-bg-primary);
+}
+
+:root[data-theme="dark"] .result-row.row-odd { background: var(--color-bg-secondary);
 }
 
 @keyframes resultFadeIn {

@@ -208,35 +208,33 @@
    DARK MODE SUPPORT
    ============================================ */
 
-@media (prefers-color-scheme: dark) {
-    .ext-link,
-    .text-link {
+:root[data-theme="dark"] .ext-link,
+:root[data-theme="dark"] .text-link {
         color: var(--color-primary);
-    }
+}
 
-    .ext-link:hover,
-    .text-link:hover {
+:root[data-theme="dark"] .ext-link:hover,
+:root[data-theme="dark"] .text-link:hover {
         background: rgba(110, 168, 254, 0.1);
         color: var(--color-primary-light);
-    }
+}
 
-    .protvar-link:hover {
+:root[data-theme="dark"] .protvar-link:hover {
         background: rgba(255, 255, 255, 0.08);
-    }
+}
 
-    .protvar-link .pv-arrow {
+:root[data-theme="dark"] .protvar-link .pv-arrow {
         color: var(--color-text-tertiary);
-    }
+}
 
-    .protvar-link:hover .pv-arrow {
+:root[data-theme="dark"] .protvar-link:hover .pv-arrow {
         color: var(--color-text-primary);
-    }
+}
 
-    .view-structure-button {
+:root[data-theme="dark"] .view-structure-button {
         color: var(--color-primary);
-    }
+}
 
-    .view-structure-button:hover {
+:root[data-theme="dark"] .view-structure-button:hover {
         color: var(--color-primary-light);
-    }
 }

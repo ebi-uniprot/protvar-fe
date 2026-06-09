@@ -172,7 +172,7 @@
 
 .aa-model-wrapper {
     margin: 16px 0;
-    background: #fff;
+    background: var(--color-bg-elevated);
     border-radius: 8px;
     padding: 12px 16px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
@@ -269,6 +269,10 @@
     max-width: 170px;
     height: auto;
     display: block;
+    /* The 2D renders are drawn on white — keep them on a white chip so they
+       stay legible on the dark (navy) wrapper. */
+    background: #fff;
+    border-radius: var(--radius-md);
 }
 
 /* Chevron denoting the ref -> alt amino-acid change (2D and 3D views) */
@@ -284,7 +288,7 @@
 .img-table {
     width: 100%;
     margin: 20px 0;
-    background: #fff;
+    background: var(--color-bg-elevated);
     border-radius: 8px;
     padding: 16px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
@@ -385,7 +389,7 @@
     left: 2px;
     width: 14px;
     height: 14px;
-    background: white;
+    background: var(--color-bg-elevated);
     border-radius: 50%;
     box-shadow: 0 1px 3px rgba(0,0,0,0.2);
     transition: transform var(--transition-base);
@@ -418,7 +422,7 @@
     color: #555;
     margin: 20px 0 12px 0;
     padding: 0 0 6px 0;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid var(--color-border-medium);
 }
 
 .prediction-subsection-header::before {
@@ -448,7 +452,7 @@
     grid-template-columns: 1fr 4rem 1fr auto;
     align-items: center;
     gap: 8px;
-    background: white;
+    background: var(--color-bg-elevated);
     border: 1px solid var(--color-border-light);
     border-radius: var(--radius-sm);
     padding: 5px 10px;
@@ -607,10 +611,10 @@
 
 
 .function-entry {
-    background: white;
+    background: var(--color-bg-elevated);
     padding: 14px 16px;
     border-radius: 6px;
-    border: 1px solid #e8e8e8;
+    border: 1px solid var(--color-border-light);
     margin-bottom: 12px;
 }
 
@@ -622,9 +626,9 @@
     color: #999;
     font-style: italic;
     padding: 12px;
-    background: white;
+    background: var(--color-bg-elevated);
     border-radius: 6px;
-    border: 1px dashed #ddd;
+    border: 1px dashed var(--color-border-medium);
 }
 
 /* Protein Details Grid */
@@ -637,10 +641,10 @@
 
 .protein-basic-info,
 .protein-detailed-info {
-    background: white;
+    background: var(--color-bg-elevated);
     padding: 16px;
     border-radius: 6px;
-    border: 1px solid #e8e8e8;
+    border: 1px solid var(--color-border-light);
     min-width: 0;
 }
 
@@ -739,10 +743,10 @@
 
 .gene-info,
 .transcript-info {
-    background: white;
+    background: var(--color-bg-elevated);
     padding: 16px;
     border-radius: 6px;
-    border: 1px solid #e8e8e8;
+    border: 1px solid var(--color-border-light);
     min-width: 0;
 }
 
@@ -760,7 +764,7 @@
     padding: 8px 12px;
     background: #f8f9fa;
     border-radius: 4px;
-    border: 1px solid #e8e8e8;
+    border: 1px solid var(--color-border-light);
 }
 
 .transcript-id {
@@ -796,112 +800,105 @@
    DARK MODE SUPPORT
    ============================================ */
 
-@media (prefers-color-scheme: dark) {
-    .residue-annotations,
-    .region-annotations {
-        background: #1e1e1e;
+:root[data-theme="dark"] .residue-annotations,
+:root[data-theme="dark"] .region-annotations {
+        background: var(--color-bg-primary);
         color: #e0e0e0;
-    }
+}
 
-    .feature-group-header {
+:root[data-theme="dark"] .feature-group-header {
         background: var(--color-bg-secondary);
         border-color: var(--color-border-light);
-    }
+}
 
-    .feature-type-label {
+:root[data-theme="dark"] .feature-type-label {
         color: var(--color-text-tertiary);
-    }
+}
 
-    .feature-item {
+:root[data-theme="dark"] .feature-item {
         border-color: var(--color-border-light);
-    }
+}
 
-    .feature-description {
+:root[data-theme="dark"] .feature-description {
         color: var(--color-text-primary);
-    }
+}
 
-    .feature-evidence-panel {
+:root[data-theme="dark"] .feature-evidence-panel {
         background: var(--color-bg-secondary);
         border-color: var(--color-border-light);
-    }
+}
 
-
-    .toggle-track {
+:root[data-theme="dark"] .toggle-track {
         background: var(--color-border-medium);
-    }
+}
 
-    .toggle-label {
+:root[data-theme="dark"] .toggle-label {
         color: var(--color-text-tertiary);
-    }
+}
 
-    .prediction-row,
-    .img-table {
-        background: #2a2a2a;
+:root[data-theme="dark"] .prediction-row,
+:root[data-theme="dark"] .img-table {
+        background: var(--color-bg-secondary);
         border-color: #3a3a3a;
         color: #e0e0e0;
-    }
+}
 
-    .prediction-row:hover {
+:root[data-theme="dark"] .prediction-row:hover {
         border-color: #4a4a4a;
-    }
+}
 
-    .prediction-subsection-header {
+:root[data-theme="dark"] .prediction-subsection-header {
         color: #e0e0e0;
         border-bottom-color: #3a3a3a;
-    }
+}
 
-    .no-predictions {
-        background: #2a2a2a;
+:root[data-theme="dark"] .no-predictions {
+        background: var(--color-bg-secondary);
         border-color: #3a3a3a;
         color: #999;
-    }
+}
 
+/* Protein Info Dark Mode */
+    :root[data-theme="dark"] .protein-info-panel,
+:root[data-theme="dark"] .gene-sequence-panel {
+        background: var(--color-bg-primary);
+}
 
-    /* Protein Info Dark Mode */
-    .protein-info-panel,
-    .gene-sequence-panel {
-        background: #1e1e1e;
-    }
-
-
-
-    .function-entry,
-    .protein-basic-info,
-    .protein-detailed-info,
-    .gene-info,
-    .transcript-info {
-        background: #2a2a2a;
+:root[data-theme="dark"] .function-entry,
+:root[data-theme="dark"] .protein-basic-info,
+:root[data-theme="dark"] .protein-detailed-info,
+:root[data-theme="dark"] .gene-info,
+:root[data-theme="dark"] .transcript-info {
+        background: var(--color-bg-secondary);
         border-color: #3a3a3a;
-    }
+}
 
-    .info-label {
+:root[data-theme="dark"] .info-label {
         color: #b0b0b0;
-    }
+}
 
-    .info-value {
+:root[data-theme="dark"] .info-value {
         color: #e0e0e0;
-    }
+}
 
-
-    .protein-info-detail {
+:root[data-theme="dark"] .protein-info-detail {
         border-bottom-color: #3a3a3a;
-    }
+}
 
-    .reaction-name {
+:root[data-theme="dark"] .reaction-name {
         color: #e0e0e0;
-    }
+}
 
-    .transcript-item {
-        background: #2a2a2a;
+:root[data-theme="dark"] .transcript-item {
+        background: var(--color-bg-secondary);
         border-color: #3a3a3a;
-    }
+}
 
-    .transcript-id {
+:root[data-theme="dark"] .transcript-id {
         color: #999;
-    }
+}
 
-    .no-data {
-        background: #2a2a2a;
+:root[data-theme="dark"] .no-data {
+        background: var(--color-bg-secondary);
         border-color: #3a3a3a;
-    }
 }

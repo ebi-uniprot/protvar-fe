@@ -468,7 +468,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--color-brand);
+    background: var(--color-brand-solid);
     color: white;
     border: none;
     border-radius: var(--radius-lg);
@@ -478,7 +478,7 @@
 }
 
 .browse-go-btn:hover:not(:disabled) {
-    background: var(--color-brand-dark);
+    background: var(--color-brand-solid-dark);
 }
 
 .browse-go-btn:disabled {
@@ -534,6 +534,12 @@
     border-color: var(--color-brand-light);
     transform: translateY(-1px);
     box-shadow: var(--shadow-xs);
+}
+
+/* Dark: navy brand text would be illegible on the dark tint — use light blue */
+:root[data-theme="dark"] .example-tag,
+:root[data-theme="dark"] .example-tag:hover {
+    color: var(--color-primary-light);
 }
 
 /* ============================================

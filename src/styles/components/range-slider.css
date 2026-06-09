@@ -86,7 +86,7 @@
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    background: #fff;
+    background: var(--color-bg-elevated);
     border: 2.5px solid #014373;
     cursor: grab;
     pointer-events: auto;
@@ -98,7 +98,7 @@
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    background: #fff;
+    background: var(--color-bg-elevated);
     border: 2.5px solid #014373;
     cursor: grab;
     pointer-events: auto;

@@ -130,7 +130,7 @@
 
 /* Content area below section title */
 .section-content {
-    background: white;
+    background: var(--color-bg-elevated);
     border: 1px solid var(--color-border-light);
     border-top: none;
     border-radius: 0 0 var(--radius-md) var(--radius-md);
@@ -296,39 +296,37 @@
    DARK MODE SUPPORT
    ============================================ */
 
-@media (prefers-color-scheme: dark) {
-    .annotation-column {
+:root[data-theme="dark"] .annotation-column {
         background: var(--color-bg-primary);
-    }
+}
 
-    .column-header {
+:root[data-theme="dark"] .column-header {
         background: var(--color-bg-secondary);
         color: var(--color-text-primary);
         border-color: var(--color-border-light);
-    }
+}
 
-    .section-title {
+:root[data-theme="dark"] .section-title {
         color: var(--color-text-secondary);
         border-color: var(--color-border-light);
-    }
+}
 
-    .section-content {
+:root[data-theme="dark"] .section-content {
         background: var(--color-bg-secondary);
         border-color: var(--color-border-light);
-    }
+}
 
-    .no-data-message,
-    .no-structure-message {
+:root[data-theme="dark"] .no-data-message,
+:root[data-theme="dark"] .no-structure-message {
         background: var(--color-bg-secondary);
         border-color: var(--color-border-light);
         color: var(--color-text-tertiary);
-    }
+}
 
-    .nested-list b {
+:root[data-theme="dark"] .nested-list b {
         color: var(--color-text-secondary);
-    }
+}
 
-    .colocated-variants-intro {
+:root[data-theme="dark"] .colocated-variants-intro {
         color: var(--color-text-tertiary);
-    }
 }

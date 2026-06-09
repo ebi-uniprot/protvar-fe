@@ -31,7 +31,7 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
-.pv-toast--info    { background: var(--color-brand); color: white; }
+.pv-toast--info    { background: var(--color-brand-solid); color: white; }
 .pv-toast--success { background: #1a7a45; color: white; }
 .pv-toast--warning { background: #b45309; color: white; }
 .pv-toast--error   { background: var(--color-danger); color: white; }

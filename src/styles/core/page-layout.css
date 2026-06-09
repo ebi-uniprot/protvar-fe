@@ -54,6 +54,10 @@
     .default-page-layout,
     .default-page-layout.sidebar-expanded {
         grid-template-columns: 1fr;
+        /* Pack rows to the top: on short pages the grid's leftover height was
+           inflating the nav-strip row and pushing the banner down (gap between
+           the top bar and the banner). Leftover space now sits at the bottom. */
+        align-content: start;
     }
 }
 
@@ -155,6 +159,20 @@
 
 .banner a:hover {
     color: var(--color-brand-dark);
+}
+
+/* Dark: the cream gradient is illegible — use the navy surface, keep the amber
+   accent border, and lift the links to a readable light blue. */
+:root[data-theme="dark"] .banner {
+    background: var(--color-bg-secondary);
+}
+
+:root[data-theme="dark"] .banner a {
+    color: var(--color-primary-light);
+}
+
+:root[data-theme="dark"] .banner a:hover {
+    color: #fff;
 }
 
 .banner-content {
