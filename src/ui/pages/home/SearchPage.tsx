@@ -1,12 +1,12 @@
 // SearchPage.tsx
 import React, { useState, useRef, ChangeEvent } from 'react';
-import {useNavigate, useSearchParams} from "react-router-dom";
+import {Link, useNavigate, useSearchParams} from "react-router-dom";
 import {HelpContent} from "../../components/help/HelpContent";
 import {HelpButton} from "../../components/help/HelpButton";
 import {useStorage} from "../../../context/StorageContext";
 import {ResultRecord, submissionExpiresAt} from "../../../types/ResultRecord";
 import {uploadFile, uploadText} from "../../../services/ProtVarService";
-import {API_ERROR, RESULT, SEARCH, SEMANTIC_SEARCH} from "../../../constants/BrowserPaths";
+import {API_ERROR, HELP, RESULT, SEARCH, SEMANTIC_SEARCH} from "../../../constants/BrowserPaths";
 import {readFirstLineFromFile} from "../../../utills/FileUtil";
 import { DEFAULT_SEARCH_FILTERS } from '../../components/search/defaultFilters';
 import SearchFilters, {
@@ -603,6 +603,11 @@ const SearchPage: React.FC = () => {
               {
                 //Search through variant annotations, disease associations, and functional descriptions
               }
+              <p className="browse-hint">
+                <i className="bi bi-info-circle"></i>
+                Experimental AI search — results are ranked by meaning, not exact
+                matches, and accuracy varies by query. <Link to={`${HELP}#semantic-search`}>Learn more</Link>
+              </p>
               <div className="examples">
                 <h6>Try these examples</h6>
                 <div className="example-tags">

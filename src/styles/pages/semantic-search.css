@@ -27,6 +27,31 @@
     gap: var(--spacing-sm);
 }
 
+/* Caution that results are AI-ranked, not exact matches. */
+.semantic-ai-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin: 0 0 var(--spacing-lg);
+    padding: 10px 14px;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    background: #fff8e6;
+    border: 1px solid var(--color-warning);
+    border-radius: 6px;
+}
+
+.semantic-ai-notice i {
+    color: var(--color-warning);
+    margin-top: 0.1rem;
+    flex-shrink: 0;
+}
+
+:root[data-theme="dark"] .semantic-ai-notice {
+    background: rgba(255, 193, 7, 0.10);
+    border-color: rgba(255, 193, 7, 0.45);
+}
+
 .result-count {
     font-size: var(--font-size-sm);
     color: var(--color-text-tertiary);

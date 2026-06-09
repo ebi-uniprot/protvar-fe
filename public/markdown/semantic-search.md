@@ -2,6 +2,10 @@
 
 Semantic Search lets you find proteins using natural language — disease names, phenotypes, pathways, or any biological description — instead of exact identifiers.
 
+> **⚠️ About AI-enabled search**
+>
+> This feature uses AI text-embedding models to find results by meaning rather than exact keyword matching. Because these models are trained on different datasets, some search terms return more accurate or complete results than others. A returned result is the model's best estimate of relevance — not a guarantee of correctness, and relevant entries may occasionally be missed or ranked low. Treat results as a guide for exploration and confirm anything important against ProtVar's curated annotations and primary sources.
+
 ![Semantic Search tab](images/semantic_search.png)
 
 ## How it works
