@@ -277,6 +277,15 @@ function SemanticSearchPageContent() {
         </div>
       </div>
 
+      {query && (
+        <p className="semantic-ai-notice">
+          <i className="bi bi-info-circle" />
+          These results are AI-ranked by semantic similarity. Relevance varies
+          depending on your search terms — use them as a starting point and
+          verify important findings against the annotated data.
+        </p>
+      )}
+
       {loading && page === 0 && (
         <div className="search-state">
           <i className="bi bi-hourglass-split search-state-icon" />
