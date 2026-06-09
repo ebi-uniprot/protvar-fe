@@ -39,7 +39,7 @@
 }
 
 .map-item.selected {
-    background: var(--color-brand);
+    background: var(--color-brand-solid);
     color: white;
     font-weight: 600;
 }
@@ -49,7 +49,7 @@
 }
 
 .map-item.selected:hover {
-    background: var(--color-brand-dark);
+    background: var(--color-brand-solid-dark);
 }
 
 .map-item-name {

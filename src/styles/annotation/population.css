@@ -261,44 +261,39 @@
    DARK MODE SUPPORT
    ============================================ */
 
-@media (prefers-color-scheme: dark) {
-    .allele-freq-row {
+:root[data-theme="dark"] .allele-freq-row {
         background: var(--color-bg-secondary);
-    }
+}
 
-    .allele-freq-value {
+:root[data-theme="dark"] .allele-freq-value {
         color: var(--color-primary);
-    }
+}
 
-    .allele-freq-class {
+:root[data-theme="dark"] .allele-freq-class {
         color: var(--color-text-tertiary);
-    }
+}
 
-    .allele-freq-count {
+:root[data-theme="dark"] .allele-freq-count {
         color: var(--color-text-muted);
-    }
+}
 
-    .colocated-variants-intro {
+:root[data-theme="dark"] .colocated-variants-intro {
         color: var(--color-text-tertiary);
-    }
+}
 
-
-
-
-    .pop-freq-source-group {
+:root[data-theme="dark"] .pop-freq-source-group {
         background: var(--color-bg-secondary);
         border-color: var(--color-border-light);
-    }
+}
 
-    .pop-freq-source-name {
+:root[data-theme="dark"] .pop-freq-source-name {
         color: var(--color-text-primary);
-    }
+}
 
-    .pop-freq-population {
+:root[data-theme="dark"] .pop-freq-population {
         color: var(--color-text-tertiary);
-    }
+}
 
-    .pop-freq-value {
+:root[data-theme="dark"] .pop-freq-value {
         color: var(--color-primary);
-    }
 }

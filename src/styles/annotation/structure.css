@@ -108,10 +108,17 @@ pdbe-molstar {
     display: block;
 }
 
+/* Molstar's maximise ("expand") sets position:fixed with no z-index, so the
+   masthead/version pill paint over it. Lift it to the overlay tier so the
+   maximised viewer covers the page — still below toasts/modals/tooltips. */
+pdbe-molstar .msp-layout-expanded {
+    z-index: var(--z-overlay);
+}
+
 /* Viewer instructions — below viewer, seamless white */
 .viewer-instructions {
     padding: 4px 12px;
-    background: white;
+    background: var(--color-bg-elevated);
     border: none;
     font-size: 11px;
     color: #999;
@@ -146,7 +153,7 @@ pdbe-molstar {
 }
 
 .viewer-control-btn:hover {
-    background: #fff;
+    background: var(--color-bg-elevated);
     border-color: #4a90e2;
     color: #4a90e2;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
@@ -174,7 +181,7 @@ pdbe-molstar {
 }
 
 .viewer-control-btn.btn-reset:hover {
-    background: #fff;
+    background: var(--color-bg-elevated);
     border-color: #666;
     color: #333;
 }
@@ -185,7 +192,7 @@ pdbe-molstar {
 
 .pae-panel {
     position: relative;
-    background: white;
+    background: var(--color-bg-elevated);
     overflow: hidden;
     max-height: 0;
     opacity: 0;
@@ -336,13 +343,13 @@ pdbe-molstar {
     font-size: 12px;
     font-weight: 600;
     color: #555;
-    border-bottom: 2px solid #e0e0e0;
+    border-bottom: 2px solid var(--color-border-medium);
 }
 
 .structure-table tbody tr {
     cursor: pointer;
     transition: background 0.15s ease;
-    border-bottom: 1px solid #e8e8e8;
+    border-bottom: 1px solid var(--color-border-light);
 }
 
 .structure-table tbody tr:hover {
@@ -376,14 +383,14 @@ pdbe-molstar {
 .table-actions {
     padding: 12px 16px;
     background: #f8f9fa;
-    border-top: 1px solid #e0e0e0;
+    border-top: 1px solid var(--color-border-medium);
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
 }
 
 .table-action-btn {
-    background: white;
+    background: var(--color-bg-elevated);
     border: 1px solid #d0d8e0;
     border-radius: 4px;
     padding: 6px 12px;
@@ -417,7 +424,7 @@ pdbe-molstar {
 
 .table-action-btn.btn-reset {
     background: #f0f0f0;
-    border-color: #ccc;
+    border-color: var(--color-border-dark);
     color: #666;
 }
 
@@ -448,7 +455,7 @@ pdbe-molstar {
     width: 30px;
     height: 12px;
     border-radius: 2px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--color-border-medium);
 }
 
 .confidence-label {
@@ -517,95 +524,93 @@ pdbe-molstar {
    DARK MODE SUPPORT
    ============================================ */
 
-@media (prefers-color-scheme: dark) {
-    .structure-viewer-wrapper,
-    .structure-table-card,
-    .pae-panel {
-        background: #1e1e1e;
-    }
+:root[data-theme="dark"] .structure-viewer-wrapper,
+:root[data-theme="dark"] .structure-table-card,
+:root[data-theme="dark"] .pae-panel {
+        background: var(--color-bg-primary);
+}
 
-    .viewer-instructions {
-        background: #1e1e1e;
+:root[data-theme="dark"] .viewer-instructions {
+        background: var(--color-bg-primary);
         color: #777;
-    }
+}
 
-    .viewer-control-btn {
+:root[data-theme="dark"] .viewer-control-btn {
         background: rgba(42, 42, 42, 0.95);
         border-color: #4a4a4a;
         color: #e0e0e0;
-    }
+}
 
-    .viewer-control-btn:hover {
-        background: #2a2a2a;
+:root[data-theme="dark"] .viewer-control-btn:hover {
+        background: var(--color-bg-secondary);
         border-color: #6ea8fe;
         color: #6ea8fe;
-    }
+}
 
-    .pae-panel-header,
-    .structure-table-header {
+:root[data-theme="dark"] .pae-panel-header,
+:root[data-theme="dark"] .structure-table-header {
         background: linear-gradient(135deg, #2563ab 0%, #1e4a7a 100%);
-    }
+}
 
-    .pae-panel-content {
-        background: #1e1e1e;
-    }
+:root[data-theme="dark"] .pae-panel-content {
+        background: var(--color-bg-primary);
+}
 
-    .pae-section-title {
+:root[data-theme="dark"] .pae-section-title {
         color: #b0b0b0;
-    }
+}
 
-    .structure-table thead {
-        background: #2a2a2a;
-    }
+:root[data-theme="dark"] .structure-table thead {
+        background: var(--color-bg-secondary);
+}
 
-    .structure-table th {
+:root[data-theme="dark"] .structure-table th {
         color: #b0b0b0;
         border-color: #3a3a3a;
-    }
+}
 
-    .structure-table tbody tr {
+:root[data-theme="dark"] .structure-table tbody tr {
         border-color: #3a3a3a;
-    }
+}
 
-    .structure-table tbody tr:hover {
-        background: #252525;
-    }
+:root[data-theme="dark"] .structure-table tbody tr:hover {
+        background: var(--color-bg-tertiary);
+}
 
-    .structure-table tbody tr.active {
+:root[data-theme="dark"] .structure-table tbody tr.active {
         background: #2a4a5a;
         border-left-color: #6ea8fe;
-    }
+}
 
-    .structure-table td {
+:root[data-theme="dark"] .structure-table td {
         color: #e0e0e0;
-    }
+}
 
-    .table-actions {
-        background: #2a2a2a;
+:root[data-theme="dark"] .table-actions {
+        background: var(--color-bg-secondary);
         border-color: #3a3a3a;
-    }
+}
 
-    .table-action-btn {
-        background: #1e1e1e;
+:root[data-theme="dark"] .table-action-btn {
+        background: var(--color-bg-primary);
         border-color: #4a4a4a;
         color: #b0b0b0;
-    }
+}
 
-    .table-action-btn:hover {
+:root[data-theme="dark"] .table-action-btn:hover {
         background: #6ea8fe;
         border-color: #6ea8fe;
         color: white;
-    }
+}
 
-    .confidence-label {
+:root[data-theme="dark"] .confidence-label {
         color: #999;
-    }
+}
 
-    .pae-image-container {
+:root[data-theme="dark"] .pae-image-container {
         border-color: #4a4a4a;
-    }
+}
 
-    .pae-axis-label {
+:root[data-theme="dark"] .pae-axis-label {
         color: #999;
-    }
 }

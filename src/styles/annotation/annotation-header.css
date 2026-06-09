@@ -127,7 +127,7 @@
 }
 
 .help-icon:hover {
-    background: white;
+    background: var(--color-bg-elevated);
     border-color: var(--color-primary);
     color: var(--color-primary);
 }
@@ -159,7 +159,7 @@
 }
 
 .icon-btn:hover {
-    background: white;
+    background: var(--color-bg-elevated);
     border-color: var(--color-primary);
     color: var(--color-primary);
 }
@@ -216,63 +216,63 @@
    DARK MODE
    ============================================ */
 
-@media (prefers-color-scheme: dark) {
-    .annotation-title h5 {
+:root[data-theme="dark"] .annotation-title h5 {
         color: var(--color-text-primary);
-    }
+}
 
-    /* Icon gradients for dark mode — no filter, backgrounds lightened for legibility */
-    .annotation-icon[data-fill^="0.0"],
-    .annotation-icon[data-fill^="0.1"] {
+/* Icon gradients for dark mode — no filter, backgrounds lightened for legibility */
+    :root[data-theme="dark"] .annotation-icon[data-fill^="0.0"],
+:root[data-theme="dark"] .annotation-icon[data-fill^="0.1"] {
         background: #4a4a4a;
-    }
+}
 
-    .annotation-icon[data-fill^="0.2"],
-    .annotation-icon[data-fill^="0.3"] {
+:root[data-theme="dark"] .annotation-icon[data-fill^="0.2"],
+:root[data-theme="dark"] .annotation-icon[data-fill^="0.3"] {
         background: linear-gradient(135deg, #4a7a9a 0%, #3a6a8a 100%);
-    }
+}
 
-    .annotation-icon[data-fill^="0.4"],
-    .annotation-icon[data-fill^="0.5"] {
+:root[data-theme="dark"] .annotation-icon[data-fill^="0.4"],
+:root[data-theme="dark"] .annotation-icon[data-fill^="0.5"] {
         background: linear-gradient(135deg, #6a9aba 0%, #558aaa 100%);
-    }
+}
 
-    .annotation-icon[data-fill^="0.6"],
-    .annotation-icon[data-fill^="0.7"] {
+:root[data-theme="dark"] .annotation-icon[data-fill^="0.6"],
+:root[data-theme="dark"] .annotation-icon[data-fill^="0.7"] {
         background: linear-gradient(135deg, #7ab0d8 0%, #62a0cc 100%);
         box-shadow: 0 2px 5px rgba(122, 176, 216, 0.3);
-    }
+}
 
-    .annotation-icon[data-fill^="0.8"],
-    .annotation-icon[data-fill^="0.9"],
-    .annotation-icon[data-fill="1.0"],
-    .annotation-icon[data-fill="1"] {
+:root[data-theme="dark"] .annotation-icon[data-fill^="0.8"],
+:root[data-theme="dark"] .annotation-icon[data-fill^="0.9"],
+:root[data-theme="dark"] .annotation-icon[data-fill="1.0"],
+:root[data-theme="dark"] .annotation-icon[data-fill="1"] {
         background: linear-gradient(135deg, #8abce8 0%, #72acde 100%);
         box-shadow: 0 3px 8px rgba(138, 188, 232, 0.4);
-    }
+        /* keyframes can't be [data-theme]-scoped, so point at a renamed dark variant */
+        animation-name: pulse-glow-dark;
+}
 
-    @keyframes pulse-glow {
+@keyframes pulse-glow-dark {
         0%, 100% { box-shadow: 0 3px 8px rgba(138, 188, 232, 0.4); }
         50%       { box-shadow: 0 3px 12px rgba(138, 188, 232, 0.6); }
-    }
+}
 
-    .help-icon,
-    .icon-btn {
+:root[data-theme="dark"] .help-icon,
+:root[data-theme="dark"] .icon-btn {
         background: transparent;
         border-color: var(--color-border-medium);
         color: var(--color-text-secondary);
-    }
+}
 
-    .help-icon:hover,
-    .icon-btn:hover {
+:root[data-theme="dark"] .help-icon:hover,
+:root[data-theme="dark"] .icon-btn:hover {
         background: var(--color-bg-secondary);
         border-color: var(--color-primary);
         color: var(--color-primary);
-    }
+}
 
-    .data-richness-badge {
+:root[data-theme="dark"] .data-richness-badge {
         background: rgba(110, 168, 254, 0.15);
         border-color: rgba(110, 168, 254, 0.3);
         color: #6ea8fe;
-    }
 }

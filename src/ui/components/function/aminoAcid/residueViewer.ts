@@ -36,10 +36,12 @@ export class ResidueViewer {
       plugin.dispose();
       throw new Error('Could not initialise the 3D viewer.');
     }
-    // White background; hide the orientation axes gizmo. (PD discriminated
-    // unions don't type cleanly here, hence the cast.)
+    // Background follows the active theme (navy in dark, white otherwise);
+    // hide the orientation axes gizmo. (PD discriminated unions don't type
+    // cleanly here, hence the cast.)
+    const dark = document.documentElement.getAttribute('data-theme') === 'dark';
     plugin.canvas3d?.setProps({
-      renderer: { backgroundColor: Color(0xffffff) },
+      renderer: { backgroundColor: Color(dark ? 0x0e2438 : 0xffffff) },
       camera: { helper: { axes: { name: 'off', params: {} } } },
     } as any);
     this.plugin = plugin;

@@ -223,39 +223,37 @@
    DARK MODE SUPPORT
    ============================================ */
 
-@media (prefers-color-scheme: dark) {
-    .collapsible {
+:root[data-theme="dark"] .collapsible {
         background: var(--color-bg-primary);
         border-color: var(--color-border-light);
         color: var(--color-text-primary);
-    }
+}
 
-    .collapsible:hover {
+:root[data-theme="dark"] .collapsible:hover {
         background: var(--color-bg-tertiary);
         border-color: var(--color-border-medium);
-    }
+}
 
-    .collapsible .chevron-icon {
+:root[data-theme="dark"] .collapsible .chevron-icon {
         color: var(--color-text-tertiary);
-    }
+}
 
-    .collapsible-content,
-    .struct-pred-content,
-    .feature-content,
-    .protein-info-content {
+:root[data-theme="dark"] .collapsible-content,
+:root[data-theme="dark"] .struct-pred-content,
+:root[data-theme="dark"] .feature-content,
+:root[data-theme="dark"] .protein-info-content {
         background: var(--color-bg-tertiary);
         border-color: var(--color-border-light);
-    }
+}
 
-    .struct-pred-description,
-    .struct-pred-help {
+:root[data-theme="dark"] .struct-pred-description,
+:root[data-theme="dark"] .struct-pred-help {
         color: var(--color-text-secondary);
-    }
+}
 
-    .genomic-location-content,
-    .colocated-variant-content,
-    .colocated-variant-xrefs {
+:root[data-theme="dark"] .genomic-location-content,
+:root[data-theme="dark"] .colocated-variant-content,
+:root[data-theme="dark"] .colocated-variant-xrefs {
         background: var(--color-bg-tertiary);
         border-color: var(--color-border-light);
-    }
 }

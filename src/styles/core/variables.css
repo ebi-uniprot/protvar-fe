@@ -32,6 +32,11 @@
     /* Brand Blue (ProtVar identity — masthead, CTA buttons, active states) */
     --color-brand: #014373;
     --color-brand-dark: #012d5a;
+    /* Solid brand fills for buttons/badges that carry white text — stay navy in
+       both themes, whereas --color-brand / --color-brand-dark flip to light blue
+       in dark so they stay legible as TEXT/borders (headings, active, link hover). */
+    --color-brand-solid: #014373;
+    --color-brand-solid-dark: #012d5a;
     --color-brand-light: #4a90b8;
     --color-brand-lighter: #8fc4dc;
     --color-brand-lightest: #e8f0f7;
@@ -206,43 +211,60 @@
         --color-primary-dark: #5a8fde;
         --color-primary-light: #9ec5fe;
 
-        /* Grays - Dark Mode */
-        --color-gray-50: #1e1e1e;
-        --color-gray-100: #2a2a2a;
-        --color-gray-200: #3a3a3a;
-        --color-gray-300: #4a4a4a;
-        --color-gray-400: #5a5a5a;
-        --color-gray-500: #6a6a6a;
-        --color-gray-600: #999;
-        --color-gray-700: #b0b0b0;
-        --color-gray-800: #d0d0d0;
-        --color-gray-900: #e0e0e0;
+        /* --color-brand is used as TEXT/borders (headings, active states, links)
+           which would be invisible navy-on-navy — flip it to a light blue.
+           Solid brand fills use --color-brand-solid (kept navy) instead. */
+        --color-brand: #6ea8fe;
+        --color-brand-dark: #9ec5fe;
 
-        /* Text Colors - Dark Mode */
-        --color-text-primary: #e0e0e0;
-        --color-text-secondary: #b0b0b0;
-        --color-text-tertiary: #999;
-        --color-text-muted: #888;
+        /* Light tints are only ever used as backgrounds/hovers/accents — give
+           them dark-blue variants so pale-blue pills don't stay light. The
+           strong --color-brand-solid / --color-primary (solid button bg with
+           white text) are intentionally left navy. */
+        --color-primary-lighter: #2a4f70;
+        --color-primary-lightest: #1c3b58;
+        --color-brand-lightest: #15314b;
+        --color-brand-lighter: #20425f;
+        --color-brand-light: #3a6e92;
 
-        /* Background Colors - Dark Mode */
-        --color-bg-primary: #1e1e1e;
-        --color-bg-secondary: #2a2a2a;
-        --color-bg-tertiary: #252525;
-        --color-bg-elevated: #2a2a2a;
+        /* Grays - Dark Mode (navy-tinted to match the ProtVar brand blue) */
+        --color-gray-50: #0e2438;
+        --color-gray-100: #1c3a54;
+        --color-gray-200: #21415c;
+        --color-gray-300: #274b66;
+        --color-gray-400: #335a78;
+        --color-gray-500: #436a8a;
+        --color-gray-600: #8398a9;
+        --color-gray-700: #aebfce;
+        --color-gray-800: #cdd9e4;
+        --color-gray-900: #e6eef5;
 
-        /* Border Colors - Dark Mode */
-        --color-border-light: #3a3a3a;
-        --color-border-medium: #4a4a4a;
-        --color-border-dark: #5a5a5a;
+        /* Text Colors - Dark Mode (cool off-white) */
+        --color-text-primary: #e6eef5;
+        --color-text-secondary: #aebfce;
+        --color-text-tertiary: #8398a9;
+        --color-text-muted: #7a8fa0;
+
+        /* Background Colors - Dark Mode (navy page; surfaces step up clearly so
+           cards/panels separate on dense views like the result tables) */
+        --color-bg-primary: #0e2438;
+        --color-bg-secondary: #1c3a54;
+        --color-bg-tertiary: #21415c;
+        --color-bg-elevated: #22455f;
+
+        /* Border Colors - Dark Mode (strong enough to read as panel edges) */
+        --color-border-light: #335066;
+        --color-border-medium: #416178;
+        --color-border-dark: #4f7188;
 
         /* Gradients - Dark Mode */
         --gradient-blue: linear-gradient(135deg, #2563ab 0%, #1e4a7a 100%);
         --gradient-blue-dark: linear-gradient(135deg, #1e4a7a 0%, #163a5a 100%);
         --gradient-blue-light: linear-gradient(135deg, #6ea8fe 0%, #5a8fde 100%);
-        --gradient-gray: linear-gradient(135deg, #2a2a2a 0%, #1e1e1e 100%);
+        --gradient-gray: linear-gradient(135deg, #143049 0%, #0e2438 100%);
 
         /* Data Richness Gradients - Dark Mode */
-        --gradient-richness-none: linear-gradient(135deg, #4a4a4a 0%, #3a3a3a 100%);
+        --gradient-richness-none: linear-gradient(135deg, #2f4a63 0%, #243c52 100%);
         --gradient-richness-low: linear-gradient(135deg, #3a5a7a 0%, #2a4a6a 100%);
         --gradient-richness-medium: linear-gradient(135deg, #4a6a8a 0%, #3a5a7a 100%);
         --gradient-richness-high: linear-gradient(135deg, #5a7a9a 0%, #4a6a8a 100%);
