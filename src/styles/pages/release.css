@@ -146,7 +146,7 @@
 }
 
 .release-badge-version {
-    background: var(--color-brand);
+    background: var(--color-brand-solid);
     color: white;
 }
 
@@ -348,6 +348,10 @@
     background: #f4f8fc;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
     transition: box-shadow var(--transition-fast), border-color var(--transition-fast);
+}
+
+:root[data-theme="dark"] .stat-card {
+    background: var(--color-bg-elevated);
 }
 
 .stat-card:hover {

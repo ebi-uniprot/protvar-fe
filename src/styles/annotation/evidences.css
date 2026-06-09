@@ -286,54 +286,52 @@
    DARK MODE SUPPORT
    ============================================ */
 
-@media (prefers-color-scheme: dark) {
-    .source-label {
+:root[data-theme="dark"] .source-label {
         color: var(--color-text-secondary);
-    }
+}
 
-    .pubmed-article-card {
+:root[data-theme="dark"] .pubmed-article-card {
         background: var(--color-bg-secondary);
         border-color: var(--color-border-light);
-    }
+}
 
-    .pubmed-article-title {
+:root[data-theme="dark"] .pubmed-article-title {
         color: var(--color-text-primary);
-    }
+}
 
-    .pubmed-article-title i {
+:root[data-theme="dark"] .pubmed-article-title i {
         color: var(--color-primary);
-    }
+}
 
-    .pubmed-article-authors {
+:root[data-theme="dark"] .pubmed-article-authors {
         color: var(--color-text-secondary);
-    }
+}
 
-    .pubmed-article-authors i {
+:root[data-theme="dark"] .pubmed-article-authors i {
         color: var(--color-text-tertiary);
-    }
+}
 
-    .pubmed-id-chip {
+:root[data-theme="dark"] .pubmed-id-chip {
         border-color: var(--color-border-medium);
-    }
+}
 
-    .pubmed-chip-toggle {
+:root[data-theme="dark"] .pubmed-chip-toggle {
         border-left-color: var(--color-border-medium);
-    }
+}
 
-    .pubmed-id-chip--active {
+:root[data-theme="dark"] .pubmed-id-chip--active {
         border-color: var(--color-primary);
-    }
+}
 
-    .pubmed-article-loading {
+:root[data-theme="dark"] .pubmed-article-loading {
         color: var(--color-text-secondary);
-    }
+}
 
-    .pubmed-article-error {
+:root[data-theme="dark"] .pubmed-article-error {
         color: #f8717c;
-    }
+}
 
-    .xref-pop-freq,
-    .xref-pop-freq-inline {
+:root[data-theme="dark"] .xref-pop-freq,
+:root[data-theme="dark"] .xref-pop-freq-inline {
         color: var(--color-text-tertiary);
-    }
 }

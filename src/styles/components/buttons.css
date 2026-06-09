@@ -61,13 +61,13 @@
 
 /* Brand button — ProtVar navy, used for primary CTA */
 .btn-brand {
-    background: var(--color-brand);
+    background: var(--color-brand-solid);
     color: white;
     border-color: var(--color-brand);
 }
 
 .btn-brand:hover:not(:disabled) {
-    background: var(--color-brand-dark);
+    background: var(--color-brand-solid-dark);
     border-color: var(--color-brand-dark);
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(1, 67, 115, 0.3);
@@ -103,7 +103,7 @@
 
 /* Secondary Button */
 .btn-secondary {
-    background: white;
+    background: var(--color-bg-elevated);
     color: var(--color-text-primary);
     border-color: var(--color-border-medium);
 }
@@ -132,7 +132,7 @@
    ============================================ */
 
 .icon-btn {
-    background: white;
+    background: var(--color-bg-elevated);
     border: 1px solid var(--color-border-medium);
     border-radius: var(--radius-md);
     padding: 6px 10px;
@@ -257,7 +257,7 @@
 }
 
 .viewer-control-btn:hover {
-    background: #fff;
+    background: var(--color-bg-elevated);
     border-color: var(--color-primary);
     color: var(--color-primary);
     box-shadow: var(--shadow-md);
@@ -285,7 +285,7 @@
 }
 
 .viewer-control-btn.btn-reset:hover {
-    background: #fff;
+    background: var(--color-bg-elevated);
     border-color: var(--color-text-secondary);
     color: var(--color-text-primary);
 }
@@ -295,7 +295,7 @@
    ============================================ */
 
 .table-action-btn {
-    background: white;
+    background: var(--color-bg-elevated);
     border: 1px solid var(--color-border-dark);
     border-radius: var(--radius-sm);
     padding: 6px 12px;
@@ -403,81 +403,79 @@
    DARK MODE SUPPORT
    ============================================ */
 
-@media (prefers-color-scheme: dark) {
-    .btn-secondary {
+:root[data-theme="dark"] .btn-secondary {
         background: var(--color-bg-secondary);
         color: var(--color-text-primary);
         border-color: var(--color-border-light);
-    }
+}
 
-    .btn-secondary:hover:not(:disabled) {
+:root[data-theme="dark"] .btn-secondary:hover:not(:disabled) {
         background: var(--color-bg-tertiary);
-    }
+}
 
-    .icon-btn {
+:root[data-theme="dark"] .icon-btn {
         background: var(--color-bg-secondary);
         border-color: var(--color-border-light);
         color: var(--color-text-secondary);
-    }
+}
 
-    .icon-btn:hover {
+:root[data-theme="dark"] .icon-btn:hover {
         background: var(--color-bg-tertiary);
         border-color: var(--color-primary);
         color: var(--color-primary);
-    }
+}
 
-    .show-btn {
+:root[data-theme="dark"] .show-btn {
         border-color: var(--color-border-medium);
         color: var(--color-text-tertiary);
-    }
+}
 
-    .show-btn:hover {
+:root[data-theme="dark"] .show-btn:hover {
         border-color: var(--color-primary);
         color: var(--color-primary);
         background: rgba(110, 168, 254, 0.08);
-    }
+}
 
-    .pubmed-btn {
+:root[data-theme="dark"] .pubmed-btn {
         border-color: var(--color-border-light);
         color: var(--color-text-tertiary);
-    }
+}
 
-    .pubmed-btn:hover {
+:root[data-theme="dark"] .pubmed-btn:hover {
         border-color: var(--color-primary);
         color: var(--color-primary);
-    }
+}
 
-    .viewer-control-btn {
+:root[data-theme="dark"] .viewer-control-btn {
         background: rgba(42, 42, 42, 0.95);
         border-color: var(--color-border-medium);
         color: var(--color-text-primary);
-    }
+}
 
-    .viewer-control-btn:hover {
+:root[data-theme="dark"] .viewer-control-btn:hover {
         background: var(--color-bg-secondary);
         border-color: var(--color-primary);
         color: var(--color-primary);
-    }
+}
 
-    .table-action-btn {
+:root[data-theme="dark"] .table-action-btn {
         background: var(--color-bg-primary);
         border-color: var(--color-border-medium);
         color: var(--color-text-secondary);
-    }
+}
 
-    .table-action-btn:hover {
+:root[data-theme="dark"] .table-action-btn:hover {
         background: var(--color-primary);
         border-color: var(--color-primary);
         color: white;
-    }
+}
 
-    .expandable-text-toggle {
+:root[data-theme="dark"] .expandable-text-toggle {
         color: var(--color-primary);
-    }
+}
 
-    .expandable-text-toggle:hover {
+:root[data-theme="dark"] .expandable-text-toggle:hover {
         color: var(--color-primary-light);
-    }
 }
 
 /* ============================================

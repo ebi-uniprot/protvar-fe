@@ -264,6 +264,11 @@
     flex-shrink: 0;
 }
 
+:root[data-theme="dark"] .help-update-notice {
+    background: rgba(255, 193, 7, 0.10);
+    border-color: rgba(255, 193, 7, 0.45);
+}
+
 .help-welcome h5 {
     font-size: var(--font-size-xl);
     color: var(--color-brand);

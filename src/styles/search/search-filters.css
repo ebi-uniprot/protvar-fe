@@ -378,13 +378,13 @@
 
 /* Highlighted when there are staged changes waiting to be applied. */
 .filter-chip-reload--pending {
-    background: var(--color-brand);
+    background: var(--color-brand-solid);
     border-color: var(--color-brand);
     color: #fff;
 }
 
 .filter-chip-reload--pending:hover {
-    background: var(--color-brand-dark);
+    background: var(--color-brand-solid-dark);
 }
 
 /* ============================================
@@ -392,7 +392,7 @@
    ============================================ */
 
 .apply-button {
-    background: var(--color-brand);
+    background: var(--color-brand-solid);
     color: white;
     border: none;
     padding: 0.55rem 1.1rem;
@@ -404,7 +404,7 @@
 }
 
 .apply-button:hover:not(:disabled) {
-    background: var(--color-brand-dark);
+    background: var(--color-brand-solid-dark);
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(1, 67, 115, 0.3);
 }
