@@ -1,22 +1,24 @@
-import { WHITE } from "../../../types/Colors";
+import { viewerBgColor } from "../../../types/Colors";
 
-export const baseSettings = {
-  bgColor: WHITE,
+// Computed per call so the background follows the active theme (a structure
+// reload re-applies these settings).
+const baseSettings = () => ({
+  bgColor: viewerBgColor(),
   hideControls: true,
   hideWater: true,
-};
+});
 
 export const pdbSettings = (pdbId: string) => ({
-  ...baseSettings,
+  ...baseSettings(),
   moleculeId: pdbId,
 });
 
 export const afSettings = (url: string) => ({
-  ...baseSettings,
+  ...baseSettings(),
   customData: { url, format: "cif" },
 });
 
 export const interactionSettings = (url: string) => ({
-  ...baseSettings,
+  ...baseSettings(),
   customData: { url, format: "pdb" },
 });

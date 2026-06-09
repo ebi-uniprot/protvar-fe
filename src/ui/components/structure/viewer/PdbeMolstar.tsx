@@ -6,6 +6,7 @@ import {PdbeStructure} from "../../../../types/PdbeStructure";
 import {API_URL} from "../../../../constants/const";
 import {PredictedStructure} from "../StructureData";
 import {Interaction} from "../../../../types/Prediction";
+import {viewerBgColor} from "../../../../types/Colors";
 import {ViewerControls} from "./ViewerControls";
 
 interface PdbeMolstarProps {
@@ -19,6 +20,7 @@ interface PdbeMolstarProps {
 }
 
 const PdbeMolstar = ({ selected, pdbeRef, controlActions = [] }: PdbeMolstarProps) => {
+  const bg = viewerBgColor();
   let pdbeComponent = <Loader />;
 
   if ("pdbId" in selected) {
@@ -26,9 +28,9 @@ const PdbeMolstar = ({ selected, pdbeRef, controlActions = [] }: PdbeMolstarProp
       <pdbe-molstar
         id="pdbeMolstarComponent"
         ref={pdbeRef}
-        bg-color-r="255"
-        bg-color-g="255"
-        bg-color-b="255"
+        bg-color-r={String(bg.r)}
+        bg-color-g={String(bg.g)}
+        bg-color-b={String(bg.b)}
         hide-controls="true"
         molecule-id={selected.pdbId}
         alphafold-view="true"
@@ -41,9 +43,9 @@ const PdbeMolstar = ({ selected, pdbeRef, controlActions = [] }: PdbeMolstarProp
       <pdbe-molstar
         id="pdbeMolstarComponent"
         ref={pdbeRef}
-        bg-color-r="255"
-        bg-color-g="255"
-        bg-color-b="255"
+        bg-color-r={String(bg.r)}
+        bg-color-g={String(bg.g)}
+        bg-color-b={String(bg.b)}
         hide-controls="true"
         custom-data-url={selected.cifUrl}
         custom-data-format="cif"
@@ -58,9 +60,9 @@ const PdbeMolstar = ({ selected, pdbeRef, controlActions = [] }: PdbeMolstarProp
       <pdbe-molstar
         id="pdbeMolstarComponent"
         ref={pdbeRef}
-        bg-color-r="255"
-        bg-color-g="255"
-        bg-color-b="255"
+        bg-color-r={String(bg.r)}
+        bg-color-g={String(bg.g)}
+        bg-color-b={String(bg.b)}
         hide-controls="true"
         custom-data-url={modelUrl}
         custom-data-format="pdb"
