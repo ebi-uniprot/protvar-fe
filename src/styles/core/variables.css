@@ -4,6 +4,16 @@
  */
 
 :root {
+    /* Light is the explicit default. Dark is opt-in via [data-theme="dark"]
+       (set from user prefs), so the app never auto-follows the OS/browser
+       dark setting. color-scheme keeps native controls (inputs, scrollbars)
+       in step with the active theme. */
+    color-scheme: light;
+
+    /* Font scale multiplier driven by the AAA size control ([data-font-size]).
+       All --font-size-* tokens below are computed from it. */
+    --font-scale: 1;
+
     /* ============================================
        COLORS - Primary Palette
        ============================================ */
@@ -122,15 +132,17 @@
     --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
     --font-family-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
 
-    /* Font Sizes — bumped +1px from the v2 overhaul scale (was 11/12/13/14/15/16/18/20) */
-    --font-size-xs: 12px;
-    --font-size-sm: 13px;
-    --font-size-base: 14px;
-    --font-size-md: 15px;
-    --font-size-lg: 16px;
-    --font-size-xl: 17px;
-    --font-size-2xl: 19px;
-    --font-size-3xl: 21px;
+    /* Font Sizes — bumped +1px from the v2 overhaul scale (was 11/12/13/14/15/16/18/20).
+       Multiplied by --font-scale so the AAA control resizes everything that
+       uses these tokens. (Hardcoded `font-size: NNpx` rules don't scale.) */
+    --font-size-xs: calc(12px * var(--font-scale));
+    --font-size-sm: calc(13px * var(--font-scale));
+    --font-size-base: calc(14px * var(--font-scale));
+    --font-size-md: calc(15px * var(--font-scale));
+    --font-size-lg: calc(16px * var(--font-scale));
+    --font-size-xl: calc(17px * var(--font-scale));
+    --font-size-2xl: calc(19px * var(--font-scale));
+    --font-size-3xl: calc(21px * var(--font-scale));
 
     /* Font Weights */
     --font-weight-normal: 400;
@@ -173,11 +185,22 @@
 }
 
 /* ============================================
-   DARK MODE VARIABLES
+   FONT SIZE STEPS (AAA control)
+   md = 1 (default, set on :root above)
    ============================================ */
 
-@media (prefers-color-scheme: dark) {
-    :root {
+:root[data-font-size="sm"] { --font-scale: 0.9; }
+:root[data-font-size="lg"] { --font-scale: 1.15; }
+
+/* ============================================
+   DARK MODE VARIABLES
+   Opt-in via [data-theme="dark"] (user pref), NOT prefers-color-scheme,
+   so dark mode never auto-activates from the OS/browser setting.
+   ============================================ */
+
+:root[data-theme="dark"] {
+        color-scheme: dark;
+
         /* Colors - Dark Mode */
         --color-primary: #6ea8fe;
         --color-primary-dark: #5a8fde;
@@ -236,5 +259,4 @@
         --shadow-primary-sm: 0 2px 6px rgba(110, 168, 254, 0.3);
         --shadow-primary-md: 0 4px 12px rgba(110, 168, 254, 0.4);
         --shadow-primary-lg: 0 4px 16px rgba(110, 168, 254, 0.6);
-    }
 }

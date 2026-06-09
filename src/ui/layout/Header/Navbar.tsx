@@ -5,6 +5,7 @@ import { API_URL } from '../../../constants/const';
 import SearchBox from "../../components/search/SearchBox";
 import VersionInfo from '../VersionInfo';
 import StatusIndicator from './StatusIndicator';
+import AppearanceControls from './AppearanceControls';
 
 interface NavbarProps {
   onShowBanner?: () => void;
@@ -62,6 +63,7 @@ const Navbar: React.FC<NavbarProps> = ({ onShowBanner }) => {
         <div className="navbar-utility">
           <StatusIndicator />
           <VersionInfo />
+          <AppearanceControls />
         </div>
 
       {onShowBanner && (
