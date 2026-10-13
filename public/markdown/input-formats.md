@@ -16,7 +16,7 @@ Genomic input should follow one of the specified formats.
 
 - **gnomAD format:** `CHR-POS-REF-ALT` (e.g., 1-12345-A-G)
 
-- **Internal format:** `CHR POS (REF (ALT))` (e.g., X 23456 C T) or `CHR:POS(:REF(:ALT))` (e.g., X:23456:C:T)  
+- **Internal format:** `CHR POS (REF (ALT))` (e.g., X 23456 C T), `CHR:POS(:REF(:ALT))` (e.g., X:23456:C:T) or `CHR:POS REF>ALT` (e.g., chrX:23456 C>T)  
   _The alternative allele, or both the reference and alternative alleles, are optional. If both alleles are provided, space, greater-than (>) sign, or forward slash (/) delimiters in specifying the allele change are all valid. A missing allele can also be given as `na` or `.` (e.g., 12:56478854:na:na)._
 
 **CHR:** Chromosome (1-22, X, Y, M, MT, mit, mtDNA, mitochondria, mitochondrion)  
