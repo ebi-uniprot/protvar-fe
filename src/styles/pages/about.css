@@ -149,6 +149,20 @@
     opacity: 1;
 }
 
+/* text tile (no logo): same height as the 36px logos, same muted-until-hover look */
+.about-ack-item--text {
+    min-height: calc(36px + 2 * var(--spacing-sm));
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    opacity: 0.8;
+    transition: border-color var(--transition-base), box-shadow var(--transition-base), opacity var(--transition-base);
+}
+
+.about-ack-item--text:hover {
+    opacity: 1;
+}
+
 /* ============================================
    LEGAL SECTION
    ============================================ */
