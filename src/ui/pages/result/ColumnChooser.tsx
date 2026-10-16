@@ -1,5 +1,6 @@
 import { ColumnGroup, ColumnId, inGroup, RESULT_COLUMNS } from "../../../constants/resultColumns";
 import { useResultColumns } from "./useResultColumns";
+import ViewSwitch from "./ViewSwitch";
 
 const GROUPS: { group: ColumnGroup; title: string }[] = [
   { group: 'genomic', title: 'Genomic' },
@@ -16,6 +17,8 @@ export default function ColumnChooser() {
   return (
     <div className="column-chooser">
       <h3>Table columns</h3>
+      <p className="column-chooser-hint">Start from a view, then add or remove columns.</p>
+      <ViewSwitch />
       {GROUPS.map(({ group, title }) => (
         <div key={group} className="column-chooser-group">
           <strong>{title}</strong>

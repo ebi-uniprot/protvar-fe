@@ -1,6 +1,7 @@
 import DefaultPageLayout from "../../layout/DefaultPageLayout";
 import {LegendContent} from "../../modal/LegendContent";
 import ColumnChooser from "./ColumnChooser";
+import ViewSwitch from "./ViewSwitch";
 import {useLocation, useNavigate, useParams, useSearchParams} from "react-router-dom";
 import ResultTable from "./ResultTable";
 import React, {useCallback, useContext, useEffect, useMemo, useRef, useState} from "react";
@@ -694,6 +695,7 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
     )}
     {data && (
       <div className="result-table-actions">
+        <ViewSwitch />
         <button className="btn btn-secondary columns-btn" title="Choose which columns to show"
                 onClick={() => appState.updateState("drawer", <ColumnChooser />)}>
           <i className="bi bi-layout-three-columns" /> Columns

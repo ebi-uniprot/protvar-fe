@@ -80,9 +80,45 @@
 .result-table-actions {
     display: flex;
     justify-content: flex-end;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
     margin-bottom: 4px;
+}
+
+/* Genomic | Genomic + protein | Protein */
+.view-switch {
+    display: inline-flex;
+    align-items: center;
+    font-size: var(--font-size-sm);
+}
+.view-switch-btn {
+    border: 1px solid #6987C3;
+    background: transparent;
+    color: #6987C3;
+    padding: 2px 10px;
+    cursor: pointer;
+}
+.view-switch-btn + .view-switch-btn {
+    border-left: none;
+}
+.view-switch-btn:first-child { border-radius: 4px 0 0 4px; }
+.view-switch-btn:last-of-type { border-radius: 0 4px 4px 0; }
+.view-switch-btn.active {
+    background: #6987C3;
+    color: white;
+}
+.view-switch-custom {
+    margin-left: 8px;
+    font-style: italic;
+    color: var(--color-text-muted);
 }
 .columns-btn {
     font-size: var(--font-size-sm);
     padding: 2px 10px;
+}
+.column-chooser-hint {
+    margin: 4px 0 8px;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
 }
