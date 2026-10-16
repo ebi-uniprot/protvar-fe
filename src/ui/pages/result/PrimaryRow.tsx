@@ -212,7 +212,7 @@ export const getNewPrimaryRow = (
         </span>,
 
         // Protein name
-        protein: <span key="protein" className="card-sep">
+        protein: <span key="protein" className="card-sep cell-protein-name">
           <Tool tip={isoform.proteinName}>{getProteinName(isoform.proteinName)}</Tool>
         </span>,
 
@@ -293,7 +293,7 @@ export const getNewPrimaryRow = (
                 <TextLink url={UNIPROT_ACCESSION_URL + altIso.accession} text={altIso.accession} />
               </Tool>
             </span>
-            <span className="card-sep">{getProteinName(altIso.proteinName)}</span>
+            <span className="card-sep cell-protein-name">{getProteinName(altIso.proteinName)}</span>
             <span className="card-sep">
               <Tool tip={aaChangeTip(altAaChange)}>{altAaFormatted}</Tool>
             </span>

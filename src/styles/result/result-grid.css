@@ -300,6 +300,7 @@
     border-radius: 0.75rem;
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-bold);
+    font-variant-numeric: tabular-nums;   /* digits line up down a score column */
     color: white;
     cursor: default;
 }
@@ -333,7 +334,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: auto;
+    width: 2.2rem;          /* same width as .score-box so NA and scores line up */
+    box-sizing: border-box;
     padding: 1px 4px;
     border-radius: 3px;
     font-size: var(--font-size-xs);
@@ -583,6 +585,9 @@
         width: 2rem;
         margin: 0;
     }
+    .card-row .na-badge:empty::after {
+        width: 2rem;
+    }
 
     /* ── Row 2: protein + scores ───────────────── */
     .card-row-protein {
@@ -630,6 +635,34 @@
         display: inline-flex;
         align-items: center;
         gap: 3px;
+    }
+
+    /* Keep each score label with its pill (no line break inside "· CADD 6.4") */
+    [data-card-label] {
+        white-space: nowrap;
+    }
+
+    /* Protein name: own full-width line at the end, so isoform · AA change · consequence (+ scores) stay together */
+    .card-row-protein > .cell-protein-name,
+    .card-isoform-inline > .cell-protein-name {
+        order: 10;
+        flex-basis: 100%;
+    }
+    .card-row-protein > .cell-protein-name::before,
+    .card-isoform-inline > .cell-protein-name::before {
+        content: none;
+    }
+    .card-row-protein .protein-name-cell,
+    .card-isoform-inline .protein-name-cell {
+        max-width: 100%;
+    }
+    /* Muted + indented so each name reads as part of the isoform line above it */
+    .card-row-protein > .cell-protein-name,
+    .card-isoform-inline > .cell-protein-name {
+        font-size: var(--font-size-sm);
+        color: var(--color-text-secondary);
+        padding-left: 1.9rem;
+        margin-top: -2px;
     }
 
     /* ── Score labels (CADD / popEVE / AM) — include · separator ── */

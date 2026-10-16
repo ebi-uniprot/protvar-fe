@@ -57,7 +57,7 @@ export function getAlternateIsoFormRow(isoformKey: string, index: number, isofor
         <TextLink url={UNIPROT_ACCESSION_URL + isoform.accession} text={isoform.accession} />
       </Tool>
     </span>,
-    protein: <span key="protein" className="card-sep">{getProteinName(isoform.proteinName)}</span>,
+    protein: <span key="protein" className="card-sep cell-protein-name">{getProteinName(isoform.proteinName)}</span>,
     aaChange: <span key="aaChange" className="card-sep"><Tool tip={aaChangeTip(aaChange)}>{aaChangeFormatted}</Tool></span>,
     consequence: <span key="consequence" className="card-sep cell-consequence"><Tool tip={CONSEQUENCES.get(isoform.consequences!)} pos="up-right"><ConsequenceBadge consequence={isoform.consequences} /></Tool></span>,
     popeve: <span key="popeve" className="cell-popeve" />,
