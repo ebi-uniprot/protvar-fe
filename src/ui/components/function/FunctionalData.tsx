@@ -24,6 +24,7 @@ export interface FunctionalDataProps {
   ensg: string
   ensp: Array<TranslatedSequence>
   caddScore: string
+  aviScore?: string
   amScore: AmScore
 }
 
@@ -124,6 +125,7 @@ function FunctionalData(props: FunctionalDataProps) {
             ensg={ensg}
             ensp={ensp}
             caddScore={props.caddScore}
+            aviScore={props.aviScore}
             amScore={props.amScore}
           />
           <RegionColumn

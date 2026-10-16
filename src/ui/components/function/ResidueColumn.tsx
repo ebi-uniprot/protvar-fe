@@ -24,6 +24,7 @@ interface ResidueColumnProps {
   ensg: string;
   ensp: TranslatedSequence[];
   caddScore: string;
+  aviScore?: string;
   amScore: AmScore;
 }
 
@@ -68,6 +69,7 @@ export function ResidueColumn(props: ResidueColumnProps) {
           ensg={props.ensg}
           ensp={props.ensp}
           caddScore={props.caddScore}
+          aviScore={props.aviScore}
           amScore={props.amScore}
         />
       </div>

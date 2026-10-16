@@ -52,6 +52,7 @@ export interface Gene {
   altAllele: string;
   isoforms: Isoform[];
   caddScore: number;
+  aviScore?: number;
 }
 
 // TODO clean up unused commented properties below
