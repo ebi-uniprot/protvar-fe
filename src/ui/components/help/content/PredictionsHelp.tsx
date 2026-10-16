@@ -91,6 +91,7 @@ export const PredictionsHelp: React.FC = () => {
           <ul>
             <li><Link to={`${HELP}#predictions:am`}>AlphaMissense</Link></li>
             <li><Link to={`${HELP}#predictions:cadd`}>CADD</Link></li>
+            <li><Link to={`${HELP}#predictions:avi`}>AlphaGenome Variant Impact (AVI)</Link></li>
             <li><Link to={`${HELP}#predictions:esm`}>ESM-1b</Link></li>
             <li><Link to={`${HELP}#predictions:popeve`}>PopEVE</Link></li>
           </ul>
@@ -171,6 +172,16 @@ export const PredictionsHelp: React.FC = () => {
         scores, log10-scaled, with higher values representing a more deleterious variant consequence.
       </p>
       <LegendCategories attrs={CADD_SCORE_ATTR} stdColor={stdColor} />
+
+      <h3 id="predictions:avi">AlphaGenome Variant Impact (AVI)</h3>
+      <p>
+        AVI score from Google DeepMind's{' '}
+        <a href="https://deepmind.google.com/science/alphagenome/" target="_blank" rel="noreferrer">AlphaGenome</a> Atlas.
+        It combines AlphaGenome's predicted molecular effects (such as splicing, chromatin and expression) with
+        AlphaMissense into one genome-wide score. Like CADD it is PHRED-scaled against all possible SNVs: higher is
+        more likely deleterious, and 20 corresponds to roughly the top 1%. Shown as the score only, with no
+        categories, because no category thresholds are published.
+      </p>
 
       <h3 id="predictions:esm">ESM-1b</h3>
       <p>

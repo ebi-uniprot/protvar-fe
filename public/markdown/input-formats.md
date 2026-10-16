@@ -12,7 +12,7 @@ ProtVar supports the following variant formats:
 Genomic input should follow one of the specified formats.
 
 - **VCF format:** `CHR POS ID REF ALT (...)` (e.g., 1 12345 . A G)  
-  _The first five columns of the VCF input are mandatory. Any fields after this (specified as ...) are optional and ignored. The third column is the user-provided variant ID, which is not interpreted by ProtVar._
+  _The first five columns of the VCF input are mandatory. Any fields after this (specified as ...) are optional and ignored. The third column is the user-provided variant ID (or `.`), which is not interpreted by ProtVar. Columns can be separated by tabs or spaces, and lines starting with `#` (e.g. VCF headers) are ignored._
 
 - **gnomAD format:** `CHR-POS-REF-ALT` (e.g., 1-12345-A-G)
 
