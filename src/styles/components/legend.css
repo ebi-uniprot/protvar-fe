@@ -52,3 +52,37 @@
 .legend-feature-ranking-wrap {
     margin-top: 1rem;
 }
+
+/* Column chooser (drawer) */
+.column-chooser-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 12px 0;
+}
+.column-chooser-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+}
+.column-chooser-item:has(input:disabled) {
+    color: var(--color-text-muted);
+    cursor: default;
+}
+.column-chooser-note {
+    margin-top: 12px;
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+}
+
+/* Columns button, above the result table's top-right corner */
+.result-table-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 4px;
+}
+.columns-btn {
+    font-size: var(--font-size-sm);
+    padding: 2px 10px;
+}

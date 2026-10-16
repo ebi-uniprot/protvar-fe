@@ -1,5 +1,6 @@
 import DefaultPageLayout from "../../layout/DefaultPageLayout";
 import {LegendContent} from "../../modal/LegendContent";
+import ColumnChooser from "./ColumnChooser";
 import {useLocation, useNavigate, useParams, useSearchParams} from "react-router-dom";
 import ResultTable from "./ResultTable";
 import React, {useCallback, useContext, useEffect, useMemo, useRef, useState} from "react";
@@ -689,6 +690,14 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
     {!isQueryMode && data && (data.totalPages > 1 || data.page > 1 || !data.last) && (
       <div className="result-pre-table">
         <PaginationRow loading={loading} data={data}/>
+      </div>
+    )}
+    {data && (
+      <div className="result-table-actions">
+        <button className="btn btn-secondary columns-btn" title="Choose which columns to show"
+                onClick={() => appState.updateState("drawer", <ColumnChooser />)}>
+          <i className="bi bi-layout-three-columns" /> Columns
+        </button>
       </div>
     )}
     <div className="result-table-wrap">

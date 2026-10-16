@@ -23,6 +23,7 @@ import SemanticSearchPage from "./pages/semanticsearch/SemanticSearchPage";
 import {MarkdownProvider} from "../context/MarkdownContext";
 import '../styles/index.css';
 import { ToastContainer } from './toast/ToastContainer';
+import { ColumnId } from "../constants/resultColumns";
 
 const empty: ReactElement = <></>;
 
@@ -37,6 +38,7 @@ export interface AppState {
   //assembly: GenomeAssembly
   pageSize: number
   response: PagedMappingResponse | null
+  resultColumns?: ColumnId[]   // live column choice; falls back to prefs (useResultColumns)
   updateState: (key: string, value: any) => void
 }
 
@@ -51,6 +53,7 @@ export const initialState = {
   //assembly: 'auto',
   pageSize: DEFAULT_PAGE_SIZE, // needs to be localStore, not appState
   response: null,
+  resultColumns: undefined as ColumnId[] | undefined,
   updateState: (key: string, value: any) => {}
 }
 

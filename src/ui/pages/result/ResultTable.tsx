@@ -8,6 +8,7 @@ import { singleVariant } from "../../../services/ProtVarService";
 import { AppContext } from "../../App";
 import MsgRow from "./MsgRow";
 import { inGroup, ResultColumn, visibleColumns } from "../../../constants/resultColumns";
+import { useResultColumns } from "./useResultColumns";
 import Tool from "../../elements/Tooltip";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import {
@@ -40,6 +41,7 @@ function ResultTable(props: ResultTableProps) {
   // True while a single-variant fetch is in flight. Keyed by gvStr —
   // one request per genomic variant covers all genes at that position.
   const [loadingVariants, setLoadingVariants] = useState<Record<string, boolean>>({});
+  const { ids: columnIds } = useResultColumns();
 
   // Reset on-demand state when the underlying data changes (page change,
   // new query). Axios still has the responses cached behind the scenes, so
@@ -136,7 +138,7 @@ function ResultTable(props: ResultTableProps) {
 
   if (!props.data) return null;
 
-  const cols = visibleColumns();
+  const cols = visibleColumns(columnIds);
   const genomic = inGroup(cols, 'genomic');
   const protein = inGroup(cols, 'protein');
   const hints = (group: ResultColumn[]) => group.map(c => c.label);

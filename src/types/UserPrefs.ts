@@ -1,3 +1,5 @@
+import { ResultColumnsPref } from '../constants/resultColumns'
+
 export type Theme = 'light' | 'dark'
 export type FontSize = 'sm' | 'md' | 'lg'
 
@@ -6,6 +8,7 @@ export interface UserPrefs {
   activityRetentionDismissed: boolean
   theme: Theme
   fontSize: FontSize
+  resultColumns?: ResultColumnsPref   // undefined = default columns
   // future: defaultAssembly, defaultPageSize, etc.
 }
 

@@ -39,3 +39,23 @@ export const visibleColumns = (ids: ColumnId[] = DEFAULT_COLUMN_IDS): ResultColu
 
 export const inGroup = (cols: ResultColumn[], group: ColumnGroup) => cols.filter(c => c.group === group);
 
+// Saved in user prefs. `known` = ids that existed when the user last saved, so a column added later follows its
+// defaultOn instead of looking "deselected". Unknown (removed/renamed) ids are ignored.
+export interface ResultColumnsPref {
+  version: 1;
+  visible: ColumnId[];
+  known: ColumnId[];
+}
+
+export const columnIdsFromPref = (pref?: ResultColumnsPref): ColumnId[] => {
+  if (!pref) return DEFAULT_COLUMN_IDS;
+  return RESULT_COLUMNS
+    .filter(c => pref.known.includes(c.id) ? pref.visible.includes(c.id) : c.defaultOn)
+    .map(c => c.id);
+};
+
+export const columnIdsToPref = (ids: ColumnId[]): ResultColumnsPref => ({
+  version: 1,
+  visible: ids,
+  known: RESULT_COLUMNS.map(c => c.id),
+});
