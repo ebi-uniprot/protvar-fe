@@ -251,6 +251,7 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
       pocket: filters?.pocket,
       stability: backendStability.length > 0 ? backendStability : undefined,
       cadd: backendCadd.length > 0 ? backendCadd : undefined,
+      aviMin: filters?.aviMin,
       am: filters?.am ?? [],
       popeve: backendPopeve.length > 0 ? backendPopeve : undefined,
       esm1bMin: filters?.esmMin,

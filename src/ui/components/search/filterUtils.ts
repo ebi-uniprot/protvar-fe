@@ -61,6 +61,7 @@ export const extractFilters = (searchParams: URLSearchParams): SearchFilterParam
 
   // Consequence
   cadd: normalizeFilterValues(searchParams.getAll("cadd"), VALID_CADD_VALUES),
+  aviMin: parseNumberParam(searchParams, "aviMin"),
   am: normalizeFilterValues(searchParams.getAll("am"), VALID_AM_VALUES),
   popeve: normalizeFilterValues(searchParams.getAll("popeve"), VALID_POPEVE_VALUES),
   esmMin: parseNumberParam(searchParams, "esmMin"),
@@ -106,6 +107,7 @@ export const buildFilterParams = (filters: SearchFilterParams): URLSearchParams 
   const normalizedPopeve = normalizeFilterValues(filters.popeve, VALID_POPEVE_VALUES);
 
   normalizedCadd.forEach(val => params.append("cadd", val));
+  if (filters.aviMin !== undefined) params.set("aviMin", filters.aviMin.toString());
   normalizedAm.forEach(val => params.append("am", val));
   normalizedPopeve.forEach(val => params.append("popeve", val));
 
@@ -172,6 +174,8 @@ export const describeFilters = (f: SearchFilterParams): FilterChip[] => {
     chips.push({ id: 'conservation', label: `Conservation ${f.consMin ?? 0}–${f.consMax ?? 1}` });
   if (f.esmMin !== undefined || f.esmMax !== undefined)
     chips.push({ id: 'esm1b', label: `ESM-1b ${f.esmMin ?? -25}–${f.esmMax ?? 0}` });
+  if (f.aviMin !== undefined)
+    chips.push({ id: 'aviMin', label: `AVI ≥ ${f.aviMin}` });
 
   return chips;
 };
@@ -196,6 +200,7 @@ export const restoreChip = (
   if (id === 'variant') return { ...local, variant: applied.variant };
   if (id === 'conservation') return { ...local, consMin: applied.consMin, consMax: applied.consMax };
   if (id === 'esm1b') return { ...local, esmMin: applied.esmMin, esmMax: applied.esmMax };
+  if (id === 'aviMin') return { ...local, aviMin: applied.aviMin };
   if (id.includes(':')) {
     const [key, val] = id.split(':');
     const cur = (local as unknown as Record<string, string[]>)[key] ?? [];

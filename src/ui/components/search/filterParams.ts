@@ -29,6 +29,7 @@ export const FILTER_PARAM_KEYS = [
 
   // Consequence
   'cadd',
+  'aviMin',
   'am',
   'popeve',
   'esmMin',
