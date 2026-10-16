@@ -7,6 +7,7 @@ import { getNewPrimaryRow, AnnotationPanels, ToggleIsoformGroupFn } from "./Prim
 import { singleVariant } from "../../../services/ProtVarService";
 import { AppContext } from "../../App";
 import MsgRow from "./MsgRow";
+import { inGroup, ResultColumn, visibleColumns } from "../../../constants/resultColumns";
 import Tool from "../../elements/Tooltip";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import {
@@ -135,6 +136,11 @@ function ResultTable(props: ResultTableProps) {
 
   if (!props.data) return null;
 
+  const cols = visibleColumns();
+  const genomic = inGroup(cols, 'genomic');
+  const protein = inGroup(cols, 'protein');
+  const hints = (group: ResultColumn[]) => group.map(c => c.label);
+
   const rows = getTableRows(
     props.data,
     isoformGroupExpanded,
@@ -145,20 +151,24 @@ function ResultTable(props: ResultTableProps) {
     !!props.lazyIsoforms,
     fetchedIsoforms,
     loadingVariants,
+    cols,
   );
 
   return (
-    <div className="result-table">
+    <div className="result-table" style={{ gridTemplateColumns: `repeat(${cols.length}, auto)` }}>
       {/* ── Sticky two-row header ── */}
       <div className="result-header">
         <div className="result-group-header">
-          <Tool el="span" tip="Gene- and nucleotide-level columns: variant ID, genomic position, gene, mRNA codon, CADD">
-            GENOMIC <span className="col-hints">· ID · position · gene · mRNA codon · CADD</span>
+          <Tool el="span" style={{ gridColumn: `span ${genomic.length}` }}
+                tip={`Gene- and nucleotide-level columns: ${hints(genomic).join(', ')}`}>
+            GENOMIC <span className="col-hints">{'· ' + hints(genomic).join(' · ')}</span>
           </Tool>
-          <Tool el="span" tip="Amino-acid / protein-level columns: isoform, protein name, AA change, consequence, popEVE, AlphaMissense">
-            PROTEIN <span className="col-hints">· isoform · name · AA change · consequence · popEVE · AlphaMissense</span>
+          <Tool el="span" style={{ gridColumn: `span ${protein.length}` }}
+                tip={`Amino-acid / protein-level columns: ${hints(protein).join(', ')}`}>
+            PROTEIN <span className="col-hints">{'· ' + hints(protein).join(' · ')}</span>
           </Tool>
-          <Tool el="span" tip="Functional, population and structural annotations — click an icon to expand" pos="up-right">
+          <Tool el="span" style={{ gridColumn: `span ${inGroup(cols, 'annotations').length}` }}
+                tip="Functional, population and structural annotations — click an icon to expand" pos="up-right">
             ANNOTATIONS
           </Tool>
         </div>
@@ -184,6 +194,7 @@ const getTableRows = (
   lazyIsoforms: boolean,
   fetchedIsoforms: Record<string, Isoform[]>,
   loadingVariants: Record<string, boolean>,
+  cols: ResultColumn[],
 ) => {
   const rows: Array<React.JSX.Element> = [];
 
@@ -245,24 +256,25 @@ const getTableRows = (
               stdColor,
               isoformGroupKey === isoformGroupExpanded ? effectiveIsoforms.slice(1) : [],
               isLoadingIsoforms,
+              cols,
             ));
           } else if (isoformGroupKey === isoformGroupExpanded) {
             altRow++;
-            geneRowEls.push(getAlternateIsoFormRow(`row-${primaryRow}-${altRow}`, inputIndex, isoform));
+            geneRowEls.push(getAlternateIsoFormRow(`row-${primaryRow}-${altRow}`, inputIndex, isoform, cols));
           }
         });
 
         // Lazy mode + expanded + nothing more to show: render a hint so the
         // user understands the chevron resolved to "no other isoforms"
-        // rather than appearing to do nothing. The hint is positioned at
-        // the isoform column (col 6+) by the .no-alts-hint CSS rule,
-        // aligning with where alt isoforms would normally appear.
+        // rather than appearing to do nothing. The hint starts at the
+        // isoform column (first protein column), aligning with where alt
+        // isoforms would normally appear.
         if (primaryKey && lazyIsoforms && !isLoadingIsoforms
             && isoformGroupKey === isoformGroupExpanded
             && effectiveIsoforms.length === 1) {
           geneRowEls.push(
             <div key={`row-${primaryRow}-no-alts`} className="result-row result-row-isoform result-row-no-alts">
-              <span className="no-alts-hint">No other isoforms.</span>
+              <span className="no-alts-hint" style={{ gridColumn: `${inGroup(cols, 'genomic').length + 1} / -1` }}>No other isoforms.</span>
             </div>
           );
         }

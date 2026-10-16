@@ -2,15 +2,13 @@
  * result-grid.css
  * CSS Grid layout for the main results table.
  *
- * Column order (12 cols):
- *   Genomic: user-id | genomic-pos | gene | codon | cadd     (cols 1–5)
- *   Protein: isoform | protein-name | aa-change | consequence | popeve | alphamiss  (cols 6–11)
- *   Annotations: details                                     (col 12)
+ * Columns come from src/constants/resultColumns.ts: ResultTable sets grid-template-columns and the
+ * group-header spans inline from the visible columns.
  */
 
 /* ============================================
    RESULT TABLE — SINGLE GRID CONTAINER
-   .result-table owns the 12-column grid.
+   .result-table owns the grid (tracks set inline).
    Every row type uses grid-column: 1/-1 and
    grid-template-columns: subgrid so all cells
    participate in the same track-sizing algorithm.
@@ -21,19 +19,7 @@
 .result-table {
     animation: resultFadeIn 0.18s ease;
     display: grid;
-    grid-template-columns:
-        auto                  /* 1  id             */
-        auto                  /* 2  genomic-pos    */
-        auto                  /* 3  gene           */
-        auto                  /* 4  codon          */
-        auto                  /* 5  cadd           */
-        auto                  /* 6  isoform        */
-        auto                  /* 7  protein-name — sizes to content, capped via .protein-name-cell max-width */
-        auto                  /* 8  aa-change      */
-        auto                  /* 9  consequence    */
-        auto                  /* 10 popeve         */
-        auto                  /* 11 alphamiss      */
-        auto;                 /* 12 details        */
+    /* grid-template-columns: set inline, one auto track per visible column */
     column-gap: 6px;
     font-size: var(--font-size-md);
     overflow-x: auto;
@@ -44,7 +30,7 @@
 }
 
 /*
- * All subgrid row containers: each spans the full 11-column table
+ * All subgrid row containers: each spans the full table
  * grid and uses subgrid so their cells feed into the parent's
  * track-sizing algorithm — the same track widths everywhere.
  */
@@ -121,10 +107,7 @@
     text-transform: none;
 }
 
-/* Group spans */
-.result-group-header > :nth-child(1) { grid-column: 1 / 6; }    /* Genomic: user-id…cadd */
-.result-group-header > :nth-child(2) { grid-column: 6 / 12; }   /* Protein: isoform…alphamiss */
-.result-group-header > :nth-child(3) { grid-column: 12 / 13; }  /* Annotations: details */
+/* Group spans: set inline from the visible columns */
 
 /* Dividers between groups */
 .result-group-header > :nth-child(2) {
@@ -436,11 +419,10 @@
 
 /* "No other isoforms" hint shown in filter-only browse when the user
    expands the chevron on a row whose lazy fetch returned no alts.
-   Positioned at the isoform column (col 6+), matching the indent of
+   Starts at the isoform column (set inline), matching the indent of
    .result-row-isoform .isoform-cell so it aligns visually with where
    alt isoforms would render. */
 .result-row-no-alts .no-alts-hint {
-    grid-column: 6 / -1;
     padding: 6px 8px 6px 24px;  /* matches isoform-cell padding-left: 24px */
     font-size: var(--font-size-xs);
     color: var(--color-text-muted);

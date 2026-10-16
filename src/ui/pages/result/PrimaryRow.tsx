@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import React, { lazy, Suspense } from "react";
 import { StringVoidFun } from "../../../constants/CommonTypes";
 import {
   CADD_INFO_URL, AM_INFO_URL,
@@ -23,6 +23,7 @@ import { ReactComponent as ChevronUpIcon } from "../../../images/chevron-up.svg"
 import { EmptyElement } from "../../../constants/ConstElement";
 import { aaChangeTip, CanonicalIcon, ConsequenceBadge, getProteinName, getConsequenceFullName } from "./AlternateIsoFormRow";
 import { Gene, Isoform, VariantInput, GenomicVariant } from "../../../types/MappingResponse";
+import { ColumnGroup, ColumnId, inGroup, ResultColumn, visibleColumns } from "../../../constants/resultColumns";
 
 const StructureData   = lazy(() => import(/* webpackChunkName: "StructureData"   */ "../../components/structure/./StructureData"));
 const PopulationData  = lazy(() => import(/* webpackChunkName: "PopulationData"  */ "../../components/population/./PopulationData"));
@@ -100,6 +101,7 @@ export const getNewPrimaryRow = (
   stdColor: boolean,
   altIsoforms: Isoform[] = [],
   isLoadingIsoforms: boolean = false,
+  cols: ResultColumn[] = visibleColumns(),
 ) => {
   const caddAttr = caddScoreAttr(gene.caddScore?.toString());
   const amAttr   = amScoreAttr(isoform.amScore?.amClass);
@@ -128,42 +130,37 @@ export const getNewPrimaryRow = (
   const idValue = getIdValue(input);
   const rowClass = `result-row ${index % 2 === 0 ? 'row-even' : 'row-odd'}`;
 
-  return (
-    <div key={isoformKey} className={rowClass}>
-
-      {/* Card row 1 — genomic (cols 1–4: ID, genomic-pos, codon, CADD) */}
-      <div className="card-row card-row-genomic">
-        {/* 1: User ID */}
-        <span className={isIdInput ? 'cell-id-input' : ''}>
+  const cells: Record<ColumnId, React.ReactNode> = {
+        // User ID
+        id: <span key="id" className={isIdInput ? 'cell-id-input' : ''}>
           {idValue && (
             <Tool tip="Variant ID provided by the user">
               <TextLink url={getIdUrl(idValue)} text={idValue} />
             </Tool>
           )}
-        </span>
+        </span>,
 
-        {/* 2: Genomic position (chr-pos-ref-alt) */}
-        <span className={`cell-genomic${isGenomicInput ? ' cell-genomic-input' : ''}`}>
+        // Genomic position (chr-pos-ref-alt)
+        position: <span key="position" className={`cell-genomic${isGenomicInput ? ' cell-genomic-input' : ''}`}>
           <Tool tip={`Genomic coordinate (chr-pos-ref-alt) for input "${input.inputStr}" — click to view the region in Ensembl`}>
             {isGenomicInput && 'isLiftedFrom37' in input && input.isLiftedFrom37 && (
               <span className="h37">37&rarr;38</span>
             )}
             <TextLink url={getEnsemblViewUrl(genomicVariant.chromosome, genomicVariant.position)} text={genomicPos} />
           </Tool>
-        </span>
+        </span>,
 
-        {/* 3: Gene (linked to Ensembl when ensg available) */}
-        <span className="card-sep cell-gene">
+        // Gene (linked to Ensembl when ensg available)
+        gene: <span key="gene" className="card-sep cell-gene">
           {gene.geneName && (
             gene.ensg
               ? <Tool tip="Gene — click to view in Ensembl"><TextLink url={ENSEMBL_GENE_URL + gene.ensg} text={gene.geneName} /></Tool>
               : <span>{gene.geneName}</span>
           )}
-        </span>
+        </span>,
 
-        {/* 4: codon (mRNA / coding strand — labelled "mRNA codon" in the group
-             header) + strand. card-sep adds dot separator before it in mobile. */}
-        <span className="card-sep">
+        // codon (mRNA / coding strand) + strand. card-sep adds dot separator before it in mobile.
+        codon: <span key="codon" className="card-sep">
           {codon && (
             <div className="flex">
               {codon}&nbsp;
@@ -172,10 +169,10 @@ export const getNewPrimaryRow = (
               </Tool>
             </div>
           )}
-        </span>
+        </span>,
 
-        {/* 5: CADD v1.7 — empty span when no score lets the .na-badge:empty::after rule render the NA pill */}
-        <span data-card-label="CADD" className="cell-cadd na-badge">
+        // CADD v1.7 — empty span when no score lets the .na-badge:empty::after rule render the NA pill
+        cadd: <span key="cadd" data-card-label="CADD" className="cell-cadd na-badge">
           {caddAttr && (
             <Tool
               className="score-box"
@@ -187,13 +184,10 @@ export const getNewPrimaryRow = (
               </a>
             </Tool>
           )}
-        </span>
-      </div>
+        </span>,
 
-      {/* Card row 2 — protein + scores (cols 5–10: isoform, name, aa-change, conseq, popEVE, AM) */}
-      <div className="card-row card-row-protein">
-        {/* 6: Isoform — toggle chevron + canonical icon + accession */}
-        <span className={`isoform-cell ${isProteinInput ? 'cell-protein-input' : ''}`}>
+        // Isoform — toggle chevron + canonical icon + accession
+        isoform: <span key="isoform" className={`isoform-cell ${isProteinInput ? 'cell-protein-input' : ''}`}>
           {hasAltIsoForm && (
             <Tool
               el="button"
@@ -215,25 +209,25 @@ export const getNewPrimaryRow = (
           <Tool tip="Click to see the UniProt page for this accession">
             <TextLink url={UNIPROT_ACCESSION_URL + isoform.accession} text={isoform.accession} />
           </Tool>
-        </span>
+        </span>,
 
-        {/* 7: Protein name */}
-        <span className="card-sep">
+        // Protein name
+        protein: <span key="protein" className="card-sep">
           <Tool tip={isoform.proteinName}>{getProteinName(isoform.proteinName)}</Tool>
-        </span>
+        </span>,
 
-        {/* 8: AA Change — card-sep adds dot separator before it in mobile */}
-        <span className={`card-sep cell-aa-change${isProteinInput ? ' cell-protein-input' : ''}`}>
+        // AA Change — card-sep adds dot separator before it in mobile
+        aaChange: <span key="aaChange" className={`card-sep cell-aa-change${isProteinInput ? ' cell-protein-input' : ''}`}>
           <Tool tip={aaChangeTip(aaChange)}>{aaChangeFormatted}</Tool>
-        </span>
+        </span>,
 
-        {/* 9: Consequence(s) */}
-        <span className="card-sep cell-consequence">
+        // Consequence(s)
+        consequence: <span key="consequence" className="card-sep cell-consequence">
           <Tool tip={getConsequenceFullName(isoform.consequences)} pos="up-right"><ConsequenceBadge consequence={isoform.consequences} /></Tool>
-        </span>
+        </span>,
 
-        {/* 10: popEVE */}
-        <span className="cell-popeve na-badge" data-card-label="popEVE">
+        // popEVE
+        popeve: <span key="popeve" className="cell-popeve na-badge" data-card-label="popEVE">
           {isoform.popEveScore && (
             <Tool
               className="score-box"
@@ -247,10 +241,10 @@ export const getNewPrimaryRow = (
               {formatPopEveScore(isoform.popEveScore)}
             </Tool>
           )}
-        </span>
+        </span>,
 
-        {/* 11: AlphaMissense — same NA pattern as CADD */}
-        <span data-card-label="AM" className="cell-am na-badge">
+        // AlphaMissense — same NA pattern as CADD
+        am: <span key="am" data-card-label="AM" className="cell-am na-badge">
           {amAttr && (
             <Tool
               className="score-box"
@@ -262,7 +256,28 @@ export const getNewPrimaryRow = (
               </a>
             </Tool>
           )}
-        </span>
+        </span>,
+
+        // Annotation buttons
+        details: <span key="details" className="details-cell">
+          <AnnotationButton rowKey={functionalKey}  label="FUN" canonical={isoform.canonical} annotationExpanded={annotationExpanded} toggleAnnotation={toggleAnnotation} />
+          <AnnotationButton rowKey={populationKey}  label="POP" canonical={isoform.canonical} annotationExpanded={annotationExpanded} toggleAnnotation={toggleAnnotation} />
+          <AnnotationButton rowKey={structuralKey}  label="STR" canonical={isoform.canonical} annotationExpanded={annotationExpanded} toggleAnnotation={toggleAnnotation} />
+        </span>,
+  };
+  const render = (group: ColumnGroup) => inGroup(cols, group).map(c => cells[c.id]);
+
+  return (
+    <div key={isoformKey} className={rowClass}>
+
+      {/* Card row 1 — genomic columns */}
+      <div className="card-row card-row-genomic">
+        {render('genomic')}
+      </div>
+
+      {/* Card row 2 — protein + scores */}
+      <div className="card-row card-row-protein">
+        {render('protein')}
       </div>
 
       {/* Mobile-only: alt isoform rows inline between protein and buttons.
@@ -291,14 +306,9 @@ export const getNewPrimaryRow = (
         );
       })}
 
-      {/* Card row 3 — annotation buttons (col 11) */}
+      {/* Card row 3 — annotation buttons */}
       <div className="card-row card-row-details">
-        {/* 12: Annotation buttons */}
-        <span className="details-cell">
-          <AnnotationButton rowKey={functionalKey}  label="FUN" canonical={isoform.canonical} annotationExpanded={annotationExpanded} toggleAnnotation={toggleAnnotation} />
-          <AnnotationButton rowKey={populationKey}  label="POP" canonical={isoform.canonical} annotationExpanded={annotationExpanded} toggleAnnotation={toggleAnnotation} />
-          <AnnotationButton rowKey={structuralKey}  label="STR" canonical={isoform.canonical} annotationExpanded={annotationExpanded} toggleAnnotation={toggleAnnotation} />
-        </span>
+        {render('annotations')}
       </div>
 
     </div>
