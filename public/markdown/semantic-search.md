@@ -51,10 +51,16 @@ The model selector in the toolbar chooses which embedding model encodes your que
 
 | Model | Best for |
 |-------|----------|
-| **BioBERT** *(default)* | Disease and function queries — a biomedical model, and the most consistent all-rounder |
+| **Qwen3** *(default)* | The best all-rounder for both protein function and variant searches — especially short or broad terms (*"cancer"*, *"DNA repair"*) |
+| **EmbeddingGemma** | Longer descriptive queries (*"calcium channel involved in cardiac arrhythmia"*) — close to Qwen3 overall |
 | **BGE** | Loosely-phrased or conceptual queries — strong at matching meaning over exact wording |
+| **MiniLM** | Fast and lightweight — handy for quick exploration with short queries |
+| **BioBERT** | Disease and function queries — a biomedical model |
 | **BioLORD** | Phenotype and clinical-feature descriptions (HPO-style terms) |
 | **MPNet** | General question-to-document retrieval — broader, but weaker on biomedical specifics |
-| **MiniLM** | Fast and lightweight — handy for quick exploration; lowest quality |
 
-As a rule of thumb: a biomedical model (BioBERT, BioLORD) understands disease and phenotype language more precisely; a general model (BGE, MPNet) is broader but less attuned to clinical terms. If you are unsure, leave the default (BioBERT) selected.
+If you are unsure, leave the default (Qwen3) selected; if a query returns little, try EmbeddingGemma or BGE.
+
+### How we chose the default
+
+We compared the models on 71 queries: real searches made on ProtVar, curated disease, phenotype and function queries, and the examples on this site. For each query, the top 10 protein function and variant results of every model were pooled and graded *relevant*, *partly relevant* or *not relevant* by an independent language model (not one of the models compared), then scored with nDCG@10 (1.0 = the best possible ranking). Qwen3 scored highest overall (0.72 function, 0.70 variants), followed by EmbeddingGemma (0.72, 0.66); BioBERT, the previous default, scored 0.57 and 0.51. The grading is automated rather than expert-curated, so treat the scores as a relative comparison between models.
