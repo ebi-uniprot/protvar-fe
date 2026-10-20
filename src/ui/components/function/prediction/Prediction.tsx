@@ -107,6 +107,13 @@ export const Prediction = (props: PredictionProps) => {
         isHighlighted={highlightedPrediction === 'cadd'}
       >
         <CaddScorePred cadd={props.caddScore} stdColor={state.stdColor} />
+      </PredictionWrapper>
+
+      {/* AVI - AlphaGenome Variant Impact, genomic like CADD */}
+      <PredictionWrapper
+        predictionType="avi"
+        isHighlighted={highlightedPrediction === 'avi'}
+      >
         <AviScorePred avi={props.aviScore} />
       </PredictionWrapper>
 
