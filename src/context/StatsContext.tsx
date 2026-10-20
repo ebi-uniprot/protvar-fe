@@ -1,32 +1,31 @@
-// src/context/StatsContext.tsx
-import React, { createContext, useContext, useState, useEffect } from "react";
-import { fetchLatestStats } from "../services/StatsService";
-import {Stats} from "../types/Stats";
+import React, {createContext, useContext, useEffect, useState} from "react";
+import {fetchStats} from "../services/StatsService";
+import {ReleaseStat} from "../types/Stats";
 
 interface StatsContextType {
-  statsMap: Map<string, Stats>
-  // previousStatsMap: Map<string, Stats>
-  getStat: (key: string) => Stats | undefined
+  stats: ReleaseStat[]                          // in display order
+  getStat: (key: string) => ReleaseStat | undefined
+  error: boolean
 }
 
 const StatsContext = createContext<StatsContextType | undefined>(undefined);
 
-export const StatsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [statsMap, setStatsMap] = useState<Map<string, Stats>>(new Map());
-  //const [previousStatsMap, setPreviousStatsMap] = useState<Map<string, Stats>>(new Map());
+export const StatsProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
+  const [stats, setStats] = useState<ReleaseStat[]>([]);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    fetchLatestStats()
-      .then((stats) => {
-        // Convert the array of stats to a map using keyName as the key
-        const map = new Map(stats.map((stat) => [stat.key, stat]));
-        setStatsMap(map);
-      })
-      .catch(console.error);
-  }, []); // Runs only once when the component mounts
+    fetchStats()
+      .then(setStats)
+      .catch((e) => {
+        console.error(e);
+        setError(true);
+      });
+  }, []);
 
-  const getStat = (key: string) => statsMap.get(key)
-  return <StatsContext.Provider value={{ statsMap, getStat }}>{children}</StatsContext.Provider>;
+  const byKey = new Map(stats.map(s => [s.key, s]));
+  const getStat = (key: string) => byKey.get(key);
+  return <StatsContext.Provider value={{stats, getStat, error}}>{children}</StatsContext.Provider>;
 };
 
 export const useStats = (): StatsContextType => {

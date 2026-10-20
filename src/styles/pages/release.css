@@ -379,19 +379,6 @@
     margin-top: 2px;
 }
 
-.stat-card-change {
-    display: inline-flex;
-    align-items: center;
-    gap: 3px;
-    margin-top: 8px;
-    padding: 1px 8px;
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-semibold);
-    color: #166534;
-    background: #dcfce7;
-    border-radius: var(--radius-full);
-}
-
 /* ── Stats table ── */
 .stats-table {
     width: 100%;
@@ -429,6 +416,21 @@
 }
 
 .stats-container {}
+
+/* Share and sub-figures under a number (e.g. "93% of …", "19,997 proteins") */
+.stats-sub {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-tertiary);
+}
+
+.stats-empty {
+    color: var(--color-text-secondary);
+}
+
+/* Status page: figures counted from a table the API does not serve */
+.stats-out-of-sync {
+    color: var(--color-warning, #b26a00);
+}
 
 .section {
     margin-bottom: 2rem;

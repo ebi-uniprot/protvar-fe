@@ -5,6 +5,8 @@ import {useStatus} from '../../context/StatusContext'
 import {OverallState, ServiceState} from '../../types/StatusResponse'
 import {getRelativeTime, parseDateString} from '../../utills/DateUtil'
 import {modelRank} from '../../constants/semanticSearch'
+import {useStats} from '../../context/StatsContext'
+import {formatNumber} from './release/Statistics'
 
 const POLL_INTERVAL_MS = 30_000
 const MAX_POLL_DURATION_MS = 15 * 60 * 1000   // give up after 15 min of an idle/forgotten tab
@@ -121,7 +123,43 @@ function StatusPageContent() {
         <ServiceCard name="MCP server" state={status.mcp} hint="protvar-mcp" />
         <SemanticSearchCard embeddings={embeddings} />
       </div>
+
+      <ReleaseStatsTable />
     </div>
+  )
+}
+
+// Every release stats figure the API serves, incl. internal ones, with where it was counted from
+function ReleaseStatsTable() {
+  const {stats} = useStats()
+  if (stats.length === 0) return null
+  const outOfSync = stats.filter(s => s.inSync === false).length
+  return (
+    <>
+      <h6 className="status-section-header">Release statistics</h6>
+      {outOfSync > 0 && <p className="stats-out-of-sync">
+        <i className="bi bi-exclamation-triangle-fill" /> {outOfSync} figure(s) counted from a table the API does not serve.
+      </p>}
+      <table className="stats-table">
+        <thead>
+        <tr><th>Key</th><th>Value</th><th>Source table</th><th>Version</th><th>Recorded</th><th>Served</th></tr>
+        </thead>
+        <tbody>
+        {[...stats].sort((a, b) => a.key.localeCompare(b.key)).map(s => (
+          <tr key={s.key}>
+            <td title={s.description}>{s.key}</td>
+            <td>{formatNumber(s.value)}</td>
+            <td>{s.sourceTable ?? '–'}</td>
+            <td>{s.version ?? '–'}</td>
+            <td>{new Date(s.recorded).toLocaleDateString()}</td>
+            <td className={s.inSync === false ? 'stats-out-of-sync' : undefined}>
+              {s.inSync === undefined || s.inSync === null ? '–' : s.inSync ? 'yes' : 'no'}
+            </td>
+          </tr>
+        ))}
+        </tbody>
+      </table>
+    </>
   )
 }
 
