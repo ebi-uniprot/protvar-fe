@@ -2,11 +2,11 @@ export const PDB_URL_INTERFACE_BY_ID = "https://www.ebi.ac.uk/pdbe/entry/pdb/";
 export const PDB_URL_INTERFACE_BY_PROTEIN = "https://www.ebi.ac.uk/pdbe/pdbe-kb/proteins/";
 export const ALPHAFOLD_URL = "https://alphafold.ebi.ac.uk/api/prediction/";
 export const ALPHAFOLD_URL_INTERFACE_BY_PROTEIN = "https://alphafold.ebi.ac.uk/entry/";
-export const ENSEMBL_GENE_RUL = "https://www.ensembl.org/Homo_sapiens/Gene/Summary?db=core;g="
-export const ENSEMBL_GENE_URL = "https://www.ensembl.org/Homo_sapiens/Gene/Summary?g="
-export const ENSEMBL_CHRM_URL = "https://www.ensembl.org/Homo_sapiens/Location/Chromosome?r="
-export const ENSEMBL_VIEW_URL = "https://www.ensembl.org/Homo_sapiens/Location/View?r="
-export const ENSEMBL_ASML_URL = "https://www.ensembl.org/Homo_sapiens/Tools/AssemblyConverter?db=core"
+// Ensembl stable-ID resolver: works for ENSG/ENST/ENSP (pass unversioned IDs)
+export const ENSEMBL_ID_URL = "https://www.ensembl.org/id/"
+// GRCh38 genome browser; focus is required, location alone renders nothing
+export const ENSEMBL_BROWSER_URL = "https://www.ensembl.org/genome-browser/GCA_000001405.29"
+export const ENSEMBL_VEP_URL = "https://www.ensembl.org/tools/vep"
 export const RHEA_URL = "https://www.rhea-db.org/rhea/";
 export const INTACT_URL = "https://www.ebi.ac.uk/intact/search?query="
 export const UNIPROT_ACCESSION_URL = "https://www.uniprot.org/uniprot/"
