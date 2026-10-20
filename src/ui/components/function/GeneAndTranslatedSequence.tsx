@@ -1,7 +1,7 @@
-import { ENSEMBL_GENE_RUL } from "../../../constants/ExternalUrls";
 import {TranslatedSequence} from "../../../types/MappingResponse";
 import React from "react";
 import {ExtLink} from "../common/Link";
+import {getEnsemblIdUrl} from "../../pages/result/PrimaryRow";
 
 interface GeneAndTranslatedSequenceProps {
   ensg: string;
@@ -10,7 +10,7 @@ interface GeneAndTranslatedSequenceProps {
 
 function GeneAndTranslatedSequence(props: GeneAndTranslatedSequenceProps) {
   const {ensg, ensp} = props;
-  const ensgUrl = ENSEMBL_GENE_RUL + ensg;
+  const ensgUrl = getEnsemblIdUrl(ensg);
 
   return (
     <div className="gene-sequence-panel">
@@ -26,11 +26,14 @@ function GeneAndTranslatedSequence(props: GeneAndTranslatedSequenceProps) {
           <div className="section-title">Canonical Isoform Transcripts</div>
           <div className="transcript-list">
             {ensp.map((ensps, index) => {
-              const enspsUrl = ENSEMBL_GENE_RUL + ensps.ensp;
               return (
                 <div key={index} className="transcript-item">
-                  <ExtLink url={enspsUrl} text={ensps.ensp} />
-                  <span className="transcript-id">{ensps.ensts}</span>
+                  <ExtLink url={getEnsemblIdUrl(ensps.ensp)} text={ensps.ensp} />
+                  <span className="transcript-id">
+                    {ensps.ensts.split(',').map((enst, i) => (
+                      <span key={enst}>{i > 0 && ','}<ExtLink url={getEnsemblIdUrl(enst)} text={enst} /></span>
+                    ))}
+                  </span>
                 </div>
               );
             })}
