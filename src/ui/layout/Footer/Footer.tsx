@@ -12,6 +12,7 @@ import vepGif from '../../../images/vep.jpeg';
 import pdbeLogo from '../../../images/pdbe-logo.png';
 import decipherLogo from '../../../images/decipher.png';
 import {ExtLink} from "../../components/common/Link";
+import {ENSEMBL_VEP_URL} from "../../../constants/ExternalUrls";
 
 const Footer: React.FC = () => {
   return (
@@ -94,7 +95,7 @@ const Footer: React.FC = () => {
             <a href="https://www.ensembl.org/" target="_blank" rel="noreferrer" title="Ensembl">
               <img src={ensemblLogo} loading="lazy" alt="Ensembl" className="collaborator-img" />
             </a>
-            <a href="https://www.ensembl.org/info/docs/tools/vep/" target="_blank" rel="noreferrer" title="Ensembl VEP">
+            <a href={ENSEMBL_VEP_URL} target="_blank" rel="noreferrer" title="Ensembl VEP">
               <img src={vepGif} loading="lazy" alt="Ensembl VEP" className="collaborator-img" />
             </a>
             <a href="https://www.ebi.ac.uk/pdbe/" target="_blank" rel="noreferrer" title="PDBe">

@@ -4,9 +4,8 @@ import {
   CADD_INFO_URL, AM_INFO_URL,
   CLINVAR_RCV_URL, CLINVAR_VCV_URL, COSMIC_URL,
   DBSNP_URL,
-  ENSEMBL_CHRM_URL,
-  ENSEMBL_GENE_URL,
-  ENSEMBL_VIEW_URL,
+  ENSEMBL_BROWSER_URL,
+  ENSEMBL_ID_URL,
   UNIPROT_ACCESSION_URL
 } from "../../../constants/ExternalUrls";
 import Tool from "../../elements/Tooltip";
@@ -43,8 +42,11 @@ export const getIdUrl = (id: string) => {
 
 export const aaChangeStr = (ref: string, alt: string) => `${ref}/${alt}`;
 
-export const getEnsemblChrUrl  = (chr: string) => ENSEMBL_CHRM_URL + chr;
-export const getEnsemblViewUrl = (chr: string, pos: number) => ENSEMBL_VIEW_URL + chr + ':' + pos + '-' + pos;
+export const getEnsemblIdUrl = (id: string) => ENSEMBL_ID_URL + id.split('.')[0];
+export const getEnsemblViewUrl = (chr: string, pos: number) => {
+  const loc = `${chr}:${pos}-${pos}`;
+  return `${ENSEMBL_BROWSER_URL}?focus=location:${loc}&location=${loc}`;
+};
 
 function AnnotationButton(props: {
   rowKey: string;
@@ -154,7 +156,7 @@ export const getNewPrimaryRow = (
         gene: <span key="gene" className="card-sep cell-gene">
           {gene.geneName && (
             gene.ensg
-              ? <Tool tip="Gene — click to view in Ensembl"><TextLink url={ENSEMBL_GENE_URL + gene.ensg} text={gene.geneName} /></Tool>
+              ? <Tool tip="Gene — click to view in Ensembl"><TextLink url={getEnsemblIdUrl(gene.ensg)} text={gene.geneName} /></Tool>
               : <span>{gene.geneName}</span>
           )}
         </span>,
