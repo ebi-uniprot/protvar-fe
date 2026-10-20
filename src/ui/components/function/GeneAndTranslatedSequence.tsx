@@ -1,7 +1,7 @@
 import {TranslatedSequence} from "../../../types/MappingResponse";
 import React from "react";
 import {ExtLink} from "../common/Link";
-import {getEnsemblIdUrl} from "../../pages/result/PrimaryRow";
+import {getEnsemblIdUrl} from "../../../constants/ExternalUrls";
 
 interface GeneAndTranslatedSequenceProps {
   ensg: string;

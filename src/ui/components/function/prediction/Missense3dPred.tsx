@@ -6,8 +6,7 @@ import Spaces from "../../../elements/Spaces";
 import {STD_BENIGN_COLOR, STD_PATHOGENIC_COLOR} from "./PredictionConstants";
 import {PredictionCategory} from "./Prediction";
 import {ExtLink} from "../../common/Link";
-
-const M3D_BASE_URL = 'https://missense3d.bc.ic.ac.uk/~missense3d2/results-details.html';
+import {MISSENSE3D_URL} from "../../../../constants/ExternalUrls";
 
 // Legend bands for Missense3D — binary class, matching the prediction values
 // returned by the API ("damaging" / "non-damaging"). No separate non-std colour.
@@ -38,7 +37,7 @@ export const Missense3dPred = ({functionalData, refAA, variantAA}: Missense3dPre
   const maxLength = 30;
   const isTruncated = formattedText.length > maxLength;
   const displayText = isTruncated ? `${formattedText.slice(0, maxLength)}...` : formattedText;
-  const m3dUrl = `${M3D_BASE_URL}?uniprot_id=${functionalData.accession}&var_id=${variantId}`;
+  const m3dUrl = `${MISSENSE3D_URL}?uniprot_id=${functionalData.accession}&var_id=${variantId}`;
 
   return (
     <div className="prediction-row">

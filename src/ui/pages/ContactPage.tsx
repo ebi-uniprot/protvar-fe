@@ -1,6 +1,7 @@
 import DefaultPageLayout from "../layout/DefaultPageLayout";
 import { useEffect } from "react";
 import { TITLE } from "../../constants/const";
+import {CONTACT_FORM_URL} from "../../constants/ExternalUrls";
 
 function ContactPageContent() {
   useEffect(() => {
@@ -23,7 +24,7 @@ function ContactPageContent() {
 
       <div className="contact-form-wrapper">
         <iframe
-          src="https://docs.google.com/forms/d/e/1FAIpQLSfVhyTjeH5NG0QnYU0LozFR1tlkiNvl8nN5g5pIrcL76yO4YA/viewform?embedded=true"
+          src={CONTACT_FORM_URL}
           height="970"
           title="Contact us"
         >
