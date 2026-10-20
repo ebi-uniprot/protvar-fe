@@ -19,6 +19,7 @@ import DecipherLogo from "../../images/decipher.png";
 import {TITLE} from "../../constants/const";
 import {ExtLink} from "../components/common/Link";
 import {StatsGrid} from "./release/Statistics";
+import {ENSEMBL_VEP_URL} from "../../constants/ExternalUrls";
 
 function AboutPageContent() {
   useEffect(() => {
@@ -118,7 +119,7 @@ function AboutPageContent() {
           <a href="https://www.ensembl.org/" target="_blank" rel="noreferrer" className="about-ack-item" title="Ensembl">
             <img src={EnsemblLogo} loading="lazy" alt="Ensembl" />
           </a>
-          <a href="https://www.ensembl.org/info/docs/tools/vep/" target="_blank" rel="noreferrer" className="about-ack-item" title="Ensembl VEP">
+          <a href={ENSEMBL_VEP_URL} target="_blank" rel="noreferrer" className="about-ack-item" title="Ensembl VEP">
             <img src={VEPGif} loading="lazy" alt="Ensembl VEP" />
           </a>
           <a href="https://www.ebi.ac.uk/pdbe/" target="_blank" rel="noreferrer" className="about-ack-item" title="PDBe">
