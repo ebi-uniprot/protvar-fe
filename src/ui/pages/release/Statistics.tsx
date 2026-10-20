@@ -12,7 +12,17 @@ const formatCompact = (n: number) => n >= 1_000_000
   ? new Intl.NumberFormat('en', {notation: 'compact', maximumFractionDigits: 1}).format(n)
   : formatNumber(n);
 
-const sourceVersion = (s: ReleaseStat) => s.version ? `${s.source} ${s.version}` : s.source;
+// "dbSNP / ClinVar" + "b157 / 2025-02" -> "dbSNP b157 · ClinVar 2025-02"
+const sourceVersion = (s: ReleaseStat) => {
+  if (!s.version) return s.source;
+  const sources = s.source.split(' / '), versions = s.version.split(' / ');
+  return sources.length > 1 && sources.length === versions.length
+    ? sources.map((src, i) => `${src} ${versions[i]}`).join(' · ')
+    : `${s.source} ${s.version}`;
+};
+
+const formatPercent = (part: number, total: number) =>
+  new Intl.NumberFormat('en', {style: 'percent', maximumFractionDigits: 1}).format(part / total);
 
 // Share (if the layout asks for one) and sub-figures (key.<sub>) shown under a number
 function useSubLines() {
@@ -20,7 +30,7 @@ function useSubLines() {
   return (item: StatsItem, s: ReleaseStat, format: (n: number) => string) => {
     const lines: string[] = [];
     const total = item.shareOf ? getStat(item.shareOf) : undefined;
-    if (total?.value) lines.push(`${Math.round(100 * s.value / total.value)}% of ${total.label.toLowerCase()}`);
+    if (total?.value) lines.push(`${formatPercent(s.value, total.value)} of ${total.label}`);
     stats.filter(c => c.key.startsWith(s.key + '.') && !c.key.slice(s.key.length + 1).includes('.'))
       .forEach(c => lines.push(`${format(c.value)} ${c.label}`));
     return lines;
