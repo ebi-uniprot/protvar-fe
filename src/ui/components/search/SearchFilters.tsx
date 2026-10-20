@@ -36,6 +36,7 @@ export interface SearchFilterParams {
 
   // Consequence
   cadd: string[];
+  aviMin?: number;
   am: string[];
   popeve: string[];
   esmMin?: number;
@@ -56,7 +57,11 @@ interface SearchFiltersProps {
   className?: string;
 }
 
-const SORT_FIELDS = ["cadd", "am", "popeve", "esm1b"]
+// AVI sort/filter need the 2026_02 genomic_score BE; hidden until REACT_APP_AVI_ENABLED=true (set at the cut-over)
+const AVI_ENABLED = process.env.REACT_APP_AVI_ENABLED === "true"
+const SORT_FIELDS = AVI_ENABLED
+  ? ["cadd", "avi", "am", "popeve", "esm1b"]
+  : ["cadd", "am", "popeve", "esm1b"]
 
 const SearchFilters: React.FC<SearchFiltersProps> = ({
                                                        filters,
@@ -452,6 +457,25 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                 </div>
               </div>
 
+              {AVI_ENABLED && (
+                <div className="filter-group">
+                  <label htmlFor="avi-min">AVI ≥</label>
+                  <input
+                    id="avi-min"
+                    type="number"
+                    min={0}
+                    max={99}
+                    step={1}
+                    placeholder="e.g. 20"
+                    value={filters.aviMin ?? ''}
+                    onChange={(e) => onFiltersChange({
+                      ...filters,
+                      aviMin: e.target.value === '' ? undefined : Number(e.target.value)
+                    })}
+                  />
+                </div>
+              )}
+
               {/* AlphaMissense */}
               <div className="filter-group">
                 <label>AlphaMissense</label>
@@ -518,6 +542,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                         onClick={() => handleSortChange("sort", filters.sort === field ? "" : field)}
                       >
                         {field === "cadd" ? "CADD" :
+                          field === "avi" ? "AVI" :
                           field === "am" ? "AlphaMissense" :
                             field === "popeve" ? "popEVE" : "ESM1b"}
                       </button>

@@ -368,6 +368,7 @@ export function AnnotationPanels({
             <FunctionalData
               annotation={annotationExpanded}
               caddScore={gene.caddScore?.toString()}
+              aviScore={gene.aviScore?.toString()}
               amScore={isoform.amScore}
               refAA={isoform.refAA!}
               variantAA={isoform.variantAA!}

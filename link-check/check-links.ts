@@ -30,6 +30,7 @@ const CHECKS: Record<string, Check | Check[] | string> = {
   CLINVAR_VCV_URL: { url: urls.CLINVAR_VCV_URL + 'VCV000010698' },
   COSMIC_URL: { url: urls.COSMIC_URL + 'COSV57102498' },
   CADD_INFO_URL: { url: urls.CADD_INFO_URL },
+  AVI_INFO_URL: { url: urls.AVI_INFO_URL },
   AM_INFO_URL: { url: urls.AM_INFO_URL },
 
   // --- Annotations ---

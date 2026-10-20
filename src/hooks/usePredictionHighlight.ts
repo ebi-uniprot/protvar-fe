@@ -1,6 +1,6 @@
 /**
  * Hook to manage prediction highlighting from URL parameters
- * Supports linking to specific predictions via ?pred=m3d, ?pred=cadd, etc.
+ * Supports linking to specific predictions via ?pred=m3d, ?pred=cadd, ?pred=avi, etc.
  */
 
 import { useState, useEffect, useRef, useCallback } from 'react';
@@ -11,13 +11,14 @@ export type PredictionType =
   | 'conserv'
   | 'foldx'
   | 'cadd'
+  | 'avi'
   | 'alphamissense'
   | 'eve'
   | 'popeve'
   | 'esm';
 
 const VALID_PREDS: PredictionType[] = [
-  'm3d', 'conserv', 'foldx', 'cadd',
+  'm3d', 'conserv', 'foldx', 'cadd', 'avi',
   'alphamissense', 'eve', 'popeve', 'esm'
 ];
 

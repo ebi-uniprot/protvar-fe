@@ -70,6 +70,7 @@ export const DEFAULT_FILTERS: Readonly<SearchFilterParams> = Object.freeze({
 
   // Consequence
   cadd: [],
+  aviMin: undefined,
   am: [],
   popeve: [],
   esmMin: undefined,

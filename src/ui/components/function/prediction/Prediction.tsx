@@ -6,6 +6,7 @@ import {FoldxPred} from "./FoldxPred";
 import React, {useContext, useState} from "react";
 import {AppContext} from "../../../App";
 import {CaddScorePred} from "./CaddScorePred";
+import {AviScorePred} from "./AviScorePred";
 import {PopEvePred} from "./PopEvePred";
 import {FunctionalInfo} from "../../../../types/FunctionalInfo";
 import {AmScore, TranslatedSequence} from "../../../../types/MappingResponse";
@@ -30,6 +31,7 @@ export interface PredictionProps {
   ensg: string;
   ensp: TranslatedSequence[];
   caddScore: string;
+  aviScore?: string;
   amScore: AmScore;
 }
 
@@ -42,6 +44,7 @@ export const Prediction = (props: PredictionProps) => {
     props.functionalData.conservScore ||
     props.amScore ||
     (props.caddScore && props.caddScore !== '-') ||
+    !!props.aviScore ||
     props.functionalData.esmScore ||
     props.functionalData.popEveScore ||
     (props.functionalData.foldxs?.length ?? 0) > 0 ||
@@ -104,6 +107,14 @@ export const Prediction = (props: PredictionProps) => {
         isHighlighted={highlightedPrediction === 'cadd'}
       >
         <CaddScorePred cadd={props.caddScore} stdColor={state.stdColor} />
+      </PredictionWrapper>
+
+      {/* AVI - AlphaGenome Variant Impact, genomic like CADD */}
+      <PredictionWrapper
+        predictionType="avi"
+        isHighlighted={highlightedPrediction === 'avi'}
+      >
+        <AviScorePred avi={props.aviScore} />
       </PredictionWrapper>
 
       {/* ESM-1b - Protein language model, complementary approach */}

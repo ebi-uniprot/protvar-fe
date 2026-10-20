@@ -42,7 +42,7 @@ import {
   PROTVAR_PAPER_URL,
   PROTVAR_VIDEO_URL,
   UNIPROT_HOME_URL,
-  VARSITE_URL
+  VARSITE_URL, AVI_INFO_URL
 } from "../../constants/ExternalUrls";
 
 function AboutPageContent() {
@@ -157,6 +157,11 @@ function AboutPageContent() {
           </a>
           <a href={CADD_HOME_URL} target="_blank" rel="noreferrer" className="about-ack-item" title="CADD">
             <img src={CADDLogo} loading="lazy" alt="CADD" />
+          </a>
+          {/* text tile until a logo is chosen */}
+          <a href={AVI_INFO_URL} target="_blank" rel="noreferrer"
+             className="about-ack-item about-ack-item--text" title="AlphaGenome Variant Impact (AVI), Google DeepMind">
+            AlphaGenome
           </a>
           <a href={EVE_URL} target="_blank" rel="noreferrer" className="about-ack-item" title="EVE">
             <img src={EVELogo} loading="lazy" alt="EVE" />

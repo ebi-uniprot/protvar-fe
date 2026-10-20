@@ -132,6 +132,17 @@ const StatsTable: React.FC = () => {
           <td>{formatDate(getStat("coding_cadd")?.created)}</td>
         </tr>
 
+        {/* AVI from 2026_02; shown once the stats import has recorded it */}
+        {getStat("avi_score") && (
+          <tr>
+            <td>AVI</td>
+            <td>{process.env.REACT_APP_AVI}</td>
+            <td>Prediction</td>
+            <td>{formatNumber(getStat("avi_score")?.value)}</td>
+            <td>{formatDate(getStat("avi_score")?.created)}</td>
+          </tr>
+        )}
+
         <tr>
           <td>Stability</td>
           <td>May 2024</td>

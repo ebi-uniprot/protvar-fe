@@ -17,6 +17,7 @@ export const CLINVAR_RCV_URL = "https://www.ncbi.nlm.nih.gov/clinvar/"
 export const CLINVAR_VCV_URL = "https://www.ncbi.nlm.nih.gov/clinvar/variation/"
 export const COSMIC_URL = "https://cancer.sanger.ac.uk/cosmic/search?q="
 export const CADD_INFO_URL = "https://cadd.gs.washington.edu/info"
+export const AVI_INFO_URL = "https://deepmind.google.com/science/alphagenome/"
 export const AM_INFO_URL = "https://alphamissense.hegelab.org/"
 
 // --- Annotations (function / population / structure) ---

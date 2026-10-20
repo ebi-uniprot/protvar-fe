@@ -38,6 +38,7 @@ export interface MappingRequest {
 
   // Consequence
   cadd?: string[];
+  aviMin?: number;
   am?: string[];
   popeve?: string[];
   esm1bMin?: number;
