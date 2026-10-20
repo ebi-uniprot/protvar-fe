@@ -1,7 +1,8 @@
 import React from 'react';
 import { VariantInput, Message, GenomicVariant } from "../../../types/MappingResponse";
 import Tool from "../../elements/Tooltip";
-import { getEnsemblViewUrl, getIdUrl, getIdValue } from "./PrimaryRow";
+import { getIdUrl, getIdValue } from "./PrimaryRow";
+import { getEnsemblViewUrl } from "../../../constants/ExternalUrls";
 import { TextLink } from "../../components/common/Link";
 
 export const WARN_ICON  = <><i className="msg-warn bi bi-exclamation-triangle-fill"></i>{' '}</>;

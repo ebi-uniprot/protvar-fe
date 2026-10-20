@@ -1,7 +1,6 @@
 import axios from "axios";
+import {ALPHAFILL_URL} from "../constants/ExternalUrls";
 
-export const ALPHAFILL_URL = 'https://alphafill.eu/v1/aff/'
-//const ALPHAFILL_JSON = 'https://alphafill.eu/v1/aff/{accession}/json'
 
 export const hasAlphafillStructure = async (accession: string): Promise<boolean> => {
   const url = ALPHAFILL_URL + accession;

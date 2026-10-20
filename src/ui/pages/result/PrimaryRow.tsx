@@ -4,8 +4,8 @@ import {
   CADD_INFO_URL, AM_INFO_URL,
   CLINVAR_RCV_URL, CLINVAR_VCV_URL, COSMIC_URL,
   DBSNP_URL,
-  ENSEMBL_BROWSER_URL,
-  ENSEMBL_ID_URL,
+  getEnsemblIdUrl,
+  getEnsemblViewUrl,
   UNIPROT_ACCESSION_URL
 } from "../../../constants/ExternalUrls";
 import Tool from "../../elements/Tooltip";
@@ -41,12 +41,6 @@ export const getIdUrl = (id: string) => {
 };
 
 export const aaChangeStr = (ref: string, alt: string) => `${ref}/${alt}`;
-
-export const getEnsemblIdUrl = (id: string) => ENSEMBL_ID_URL + id.split('.')[0];
-export const getEnsemblViewUrl = (chr: string, pos: number) => {
-  const loc = `${chr}:${pos}-${pos}`;
-  return `${ENSEMBL_BROWSER_URL}?focus=location:${loc}&location=${loc}`;
-};
 
 function AnnotationButton(props: {
   rowKey: string;

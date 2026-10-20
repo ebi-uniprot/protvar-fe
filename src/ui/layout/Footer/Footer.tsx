@@ -12,7 +12,21 @@ import vepGif from '../../../images/vep.jpeg';
 import pdbeLogo from '../../../images/pdbe-logo.png';
 import decipherLogo from '../../../images/decipher.png';
 import {ExtLink} from "../../components/common/Link";
-import {ENSEMBL_VEP_URL} from "../../../constants/ExternalUrls";
+import {
+  CC_BY_URL,
+  DECIPHER_URL,
+  EBI_PRIVACY_URL,
+  EBI_TERMS_URL,
+  EBI_URL,
+  EMBL_URL,
+  ENSEMBL_HOME_URL,
+  ENSEMBL_VEP_URL,
+  OPEN_TARGETS_URL,
+  PDBE_URL,
+  PROTVAR_PAPER_URL,
+  PROTVAR_TWITTER_URL,
+  UNIPROT_HOME_URL
+} from "../../../constants/ExternalUrls";
 
 const Footer: React.FC = () => {
   return (
@@ -24,7 +38,7 @@ const Footer: React.FC = () => {
           <p className="citation-text">
             James D Stephenson, Prabhat Totoo, David F Burke, Jürgen Jänes, Pedro Beltrao, Maria J Martin,
             ProtVar: mapping and contextualizing human missense variation, <i>Nucleic Acids Research</i>, 2024;&nbsp;
-            <ExtLink url="https://doi.org/10.1093/nar/gkae413" text="https://doi.org/10.1093/nar/gkae413" />
+            <ExtLink url={PROTVAR_PAPER_URL} text={PROTVAR_PAPER_URL} />
           </p>
 
           {/* Citation Carousel */}
@@ -40,7 +54,7 @@ const Footer: React.FC = () => {
             </p>
             <p>
               Licensed under{' '}
-              <a className="ref-link" href="https://creativecommons.org/licenses/by/4.0/"
+              <a className="ref-link" href={CC_BY_URL}
                  target="_blank" rel="noreferrer">Creative Commons Attribution 4.0</a>.
             </p>
           </div>
@@ -54,13 +68,13 @@ const Footer: React.FC = () => {
                data-height="280"
                data-theme="light"
                data-chrome="noheader nofooter noborders transparent"
-               href="https://twitter.com/EBIProtVar?ref_src=twsrc%5Etfw">
+               href={PROTVAR_TWITTER_URL + "?ref_src=twsrc%5Etfw"}>
               Tweets by EBIProtVar
             </a>
             <div className="twitter-fallback">
               <i className="bi bi-twitter-x" />
               {' '}Follow{' '}
-              <a href="https://twitter.com/EBIProtVar" target="_blank" rel="noreferrer">@EBIProtVar</a>
+              <a href={PROTVAR_TWITTER_URL} target="_blank" rel="noreferrer">@EBIProtVar</a>
               {' '}for the latest updates.
             </div>
           </div>
@@ -69,7 +83,7 @@ const Footer: React.FC = () => {
               className="twitter-follow-button"
               data-size="large"
               data-show-screen-name="false"
-              href="https://twitter.com/EBIProtVar"
+              href={PROTVAR_TWITTER_URL}
             >
               Follow @EBIProtVar
             </a>
@@ -83,22 +97,22 @@ const Footer: React.FC = () => {
         <div className="partners-section">
           <p className="partners-heading">In collaboration with our partners</p>
           <div className="partner-logos">
-            <a href="https://www.uniprot.org/" target="_blank" rel="noreferrer" title="UniProt">
+            <a href={UNIPROT_HOME_URL} target="_blank" rel="noreferrer" title="UniProt">
               <img src={uniprotLogo} loading="lazy" alt="UniProt" className="collaborator-img" />
             </a>
-            <a href="https://www.opentargets.org/" target="_blank" rel="noreferrer" title="Open Targets">
+            <a href={OPEN_TARGETS_URL} target="_blank" rel="noreferrer" title="Open Targets">
               <img src={openTargetsLogo} loading="lazy" alt="Open Targets" className="collaborator-img" />
             </a>
-            <a href="https://www.deciphergenomics.org/" target="_blank" rel="noreferrer" title="DECIPHER">
+            <a href={DECIPHER_URL} target="_blank" rel="noreferrer" title="DECIPHER">
               <img src={decipherLogo} loading="lazy" alt="DECIPHER" className="collaborator-img" />
             </a>
-            <a href="https://www.ensembl.org/" target="_blank" rel="noreferrer" title="Ensembl">
+            <a href={ENSEMBL_HOME_URL} target="_blank" rel="noreferrer" title="Ensembl">
               <img src={ensemblLogo} loading="lazy" alt="Ensembl" className="collaborator-img" />
             </a>
             <a href={ENSEMBL_VEP_URL} target="_blank" rel="noreferrer" title="Ensembl VEP">
               <img src={vepGif} loading="lazy" alt="Ensembl VEP" className="collaborator-img" />
             </a>
-            <a href="https://www.ebi.ac.uk/pdbe/" target="_blank" rel="noreferrer" title="PDBe">
+            <a href={PDBE_URL} target="_blank" rel="noreferrer" title="PDBe">
               <img src={pdbeLogo} loading="lazy" alt="PDBe" className="collaborator-img" />
             </a>
           </div>
@@ -108,7 +122,7 @@ const Footer: React.FC = () => {
       {/* EBI institutional footer */}
       <div className="ebi-footer">
         <div className="ebi-footer-inner">
-          <a href="https://www.ebi.ac.uk/" target="_blank" rel="noreferrer" className="ebi-footer-logo">
+          <a href={EBI_URL} target="_blank" rel="noreferrer" className="ebi-footer-logo">
             <img src={EMBLEBILogo} alt="EMBL-EBI" height="30" />
           </a>
           <p className="ebi-footer-tagline">
@@ -118,9 +132,9 @@ const Footer: React.FC = () => {
             Copyright © EMBL {new Date().getFullYear()}
             <span className="ebi-footer-sep">·</span>
             EMBL-EBI is part of the{' '}
-            <a href="https://www.embl.org/" target="_blank" rel="noreferrer">European Molecular Biology Laboratory</a>
+            <a href={EMBL_URL} target="_blank" rel="noreferrer">European Molecular Biology Laboratory</a>
             <span className="ebi-footer-sep">·</span>
-            <a href="https://www.ebi.ac.uk/about/terms-of-use" target="_blank" rel="noreferrer">Terms of use</a>
+            <a href={EBI_TERMS_URL} target="_blank" rel="noreferrer">Terms of use</a>
           </p>
         </div>
       </div>
@@ -136,7 +150,7 @@ const Footer: React.FC = () => {
           <a
             target="_blank"
             rel="noreferrer"
-            href="https://www.ebi.ac.uk/data-protection/privacy-notice/embl-ebi-public-website"
+            href={EBI_PRIVACY_URL}
           >
             Privacy Notice
           </a>{' '}
@@ -144,7 +158,7 @@ const Footer: React.FC = () => {
           <a
             target="_blank"
             rel="noreferrer"
-            href="https://www.ebi.ac.uk/about/terms-of-use"
+            href={EBI_TERMS_URL}
           >
             Terms of Use
           </a>.<br />

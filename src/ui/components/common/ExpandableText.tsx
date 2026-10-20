@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import {PUBMED_URL} from "../../../constants/ExternalUrls";
 
 interface ExpandableTextProps {
   text: string;
@@ -26,7 +27,7 @@ export const ExpandableText: React.FC<ExpandableTextProps> = ({
       parts.push(
         <a
           key={`pubmed-${match[1]}-${keyCounter++}`}
-          href={`https://pubmed.ncbi.nlm.nih.gov/${match[1]}`}
+          href={PUBMED_URL + match[1]}
           target="_blank"
           rel="noopener noreferrer"
           className="pubmed-link"

@@ -13,6 +13,7 @@ import { M3D_SCORE_ATTR } from '../../function/prediction/Missense3dPred';
 import { POCKET_CONFIDENCE_BANDS, INTERACTION_CONFIDENCE_BANDS } from '../../function/utils/confidenceUtils';
 import { LegendCategories } from '../../common/LegendCategories';
 import { AFConfidenceLegend } from '../../structure/alphafoldConfidence';
+import {PUBMED_URL} from "../../../../constants/ExternalUrls";
 
 const PATHOGENIC_EXAMPLE = {
   conservScore:  { score: 0.93 },
@@ -146,7 +147,7 @@ export const PredictionsHelp: React.FC = () => {
       <h2 id="predictions:conservation">Conservation</h2>
       <p>
         Inter-species amino acid conservation based on UniRef90 sequence alignments using the ScoreCons
-        algorithm (<a href="https://pubmed.ncbi.nlm.nih.gov/11093265" target="_blank" rel="noreferrer">PubMed 11093265</a>).
+        algorithm (<a href={PUBMED_URL + "11093265"} target="_blank" rel="noreferrer">PubMed 11093265</a>).
         Scored from 0 (no conservation) to 1 (complete conservation).
       </p>
       <LegendCategories attrs={CONSERV_SCORE_ATTR} stdColor={stdColor} />
@@ -157,7 +158,7 @@ export const PredictionsHelp: React.FC = () => {
       <h3 id="predictions:am">AlphaMissense</h3>
       <p>
         A deep learning model based on structural context and population frequencies
-        (<a href="https://pubmed.ncbi.nlm.nih.gov/37733863" target="_blank" rel="noreferrer">PubMed 37733863</a>).
+        (<a href={PUBMED_URL + "37733863"} target="_blank" rel="noreferrer">PubMed 37733863</a>).
         Scores range from 0 (least deleterious) to 1 (most deleterious). Category ranges vary and are
         provided by AlphaMissense.
       </p>
@@ -166,7 +167,7 @@ export const PredictionsHelp: React.FC = () => {
       <h3 id="predictions:cadd">CADD</h3>
       <p>
         Scaled Combined Annotation-Dependent Depletion scores
-        (<a href="https://pubmed.ncbi.nlm.nih.gov/30371827" target="_blank" rel="noreferrer">PubMed 30371827</a>).
+        (<a href={PUBMED_URL + "30371827"} target="_blank" rel="noreferrer">PubMed 30371827</a>).
         An integrative annotation score built from genomic features. Scores are relative to all other
         scores, log10-scaled, with higher values representing a more deleterious variant consequence.
       </p>
@@ -174,7 +175,7 @@ export const PredictionsHelp: React.FC = () => {
 
       <h3 id="predictions:esm">ESM-1b</h3>
       <p>
-        Evolutionary Scaled Model (<a href="https://pubmed.ncbi.nlm.nih.gov/33876751" target="_blank" rel="noreferrer">PubMed 33876751</a>).
+        Evolutionary Scaled Model (<a href={PUBMED_URL + "33876751"} target="_blank" rel="noreferrer">PubMed 33876751</a>).
         A deep contextual language model built across a diverse range of species.
         Scores range from −25 (most deleterious) to 0 (least deleterious).
       </p>
@@ -200,7 +201,7 @@ export const PredictionsHelp: React.FC = () => {
       <p>
         The predicted free energy change in the protein when the reference amino acid is replaced with
         the variant, calculated using FoldX v5.0 on the AlphaFold2 structure
-        (<a href="https://pubmed.ncbi.nlm.nih.gov/15980494" target="_blank" rel="noreferrer">PubMed 15980494</a>).
+        (<a href={PUBMED_URL + "15980494"} target="_blank" rel="noreferrer">PubMed 15980494</a>).
       </p>
       <LegendCategories attrs={FOLDX_SCORE_ATTR} stdColor={stdColor} />
 
@@ -216,7 +217,7 @@ export const PredictionsHelp: React.FC = () => {
       <p>
         Predicted protein pockets containing the variant position and other amino acids involved in
         the pocket, with prediction confidence
-        (<a href="https://pubmed.ncbi.nlm.nih.gov/38854010" target="_blank" rel="noreferrer">PubMed 38854010</a>).
+        (<a href={PUBMED_URL + "38854010"} target="_blank" rel="noreferrer">PubMed 38854010</a>).
       </p>
       <ul>
         <li><strong>Pocket confidence:</strong> Filter pockets containing the variant according to confidence that the pocket exists.
@@ -233,8 +234,8 @@ export const PredictionsHelp: React.FC = () => {
       <p>
         Predicted protein–protein interfaces containing the variant position with information about
         the quality of the interface and the proteins involved
-        (<a href="https://pubmed.ncbi.nlm.nih.gov/36690744" target="_blank" rel="noreferrer">PubMed 36690744</a>,{' '}
-        <a href="https://pubmed.ncbi.nlm.nih.gov/38854010" target="_blank" rel="noreferrer">PubMed 38854010</a>).
+        (<a href={PUBMED_URL + "36690744"} target="_blank" rel="noreferrer">PubMed 36690744</a>,{' '}
+        <a href={PUBMED_URL + "38854010"} target="_blank" rel="noreferrer">PubMed 38854010</a>).
       </p>
       <ul>
         <li><strong>pDockQ:</strong> Interface confidence score based on the pLDDT model confidence and the number of residues at the interface.

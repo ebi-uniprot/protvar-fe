@@ -13,11 +13,12 @@ import {HelpContent} from "../help/HelpContent";
 import {HelpButton} from "../help/HelpButton";
 import {ShareAnnotationIcon} from "../common/ShareLink";
 import {NoAnnotationData} from "../common/NoAnnotationData";
-import {ALPHAFILL_URL, hasAlphafillStructure} from "../../../services/AlphafillService";
+import {hasAlphafillStructure} from "../../../services/AlphafillService";
 import {Interaction, Pocket} from "../../../types/Prediction";
 import {useMolstarController} from "./useMolstarController";
 import {useStructureUrl} from "./useStructureUrl";
 import {AFConfidencePanel} from "./viewer/AFConfidencePanel";
+import {ALPHAFILL_URL} from "../../../constants/ExternalUrls";
 
 
 

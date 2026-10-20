@@ -2,6 +2,7 @@ import React from 'react';
 import { API_URL } from '../../../../constants/const';
 import { HelpCommandBlock } from '../shared/HelpCommandBlock';
 import { HelpPromptCard } from '../shared/HelpPromptCard';
+import {MCP_SPEC_URL} from "../../../../constants/ExternalUrls";
 
 // The MCP endpoint mirrors the API base URL for whichever environment the
 // front-end is pointed at: .../ProtVar/api  ->  .../ProtVar/mcp
@@ -59,7 +60,7 @@ export const McpHelp: React.FC = () => {
       </p>
       <p>
         It is built on the{' '}
-        <a href="https://modelcontextprotocol.io/" target="_blank" rel="noreferrer">
+        <a href={MCP_SPEC_URL} target="_blank" rel="noreferrer">
           Model Context Protocol (MCP)
         </a>
         , an open standard for connecting AI assistants to external tools and data.

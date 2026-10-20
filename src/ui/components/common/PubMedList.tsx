@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { IdUrl } from "./Evidences";
 import {ExtLink} from "./Link";
+import {PUBMED_EUTILS_URL} from "../../../constants/ExternalUrls";
 
 // Shared instance for PubMed API
 const pubmedApi = axios.create({
-  baseURL: 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils',
+  baseURL: PUBMED_EUTILS_URL,
   timeout: 10000,
 });
 

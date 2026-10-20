@@ -3,6 +3,7 @@ import {STD_COLOR_GRADIENT_REVERSE} from "../function/prediction/PredictionConst
 import React from "react";
 import {AlleleFreq} from "../../../types/PopulationObservation";
 import {ExtLink} from "../common/Link";
+import {GNOMAD_VARIANT_URL} from "../../../constants/ExternalUrls";
 
 const PRECISION: number = 5; // decimal places
 
@@ -12,10 +13,10 @@ const buildGnomadUrl = (genomicVariant: string, allele: string): string => {
     // Replace the alt (4th part) with the current allele
     const [chr, pos, ref] = parts;
     const variantId = `${chr}-${pos}-${ref}-${allele}`;
-    return `https://gnomad.broadinstitute.org/variant/${variantId}?dataset=gnomad_r4`;
+    return `${GNOMAD_VARIANT_URL}${variantId}?dataset=gnomad_r4`;
   }
   // Fallback to original if format is unexpected
-  return `https://gnomad.broadinstitute.org/variant/${genomicVariant}?dataset=gnomad_r4`;
+  return `${GNOMAD_VARIANT_URL}${genomicVariant}?dataset=gnomad_r4`;
 };
 
 export const AF_ATTR: PredictionCategory[] = [
