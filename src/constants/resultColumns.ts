@@ -4,7 +4,7 @@
 export type ColumnGroup = 'genomic' | 'protein' | 'annotations';
 
 export type ColumnId =
-  | 'id' | 'position' | 'gene' | 'codon' | 'cadd'
+  | 'id' | 'position' | 'gene' | 'codon' | 'cadd' | 'avi'
   | 'isoform' | 'protein' | 'aaChange' | 'consequence' | 'popeve' | 'am'
   | 'details';
 
@@ -22,6 +22,7 @@ export const RESULT_COLUMNS: ResultColumn[] = [
   { id: 'gene',        label: 'gene',          group: 'genomic',     defaultOn: true, locked: true },
   { id: 'codon',       label: 'mRNA codon',    group: 'genomic',     defaultOn: true },
   { id: 'cadd',        label: 'CADD',          group: 'genomic',     defaultOn: true },
+  { id: 'avi',         label: 'AVI',           group: 'genomic',     defaultOn: false },
   { id: 'isoform',     label: 'isoform',       group: 'protein',     defaultOn: true, locked: true },
   { id: 'protein',     label: 'name',          group: 'protein',     defaultOn: true },
   { id: 'aaChange',    label: 'AA change',     group: 'protein',     defaultOn: true, locked: true },

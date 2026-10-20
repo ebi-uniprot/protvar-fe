@@ -310,6 +310,11 @@
     text-decoration: none !important;
 }
 
+/* Scores without published categories (AVI): no category colour */
+.score-box--neutral {
+    background-color: #6c7a89;
+}
+
 /* ============================================
    PROTEIN NAME TRUNCATION
    ============================================ */

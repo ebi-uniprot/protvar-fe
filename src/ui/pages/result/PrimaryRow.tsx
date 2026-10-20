@@ -11,6 +11,7 @@ import {
 import Tool from "../../elements/Tooltip";
 import { TextLink } from "../../components/common/Link";
 import { caddScoreAttr, formatCaddScore } from "../../components/function/prediction/CaddScorePred";
+import { genomeWideRank } from "../../components/function/prediction/AviScorePred";
 import { amScoreAttr, formatAMScore } from "../../components/function/prediction/AlphaMissensePred";
 import { formatPopEveScore, getPopEveColor, getPopEveClass, POPEVE_SCORE_ATTR } from "../../components/function/prediction/PopEvePred";
 import ProteinIcon from '../../../images/proteins.svg';
@@ -178,6 +179,16 @@ export const getNewPrimaryRow = (
               <a href={CADD_INFO_URL} target="_blank" rel="noopener noreferrer">
                 {formatCaddScore(gene.caddScore?.toString())}
               </a>
+            </Tool>
+          )}
+        </span>,
+
+        // AlphaGenome Variant Impact (AVI): no published categories, so a neutral pill; the tooltip gives the genome-wide rank
+        avi: <span key="avi" data-card-label="AVI" className="cell-avi na-badge">
+          {gene.aviScore != null && (
+            <Tool className="score-box score-box--neutral"
+                  tip={`AVI ${gene.aviScore.toFixed(1)} — ${genomeWideRank(gene.aviScore)}`}>
+              {gene.aviScore.toFixed(1)}
             </Tool>
           )}
         </span>,
