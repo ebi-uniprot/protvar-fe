@@ -6,11 +6,10 @@ const VersionInfo: React.FC = () => {
   return (
     <div className="version-info">
       <Link to={RELEASE} className="version-pill" title="View release notes">
-        UI {process.env.REACT_APP_UI} · API {process.env.REACT_APP_API} · Data {process.env.REACT_APP_DATA}
+        UI {process.env.REACT_APP_UI} · API {process.env.REACT_APP_API} · Data {process.env.REACT_APP_UNIPROT}
       </Link>
       <div className="version-panel">
-        <div className="data-header">Data release {process.env.REACT_APP_DATA}</div>
-        <div>UniProt {process.env.REACT_APP_UNIPROT}</div>
+        <div className="data-header">Data release: UniProt {process.env.REACT_APP_UNIPROT}</div>
         <div>Ensembl {process.env.REACT_APP_ENSEMBL}</div>
         <div>CADD {process.env.REACT_APP_CADD}</div>
         <div>popEVE {process.env.REACT_APP_POPEVE}</div>
