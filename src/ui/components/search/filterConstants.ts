@@ -20,6 +20,13 @@ export const CADD_CATEGORIES = [
 
 export const VALID_CADD_VALUES = CADD_CATEGORIES.map(cat => cat.value);
 
+// AVI: genome-wide rank bands (PHRED 10/20/30); one choice, sent as aviMin
+export const AVI_CATEGORIES = [
+  { min: 10, label: 'top 10%' },
+  { min: 20, label: 'top 1%' },
+  { min: 30, label: 'top 0.1%' },
+];
+
 // Backend and UI AlphaMissense values are the same
 export const ALPHAMISSENSE_CATEGORIES = [
   { value: AmClass.BENIGN, label: 'Benign' },

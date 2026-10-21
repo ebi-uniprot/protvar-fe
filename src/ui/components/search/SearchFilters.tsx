@@ -2,6 +2,7 @@
 import React, { useLayoutEffect, useRef, useState } from 'react';
 import {
   CADD_CATEGORIES,
+  AVI_CATEGORIES,
   ALPHAMISSENSE_CATEGORIES,
   POPEVE_CATEGORIES,
   STABILITY_CATEGORIES,
@@ -459,20 +460,23 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
 
               {AVI_ENABLED && (
                 <div className="filter-group">
-                  <label htmlFor="avi-min">AVI ≥</label>
-                  <input
-                    id="avi-min"
-                    type="number"
-                    min={0}
-                    max={99}
-                    step={1}
-                    placeholder="e.g. 20"
-                    value={filters.aviMin ?? ''}
-                    onChange={(e) => onFiltersChange({
-                      ...filters,
-                      aviMin: e.target.value === '' ? undefined : Number(e.target.value)
+                  <label>AVI genome-wide rank</label>
+                  <div className="button-group">
+                    {AVI_CATEGORIES.map(cat => {
+                      const selected = filters.aviMin === cat.min;
+                      return (
+                        <button
+                          key={cat.min}
+                          className={`filter-button ${selected ? "selected" : ""}`}
+                          onClick={() => onFiltersChange({ ...filters, aviMin: selected ? undefined : cat.min })}
+                          title={`AVI ≥ ${cat.min}`}
+                        >
+                          {selected ? <i className="bi-check-lg tick"></i> : <i className="bi-plus-lg plus"></i>}
+                          {' '}{cat.label}
+                        </button>
+                      );
                     })}
-                  />
+                  </div>
                 </div>
               )}
 

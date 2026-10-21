@@ -5,6 +5,7 @@ import { HELP } from '../../../../constants/BrowserPaths';
 import { PredictionRadar } from '../../function/prediction/PredictionRadar';
 import { CONSERV_SCORE_ATTR } from '../../function/prediction/ConservPred';
 import { AM_SCORE_ATTR } from '../../function/prediction/AlphaMissensePred';
+import { AVI_SCORE_ATTR } from "../../function/prediction/AviScorePred";
 import { CADD_SCORE_ATTR } from '../../function/prediction/CaddScorePred';
 import { ESM_SCORE_ATTR } from '../../function/prediction/EsmPred';
 import { POPEVE_SCORE_ATTR } from '../../function/prediction/PopEvePred';
@@ -179,10 +180,16 @@ export const PredictionsHelp: React.FC = () => {
         AVI score from Google DeepMind's{' '}
         <a href="https://deepmind.google.com/science/alphagenome/" target="_blank" rel="noreferrer">AlphaGenome</a> Atlas.
         It combines AlphaGenome's predicted molecular effects (such as splicing, chromatin and expression) with
-        AlphaMissense into one genome-wide score. Like CADD it is PHRED-scaled against all possible SNVs: higher is
-        more likely deleterious, and 20 corresponds to roughly the top 1%. Shown as the score only, with no
-        categories, because no category thresholds are published.
+        AlphaMissense, conservation and loss-of-function annotations into one genome-wide score. It is PHRED-scaled
+        like CADD: the score ranks a variant against all possible SNVs in the genome, so 10 is the top 10%, 20 the
+        top 1% and 30 the top 0.1%.
       </p>
+      <p>
+        AlphaGenome publishes no categories for AVI, and its authors advise ranking variants rather than applying a
+        fixed cut-off. ProtVar therefore groups scores by their genome-wide rank, using the same breakpoints as CADD.
+        The bands describe how unusual a variant's predicted impact is, not whether it is pathogenic.
+      </p>
+      <LegendCategories attrs={AVI_SCORE_ATTR} stdColor={stdColor} />
 
       <h3 id="predictions:esm">ESM-1b</h3>
       <p>

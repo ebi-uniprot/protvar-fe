@@ -114,7 +114,7 @@ export const Prediction = (props: PredictionProps) => {
         predictionType="avi"
         isHighlighted={highlightedPrediction === 'avi'}
       >
-        <AviScorePred avi={props.aviScore} />
+        <AviScorePred avi={props.aviScore} stdColor={state.stdColor} />
       </PredictionWrapper>
 
       {/* ESM-1b - Protein language model, complementary approach */}

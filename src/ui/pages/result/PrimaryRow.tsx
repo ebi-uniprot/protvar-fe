@@ -11,7 +11,7 @@ import {
 import Tool from "../../elements/Tooltip";
 import { TextLink } from "../../components/common/Link";
 import { caddScoreAttr, formatCaddScore } from "../../components/function/prediction/CaddScorePred";
-import { genomeWideRank } from "../../components/function/prediction/AviScorePred";
+import { aviScoreAttr, AVI_SCORE_ATTR, genomeWideRank } from "../../components/function/prediction/AviScorePred";
 import { amScoreAttr, formatAMScore } from "../../components/function/prediction/AlphaMissensePred";
 import { formatPopEveScore, getPopEveColor, getPopEveClass, POPEVE_SCORE_ATTR } from "../../components/function/prediction/PopEvePred";
 import ProteinIcon from '../../../images/proteins.svg';
@@ -183,14 +183,17 @@ export const getNewPrimaryRow = (
           )}
         </span>,
 
-        // AlphaGenome Variant Impact (AVI): no published categories, so a neutral pill; the tooltip gives the genome-wide rank
+        // AlphaGenome Variant Impact (AVI): band by genome-wide rank (no published categories; see AviScorePred)
         avi: <span key="avi" data-card-label="AVI" className="cell-avi na-badge">
-          {gene.aviScore != null && (
-            <Tool className="score-box score-box--neutral"
-                  tip={`AVI ${gene.aviScore.toFixed(1)} — ${genomeWideRank(gene.aviScore)}`}>
+          {gene.aviScore != null && (() => {
+            const attr = aviScoreAttr(gene.aviScore);
+            return <Tool className="score-box"
+                         style={{ backgroundColor: stdColor ? attr.stdColor : attr.color,
+                                  color: !stdColor && attr === AVI_SCORE_ATTR[0] ? '#2e2257' : undefined }}
+                         tip={`AVI ${gene.aviScore.toFixed(1)} — ${genomeWideRank(gene.aviScore)} (${attr.range})`}>
               {gene.aviScore.toFixed(1)}
-            </Tool>
-          )}
+            </Tool>;
+          })()}
         </span>,
 
         // Isoform — toggle chevron + canonical icon + accession

@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
 import AnnotationLegend from './AnnotationLegend'
 import { CADD_SCORE_ATTR } from "../components/function/prediction/CaddScorePred";
+import { AVI_SCORE_ATTR } from "../components/function/prediction/AviScorePred";
 import { AM_SCORE_ATTR } from "../components/function/prediction/AlphaMissensePred";
 import { AF_ATTR } from "../components/population/PopulationAlleleFreq";
 import { POPEVE_SCORE_ATTR, POPEVE_COLORS, POPEVE_MIN, POPEVE_MAX } from "../components/function/prediction/PopEvePred";
@@ -128,6 +129,10 @@ export function LegendContent() {
 
         <LegendSection title="CADD phred-like score">
           <LegendCategories attrs={Object.values(CADD_SCORE_ATTR)} stdColor={stdColor} />
+        </LegendSection>
+
+        <LegendSection title="AVI genome-wide rank">
+          <LegendCategories attrs={AVI_SCORE_ATTR} stdColor={stdColor} />
         </LegendSection>
 
         <LegendSection title="AlphaMissense score">
