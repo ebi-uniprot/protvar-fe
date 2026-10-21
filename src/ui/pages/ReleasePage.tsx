@@ -49,6 +49,51 @@ function ReleasePageContent() {
       {activeTab === 'stats' && <Statistics />}
 
       {activeTab === 'notes' && <div className="release-notes">
+      {/* ── v2.1 ── */}
+      <ReleaseNote isDefaultOpen title={<><span className="release-badge release-badge-version">v2.1</span> UniProt 2026_02 data &amp; AlphaGenome Variant Impact <small>2026</small></>}>
+        <div className="release-categories">
+          <div className="release-category">
+            <ReleaseBadge type="ui" />
+            <ul>
+              <li>AlphaGenome Variant Impact (AVI) score — in the predictions panel, as an optional result column coloured by genome-wide rank (top 10% / 1% / 0.3% / 0.1%), sortable, and as quick filters (top 10%, 1%, 0.1%)</li>
+              <li>Result table — choose columns; Genomic, Genomic + protein and Protein views; aligned score columns, tidier mobile cards</li>
+              <li>Semantic search — two new models, Qwen3 (now the default) and EmbeddingGemma; help explains how the models were compared</li>
+              <li>Release page Statistics tab with live figures for the current data release</li>
+              <li>Version menu shows the data release as the UniProt release, with all source versions</li>
+              <li>Help — download format matches the CSV columns; VCF input notes</li>
+            </ul>
+          </div>
+
+          <div className="release-category">
+            <ReleaseBadge type="api" />
+            <ul>
+              <li>AVI score in mapping responses and downloads (new CSV column); sort=avi; aviMin filter</li>
+              <li>Semantic search: qwen3 (default) and gemma models</li>
+              <li>GET /stats — the current release's statistics (replaces /stats/latest and /stats/&#123;type&#125;/&#123;key&#125;)</li>
+              <li>A non-canonical isoform given as input returns its own mapping first (with a note); genes are never dropped from a result; stable result order</li>
+            </ul>
+          </div>
+
+          <div className="release-category">
+            <ReleaseBadge type="data" />
+            <ul>
+              <li>Genomic–protein mapping rebuilt on UniProt 2026_02 &amp; Ensembl 115 — 266.6M mapped positions (+57%); every Ensembl transcript encoding the exact protein sequence is linked (158K transcripts, +43%); 93.1% of reviewed human proteins mapped</li>
+              <li><strong>New dataset:</strong> AlphaGenome Variant Impact (AVI) scores for all 107.9M possible coding SNVs</li>
+              <li>CADD v1.7 recomputed on the new coding regions (107.9M variants)</li>
+              <li>dbSNP b156 → b157 (26.9M coding SNVs, +49%)</li>
+              <li>popEVE 2025.03 → 2025.07 (single-nucleotide-reachable changes)</li>
+              <li>Function, population &amp; structure annotations from UniProt 2026_02 (+6.6% features; 76K PDB structures, +9%); semantic-search texts and embeddings rebuilt</li>
+            </ul>
+          </div>
+        </div>
+
+        <p className="release-data-note">
+          Data 2026_02 — core mapping on UniProt 2026_02 and Ensembl 115; ClinVar 2025-02, COSMIC v103 and
+          gnomAD v4.1.0 unchanged. RefSeq links are 15% lower: Ensembl 115 dropped UniProt cross-references
+          for ~9K RefSeq proteins; we will restore them from our own mapping in the next update.
+        </p>
+      </ReleaseNote>
+
       {/* ── v2.0 ── */}
       <ReleaseNote isDefaultOpen title={<><span className="release-badge release-badge-version">v2.0</span> ProtVar 2.0 <small>2026</small></>}>
         <div className="release-categories">
@@ -98,9 +143,8 @@ function ReleasePageContent() {
         </div>
 
         <p className="release-data-note">
-          Data release 2.1 — adds popEVE, Missense3D and semantic search, and updates gnomAD allele
-          frequencies (AC/AN); core genomic–protein mapping remains UniProt 2025_01, with a remap to
-          UniProt 2026_01 under way.
+          Data 2025_01 — adds popEVE, Missense3D and semantic search, and updates gnomAD allele
+          frequencies (AC/AN); core genomic–protein mapping on UniProt 2025_01.
         </p>
       </ReleaseNote>
 
