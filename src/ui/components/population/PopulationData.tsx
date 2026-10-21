@@ -19,6 +19,7 @@ interface PopulationDataProps {
   populationObservationsUri: string
   variantAA: string
   genomicVariant: string
+  richness?: number   // precomputed by the BE (0–1)
 }
 
 function PopulationData(props: PopulationDataProps) {
@@ -26,6 +27,8 @@ function PopulationData(props: PopulationDataProps) {
   const [poApiData, setPoApiData] = useState<PopulationObservation>();
   const [selectedVariant, setSelectedVariant] = useState<Variant | null>(null);
 
+  // Old FE calculation from the loaded panel data, kept as the fallback when the BE sends no richness
+  // (BE without the release's richness table). The BE precomputes the same weights per position.
   const calculateDataRichness = (data?: PopulationObservation): number => {
     if (!data) return 0;
     let score = 0;
@@ -35,7 +38,7 @@ function PopulationData(props: PopulationDataProps) {
     return Math.min(score, 1.0);
   };
 
-  const dataRichness = calculateDataRichness(poApiData);
+  const dataRichness = props.richness ?? calculateDataRichness(poApiData);
 
   useEffect(() => {
     getPopulationData(populationObservationsUri).then(response => {

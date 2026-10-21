@@ -56,6 +56,13 @@ export interface Gene {
 }
 
 // TODO clean up unused commented properties below
+// How much annotation there is at the position, per annotation tab (0–1)
+export interface Richness {
+  fun: number;
+  pop: number;
+  str: number;
+}
+
 export interface Isoform {
   accession: string;
   canonical: boolean;
@@ -74,6 +81,7 @@ export interface Isoform {
   proteinStructureUri: string;
   amScore: AmScore;
   popEveScore?: PopEveScore;
+  richness?: Richness;   // precomputed by the release (BE), canonical only
 }
 
 interface Transcript {

@@ -26,6 +26,7 @@ export interface FunctionalDataProps {
   caddScore: string
   aviScore?: string
   amScore: AmScore
+  richness?: number   // precomputed by the BE (0–1)
 }
 
 function FunctionalData(props: FunctionalDataProps) {
@@ -43,6 +44,8 @@ function FunctionalData(props: FunctionalDataProps) {
     });
   };
 
+  // Old FE calculation from the loaded panel data, kept as the fallback when the BE sends no richness
+  // (BE without the release's richness table). The BE precomputes the same weights per position.
   const calculateDataRichness = (data?: FunctionalInfo): number => {
     if (!data) return 0;
     const hasAnyPredictions = data.conservScore || props.amScore || props.caddScore
@@ -58,7 +61,7 @@ function FunctionalData(props: FunctionalDataProps) {
     return Math.min(score, 1.0);
   };
 
-  const dataRichness = calculateDataRichness(apiData);
+  const dataRichness = props.richness ?? calculateDataRichness(apiData);
 
   useEffect(() => {
     getFunctionalData(referenceFunctionUri).then(response => {

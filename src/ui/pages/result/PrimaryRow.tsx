@@ -49,21 +49,24 @@ function AnnotationButton(props: {
   canonical: boolean | undefined;
   annotationExpanded: string;
   toggleAnnotation: StringVoidFun;
+  richness?: number;   // 0–1 from the BE; shades the icon
 }) {
   if (!props.canonical) return EmptyElement;
 
   const isActive = props.rowKey === props.annotationExpanded;
   const btnClass = isActive ? 'button click-icon-btn significance' : 'button click-icon-btn';
 
+  const fill = props.richness?.toFixed(1);
   let tip = "Functional annotations (click to expand)";
-  let icon = <img src={ProteinIcon} className="click-icon" alt="protein icon" />;
+  let icon = <img src={ProteinIcon} className="click-icon" data-fill={fill} alt="protein icon" />;
   if (props.label === 'POP') {
     tip  = "Population observations (click to expand)";
-    icon = <img src={PopulationIcon} className="click-icon" alt="population icon" />;
+    icon = <img src={PopulationIcon} className="click-icon" data-fill={fill} alt="population icon" />;
   } else if (props.label === 'STR') {
     tip  = "3D structure (click to expand)";
-    icon = <img src={StructureIcon} className="click-icon" alt="structure icon" />;
+    icon = <img src={StructureIcon} className="click-icon" data-fill={fill} alt="structure icon" />;
   }
+  if (props.richness !== undefined) tip += ` · data richness ${Math.round(props.richness * 100)}%`;
 
   return (
     <Tool el="button" tip={tip} pos="up-right"
@@ -270,9 +273,9 @@ export const getNewPrimaryRow = (
 
         // Annotation buttons
         details: <span key="details" className="details-cell">
-          <AnnotationButton rowKey={functionalKey}  label="FUN" canonical={isoform.canonical} annotationExpanded={annotationExpanded} toggleAnnotation={toggleAnnotation} />
-          <AnnotationButton rowKey={populationKey}  label="POP" canonical={isoform.canonical} annotationExpanded={annotationExpanded} toggleAnnotation={toggleAnnotation} />
-          <AnnotationButton rowKey={structuralKey}  label="STR" canonical={isoform.canonical} annotationExpanded={annotationExpanded} toggleAnnotation={toggleAnnotation} />
+          <AnnotationButton rowKey={functionalKey}  label="FUN" canonical={isoform.canonical} annotationExpanded={annotationExpanded} toggleAnnotation={toggleAnnotation} richness={isoform.richness?.fun} />
+          <AnnotationButton rowKey={populationKey}  label="POP" canonical={isoform.canonical} annotationExpanded={annotationExpanded} toggleAnnotation={toggleAnnotation} richness={isoform.richness?.pop} />
+          <AnnotationButton rowKey={structuralKey}  label="STR" canonical={isoform.canonical} annotationExpanded={annotationExpanded} toggleAnnotation={toggleAnnotation} richness={isoform.richness?.str} />
         </span>,
   };
   const render = (group: ColumnGroup) => inGroup(cols, group).map(c => cells[c.id]);
@@ -359,6 +362,7 @@ export function AnnotationPanels({
               populationObservationsUri={isoform.populationObservationsUri!}
               variantAA={isoform.variantAA!}
               genomicVariant={genomicVariantStr}
+              richness={isoform.richness?.pop}
             />
           </Suspense>
         </div>
@@ -372,6 +376,7 @@ export function AnnotationPanels({
               aaPosition={isoform.isoformPosition!}
               variantAA={isoform.variantAA!}
               proteinStructureUri={isoform.proteinStructureUri!}
+              richness={isoform.richness?.str}
             />
           </Suspense>
         </div>
@@ -389,6 +394,7 @@ export function AnnotationPanels({
               ensg={gene.ensg!}
               ensp={ensp!}
               referenceFunctionUri={isoform.referenceFunctionUri!}
+              richness={isoform.richness?.fun}
             />
           </Suspense>
         </div>

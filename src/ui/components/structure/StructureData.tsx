@@ -28,6 +28,7 @@ interface StructureDataProps {
   aaPosition: number;
   variantAA: string; // 3-letter variant AA code
   proteinStructureUri: string;
+  richness?: number;   // precomputed by the BE (0–1)
 }
 
 export interface AlphaFillStructure {
@@ -56,7 +57,8 @@ function StructureData(props: StructureDataProps) {
   const addPredictedStructures = (newItems: PredictedStructure[]) =>
     setPredictedData((prev) => [...prev, ...newItems]);
 
-  // Calculate data richness
+  // Old FE calculation from the loaded panel data, kept as the fallback when the BE sends no richness
+  // (BE without the release's richness table). The BE precomputes the same weights per position.
   const calculateDataRichness = (): number => {
 
     let score = 0;
@@ -67,7 +69,7 @@ function StructureData(props: StructureDataProps) {
     return Math.min(score, 1.0);
   };
 
-  const dataRichness = calculateDataRichness();
+  const dataRichness = props.richness ?? calculateDataRichness();
 
   // Fetch structures and functional data
   useEffect(() => {
