@@ -11,7 +11,7 @@ Only genomic coordinates whose assembly is not implied by the input itself: VCF,
 
 ## How Auto works
 
-1. **Sample.** If you submit fewer than 10 genomic variants, all are used; otherwise 100 are picked at random.
+1. **Sample.** If you submit fewer than 10 genomic variants, all are used; otherwise 100 are picked at evenly spaced intervals through the list.
 2. **Compare.** The reference nucleotide of each sampled variant is checked against both the GRCh38 and the GRCh37 reference at that position, giving a percentage match for each.
 3. **Decide.**
    - more than 75% GRCh38 matches and fewer than 25% GRCh37 matches → **GRCh38**
@@ -28,6 +28,6 @@ The outcome is shown as a message on the result page, for example:
 
 - **Protein-coding positions only.** The comparison uses ProtVar's GRCh37↔GRCh38 equivalence table, which covers protein-coding positions. Non-coding variants count as non-matches for both assemblies, so input that is mostly non-coding (e.g. a whole-genome VCF) is often inconclusive and falls back to GRCh38. For the same reason, non-coding GRCh37 coordinates can't be converted and are reported with *Unable to map GRCh37 to GRCh38 coordinate*. These variants have no protein consequence, so no annotations are lost.
 - **A reference allele is needed.** Inputs given without a reference nucleotide (e.g. `X 23456`) can't be compared, so they count as non-matches.
-- **Small or random samples.** With only a few variants, a single mismatch moves the percentages a lot. For larger inputs the random sample means borderline cases can be decided differently on resubmission.
+- **Small inputs.** With only a few variants, a single mismatch moves the percentages a lot.
 
 If the detected assembly looks wrong, resubmit with **GRCh38** or **GRCh37** selected explicitly. See also [Genome assembly](#further-info:genome-assembly).
