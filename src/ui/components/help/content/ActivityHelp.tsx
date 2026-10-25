@@ -13,7 +13,7 @@ export const ActivityHelp = () => (
       Switch to <strong>Grouped</strong> view to see downloads grouped under their originating result.
     </p>
 
-    <h2 id="activity-history">History</h2>
+    <h2 id="activity:activity-history">History</h2>
     <img src={`${process.env.PUBLIC_URL}/images/history.png`} alt="Activity History tab" />
     <p>
       History records two kinds of entries:
@@ -42,7 +42,7 @@ export const ActivityHelp = () => (
       and <i className="bi bi-trash" /> to delete entries.
     </p>
 
-    <h2 id="activity-downloads">Downloads</h2>
+    <h2 id="activity:activity-downloads">Downloads</h2>
     <img src={`${process.env.PUBLIC_URL}/images/activity_downloads.png`} alt="Activity Downloads tab" />
     <p>
       Downloads can be requested from any <Link to={`${HELP}#results`}>result page</Link>{' '}
