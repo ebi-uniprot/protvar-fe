@@ -56,6 +56,9 @@ function ReleasePageContent() {
             <ReleaseBadge type="ui" />
             <ul>
               <li>AlphaGenome Variant Impact (AVI) score — in the predictions panel, as an optional result column coloured by genome-wide rank (top 10% / 1% / 0.3% / 0.1%), sortable, and as quick filters (top 10%, 1%, 0.1%)</li>
+              <li>Filter and sort your own uploaded variants (Annotate) with the same filters as browse; a large upload shows a short "preparing" step the first time it's filtered</li>
+              <li>Filters in a side panel next to the results, which you can collapse; a filtered upload shows how many of its inputs match</li>
+              <li>Isoform labels mark reviewed isoforms (iso) and unreviewed entries (unr)</li>
               <li>Result table — choose columns; Genomic, Genomic + protein and Protein views; aligned score columns, tidier mobile cards</li>
               <li>Semantic search — two new models, Qwen3 (now the default) and EmbeddingGemma; help explains how the models were compared</li>
               <li>Release page Statistics tab with live figures for the current data release</li>
