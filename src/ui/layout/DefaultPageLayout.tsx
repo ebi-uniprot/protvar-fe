@@ -9,6 +9,9 @@ import Navbar from "./Header/Navbar";
 import Footer from "./Footer/Footer";
 import {useStorage, STORAGE_CHANGE} from "../../context/StorageContext";
 
+/** Grid column between the app sidebar and the page content; a page portals a side panel into it. */
+export const SIDE_PANEL_ID = 'page-side-panel'
+
 interface DefaultPageLayoutProps {
   content: React.JSX.Element
 }
@@ -16,21 +19,20 @@ interface DefaultPageLayoutProps {
 const bannerText = (
   <>
     <span className="banner-lead">
-      <i className="bi bi-rocket-takeoff-fill banner-new-icon" /> ProtVar 2.0 is live — new search modes,
-      and more ways to filter and explore variants. See the{' '}
-      <Link to={RELEASE}>release notes</Link> for details.
+      <i className="bi bi-rocket-takeoff-fill banner-new-icon" /> ProtVar 2.1 — UniProt 2026_02 data,
+      AlphaGenome Variant Impact (AVI) scores, and you can now filter and sort your own uploaded variants. See
+      the{' '}<Link to={RELEASE}>release notes</Link> for details.
     </span>{' '}
     Questions or feedback? Email{' '}
     <a href="mailto:protvar@ebi.ac.uk">protvar@ebi.ac.uk</a>.
     <div>
       <i className="bi bi-stars banner-new-icon" />{' '}
       Explore what's new:{' '}
-      <Link to={`${HELP}#browse`}>Advanced Filtering</Link>{' · '}
-      <Link to={`${HELP}#semantic-search`}>Semantic Search</Link>{' · '}
-      <Link to={`${HELP}#protvar-links`}>ProtVar Links</Link>{' · '}
-      <Link to={`${HELP}#predictions`}>Score Radar</Link>{' · '}
-      <Link to={`${HELP}#feature-ranking`}>Feature Ranking</Link>{' · '}
-      <Link to={`${HELP}#mcp`}>ProtVar MCP</Link>
+      <Link to={`${HELP}#browse`}>Filter your uploads</Link>{' · '}
+      <Link to={`${HELP}#predictions`}>AVI scores</Link>{' · '}
+      <Link to={`${HELP}#results`}>Choose result columns</Link>{' · '}
+      <Link to={`${HELP}#semantic-search`}>Semantic search models</Link>{' · '}
+      <Link to={`${RELEASE}?tab=stats`}>Statistics</Link>
     </div>
   </>
 );
@@ -82,6 +84,8 @@ function DefaultPageLayout({ content }: DefaultPageLayoutProps) {
             />
 
             <SideDrawer/>
+
+            <div id={SIDE_PANEL_ID} className="page-side-panel"/>
 
             <DefaultPageContent banner={showBanner ? { text: bannerText, onDismiss: handleDismiss } : null}>
               {content}

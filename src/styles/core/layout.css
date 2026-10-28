@@ -64,11 +64,6 @@ a:focus-visible {
     flex-wrap: wrap;
 }
 
-/* Hug the count to the header when both are present. */
-.page-header-row:has(+ .page-header-count) {
-    margin-bottom: 0.1rem;
-}
-
 .page-header {
     margin: 0;
 }

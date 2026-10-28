@@ -512,3 +512,324 @@
         transform: none;
     }
 }
+
+/* ============================================
+   FILTER RAIL (result pages, wide screens)
+   Rendered into the layout's side-panel column (page-layout.css), flush against the app sidebar and
+   sticky like it, so the results centre in the remaining width. Below 1200px the page keeps the inline
+   layout above.
+   ============================================ */
+
+.filter-rail {
+    position: relative;
+    width: 300px;
+    height: 100%;
+    overflow: hidden;   /* clips the panel while the width animates */
+    background: var(--color-bg-primary);
+    border-right: 1px solid var(--color-border-light);
+    transition: width var(--transition-panel);
+}
+
+.filter-rail.collapsed {
+    width: 36px;
+}
+
+/* the panel keeps its full width while the rail narrows (clipped, never reflowed), and fades */
+.filter-rail-inner {
+    width: 300px;
+    height: 100%;
+    transition: opacity 0.18s ease, visibility 0s;
+}
+
+.filter-rail.collapsed .filter-rail-inner {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.12s ease, visibility 0s 0.28s;
+}
+
+/* rail = header (fixed height) + body that takes the rest and scrolls on its own */
+.search-filters--rail {
+    position: static;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0;
+    overflow: hidden;
+    border-radius: 0;
+    box-shadow: none;
+    background: var(--color-bg-primary);
+}
+
+.filter-header--rail {
+    cursor: default;
+}
+
+.filter-header--rail:hover {
+    background: none;
+}
+
+.filter-rail-collapse {
+    width: 30px;
+    height: 28px;
+    border: 1px solid var(--color-border-medium);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-primary);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+}
+
+.filter-rail-collapse:hover {
+    color: var(--color-text-primary);
+}
+
+/* the scrolling body: only the sections scroll; contained (no page scroll chaining), a thin faint
+   scrollbar that darkens on hover, its space reserved so nothing shifts */
+.search-filters--rail .filter-rail-body {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border-light) transparent;
+}
+
+.search-filters--rail .filter-rail-body:hover {
+    scrollbar-color: var(--color-border-dark) transparent;
+}
+
+.search-filters--rail .filter-rail-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.search-filters--rail .filter-rail-body::-webkit-scrollbar-thumb {
+    background: var(--color-border-light);
+    border-radius: 3px;
+}
+
+.search-filters--rail .filter-rail-body:hover::-webkit-scrollbar-thumb {
+    background: var(--color-border-dark);
+}
+
+/* Update stays at the top of the scrolling body */
+.search-filters--rail .filter-panel-actions {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    padding-bottom: 0.5rem;
+    background: var(--color-bg-primary);
+}
+
+/* collapsed rail: a slim full-height tab that brings it back; fades in once the rail has narrowed. Its »
+   sits in a top cell matching the app sidebar's toggle row, the vertical label below. */
+.filter-rail-tab {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 36px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    border: none;
+    background: var(--color-bg-primary);
+    color: var(--color-brand);
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.12s ease, visibility 0s 0.12s;
+}
+
+.filter-rail-tab__top {
+    min-height: var(--sidebar-rail-width);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid var(--color-border-light);
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-tertiary);
+}
+
+.filter-rail-tab__label {
+    padding: 1rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    writing-mode: vertical-rl;
+}
+
+.filter-rail.collapsed .filter-rail-tab {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.18s ease 0.12s, visibility 0s;
+}
+
+.filter-rail-tab:hover {
+    background: var(--color-brand-lightest);
+}
+
+.result-chips-row > .filter-chips {
+    margin-bottom: 0.75rem;
+}
+
+
+/* ============================================
+   RAIL THEME
+   Next to the app sidebar the panel's bar styling (bold black labels, filled pills, dividers) reads heavy.
+   In the rail: light type, quiet greys, outline controls, space instead of rules.
+   ============================================ */
+
+/* header: the app sidebar's toggle row continued (same height, border and background); outside the
+   scrolling body, so the «« never moves */
+.search-filters--rail .filter-header--rail {
+    flex-shrink: 0;
+    min-height: var(--sidebar-rail-width);
+    padding: 0 var(--spacing-md) 0 var(--spacing-xl);
+    border-bottom: 1px solid var(--color-border-light);
+    background: var(--color-bg-tertiary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+}
+
+.search-filters--rail .filter-header--rail i.bi-funnel {
+    color: var(--color-text-tertiary);
+}
+
+.search-filters--rail .filter-rail-collapse {
+    border: none;
+    background: none;
+    color: var(--color-text-tertiary);
+}
+
+.search-filters--rail .filter-rail-collapse:hover {
+    color: var(--color-text-primary);
+    background: var(--color-bg-tertiary);
+}
+
+.search-filters--rail .filter-panel {
+    border-top: none;
+    padding: 0 var(--spacing-xl) var(--spacing-xl);
+}
+
+/* Update: full width, lighter; grey when nothing is pending. A hairline keeps the sections from looking
+   like they slide under it while the rail scrolls. */
+.search-filters--rail .filter-panel-actions {
+    padding: var(--spacing-md) 0;
+    margin-bottom: var(--spacing-md);
+    box-shadow: 0 1px 0 var(--color-border-light);
+}
+
+.search-filters--rail .apply-button {
+    width: 100%;
+    padding: 0.45rem 0.75rem;
+    font-size: var(--font-size-xs);
+    border-radius: var(--radius-md);
+}
+
+.search-filters--rail .apply-button:hover:not(:disabled) {
+    transform: none;
+    box-shadow: none;
+}
+
+.search-filters--rail .apply-button:disabled {
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-tertiary);
+    opacity: 1;
+}
+
+/* sections: space, no rules */
+.search-filters--rail .filter-section {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 1.4rem;
+}
+
+.search-filters--rail .section-title {
+    font-size: calc(11px * var(--font-scale));
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.07em;
+    color: var(--color-text-tertiary);
+    margin-bottom: var(--spacing-sm);
+}
+
+/* groups stack in the narrow column */
+.search-filters--rail .filter-row {
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.search-filters--rail .filter-group {
+    min-width: 0;
+    max-width: none;
+}
+
+.search-filters--rail .filter-group > label,
+.search-filters--rail .range-slider__label {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-normal);
+    color: var(--color-text-secondary);
+    margin-bottom: 0.35rem;
+}
+
+/* checkboxes and radios: light text, small inputs */
+.search-filters--rail .checkbox-group {
+    gap: 0.55rem;
+}
+
+.search-filters--rail .radio-group {
+    gap: 1rem;
+}
+
+.search-filters--rail .checkbox-label,
+.search-filters--rail .radio-label {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-normal);
+    color: var(--color-text-secondary);
+    gap: 0.5rem;
+}
+
+.search-filters--rail .checkbox-label:hover,
+.search-filters--rail .radio-label:hover {
+    color: var(--color-text-primary);
+}
+
+.search-filters--rail .checkbox-label input[type="checkbox"],
+.search-filters--rail .radio-label input[type="radio"] {
+    width: 13px;
+    height: 13px;
+}
+
+/* band buttons: thin outline pills; selected = soft brand tint with a tick, no "+" */
+.search-filters--rail .button-group {
+    gap: 0.3rem;
+}
+
+.search-filters--rail .filter-button {
+    padding: 0.2rem 0.55rem;
+    font-size: calc(11.5px * var(--font-scale));
+    font-weight: var(--font-weight-normal);
+    background: transparent;
+    border: 1px solid var(--color-border-light);
+    color: var(--color-text-secondary);
+}
+
+.search-filters--rail .filter-button:hover {
+    background: transparent;
+    border-color: var(--color-border-dark);
+    color: var(--color-text-primary);
+}
+
+.search-filters--rail .filter-button .plus {
+    display: none;
+}
+
+.search-filters--rail .filter-button.selected {
+    background: var(--color-brand-lightest);
+    border-color: transparent;
+    color: var(--color-brand);
+    font-weight: var(--font-weight-medium);
+}

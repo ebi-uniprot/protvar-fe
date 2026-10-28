@@ -18,13 +18,36 @@
  */
 .default-page-layout {
     display: grid;
-    grid-template-columns: var(--sidebar-rail-width) 1fr;
+    /* sidebar and side panel columns size to their elements, so the content follows their width transitions
+       frame by frame instead of jumping when they open or close */
+    grid-template-columns: auto auto 1fr;
     align-items: start;
     min-height: 100vh;
 }
 
 .default-page-layout.sidebar-expanded {
-    grid-template-columns: var(--sidebar-width) 1fr;
+    grid-template-columns: auto auto 1fr;
+}
+
+/* Middle column: a page's side panel (the result page's filter rail), flush against the app sidebar,
+   full height and sticky like it. A fixed frame: the panel inside decides what scrolls (the rail scrolls
+   only its body, below its header). Empty on every other page, so the auto column takes no width. */
+.page-side-panel {
+    grid-column: 2;
+    grid-row: 1;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.page-side-panel:empty {
+    display: none;
+}
+
+.default-page-layout > .page-content {
+    grid-column: 3;
+    grid-row: 1;
 }
 
 /* ============================================
@@ -51,6 +74,11 @@
     }
 
     /* On mobile the sidebar becomes a fixed strip — no grid column */
+    .default-page-layout > .page-content {
+        grid-column: auto;
+        grid-row: auto;
+    }
+
     .default-page-layout,
     .default-page-layout.sidebar-expanded {
         grid-template-columns: 1fr;

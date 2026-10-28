@@ -77,14 +77,6 @@
 }
 
 /* Columns button, above the result table's top-right corner */
-.result-table-actions {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 4px;
-}
 
 /* Genomic | Genomic + protein | Protein */
 .view-switch {

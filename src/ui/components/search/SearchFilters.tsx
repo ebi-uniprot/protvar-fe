@@ -8,7 +8,7 @@ import {
   STABILITY_CATEGORIES,
   ALLELE_FREQ_CATEGORIES
 } from "./filterConstants";
-import { describeFilters, removeChip, restoreChip } from "./filterUtils";
+import FilterChips from "./FilterChips";
 import RangeSlider from "./RangeSlider";
 
 export interface SearchFilterParams {
@@ -56,6 +56,8 @@ interface SearchFiltersProps {
   onApply?: () => void;
   showSorting?: boolean;
   upload?: boolean;                        // uploaded result: default is all submitted variants, not known only
+  layout?: 'inline' | 'rail';              // inline: chip bar + expandable panel; rail: always-open side column
+  onCollapse?: () => void;                 // rail: collapse button (the page hides the rail)
   className?: string;
 }
 
@@ -73,6 +75,8 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                                                        onApply,
                                                        showSorting = false,
                                                        upload = false,
+                                                       layout = 'inline',
+                                                       onCollapse,
                                                        className = ''
                                                      }) => {
   // Panel stays collapsed by default — the chip bar shows what's active, so
@@ -102,30 +106,12 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
     }
   };
 
+  const isRail = layout === 'rail';
+
   // "Applied" = filters the current results reflect (falls back to staged).
   const applied = appliedFilters ?? filters;
 
-  // Active-filter chips: union of staged + applied, keyed by id. A chip is
-  // "staged for removal" (greyed) when it's applied but no longer staged.
-  const localChips = describeFilters(filters, upload);
-  const localIds = new Set(localChips.map(c => c.id));
-  const chipMap = new Map<string, { id: string; label: string; staged: boolean }>();
-  describeFilters(applied, upload).forEach(c => chipMap.set(c.id, { ...c, staged: !localIds.has(c.id) }));
-  localChips.forEach(c => chipMap.set(c.id, { ...c, staged: false }));
-  const chips = Array.from(chipMap.values());
-
   const hasPendingChanges = JSON.stringify(filters) !== JSON.stringify(applied);
-
-  // × on a chip stages a removal (greys it); × on a greyed chip restores it.
-  const toggleChip = (id: string, staged: boolean) => {
-    onFiltersChange(staged ? restoreChip(filters, applied, id) : removeChip(filters, id, upload));
-  };
-
-  const handleClearAll = () => {
-    let cleared = filters;
-    describeFilters(filters, upload).forEach(c => { cleared = removeChip(cleared, c.id, upload); });
-    onFiltersChange(cleared);
-  };
 
   const handleCheckboxChange = (key: "cadd" | "am" | "popeve" | "stability" | "freq", value: string) => {
     const lowerValue = value.toLowerCase();
@@ -189,52 +175,37 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
   const isFreqSelected = (value: string) => filters.freq.includes(value.toLowerCase());
 
   return (
-    <div ref={rootRef} className={`search-filters ${isExpanded ? 'expanded' : ''} ${className}`}>
-      {/* Active-filter chips — shown only while the panel is collapsed; they
-          summarise the selection. When expanded, the panel itself shows it. */}
-      {!isExpanded && chips.length > 0 && (
-        <div className="filter-chips">
-          {chips.map(c => (
-            <span key={c.id} className={`filter-chip${c.staged ? ' filter-chip--staged' : ''}`}>
-              <button
-                type="button"
-                className="filter-chip__x"
-                onClick={() => toggleChip(c.id, c.staged)}
-                aria-label={`${c.staged ? 'Restore' : 'Remove'} ${c.label}`}
-                title={c.staged ? 'Restore' : 'Remove'}
-              >
-                <i className={`bi ${c.staged ? 'bi-arrow-counterclockwise' : 'bi-x-lg'}`}></i>
-              </button>
-              <span className="filter-chip__label">{c.label}</span>
-            </span>
-          ))}
-          <button type="button" className="filter-chip-clear" onClick={handleClearAll}>Clear all</button>
-          {onApply && (
-            <button
-              type="button"
-              className={`filter-chip-reload${hasPendingChanges ? ' filter-chip-reload--pending' : ''}`}
-              onClick={onApply}
-              disabled={loading || !hasPendingChanges}
-              aria-label="Apply filter changes and reload results"
-              title={hasPendingChanges ? 'Apply changes' : 'No pending changes'}
-            >
-              <i className="bi bi-arrow-clockwise"></i>
-            </button>
-          )}
-        </div>
+    <div ref={rootRef} className={`search-filters${isRail ? ' search-filters--rail' : (isExpanded ? ' expanded' : '')} ${className}`}>
+      {/* Active-filter chips — inline layout only, while the panel is collapsed (they summarise the
+          selection; expanded, the panel itself shows it). With the rail the page shows them above the table. */}
+      {isRail || isExpanded ? null : (
+        <FilterChips filters={filters} appliedFilters={appliedFilters} onFiltersChange={onFiltersChange}
+                     onApply={onApply} loading={loading} upload={upload} />
       )}
 
       {/* Collapse toggle — funnel + label grouped left, chevron (disclosure) right */}
-      <button className="filter-header" onClick={toggleExpanded} aria-expanded={isExpanded}>
-        <span><i className="bi bi-funnel"></i>Search Filters</span>
-        <i className={`bi ${isExpanded ? 'bi-chevron-down' : 'bi-chevron-right'}`}></i>
-      </button>
+      {isRail ? (
+        <div className="filter-header filter-header--rail">
+          <span><i className="bi bi-funnel"></i>Filters</span>
+          {onCollapse && (
+            <button type="button" className="filter-rail-collapse" onClick={onCollapse}
+                    aria-label="Hide filters" title="Hide filters">
+              <i className="bi bi-chevron-double-left"></i>
+            </button>
+          )}
+        </div>
+      ) : (
+        <button className="filter-header" onClick={toggleExpanded} aria-expanded={isExpanded}>
+          <span><i className="bi bi-funnel"></i>Search Filters</span>
+          <i className={`bi ${isExpanded ? 'bi-chevron-down' : 'bi-chevron-right'}`}></i>
+        </button>
+      )}
 
       {/* Filters Panel — max-height animates to the measured panel height
           (exact target → smooth, no max-height overshoot). */}
       <div
-        className={`collapsible-anim${isExpanded ? ' open' : ''}`}
-        style={{ maxHeight: isExpanded ? panelHeight : 0 }}
+        className={isRail ? 'filter-rail-body' : `collapsible-anim${isExpanded ? ' open' : ''}`}
+        style={isRail ? undefined : { maxHeight: isExpanded ? panelHeight : 0 }}
       >
         <div className="filter-panel" ref={panelRef}>
 

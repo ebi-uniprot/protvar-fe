@@ -1,4 +1,4 @@
-import DefaultPageLayout from "../../layout/DefaultPageLayout";
+import DefaultPageLayout, { SIDE_PANEL_ID } from "../../layout/DefaultPageLayout";
 import {LegendContent} from "../../modal/LegendContent";
 import ColumnChooser from "./ColumnChooser";
 import ViewSwitch from "./ViewSwitch";
@@ -31,6 +31,9 @@ import {
   mapUiCaddToBackend, mapUiPopeveToBackend,
   mapUiStabilityToBackend, mapUiAlleleFreqToBackend
 } from "../../components/search/filterUtils";
+import FilterChips from "../../components/search/FilterChips";
+import { createPortal } from "react-dom";
+import { useMediaQuery } from "../../../hooks/useMediaQuery";
 import {parseIdParam} from "../../../utills/InputTypeResolver";
 import {effectiveTotalPages, formatTotalCount} from "../../../utills/PaginationFormat";
 import {Identifier, IdentifierType, InputType} from "../../../types/InputType";
@@ -186,7 +189,18 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
   const [loading, setLoading] = useState(true)
   const [warning, setWarning] = useState('')
   const [loadError, setLoadError] = useState<LoadError | null>(null)
-  const { touchResult, saveResult, getHistory } = useStorage()
+  const { touchResult, saveResult, getHistory, getPrefs, setPrefs } = useStorage()
+  // Wide screens put the filters in a rail beside the table (collapsible, remembered); narrower ones keep the
+  // inline chip bar + expandable panel.
+  const railLayout = useMediaQuery('(min-width: 1200px)')
+  const [railCollapsed, setRailCollapsed] = useState(() => !!getPrefs().filterRailCollapsed)
+  // The layout's side-panel column (filled through a portal; found after the layout mounts)
+  const [sidePanelEl, setSidePanelEl] = useState<HTMLElement | null>(null)
+  useEffect(() => setSidePanelEl(document.getElementById(SIDE_PANEL_ID)), [])
+  const toggleRail = useCallback(() => setRailCollapsed(c => {
+    setPrefs({ filterRailCollapsed: !c });
+    return !c;
+  }), [setPrefs])
   // An upload is named by the user's label for it in History, else by a short form of its id
   const uploadLabel = useCallback((id: string) =>
     getHistory().find(r => r.id === id)?.name || `Upload ${id.slice(0, 8)}`, [getHistory])
@@ -333,6 +347,13 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
               setResultTitle(displayLabel);
               setTitleFlash(true);
               setTimeout(() => setTitleFlash(false), 600);
+            }
+          } else if (filters && describeFilters(filters, !!options.resultId).length > 0) {
+            // nothing matches, but filters are on: stay on the page (rail, chips) with an in-place empty state
+            setData(response.data)
+            if (options.resultId) {
+              setInputType('input_id');
+              setResultTitle(uploadLabel(options.resultId));
             }
           } else {
             setData(null); setWarning(NO_RESULT)
@@ -514,7 +535,13 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
     newSearchParams.delete('page');
     const queryString = newSearchParams.toString();
     navigate(`${location.pathname}${queryString ? `?${queryString}` : ''}`);
-    setTimeout(() => resultsTopRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+    // Update brings back a new page 1: bring the top of the results into view, but only when it's above the
+    // screen (already at the top, nothing moves). With the filters in the side rail this is about the results
+    // resetting, not about a panel that pushed the table down.
+    setTimeout(() => {
+      const top = resultsTopRef.current;
+      if (top && top.getBoundingClientRect().top < 0) top.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
   };
 
   const isQueryMode = mode === 'query';
@@ -672,33 +699,61 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
     );
   }
 
-  return <div>
-    <div className="page-header-row" ref={resultsTopRef}>
-      <h5 className="page-header">{pageTitle}</h5>
-      <HelpButton title="" content={<HelpContent name={helpName}/>}/>
+  const showFilters = (!isQueryMode || isFilterOnly) && inputType !== 'variant';
+  // Results came back empty with filters on: the page stays, an empty state replaces the table
+  const noMatches = !!data && (data.content?.inputs?.length ?? 0) === 0;
+  const appliedLabels = describeFilters(filters, isUploadedResult).map(c => c.label);
+  // browse's default "known variants" has no chip but still narrows the result
+  if (!isUploadedResult && filters.variant !== 'potential') appliedLabels.unshift('Known variants');
+  const appliedText = appliedLabels.length > 1
+    ? `${appliedLabels.slice(0, -1).join(', ')} and ${appliedLabels[appliedLabels.length - 1]}`
+    : appliedLabels[0];
+  const unfilteredParams = new URLSearchParams(searchParams);
+  FILTER_PARAM_KEYS.forEach(key => unfilteredParams.delete(key));
+  unfilteredParams.delete('page');
+  const unfilteredUrl = `${location.pathname}${unfilteredParams.toString() ? `?${unfilteredParams}` : ''}`;
+  const activeFilterCount = describeFilters(filters, isUploadedResult).length;
+  const filterProps = {
+    filters: localFilters,
+    appliedFilters: filters,
+    onFiltersChange: setLocalFilters,
+    onApply: handleApplyFilters,
+    loading: loading || preparing != null,
+    showSorting: true,
+    upload: isUploadedResult,
+  };
+  const resultsBody = noMatches ? (
+    <div className="result-empty">
+      <i className="bi bi-funnel result-empty__icon" aria-hidden="true" />
+      <p className="result-empty__title">No variants match these filters</p>
+      <p className="result-empty__text">
+        {subject && !isFilterOnly
+          ? <>Nothing for <strong>{subject}</strong> matches {appliedText}.</>
+          : <>Nothing matches {appliedText}.</>}
+        {' '}{appliedLabels.length > 1 ? 'Try removing some of these filters' : 'Try removing this filter'}, or{' '}
+        <button type="button" className="link-button" onClick={() => navigate(unfilteredUrl)}>clear them</button>.
+      </p>
     </div>
-    {data && !isQueryMode && (
-      <div className="page-header-count">{
-        data.totalInputs != null
-          // an upload counts its input lines; with filters on, out of the whole upload
-          ? (describeFilters(filters, true).length > 0
-              ? `${formatTotalCount(data)} of ${data.totalInputs.toLocaleString()} submitted inputs match the filters`
-              : `${data.totalInputs.toLocaleString()} submitted inputs`)
-          : `${formatTotalCount(data)} variants`
-      }</div>
-    )}
-
-    {/* ── Toolbar ── */}
-    <div className="result-toolbar">
-      {data && (
-        <label className="toggle-switch" title="Toggle between ProtVar standardised and original source colours">
-          <input type="checkbox" checked={appState.stdColor} onChange={() => appState.updateState("stdColor", !appState.stdColor)} />
-          <span className="toggle-track"><span className="toggle-thumb"></span></span>
-          <span className="toggle-label">ProtVar colours</span>
-        </label>
-      )}
-      {data && (
-        <div className="result-toolbar-actions">
+  ) : <>
+    {/* ── One toolbar over the table: pagination left; view, columns, colours, share, download right ── */}
+    {data && (
+      <div className="result-table-toolbar">
+        <div className="result-table-toolbar__pages">
+          {!isQueryMode && (data.totalPages > 1 || data.page > 1 || !data.last) && (
+            <PaginationRow loading={loading} data={data}/>
+          )}
+        </div>
+        <div className="result-table-toolbar__tools">
+          <label className="toggle-switch" title="Toggle between ProtVar standardised and original source colours">
+            <input type="checkbox" checked={appState.stdColor} onChange={() => appState.updateState("stdColor", !appState.stdColor)} />
+            <span className="toggle-track"><span className="toggle-thumb"></span></span>
+            <span className="toggle-label">ProtVar colours</span>
+          </label>
+          <ViewSwitch />
+          <button className="btn btn-secondary columns-btn" title="Choose which columns to show"
+                  onClick={() => appState.updateState("drawer", <ColumnChooser />)}>
+            <i className="bi bi-layout-three-columns" /> Columns
+          </button>
           <ShareLink url={shareUrl} linkText="Share" />
           {isBrowseIdentifier && (
             <i
@@ -725,7 +780,38 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
             <i className="bi bi-download" /> Download
           </button>
         </div>
+      </div>
+    )}
+    <div className="result-table-wrap">
+      {loading && data && (
+        <div className="result-table-loading" aria-live="polite" aria-label="Updating results">
+          <Loader className="result-table-loader"/>
+        </div>
       )}
+      <ResultTable key={input} data={data} lazyIsoforms={isFilterOnly}/>
+    </div>
+    {!isQueryMode && data && (data.totalPages > 1 || data.page > 1 || !data.last) && (
+      <div className="result-pre-table result-post-table">
+        <PaginationRow loading={loading} data={data}/>
+      </div>
+    )}
+  </>;
+
+  return <div>
+    {/* ── Title + count on one line ── */}
+    <div className="page-header-row" ref={resultsTopRef}>
+      <h5 className="page-header">{pageTitle}</h5>
+      {data && !isQueryMode && (
+        <span className="page-header-count page-header-count--inline">{
+          data.totalInputs != null
+            // an upload counts its input lines; with filters on, out of the whole upload
+            ? (describeFilters(filters, true).length > 0
+                ? `${formatTotalCount(data)} of ${data.totalInputs.toLocaleString()} submitted inputs match the filters`
+                : `${data.totalInputs.toLocaleString()} submitted inputs`)
+            : `${formatTotalCount(data)} variants`
+        }</span>
+      )}
+      <HelpButton title="" content={<HelpContent name={helpName}/>}/>
     </div>
 
     {/* ── Response-level messages from API ── */}
@@ -758,44 +844,34 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
     )}
 
     {/* ── Filters (browse, filter-only and uploaded results; not for a single variant) ── */}
-    {(!isQueryMode || isFilterOnly) && inputType !== 'variant' && (
-      <SearchFilters
-        filters={localFilters}
-        appliedFilters={filters}
-        onFiltersChange={setLocalFilters}
-        onApply={handleApplyFilters}
-        loading={loading || preparing != null}
-        showSorting={true}
-        upload={isUploadedResult}
-      />
-    )}
-
-    {!isQueryMode && data && (data.totalPages > 1 || data.page > 1 || !data.last) && (
-      <div className="result-pre-table">
-        <PaginationRow loading={loading} data={data}/>
-      </div>
-    )}
-    {data && (
-      <div className="result-table-actions">
-        <ViewSwitch />
-        <button className="btn btn-secondary columns-btn" title="Choose which columns to show"
-                onClick={() => appState.updateState("drawer", <ColumnChooser />)}>
-          <i className="bi bi-layout-three-columns" /> Columns
-        </button>
-      </div>
-    )}
-    <div className="result-table-wrap">
-      {loading && data && (
-        <div className="result-table-loading" aria-live="polite" aria-label="Updating results">
-          <Loader className="result-table-loader"/>
+    {!showFilters ? resultsBody : !railLayout ? (
+      <>
+        <SearchFilters {...filterProps} />
+        {resultsBody}
+      </>
+    ) : (
+      <>
+        {sidePanelEl && createPortal(
+          // one element whose width animates (300px ↔ 36px); the panel fades out and the tab fades in
+          <aside className={`filter-rail${railCollapsed ? ' collapsed' : ''}`} aria-label="Filters">
+            <div className="filter-rail-inner" aria-hidden={railCollapsed}>
+              <SearchFilters {...filterProps} layout="rail" onCollapse={toggleRail} />
+            </div>
+            <button type="button" className="filter-rail-tab" onClick={toggleRail} aria-label="Show filters"
+                    tabIndex={railCollapsed ? 0 : -1}>
+              <span className="filter-rail-tab__top"><i className="bi bi-chevron-double-right"></i></span>
+              <span className="filter-rail-tab__label">
+                <i className="bi bi-funnel"></i> Filters{activeFilterCount ? ` (${activeFilterCount})` : ''}
+              </span>
+            </button>
+          </aside>,
+          sidePanelEl)}
+        <div className="result-chips-row">
+          <FilterChips filters={localFilters} appliedFilters={filters} onFiltersChange={setLocalFilters}
+                       onApply={handleApplyFilters} loading={loading || preparing != null} upload={isUploadedResult} />
         </div>
-      )}
-      <ResultTable key={input} data={data} lazyIsoforms={isFilterOnly}/>
-    </div>
-    {!isQueryMode && data && (data.totalPages > 1 || data.page > 1 || !data.last) && (
-      <div className="result-pre-table result-post-table">
-        <PaginationRow loading={loading} data={data}/>
-      </div>
+        {resultsBody}
+      </>
     )}
 
   </div>

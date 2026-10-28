@@ -1,20 +1,5 @@
 /* ── Result toolbar (colour toggle left + actions right) ── */
-.result-toolbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 6px;
-    padding: 4px 0 6px;
-    margin-bottom: 6px;
-}
 
-.result-toolbar-actions {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-shrink: 0;
-}
 
 /* ── Pre-table pagination row ── */
 .result-pre-table {
@@ -123,4 +108,75 @@
 
 .result-table-loader {
     transform: scale(0.6);
+}
+
+/* count inline after the title (was its own line) */
+.page-header-count--inline {
+    margin: 0;
+    font-size: var(--font-size-sm);
+}
+
+/* one toolbar directly over the table: pagination left, tools right; wraps on narrow screens */
+.result-table-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    margin: 4px 0 8px;
+}
+
+.result-table-toolbar__pages {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+}
+
+.result-table-toolbar__tools {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-left: auto;
+}
+
+/* filters matched nothing: in place of the table, not a separate error page */
+.result-empty {
+    padding: 3rem 1.5rem;
+    text-align: center;
+    border: 1px dashed var(--color-border-medium);
+    border-radius: var(--radius-lg);
+    background: var(--color-bg-primary);
+}
+
+.result-empty__icon {
+    font-size: 1.5rem;
+    color: var(--color-text-tertiary);
+}
+
+.result-empty__title {
+    margin: 0.5rem 0 0.25rem;
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+}
+
+.result-empty__text {
+    margin: 0;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+}
+
+/* an inline action styled as a link */
+.link-button {
+    padding: 0;
+    border: none;
+    background: none;
+    font: inherit;
+    color: var(--color-primary);
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.link-button:hover {
+    color: var(--color-primary-dark);
 }

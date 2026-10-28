@@ -21,7 +21,7 @@
     flex-direction: column;
     overflow: hidden;
     /* Only this transition fires — on expand/collapse click */
-    transition: width 0.28s ease;
+    transition: width var(--transition-panel);
     flex-shrink: 0;
 }
 
