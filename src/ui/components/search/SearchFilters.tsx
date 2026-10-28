@@ -55,6 +55,7 @@ interface SearchFiltersProps {
   loading?: boolean;
   onApply?: () => void;
   showSorting?: boolean;
+  upload?: boolean;                        // uploaded result: default is all submitted variants, not known only
   className?: string;
 }
 
@@ -71,6 +72,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                                                        loading = false,
                                                        onApply,
                                                        showSorting = false,
+                                                       upload = false,
                                                        className = ''
                                                      }) => {
   // Panel stays collapsed by default — the chip bar shows what's active, so
@@ -254,20 +256,20 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                   type="radio"
                   name="variant"
                   value="known"
-                  checked={filters.variant === 'known' || filters.variant === undefined}
+                  checked={filters.variant === 'known' || (!upload && filters.variant === undefined)}
                   onChange={() => handleVariantChange('known')}
                 />
-                <span>Known variants</span>
+                <span>{upload ? 'Known variants only' : 'Known variants'}</span>
               </label>
               <label className="radio-label">
                 <input
                   type="radio"
                   name="variant"
                   value="potential"
-                  checked={filters.variant === 'potential'}
+                  checked={filters.variant === 'potential' || (upload && filters.variant === undefined)}
                   onChange={() => handleVariantChange('potential')}
                 />
-                <span>Potential variants</span>
+                <span>{upload ? 'All submitted variants' : 'Potential variants'}</span>
               </label>
             </div>
           </div>

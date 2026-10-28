@@ -13,6 +13,9 @@ export interface PagedMappingResponse {
   // "more than totalCap" — display as e.g. "10,000+".
   totalCap?: number | null
   last: boolean
+  // Uploaded result being prepared for filter/sort (large uploads build in the background): progress 0–99.
+  // Content is empty meanwhile; re-send the same request until this is absent.
+  preparing?: number | null
 }
 
 export interface InputUploadResponse {

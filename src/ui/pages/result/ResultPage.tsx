@@ -179,6 +179,11 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
   // refetch when the load key matches avoids a spurious reload + loader flash;
   // a real change (ids/filters/page/assembly/query) yields a new key and loads.
   const lastLoadKeyRef = useRef<string | null>(null);
+  // Upload filter/sort being prepared by the BE: progress, and the pending re-poll
+  const [preparing, setPreparing] = useState<number | null>(null);
+  const [pollNonce, setPollNonce] = useState(0);
+  const pollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => { if (pollTimerRef.current) clearTimeout(pollTimerRef.current); }, []);
   // Track browse identifiers so DownloadPanel and Save button can reference them
   const [currentBrowseIds, setCurrentBrowseIds] = useState<Identifier[] | undefined>()
 
@@ -231,7 +236,11 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
     const backendPopeve = filters?.popeve ? mapUiPopeveToBackend(filters.popeve) : [];
     const backendStability = filters?.stability ? mapUiStabilityToBackend(filters.stability) : [];
     const backendFreq = filters?.freq ? mapUiAlleleFreqToBackend(filters.freq) : [];
-    const knownVariants = filters?.variant !== 'potential' ? true : undefined;
+    // Browse defaults to known variants (a driver filter); an upload shows all submitted variants unless the
+    // user picks "known" — sending known=true by default would filter every upload view.
+    const knownVariants = options.resultId
+      ? (filters?.variant === 'known' ? true : undefined)
+      : (filters?.variant !== 'potential' ? true : undefined);
 
     const request: MappingRequest = {
       ...options,
@@ -262,8 +271,18 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
       order: filters?.order,
     };
 
+    if (pollTimerRef.current) { clearTimeout(pollTimerRef.current); pollTimerRef.current = null; }
     getMapping(request)
       .then((response) => {
+        if (response.data?.preparing != null) {
+          // upload still being prepared for filter/sort: show progress, ask again shortly
+          setPreparing(response.data.preparing);
+          setData(null);   // the old page doesn't match the new filters
+          lastLoadKeyRef.current = null;
+          pollTimerRef.current = setTimeout(() => setPollNonce(n => n + 1), 2000);
+          return;
+        }
+        setPreparing(null);
         if (response.data) {
           if (response.data.content?.inputs?.length > 0) {
             setData(response.data)
@@ -302,6 +321,7 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
       })
       .catch((err) => {
         setData(null)
+        setPreparing(null)
         if (err.response) {
           if (err.response?.status === 400) {
             const errData = err.response.data;
@@ -449,7 +469,7 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
       setResultTitle('');
       loadBrowseData({}, page, pageSize, assembly, filters);
     }
-  }, [mode, isRangeQuery, param1, param2, idType, idParam, idParamValues, input, location.pathname, page, pageSize, assembly, filters, loadBrowseData])
+  }, [mode, isRangeQuery, param1, param2, idType, idParam, idParamValues, input, location.pathname, page, pageSize, assembly, filters, loadBrowseData, pollNonce])
 
   useEffect(() => {
     setLocalFilters(extractFilters(searchParams));
@@ -588,7 +608,7 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
 
   // No data (bad/unresolvable id or unrecognised query): a centred "not found"
   // like the error/404 pages, not an empty toolbar + table. Already noindex.
-  if (!loading && !data) {
+  if (!loading && !data && preparing == null) {
     const isInvalid = warning === INVALID_QUERY;
     return (
       <div className="error-page">
@@ -677,15 +697,25 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
 
     {!data && loading && <Loader/>}
 
-    {/* ── Filters (browse/filter-only mode; not for single-variant or batch results) ── */}
-    {(!isQueryMode || isFilterOnly) && inputType !== 'input_id' && inputType !== 'variant' && (
+    {preparing != null && (
+      <div className="result-notices">
+        <div className="result-notice result-notice--info">
+          Preparing filters for your upload… {preparing}%. Large uploads take a few minutes; this page updates
+          by itself.
+        </div>
+      </div>
+    )}
+
+    {/* ── Filters (browse, filter-only and uploaded results; not for a single variant) ── */}
+    {(!isQueryMode || isFilterOnly) && inputType !== 'variant' && (
       <SearchFilters
         filters={localFilters}
         appliedFilters={filters}
         onFiltersChange={setLocalFilters}
         onApply={handleApplyFilters}
-        loading={loading}
+        loading={loading || preparing != null}
         showSorting={true}
+        upload={isUploadedResult}
       />
     )}
 
