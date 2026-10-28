@@ -47,6 +47,20 @@ export const NO_DATA = 'No data'
 export const NO_RESULT = 'No result to display'
 export const UNEXPECTED_ERR = 'An unexpected error occurred'
 
+/** A failed load (not an empty result): what the error page says instead of "No results found". */
+interface LoadError { title: string; text: string }
+
+function loadErrorOf(err: any, badRequestMsg?: string): LoadError {
+  const status: number | undefined = err?.response?.status;
+  if (status === 400)
+    return { title: "Can't show these results", text: badRequestMsg || 'The request was not valid.' };
+  if (status !== undefined && status >= 500)
+    return { title: 'Something went wrong',
+             text: `The server took too long to respond or hit an error (HTTP ${status}). Filtering or sorting a large `
+                 + 'upload for the first time can take a while. Please try again in a moment.' };
+  return { title: 'Something went wrong', text: status ? `Error ${status}: ${err.message}` : 'Could not reach the server. Check your connection and try again.' };
+}
+
 // Regex used for backward-compat chromosome_protein route parsing
 const chromosomeRegex = /^chr([1-9]|1[0-9]|2[0-2]|X|Y|MT)$/;
 const proteinAccessionRegex = /^([OPQ][0-9][A-Z0-9]{3}[0-9]|[A-NR-Z][0-9]([A-Z][A-Z0-9]{2}[0-9]){1,2})$/;
@@ -171,7 +185,11 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
   const [data, setData] = useState<PagedMappingResponse | null>(null)
   const [loading, setLoading] = useState(true)
   const [warning, setWarning] = useState('')
+  const [loadError, setLoadError] = useState<LoadError | null>(null)
   const { touchResult, saveResult, getHistory } = useStorage()
+  // An upload is named by the user's label for it in History, else by a short form of its id
+  const uploadLabel = useCallback((id: string) =>
+    getHistory().find(r => r.id === id)?.name || `Upload ${id.slice(0, 8)}`, [getHistory])
   const resultsTopRef = useRef<HTMLDivElement>(null);
   // De-dupe identical consecutive data loads. Annotation panels keep their
   // open/closed state in the URL (?annotation=…), so toggling one navigates and
@@ -232,7 +250,7 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
     // filter panel's busy state in and out every couple of seconds, which jumps the layout.
     const isPoll = pollingRef.current;
     pollingRef.current = false;
-    if (!isPoll) { setLoading(true); pollDelayRef.current = 2000; }
+    if (!isPoll) { setLoading(true); setLoadError(null); pollDelayRef.current = 2000; }
 
     const pageIsValid = !isNaN(page) && page > 0;
     const pageSizeIsValid = !isNaN(pageSize) && PERMITTED_PAGE_SIZES.includes(pageSize);
@@ -299,13 +317,10 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
             setData(response.data)
 
             if (options.resultId) {
-              // Uploaded result: type is effectively 'input_id', show summary title
+              // Uploaded result: type is effectively 'input_id'; titled by its name, not by its rows (which
+              // change with the filters)
               setInputType('input_id');
-              const totalItems = response.data.totalItems;
-              const firstInputLine = totalItems === 1 ?
-                response.data.content.inputs[0].inputStr :
-                `${response.data.content.inputs[0].inputStr} ...+${totalItems - 1} more `;
-              setResultTitle(firstInputLine);
+              setResultTitle(uploadLabel(options.resultId));
               touchResult(options.resultId, location.pathname + location.search);
             } else {
               // Identifier browse: derive type and label from what we sent
@@ -352,16 +367,19 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
               msg = 'Invalid input or type mismatch';
             }
             setWarning(msg);
+            setLoadError(loadErrorOf(err, msg));
           } else if (err.response.status === 404) {
             setWarning(NO_RESULT);
           } else {
             setWarning(`Error ${err.response.status}: ${err.message}`);
+            setLoadError(loadErrorOf(err));
           }
         } else {
           setWarning(UNEXPECTED_ERR);
+          setLoadError(loadErrorOf(err));
         }
       }).finally(() => setLoading(false))
-  }, [touchResult, location])
+  }, [touchResult, location, uploadLabel])
 
   // ── Query mode loader (GET /mapping?input=) ─────────────────────────────────
   const loadQueryData = useCallback((q: string, assembly: string | null) => {
@@ -369,6 +387,7 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
     if (loadKey === lastLoadKeyRef.current) return;
     lastLoadKeyRef.current = loadKey;
     setLoading(true)
+    setLoadError(null)
     singleVariant(q, assembly ?? undefined)
       .then((response) => {
         if (response.data?.content?.inputs?.length > 0) {
@@ -382,10 +401,9 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
         setData(null)
         if (err.response?.status === 404) {
           setWarning(NO_RESULT)
-        } else if (err.response) {
-          setWarning(`Error ${err.response.status}: ${err.message}`)
         } else {
-          setWarning(UNEXPECTED_ERR)
+          setWarning(err.response ? `Error ${err.response.status}: ${err.message}` : UNEXPECTED_ERR)
+          setLoadError(loadErrorOf(err))
         }
       }).finally(() => setLoading(false))
   }, [])
@@ -467,6 +485,7 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
       setResultTitle(trimmedInput);
       if (location.pathname.startsWith(RESULT + '/')) {
         // /result/:id — uploaded result, use resultId path
+        setResultTitle(uploadLabel(trimmedInput));
         loadBrowseData({ resultId: trimmedInput }, page, pageSize, assembly, filters);
       } else {
         // /:accession — UniProt accession or other identifier, use ids path
@@ -480,7 +499,7 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
       setResultTitle('');
       loadBrowseData({}, page, pageSize, assembly, filters);
     }
-  }, [mode, isRangeQuery, param1, param2, idType, idParam, idParamValues, input, location.pathname, page, pageSize, assembly, filters, loadBrowseData, pollNonce])
+  }, [mode, isRangeQuery, param1, param2, idType, idParam, idParamValues, input, location.pathname, page, pageSize, assembly, filters, loadBrowseData, pollNonce, uploadLabel])
 
   useEffect(() => {
     setLocalFilters(extractFilters(searchParams));
@@ -619,6 +638,20 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
 
   // No data (bad/unresolvable id or unrecognised query): a centred "not found"
   // like the error/404 pages, not an empty toolbar + table. Already noindex.
+  if (!loading && !data && preparing == null && loadError) {
+    return (
+      <div className="error-page">
+        <i className="bi bi-exclamation-triangle error-page-icon" />
+        <h4 className="error-page-title">{loadError.title}</h4>
+        <p className="error-page-text">{loadError.text}</p>
+        <div className="error-page-actions">
+          <button className="btn btn-primary" onClick={() => window.location.reload()}>Try again</button>
+          <button className="btn btn-secondary" onClick={() => navigate(HOME)}>Back to search</button>
+        </div>
+      </div>
+    );
+  }
+
   if (!loading && !data && preparing == null) {
     const isInvalid = warning === INVALID_QUERY;
     return (
@@ -645,7 +678,14 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
       <HelpButton title="" content={<HelpContent name={helpName}/>}/>
     </div>
     {data && !isQueryMode && (
-      <div className="page-header-count">{formatTotalCount(data)} variants</div>
+      <div className="page-header-count">{
+        data.totalInputs != null
+          // an upload counts its input lines; with filters on, out of the whole upload
+          ? (describeFilters(filters, true).length > 0
+              ? `${formatTotalCount(data)} of ${data.totalInputs.toLocaleString()} submitted inputs match the filters`
+              : `${data.totalInputs.toLocaleString()} submitted inputs`)
+          : `${formatTotalCount(data)} variants`
+      }</div>
     )}
 
     {/* ── Toolbar ── */}

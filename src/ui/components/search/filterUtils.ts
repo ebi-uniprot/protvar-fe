@@ -155,10 +155,14 @@ const prettyValue = (v: string): string =>
   v.replace(/_/g, ' ').replace(/^\w/, c => c.toUpperCase());
 
 // Flat list of chips for the active filters in `f` — one chip per value.
-export const describeFilters = (f: SearchFilterParams): FilterChip[] => {
+// Variant type is the one filter whose default depends on the view: browse defaults to known variants (a
+// "Potential variants" chip when widened), an upload to all submitted variants ("Known variants only" chip
+// when narrowed).
+export const describeFilters = (f: SearchFilterParams, upload = false): FilterChip[] => {
   const chips: FilterChip[] = [];
 
-  if (f.variant === 'potential') chips.push({ id: 'variant', label: 'Potential variants' });
+  if (upload ? f.variant === 'known' : f.variant === 'potential')
+    chips.push({ id: 'variant', label: upload ? 'Known variants only' : 'Potential variants' });
 
   for (const [key, label] of BOOLEAN_CHIP_LABELS) {
     if (f[key] === true) chips.push({ id: key as string, label });
@@ -181,8 +185,8 @@ export const describeFilters = (f: SearchFilterParams): FilterChip[] => {
 };
 
 // Remove the filter atom identified by `id` from `f`.
-export const removeChip = (f: SearchFilterParams, id: string): SearchFilterParams => {
-  if (id === 'variant') return { ...f, variant: 'known' };
+export const removeChip = (f: SearchFilterParams, id: string, upload = false): SearchFilterParams => {
+  if (id === 'variant') return { ...f, variant: upload ? undefined : 'known' };
   if (id === 'conservation') return { ...f, consMin: undefined, consMax: undefined };
   if (id === 'esm1b') return { ...f, esmMin: undefined, esmMax: undefined };
   if (id.includes(':')) {

@@ -107,10 +107,10 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
 
   // Active-filter chips: union of staged + applied, keyed by id. A chip is
   // "staged for removal" (greyed) when it's applied but no longer staged.
-  const localChips = describeFilters(filters);
+  const localChips = describeFilters(filters, upload);
   const localIds = new Set(localChips.map(c => c.id));
   const chipMap = new Map<string, { id: string; label: string; staged: boolean }>();
-  describeFilters(applied).forEach(c => chipMap.set(c.id, { ...c, staged: !localIds.has(c.id) }));
+  describeFilters(applied, upload).forEach(c => chipMap.set(c.id, { ...c, staged: !localIds.has(c.id) }));
   localChips.forEach(c => chipMap.set(c.id, { ...c, staged: false }));
   const chips = Array.from(chipMap.values());
 
@@ -118,12 +118,12 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
 
   // × on a chip stages a removal (greys it); × on a greyed chip restores it.
   const toggleChip = (id: string, staged: boolean) => {
-    onFiltersChange(staged ? restoreChip(filters, applied, id) : removeChip(filters, id));
+    onFiltersChange(staged ? restoreChip(filters, applied, id) : removeChip(filters, id, upload));
   };
 
   const handleClearAll = () => {
     let cleared = filters;
-    describeFilters(filters).forEach(c => { cleared = removeChip(cleared, c.id); });
+    describeFilters(filters, upload).forEach(c => { cleared = removeChip(cleared, c.id, upload); });
     onFiltersChange(cleared);
   };
 

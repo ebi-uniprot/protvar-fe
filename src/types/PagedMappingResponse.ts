@@ -16,6 +16,8 @@ export interface PagedMappingResponse {
   // Uploaded result being prepared for filter/sort (large uploads build in the background): progress 0–99.
   // Content is empty meanwhile; re-send the same request until this is absent.
   preparing?: number | null
+  // Uploaded result only: the upload's total inputs whatever the filters (totalItems = the matching ones)
+  totalInputs?: number | null
 }
 
 export interface InputUploadResponse {
