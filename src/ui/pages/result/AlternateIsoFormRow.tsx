@@ -31,13 +31,19 @@ export function getConsequenceFullName(consequence?: string): string {
   return consequence;
 }
 
-export function CanonicalIcon(props: { isCanonical: boolean | undefined }) {
+// Only reviewed (Swiss-Prot) entries have -N isoforms; any other non-canonical accession is an unreviewed entry.
+const REVIEWED_ISOFORM = /-\d+$/;
+
+export function CanonicalIcon(props: { isCanonical: boolean | undefined, accession?: string }) {
   if (props.isCanonical === undefined)
     return EmptyElement;
   else if (props.isCanonical)
     return <Tool el="span" tip="Canonical isoform" className="protein-type-icon protein-type-icon--canonical">can</Tool>;
+  else if (!props.accession || REVIEWED_ISOFORM.test(props.accession))
+    return <Tool el="span" tip="Isoform of a reviewed entry" className="protein-type-icon protein-type-icon--isoform">iso</Tool>;
   else
-    return <Tool el="span" tip="Non canonical isoform" className="protein-type-icon protein-type-icon--isoform">iso</Tool>;
+    return <Tool el="span" tip="Unreviewed entry (TrEMBL), not an isoform of a reviewed protein"
+                 className="protein-type-icon protein-type-icon--unreviewed">unr</Tool>;
 }
 
 export function getProteinName(proteinName?: string) {
@@ -52,7 +58,7 @@ export function getAlternateIsoFormRow(isoformKey: string, index: number, isofor
   // Alt isoforms only fill these protein columns; every other visible column gets an empty placeholder.
   const cells: Partial<Record<ColumnId, React.ReactNode>> = {
     isoform: <span key="isoform" className="isoform-cell">
-      <CanonicalIcon isCanonical={false} />
+      <CanonicalIcon isCanonical={false} accession={isoform.accession} />
       <Tool tip="Click to see the UniProt page for this accession">
         <TextLink url={UNIPROT_ACCESSION_URL + isoform.accession} text={isoform.accession} />
       </Tool>

@@ -382,6 +382,13 @@
     color: white;
 }
 
+/* unreviewed entry: the quietest of the three — outline only, same shape */
+.protein-type-icon--unreviewed {
+    background: transparent;
+    color: #9ab0d8;
+    box-shadow: inset 0 0 0 1px #9ab0d8;
+}
+
 .button--toggle-isoforms {
     background: none;
     border: none;

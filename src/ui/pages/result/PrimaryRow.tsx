@@ -215,7 +215,7 @@ export const getNewPrimaryRow = (
                     : <ChevronUpIcon  className="toggle-isoforms" />)}
             </Tool>
           )}
-          <CanonicalIcon isCanonical={isoform.canonical} />
+          <CanonicalIcon isCanonical={isoform.canonical} accession={isoform.accession} />
           <Tool tip="Click to see the UniProt page for this accession">
             <TextLink url={UNIPROT_ACCESSION_URL + isoform.accession} text={isoform.accession} />
           </Tool>
@@ -298,7 +298,7 @@ export const getNewPrimaryRow = (
         return (
           <div key={altIso.accession} className="card-isoform-inline">
             <span className="isoform-cell">
-              <CanonicalIcon isCanonical={false} />
+              <CanonicalIcon isCanonical={false} accession={altIso.accession} />
               <Tool tip="Click to see the UniProt page for this accession">
                 <TextLink url={UNIPROT_ACCESSION_URL + altIso.accession} text={altIso.accession} />
               </Tool>
