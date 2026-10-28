@@ -63,7 +63,7 @@
 .range-slider__track-fill {
     position: absolute;
     height: 100%;
-    background-color: rgba(1, 67, 115, 0.6);
+    background-color: var(--color-brand-light);
     border-radius: 3px;
 }
 
@@ -87,7 +87,7 @@
     height: 16px;
     border-radius: 50%;
     background: var(--color-bg-elevated);
-    border: 2.5px solid #014373;
+    border: 2.5px solid var(--color-brand-light);
     cursor: grab;
     pointer-events: auto;
     box-shadow: 0 1px 3px rgba(0,0,0,0.15);
@@ -99,7 +99,7 @@
     height: 16px;
     border-radius: 50%;
     background: var(--color-bg-elevated);
-    border: 2.5px solid #014373;
+    border: 2.5px solid var(--color-brand-light);
     cursor: grab;
     pointer-events: auto;
     box-shadow: 0 1px 3px rgba(0,0,0,0.15);
@@ -110,13 +110,13 @@
 .range-slider__input::-moz-range-thumb:hover {
     transform: scale(1.1);
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    border-color: #012d5a;
+    border-color: var(--color-brand);
 }
 
 .range-slider__input::-webkit-slider-thumb:active,
 .range-slider__input::-moz-range-thumb:active {
     cursor: grabbing;
-    border-color: #012d5a;
+    border-color: var(--color-brand);
 }
 
 .range-slider__input::-webkit-slider-runnable-track,
