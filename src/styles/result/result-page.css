@@ -140,6 +140,11 @@
     margin-left: auto;
 }
 
+/* Share / Legends: same text size as the buttons beside them (icon-btn defaults to 16px for icon-only use) */
+.result-table-toolbar__tools .icon-btn {
+    font-size: var(--font-size-sm);
+}
+
 /* filters matched nothing: in place of the table, not a separate error page */
 .result-empty {
     padding: 3rem 1.5rem;

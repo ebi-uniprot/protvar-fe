@@ -85,9 +85,9 @@
     font-size: var(--font-size-sm);
 }
 .view-switch-btn {
-    border: 1px solid #6987C3;
+    border: 1px solid var(--color-primary);
     background: transparent;
-    color: #6987C3;
+    color: var(--color-primary);
     padding: 2px 10px;
     cursor: pointer;
 }
@@ -97,7 +97,7 @@
 .view-switch-btn:first-child { border-radius: 4px 0 0 4px; }
 .view-switch-btn:last-of-type { border-radius: 0 4px 4px 0; }
 .view-switch-btn.active {
-    background: #6987C3;
+    background: var(--color-primary);
     color: white;
 }
 .view-switch-custom {

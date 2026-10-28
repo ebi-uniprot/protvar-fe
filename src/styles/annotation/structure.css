@@ -94,7 +94,7 @@
 
 .structure-viewer-wrapper {
     position: relative;
-    background: #fafafa;
+    background: var(--color-bg-secondary);
     min-width: 360px;   /* MolStar needs at least ~360px to render usably */
     border-radius: 0 0 8px 8px;
     overflow: hidden;
@@ -121,7 +121,7 @@ pdbe-molstar .msp-layout-expanded {
     background: var(--color-bg-elevated);
     border: none;
     font-size: 11px;
-    color: #999;
+    color: var(--color-text-tertiary);
     font-weight: 400;
     letter-spacing: 0.01em;
     text-align: center;
@@ -140,12 +140,12 @@ pdbe-molstar .msp-layout-expanded {
 
 .viewer-control-btn {
     background: rgba(255, 255, 255, 0.95);
-    border: 1px solid #d0d8e0;
+    border: 1px solid var(--color-border-dark);
     border-radius: 6px;
     padding: 8px 12px;
     font-size: 12px;
     font-weight: 500;
-    color: #333;
+    color: var(--color-text-primary);
     cursor: pointer;
     transition: all 0.2s ease;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -154,8 +154,8 @@ pdbe-molstar .msp-layout-expanded {
 
 .viewer-control-btn:hover {
     background: var(--color-bg-elevated);
-    border-color: #4a90e2;
-    color: #4a90e2;
+    border-color: var(--color-primary);
+    color: var(--color-primary);
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
 }
 
@@ -164,26 +164,26 @@ pdbe-molstar .msp-layout-expanded {
 }
 
 .viewer-control-btn.btn-primary {
-    background: #4a90e2;
+    background: var(--color-primary);
     color: white;
-    border-color: #4a90e2;
+    border-color: var(--color-primary);
 }
 
 .viewer-control-btn.btn-primary:hover {
-    background: #357abd;
-    border-color: #357abd;
+    background: var(--color-primary-dark);
+    border-color: var(--color-primary-dark);
 }
 
 .viewer-control-btn.btn-reset {
     background: rgba(255, 255, 255, 0.9);
-    border-color: #999;
-    color: #666;
+    border-color: var(--color-gray-600);
+    color: var(--color-text-secondary);
 }
 
 .viewer-control-btn.btn-reset:hover {
     background: var(--color-bg-elevated);
-    border-color: #666;
-    color: #333;
+    border-color: var(--color-gray-700);
+    color: var(--color-text-primary);
 }
 
 /* ============================================
@@ -213,7 +213,7 @@ pdbe-molstar .msp-layout-expanded {
     border: none;
     cursor: pointer;
     font-size: 16px;
-    color: #999;
+    color: var(--color-text-tertiary);
     width: 22px;
     height: 22px;
     display: flex;
@@ -225,8 +225,8 @@ pdbe-molstar .msp-layout-expanded {
 }
 
 .pae-panel-close:hover {
-    background: #f0f0f0;
-    color: #333;
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-primary);
 }
 
 .pae-panel-content {
@@ -244,7 +244,7 @@ pdbe-molstar .msp-layout-expanded {
 .pae-section-title {
     font-size: 11px;
     font-weight: 600;
-    color: #777;
+    color: var(--color-text-tertiary);
     text-transform: uppercase;
     letter-spacing: 0.3px;
     margin-bottom: 8px;
@@ -261,7 +261,7 @@ pdbe-molstar .msp-layout-expanded {
     writing-mode: vertical-rl;
     transform: rotate(180deg);
     font-size: 10px;
-    color: #888;
+    color: var(--color-text-tertiary);
     white-space: nowrap;
     align-self: center;
     letter-spacing: 0.2px;
@@ -282,7 +282,7 @@ pdbe-molstar .msp-layout-expanded {
 
 .pae-x-axis {
     font-size: 10px;
-    color: #888;
+    color: var(--color-text-tertiary);
     white-space: nowrap;
     letter-spacing: 0.2px;
 }
@@ -292,7 +292,7 @@ pdbe-molstar .msp-layout-expanded {
    ============================================ */
 
 .structure-table-card {
-    background: #fafafa;
+    background: var(--color-bg-secondary);
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     overflow: hidden;
@@ -303,7 +303,7 @@ pdbe-molstar .msp-layout-expanded {
     align-items: center;
     justify-content: space-between;
     padding: 14px 20px;
-    background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+    background: var(--color-primary);
     color: white;
     font-size: 15px;
     font-weight: 600;
@@ -333,7 +333,7 @@ pdbe-molstar .msp-layout-expanded {
 .structure-table thead {
     position: sticky;
     top: 0;
-    background: #f0f0f0;
+    background: var(--color-bg-tertiary);
     z-index: 1;
 }
 
@@ -342,7 +342,7 @@ pdbe-molstar .msp-layout-expanded {
     text-align: left;
     font-size: 12px;
     font-weight: 600;
-    color: #555;
+    color: var(--color-text-secondary);
     border-bottom: 2px solid var(--color-border-medium);
 }
 
@@ -353,18 +353,18 @@ pdbe-molstar .msp-layout-expanded {
 }
 
 .structure-table tbody tr:hover {
-    background: #f5f8fa;
+    background: var(--color-gray-50);
 }
 
 .structure-table tbody tr.active {
-    background: #e8f4f8;
-    border-left: 3px solid #4a90e2;
+    background: var(--color-primary-lightest);
+    border-left: 3px solid var(--color-primary);
 }
 
 .structure-table td {
     padding: 10px 12px;
     font-size: 13px;
-    color: #333;
+    color: var(--color-text-primary);
 }
 
 .structure-table td.small {
@@ -382,7 +382,7 @@ pdbe-molstar .msp-layout-expanded {
 
 .table-actions {
     padding: 12px 16px;
-    background: #f8f9fa;
+    background: var(--color-gray-50);
     border-top: 1px solid var(--color-border-medium);
     display: flex;
     flex-wrap: wrap;
@@ -391,19 +391,19 @@ pdbe-molstar .msp-layout-expanded {
 
 .table-action-btn {
     background: var(--color-bg-elevated);
-    border: 1px solid #d0d8e0;
+    border: 1px solid var(--color-border-dark);
     border-radius: 4px;
     padding: 6px 12px;
     font-size: 12px;
     font-weight: 500;
-    color: #555;
+    color: var(--color-text-secondary);
     cursor: pointer;
     transition: all 0.2s ease;
 }
 
 .table-action-btn:hover {
-    background: #4a90e2;
-    border-color: #4a90e2;
+    background: var(--color-primary);
+    border-color: var(--color-primary);
     color: white;
 }
 
@@ -412,26 +412,26 @@ pdbe-molstar .msp-layout-expanded {
 }
 
 .table-action-btn.btn-zoom {
-    background: #4a90e2;
-    border-color: #4a90e2;
+    background: var(--color-primary);
+    border-color: var(--color-primary);
     color: white;
 }
 
 .table-action-btn.btn-zoom:hover {
-    background: #357abd;
-    border-color: #357abd;
+    background: var(--color-primary-dark);
+    border-color: var(--color-primary-dark);
 }
 
 .table-action-btn.btn-reset {
-    background: #f0f0f0;
+    background: var(--color-bg-tertiary);
     border-color: var(--color-border-dark);
-    color: #666;
+    color: var(--color-text-secondary);
 }
 
 .table-action-btn.btn-reset:hover {
-    background: #e0e0e0;
-    border-color: #999;
-    color: #333;
+    background: var(--color-border-medium);
+    border-color: var(--color-gray-600);
+    color: var(--color-text-primary);
 }
 
 /* ============================================
@@ -459,7 +459,7 @@ pdbe-molstar .msp-layout-expanded {
 }
 
 .confidence-label {
-    color: #666;
+    color: var(--color-text-secondary);
 }
 
 /* AlphaFold PAE legend confidence colours */
@@ -476,7 +476,7 @@ pdbe-molstar .msp-layout-expanded {
 .no-structure-message {
     padding: 40px 20px;
     text-align: center;
-    color: #999;
+    color: var(--color-text-tertiary);
     font-size: 14px;
 }
 

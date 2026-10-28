@@ -4,6 +4,11 @@ import {BrowserRouter} from "react-router-dom";
 import reportWebVitals from './reportWebVitals';
 
 import App from './ui/App';
+// IBM Plex Sans (the EBI Visual Framework font), self-hosted: no third-party font request
+import '@fontsource/ibm-plex-sans/400.css';
+import '@fontsource/ibm-plex-sans/500.css';
+import '@fontsource/ibm-plex-sans/600.css';
+import '@fontsource/ibm-plex-sans/700.css';
 
 const root = createRoot(document.getElementById("root") as HTMLElement);
 root.render(

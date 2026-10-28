@@ -26,7 +26,7 @@
     min-width: 0;
     /* Thin scrollbar so the bottom bar is unobtrusive */
     scrollbar-width: thin;
-    scrollbar-color: #c5d0e0 transparent;
+    scrollbar-color: var(--color-border-dark) transparent;
 }
 
 /*
@@ -70,13 +70,13 @@
     display: grid;
     grid-template-columns: subgrid;
     grid-template-rows: auto;
-    border-bottom: 2px solid #6987C3;
+    border-bottom: 1px solid var(--color-border-medium);
 }
 
-/* Group header row: Genomic | Protein | Annotations */
+/* Group header row: Genomic | Protein | Annotations. A soft brand tint, not a solid blue bar */
 .result-group-header {
-    background: #6987C3;
-    color: white;
+    background: var(--color-brand-lightest);
+    color: var(--color-brand);
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-semibold);
     letter-spacing: 0.04em;
@@ -111,10 +111,10 @@
 
 /* Dividers between groups */
 .result-group-header > :nth-child(2) {
-    border-left: 1px solid rgba(255,255,255,0.3);
+    border-left: 1px solid var(--color-border-medium);
 }
 .result-group-header > :nth-child(3) {
-    border-left: 1px solid rgba(255,255,255,0.3);
+    border-left: 1px solid var(--color-border-medium);
 }
 
 
@@ -139,14 +139,14 @@
 }
 
 .result-row {
-    border-bottom: 1px dotted var(--color-border-dark);
+    border-bottom: 1px solid var(--color-border-light);
     transition: background var(--transition-base);
     min-height: 2rem;
 }
 
 .result-row.row-even:hover,
 .result-row.row-odd:hover {
-    background: #eef3ff;
+    background: var(--color-primary-lightest);
 }
 
 /* Card-row wrappers are transparent to the grid — their children become grid items.
@@ -201,7 +201,7 @@
 
 /* Alternating row backgrounds */
 .result-row.row-even { background: var(--color-bg-elevated); }
-.result-row.row-odd  { background: #F4F3F3; }
+.result-row.row-odd  { background: var(--color-gray-50); }
 
 /* No underlines on any links inside result rows or annotation panels */
 .result-row a,
@@ -292,14 +292,17 @@
    SCORE BOX (CADD, AlphaMissense)
    ============================================ */
 
+/* compact fixed width: minimal side padding + slight tightening so 2-dp scores ("25.34") fit inside */
 .score-box {
     display: inline-block;
     width: 2.2rem;
     text-align: center;
-    padding: 1px 3px;
+    padding: 3px 1px;
+    line-height: 1;
+    letter-spacing: -0.02em;
     border-radius: 0.75rem;
     font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-semibold);
     font-variant-numeric: tabular-nums;   /* digits line up down a score column */
     color: white;
     cursor: default;
@@ -336,12 +339,13 @@
     justify-content: center;
     width: 2.2rem;          /* same width as .score-box so NA and scores line up */
     box-sizing: border-box;
-    padding: 1px 4px;
-    border-radius: 3px;
+    padding: 3px 1px;
+    line-height: 1;
+    border-radius: 0.75rem;   /* same pill shape as .score-box */
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-medium);
-    color: #aaa;
-    background: #f5f5f5;
+    color: var(--color-text-tertiary);
+    background: var(--color-bg-tertiary);
 }
 
 
@@ -378,7 +382,7 @@
 }
 
 .protein-type-icon--canonical {
-    background: #6987C3;
+    background: var(--color-primary-light);
     color: white;
 }
 
@@ -571,7 +575,7 @@
         font-weight: var(--font-weight-semibold);
         text-transform: uppercase;
         letter-spacing: 0.05em;
-        color: #6987C3;
+        color: var(--color-primary-light);
         opacity: 0.85;
         flex-shrink: 0;
         align-self: center;
@@ -596,6 +600,7 @@
         width: 2rem;
         margin: 0;
     }
+
     .card-row .na-badge:empty::after {
         width: 2rem;
     }
@@ -717,10 +722,6 @@
 :root[data-theme="dark"] .result-header {
         background: var(--color-bg-primary);
         border-bottom-color: #4a6ab0;
-}
-
-:root[data-theme="dark"] .result-group-header {
-        background: #3a5080;
 }
 
 :root[data-theme="dark"] .result-col-header {

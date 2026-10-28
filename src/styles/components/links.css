@@ -191,7 +191,7 @@
 
 .ref-link,
 .ref-link:visited {
-    color: #6987C3;
+    color: var(--color-primary);
     border-bottom-style: none;
     text-decoration: none;
     cursor: pointer;
