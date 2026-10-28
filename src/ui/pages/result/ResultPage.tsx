@@ -183,6 +183,10 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
   const [preparing, setPreparing] = useState<number | null>(null);
   const [pollNonce, setPollNonce] = useState(0);
   const pollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pollingRef = useRef(false);   // the next browse load is a background poll: don't flip `loading`
+  // Poll interval: 2 s first (small builds finish fast), ×1.5 per poll up to 10 s. Progress only moves per
+  // 2,000-line chunk, and each poll is a full /mapping request.
+  const pollDelayRef = useRef(2000);
   useEffect(() => () => { if (pollTimerRef.current) clearTimeout(pollTimerRef.current); }, []);
   // Track browse identifiers so DownloadPanel and Save button can reference them
   const [currentBrowseIds, setCurrentBrowseIds] = useState<Identifier[] | undefined>()
@@ -224,7 +228,11 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
     const loadKey = `browse|${JSON.stringify(options)}|${page}|${pageSize}|${assembly}|${JSON.stringify(filters ?? {})}`;
     if (loadKey === lastLoadKeyRef.current) return;
     lastLoadKeyRef.current = loadKey;
-    setLoading(true)
+    // A poll while an upload is being prepared stays silent: toggling `loading` swaps the page loader and the
+    // filter panel's busy state in and out every couple of seconds, which jumps the layout.
+    const isPoll = pollingRef.current;
+    pollingRef.current = false;
+    if (!isPoll) { setLoading(true); pollDelayRef.current = 2000; }
 
     const pageIsValid = !isNaN(page) && page > 0;
     const pageSizeIsValid = !isNaN(pageSize) && PERMITTED_PAGE_SIZES.includes(pageSize);
@@ -279,10 +287,13 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
           setPreparing(response.data.preparing);
           setData(null);   // the old page doesn't match the new filters
           lastLoadKeyRef.current = null;
-          pollTimerRef.current = setTimeout(() => setPollNonce(n => n + 1), 2000);
+          const delay = pollDelayRef.current;
+          pollDelayRef.current = Math.min(delay * 1.5, 10000);
+          pollTimerRef.current = setTimeout(() => { pollingRef.current = true; setPollNonce(n => n + 1); }, delay);
           return;
         }
         setPreparing(null);
+        pollDelayRef.current = 2000;
         if (response.data) {
           if (response.data.content?.inputs?.length > 0) {
             setData(response.data)
