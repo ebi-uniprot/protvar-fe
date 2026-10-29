@@ -1,4 +1,4 @@
-import {useCallback, useContext, useEffect, useState} from 'react';
+import {useCallback, useContext, useMemo, useState} from 'react';
 import Button from '../elements/form/Button';
 import {emailValidate} from '../../utills/Validator';
 import {DownloadRecord, recordFromResponse} from "../../types/DownloadRecord";
@@ -9,8 +9,11 @@ import {useLocation, useSearchParams} from "react-router-dom";
 import {DownloadRequest} from "../../types/DownloadRequest";
 import {Identifier} from "../../types/InputType";
 import {autoJobName} from "../../utills/autoJobName";
-import {extractFilters, filterRequest} from "../components/search/filterUtils";
+import {describeFilters, extractFilters, filterRequest} from "../components/search/filterUtils";
 import {AppContext} from "../App";
+import {PagedMappingResponse} from "../../types/PagedMappingResponse";
+import {SearchFilterParams} from "../components/search/SearchFilters";
+import {isTotalCapped, isTotalUnknown} from "../../utills/PaginationFormat";
 
 interface DownloadForm {
   email: string
@@ -21,39 +24,64 @@ interface DownloadForm {
 }
 
 export interface DownloadPanelProps {
-  numPages: number;
   // One of the following identifies what to download:
   q?: string;          // single variant query
   resultId?: string;   // uploaded result ID
   ids?: Identifier[];  // identifier browse
   // Optional: links the download record back to a history entry
   historyId?: string;
+  // What the summary shows: the result's name, its filters and sort, and its counts (not for a single variant)
+  subject?: string;
+  filters?: SearchFilterParams;
+  result?: PagedMappingResponse;
 }
 
-const NUM_PAGES_LIMIT = 10;
+// Full downloads are capped at this many variants (BE DownloadController.MAX_FULL_DOWNLOAD_ROWS)
+const MAX_FULL_DOWNLOAD = 100_000;
+
+const SORT_LABELS: Record<string, string> = {
+  cadd: 'CADD', avi: 'AVI', am: 'AlphaMissense', popeve: 'popEVE', esm1b: 'ESM1b',
+};
+
+// Why "All pages" can't be downloaded, or null when it can. The BE refuses the same cases.
+const allPagesBlocked = (result?: PagedMappingResponse): string | null => {
+  if (!result) return null;
+  if (isTotalUnknown(result))
+    return 'The number of variants could not be counted in time. Refine the filters, or reload the page and try again.';
+  if (isTotalCapped(result))
+    return `More than ${result.totalCap!.toLocaleString()} variants. Refine the filters to download them all.`;
+  if (result.totalItems > MAX_FULL_DOWNLOAD)
+    return `Too many for one file (limit ${MAX_FULL_DOWNLOAD.toLocaleString()}). Refine the filters, or use the FTP files.`;
+  return null;
+};
 
 export function DownloadPanel(props: DownloadPanelProps) {
   const appState = useContext(AppContext);
   const { addDownload, getHistory } = useStorage()
   const [errorMsg, setErrorMsg] = useState("")
-  const [jobNamePlaceholder, setJobNamePlaceholder] = useState<string>('')
 
   const location = useLocation();
   const [searchParams] = useSearchParams();
   const initialForm: DownloadForm = { email: "", jobName: "", fun: true, pop: true, str: true }
   const [form, setForm] = useState<DownloadForm>(initialForm)
   const [annotations, setAnnotations] = useState<boolean>(true)
-  const [currPage, setCurrPage] = useState<boolean>(false)
+  const blocked = allPagesBlocked(props.result)
+  const [currPage, setCurrPage] = useState<boolean>(!!blocked)
+  const upload = !!props.resultId
+  const chips = props.filters ? describeFilters(props.filters, upload) : []
+  const sort = props.filters?.sort
 
-  useEffect(() => {
+  // a name the user gave this result (Activity) leads the suggested job name
+  const savedName = useMemo(() => {
     const historyId = props.historyId ?? props.resultId
-    const saved = historyId ? getHistory().find(r => r.id === historyId) : undefined
-    if (saved?.name) {
-      setJobNamePlaceholder(saved.name)
-      return
-    }
-    setJobNamePlaceholder(autoJobName({ q: props.q, ids: props.ids, searchParams, upload: !!props.resultId }))
-  }, [props.historyId, props.resultId, props.q, props.ids, searchParams, getHistory])
+    return historyId ? getHistory().find(r => r.id === historyId)?.name : undefined
+  }, [props.historyId, props.resultId, getHistory])
+  const filterOnly = !props.q && !props.resultId && !props.ids?.length
+  const jobNamePlaceholder = autoJobName({
+    subject: props.q?.trim() || savedName || (filterOnly ? undefined : props.subject ?? props.ids?.map(id => id.value).join(', ')),
+    filters: chips.map(c => c.label),
+    page: currPage ? props.result?.page ?? parseInt(searchParams.get('page') ?? '1') : undefined,
+  })
 
   const updateForm = useCallback((key: string, value: any) => {
     setForm(prev => ({ ...prev, [key]: value }));
@@ -81,11 +109,6 @@ export function DownloadPanel(props: DownloadPanelProps) {
   }
 
   const handleSubmit = () => {
-    if (!currPage && props.numPages > NUM_PAGES_LIMIT) {
-      const confirm = window.confirm(`Are you sure you want to download all ${props.numPages} pages?\nThis may take a long time to generate.`);
-      if (!confirm) return;
-    }
-
     const err = emailValidate(form.email)
     if (err) { setErrorMsg(err); return; }
 
@@ -134,7 +157,25 @@ export function DownloadPanel(props: DownloadPanelProps) {
 
   return (
     <div className="dp">
-      <h6 className="dp-title">Download Panel</h6>
+      <h6 className="dp-title">Download</h6>
+
+      {(props.subject || props.q) && (
+        <dl className="dp-summary">
+          <dt className="dp-summary-subject">{props.subject || props.q}</dt>
+          {props.filters && (
+            <>
+              <dt>Filters</dt>
+              <dd>{chips.length ? chips.map(c => c.label).join(' · ') : 'None'}</dd>
+              {sort && (
+                <>
+                  <dt>Sort</dt>
+                  <dd>{SORT_LABELS[sort] ?? sort}, {props.filters.order === 'asc' ? 'ascending' : 'descending'}</dd>
+                </>
+              )}
+            </>
+          )}
+        </dl>
+      )}
 
       <div className="dp-options">
         <div className="dp-group">
@@ -170,20 +211,23 @@ export function DownloadPanel(props: DownloadPanelProps) {
           </label>
         </div>
 
-        <div className="dp-group">
+        {!props.q && <div className="dp-group">
           <div className="dp-group-label">Pages</div>
-          <label className="dp-option">
-            <input type="radio" name="currPage" value="false"
+          <label className={`dp-option${blocked ? ' dp-option--disabled' : ''}`}>
+            <input type="radio" name="currPage" value="false" disabled={!!blocked}
               checked={!currPage} onChange={_ => setCurrPage(false)} />
-            All
+            All{props.result && !blocked && <span className="dp-count">{allCount(props.result, upload)}</span>}
           </label>
           <label className="dp-option">
             <input type="radio" name="currPage" value="true"
               checked={currPage} onChange={_ => setCurrPage(true)} />
-            Current
+            Current{props.result && <span className="dp-count">page {props.result.page}</span>}
           </label>
-        </div>
+        </div>}
       </div>
+
+      {blocked && <p className="dp-note dp-note--warn">{blocked}</p>}
+      {props.result && <p className="dp-note">One variant can give several rows (one per gene or isoform).</p>}
 
       <div className="dp-fields">
         <label className="dp-field">
@@ -215,5 +259,14 @@ export function DownloadPanel(props: DownloadPanelProps) {
     </div>
   );
 }
+
+// e.g. "10,147 of 83,859 inputs" for a filtered upload, "2,614 variants" otherwise
+const allCount = (result: PagedMappingResponse, upload: boolean): string => {
+  const n = result.totalItems.toLocaleString();
+  if (!upload) return `${n} variant${result.totalItems === 1 ? '' : 's'}`;
+  return result.totalInputs != null && result.totalInputs !== result.totalItems
+    ? `${n} of ${result.totalInputs.toLocaleString()} inputs`
+    : `${n} input${result.totalItems === 1 ? '' : 's'}`;
+};
 
 export default DownloadPanel;

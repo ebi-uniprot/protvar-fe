@@ -742,7 +742,9 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
                 resultId={!isQueryMode && inputType === 'input_id' ? input ?? undefined : undefined}
                 ids={!isQueryMode && inputType !== 'input_id' ? currentBrowseIds : undefined}
                 historyId={browseHistoryId}
-                numPages={isQueryMode ? 1 : (data?.totalPages ?? 0)} />)}
+                subject={isFilterOnly ? 'All coding variants' : idParamValues.length > 1 ? subject : resultTitle ?? undefined}
+                filters={isQueryMode ? undefined : filters}
+                result={isQueryMode ? undefined : data ?? undefined} />)}
           >
             <i className="bi bi-download" /> Download
           </button>
