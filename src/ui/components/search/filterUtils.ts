@@ -10,6 +10,7 @@ import { SearchFilterParams } from "./SearchFilters";
 import { CaddCategory } from "../../../types/CaddCategory";
 import { StabilityChange } from "../../../types/StabilityChange";
 import { PopEveClass } from "../../../types/PopEveClass";
+import { MappingRequest } from "../../../types/MappingRequest";
 import { AlleleFreqCategory } from "../../../types/AlleleFreqCategory";
 
 export const normalizeFilterValues = (selected: string[], valid: string[]): string[] => {
@@ -306,4 +307,42 @@ export const mapUiAlleleFreqToBackend = (uiCategories: string[]): string[] => {
   });
 
   return backendCategories;
+};
+
+// The filter/sort fields of a mapping request, from the UI filters. Shared by the result page and the download
+// panel so a download matches what's on screen. Browse defaults to known variants (a driver filter); an upload
+// shows all submitted variants unless the user picks "known" — sending known=true by default would filter every
+// upload view.
+export const filterRequest = (filters: SearchFilterParams | undefined, isUpload: boolean): Partial<MappingRequest> => {
+  const cadd = filters?.cadd ? mapUiCaddToBackend(filters.cadd) : [];
+  const popeve = filters?.popeve ? mapUiPopeveToBackend(filters.popeve) : [];
+  const stability = filters?.stability ? mapUiStabilityToBackend(filters.stability) : [];
+  const freq = filters?.freq ? mapUiAlleleFreqToBackend(filters.freq) : [];
+  return {
+    known: isUpload
+      ? (filters?.variant === 'known' ? true : undefined)
+      : (filters?.variant !== 'potential' ? true : undefined),
+    ptm: filters?.ptm,
+    mutagen: filters?.mutagen,
+    domain: filters?.domain,
+    binding: filters?.binding,
+    actsite: filters?.actsite,
+    transmem: filters?.transmem,
+    conservationMin: filters?.consMin,
+    conservationMax: filters?.consMax,
+    diseaseAssociation: filters?.disease,
+    alleleFreq: freq.length > 0 ? freq : undefined,
+    experimentalModel: filters?.expModel,
+    interact: filters?.interact,
+    pocket: filters?.pocket,
+    stability: stability.length > 0 ? stability : undefined,
+    cadd: cadd.length > 0 ? cadd : undefined,
+    aviMin: filters?.aviMin,
+    am: filters?.am ?? [],
+    popeve: popeve.length > 0 ? popeve : undefined,
+    esm1bMin: filters?.esmMin,
+    esm1bMax: filters?.esmMax,
+    sort: filters?.sort,
+    order: filters?.order,
+  };
 };

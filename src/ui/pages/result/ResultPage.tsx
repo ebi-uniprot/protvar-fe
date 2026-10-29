@@ -28,8 +28,7 @@ import {
   extractFilters,
   buildFilterParams,
   describeFilters,
-  mapUiCaddToBackend, mapUiPopeveToBackend,
-  mapUiStabilityToBackend, mapUiAlleleFreqToBackend
+  filterRequest
 } from "../../components/search/filterUtils";
 import FilterChips from "../../components/search/FilterChips";
 import { createPortal } from "react-dom";
@@ -272,43 +271,11 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
     if (!pageIsValid) { setWarning(INVALID_PAGE); page = DEFAULT_PAGE; }
     if (!pageSizeIsValid) { setWarning(INVALID_PAGE_SIZE); pageSize = DEFAULT_PAGE_SIZE; }
 
-    const backendCadd = filters?.cadd ? mapUiCaddToBackend(filters.cadd) : [];
-    const backendPopeve = filters?.popeve ? mapUiPopeveToBackend(filters.popeve) : [];
-    const backendStability = filters?.stability ? mapUiStabilityToBackend(filters.stability) : [];
-    const backendFreq = filters?.freq ? mapUiAlleleFreqToBackend(filters.freq) : [];
-    // Browse defaults to known variants (a driver filter); an upload shows all submitted variants unless the
-    // user picks "known" — sending known=true by default would filter every upload view.
-    const knownVariants = options.resultId
-      ? (filters?.variant === 'known' ? true : undefined)
-      : (filters?.variant !== 'potential' ? true : undefined);
-
     const request: MappingRequest = {
       ...options,
       page, pageSize,
       assembly: assembly ?? undefined,
-      known: knownVariants,
-      ptm: filters?.ptm,
-      mutagen: filters?.mutagen,
-      domain: filters?.domain,
-      binding: filters?.binding,
-      actsite: filters?.actsite,
-      transmem: filters?.transmem,
-      conservationMin: filters?.consMin,
-      conservationMax: filters?.consMax,
-      diseaseAssociation: filters?.disease,
-      alleleFreq: backendFreq.length > 0 ? backendFreq : undefined,
-      experimentalModel: filters?.expModel,
-      interact: filters?.interact,
-      pocket: filters?.pocket,
-      stability: backendStability.length > 0 ? backendStability : undefined,
-      cadd: backendCadd.length > 0 ? backendCadd : undefined,
-      aviMin: filters?.aviMin,
-      am: filters?.am ?? [],
-      popeve: backendPopeve.length > 0 ? backendPopeve : undefined,
-      esm1bMin: filters?.esmMin,
-      esm1bMax: filters?.esmMax,
-      sort: filters?.sort,
-      order: filters?.order,
+      ...filterRequest(filters, !!options.resultId),
     };
 
     if (pollTimerRef.current) { clearTimeout(pollTimerRef.current); pollTimerRef.current = null; }

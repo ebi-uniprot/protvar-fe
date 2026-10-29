@@ -9,6 +9,7 @@ import {useLocation, useSearchParams} from "react-router-dom";
 import {DownloadRequest} from "../../types/DownloadRequest";
 import {Identifier} from "../../types/InputType";
 import {autoJobName} from "../../utills/autoJobName";
+import {extractFilters, filterRequest} from "../components/search/filterUtils";
 import {AppContext} from "../App";
 
 interface DownloadForm {
@@ -51,7 +52,7 @@ export function DownloadPanel(props: DownloadPanelProps) {
       setJobNamePlaceholder(saved.name)
       return
     }
-    setJobNamePlaceholder(autoJobName({ q: props.q, ids: props.ids, searchParams }))
+    setJobNamePlaceholder(autoJobName({ q: props.q, ids: props.ids, searchParams, upload: !!props.resultId }))
   }, [props.historyId, props.resultId, props.q, props.ids, searchParams, getHistory])
 
   const updateForm = useCallback((key: string, value: any) => {
@@ -96,6 +97,8 @@ export function DownloadPanel(props: DownloadPanelProps) {
     const jobName = form.jobName || jobNamePlaceholder
 
     const request: DownloadRequest = {
+      // the filters and sort on screen, so the file matches the result page (not for a single variant query)
+      ...(props.q ? {} : filterRequest(extractFilters(searchParams), !!props.resultId)),
       q: props.q,
       resultId: props.resultId,
       ids: props.ids,
