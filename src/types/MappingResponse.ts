@@ -42,6 +42,7 @@ export interface MappingResponse {
 export interface Message {
   type: MessageType
   text: string
+  code?: string // catalogue code, e.g. PV-103 (BE MessageCode); absent on uncatalogued messages
 }
 
 export interface Gene {

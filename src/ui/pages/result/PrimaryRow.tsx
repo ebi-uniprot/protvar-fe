@@ -99,6 +99,7 @@ export const getNewPrimaryRow = (
   altIsoforms: Isoform[] = [],
   isLoadingIsoforms: boolean = false,
   cols: ResultColumn[] = visibleColumns(),
+  noteMarker?: React.ReactNode, // corner marker for the input's notes (first row of the input only)
 ) => {
   const caddAttr = caddScoreAttr(gene.caddScore?.toString());
   const amAttr   = amScoreAttr(isoform.amScore?.amClass);
@@ -125,7 +126,7 @@ export const getNewPrimaryRow = (
   const aaChangeFormatted = `${isoform.refAA}${isoform.isoformPosition}${isoform.variantAA}`;
 
   const idValue = getIdValue(input);
-  const rowClass = `result-row ${index % 2 === 0 ? 'row-even' : 'row-odd'}`;
+  const rowClass = `result-row ${index % 2 === 0 ? 'row-even' : 'row-odd'}${noteMarker ? ' has-note' : ''}`;
 
   const cells: Record<ColumnId, React.ReactNode> = {
         // User ID
@@ -279,6 +280,7 @@ export const getNewPrimaryRow = (
 
   return (
     <div key={isoformKey} className={rowClass}>
+      {noteMarker}
 
       {/* Card row 1 — genomic columns */}
       <div className="card-row card-row-genomic">

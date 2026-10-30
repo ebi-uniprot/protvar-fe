@@ -1,12 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
 import { PagedMappingResponse } from "../../../types/PagedMappingResponse";
-import { Message, GenomicVariant, Isoform } from "../../../types/MappingResponse";
+import { Message, GenomicVariant, Isoform, VariantInput } from "../../../types/MappingResponse";
 import { StringVoidFun } from "../../../constants/CommonTypes";
 import { getAlternateIsoFormRow } from "./AlternateIsoFormRow";
 import { getNewPrimaryRow, AnnotationPanels, ToggleIsoformGroupFn } from "./PrimaryRow";
 import { singleVariant } from "../../../services/ProtVarService";
 import { AppContext } from "../../App";
 import MsgRow from "./MsgRow";
+import { NoteCounts, NoteMarker, NoteRow, NotesBar } from "./RowNotes";
 import { inGroup, ResultColumn, visibleColumns } from "../../../constants/resultColumns";
 import { useResultColumns } from "./useResultColumns";
 import Tool from "../../elements/Tooltip";
@@ -42,6 +43,10 @@ function ResultTable(props: ResultTableProps) {
   // one request per genomic variant covers all genes at that position.
   const [loadingVariants, setLoadingVariants] = useState<Record<string, boolean>>({});
   const { ids: columnIds } = useResultColumns();
+  // Notes on inputs with result rows: opened one by one (by input index), or all at once.
+  // "Show all" is kept across pages; single opens reset with the data.
+  const [openNotes, setOpenNotes] = useState<Set<number>>(new Set());
+  const [showAllNotes, setShowAllNotes] = useState(false);
 
   // Reset on-demand state when the underlying data changes (page change,
   // new query). Axios still has the responses cached behind the scenes, so
@@ -49,6 +54,7 @@ function ResultTable(props: ResultTableProps) {
   useEffect(() => {
     setFetchedIsoforms({});
     setLoadingVariants({});
+    setOpenNotes(new Set());
   }, [props.data]);
 
   useEffect(() => {
@@ -136,6 +142,18 @@ function ResultTable(props: ResultTableProps) {
     navigate(url, { replace: true });
   }
 
+  function toggleNote(i: number) {
+    if (showAllNotes) {
+      // closing one while all are shown: keep the others open
+      setShowAllNotes(false);
+      setOpenNotes(new Set(notedInputs(props.data).filter(j => j !== i)));
+      return;
+    }
+    const next = new Set(openNotes);
+    if (next.has(i)) next.delete(i); else next.add(i);
+    setOpenNotes(next);
+  }
+
   if (!props.data) return null;
 
   const cols = visibleColumns(columnIds);
@@ -154,9 +172,13 @@ function ResultTable(props: ResultTableProps) {
     fetchedIsoforms,
     loadingVariants,
     cols,
+    { isOpen: (i: number) => showAllNotes || openNotes.has(i), toggle: toggleNote },
   );
 
   return (
+    <>
+    <NotesBar counts={noteCounts(props.data)} showAll={showAllNotes}
+              onToggle={() => { setShowAllNotes(!showAllNotes); setOpenNotes(new Set()); }} />
     <div className="result-table" style={{ gridTemplateColumns: `repeat(${cols.length}, auto)` }}>
       {/* ── Sticky two-row header ── */}
       <div className="result-header">
@@ -181,7 +203,31 @@ function ResultTable(props: ResultTableProps) {
         {rows}
       </div>
     </div>
+    </>
   );
+}
+
+// An input "has rows" when any of its genomic variants mapped to a gene; its notes then go on a
+// corner marker. Inputs without rows (invalid, not mapped) show their messages as rows instead.
+const hasRows = (input: VariantInput) => input.derivedGenomicVariants.some(gv => gv.genes.length > 0);
+
+const notedInputs = (data: PagedMappingResponse | null): number[] =>
+  (data?.content.inputs ?? []).flatMap((input, i) => hasRows(input) && input.messages.length > 0 ? [i] : []);
+
+const noteCounts = (data: PagedMappingResponse | null): NoteCounts => {
+  const counts: NoteCounts = { warn: 0, info: 0, notMapped: 0 };
+  data?.content.inputs?.forEach(input => {
+    if (!hasRows(input)) { counts.notMapped++; return; }
+    input.messages.forEach(m => {
+      if (m.type === 'INFO') counts.info++; else counts.warn++;
+    });
+  });
+  return counts;
+};
+
+interface RowNoteState {
+  isOpen: (inputIndex: number) => boolean;
+  toggle: (inputIndex: number) => void;
 }
 
 const NO_MAPPING: Message = { type: 'ERROR', text: 'No mapping found' };
@@ -197,6 +243,7 @@ const getTableRows = (
   fetchedIsoforms: Record<string, Isoform[]>,
   loadingVariants: Record<string, boolean>,
   cols: ResultColumn[],
+  notes: RowNoteState,
 ) => {
   const rows: Array<React.JSX.Element> = [];
 
@@ -204,11 +251,16 @@ const getTableRows = (
   let altRow = 0;
 
   data?.content.inputs?.forEach((input, inputIndex) => {
-    input.messages.forEach((message, i) => {
-      rows.push(
-        <MsgRow key={`input-${inputIndex}-message-${i}`} index={inputIndex} message={message} input={input} />
-      );
-    });
+    const inputHasRows = hasRows(input);
+    if (!inputHasRows) {
+      input.messages.forEach((message, i) => {
+        rows.push(
+          <MsgRow key={`input-${inputIndex}-message-${i}`} index={inputIndex} message={message} input={input} />
+        );
+      });
+    }
+    // the input's notes go on its first result row
+    let notePlaced = !inputHasRows || input.messages.length === 0;
 
     input.derivedGenomicVariants.forEach((genomicVariant: GenomicVariant, genIndex: number) => {
       if (genomicVariant.genes.length === 0 && input.messages.length === 0) {
@@ -238,6 +290,11 @@ const getTableRows = (
 
         effectiveIsoforms.forEach((isoform, isoformIdx) => {
           if (isoformIdx === 0) {
+            const noteMarker = notePlaced ? undefined
+              : <NoteMarker messages={input.messages} open={notes.isOpen(inputIndex)}
+                            onToggle={() => notes.toggle(inputIndex)} />;
+            const noteOpen = !notePlaced && notes.isOpen(inputIndex);
+            notePlaced = true;
             primaryRow++;
             altRow = 0;
             primaryKey = `row-${primaryRow}`;
@@ -259,7 +316,12 @@ const getTableRows = (
               isoformGroupKey === isoformGroupExpanded ? effectiveIsoforms.slice(1) : [],
               isLoadingIsoforms,
               cols,
+              noteMarker,
             ));
+            if (noteMarker && noteOpen) {
+              geneRowEls.push(<NoteRow key={`row-${primaryRow}-note`} messages={input.messages} />);
+            }
+
           } else if (isoformGroupKey === isoformGroupExpanded) {
             altRow++;
             geneRowEls.push(getAlternateIsoFormRow(`row-${primaryRow}-${altRow}`, inputIndex, isoform, cols));

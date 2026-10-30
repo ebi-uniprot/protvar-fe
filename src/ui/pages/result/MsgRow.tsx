@@ -1,21 +1,10 @@
 import React from 'react';
 import { VariantInput, Message, GenomicVariant } from "../../../types/MappingResponse";
+import { NoteCorner, NoteText } from "./RowNotes";
 import Tool from "../../elements/Tooltip";
 import { getIdUrl, getIdValue } from "./PrimaryRow";
 import { getEnsemblViewUrl } from "../../../constants/ExternalUrls";
 import { TextLink } from "../../components/common/Link";
-
-export const WARN_ICON  = <><i className="msg-warn bi bi-exclamation-triangle-fill"></i>{' '}</>;
-export const ERROR_ICON = <><i className="msg-error bi bi-x-circle-fill"></i>{' '}</>;
-export const INFO_ICON  = <><i className="msg-info bi bi-info-circle-fill"></i>{' '}</>;
-
-const getIcon = (m?: Message) => {
-  if (m) {
-    if (m.type === "ERROR") return ERROR_ICON;
-    if (m.type === "WARN")  return WARN_ICON;
-    if (m.type === "INFO")  return INFO_ICON;
-  }
-};
 
 interface MsgRowProps {
   message: Message;
@@ -27,12 +16,14 @@ interface MsgRowProps {
 const MsgRow = ({ message, input, genomicVariant, index }: MsgRowProps) => {
   const inputStr = input?.inputStr ?? '';
   const idValue = getIdValue(input);
-  const rowClass = `result-row-msg ${(index ?? -1) % 2 === 0 ? 'row-even' : 'row-odd'}`;
+  // tinted by severity, so no zebra striping
+  const rowClass = `result-row-msg result-row-msg--${message.type.toLowerCase()}`;
 
   if (genomicVariant) {
     const genomicPos = `${genomicVariant.chromosome}-${genomicVariant.position}-${genomicVariant.refBase}-${genomicVariant.altBase}`;
     return (
       <div className={`result-row ${rowClass}`}>
+        <NoteCorner type={message.type} />
         {/* col 1: user-id */}
         <span>
           {idValue && (
@@ -49,7 +40,7 @@ const MsgRow = ({ message, input, genomicVariant, index }: MsgRowProps) => {
         </span>
         {/* cols 3–11: message spanning remaining */}
         <span style={{ gridColumn: '3 / -1' }}>
-          {getIcon(message)}<b>{inputStr}</b> {message.text}
+          <b>{inputStr}</b> <NoteText message={message} />
         </span>
       </div>
     );
@@ -57,8 +48,9 @@ const MsgRow = ({ message, input, genomicVariant, index }: MsgRowProps) => {
 
   return (
     <div className={rowClass}>
-      <span style={{ gridColumn: '1 / -1', padding: '4px 8px', wordBreak: 'break-word' }}>
-        {getIcon(message)}<b>{inputStr}</b> {message.text}
+      <NoteCorner type={message.type} />
+      <span style={{ gridColumn: '1 / -1', wordBreak: 'break-word' }}>
+        <b>{inputStr}</b> <NoteText message={message} />
       </span>
     </div>
   );

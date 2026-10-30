@@ -46,7 +46,8 @@
 /* Full-width non-subgrid rows (annotation panels, messages, loader) */
 .result-annotation,
 .result-loader-row,
-.result-row-msg {
+.result-row-msg,
+.result-row-note {
     grid-column: 1 / -1;
 }
 
@@ -242,8 +243,9 @@
    ============================================ */
 
 .result-row-msg {
-    border-bottom: 1px dotted var(--color-border-dark);
-    padding: 4px 6px;
+    position: relative;
+    border-bottom: 1px solid var(--color-border-light);
+    padding: 4px 8px 4px 14px;
     font-size: var(--font-size-sm);
     word-wrap: break-word;
     overflow-wrap: break-word;
@@ -259,6 +261,139 @@
     grid-column: 3 / -1;
     padding: 4px 8px;
 }
+
+/* ============================================
+   ROW NOTES — messages on inputs that have result rows: a corner marker on the
+   input's first row (hover for the text, click to open a note row under it).
+   ============================================ */
+
+:root {
+    --note-warn: #b45f06;
+    --note-warn-bg: #fff6e6;
+    --note-error: #c0392b;
+    --note-error-bg: #fdecec;
+    --note-info: #2f6db3;
+    --note-info-bg: #eaf2fb;
+}
+
+:root[data-theme="dark"] {
+    --note-warn: #f0a646;
+    --note-warn-bg: #3a2f1c;
+    --note-error: #f07a6e;
+    --note-error-bg: #3d2226;
+    --note-info: #7fb2ec;
+    --note-info-bg: #1d3550;
+}
+
+.result-row.has-note {
+    position: relative;
+}
+
+/* 22px hit area, 12px triangle drawn in the corner */
+.note-marker {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: 22px;
+    height: 22px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+}
+
+.note-marker::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 12px;
+    height: 12px;
+    background: var(--note-warn);
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+
+.note-marker--error::before { background: var(--note-error); }
+.note-marker--info::before  { background: var(--note-info); }
+
+/* Static corner on rows that are themselves messages (inputs without result rows) */
+.note-corner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 12px;
+    height: 12px;
+    background: var(--note-warn);
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+
+.note-corner--error { background: var(--note-error); }
+.note-corner--info  { background: var(--note-info); }
+
+.note-marker:hover::before,
+.note-marker[aria-expanded="true"]::before {
+    width: 15px;
+    height: 15px;
+}
+
+.note-marker:focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: -2px;
+}
+
+.result-row-note {
+    grid-column: 1 / -1;
+    padding: 4px 8px 6px 14px;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-primary);
+    background: var(--note-warn-bg);
+    border-bottom: 1px solid var(--color-border-light);
+}
+
+.result-row-note--error,
+.result-row-msg--error { background: var(--note-error-bg); }
+.result-row-note--info,
+.result-row-msg--info  { background: var(--note-info-bg); }
+.result-row-msg--warn  { background: var(--note-warn-bg); }
+
+.note-line + .note-line {
+    margin-top: 2px;
+}
+
+.msg-code {
+    margin-right: 2px;
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-xs);
+    color: var(--color-text-secondary);
+}
+
+.notes-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 14px;
+    padding: 4px 2px 8px;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+}
+
+.notes-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--color-text-primary);
+}
+
+.note-swatch {
+    width: 10px;
+    height: 10px;
+    background: var(--note-warn);
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+
+.note-swatch--error { background: var(--note-error); }
+.note-swatch--info  { background: var(--note-info); }
 
 /* ============================================
    ANNOTATION PANEL ROW (FunctionalData etc.)

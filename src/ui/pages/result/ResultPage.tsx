@@ -4,6 +4,7 @@ import ColumnChooser from "./ColumnChooser";
 import ViewSwitch from "./ViewSwitch";
 import {useLocation, useNavigate, useParams, useSearchParams} from "react-router-dom";
 import ResultTable from "./ResultTable";
+import { NoteText } from "./RowNotes";
 import React, {useCallback, useContext, useEffect, useMemo, useRef, useState} from "react";
 import PaginationRow from "./PaginationRow";
 import {DEFAULT_PAGE, DEFAULT_PAGE_SIZE, PERMITTED_PAGE_SIZES} from "../../../constants/const";
@@ -788,7 +789,7 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
       <div className="result-notices">
         {data!.content.messages!.map((message, i) => (
           <div key={`response-msg-${i}`} className={`result-notice result-notice--${message.type.toLowerCase()}`}>
-            {message.text}
+            <NoteText message={message} />
           </div>
         ))}
       </div>
