@@ -20,7 +20,7 @@ export const ActivityHelp = () => (
     </p>
     <ul>
       <li>
-        <strong>Submitted</strong> — variant inputs uploaded as a file or pasted as text.
+        <strong>Submitted</strong> — variants uploaded as a file or pasted as several lines (a single pasted variant is a direct lookup and is not recorded).
         Saved automatically when you submit; the entry links back to the{' '}
         <Link to={`${HELP}#results`}>result page</Link>. Submitted entries expire 90 days
         after submission and are then removed automatically.
@@ -56,8 +56,8 @@ export const ActivityHelp = () => (
       Each submission has an optional <em>job name</em>. If you leave it blank, a default is
       suggested based on what you're downloading — e.g. <code>BRCA1</code> for a gene browse,
       <code>P22304, 6ioz</code> for a multi-identifier browse, the variant string for a single
-      query, or labels like <code>Pocket browse</code> / <code>Known variants</code> for filter-only
-      downloads. You can override this with anything more meaningful for your records.
+      query, followed by up to two active filters (e.g. <code>P22304 · PTM</code>); a filter-only
+      download is named after its filters (e.g. <code>Predicted Pocket</code>). You can override this with anything more meaningful for your records.
     </p>
     <p>
       The download itself is identified internally by a server-allocated job ID (UUID).

@@ -38,7 +38,7 @@ A single-variant query accepts any ProtVar-supported input format and returns a 
 
 | Parameter | Required | Description |
 |-----------|----------|-------------|
-| `q` | yes | Any ProtVar-supported input (see Supported Input Formats) |
+| `q` | yes | Any ProtVar-supported input (see [Supported Formats](#input-formats)) |
 | `assembly` | no | `grch37` or `grch38`; omit to auto-detect |
 
 **Examples:**
@@ -146,7 +146,7 @@ When multiple variants are submitted or a file is uploaded, a unique result ID i
 |-----------|----------|-------------|
 | `id` | yes | Unique result identifier (UUID) |
 | `page` | no | Page number (default: `1`) |
-| `pageSize` | no | Results per page: `10`, `25`, `50`, `100` (default: `25`) |
+| `pageSize` | no | Results per page: `25`, `50`, `100` (default: `25`) |
 | `assembly` | no | `grch37` or `grch38` |
 
 **Example:**
@@ -354,6 +354,7 @@ When a Functional annotation tab is open, a specific prediction card can be scro
 | Value | Prediction |
 |-------|-----------|
 | `cadd` | CADD score |
+| `avi` | AlphaGenome Variant Impact (AVI) |
 | `alphamissense` | AlphaMissense |
 | `popeve` | popEVE |
 | `esm` | ESM-1b |
@@ -377,7 +378,7 @@ Filters can be appended to any browse/result URL to narrow the displayed variant
 
 | Parameter | Values | Description |
 |-----------|--------|-------------|
-| `variant` | `known` `potential` | `known` = confirmed variants (default); `potential` = predicted |
+| `variant` | `known` `potential` | Browse: `known` = variants reported in databases (default); `potential` = every possible change. Upload: all submitted variants by default; `known` = known variants only |
 
 ### Functional filters
 
@@ -385,7 +386,9 @@ Filters can be appended to any browse/result URL to narrow the displayed variant
 |-----------|--------|-------------|
 | `ptm` | `true` | Has post-translational modification site at position |
 | `mutagen` | `true` | Has mutagenesis data at position |
-| `domain` | `true` | Falls within a UniProt domain |
+| `domain` | `true` | Falls within a UniProt domain, region, motif or notable site |
+| `binding` | `true` | At a UniProt binding site |
+| `actsite` | `true` | At a UniProt active site |
 | `consMin` | `0.0`–`1.0` | Residue conservation lower bound |
 | `consMax` | `0.0`–`1.0` | Residue conservation upper bound |
 
@@ -400,6 +403,7 @@ Filters can be appended to any browse/result URL to narrow the displayed variant
 
 | Parameter | Values | Description |
 |-----------|--------|-------------|
+| `transmem` | `true` | Within a transmembrane region |
 | `expModel` | `true` | Has experimental PDB structure |
 | `interact` | `true` | Variant at protein–protein interaction site |
 | `pocket` | `true` | Variant in predicted binding pocket |
@@ -410,17 +414,25 @@ Filters can be appended to any browse/result URL to narrow the displayed variant
 | Parameter | Values | Description |
 |-----------|--------|-------------|
 | `cadd` | `low` `medium` `high` | CADD phred score bracket (repeatable): `low` < 15, `medium` 15–25, `high` > 25 |
+| `aviMin` | `10` `20` `30` | AVI genome-wide rank: top 10%, 1%, 0.1% |
 | `am` | `benign` `ambiguous` `pathogenic` | AlphaMissense class (repeatable) |
 | `popeve` | `severe` `moderate` `unlikely` | popEVE effect class (repeatable) |
 | `esmMin` | float | ESM-1b LLR lower bound |
 | `esmMax` | float | ESM-1b LLR upper bound |
 
+### Notes (uploads only)
+
+| Parameter | Values | Description |
+|-----------|--------|-------------|
+| `notes` | `any` `none` | Lines with any [note](#messages), or without |
+| `codes` | e.g. `PV-201` | Lines with this note code (repeatable) |
+
 ### Sorting
 
 | Parameter | Values | Description |
 |-----------|--------|-------------|
-| `sort` | `cadd` `am` `popeve` `esm1b` | Sort results by this score |
-| `order` | `asc` `desc` | Sort direction (default: `asc`) |
+| `sort` | `cadd` `avi` `am` `popeve` `esm1b` | Sort results by this score (for popEVE and ESM-1b, lower = more damaging) |
+| `order` | `asc` `desc` | Sort direction (default `desc` when omitted) |
 
 **Filter example:**
 

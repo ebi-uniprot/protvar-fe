@@ -16,7 +16,7 @@ Definitions of terms and tools used across ProtVar. Most terms are also linked f
 
 <a id="glossary:general-protein-information"></a>**General protein information.** UniProt-sourced context about the protein as a whole — useful for judging what an alteration at the residue might mean for the organism. Shown under *Protein Information from UniProt* in the [Function Annotations](#function) panel.
 
-<a id="glossary:isoforms"></a>**Isoforms.** ProtVar maps each variant to as many UniProt isoforms as the translated transcripts allow. The default view shows the canonical isoform, marked with a *can* pill; alternative isoforms are marked *iso*. All annotations use canonical-isoform numbering.
+<a id="glossary:isoforms"></a>**Isoforms.** ProtVar maps each variant to as many UniProt isoforms as the translated transcripts allow. The default view shows the canonical isoform, marked with a *can* pill; other isoforms of a reviewed entry are marked *iso*, and unreviewed (TrEMBL) entries *unr*. Annotations are offered on canonical-isoform rows and use canonical-isoform numbering.
 
 <a id="glossary:missense"></a>**Missense.** A single-nucleotide change in which the codon is altered to encode a different amino acid. Synonymous mutations — point mutations that don't change the encoded amino acid — are also recognised by ProtVar.
 

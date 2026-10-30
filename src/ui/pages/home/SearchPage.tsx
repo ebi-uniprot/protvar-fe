@@ -23,7 +23,7 @@ interface ExampleData {
   tip?: string;
 }
 
-type SearchMode = 'annotate' | 'browse' | 'semantic'; // annotate=variant annotation; browse=by identifier; semantic=free-text search
+type SearchMode = 'annotate' | 'browse' | 'semantic'; // annotate=variant annotation; browse=by identifier and/or filters; semantic=free-text search
 export type GenomeAssembly = 'auto' | 'grch38' | 'grch37';
 
 // The active mode is mirrored in the URL (?tab=) so sidebar links can deep-link
@@ -397,7 +397,7 @@ const SearchPage: React.FC = () => {
           onClick={() => handleModeChange('browse')}
         >
           <span className="icon"><i className="bi bi-card-list"></i></span>
-          Browse by Identifier
+          Browse Variants
         </button>
         <button
           className={`mode-tab ${activeMode === 'semantic' ? 'active' : ''}`}
@@ -519,7 +519,7 @@ const SearchPage: React.FC = () => {
         {activeMode === 'browse' && (
           <div className="search-content">
             <div className="input-group">
-              <label className="input-label">Browse all mapped variants for a protein, gene, or other biological identifier</label>
+              <label className="input-label">Browse all mapped variants for a protein, gene or other identifier, or across all proteins with filters</label>
 
               {/* Chips */}
               {browseIds.length > 0 && (

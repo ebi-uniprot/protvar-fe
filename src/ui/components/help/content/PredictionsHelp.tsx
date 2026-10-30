@@ -193,7 +193,7 @@ export const PredictionsHelp: React.FC = () => {
 
       <h3 id="predictions:esm">ESM-1b</h3>
       <p>
-        Evolutionary Scaled Model (<a href={PUBMED_URL + "33876751"} target="_blank" rel="noreferrer">PubMed 33876751</a>).
+        Evolutionary Scale Modeling (<a href={PUBMED_URL + "33876751"} target="_blank" rel="noreferrer">PubMed 33876751</a>).
         A deep contextual language model built across a diverse range of species.
         Scores range from −25 (most deleterious) to 0 (least deleterious).
       </p>
@@ -202,7 +202,9 @@ export const PredictionsHelp: React.FC = () => {
       <h3 id="predictions:popeve">PopEVE</h3>
       <p>
         Population-based EVE score integrating evolutionary and population genetics signals. Scores
-        are negative; more negative values indicate greater predicted deleteriousness.
+        are negative; more negative values indicate greater predicted deleteriousness. popEVE scores
+        are given per RefSeq protein; ProtVar shows one per UniProt accession, from its MANE Select
+        RefSeq when that has a score, otherwise from its lowest RefSeq accession.
       </p>
       <LegendCategories attrs={POPEVE_SCORE_ATTR} stdColor={stdColor} />
 

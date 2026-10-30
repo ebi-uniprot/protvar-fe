@@ -31,7 +31,7 @@ export const HELP_SECTIONS: HelpSection[] = [
           { name: 'assembly-detection', title: 'Assembly Detection' },
         ],
       },
-      { name: 'browse',          title: 'Browse by Identifier' },
+      { name: 'browse',          title: 'Browse Variants' },
       { name: 'semantic-search', title: 'Semantic Search' },
     ],
   },
@@ -40,6 +40,7 @@ export const HELP_SECTIONS: HelpSection[] = [
     icon: 'bi-table',
     items: [
       { name: 'results',    title: 'Results' },
+      { name: 'messages',   title: 'Messages and notes' },
       { name: 'function',   title: 'Function' },
       { name: 'population', title: 'Population' },
       { name: 'structure',  title: 'Structure' },

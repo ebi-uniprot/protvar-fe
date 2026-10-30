@@ -1,6 +1,6 @@
 # <a id="download-panel"></a>Download Panel
 
-The **Download Panel** opens as a side drawer from the **Download** button in the result-page toolbar. It queues an asynchronous job to generate a CSV from the current result.
+The **Download Panel** opens as a side drawer from the **Download** button in the result-page toolbar. It queues an asynchronous job to generate a CSV (served zipped) of the current result: the same variants as on the page, with its filters and sort. The top of the panel shows what will be downloaded — the subject, the filters and the sort.
 
 ![Download Panel](images/download_panel.png)
 
@@ -25,15 +25,15 @@ Each category adds time to generation. See the [Download File Format](#download-
 
 **Pages**
 
-- **All** — every page of the current result. Capped at 100,000 rows; for bulk data use the FTP site (linked at the top of the Activity Downloads tab).
+- **All** — every page of the current result; the count shows how many. Not available above 100,000 variants, or when the count is capped or could not be completed in time — refine the filters, or for bulk data use the FTP site (linked at the top of the Activity Downloads tab).
 - **Current** — only the page in view, honouring the current `page` and `pageSize` parameters.
 
-> If *All* would generate more than 10 pages, ProtVar asks you to confirm before submitting.
+A single-variant lookup has no page choice.
 
 ## Email and Job Name
 
 - **Email** *(optional)* — get notified once when the file is ready.
-- **Job Name** *(optional)* — a label for your Downloads list. If left blank, ProtVar suggests one based on the source (e.g. `BRCA1`, `P22304, 6ioz`, the variant string, `Pocket browse`, `Known variants`).
+- **Job Name** *(optional)* — a label for your Downloads list. If left blank, ProtVar suggests one based on the source (e.g. `BRCA1`, `P22304, 6ioz`, the variant string or upload name, followed by up to two active filters, e.g. `P22304 · PTM`; a filter-only download is named after its filters, e.g. `Predicted Pocket (page 3)`).
 
 ## Submit
 

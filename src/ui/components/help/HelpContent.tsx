@@ -5,6 +5,7 @@ import { HELP } from '../../../constants/BrowserPaths';
 import { ActivityHelp } from './content/ActivityHelp';
 import { PredictionsHelp } from './content/PredictionsHelp';
 import { McpHelp } from './content/McpHelp';
+import { MessagesHelp } from './content/MessagesHelp';
 
 interface HelpContentProps {
   name: string;
@@ -34,6 +35,9 @@ export const HelpContent: React.FC<HelpContentProps> = ({ name }) => {
           break;
         case 'predictions':
           setContent(<PredictionsHelp />);
+          break;
+        case 'messages':
+          setContent(<MessagesHelp />);
           break;
         case 'mcp':
           setContent(<McpHelp />);

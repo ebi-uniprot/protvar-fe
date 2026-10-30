@@ -28,7 +28,7 @@ Genomic input should follow one of the specified formats.
 
 Protein input should follow one of the specified formats.
 
-- `ACC (p.)REF`**`POS`**`ALT` (e.g., P22304 A205P)  
+- <code>ACC (p.)REF<strong>POS</strong>ALT</code> (e.g., P22304 A205P)  
   _The_ `p.` _is optional._
 
 - `ACC POS (REF (ALT))` (e.g., P22309 71 (Gly (Arg)))  
@@ -70,7 +70,7 @@ Variant ID input must be a single word with no spaces, beginning with a specific
 
 ## Entering or uploading inputs
 
-- Enter one variant per line. Commas also separate inputs, so a CSV row is read as separate values; upload a plain-text file with one variant per line rather than a spreadsheet export.
+- Enter one variant per line. Commas and `|` also separate inputs, so a CSV row is read as separate values; upload a plain-text file with one variant per line rather than a spreadsheet export.
 - Quotes around a whole input are ignored (e.g., "P22304 A205P").
 - Lines starting with `#` are ignored.
 
@@ -81,4 +81,4 @@ ProtVar annotates single-nucleotide variants and single amino acid changes. The 
 - Insertions, deletions and multi-nucleotide variants (e.g., 19:18169206:TC:T, 7 140753336 AC TT)
 - A protein change without a UniProt accession (e.g., R32C), or with a gene symbol instead (e.g., SMAD4 R361H); use the accession, e.g., P22304 A205P
 - HGVS c. input without a RefSeq transcript (e.g., c.1072G>A)
-- An identifier on its own, such as a UniProt accession, Ensembl or RefSeq ID; to see all variants of a protein, use Search
+- An identifier on its own, such as a UniProt accession, Ensembl or RefSeq ID; to see all variants of a protein, use [Browse Variants](#browse)

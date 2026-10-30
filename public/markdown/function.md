@@ -9,8 +9,8 @@ The **Functional Information** panel describes the variant in three nested conte
 **Variant Residue Position** — annotations specifically about the changed amino acid.
 
 - **UniProt annotations** — curated features at the variant position (e.g. *Active site*, *Mutagenesis*, *Modified residue*).
-- 3D thumbnails of the reference and variant amino acids, to highlight the chemical change.
-- **Predictions** — Conservation, AlphaMissense, CADD, ESM-1b, popEVE, FoldX [stability change](#glossary:predicted-free-energy-change) and Missense3D, each with a score and a categorical label. See [Predictions](#predictions) for what each tool measures and how to read its score.
+- Images of the reference and variant amino acids, to highlight the chemical change (2D by default; switch to 3D to rotate them).
+- **Predictions** — Conservation, AlphaMissense, CADD, AVI, ESM-1b, popEVE, FoldX [stability change](#glossary:predicted-free-energy-change) and Missense3D, each with a score and a categorical label. See [Predictions](#predictions) for what each tool measures and how to read its score.
 
 **Region Containing Variant Position** — annotations about the [region](#glossary:region) the variant falls within.
 
