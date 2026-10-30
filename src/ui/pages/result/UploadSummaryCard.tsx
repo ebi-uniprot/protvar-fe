@@ -2,8 +2,9 @@ import { UploadSummary } from "../../../types/PagedMappingResponse";
 
 // What happened to an upload's lines. Lines and formats show at once; the mapped / not mapped / notes counts
 // once the upload is prepared (a progress line meanwhile). The counts are links that filter the lines.
-export function UploadSummaryCard({ summary, onShowNotes, onShowNotMapped }: {
+export function UploadSummaryCard({ summary, matching, onShowNotes, onShowNotMapped }: {
   summary: UploadSummary;
+  matching?: number | null;    // with filters on: lines that match them (the page total)
   onShowNotes: () => void;     // lines with any note
   onShowNotMapped?: () => void; // lines without a result (their error codes); absent when there are none
 }) {
@@ -11,6 +12,12 @@ export function UploadSummaryCard({ summary, onShowNotes, onShowNotMapped }: {
     .map(([name, n]) => `${name} ${n.toLocaleString()}`).join(' · ');
   return (
     <div className="upload-summary">
+      {matching != null && (
+        <span className="upload-summary__matching">
+          <span className="upload-summary__n">{matching.toLocaleString()}</span> of {summary.lines.toLocaleString()} lines
+          match the filters
+        </span>
+      )}
       <Stat n={summary.lines} label={summary.lines === 1 ? 'line' : 'lines'} />
       {summary.mapped != null ? (
         <>

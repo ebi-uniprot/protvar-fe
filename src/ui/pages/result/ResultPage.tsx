@@ -808,11 +808,11 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
       {data && !isQueryMode && (
         <span className="page-header-count page-header-count--inline">{
           data.totalInputs != null
-            // an upload counts its input lines; with filters on, out of the whole upload (unfiltered, the
-            // summary card below says how many)
-            ? (describeFilters(filters, true).length > 0
-                ? `${formatTotalCount(data)} of ${data.totalInputs.toLocaleString()} lines match the filters`
-                : (data.uploadSummary ? '' : `${data.totalInputs.toLocaleString()} submitted inputs`))
+            // an upload counts its input lines; the summary card says how many (and how many match the filters)
+            ? (data.uploadSummary ? ''
+                : describeFilters(filters, true).length > 0
+                  ? `${formatTotalCount(data)} of ${data.totalInputs.toLocaleString()} lines match the filters`
+                  : `${data.totalInputs.toLocaleString()} submitted inputs`)
             : `${formatTotalCount(data)} variants`
         }</span>
       )}
@@ -822,6 +822,7 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
     {/* ── Upload summary: what happened to the lines ── */}
     {data?.uploadSummary && (
       <UploadSummaryCard summary={data.uploadSummary}
+                         matching={describeFilters(filters, true).length > 0 ? data.totalItems : null}
                          onShowNotes={() => applyNotes({ notes: 'any' })}
                          onShowNotMapped={errorCodes.length ? () => applyNotes({ codes: errorCodes }) : undefined} />
     )}

@@ -245,6 +245,17 @@
     transition: width 0.4s ease;
 }
 
+/* with filters on: how many lines match, set apart from the upload's own counts */
+.upload-summary__matching {
+    padding-right: 20px;
+    border-right: 1px solid var(--color-border-light);
+    color: var(--color-text-primary);
+}
+
+.upload-summary__matching .upload-summary__n {
+    color: var(--color-brand);
+}
+
 .upload-summary__formats {
     margin-left: auto;
     color: var(--color-text-tertiary);
