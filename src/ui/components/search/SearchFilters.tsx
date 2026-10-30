@@ -102,9 +102,6 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
   // to an exact px target — no overshoot, so it's smooth rather than abrupt.
   const panelRef = useRef<HTMLDivElement>(null);
   const [panelHeight, setPanelHeight] = useState(0);
-  useLayoutEffect(() => {
-    if (panelRef.current) setPanelHeight(panelRef.current.scrollHeight);
-  }, [isExpanded, showSorting]);
 
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -161,6 +158,10 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
   };
   const [closed, setClosed] = useState<Record<string, boolean>>(() => Object.fromEntries(
     Object.entries(counts).map(([id, n]) => [id, n === 0 && id !== 'variant' && id !== 'notes'])));
+  // re-measured when a section opens or closes too, or the panel would clip it
+  useLayoutEffect(() => {
+    if (panelRef.current) setPanelHeight(panelRef.current.scrollHeight);
+  }, [isExpanded, showSorting, closed]);
   const sectionClass = (id: string) => `filter-section${closed[id] ? ' filter-section--closed' : ''}`;
   const sectionTitle = (id: string, title: string) => (
     <button type="button" className="section-title section-toggle" aria-expanded={!closed[id]}
