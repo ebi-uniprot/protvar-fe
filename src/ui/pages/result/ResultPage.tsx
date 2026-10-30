@@ -232,7 +232,10 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
   // message catalogue (code → entry), for the Notes filter labels; uploads only
   const [catalogue, setCatalogue] = useState<Record<string, MessageCatalogueEntry>>({});
   const [pollNonce, setPollNonce] = useState(0);
-  const onUploadPage = location.pathname.startsWith(RESULT);
+  // an uploaded result (/result/:id) or a ready-made dataset (/dataset/:name, itself an upload)
+  const isDataset = location.pathname.startsWith(DATASET + '/');
+  const [datasetResultId, setDatasetResultId] = useState<string>();   // the dataset's upload id, once looked up
+  const onUploadPage = location.pathname.startsWith(RESULT) || isDataset;
   useEffect(() => {
     if (!onUploadPage || Object.keys(catalogue).length > 0) return;
     getMessageCatalogue()
@@ -511,6 +514,7 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
         getDatasets().then(r => {
           const dataset = r.data.find(d => d.name === trimmedInput);
           if (!dataset) { navigate(HOME, { replace: true }); return; }
+          setDatasetResultId(dataset.resultId);
           setResultTitle(dataset.title);
           loadBrowseData({ resultId: dataset.resultId }, page, pageSize, assembly, filters);
         }).catch(() => navigate(HOME, { replace: true }));
@@ -553,7 +557,7 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
   const isQueryMode = mode === 'query';
   const isFilterOnly = mode === 'browse' && !idType && !idParam && idParamValues.length === 0 && !input;
   const isBrowseIdentifier = mode === 'browse' && !isFilterOnly &&
-    !(input && location.pathname.startsWith(RESULT + '/'));
+    !(input && (location.pathname.startsWith(RESULT + '/') || isDataset));
   const shareUrl = `${APP_URL}${location.pathname}${location.search}`
   const helpName = isQueryMode ? 'protvar-links' : 'results';
 
@@ -607,6 +611,7 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
     }
     // /result/:id — uploaded multi-variant results (detected by pathname before API responds)
     if (input && location.pathname.startsWith(RESULT + '/')) return 'Results';
+    if (input && isDataset) return 'Dataset';
     // Type-prefixed single-identifier browse
     if (idType) {
       const labels: Record<string, string> = {
@@ -636,7 +641,7 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
   // Index the linkable resources (one identifier or one variant); noindex the
   // constructed/transient views (/result/{id}, composite browse) and no-data
   // URLs (else flagged as Soft 404s).
-  const isUploadedResult = location.pathname.startsWith(RESULT);
+  const isUploadedResult = onUploadPage;
   const isComposite = idParamValues.length > 1 || isFilterOnly;
   const TITLE_LIST_MAX = 3;
   const summarise = (items: string[]): string =>
@@ -663,10 +668,10 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
     description: isSingleSubject
       ? `Structural, functional, population and disease annotations for ${subject} — ProtVar.`
       : undefined,
-    canonical: isUploadedResult
+    canonical: isUploadedResult && !isDataset
       ? undefined
       : `${APP_URL}${location.pathname}${canonicalQuery ? `?${canonicalQuery}` : ''}`,
-    noindex: isUploadedResult || isComposite || (!loading && !data),
+    noindex: (isUploadedResult && !isDataset) || isComposite || (!loading && !data),   // a dataset is linkable
   });
 
   // No data (bad/unresolvable id or unrecognised query): a centred "not found"
@@ -790,7 +795,7 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
             onClick={() => appState.updateState("drawer",
               <DownloadPanel
                 q={isQueryMode ? (resultTitle ?? undefined) : undefined}
-                resultId={!isQueryMode && inputType === 'input_id' ? input ?? undefined : undefined}
+                resultId={!isQueryMode && inputType === 'input_id' ? (isDataset ? datasetResultId : input) ?? undefined : undefined}
                 ids={!isQueryMode && inputType !== 'input_id' ? currentBrowseIds : undefined}
                 historyId={browseHistoryId}
                 subject={isFilterOnly ? 'All coding variants' : idParamValues.length > 1 ? subject : resultTitle ?? undefined}
@@ -820,7 +825,7 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
   return <div>
     {/* ── Title + count on one line ── */}
     <div className="page-header-row" ref={resultsTopRef}>
-      <h5 className="page-header" title={isUploadedResult && input ? `Upload ${input}` : undefined}>{pageTitle}</h5>
+      <h5 className="page-header" title={isUploadedResult && input && !isDataset ? `Upload ${input}` : undefined}>{pageTitle}</h5>
       {data && !isQueryMode && (
         <span className="page-header-count page-header-count--inline">{
           data.totalInputs != null
