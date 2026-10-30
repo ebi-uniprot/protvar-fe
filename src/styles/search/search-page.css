@@ -623,3 +623,10 @@
         max-width: 100%;
     }
 }
+
+/* "Or explore a ready-made dataset" under the Annotate examples */
+.example-dataset {
+    margin: 0.75rem 0 0;
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+}

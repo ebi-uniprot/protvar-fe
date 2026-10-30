@@ -5,7 +5,7 @@ import APIErrorPage from "./pages/APIErrorPage";
 import AboutPage from "./pages/AboutPage";
 import ReleasePage from "./pages/ReleasePage";
 import ContactPage from "./pages/ContactPage";
-import {ABOUT, ACTIVITY, API_ERROR, CONTACT, DOWNLOAD, G_QUERY, HELP, HOME, ID_ENSEMBL, ID_GENE, ID_PDB, ID_REFSEQ, P_QUERY, QUERY, RELEASE, RESULT, SEARCH, SEMANTIC_SEARCH, STATUS} from "../constants/BrowserPaths";
+import {ABOUT, ACTIVITY, API_ERROR, CONTACT, DATASET, DOWNLOAD, G_QUERY, HELP, HOME, ID_ENSEMBL, ID_GENE, ID_PDB, ID_REFSEQ, P_QUERY, QUERY, RELEASE, RESULT, SEARCH, SEMANTIC_SEARCH, STATUS} from "../constants/BrowserPaths";
 import DownloadPage from "./pages/download/DownloadPage";
 import HelpPage from "./pages/help/HelpPage";
 import {PagedMappingResponse} from "../types/PagedMappingResponse";
@@ -89,6 +89,8 @@ export default function App() {
 
           {/* Route for user inputId - result/{inputId} */}
           <Route path={`${RESULT}/:input`} element={<ResultPage />} />
+          {/* Ready-made dataset by name - dataset/{name} */}
+          <Route path={`${DATASET}/:input`} element={<ResultPage />} />
 
           {/* /search — mode auto-detected: ?q= → variant query, ?id= → multi-id browse, neither → filter-only */}
           <Route path={SEARCH} element={<ResultPage queryType="search" />} />

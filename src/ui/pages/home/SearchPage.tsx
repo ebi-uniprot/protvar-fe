@@ -1,12 +1,13 @@
 // SearchPage.tsx
-import React, { useState, useRef, ChangeEvent } from 'react';
+import React, { useState, useRef, useEffect, ChangeEvent } from 'react';
 import {Link, useNavigate, useSearchParams} from "react-router-dom";
 import {HelpContent} from "../../components/help/HelpContent";
 import {HelpButton} from "../../components/help/HelpButton";
 import {useStorage} from "../../../context/StorageContext";
 import {ResultRecord, submissionExpiresAt} from "../../../types/ResultRecord";
-import {uploadFile, uploadText} from "../../../services/ProtVarService";
-import {API_ERROR, HELP, RESULT, SEARCH, SEMANTIC_SEARCH} from "../../../constants/BrowserPaths";
+import {getDatasets, uploadFile, uploadText} from "../../../services/ProtVarService";
+import {API_ERROR, DATASET, HELP, RESULT, SEARCH, SEMANTIC_SEARCH} from "../../../constants/BrowserPaths";
+import {Dataset} from "../../../types/Dataset";
 import {readFirstLineFromFile} from "../../../utills/FileUtil";
 import { DEFAULT_SEARCH_FILTERS } from '../../components/search/defaultFilters';
 import SearchFilters, {
@@ -124,6 +125,9 @@ const SearchPage: React.FC = () => {
   const { saveResult } = useStorage();
 
   const [searchFilters, setSearchFilters] = useState<SearchFilterParams>(DEFAULT_SEARCH_FILTERS);
+  // ready-made datasets for the "explore a dataset" link; none if the API has none (or fails)
+  const [datasets, setDatasets] = useState<Dataset[]>([]);
+  useEffect(() => { getDatasets().then(r => setDatasets(r.data ?? [])).catch(() => setDatasets([])); }, []);
 
   const handleModeChange = (mode: SearchMode) => {
     setError('');
@@ -501,6 +505,18 @@ const SearchPage: React.FC = () => {
                       </span>
                     ))}
                   </div>
+                  {datasets.length > 0 && (
+                    <p className="example-dataset">
+                      Or explore a ready-made dataset:{' '}
+                      {datasets.map((d, i) => (
+                        <React.Fragment key={d.name}>
+                          {i > 0 && ', '}
+                          <Link to={`${DATASET}/${d.name}`} title={d.description}>{d.title}</Link>
+                          {' '}({d.lineCount.toLocaleString()} variants{d.sourceVersion ? `, ${d.sourceVersion}` : ''})
+                        </React.Fragment>
+                      ))}
+                    </p>
+                  )}
                 </div>
               </div>
             )}

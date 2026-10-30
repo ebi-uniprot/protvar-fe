@@ -1,6 +1,7 @@
 export const ABOUT = "/about"
 export const CONTACT = "/contact"
 export const RESULT = "/result" //[/:input]
+export const DATASET = "/dataset" // /dataset/:input — a ready-made dataset by name (GET /datasets)
 export const QUERY = "/query"   // deprecated, kept for backward compat
 export const SEARCH = "/search" // single-variant query (?q=) · identifier browse (?id=) · no-id browse (filters only)
                                 // filters (?cadd=, ?am=, etc.) can be combined with any of the above

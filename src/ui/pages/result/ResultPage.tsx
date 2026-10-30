@@ -9,9 +9,9 @@ import React, {useCallback, useContext, useEffect, useMemo, useRef, useState} fr
 import PaginationRow from "./PaginationRow";
 import {DEFAULT_PAGE, DEFAULT_PAGE_SIZE, PERMITTED_PAGE_SIZES} from "../../../constants/const";
 import {SESSION_REDIRECT} from "../../../constants/storage";
-import {HOME, RESULT} from "../../../constants/BrowserPaths";
+import {DATASET, HOME, RESULT} from "../../../constants/BrowserPaths";
 import {DownloadPanel} from "../../modal/DownloadPanel";
-import {getMapping, getMessageCatalogue, singleVariant} from "../../../services/ProtVarService";
+import {getDatasets, getMapping, getMessageCatalogue, singleVariant} from "../../../services/ProtVarService";
 import {MessageCatalogueEntry, PagedMappingResponse} from "../../../types/PagedMappingResponse";
 import { toast } from '../../toast/toast';
 
@@ -506,6 +506,14 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
         // /result/:id — uploaded result, use resultId path
         setResultTitle(uploadLabel(trimmedInput));
         loadBrowseData({ resultId: trimmedInput }, page, pageSize, assembly, filters);
+      } else if (location.pathname.startsWith(DATASET + '/')) {
+        // /dataset/:name — a ready-made dataset: its upload, titled by the dataset (unknown name: home)
+        getDatasets().then(r => {
+          const dataset = r.data.find(d => d.name === trimmedInput);
+          if (!dataset) { navigate(HOME, { replace: true }); return; }
+          setResultTitle(dataset.title);
+          loadBrowseData({ resultId: dataset.resultId }, page, pageSize, assembly, filters);
+        }).catch(() => navigate(HOME, { replace: true }));
       } else {
         // /:accession — UniProt accession or other identifier, use ids path
         loadBrowseData({ ids: [parseIdParam(trimmedInput)] }, page, pageSize, assembly, filters);
@@ -518,7 +526,7 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
       setResultTitle('');
       loadBrowseData({}, page, pageSize, assembly, filters);
     }
-  }, [mode, isRangeQuery, param1, param2, idType, idParam, idParamValues, input, location.pathname, page, pageSize, assembly, filters, loadBrowseData, pollNonce, uploadLabel])
+  }, [mode, isRangeQuery, param1, param2, idType, idParam, idParamValues, input, location.pathname, page, pageSize, assembly, filters, loadBrowseData, pollNonce, uploadLabel, navigate])
 
   useEffect(() => {
     setLocalFilters(extractFilters(searchParams));

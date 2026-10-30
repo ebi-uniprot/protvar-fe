@@ -11,6 +11,7 @@ import {PdbeStructure} from "../types/PdbeStructure";
 import {DownloadResponse, DownloadStatusEntry} from "../types/DownloadRecord";
 import {InputUploadResponse, MessageCatalogueEntry, PagedMappingResponse} from "../types/PagedMappingResponse";
 import {DownloadRequest} from "../types/DownloadRequest";
+import {Dataset} from "../types/Dataset";
 import {MappingRequest} from "../types/MappingRequest";
 import {ModelInfo, VectorSearchResponse} from "../types/VectorSearch";
 import {StatusResponse} from "../types/StatusResponse";
@@ -120,6 +121,11 @@ export function downloadStatus(ids: string[]) {
 // The message catalogue (codes, severity, labels): changes only with a BE release
 export function getMessageCatalogue() {
   return api.get<MessageCatalogueEntry[]>(`${API_URL}/messages`, { cache: { ttl: 24 * 60 * 60 * 1000 } });
+}
+
+// Ready-made datasets: change only when protvar-production rebuilds them
+export function getDatasets() {
+  return api.get<Dataset[]>(`${API_URL}/datasets`, { cache: { ttl: 60 * 60 * 1000 } });
 }
 
 export function getServiceStatus() {
