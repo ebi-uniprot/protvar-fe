@@ -65,7 +65,7 @@ export interface Isoform {
   refCodon: string;
   codonPosition: number;
   refAA: string;
-  variantAA: string;
+  variantAA?: string; // absent when the codon isn't readable (PV-113)
   variantCodon: string;
   consequences: string;
   proteinName: string;

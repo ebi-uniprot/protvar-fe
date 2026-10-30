@@ -41,7 +41,8 @@ export const getIdUrl = (id: string) => {
   return "";
 };
 
-export const aaChangeStr = (ref: string, alt: string) => `${ref}/${alt}`;
+// the alt is unknown (no readable codon, PV-113): shown as "?"
+export const aaChangeStr = (ref: string, alt?: string) => `${ref}/${alt ?? '?'}`;
 
 function AnnotationButton(props: {
   rowKey: string;
@@ -123,7 +124,7 @@ export const getNewPrimaryRow = (
 
   // AA change in Ala205Pro format
   const aaChange = aaChangeStr(isoform.refAA, isoform.variantAA);
-  const aaChangeFormatted = `${isoform.refAA}${isoform.isoformPosition}${isoform.variantAA}`;
+  const aaChangeFormatted = `${isoform.refAA}${isoform.isoformPosition}${isoform.variantAA ?? '?'}`;
 
   const idValue = getIdValue(input);
   const rowClass = `result-row ${index % 2 === 0 ? 'row-even' : 'row-odd'}${noteMarker ? ' has-note' : ''}`;
@@ -296,7 +297,7 @@ export const getNewPrimaryRow = (
           Desktop uses separate result-row-isoform elements; these are hidden there. */}
       {altIsoforms.map((altIso) => {
         const altAaChange = aaChangeStr(altIso.refAA, altIso.variantAA);
-        const altAaFormatted = `${altIso.refAA}${altIso.isoformPosition}${altIso.variantAA}`;
+        const altAaFormatted = `${altIso.refAA}${altIso.isoformPosition}${altIso.variantAA ?? '?'}`;
         return (
           <div key={altIso.accession} className="card-isoform-inline">
             <span className="isoform-cell">

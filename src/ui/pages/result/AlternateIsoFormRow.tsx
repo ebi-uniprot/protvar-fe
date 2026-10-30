@@ -53,7 +53,7 @@ export function getProteinName(proteinName?: string) {
 export function getAlternateIsoFormRow(isoformKey: string, index: number, isoform: Isoform,
                                        cols: ResultColumn[] = visibleColumns()) {
   const aaChange = aaChangeStr(isoform.refAA, isoform.variantAA);
-  const aaChangeFormatted = `${isoform.refAA}${isoform.isoformPosition}${isoform.variantAA}`;
+  const aaChangeFormatted = `${isoform.refAA}${isoform.isoformPosition}${isoform.variantAA ?? '?'}`;
 
   // Alt isoforms only fill these protein columns; every other visible column gets an empty placeholder.
   const cells: Partial<Record<ColumnId, React.ReactNode>> = {
