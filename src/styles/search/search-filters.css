@@ -784,6 +784,12 @@
     gap: 1rem;
 }
 
+/* one option per line (Notes: three options that would otherwise wrap unevenly) */
+.radio-group.radio-group--stacked {
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
 .search-filters--rail .checkbox-label,
 .search-filters--rail .radio-label {
     font-size: var(--font-size-xs);

@@ -51,4 +51,7 @@ export interface MappingRequest {
   // Sorting
   sort?: string;
   order?: 'asc' | 'desc';
+  // uploaded result only: lines with notes (any) or without (none), or with any of these codes
+  notes?: 'any' | 'none';
+  codes?: string[];
 }

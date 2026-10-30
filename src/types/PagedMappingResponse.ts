@@ -18,6 +18,28 @@ export interface PagedMappingResponse {
   preparing?: number | null
   // Uploaded result only: the upload's total inputs whatever the filters (totalItems = the matching ones)
   totalInputs?: number | null
+  // Uploaded result only: what happened to its lines (see UploadSummary)
+  uploadSummary?: UploadSummary | null
+}
+
+// Lines and formats are known from upload; preparing (0–99) while the upload is prepared in the background;
+// then the counts. A line counts once per note code; withNotes = lines with any note.
+export interface UploadSummary {
+  lines: number
+  formats?: Record<string, number>
+  preparing?: number
+  mapped?: number
+  notMapped?: number
+  withNotes?: number
+  codes?: Record<string, number>
+}
+
+// One entry of the message catalogue (GET /messages); text may hold format placeholders
+export interface MessageCatalogueEntry {
+  code: string
+  type: 'INFO' | 'WARN' | 'ERROR'
+  label: string
+  text: string
 }
 
 export interface InputUploadResponse {

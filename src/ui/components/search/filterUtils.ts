@@ -71,7 +71,18 @@ export const extractFilters = (searchParams: URLSearchParams): SearchFilterParam
   // Sorting
   sort: searchParams.get("sort") || undefined,
   order: (searchParams.get("order") as "asc" | "desc") || undefined,
+
+  // Notes (uploaded result only)
+  notes: parseNotesParam(searchParams),
+  codes: searchParams.getAll("codes").filter(c => NOTE_CODE.test(c)),
 });
+
+const NOTE_CODE = /^PV-\d{3}$/;
+
+const parseNotesParam = (searchParams: URLSearchParams): 'any' | 'none' | undefined => {
+  const v = searchParams.get("notes");
+  return v === 'any' || v === 'none' ? v : undefined;
+};
 
 // Build URL params from filters - NOW MUCH SIMPLER! Direct 1:1 mapping
 export const buildFilterParams = (filters: SearchFilterParams): URLSearchParams => {
@@ -118,6 +129,10 @@ export const buildFilterParams = (filters: SearchFilterParams): URLSearchParams 
   // Sorting
   if (filters.sort) params.set("sort", filters.sort);
   if (filters.order) params.set("order", filters.order);
+
+  // Notes
+  if (filters.notes) params.set("notes", filters.notes);
+  (filters.codes ?? []).filter(c => NOTE_CODE.test(c)).forEach(c => params.append("codes", c));
 
   return params;
 };
@@ -182,6 +197,9 @@ export const describeFilters = (f: SearchFilterParams, upload = false): FilterCh
   if (f.aviMin !== undefined)
     chips.push({ id: 'aviMin', label: `AVI ≥ ${f.aviMin}` });
 
+  if (upload && f.notes) chips.push({ id: 'notes', label: f.notes === 'any' ? 'With notes' : 'Without notes' });
+  if (upload) (f.codes ?? []).forEach(c => chips.push({ id: `codes:${c}`, label: `Note ${c}` }));
+
   return chips;
 };
 
@@ -206,6 +224,7 @@ export const restoreChip = (
   if (id === 'conservation') return { ...local, consMin: applied.consMin, consMax: applied.consMax };
   if (id === 'esm1b') return { ...local, esmMin: applied.esmMin, esmMax: applied.esmMax };
   if (id === 'aviMin') return { ...local, aviMin: applied.aviMin };
+  if (id === 'notes') return { ...local, notes: applied.notes };
   if (id.includes(':')) {
     const [key, val] = id.split(':');
     const cur = (local as unknown as Record<string, string[]>)[key] ?? [];
@@ -344,5 +363,7 @@ export const filterRequest = (filters: SearchFilterParams | undefined, isUpload:
     esm1bMax: filters?.esmMax,
     sort: filters?.sort,
     order: filters?.order,
+    notes: isUpload ? filters?.notes : undefined,
+    codes: isUpload && filters?.codes?.length ? filters.codes : undefined,
   };
 };

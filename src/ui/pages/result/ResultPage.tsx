@@ -5,14 +5,15 @@ import ViewSwitch from "./ViewSwitch";
 import {useLocation, useNavigate, useParams, useSearchParams} from "react-router-dom";
 import ResultTable from "./ResultTable";
 import { NoteText } from "./RowNotes";
+import { UploadSummaryCard } from "./UploadSummaryCard";
 import React, {useCallback, useContext, useEffect, useMemo, useRef, useState} from "react";
 import PaginationRow from "./PaginationRow";
 import {DEFAULT_PAGE, DEFAULT_PAGE_SIZE, PERMITTED_PAGE_SIZES} from "../../../constants/const";
 import {SESSION_REDIRECT} from "../../../constants/storage";
 import {HOME, RESULT} from "../../../constants/BrowserPaths";
 import {DownloadPanel} from "../../modal/DownloadPanel";
-import {getMapping, singleVariant} from "../../../services/ProtVarService";
-import {PagedMappingResponse} from "../../../types/PagedMappingResponse";
+import {getMapping, getMessageCatalogue, singleVariant} from "../../../services/ProtVarService";
+import {MessageCatalogueEntry, PagedMappingResponse} from "../../../types/PagedMappingResponse";
 import { toast } from '../../toast/toast';
 
 import {ResultRecord} from "../../../types/ResultRecord";
@@ -39,6 +40,7 @@ import {effectiveTotalPages, formatTotalCount} from "../../../utills/PaginationF
 import {Identifier, IdentifierType, InputType} from "../../../types/InputType";
 import {MappingRequest} from "../../../types/MappingRequest";
 import SearchFilters, {
+  NoteCodeOption,
   SearchFilterParams
 } from "../../components/search/SearchFilters";
 
@@ -213,7 +215,16 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
   const lastLoadKeyRef = useRef<string | null>(null);
   // Upload filter/sort being prepared by the BE: progress, and the pending re-poll
   const [preparing, setPreparing] = useState<number | null>(null);
+  // message catalogue (code → entry), for the Notes filter labels; uploads only
+  const [catalogue, setCatalogue] = useState<Record<string, MessageCatalogueEntry>>({});
   const [pollNonce, setPollNonce] = useState(0);
+  const onUploadPage = location.pathname.startsWith(RESULT);
+  useEffect(() => {
+    if (!onUploadPage || Object.keys(catalogue).length > 0) return;
+    getMessageCatalogue()
+      .then(r => setCatalogue(Object.fromEntries(r.data.map(e => [e.code, e]))))
+      .catch(() => { /* labels fall back to the code alone */ });
+  }, [onUploadPage, catalogue]);
   const pollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pollingRef = useRef(false);   // the next browse load is a background poll: don't flip `loading`
   // Poll interval: 2 s first (small builds finish fast), ×1.5 per poll up to 10 s. Progress only moves per
@@ -294,6 +305,11 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
         }
         setPreparing(null);
         pollDelayRef.current = 2000;
+        if (response.data?.uploadSummary?.preparing != null) {
+          // the upload is still being prepared in the background: refresh quietly so the summary fills in
+          lastLoadKeyRef.current = null;
+          pollTimerRef.current = setTimeout(() => { pollingRef.current = true; setPollNonce(n => n + 1); }, 10000);
+        }
         if (response.data) {
           if (response.data.content?.inputs?.length > 0) {
             setData(response.data)
@@ -681,7 +697,25 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
   unfilteredParams.delete('page');
   const unfilteredUrl = `${location.pathname}${unfilteredParams.toString() ? `?${unfilteredParams}` : ''}`;
   const activeFilterCount = describeFilters(filters, isUploadedResult).length;
+  // note codes the upload's lines have, labelled from the message catalogue, for the Notes filter group
+  const noteCodes: NoteCodeOption[] = Object.entries(data?.uploadSummary?.codes ?? {})
+    .map(([code, lines]) => ({ code, lines, label: catalogue[code]?.label ?? '' }))
+    .sort((a, b) => a.code.localeCompare(b.code));
+  // apply a notes filter on top of the current filters (from the summary card)
+  const applyNotes = (notes: Pick<SearchFilterParams, 'notes' | 'codes'>) => {
+    const newSearchParams = new URLSearchParams(searchParams);
+    FILTER_PARAM_KEYS.forEach(key => newSearchParams.delete(key));
+    buildFilterParams({ ...filters, notes: undefined, codes: [], ...notes })
+      .forEach((value, key) => newSearchParams.append(key, value));
+    newSearchParams.delete('page');
+    navigate(`${location.pathname}?${newSearchParams.toString()}`);
+  };
+  const errorCodes = noteCodes.filter(n => catalogue[n.code]?.type === 'ERROR').map(n => n.code);
+
   const filterProps = {
+    noteCodes,
+    // the Notes group shows once the upload has been checked (its summary has counts)
+    notesReady: data?.uploadSummary?.mapped != null,
     filters: localFilters,
     appliedFilters: filters,
     onFiltersChange: setLocalFilters,
@@ -774,15 +808,23 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
       {data && !isQueryMode && (
         <span className="page-header-count page-header-count--inline">{
           data.totalInputs != null
-            // an upload counts its input lines; with filters on, out of the whole upload
+            // an upload counts its input lines; with filters on, out of the whole upload (unfiltered, the
+            // summary card below says how many)
             ? (describeFilters(filters, true).length > 0
-                ? `${formatTotalCount(data)} of ${data.totalInputs.toLocaleString()} submitted inputs match the filters`
-                : `${data.totalInputs.toLocaleString()} submitted inputs`)
+                ? `${formatTotalCount(data)} of ${data.totalInputs.toLocaleString()} lines match the filters`
+                : (data.uploadSummary ? '' : `${data.totalInputs.toLocaleString()} submitted inputs`))
             : `${formatTotalCount(data)} variants`
         }</span>
       )}
       <HelpButton title="" content={<HelpContent name={helpName}/>}/>
     </div>
+
+    {/* ── Upload summary: what happened to the lines ── */}
+    {data?.uploadSummary && (
+      <UploadSummaryCard summary={data.uploadSummary}
+                         onShowNotes={() => applyNotes({ notes: 'any' })}
+                         onShowNotMapped={errorCodes.length ? () => applyNotes({ codes: errorCodes }) : undefined} />
+    )}
 
     {/* ── Response-level messages from API ── */}
     {(data?.content.messages?.length ?? 0) > 0 && (

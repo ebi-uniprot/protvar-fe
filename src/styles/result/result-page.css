@@ -185,3 +185,79 @@
 .link-button:hover {
     color: var(--color-primary-dark);
 }
+
+/* ── Upload summary card: what happened to the lines ── */
+.upload-summary {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px 20px;
+    margin: 0 0 10px;
+    padding: 8px 14px;
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-md, 8px);
+    background: var(--color-bg-elevated);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+}
+
+.upload-summary__n {
+    font-size: var(--font-size-lg, 1.1rem);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+}
+
+.upload-summary__stat--error .upload-summary__n { color: var(--note-error); }
+.upload-summary__stat--warn .upload-summary__n  { color: var(--note-warn); }
+
+.upload-summary__stat--link {
+    padding: 0;
+    border: none;
+    background: none;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+    text-decoration: underline dotted;
+    text-underline-offset: 3px;
+}
+
+.upload-summary__stat--link:hover { color: var(--color-text-primary); }
+
+.upload-summary__preparing {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.upload-summary__bar {
+    display: inline-block;
+    width: 80px;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--color-border-light);
+    overflow: hidden;
+}
+
+.upload-summary__bar > span {
+    display: block;
+    height: 100%;
+    background: var(--color-brand);
+    transition: width 0.4s ease;
+}
+
+.upload-summary__formats {
+    margin-left: auto;
+    color: var(--color-text-tertiary);
+}
+
+/* Notes group in the filter rail: code checkboxes with line counts */
+.note-codes .checkbox-label {
+    align-items: baseline;
+}
+
+.note-code-count {
+    margin-left: auto;
+    padding-left: 8px;
+    font-size: var(--font-size-xs);
+    color: var(--color-text-tertiary);
+}

@@ -46,6 +46,10 @@ export interface SearchFilterParams {
   // Sorting
   sort?: string;
   order?: "asc" | "desc";
+
+  // Notes (uploaded result only): lines with notes (any) or without (none), or with any of these codes
+  notes?: 'any' | 'none';
+  codes?: string[];
 }
 
 interface SearchFiltersProps {
@@ -59,6 +63,15 @@ interface SearchFiltersProps {
   layout?: 'inline' | 'rail';              // inline: chip bar + expandable panel; rail: always-open side column
   onCollapse?: () => void;                 // rail: collapse button (the page hides the rail)
   className?: string;
+  noteCodes?: NoteCodeOption[];            // uploaded result: the note codes its lines have, for the Notes group
+  notesReady?: boolean;                    // uploaded result checked (its summary has counts): show the Notes group
+}
+
+// A note code an upload's lines have, with its catalogue label and how many lines have it
+export interface NoteCodeOption {
+  code: string;
+  label: string;
+  lines: number;
 }
 
 // AVI sort/filter need the 2026_02 genomic_score BE; hidden until REACT_APP_AVI_ENABLED=true (set at the cut-over)
@@ -77,7 +90,9 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                                                        upload = false,
                                                        layout = 'inline',
                                                        onCollapse,
-                                                       className = ''
+                                                       className = '',
+                                                       noteCodes = [],
+                                                       notesReady = false
                                                      }) => {
   // Panel stays collapsed by default — the chip bar shows what's active, so
   // the user only opens the tall panel to add a new selection.
@@ -128,6 +143,15 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
       ...filters,
       [key]: checked ? true : undefined
     });
+  };
+
+  const handleNotesChange = (value: 'any' | 'none' | undefined) => {
+    onFiltersChange({ ...filters, notes: value });
+  };
+
+  const handleCodeChange = (code: string, checked: boolean) => {
+    const codes = filters.codes ?? [];
+    onFiltersChange({ ...filters, codes: checked ? [...codes, code] : codes.filter(c => c !== code) });
   };
 
   const handleVariantChange = (value: 'known' | 'potential') => {
@@ -244,6 +268,35 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
               </label>
             </div>
           </div>
+
+          {/* Notes (uploaded result only): lines by their notes, across the whole upload */}
+          {upload && notesReady && (
+            <div className="filter-section">
+              <h4 className="section-title">Notes</h4>
+              <div className="radio-group radio-group--stacked">
+                {([[undefined, 'All lines'], ['any', 'Lines with notes'], ['none', 'Lines without notes']] as const)
+                  .map(([value, label]) => (
+                    <label key={label} className="radio-label">
+                      <input type="radio" name="notes" checked={filters.notes === value}
+                             onChange={() => handleNotesChange(value)} />
+                      <span>{label}</span>
+                    </label>
+                  ))}
+              </div>
+              {noteCodes.length > 0 && (
+                <div className="checkbox-group note-codes">
+                  {noteCodes.map(n => (
+                    <label key={n.code} className="checkbox-label">
+                      <input type="checkbox" checked={(filters.codes ?? []).includes(n.code)}
+                             onChange={(e) => handleCodeChange(n.code, e.target.checked)} />
+                      <span><span className="msg-code">{n.code}</span>{' '}{n.label}</span>
+                      <span className="note-code-count">{n.lines.toLocaleString()}</span>
+                    </label>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
 
           {/* 2. Functional */}
           <div className="filter-section">

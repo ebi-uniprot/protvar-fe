@@ -37,7 +37,11 @@ export const FILTER_PARAM_KEYS = [
 
   // Sorting
   'sort',
-  'order'
+  'order',
+
+  // Notes (uploaded result only)
+  'notes',
+  'codes'
 ] as const;
 
 // Type-safe parameter keys

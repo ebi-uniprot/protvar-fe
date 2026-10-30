@@ -9,7 +9,7 @@ import {FunctionalInfo} from "../types/FunctionalInfo";
 import {PopulationObservation} from "../types/PopulationObservation";
 import {PdbeStructure} from "../types/PdbeStructure";
 import {DownloadResponse, DownloadStatusEntry} from "../types/DownloadRecord";
-import {InputUploadResponse, PagedMappingResponse} from "../types/PagedMappingResponse";
+import {InputUploadResponse, MessageCatalogueEntry, PagedMappingResponse} from "../types/PagedMappingResponse";
 import {DownloadRequest} from "../types/DownloadRequest";
 import {MappingRequest} from "../types/MappingRequest";
 import {ModelInfo, VectorSearchResponse} from "../types/VectorSearch";
@@ -115,6 +115,11 @@ export function downloadStatus(ids: string[]) {
       headers: DEFAULT_HEADERS,
     }
   );
+}
+
+// The message catalogue (codes, severity, labels): changes only with a BE release
+export function getMessageCatalogue() {
+  return api.get<MessageCatalogueEntry[]>(`${API_URL}/messages`, { cache: { ttl: 24 * 60 * 60 * 1000 } });
 }
 
 export function getServiceStatus() {
