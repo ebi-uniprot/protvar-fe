@@ -49,6 +49,15 @@ const INVALID_PAGE_SIZE = `The specified page size is invalid. Using the default
 const MAX_PAGE_EXCEEDED = `The requested page number exceeds the total number of available pages (total pages: {totalPages}).`
 const INVALID_QUERY = 'Invalid or unrecognised query'
 export const NO_DATA = 'No data'
+
+// e.g. "30 Oct, 14:12"; with the year when it isn't this year ("30 Oct 2025, 14:12")
+const shortDateTime = (iso: string): string => {
+  const d = new Date(iso);
+  return d.toLocaleString('en-GB', {
+    day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit',
+    ...(d.getFullYear() !== new Date().getFullYear() ? { year: 'numeric' } : {}),
+  });
+}
 export const NO_RESULT = 'No result to display'
 export const UNEXPECTED_ERR = 'An unexpected error occurred'
 
@@ -203,9 +212,12 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
     setPrefs({ filterRailCollapsed: !c });
     return !c;
   }), [setPrefs])
-  // An upload is named by the user's label for it in History, else by a short form of its id
-  const uploadLabel = useCallback((id: string) =>
-    getHistory().find(r => r.id === id)?.name || `Upload ${id.slice(0, 8)}`, [getHistory])
+  // An upload is named by the user's label for it in History, else by when it was submitted here (from History),
+  // else — a shared link, or another browser — by a short form of its id. The full id shows on the title's hover.
+  const uploadLabel = useCallback((id: string) => {
+    const rec = getHistory().find(r => r.id === id);
+    return rec?.name || (rec ? `Upload ${shortDateTime(rec.savedAt)}` : `Upload ${id.slice(0, 8)}`);
+  }, [getHistory])
   const resultsTopRef = useRef<HTMLDivElement>(null);
   // De-dupe identical consecutive data loads. Annotation panels keep their
   // open/closed state in the URL (?annotation=…), so toggling one navigates and
@@ -804,7 +816,7 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
   return <div>
     {/* ── Title + count on one line ── */}
     <div className="page-header-row" ref={resultsTopRef}>
-      <h5 className="page-header">{pageTitle}</h5>
+      <h5 className="page-header" title={isUploadedResult && input ? `Upload ${input}` : undefined}>{pageTitle}</h5>
       {data && !isQueryMode && (
         <span className="page-header-count page-header-count--inline">{
           data.totalInputs != null
