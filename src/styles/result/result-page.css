@@ -8,7 +8,9 @@
     padding: 2px 0 4px;
 }
 
-.result-post-table {
+/* bottom pagination: left, under the top one */
+.result-pre-table.result-post-table {
+    justify-content: flex-start;
     padding-top: var(--spacing-sm);
 }
 

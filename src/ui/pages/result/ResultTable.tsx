@@ -7,7 +7,8 @@ import { getNewPrimaryRow, AnnotationPanels, ToggleIsoformGroupFn } from "./Prim
 import { singleVariant } from "../../../services/ProtVarService";
 import { AppContext } from "../../App";
 import MsgRow from "./MsgRow";
-import { NoteCounts, NoteMarker, NoteRow, NotesBar } from "./RowNotes";
+import { NoteCorner, NoteCounts, NoteMarker, NoteRow, NotesBar, NoteText, plural, worstType } from "./RowNotes";
+import { ResultLayout } from "../../../types/UserPrefs";
 import { inGroup, ResultColumn, visibleColumns } from "../../../constants/resultColumns";
 import { useResultColumns } from "./useResultColumns";
 import Tool from "../../elements/Tooltip";
@@ -26,6 +27,7 @@ interface ResultTableProps {
   // browse). The chevron then triggers a single-variant lookup on first
   // expand to fetch the alt-isoform list on demand.
   lazyIsoforms?: boolean;
+  layout?: ResultLayout;
 }
 
 function ResultTable(props: ResultTableProps) {
@@ -160,6 +162,8 @@ function ResultTable(props: ResultTableProps) {
   const genomic = inGroup(cols, 'genomic');
   const protein = inGroup(cols, 'protein');
   const hints = (group: ResultColumn[]) => group.map(c => c.label);
+  const cards = props.layout === 'cards' || props.layout === 'compact';
+  const tableClass = `result-table${cards ? ' result-table--cards' : ''}${props.layout === 'compact' ? ' result-table--compact' : ''}`;
 
   const rows = getTableRows(
     props.data,
@@ -173,13 +177,14 @@ function ResultTable(props: ResultTableProps) {
     loadingVariants,
     cols,
     { isOpen: (i: number) => showAllNotes || openNotes.has(i), toggle: toggleNote },
+    cards,
   );
 
   return (
     <>
     <NotesBar counts={noteCounts(props.data)} showAll={showAllNotes}
               onToggle={() => { setShowAllNotes(!showAllNotes); setOpenNotes(new Set()); }} />
-    <div className="result-table" style={{ gridTemplateColumns: `repeat(${cols.length}, auto)` }}>
+    <div className={tableClass} style={{ gridTemplateColumns: `repeat(${cols.length}, auto)` }}>
       {/* ── Sticky two-row header ── */}
       <div className="result-header">
         <div className="result-group-header">
@@ -244,6 +249,7 @@ const getTableRows = (
   loadingVariants: Record<string, boolean>,
   cols: ResultColumn[],
   notes: RowNoteState,
+  cards: boolean,
 ) => {
   const rows: Array<React.JSX.Element> = [];
 
@@ -252,19 +258,20 @@ const getTableRows = (
 
   data?.content.inputs?.forEach((input, inputIndex) => {
     const inputHasRows = hasRows(input);
-    if (!inputHasRows) {
+    const inputRows: React.JSX.Element[] = [];
+    if (!inputHasRows && !cards) {
       input.messages.forEach((message, i) => {
-        rows.push(
+        inputRows.push(
           <MsgRow key={`input-${inputIndex}-message-${i}`} index={inputIndex} message={message} input={input} />
         );
       });
     }
-    // the input's notes go on its first result row
-    let notePlaced = !inputHasRows || input.messages.length === 0;
+    // the input's notes go on its first result row (on the card itself in card layout)
+    let notePlaced = cards || !inputHasRows || input.messages.length === 0;
 
     input.derivedGenomicVariants.forEach((genomicVariant: GenomicVariant, genIndex: number) => {
       if (genomicVariant.genes.length === 0 && input.messages.length === 0) {
-        rows.push(
+        inputRows.push(
           <MsgRow key={`input-${inputIndex}-${genIndex}-nomapping`} index={inputIndex} message={NO_MAPPING} input={input} genomicVariant={genomicVariant} />
         );
         return;
@@ -346,7 +353,7 @@ const getTableRows = (
         if (primaryKey) {
           // Wrap in display:contents div — guarantees Primary → Alt Isoforms → Annotation Panel
           // order regardless of React reconciliation behaviour.
-          rows.push(
+          inputRows.push(
             <div key={`group-${primaryKey}`} className="result-gene-group">
               {geneRowEls}
               <AnnotationPanels
@@ -361,15 +368,46 @@ const getTableRows = (
         }
       });
     });
+
+    if (!cards) {
+      rows.push(...inputRows);
+      return;
+    }
+    rows.push(
+      <InputCard key={`input-${inputIndex}`} input={input} hasRows={inputHasRows}
+                 noteOpen={notes.isOpen(inputIndex)} onToggleNote={() => notes.toggle(inputIndex)}>
+        {inputRows}
+      </InputCard>
+    );
   });
 
   return rows;
 };
 
-export const rowBg = (index: number) => {
-  const rowColor    = { backgroundColor: "#F4F3F3" };
-  const altRowColor = { backgroundColor: "#FFFFFF" };
-  return (index % 2 === 0) ? altRowColor : rowColor;
-};
+// Card layout: one outlined card per input line. Its header names the input; its rows share the table's subgrid,
+// so columns still line up across cards. Inputs without rows are a header-only card carrying their messages.
+function InputCard({ input, hasRows, noteOpen, onToggleNote, children }: {
+  input: VariantInput; hasRows: boolean; noteOpen: boolean; onToggleNote: () => void; children: React.ReactNode;
+}) {
+  const noted = hasRows && input.messages.length > 0;
+  const mapped = input.derivedGenomicVariants.filter(gv => gv.genes.length > 0);
+  const genes = Array.from(new Set(mapped.flatMap(gv => gv.genes.map(g => g.geneName))));
+  const meta = hasRows ? `${plural(mapped.length, 'variant')} · ${genes.join(', ')}` : 'not mapped';
+  return (
+    <div className={`result-card${hasRows ? '' : ' result-card--empty'}`}>
+      {noted && <NoteMarker messages={input.messages} open={noteOpen} onToggle={onToggleNote} />}
+      {!hasRows && input.messages.length > 0 && <NoteCorner type={worstType(input.messages)} />}
+      <div className="result-card-header">
+        <b>{input.inputStr}</b>
+        <span className="result-card-meta">{meta}</span>
+        {!hasRows && input.messages.map((m, i) => (
+          <span key={i} className="result-card-msg"><NoteText message={m} /></span>
+        ))}
+      </div>
+      {noted && noteOpen && <NoteRow messages={input.messages} />}
+      {children}
+    </div>
+  );
+}
 
 export default ResultTable;

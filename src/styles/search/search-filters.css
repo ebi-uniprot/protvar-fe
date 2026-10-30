@@ -839,3 +839,57 @@
     color: var(--color-brand);
     font-weight: var(--font-weight-medium);
 }
+
+/* collapsible sections: the title is a toggle; a closed section shows only its title */
+.section-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    text-align: left;
+}
+
+.section-toggle .bi {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-tertiary);
+}
+
+/* same look as the sidebar's History / Downloads counts (.record-count) */
+.section-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 16px;
+    margin-left: 6px;
+    padding: 1px 5px;
+    border-radius: var(--radius-full);
+    background: color-mix(in srgb, var(--color-brand) 12%, transparent);
+    color: var(--color-brand);
+    font-size: 9px;
+    font-weight: var(--font-weight-bold);
+    letter-spacing: 0;
+}
+
+/* Notes: the code checkboxes under their own label, apart from the three radio options */
+.note-codes {
+    margin-top: 0.75rem;
+}
+
+.note-codes-label {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-size: var(--font-size-xs);
+    color: var(--color-text-secondary);
+}
+
+.filter-section--closed > :not(.section-toggle) {
+    display: none;
+}
+
+.filter-section--closed > .section-toggle {
+    margin-bottom: 0;
+}

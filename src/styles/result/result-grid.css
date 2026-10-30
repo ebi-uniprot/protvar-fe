@@ -878,3 +878,81 @@
     from { opacity: 0; }
     to   { opacity: 1; }
 }
+
+/* ============================================
+   CARD LAYOUT (opt-in) — one outlined card per input line.
+   Cards span the table grid with subgrid, so their rows keep the shared column tracks.
+   Kept after the zebra/dark rules so the transparent row background wins at equal specificity.
+   ============================================ */
+
+.result-card {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: subgrid;
+    position: relative;
+    margin-top: 10px;
+    border: 1px solid var(--color-border-medium);
+    border-radius: 10px;
+    background: var(--color-bg-elevated);
+}
+
+.result-card--empty {
+    background: var(--color-gray-50);
+}
+
+.result-card-header {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 2px 10px;
+    padding: 9px 12px 7px 16px;
+}
+
+.result-card-meta,
+.result-card-msg {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+}
+
+.result-card .result-row {
+    background: transparent;
+    border-bottom: none;
+    border-top: 1px solid var(--color-border-light);
+}
+
+:root[data-theme="dark"] .result-card .result-row {
+    background: transparent;
+}
+
+.result-card .result-row-isoform {
+    border-top-style: dotted;
+}
+
+.result-card .result-row-note {
+    margin: 0 12px 8px;
+    border-bottom: none;
+    border-radius: 6px;
+}
+
+/* Corner triangle follows the card's rounded corner */
+.result-card > .note-marker::before,
+.result-card > .note-corner {
+    border-top-left-radius: 9px;
+}
+
+.result-table--compact .result-card {
+    margin-top: 6px;
+}
+
+.result-table--compact .result-card-header {
+    padding: 5px 12px 3px 16px;
+}
+
+.result-table--compact .result-card .result-row {
+    min-height: 1.6rem;
+}
+
+.result-table--compact .result-card .card-row > * {
+    padding-block: 2px;
+}

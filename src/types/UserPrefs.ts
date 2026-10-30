@@ -2,6 +2,7 @@ import { ResultColumnsPref } from '../constants/resultColumns'
 
 export type Theme = 'light' | 'dark'
 export type FontSize = 'sm' | 'md' | 'lg'
+export type ResultLayout = 'rows' | 'cards' | 'compact'
 
 export interface UserPrefs {
   sidebarExpanded: boolean
@@ -10,6 +11,7 @@ export interface UserPrefs {
   fontSize: FontSize
   resultColumns?: ResultColumnsPref   // undefined = default columns
   filterRailCollapsed?: boolean       // result page filter rail hidden (wide screens)
+  resultLayout?: ResultLayout         // undefined = rows
   // future: defaultAssembly, defaultPageSize, etc.
 }
 

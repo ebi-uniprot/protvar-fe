@@ -145,6 +145,31 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
     });
   };
 
+  // Sections open and close from their title; each shows how many of its filters are on. Sections with active
+  // filters (and Variant Type, Notes) start open.
+  const counts: Record<string, number> = {
+    variant: (upload ? filters.variant === 'known' : filters.variant === 'potential') ? 1 : 0,
+    notes: (filters.notes ? 1 : 0) + (filters.codes?.length ?? 0),
+    functional: [filters.ptm, filters.mutagen, filters.domain, filters.binding, filters.actsite].filter(Boolean).length
+      + (filters.consMin !== undefined || filters.consMax !== undefined ? 1 : 0),
+    population: (filters.disease ? 1 : 0) + (filters.freq?.length ?? 0),
+    structural: [filters.transmem, filters.expModel, filters.interact, filters.pocket].filter(Boolean).length
+      + (filters.stability?.length ?? 0),
+    consequence: (filters.cadd?.length ?? 0) + (filters.aviMin !== undefined ? 1 : 0) + (filters.am?.length ?? 0)
+      + (filters.popeve?.length ?? 0) + (filters.esmMin !== undefined || filters.esmMax !== undefined ? 1 : 0),
+    sort: filters.sort ? 1 : 0,
+  };
+  const [closed, setClosed] = useState<Record<string, boolean>>(() => Object.fromEntries(
+    Object.entries(counts).map(([id, n]) => [id, n === 0 && id !== 'variant' && id !== 'notes'])));
+  const sectionClass = (id: string) => `filter-section${closed[id] ? ' filter-section--closed' : ''}`;
+  const sectionTitle = (id: string, title: string) => (
+    <button type="button" className="section-title section-toggle" aria-expanded={!closed[id]}
+            onClick={() => setClosed(c => ({ ...c, [id]: !c[id] }))}>
+      <span>{title}{counts[id] > 0 && <span className="section-count">{counts[id]}</span>}</span>
+      <i className={`bi bi-chevron-${closed[id] ? 'right' : 'down'}`} aria-hidden="true" />
+    </button>
+  );
+
   const handleNotesChange = (value: 'any' | 'none' | undefined) => {
     onFiltersChange({ ...filters, notes: value });
   };
@@ -243,8 +268,8 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
           )}
 
           {/* 1. Variant Type - Radio Buttons */}
-          <div className="filter-section">
-            <h4 className="section-title">Variant Type</h4>
+          <div className={sectionClass('variant')}>
+            {sectionTitle('variant', 'Variant Type')}
             <div className="radio-group">
               <label className="radio-label">
                 <input
@@ -271,8 +296,8 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
 
           {/* Notes (uploaded result only): lines by their notes, across the whole upload */}
           {upload && notesReady && (
-            <div className="filter-section">
-              <h4 className="section-title">Notes</h4>
+            <div className={sectionClass('notes')}>
+              {sectionTitle('notes', 'Notes')}
               <div className="radio-group radio-group--stacked">
                 {([[undefined, 'All lines'], ['any', 'Lines with notes'], ['none', 'Lines without notes']] as const)
                   .map(([value, label]) => (
@@ -285,6 +310,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
               </div>
               {noteCodes.length > 0 && (
                 <div className="checkbox-group note-codes">
+                  <span className="note-codes-label">By code</span>
                   {noteCodes.map(n => (
                     <label key={n.code} className="checkbox-label">
                       <input type="checkbox" checked={(filters.codes ?? []).includes(n.code)}
@@ -299,8 +325,8 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
           )}
 
           {/* 2. Functional */}
-          <div className="filter-section">
-            <h4 className="section-title">Functional</h4>
+          <div className={sectionClass('functional')}>
+            {sectionTitle('functional', 'Functional')}
 
             <div className="checkbox-group">
               <label className="checkbox-label">
@@ -363,8 +389,8 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
           </div>
 
           {/* 3. Population */}
-          <div className="filter-section">
-            <h4 className="section-title">Population</h4>
+          <div className={sectionClass('population')}>
+            {sectionTitle('population', 'Population')}
 
             <div className="checkbox-group">
               <label className="checkbox-label">
@@ -399,8 +425,8 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
           </div>
 
           {/* 4. Structural */}
-          <div className="filter-section">
-            <h4 className="section-title">Structural</h4>
+          <div className={sectionClass('structural')}>
+            {sectionTitle('structural', 'Structural')}
 
             <div className="checkbox-group">
               <label className="checkbox-label">
@@ -462,8 +488,8 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
           </div>
 
           {/* 5. Consequence */}
-          <div className="filter-section">
-            <h4 className="section-title">Consequence</h4>
+          <div className={sectionClass('consequence')}>
+            {sectionTitle('consequence', 'Consequence')}
             <div className="filter-row">
               {/* CADD Score */}
               <div className="filter-group">
@@ -559,8 +585,8 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
 
           {/* 6. Sorting */}
           {showSorting && (
-            <div className="filter-section">
-              <h4 className="section-title">Sort Results</h4>
+            <div className={sectionClass('sort')}>
+              {sectionTitle('sort', 'Sort Results')}
               <div className="filter-row">
                 <div className="filter-group">
                   <label>Sort By</label>

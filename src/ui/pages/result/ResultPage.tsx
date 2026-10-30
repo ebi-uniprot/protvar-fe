@@ -1,7 +1,6 @@
 import DefaultPageLayout, { SIDE_PANEL_ID } from "../../layout/DefaultPageLayout";
 import {LegendContent} from "../../modal/LegendContent";
 import ColumnChooser from "./ColumnChooser";
-import ViewSwitch from "./ViewSwitch";
 import {useLocation, useNavigate, useParams, useSearchParams} from "react-router-dom";
 import ResultTable from "./ResultTable";
 import { NoteText } from "./RowNotes";
@@ -17,6 +16,7 @@ import {MessageCatalogueEntry, PagedMappingResponse} from "../../../types/PagedM
 import { toast } from '../../toast/toast';
 
 import {ResultRecord} from "../../../types/ResultRecord";
+import {ResultLayout} from "../../../types/UserPrefs";
 import {useStorage} from "../../../context/StorageContext";
 import {APP_URL} from "../../App";
 import {HelpButton} from "../../components/help/HelpButton";
@@ -212,6 +212,8 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
     setPrefs({ filterRailCollapsed: !c });
     return !c;
   }), [setPrefs])
+  const [layout, setLayout] = useState<ResultLayout>(() => getPrefs().resultLayout ?? 'rows')
+  const changeLayout = (l: ResultLayout) => { setLayout(l); setPrefs({ resultLayout: l }) }
   // An upload is named by the user's label for it in History, else by when it was submitted here (from History),
   // else — a shared link, or another browser — by a short form of its id. The full id shows on the title's hover.
   const uploadLabel = useCallback((id: string) => {
@@ -758,15 +760,9 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
           )}
         </div>
         <div className="result-table-toolbar__tools">
-          <label className="toggle-switch" title="Toggle between ProtVar standardised and original source colours">
-            <input type="checkbox" checked={appState.stdColor} onChange={() => appState.updateState("stdColor", !appState.stdColor)} />
-            <span className="toggle-track"><span className="toggle-thumb"></span></span>
-            <span className="toggle-label">ProtVar colours</span>
-          </label>
-          <ViewSwitch />
-          <button className="btn btn-secondary columns-btn" title="Choose which columns to show"
-                  onClick={() => appState.updateState("drawer", <ColumnChooser />)}>
-            <i className="bi bi-layout-three-columns" /> Columns
+          <button className="btn btn-secondary columns-btn" title="Layout, columns and colours"
+                  onClick={() => appState.updateState("drawer", <ColumnChooser layout={layout} onLayoutChange={changeLayout} />)}>
+            <i className="bi bi-sliders" /> View
           </button>
           <ShareLink url={shareUrl} linkText="Share" />
           {isBrowseIdentifier && (
@@ -804,7 +800,7 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
           <Loader className="result-table-loader"/>
         </div>
       )}
-      <ResultTable key={input} data={data} lazyIsoforms={isFilterOnly}/>
+      <ResultTable key={input} data={data} lazyIsoforms={isFilterOnly} layout={layout}/>
     </div>
     {!isQueryMode && data && (data.totalPages > 1 || data.page > 1 || !data.last) && (
       <div className="result-pre-table result-post-table">

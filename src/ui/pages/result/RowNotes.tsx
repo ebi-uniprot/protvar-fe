@@ -46,7 +46,7 @@ export function NoteRow({ messages }: { messages: Message[] }) {
 
 export interface NoteCounts { warn: number; info: number; notMapped: number }
 
-const plural = (n: number, word: string) => `${n.toLocaleString()} ${word}${n === 1 ? '' : 's'}`;
+export const plural = (n: number, word: string) => `${n.toLocaleString()} ${word}${n === 1 ? '' : 's'}`;
 
 export function NotesBar({ counts, showAll, onToggle }: {
   counts: NoteCounts; showAll: boolean; onToggle: () => void;

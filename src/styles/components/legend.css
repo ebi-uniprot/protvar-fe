@@ -54,6 +54,15 @@
 }
 
 /* Column chooser (drawer) */
+.column-chooser-section {
+    display: block;
+    margin: 1rem 0 0.4rem;
+}
+
+.column-chooser-section:first-of-type {
+    margin-top: 0.25rem;
+}
+
 .column-chooser-group {
     display: flex;
     flex-direction: column;
