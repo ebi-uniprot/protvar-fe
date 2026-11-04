@@ -542,6 +542,88 @@
     color: var(--color-primary-light);
 }
 
+/* Well-known variant cards (Annotate): name, change, the query and its format; a click runs it */
+.story-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(11.5rem, 1fr));
+    gap: 0.5rem;
+}
+
+.story-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.15rem;
+    text-align: left;
+    padding: 0.55rem 0.7rem;
+    background: var(--color-bg-elevated);
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-brand-light);
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    font: inherit;
+}
+
+.story-card:hover,
+.story-card:focus-visible {
+    background: var(--color-brand-lightest);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-xs);
+}
+
+.story-name {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-brand);
+}
+
+.story-change {
+    font-size: var(--font-size-sm);
+}
+
+.story-input code {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    background: none;
+    padding: 0;
+    overflow-wrap: anywhere; /* wrap at spaces; split only tokens too long for the card (HGVS) */
+}
+
+.story-format {
+    align-self: flex-end;
+    font-size: 0.75rem;
+    color: var(--color-brand);
+    background: var(--color-brand-lightest);
+    border-radius: var(--radius-full);
+    padding: 0 0.45rem;
+}
+
+:root[data-theme="dark"] .story-name,
+:root[data-theme="dark"] .story-format {
+    color: var(--color-primary-light);
+}
+
+.story-more {
+    margin: 0.4rem 0 0;
+    padding: 0;
+    background: none;
+    border: none;
+    color: var(--color-brand);
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+:root[data-theme="dark"] .story-more {
+    color: var(--color-primary-light);
+}
+
+.examples h6.examples-by-format {
+    margin-top: 1rem;
+}
+
 /* ============================================
    ERROR MESSAGE
    ============================================ */

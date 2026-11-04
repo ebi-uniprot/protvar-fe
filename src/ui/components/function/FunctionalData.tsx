@@ -1,3 +1,4 @@
+import { Pangolin } from "../../../types/MappingResponse";
 import { useState, useEffect, useMemo } from 'react';
 import Loader from '../../elements/Loader';
 import {getFunctionalData} from "../../../services/ProtVarService";
@@ -25,6 +26,7 @@ export interface FunctionalDataProps {
   ensp: Array<TranslatedSequence>
   caddScore: string
   aviScore?: string
+  pangolin?: Pangolin
   amScore: AmScore
 }
 
@@ -126,6 +128,7 @@ function FunctionalData(props: FunctionalDataProps) {
             ensp={ensp}
             caddScore={props.caddScore}
             aviScore={props.aviScore}
+            pangolin={props.pangolin}
             amScore={props.amScore}
           />
           <RegionColumn

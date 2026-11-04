@@ -12,13 +12,14 @@ export type PredictionType =
   | 'foldx'
   | 'cadd'
   | 'avi'
+  | 'pangolin'
   | 'alphamissense'
   | 'eve'
   | 'popeve'
   | 'esm';
 
 const VALID_PREDS: PredictionType[] = [
-  'm3d', 'conserv', 'foldx', 'cadd', 'avi',
+  'm3d', 'conserv', 'foldx', 'cadd', 'avi', 'pangolin',
   'alphamissense', 'eve', 'popeve', 'esm'
 ];
 

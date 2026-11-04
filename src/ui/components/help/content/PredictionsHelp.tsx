@@ -6,6 +6,8 @@ import { PredictionRadar } from '../../function/prediction/PredictionRadar';
 import { CONSERV_SCORE_ATTR } from '../../function/prediction/ConservPred';
 import { AM_SCORE_ATTR } from '../../function/prediction/AlphaMissensePred';
 import { AVI_SCORE_ATTR } from "../../function/prediction/AviScorePred";
+import { PANGOLIN_SCORE_ATTR } from "../../function/prediction/PangolinPred";
+import { PANGOLIN_INFO_URL, PANGOLIN_DATA_URL } from "../../../../constants/ExternalUrls";
 import { CADD_SCORE_ATTR } from '../../function/prediction/CaddScorePred';
 import { ESM_SCORE_ATTR } from '../../function/prediction/EsmPred';
 import { POPEVE_SCORE_ATTR } from '../../function/prediction/PopEvePred';
@@ -94,6 +96,7 @@ export const PredictionsHelp: React.FC = () => {
             <li><Link to={`${HELP}#predictions:am`}>AlphaMissense</Link></li>
             <li><Link to={`${HELP}#predictions:cadd`}>CADD</Link></li>
             <li><Link to={`${HELP}#predictions:avi`}>AlphaGenome Variant Impact (AVI)</Link></li>
+            <li><Link to={`${HELP}#predictions:pangolin`}>Pangolin (splicing)</Link></li>
             <li><Link to={`${HELP}#predictions:esm`}>ESM-1b</Link></li>
             <li><Link to={`${HELP}#predictions:popeve`}>PopEVE</Link></li>
           </ul>
@@ -190,6 +193,25 @@ export const PredictionsHelp: React.FC = () => {
         The bands describe how unusual a variant's predicted impact is, not whether it is pathogenic.
       </p>
       <LegendCategories attrs={AVI_SCORE_ATTR} stdColor={stdColor} />
+
+      <h3 id="predictions:pangolin">Pangolin (splicing)</h3>
+      <p>
+        Pangolin (<a href={PANGOLIN_INFO_URL} target="_blank" rel="noreferrer">Zeng &amp; Li 2022</a>) is a deep
+        learning model that predicts how a variant changes splicing. It compares the reference and variant sequence
+        and reports the largest predicted <strong>gain</strong> (a new or stronger splice site) and{' '}
+        <strong>loss</strong> (a weaker or lost splice site) of splice-site usage within 50 nucleotides, and where
+        they are relative to the variant. The scores are masked with GENCODE splice sites, so only real gains and
+        losses count. ProtVar shows the larger of the two, from 0 (no change) to 1, using the{' '}
+        <a href={PANGOLIN_DATA_URL} target="_blank" rel="noreferrer">precomputed scores</a> for all SNVs in
+        protein-coding genes.
+      </p>
+      <p>
+        A coding variant can look harmless at the protein level and still disrupt splicing, especially near an exon
+        edge. Genes can overlap, so each gene has its own score. Pangolin publishes no categories; ProtVar's bands
+        use 0.2 and 0.5, cut-offs commonly used for splice predictors (borrowed from SpliceAI practice). They
+        describe the size of the predicted splicing change, not whether the variant is pathogenic.
+      </p>
+      <LegendCategories attrs={PANGOLIN_SCORE_ATTR} stdColor={stdColor} />
 
       <h3 id="predictions:esm">ESM-1b</h3>
       <p>

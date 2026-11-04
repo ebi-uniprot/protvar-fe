@@ -20,7 +20,8 @@ const bannerText = (
   <>
     <span className="banner-lead">
       <i className="bi bi-rocket-takeoff-fill banner-new-icon" /> ProtVar 2.1 — UniProt 2026_02 data,
-      AlphaGenome Variant Impact (AVI) scores, and you can now filter and sort your own uploaded variants. See
+      AlphaGenome Variant Impact (AVI) and Pangolin splice scores, UniProt variant IDs (VAR_) as input, and you can
+      now filter and sort your own uploaded variants. See
       the{' '}<Link to={RELEASE}>release notes</Link> for details.
     </span>{' '}
     Questions or feedback? Email{' '}
@@ -29,7 +30,7 @@ const bannerText = (
       <i className="bi bi-stars banner-new-icon" />{' '}
       Explore what's new:{' '}
       <Link to={`${HELP}#browse`}>Filter your uploads</Link>{' · '}
-      <Link to={`${HELP}#predictions`}>AVI scores</Link>{' · '}
+      <Link to={`${HELP}#predictions`}>AVI &amp; Pangolin scores</Link>{' · '}
       <Link to={`${HELP}#results`}>Choose result columns</Link>{' · '}
       <Link to={`${HELP}#semantic-search`}>Semantic search models</Link>{' · '}
       <Link to={`${RELEASE}?tab=stats`}>Statistics</Link>

@@ -2,7 +2,7 @@ import React, { lazy, Suspense } from "react";
 import { StringVoidFun } from "../../../constants/CommonTypes";
 import {
   CADD_INFO_URL, AM_INFO_URL,
-  CLINVAR_RCV_URL, CLINVAR_VCV_URL, COSMIC_URL,
+  CLINVAR_RCV_URL, CLINVAR_VCV_URL, COSMIC_URL, UNIPROT_VAR_URL,
   DBSNP_URL,
   getEnsemblIdUrl,
   getEnsemblViewUrl,
@@ -12,6 +12,7 @@ import Tool from "../../elements/Tooltip";
 import { TextLink } from "../../components/common/Link";
 import { caddScoreAttr, formatCaddScore } from "../../components/function/prediction/CaddScorePred";
 import { aviScoreAttr, AVI_SCORE_ATTR, genomeWideRank } from "../../components/function/prediction/AviScorePred";
+import { pangolinScoreAttr, pangolinDetail, PANGOLIN_SCORE_ATTR } from "../../components/function/prediction/PangolinPred";
 import { amScoreAttr, formatAMScore } from "../../components/function/prediction/AlphaMissensePred";
 import { formatPopEveScore, getPopEveColor, getPopEveClass, POPEVE_SCORE_ATTR } from "../../components/function/prediction/PopEvePred";
 import ProteinIcon from '../../../images/proteins.svg';
@@ -37,6 +38,7 @@ export const getIdUrl = (id: string) => {
     if (upper.startsWith("RCV"))  return CLINVAR_RCV_URL + id;
     if (upper.startsWith("VCV"))  return CLINVAR_VCV_URL + id;
     if (upper.startsWith("COSV") || upper.startsWith("COSM") || upper.startsWith("COSN")) return COSMIC_URL + id;
+    if (upper.startsWith("VAR_")) return UNIPROT_VAR_URL + upper + ".html";
   }
   return "";
 };
@@ -141,10 +143,10 @@ export const getNewPrimaryRow = (
 
         // Genomic position (chr-pos-ref-alt)
         position: <span key="position" className={`cell-genomic${isGenomicInput ? ' cell-genomic-input' : ''}`}>
+          {isGenomicInput && 'isLiftedFrom37' in input && input.isLiftedFrom37 && (
+            <Tool el="span" tip={`Converted from GRCh37: you entered "${input.inputStr}"`} className="lift-badge">37&rarr;38</Tool>
+          )}
           <Tool tip={`Genomic coordinate (chr-pos-ref-alt) for input "${input.inputStr}" — click to view the region in Ensembl`}>
-            {isGenomicInput && 'isLiftedFrom37' in input && input.isLiftedFrom37 && (
-              <span className="h37">37&rarr;38</span>
-            )}
             <TextLink url={getEnsemblViewUrl(genomicVariant.chromosome, genomicVariant.position)} text={genomicPos} />
           </Tool>
         </span>,
@@ -194,6 +196,20 @@ export const getNewPrimaryRow = (
                                   color: !stdColor && attr === AVI_SCORE_ATTR[0] ? '#2e2257' : undefined }}
                          tip={`AVI ${gene.aviScore.toFixed(1)} — ${genomeWideRank(gene.aviScore)} (${attr.range})`}>
               {gene.aviScore.toFixed(1)}
+            </Tool>;
+          })()}
+        </span>,
+
+        // Pangolin splice prediction for this gene: max(gain, |loss|), banded at 0.2 / 0.5 (see PangolinPred)
+        pangolin: <span key="pangolin" data-card-label="Pangolin" className="cell-pangolin na-badge">
+          {gene.pangolin && (() => {
+            const p = gene.pangolin;
+            const attr = pangolinScoreAttr(p.score);
+            return <Tool className="score-box"
+                         style={{ backgroundColor: stdColor ? attr.stdColor : attr.color,
+                                  color: !stdColor && attr === PANGOLIN_SCORE_ATTR[0] ? '#0b3d39' : undefined }}
+                         tip={`Pangolin ${p.score.toFixed(2)} — ${attr.text}${pangolinDetail(p) ? ` (${pangolinDetail(p)})` : ''}`}>
+              {p.score.toFixed(2)}
             </Tool>;
           })()}
         </span>,
@@ -386,6 +402,7 @@ export function AnnotationPanels({
               annotation={annotationExpanded}
               caddScore={gene.caddScore?.toString()}
               aviScore={gene.aviScore?.toString()}
+              pangolin={gene.pangolin}
               amScore={isoform.amScore}
               refAA={isoform.refAA!}
               variantAA={isoform.variantAA!}

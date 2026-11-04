@@ -29,8 +29,11 @@ const CHECKS: Record<string, Check | Check[] | string> = {
   CLINVAR_RCV_URL: { url: urls.CLINVAR_RCV_URL + 'RCV000011331' },
   CLINVAR_VCV_URL: { url: urls.CLINVAR_VCV_URL + 'VCV000010698' },
   COSMIC_URL: { url: urls.COSMIC_URL + 'COSV57102498' },
+  UNIPROT_VAR_URL: { url: urls.UNIPROT_VAR_URL + 'VAR_018369.html' },
   CADD_INFO_URL: { url: urls.CADD_INFO_URL },
   AVI_INFO_URL: { url: urls.AVI_INFO_URL },
+  PANGOLIN_INFO_URL: { url: urls.PANGOLIN_INFO_URL },
+  PANGOLIN_DATA_URL: { url: urls.PANGOLIN_DATA_URL },
   AM_INFO_URL: { url: urls.AM_INFO_URL },
 
   // --- Annotations ---

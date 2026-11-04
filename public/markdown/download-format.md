@@ -1,6 +1,6 @@
 # <a id="download-format"></a>Download File Format
 
-The output file has 45 columns in total. Every column value is double-quoted, for example "User input" and then separated by a comma.
+The output file has 46 columns in total. Every column value is double-quoted, for example "User input" and then separated by a comma.
 Columns can contain "N/A" as a value indicating either:
 
 - The user did not request the data (for example if only mappings are requested without annotation)
@@ -44,7 +44,7 @@ Only numbers 1-22 or X or Y or mitochondria (chrM, mitochondria, mitochondrion, 
 
 <a id="download-format:coordinate"></a>**C - Coordinate:** The genomic coordinate position of the variant as interpreted from the user input. Only numeric characters.
 
-<a id="download-format:id"></a>**D - ID:** The variant ID carried over from the input. For VCF input this is the value of the VCF ID column (an ID, "." or n/a). When the input is a variant ID (dbSNP rs ID, ClinVar or COSMIC ID), that ID is shown. Other input formats have no ID, so the column is empty.
+<a id="download-format:id"></a>**D - ID:** The variant ID carried over from the input. For VCF input this is the value of the VCF ID column (an ID, "." or n/a). When the input is a variant ID (dbSNP rs ID, ClinVar, COSMIC or UniProt VAR_ ID), that ID is shown. Other input formats have no ID, so the column is empty.
 
 <a id="download-format:reference-allele"></a>**E - Reference_allele:** This is the reference allele. It is defined by the nucleotide identity at that coordinate in the reference genome build. If the user inputted nucleotide differs from the reference build the reference build nucleotide identity will be shown and not the user inputted identity. This conflict will be noted in the "Notes" column. Any user inputs except 'A', 'G', 'C', 'T' will be flagged in the "Notes" column.
 
@@ -65,12 +65,13 @@ Only numbers 1-22 or X or Y or mitochondria (chrM, mitochondria, mitochondrion, 
 
 ## <a id="download-format:genomic-mapping-columns"></a>Genomic Mapping Columns
 
-Contains information regarding mapping of the user variant input to the relevant gene(s), transcript(s) and codon. The category contains seven columns:
+Contains information regarding mapping of the user variant input to the relevant gene(s), transcript(s) and codon. The category contains eight columns:
 - [Gene](#download-format:gene)
 - [Codon_change](#download-format:codon-change)
 - [Strand](#download-format:strand)
 - [CADD_phred_like_score](#download-format:cadd-phred-like-score)
 - [AVI_phred_like_score](#download-format:avi-phred-like-score)
+- [Pangolin_splice_score](#download-format:pangolin-splice-score)
 - [Canonical_isoform_transcripts](#download-format:canonical-isoform-transcripts)
 - [MANE_transcript](#download-format:mane-transcript)
 
@@ -89,12 +90,14 @@ They calculate a score for every possible change in the genome. The phred-like s
 
 <a id="download-format:avi-phred-like-score"></a>**L - AVI_phred_like_score:** The AlphaGenome Variant Impact (AVI) score from Google DeepMind's [AlphaGenome](https://deepmind.google.com/science/alphagenome/) Atlas. Like CADD, AVI is PHRED-scaled against all possible single nucleotide variants in the genome: higher scores are more likely deleterious, and 20 corresponds to roughly the top 1%. The cell is empty when there is no score.
 
-<a id="download-format:canonical-isoform-transcripts"></a>**M - Canonical_isoform_transcripts:** The transcripts and transcript translation identifiers which correspond to the UniProt canonical isoform. Transcripts (DNA sequences) have an ID starting with "ENST". There can be several different transcripts which encode the same
+<a id="download-format:pangolin-splice-score"></a>**M - Pangolin_splice_score:** The [Pangolin](https://doi.org/10.1186/s13059-022-02664-4) splice prediction for this gene (precomputed scores, [Zenodo](https://zenodo.org/records/15649338)): the larger of the predicted gain and loss of splice-site usage within 50 nucleotides of the variant, from 0 (no change) to 1. Genes can overlap, so each gene has its own score. Pangolin publishes no categories; 0.2 and 0.5 are cut-offs commonly used for splice predictors. The cell is empty when Pangolin has no score for the gene.
+
+<a id="download-format:canonical-isoform-transcripts"></a>**N - Canonical_isoform_transcripts:** The transcripts and transcript translation identifiers which correspond to the UniProt canonical isoform. Transcripts (DNA sequences) have an ID starting with "ENST". There can be several different transcripts which encode the same
 isoform because they may differ in their untranslated (non-coding) regions at either end. The translated transcript has an ID
 starting "ENSP". For example:
 >[ENSP00000337353(ENST00000335725,ENST00000123456).
 
-<a id="download-format:mane-transcript"></a>**N - MANE_transcript:** MANE (Matched Annotation from NCBI and EBI) Select transcript. This column is currently always "N/A". [Ensembl website](https://www.ensembl.org/info/genome/genebuild/mane.html)
+<a id="download-format:mane-transcript"></a>**O - MANE_transcript:** MANE (Matched Annotation from NCBI and EBI) Select transcript. This column is currently always "N/A". [Ensembl website](https://www.ensembl.org/info/genome/genebuild/mane.html)
 
 ## <a id="download-format:protein-mapping-columns"></a>Protein Mapping Columns
 
@@ -108,19 +111,19 @@ Contains information regarding mapping of the user variant input to the encoded 
 - [Consequences](#download-format:consequences)
 
 
-<a id="download-format:uniprot-canonical"></a>**O - Uniprot_canonical_isoform_(non_canonical):** This is the accession of the canonical isoform of the protein if ProtVar is able to map the variant to it. ProtVar always attempts to map to this isoform because most of the UniProt annotations are based on numbering in the canonical isoform. Sometimes ProtVar cannot map to the canonical isoform
+<a id="download-format:uniprot-canonical"></a>**P - Uniprot_canonical_isoform_(non_canonical):** This is the accession of the canonical isoform of the protein if ProtVar is able to map the variant to it. ProtVar always attempts to map to this isoform because most of the UniProt annotations are based on numbering in the canonical isoform. Sometimes ProtVar cannot map to the canonical isoform
 but can to an alternative isoform (sequence version of the protein). In these cases brackets are displayed around the accession to show that the mapping is to a non-canonical isoform.
 
-<a id="download-format:alternative-isoform-mappings"></a>**P - Alternative_isoform_mappings:** Details about each isoform including the isoform accession, amino acid position in the isoform, amino acid change,
+<a id="download-format:alternative-isoform-mappings"></a>**Q - Alternative_isoform_mappings:** Details about each isoform including the isoform accession, amino acid position in the isoform, amino acid change,
 consequence and ENSP and ENST identifiers. Many genes have several transcripts caused by alternative splicing, some of which translate into different isoforms. Here we list details about all the isoforms where we can map from genomic location to isoform. Isoforms are separated by "|".
 
-<a id="download-format:protein-name"></a>**Q - Protein_name:** The full protein name from UniProt.
+<a id="download-format:protein-name"></a>**R - Protein_name:** The full protein name from UniProt.
 
-<a id="download-format:amino-acid-position"></a>**R - Amino_acid_position:** The position of the amino acid in the UniProt canonical isoform or the alternative isoform shown in the Uniprot_canonical_isoform_(non_canonical) column.
+<a id="download-format:amino-acid-position"></a>**S - Amino_acid_position:** The position of the amino acid in the UniProt canonical isoform or the alternative isoform shown in the Uniprot_canonical_isoform_(non_canonical) column.
 
-<a id="download-format:amino-acid-change"></a>**S - Amino_acid_change:** The identity of the reference and variant amino acid caused by the variant. Three letter amino acid nomenclature is used separated by "/". Stop codons are shown as an asterisk (\*).
+<a id="download-format:amino-acid-change"></a>**T - Amino_acid_change:** The identity of the reference and variant amino acid caused by the variant. Three letter amino acid nomenclature is used separated by "/". Stop codons are shown as an asterisk (\*).
 
-<a id="download-format:consequences"></a>**T - Consequences:** The consequence of the variant on the amino acid sequence: "missense", "synonymous" (no change to the amino acid) or "stop gained".
+<a id="download-format:consequences"></a>**U - Consequences:** The consequence of the variant on the amino acid sequence: "missense", "synonymous" (no change to the amino acid) or "stop gained".
 
 ## <a id="download-format:function-annotations-columns"></a>Function Annotations Columns
 
@@ -141,29 +144,29 @@ These columns contain functional annotations regarding the variant amino acid, r
 - 3 [Pathogenicity Prediction Columns](#download-format:predictors-columns)
 
 
-<a id="download-format:residue-function"></a>**U - Residue_function_(evidence):** Functional features specifically describing the residue encoded by the user submitted variant, i.e. features that start and end at that position (for example start 213, end 213).
+<a id="download-format:residue-function"></a>**V - Residue_function_(evidence):** Functional features specifically describing the residue encoded by the user submitted variant, i.e. features that start and end at that position (for example start 213, end 213).
 
-<a id="download-format:region-function"></a>**V - Region_function_(evidence):** This column describes functional features of the region in which the residue encoded by the user submitted variant falls, i.e. features spanning more than one position that contain it (for example start 200, end 213 for position 206). The range of the region is provided after the ";". Overlapping regions describing the variant are separated by "|".
+<a id="download-format:region-function"></a>**W - Region_function_(evidence):** This column describes functional features of the region in which the residue encoded by the user submitted variant falls, i.e. features spanning more than one position that contain it (for example start 200, end 213 for position 206). The range of the region is provided after the ";". Overlapping regions describing the variant are separated by "|".
 
-<a id="download-format:protein-existence"></a>**W - Protein_existence_evidence:** Describes if there is experimental evidence to support the existence of the protein.
+<a id="download-format:protein-existence"></a>**X - Protein_existence_evidence:** Describes if there is experimental evidence to support the existence of the protein.
 
-<a id="download-format:protein-length"></a>**X - Protein_length:** The length of the UniProt canonical isoform sequence in amino acids.
+<a id="download-format:protein-length"></a>**Y - Protein_length:** The length of the UniProt canonical isoform sequence in amino acids.
 
-<a id="download-format:entry-last-updated"></a>**Y - Entry_last_updated:** When the UniProt entry was last updated with any type of information.
+<a id="download-format:entry-last-updated"></a>**Z - Entry_last_updated:** When the UniProt entry was last updated with any type of information.
 
-<a id="download-format:sequence-last-updated"></a>**Z - Sequence_last_updated:** When the canonical isoform sequence was last updated.
+<a id="download-format:sequence-last-updated"></a>**AA - Sequence_last_updated:** When the canonical isoform sequence was last updated.
 
-<a id="download-format:protein-catalytic-activity"></a>**AA - Protein_catalytic_activity:** Describes the reactions previously ascribed to this protein. These are not necessarily reactions affected by the variant amino acid but they could be. The RHEA ID (a SIB reactions database) is given as is the evidence(s) from publications. Different reactions are separated by "|". For example:
+<a id="download-format:protein-catalytic-activity"></a>**AB - Protein_catalytic_activity:** Describes the reactions previously ascribed to this protein. These are not necessarily reactions affected by the variant amino acid but they could be. The RHEA ID (a SIB reactions database) is given as is the evidence(s) from publications. Different reactions are separated by "|". For example:
 
 > RHEA:25017(PubMed:[16824732,9593664,9811831])|RHEA:20629(PubMed:[9256433])
 
-<a id="download-format:protein-complex"></a>**AB - Protein_complex:** Describes whether the protein containing the variant exists in a complex.
+<a id="download-format:protein-complex"></a>**AC - Protein_complex:** Describes whether the protein containing the variant exists in a complex.
 
-<a id="download-format:protein-sub-cellular-location"></a>**AC - Protein_sub_cellular_location:** Describes the location within the cell where the protein is localised. There may be more than one location if multiple locations have been described.
+<a id="download-format:protein-sub-cellular-location"></a>**AD - Protein_sub_cellular_location:** Describes the location within the cell where the protein is localised. There may be more than one location if multiple locations have been described.
 
-<a id="download-format:protein-family"></a>**AD - Protein_family:** Describes the functional family that the protein belongs to.
+<a id="download-format:protein-family"></a>**AE - Protein_family:** Describes the functional family that the protein belongs to.
 
-<a id="download-format:protein-interactions"></a>**AE - Protein_interactions_PROTEIN(gene):** This shows which other proteins have been shown to interact with the protein containing the variant. This data is from the EMBL-EBI IntAct database and is predominantly from manual curation. The format is: UniProt accession(gene symbol). Different interacting partners are separated by ";".
+<a id="download-format:protein-interactions"></a>**AF - Protein_interactions_PROTEIN(gene):** This shows which other proteins have been shown to interact with the protein containing the variant. This data is from the EMBL-EBI IntAct database and is predominantly from manual curation. The format is: UniProt accession(gene symbol). Different interacting partners are separated by ";".
 
 ### <a id="download-format:predictions-columns"></a>Structure Prediction Columns
 Predictions based on structure hosted by ProtVar. There are 4 columns in this category:
@@ -173,13 +176,13 @@ Predictions based on structure hosted by ProtVar. There are 4 columns in this ca
 - [Foldx_prediction(foldxDdg;plddt)](#download-format:foldx-prediction)
 - [Conservation_score](#download-format:conservation-score)
 
-<a id="download-format:predicted-pockets"></a>**AF - Predicted_pockets(energy;per_vol;score;resids):** This shows the residues which are predicted to form a pocket in the AlphaFold modelled protein. Each pocket is given as "pocket_id:…;rad_gyration:…;energy_per_vol:…;buriedness:…;resid:…;mean_plddt:…;score:…" and pockets are separated by "|".
+<a id="download-format:predicted-pockets"></a>**AG - Predicted_pockets(energy;per_vol;score;resids):** This shows the residues which are predicted to form a pocket in the AlphaFold modelled protein. Each pocket is given as "pocket_id:…;rad_gyration:…;energy_per_vol:…;buriedness:…;resid:…;mean_plddt:…;score:…" and pockets are separated by "|".
 
-<a id="download-format:predicted-interactions"></a>**AG - Predicted_interactions(chainA-chainB;a_resids;b_resids;pDockQ):** Interface residues are predicted from folding proteins which are considered to interact simultaneously using the Alphafold2 algorithm. The interfaces are then scored for confidence. Each interaction is given as "chainA-chainB;A residues:…;B residues:…;pDockQ:…" and interactions are separated by "|".
+<a id="download-format:predicted-interactions"></a>**AH - Predicted_interactions(chainA-chainB;a_resids;b_resids;pDockQ):** Interface residues are predicted from folding proteins which are considered to interact simultaneously using the Alphafold2 algorithm. The interfaces are then scored for confidence. Each interaction is given as "chainA-chainB;A residues:…;B residues:…;pDockQ:…" and interactions are separated by "|".
 
-<a id="download-format:foldx-prediction"></a>**AH - Foldx_prediction(foldxDdg;plddt):** The predicted Gibbs free energy change of the protein when the variant is introduced as calculated using the FoldX algorithm: [foldX website](https://foldxsuite.crg.eu/). Given as "foldxDdg:…;plddt:…", multiple predictions separated by "|".
+<a id="download-format:foldx-prediction"></a>**AI - Foldx_prediction(foldxDdg;plddt):** The predicted Gibbs free energy change of the protein when the variant is introduced as calculated using the FoldX algorithm: [foldX website](https://foldxsuite.crg.eu/). Given as "foldxDdg:…;plddt:…", multiple predictions separated by "|".
 
-<a id="download-format:conservation-score"></a>**AI - Conservation_score:** Is a score from 0-1 where 0 is not at all conserved and 1 is totally conserved in pre-calculated multiple sequence alignments based on UniRef90 and scored using the ScoreCons algorithm.
+<a id="download-format:conservation-score"></a>**AJ - Conservation_score:** Is a score from 0-1 where 0 is not at all conserved and 1 is totally conserved in pre-calculated multiple sequence alignments based on UniRef90 and scored using the ScoreCons algorithm.
 
 ### <a id="download-format:predictors-columns"></a>Pathogenicity Prediction Columns
 Pathogenicity prediction retrieved from other resources (all pre-computed). There are 3 columns in this category:
@@ -188,11 +191,11 @@ Pathogenicity prediction retrieved from other resources (all pre-computed). Ther
 - [popEVE_score(class)](#download-format:popeve-score)
 - [ESM1b_score](#download-format:esm1b-score)
 
-<a id="download-format:alphamissense"></a>**AJ - AlphaMissense_pathogenicity(class):** AlphaMissense score is a pathogenicity score based on AlphaFold structures. It ranges from 0 to 1 with higher scores more likely to be pathogenic, followed by the class in brackets. The categories have different boundaries based on the protein and are taken directly from AlphaMissense. [AlphaMissense paper](https://www.science.org/doi/10.1126/science.adg7492) [AlphaMissense data](https://zenodo.org/records/8208688)
+<a id="download-format:alphamissense"></a>**AK - AlphaMissense_pathogenicity(class):** AlphaMissense score is a pathogenicity score based on AlphaFold structures. It ranges from 0 to 1 with higher scores more likely to be pathogenic, followed by the class in brackets. The categories have different boundaries based on the protein and are taken directly from AlphaMissense. [AlphaMissense paper](https://www.science.org/doi/10.1126/science.adg7492) [AlphaMissense data](https://zenodo.org/records/8208688)
 
-<a id="download-format:popeve-score"></a>**AK - popEVE_score(class):** The popEVE score (an extension of EVE, the evolutionary model of variant effect, calibrated across proteins with population data), followed by its class in brackets. [EVE paper](https://www.nature.com/articles/s41586-021-04043-8)
+<a id="download-format:popeve-score"></a>**AL - popEVE_score(class):** The popEVE score (an extension of EVE, the evolutionary model of variant effect, calibrated across proteins with population data), followed by its class in brackets. [EVE paper](https://www.nature.com/articles/s41586-021-04043-8)
 
-<a id="download-format:esm1b-score"></a>**AL - ESM1b_score:** A 650-million-parameter protein language model trained on 250 million protein sequences across all organisms. It is log 10 scaled and the category boundaries can be seen in the ProtVar legend. Higher scores equate to variants with a higher probability of deleteriousness. [ESM1b paper](https://www.nature.com/articles/s41588-023-01465-0)
+<a id="download-format:esm1b-score"></a>**AM - ESM1b_score:** A 650-million-parameter protein language model trained on 250 million protein sequences across all organisms. It is log 10 scaled and the category boundaries can be seen in the ProtVar legend. Higher scores equate to variants with a higher probability of deleteriousness. [ESM1b paper](https://www.nature.com/articles/s41588-023-01465-0)
 
 ## <a id="download-format:population-observations-columns"></a>Population Observations Columns
 There are six columns in this category:
@@ -204,25 +207,25 @@ There are six columns in this category:
 - [Diseases_associated_with_variant](#download-format:diseases-associated-with-variant)
 - [Variants_colocated_at_residue_position](#download-format:variants-colocated-at-residue-position)
 
-<a id="download-format:gnomad-allele-freq"></a>**AM - Gnomad_allele_freq(ac;an;af):** The gnomAD allele count, allele number and allele frequency for the variant's alternative allele, given as "ac;an;af". "N/A" when gnomAD has no record of the variant.
+<a id="download-format:gnomad-allele-freq"></a>**AN - Gnomad_allele_freq(ac;an;af):** The gnomAD allele count, allele number and allele frequency for the variant's alternative allele, given as "ac;an;af". "N/A" when gnomAD has no record of the variant.
 
-<a id="download-format:genomic-location"></a>**AN - Genomic_location:** The variant described in HGVS format. This is a different way of describing the variant which includes the sequence
+<a id="download-format:genomic-location"></a>**AO - Genomic_location:** The variant described in HGVS format. This is a different way of describing the variant which includes the sequence
 version of the reference genome assembly: [HGVS website](https://varnomen.hgvs.org/bg-material/simple/)
 
-<a id="download-format:cytogenetic-band"></a>**AO - Cytogenetic_band:** The region of the chromosome containing the variant position. Cytogenic bands are areas of chromosomes rich in
+<a id="download-format:cytogenetic-band"></a>**AP - Cytogenetic_band:** The region of the chromosome containing the variant position. Cytogenic bands are areas of chromosomes rich in
 actively transcribing DNA.
 
-<a id="download-format:other-identifiers-for-the-variant"></a>**AP - Other_identifiers_for_the_variant:** Description of the same variant (position and nucleotide change) as the user entered variant in different databases. The source database name is given, separated by the variant ID with "-" then separated from the clinical consequence with ";". Each separate database is separated by "|". For example:
+<a id="download-format:other-identifiers-for-the-variant"></a>**AQ - Other_identifiers_for_the_variant:** Description of the same variant (position and nucleotide change) as the user entered variant in different databases. The source database name is given, separated by the variant ID with "-" then separated from the clinical consequence with ";". Each separate database is separated by "|". For example:
 > ClinVar-RCV000003593;Pathogenic|UniProt-VAR_017144;Pathogenic.
 
-<a id="download-format:diseases-associated-with-variant"></a>**AQ - Diseases_associated_with_variant:** Describes diseases from literature which have been associated with the variant. There may be multiple diseases listed which are separated by "|". The evidence for each disease is in brackets which may be a ClinVar ID or Pubmed link to a publication.
+<a id="download-format:diseases-associated-with-variant"></a>**AR - Diseases_associated_with_variant:** Describes diseases from literature which have been associated with the variant. There may be multiple diseases listed which are separated by "|". The evidence for each disease is in brackets which may be a ClinVar ID or Pubmed link to a publication.
 
-<a id="download-format:variants-colocated-at-residue-position"></a>**AR - Variants_colocated_at_residue_position:** This column describes other variants which have been described at the same AMINO ACID position. As a codon is three nucleotides this means that the variants here could be at any one of three positions and can be any alternative allele.
+<a id="download-format:variants-colocated-at-residue-position"></a>**AS - Variants_colocated_at_residue_position:** This column describes other variants which have been described at the same AMINO ACID position. As a codon is three nucleotides this means that the variants here could be at any one of three positions and can be any alternative allele.
 
 ## <a id="download-format:structure-annotations-columns"></a>Structure Annotations Columns
 
 This category has one column:
 
-<a id="download-format:position-in-structures"></a>**AS - Position_in_structures:** This column shows which PDB protein structures contain the variant. This is not an exhaustive list of all structures
+<a id="download-format:position-in-structures"></a>**AT - Position_in_structures:** This column shows which PDB protein structures contain the variant. This is not an exhaustive list of all structures
 of the protein as some structures will not cover the region containing the variant. The format is:
 > PDB_accesion;chain_position_in_structure,chain_position_in_structure;structure_resolution;structure_method. Structures are separated by "|".

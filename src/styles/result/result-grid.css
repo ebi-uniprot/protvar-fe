@@ -639,21 +639,23 @@
    MISC
    ============================================ */
 
-/* GRCh37→38 lift-over badge — anchored top-left of the genomic cell so it
-   doesn't push the coordinate inline. */
+/* GRCh37→38 lift-over badge: the isoform pills' shape (can/iso), outlined so it reads as a note on the coordinate,
+   not a category. Sits in the cell's top-left corner so the coordinate keeps its full width. The tooltip gives
+   the GRCh37 input as typed. */
 .cell-genomic { position: relative; overflow: visible; }
-.h37 {
+.lift-badge {
     position: absolute;
-    top: -8px;
+    top: -7px;
     left: -2px;
     font-size: 0.55rem;
+    font-weight: var(--font-weight-bold);
     line-height: 1;
-    background: #f0ad4e;
-    color: white;
     padding: 1px 3px;
+    border: 1px solid var(--color-primary-light);
     border-radius: 3px;
+    color: var(--color-primary-light);
     white-space: nowrap;
-    pointer-events: none;
+    cursor: help;
 }
 
 /* ============================================

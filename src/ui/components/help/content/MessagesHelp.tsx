@@ -9,7 +9,7 @@ const GROUPS: Record<string, string> = {
   '1': 'Protein input',
   '2': 'Genomic input',
   '3': 'HGVS and RefSeq',
-  '4': 'Variant IDs (dbSNP, ClinVar, COSMIC)',
+  '4': 'Variant IDs (dbSNP, ClinVar, COSMIC, UniProt)',
   '5': 'Genome assembly',
   '8': 'Request',
   '9': 'Input lines',

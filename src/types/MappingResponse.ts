@@ -54,6 +54,17 @@ export interface Gene {
   isoforms: Isoform[];
   caddScore: number;
   aviScore?: number;
+  pangolin?: Pangolin; // this gene's splice prediction; absent if Pangolin has none for the gene
+}
+
+// Pangolin splice prediction: max increase (gain, 0..1) and decrease (loss, -1..0) of splice-site usage within
+// ±50 nt, at positions relative to the variant; score = max(gain, |loss|)
+export interface Pangolin {
+  score: number;
+  gain: number;
+  gainPos: number;
+  loss: number;
+  lossPos: number;
 }
 
 // TODO clean up unused commented properties below

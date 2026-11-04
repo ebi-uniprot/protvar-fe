@@ -1,82 +1,103 @@
 # <a id="input-formats"></a>Supported Formats
 
-ProtVar supports the following variant formats:
+Enter **one variant per line**, in any of the formats below; formats can be mixed in one list. The **Or fill the box by format** chips on the Annotate tab fill the box with the examples shown here.
 
-- **Genomic:** VCF, coordinates, HGVS genomic
-- **Protein:** UniProt variants, HGVS protein
-- **Transcript:** HGVS coding/cDNA
-- **Variant IDs:** dbSNP, ClinVar, COSMIC
+| Type | Formats | Example |
+|---|---|---|
+| Genomic | VCF, gnomAD, chromosome + position | 17 7675088 C T |
+| HGVS | genomic (g.), coding (c.), protein (p.) | NM_000546.6:c.524G>A |
+| Protein | UniProt accession + change | P15056 V600E |
+| Variant ID | dbSNP, ClinVar, COSMIC, UniProt | rs334 |
 
 ## Genomic
 
-Genomic input should follow one of the specified formats.
+| Format | Example |
+|---|---|
+| VCF: `CHR POS ID REF ALT (...)` | 7&nbsp;&nbsp;140753336&nbsp;&nbsp;rs113488022&nbsp;&nbsp;A&nbsp;&nbsp;T |
+| gnomAD: `CHR-POS-REF-ALT` | 12-25245350-C-T |
+| `CHR POS REF ALT` | 17 7675088 C T |
+| `CHR:POS:REF:ALT` | 7:55191822:T:G |
+| `CHR:POS REF>ALT` | chr11:5227002 T>A |
+| `CHR POS REF/ALT` | 19 44908684 T/C |
+| Mitochondrial | MT 3460 G A |
 
-- **VCF format:** `CHR POS ID REF ALT (...)` (e.g., 1 12345 . A G)  
-  _The first five columns of the VCF input are mandatory. Any fields after this (specified as ...) are optional and ignored. The third column is the user-provided variant ID (or `.`), which is not interpreted by ProtVar. Columns can be separated by tabs or spaces, and lines starting with `#` (e.g. VCF headers) are ignored._
+**CHR:** 1–22, X, Y, or for mitochondrial DNA M, MT, mit, mtDNA, mitochondria or mitochondrion; a `chr` prefix is optional.  
+**POS:** position on the chromosome; thousands separators are accepted (e.g., 17 7,675,088 C T).  
+**REF / ALT:** reference and alternative nucleotide (A, C, G or T).
 
-- **gnomAD format:** `CHR-POS-REF-ALT` (e.g., 1-12345-A-G)
-
-- **Internal format:** `CHR POS (REF (ALT))` (e.g., X 23456 C T), `CHR:POS(:REF(:ALT))` (e.g., X:23456:C:T) or `CHR:POS REF>ALT` (e.g., chrX:23456 C>T)  
-  _The alternative allele, or both the reference and alternative alleles, are optional. If both alleles are provided, space, greater-than (>) sign, or forward slash (/) delimiters in specifying the allele change are all valid. A missing allele can also be given as `na` or `.` (e.g., 12:56478854:na:na)._
-
-**CHR:** Chromosome (1-22, X, Y, M, MT, mit, mtDNA, mitochondria, mitochondrion)  
-**POS:** Position on the chromosome (integer); thousands separators are accepted (e.g., chr16:29,847,799 T>C)  
-**REF:** Reference nucleotide (A, T, C, G)  
-**ALT:** Alternative nucleotide (A, T, C, G)
-
-## Protein
-
-Protein input should follow one of the specified formats.
-
-- <code>ACC (p.)REF<strong>POS</strong>ALT</code> (e.g., P22304 A205P)  
-  _The_ `p.` _is optional._
-
-- `ACC POS (REF (ALT))` (e.g., P22309 71 (Gly (Arg)))  
-  _The alternative, or both the reference and alternative amino acid, are optional._
-
-- `ACC POS REF/ALT` (e.g., P22304 205 A/P)
-
-**ACC:** UniProt accession  
-**POS:** Amino acid position (integer)  
-**REF:** Reference amino acid (1- or 3-letter code)  
-**ALT:** Alternative amino acid (1- or 3-letter code) or one of:
-  - `*` or `Ter` — stop codon
-  - `=` — no change / silent (same as the reference amino acid)
-  - `?` — unknown variant amino acid (e.g. HGVS `p.Met1?`); treated as unspecified, so results are position- but not variant-specific
-
-_The same `*`/`Ter`, `=` and `?` notations are also accepted in the alternative amino acid of HGVS protein (p.) input._
+- **VCF:** the first five columns are required; any further columns (QUAL, FILTER, INFO, ...) are ignored. The ID column (or `.`) is not interpreted by ProtVar. Columns can be separated by tabs or spaces, and `#` lines (VCF headers) are skipped.
+- **Several alternative alleles** in a VCF line (e.g., 7 140753336 . A T,G) give one variant per allele.
+- **Assembly:** positions are GRCh38 unless you select GRCh37, or leave **Auto** to [detect it](#assembly-detection). GRCh37 positions are converted to GRCh38 (e.g., 17 7578406 C T).
 
 ## HGVS
 
-- The **Reference Sequence** part of the input should be a valid RefSeq identifier with the prefix NC, NM, or NP. Optionally, the HGNC gene symbol can be included within brackets.
-- The **Variant Description** part of the input should be valid for the specific scheme.
-- **Supported schemes:**
-    - HGVS genomic (g.) format (e.g., NC_000001.10:g.12345A>G)  
-      _A chromosome can be given instead of the NC accession (e.g., chr11:g.108321424A>G); the position is then read in the selected (or detected) assembly, as for other genomic input._
-    - HGVS protein (p.) format (e.g., NP_000001.1:p.Ala123Val)
-    - HGVS coding (c.) format (e.g., NM_000001.2:c.123A>G)  
-      _The protein change can follow, separated by a space or `/` (e.g., NM_000316.3:c.1393G>A p.(Glu465Lys))._
+| Scheme | Example |
+|---|---|
+| Genomic (g.) | NC_000007.14:g.140753336A>T |
+| Genomic, with a chromosome | chr11:g.5227002T>A |
+| Coding (c.) | NM_000518.5:c.20A>T |
+| Coding, with the gene | NM_004333.6(BRAF):c.1799T>A |
+| Coding, with the protein change | NM_000546.6:c.524G>A p.(Arg175His) |
+| Protein (p.) | NP_000509.1:p.Glu7Val |
 
-- **Only substitutions are supported.** Deletions, duplications, insertions, delins, inversions and frameshifts (e.g., c.235del, p.Gln7fs) are not.
-- **Unsupported schemes:** HGVS non-coding, mitochondrial, and RNA schemes (n., m., r.).
-- **Unsupported positions:** intronic and UTR positions in c. input (e.g., c.128+1G>A, c.-128A>G, c.*128A>G).
+- The reference sequence is a RefSeq accession: NC_ for g., NM_ for c., NP_ for p. The HGNC gene symbol can follow in brackets.
+- With a chromosome instead of an NC_ accession, the position is read in the selected (or detected) assembly, as for other genomic input.
+- A c. change can be followed by its protein change, separated by a space or `/`.
+- **Only substitutions** are supported: not deletions, duplications, insertions, delins, inversions or frameshifts (e.g., c.235del, p.Gln7fs).
+- **Not supported:** the non-coding, mitochondrial and RNA schemes (n., m., r.), and intronic or UTR positions in c. input (e.g., c.128+1G>A, c.-128A>G, c.*128A>G).
+
+## Protein
+
+| Format | Example |
+|---|---|
+| `ACC REF POS ALT` (1-letter) | P15056 V600E |
+| with `p.` | P01116 p.G12D |
+| 3-letter | P02649 Cys130Arg |
+| any case | p00533 leu858arg |
+| `ACC POS REF/ALT` | P38398 61 C/G |
+| `ACC POS REF ALT` | Q30201 282 Cys Tyr |
+| Stop | P04637 R213* |
+| Silent | P40692 G181= |
+
+**ACC:** UniProt accession.  
+**POS:** amino acid position in the UniProt sequence.  
+**REF / ALT:** amino acid, 1- or 3-letter code. ALT can also be `*` or `Ter` (stop), `=` (silent: same as REF) or `?` (unknown, as in HGVS `p.Met1?`). The same notations work in HGVS p. input.
 
 ## Variant ID
 
-Variant ID input must be a single word with no spaces, beginning with a specific prefix.
+| Source | Prefix | Example |
+|---|---|---|
+| dbSNP | rs | rs334 |
+| ClinVar | VCV, RCV (a version such as .133 is optional) | VCV000000642.133, RCV000007540 |
+| COSMIC | COSV, COSM, COSN | COSV56056643, COSM521, COSN190667 |
+| UniProt | VAR_ + 6 digits | VAR_004109 |
 
-- **Examples:** rs12345, RCV0123, COSM9876
-- **Prefixes:** dbSNP (rs), ClinVar (RCV or VCV), COSMIC (COSV, COSM, or COSN)
+- An ID is a single word; upper or lower case.
+- **UniProt variant IDs** (VAR_) are the curated human missense variants in UniProtKB/Swiss-Prot ([humsavar](https://www.uniprot.org/help/humsavar)). ProtVar uses the humsavar file of the same UniProt release as its data, and maps the ID's amino-acid change to its genomic variants.
+
+## Position only
+
+Leave out the alternative allele or amino acid (or both alleles) to get every possible change at a position.
+
+| Input | Gives |
+|---|---|
+| 17 7675088 | every SNV at the position |
+| 7 140753336 A | every change from A |
+| 11:5227002:na:na | every SNV (`na` or `.` for a missing allele) |
+| P01116 12 | every amino acid change at residue 12 |
+| P15056 600 Val | every change from Val |
+| P04637 M1? | every change at the start codon |
 
 ## Entering or uploading inputs
 
-- Enter one variant per line. Commas and `|` also separate inputs, so a CSV row is read as separate values; upload a plain-text file with one variant per line rather than a spreadsheet export.
+- **One variant per line.** A line break is the only separator: commas and `|` can be part of a variant (thousands separators, several VCF alleles, VCF INFO columns), so they don't separate variants.
+- A **CSV row** is read as one variant, its commas as column separators (e.g., 17,7675088,C,T or "P15056","V600E").
 - Quotes around a whole input are ignored (e.g., "P22304 A205P").
-- Lines starting with `#` are ignored.
+- Lines starting with `#` are skipped. Other lines that aren't a variant (such as a spreadsheet header) are listed with a [note](#messages).
 
 ## Not supported
 
-ProtVar annotates single-nucleotide variants and single amino acid changes. The following are not supported, and are reported with a specific message:
+ProtVar annotates single-nucleotide variants and single amino acid changes. The following are reported with a specific message:
 
 - Insertions, deletions and multi-nucleotide variants (e.g., 19:18169206:TC:T, 7 140753336 AC TT)
 - A protein change without a UniProt accession (e.g., R32C), or with a gene symbol instead (e.g., SMAD4 R361H); use the accession, e.g., P22304 A205P

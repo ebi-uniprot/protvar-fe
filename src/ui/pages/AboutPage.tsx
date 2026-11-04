@@ -42,7 +42,7 @@ import {
   PROTVAR_PAPER_URL,
   PROTVAR_VIDEO_URL,
   UNIPROT_HOME_URL,
-  VARSITE_URL, AVI_INFO_URL
+  VARSITE_URL, AVI_INFO_URL, PANGOLIN_INFO_URL
 } from "../../constants/ExternalUrls";
 
 function AboutPageContent() {
@@ -162,6 +162,10 @@ function AboutPageContent() {
           <a href={AVI_INFO_URL} target="_blank" rel="noreferrer"
              className="about-ack-item about-ack-item--text" title="AlphaGenome Variant Impact (AVI), Google DeepMind">
             AlphaGenome
+          </a>
+          <a href={PANGOLIN_INFO_URL} target="_blank" rel="noreferrer"
+             className="about-ack-item about-ack-item--text" title="Pangolin splice prediction (Zeng & Li 2022)">
+            Pangolin
           </a>
           <a href={EVE_URL} target="_blank" rel="noreferrer" className="about-ack-item" title="EVE">
             <img src={EVELogo} loading="lazy" alt="EVE" />

@@ -158,7 +158,7 @@ function buildQueryString(p1: string, p2: string, p3?: string | null, p4?: strin
 
 function splitFirst(input: string | null): string | undefined {
   if (!input) return undefined;
-  return input.split(/[\n,|]/)[0]?.trim() || undefined;
+  return input.split(/\r?\n/)[0]?.trim() || undefined; // q is one variant; commas belong to it
 }
 
 function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProps) {

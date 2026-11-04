@@ -17,6 +17,7 @@ import {buildFilterParams} from "../../components/search/filterUtils";
 import {parseIdParam} from "../../../utills/InputTypeResolver";
 import {hasPrimaryFilter, PRIMARY_FILTER_PROMPT} from "../../../utills/PrimaryFilter";
 import {ID_GENE, ID_PDB, ID_ENSEMBL, ID_REFSEQ} from "../../../constants/BrowserPaths";
+import {ANNOTATE_CARDS, BROWSE_CARDS, CARDS_SHOWN, ExampleCard, PASTE_BOX, SEMANTIC_CARDS} from "../../../constants/Example";
 
 interface ExampleData {
   label: string;
@@ -34,65 +35,89 @@ const tabToMode = (tab: string | null): SearchMode =>
   tab === 'browse' || tab === 'semantic' ? tab : 'annotate';
 
 const EXAMPLES: Record<SearchMode, ExampleData[]> = {
+  // By format: together the chips cover every supported input form (see input-formats help)
   annotate: [
     {
-      label: 'VCF / Genomic',
-      value: 'X\t149498202\t.\tC\tG\n' +
-        '10-43118436-A-C\n' +
-        'chr12 25245350 C T\n' +
-        '14 89993420 A/G'
+      label: 'Genomic',
+      value: '7\t140753336\trs113488022\tA\tT\n' +
+        '12-25245350-C-T\n' +
+        '17 7675088 C T\n' +
+        '7:55191822:T:G\n' +
+        'chr11:5227002 T>A\n' +
+        '19 44908684 T/C\n' +
+        'MT 3460 G A',
+      tip: 'VCF, gnomAD, chromosome/position (space, colon, > or /), mitochondrial'
     },
     {
-      label: 'HGVS Genomic',
-      value: 'NC_000002.12:g.233760498G>A\n' +
-        'NC_000010.11:g.43100674C>G\n' +
-        'NC_000023.11:g.149483072G>A\n' +
-        'NC_000012.11:g.25398284C>T'
+      label: 'HGVS g.',
+      value: 'NC_000007.14:g.140753336A>T\n' +
+        'chr11:g.5227002T>A',
+      tip: 'HGVS genomic, with an NC_ accession or a chromosome'
     },
     {
-      label: 'HGVS cDNA',
-      value: 'NM_000202.8:c.1327C>T\n' +
-        'NM_020975.6(RET):c.3105G>A (p.Glu1035Glu)\n' +
-        'NM_000463.3(IDS):c.1124C>T\n' +
-        'NM_018319.4:c.1478A>G p.(His493Arg)'
+      label: 'HGVS c.',
+      value: 'NM_000518.5:c.20A>T\n' +
+        'NM_004333.6(BRAF):c.1799T>A\n' +
+        'NM_000546.6:c.524G>A p.(Arg175His)\n' +
+        'NM_000249.4:c.543C>T',
+      tip: 'HGVS coding, optionally with the gene or the protein change'
     },
     {
-      label: 'UniProt Variants',
-      value: 'P22304 A205P\n' +
-        'P07949 asn783thr\n' +
-        'P22309 71 Gly Arg'
+      label: 'UniProt',
+      value: 'P15056 V600E\n' +
+        'P01116 p.G12D\n' +
+        'P02649 Cys130Arg\n' +
+        'p00533 leu858arg\n' +
+        'P38398 61 C/G\n' +
+        'Q30201 282 Cys Tyr\n' +
+        'P04637 R213*\n' +
+        'P40692 G181=',
+      tip: 'UniProt accession + change: 1- or 3-letter, any case, stop (*) and silent (=)'
     },
     {
-      label: 'HGVS Protein',
-      value: 'NP_001305738.1:p.Pro267Ser'
+      label: 'HGVS p.',
+      value: 'NP_000509.1:p.Glu7Val\n' +
+        'NP_000537.3:p.Arg213Ter',
+      tip: 'HGVS protein'
     },
     {
       label: 'Variant IDs',
-      value: 'rs864622779\n' +
-        'VCV002573141\n' +
-        'COSV64777467',
-      tip: 'dbSNP, ClinVar, COSMIC'
+      value: 'rs334\n' +
+        'VCV000000642.133\n' +
+        'RCV000007540\n' +
+        'COSV56056643\n' +
+        'COSM521\n' +
+        'COSN190667\n' +
+        'VAR_004109',
+      tip: 'dbSNP, ClinVar (VCV with a version, RCV), COSMIC (COSV, COSM, COSN), UniProt (VAR_)'
     },
-    // TODO: add 37-38 examples, following aren't working despite 100% 37 matches
-    //X 153009152 6a C T
-    // 9 133759718 12a T A
-    // 15 35085619 21a T C
-    // 1 236906323 27a C T
+    {
+      label: 'Position only',
+      value: '17 7675088\n' +
+        '7 140753336 A\n' +
+        '11:5227002:na:na\n' +
+        'P01116 12\n' +
+        'P15056 600 Val\n' +
+        'P04637 M1?',
+      tip: 'Without the alternative (or both alleles / amino acids): every possible change at the position'
+    },
+    {
+      label: 'GRCh37',
+      value: '7 140453136 A T\n' +
+        '11 5248232 T A\n' +
+        '12 25398284 C T\n' +
+        '17 7578406 C T',
+      tip: 'GRCh37 positions: detected and converted to GRCh38'
+    },
   ],
   browse: [
-    { label: 'UniProt ID', value: 'P68871' },
+    { label: 'UniProt ID', value: 'P04637', tip: 'TP53' },
     { label: 'Gene Symbol', value: 'BRCA1' },
-    { label: 'Ensembl Gene', value: 'ENSG00000012048' },
-    { label: 'RefSeq ID', value: 'NM_007294.4' },
-    { label: 'PDB ID', value: '1JNX' }
+    { label: 'Ensembl Gene', value: 'ENSG00000141510', tip: 'TP53' },
+    { label: 'RefSeq ID', value: 'NM_000492.4', tip: 'CFTR' },
+    { label: 'PDB ID', value: '4HHB', tip: 'Haemoglobin' }
   ],
-  semantic: [
-    { label: 'Disease Terms', value: 'sickle cell anemia' },
-    { label: 'Phenotypes', value: 'intellectual disability' },
-    { label: 'Pathways', value: 'DNA repair pathway' },
-    { label: 'Drug Response', value: 'warfarin sensitivity' },
-    { label: 'Functional Impact', value: 'loss of function' }
-  ]
+  semantic: []  // cards only (SEMANTIC_CARDS)
 };
 
 
@@ -101,10 +126,7 @@ const findExampleLabel = (input: string): string | null =>
     .flat()
     .find(example => example.value === input)?.label ?? null;
 
-const PASTE_BOX = `NP_000508.1:p.Glu6Val
-11:5248232:A:T
-rs334
-NC_000011.10:g.5248232A>T`;
+
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
@@ -162,8 +184,7 @@ const SearchPage: React.FC = () => {
 
   const cleanInput = (input: string): string => {
     return input
-      .replace(/[|,]/g, '\n') // Replace comma and pipe with newline
-      .split('\n') // Split into lines
+      .split(/\r?\n/) // one variant per line: commas and pipes can be part of a variant (VCF, thousands separators)
       .map(line => line.trim()) // Trim leading and trailing whitespace
       .filter(line => line !== '')
       .join('\n'); // Remove empty lines
@@ -200,6 +221,32 @@ const SearchPage: React.FC = () => {
       fileInputRef.current.value = '';
     }
   };
+
+  const [showAllCards, setShowAllCards] = useState(false);
+
+  // Example cards open their result straight away (a single variant, a filtered browse or a semantic search)
+  const renderCards = (cards: ExampleCard[], title: string) => (
+    <>
+      <h6>{title}</h6>
+      <div className="story-cards">
+        {(showAllCards ? cards : cards.slice(0, CARDS_SHOWN)).map(card => (
+          <button key={card.name} type="button" className="story-card"
+                  onClick={() => navigate(card.to)} title={card.note}>
+            <span className="story-name">{card.name}</span>
+            {card.detail && <span className="story-change">{card.detail}</span>}
+            <span className="story-input"><code>{card.code}</code></span>
+            <span className="story-format">{card.tag}</span>
+          </button>
+        ))}
+      </div>
+      {cards.length > CARDS_SHOWN && (
+        <button type="button" className="story-more" onClick={() => setShowAllCards(v => !v)}>
+          {showAllCards ? 'Fewer' : `${cards.length - CARDS_SHOWN} more`}
+          <i className={`bi bi-chevron-${showAllCards ? 'up' : 'down'}`} />
+        </button>
+      )}
+    </>
+  );
 
   const handleExampleClick = (example: ExampleData) => {
     switch (activeMode) {
@@ -489,8 +536,9 @@ const SearchPage: React.FC = () => {
                   onChange={(e) => setVariantInput(e.target.value)}
                 />
                 <div className="examples">
-                  <h6>
-                    Try these examples
+                  {renderCards(ANNOTATE_CARDS, 'Try a well-known variant')}
+                  <h6 className="examples-by-format">
+                    Or fill the box by format
                     <HelpButton title="" content={<HelpContent name="input-formats" />} />
                   </h6>
                   <div className="example-tags">
@@ -587,13 +635,15 @@ const SearchPage: React.FC = () => {
               </div>
 
               <div className="examples">
-                <h6>Try these examples</h6>
+                {renderCards(BROWSE_CARDS, 'Try a ready-made view')}
+                <h6 className="examples-by-format">Or add an identifier by type</h6>
                 <div className="example-tags">
                   {EXAMPLES[activeMode].map((example, index) => (
                     <span
                       key={index}
                       className="example-tag"
                       onClick={() => handleExampleClick(example)}
+                      title={example.tip}
                     >
                       {example.label}
                     </span>
@@ -612,7 +662,7 @@ const SearchPage: React.FC = () => {
               <input
                 type="text"
                 className="input-field"
-                placeholder="sickle cell anemia"
+                placeholder="loss of DNA mismatch repair in Lynch syndrome"
                 value={textInput}
                 onChange={(e) => setTextInput(e.target.value)}
               />
@@ -625,18 +675,7 @@ const SearchPage: React.FC = () => {
                 matches, and accuracy varies by query. <Link to={`${HELP}#semantic-search`}>Learn more</Link>
               </p>
               <div className="examples">
-                <h6>Try these examples</h6>
-                <div className="example-tags">
-                  {EXAMPLES[activeMode].map((example, index) => (
-                    <span
-                      key={index}
-                      className="example-tag"
-                      onClick={() => handleExampleClick(example)}
-                    >
-                      {example.label}
-                    </span>
-                  ))}
-                </div>
+                {renderCards(SEMANTIC_CARDS, 'Try a search')}
               </div>
             </div>
           </div>

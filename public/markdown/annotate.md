@@ -6,8 +6,8 @@ The **Annotate Variants** tab on the home page accepts a list of human [missense
 
 ## Input mode
 
-- **Type / Paste** — enter variants directly, one per line. Use the **Try these examples** chips below the box to populate it with sample inputs in each [supported format](#input-formats) (VCF, HGVS, UniProt, dbSNP, ClinVar, COSMIC).
-- **Upload File** — upload a plain-text file (.txt, .tsv, .csv or .vcf, up to 10 MB) for larger jobs. Any common delimiter (space, tab, comma) works; header lines and extra columns are ignored, and rows are processed in input order.
+- **Type / Paste** — enter variants directly, one per line. Below the box, **Try a well-known variant** opens the result for a famous variant, and **Or fill the box by format** fills it with examples of every [supported format](#input-formats) (genomic, HGVS, UniProt, variant IDs, position only, GRCh37).
+- **Upload File** — upload a plain-text file (.txt, .tsv, .csv or .vcf, up to 10 MB) for larger jobs, one variant per line. Columns can be separated by spaces, tabs or commas; `#` lines are skipped, extra VCF columns are ignored, and rows are processed in input order.
 
 ## Genome assembly
 

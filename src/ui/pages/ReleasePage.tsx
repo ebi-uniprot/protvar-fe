@@ -50,12 +50,16 @@ function ReleasePageContent() {
 
       {activeTab === 'notes' && <div className="release-notes">
       {/* ── v2.1 ── */}
-      <ReleaseNote isDefaultOpen title={<><span className="release-badge release-badge-version">v2.1</span> UniProt 2026_02 data &amp; AlphaGenome Variant Impact <small>2026</small></>}>
+      <ReleaseNote isDefaultOpen title={<><span className="release-badge release-badge-version">v2.1</span> UniProt 2026_02 data, AlphaGenome Variant Impact &amp; Pangolin <small>2026</small></>}>
         <div className="release-categories">
           <div className="release-category">
             <ReleaseBadge type="ui" />
             <ul>
               <li>AlphaGenome Variant Impact (AVI) score — in the predictions panel, as an optional result column coloured by genome-wide rank (top 10% / 1% / 0.3% / 0.1%), sortable, and as quick filters (top 10%, 1%, 0.1%)</li>
+              <li>Pangolin splice prediction — per gene, in the predictions panel (gain and loss of splice-site usage and where) and as an optional result column</li>
+              <li>UniProt variant IDs (VAR_, e.g. VAR_004109) as input, linked to their UniProtKB/Swiss-Prot variant page</li>
+              <li>Variant IDs accepted in any case; ClinVar IDs with a version (RCV000424939.1)</li>
+              <li>One variant per line: commas and | no longer separate variants. A VCF line with several alternative alleles gives one variant each, VCF INFO columns are ignored, CSV rows (17,7675088,C,T) and thousands separators (17 7,675,088 C T) work</li>
               <li>Filter and sort your own uploaded variants (Annotate) with the same filters as browse; a large upload shows a short "preparing" step the first time it's filtered</li>
               <li>Filters in a side panel next to the results, which you can collapse; a filtered upload shows how many of its inputs match</li>
               <li>Isoform labels mark reviewed isoforms (iso) and unreviewed entries (unr)</li>
@@ -71,6 +75,9 @@ function ReleasePageContent() {
             <ReleaseBadge type="api" />
             <ul>
               <li>AVI score in mapping responses and downloads (new CSV column); sort=avi; aviMin filter</li>
+              <li>Pangolin per gene in mapping responses (gene.pangolin: score, gain, gainPos, loss, lossPos) and downloads (new CSV column Pangolin_splice_score, after AVI)</li>
+              <li>UniProt VAR_ IDs as variant-ID input (new messages PV-407, PV-408); faster ClinVar RCV lookup</li>
+              <li>Input: a line break is the only separator in /input/text and /input/file (commas and | are part of a line: CSV columns, multi-allelic VCF ALT, VCF INFO); q is one variant, read the same way</li>
               <li>Semantic search: qwen3 (default) and gemma models</li>
               <li>GET /stats — the current release's statistics (replaces /stats/latest and /stats/&#123;type&#125;/&#123;key&#125;)</li>
               <li>A non-canonical isoform given as input returns its own mapping first (with a note); genes are never dropped from a result; stable result order</li>
@@ -82,6 +89,8 @@ function ReleasePageContent() {
             <ul>
               <li>Genomic–protein mapping rebuilt on UniProt 2026_02 &amp; Ensembl 115 — 266.6M mapped positions (+57%); every Ensembl transcript encoding the exact protein sequence is linked (158K transcripts, +43%); 93.1% of reviewed human proteins mapped</li>
               <li><strong>New dataset:</strong> AlphaGenome Variant Impact (AVI) scores for all 107.9M possible coding SNVs</li>
+              <li><strong>New dataset:</strong> Pangolin splice scores (Zeng &amp; Li 2022) for 107.0M coding SNVs (99.1%), per gene</li>
+              <li><strong>New dataset:</strong> UniProt humsavar 2026_02 — 83,694 curated variant IDs, 80,641 (96.4%) mapped to coding SNVs</li>
               <li>CADD v1.7 recomputed on the new coding regions (107.9M variants)</li>
               <li>dbSNP b156 → b157 (26.9M coding SNVs, +49%)</li>
               <li>popEVE 2025.03 → 2025.07 (single-nucleotide-reachable changes)</li>
@@ -92,7 +101,7 @@ function ReleasePageContent() {
 
         <p className="release-data-note">
           Data 2026_02 — core mapping on UniProt 2026_02 and Ensembl 115; ClinVar 2025-02, COSMIC v103 and
-          gnomAD v4.1.0 unchanged. RefSeq links are 15% lower: Ensembl 115 dropped UniProt cross-references
+          gnomAD v4.1.0 unchanged; humsavar from the same UniProt release (2026_02). RefSeq links are 15% lower: Ensembl 115 dropped UniProt cross-references
           for ~9K RefSeq proteins; we will restore them from our own mapping in the next update.
         </p>
       </ReleaseNote>

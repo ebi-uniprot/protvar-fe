@@ -16,8 +16,13 @@ export const DBSNP_URL = "https://www.ncbi.nlm.nih.gov/snp/"
 export const CLINVAR_RCV_URL = "https://www.ncbi.nlm.nih.gov/clinvar/"
 export const CLINVAR_VCV_URL = "https://www.ncbi.nlm.nih.gov/clinvar/variation/"
 export const COSMIC_URL = "https://cancer.sanger.ac.uk/cosmic/search?q="
+// UniProtKB/Swiss-Prot variant pages (humsavar VAR_ IDs), e.g. VAR_018369.html
+export const UNIPROT_VAR_URL = "https://web.expasy.org/variant_pages/"
 export const CADD_INFO_URL = "https://cadd.gs.washington.edu/info"
 export const AVI_INFO_URL = "https://deepmind.google.com/science/alphagenome/"
+// Pangolin splice prediction: Zeng & Li 2022 (Genome Biology); precomputed scores on Zenodo
+export const PANGOLIN_INFO_URL = "https://doi.org/10.1186/s13059-022-02664-4"
+export const PANGOLIN_DATA_URL = "https://zenodo.org/records/15649338"
 export const AM_INFO_URL = "https://alphamissense.hegelab.org/"
 
 // --- Annotations (function / population / structure) ---

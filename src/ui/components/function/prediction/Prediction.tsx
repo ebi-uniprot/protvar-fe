@@ -1,3 +1,4 @@
+import { Pangolin } from "../../../../types/MappingResponse";
 import {ConservPred} from "./ConservPred";
 import {AlphaMissensePred} from "./AlphaMissensePred";
 //import {EvePred} from "./EvePred";
@@ -7,6 +8,7 @@ import React, {useContext, useState} from "react";
 import {AppContext} from "../../../App";
 import {CaddScorePred} from "./CaddScorePred";
 import {AviScorePred} from "./AviScorePred";
+import {PangolinPred} from "./PangolinPred";
 import {PopEvePred} from "./PopEvePred";
 import {FunctionalInfo} from "../../../../types/FunctionalInfo";
 import {AmScore, TranslatedSequence} from "../../../../types/MappingResponse";
@@ -32,6 +34,7 @@ export interface PredictionProps {
   ensp: TranslatedSequence[];
   caddScore: string;
   aviScore?: string;
+  pangolin?: Pangolin;
   amScore: AmScore;
 }
 
@@ -45,6 +48,7 @@ export const Prediction = (props: PredictionProps) => {
     props.amScore ||
     (props.caddScore && props.caddScore !== '-') ||
     !!props.aviScore ||
+    !!props.pangolin ||
     props.functionalData.esmScore ||
     props.functionalData.popEveScore ||
     (props.functionalData.foldxs?.length ?? 0) > 0 ||
@@ -115,6 +119,14 @@ export const Prediction = (props: PredictionProps) => {
         isHighlighted={highlightedPrediction === 'avi'}
       >
         <AviScorePred avi={props.aviScore} stdColor={state.stdColor} />
+      </PredictionWrapper>
+
+      {/* Pangolin - splice prediction for this gene, genomic */}
+      <PredictionWrapper
+        predictionType="pangolin"
+        isHighlighted={highlightedPrediction === 'pangolin'}
+      >
+        <PangolinPred pangolin={props.pangolin} stdColor={state.stdColor} />
       </PredictionWrapper>
 
       {/* ESM-1b - Protein language model, complementary approach */}

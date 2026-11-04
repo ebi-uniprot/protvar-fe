@@ -1,3 +1,4 @@
+import { Pangolin } from "../../../types/MappingResponse";
 /**
  * Left column - Residue-level annotations
  * Displays features at single positions, amino acid model, and predictions
@@ -25,6 +26,7 @@ interface ResidueColumnProps {
   ensp: TranslatedSequence[];
   caddScore: string;
   aviScore?: string;
+  pangolin?: Pangolin;
   amScore: AmScore;
 }
 
@@ -70,6 +72,7 @@ export function ResidueColumn(props: ResidueColumnProps) {
           ensp={props.ensp}
           caddScore={props.caddScore}
           aviScore={props.aviScore}
+          pangolin={props.pangolin}
           amScore={props.amScore}
         />
       </div>
