@@ -34,7 +34,7 @@ function InteractingStructures({
     const rowId = `${i.a}_${i.b}`;
     const isSelected = selectedInteraction === rowId;
     const protChain = i.a === isoFormAccession ? "A" : "B";
-    const modelUrl = `${API_URL}/prediction/interaction/${i.a}/${i.b}/model`;
+    const modelUrl = `${API_URL}/prediction/interface/${i.a}/${i.b}/model`;
 
     rows.push(
       <div

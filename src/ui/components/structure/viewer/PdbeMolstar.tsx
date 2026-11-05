@@ -55,7 +55,7 @@ const PdbeMolstar = ({ selected, pdbeRef, controlActions = [] }: PdbeMolstarProp
       />
     );
   } else if ("a" in selected && "b" in selected) {
-    const modelUrl = `${API_URL}/prediction/interaction/${selected.a}/${selected.b}/model`;
+    const modelUrl = `${API_URL}/prediction/interface/${selected.a}/${selected.b}/model`;
     pdbeComponent = (
       <pdbe-molstar
         id="pdbeMolstarComponent"
