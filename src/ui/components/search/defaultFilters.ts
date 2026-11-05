@@ -47,6 +47,8 @@ useEffect(() => {
 export const DEFAULT_FILTERS: Readonly<SearchFilterParams> = Object.freeze({
   // Variant Type
   variant: 'known',  // Default to known variants
+  knownIn: [],
+  curated: [],
 
   // Functional
   ptm: undefined,

@@ -6,14 +6,15 @@ import {
   ALPHAMISSENSE_CATEGORIES,
   POPEVE_CATEGORIES,
   STABILITY_CATEGORIES,
-  ALLELE_FREQ_CATEGORIES
-} from "./filterConstants";
+  ALLELE_FREQ_CATEGORIES, KNOWN_SOURCES, CURATED_CATEGORIES} from "./filterConstants";
 import FilterChips from "./FilterChips";
 import RangeSlider from "./RangeSlider";
 
 export interface SearchFilterParams {
   // Variant Type
   variant?: 'known' | 'potential';  // Radio button (default: 'known')
+  knownIn: string[];                 // known in any of these sources (only with known); none = any source
+  curated: string[];                 // UniProt curated (humsavar): any, or categories
 
   // Functional
   ptm?: boolean;
@@ -125,7 +126,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
 
   const hasPendingChanges = JSON.stringify(filters) !== JSON.stringify(applied);
 
-  const handleCheckboxChange = (key: "cadd" | "am" | "popeve" | "stability" | "freq", value: string) => {
+  const handleCheckboxChange = (key: "cadd" | "am" | "popeve" | "stability" | "freq" | "knownIn", value: string) => {
     const lowerValue = value.toLowerCase();
     const currentValues = filters[key].map(v => v.toLowerCase());
     const updated = currentValues.includes(lowerValue)
@@ -145,7 +146,9 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
   // Sections open and close from their title; each shows how many of its filters are on. Sections with active
   // filters (and Variant Type, Notes) start open.
   const counts: Record<string, number> = {
-    variant: (upload ? filters.variant === 'known' : filters.variant === 'potential') ? 1 : 0,
+    variant: ((upload ? filters.variant === 'known' : filters.variant === 'potential') ? 1 : 0)
+      + (filters.knownIn?.length ?? 0),
+    curated: filters.curated?.length ?? 0,
     notes: (filters.notes ? 1 : 0) + (filters.codes?.length ?? 0),
     functional: [filters.ptm, filters.mutagen, filters.domain, filters.binding, filters.actsite].filter(Boolean).length
       + (filters.consMin !== undefined || filters.consMax !== undefined ? 1 : 0),
@@ -157,7 +160,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
     sort: filters.sort ? 1 : 0,
   };
   const [closed, setClosed] = useState<Record<string, boolean>>(() => Object.fromEntries(
-    Object.entries(counts).map(([id, n]) => [id, n === 0 && id !== 'variant' && id !== 'notes'])));
+    Object.entries(counts).map(([id, n]) => [id, n === 0 && id !== 'variant' && id !== 'notes' && id !== 'curated'])));
   // re-measured when a section opens or closes too, or the panel would clip it
   useLayoutEffect(() => {
     if (panelRef.current) setPanelHeight(panelRef.current.scrollHeight);
@@ -183,8 +186,17 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
   const handleVariantChange = (value: 'known' | 'potential') => {
     onFiltersChange({
       ...filters,
-      variant: value
+      variant: value,
+      knownIn: value === 'potential' ? [] : filters.knownIn   // sources only narrow known variants
     });
+  };
+
+  // "Any" and the categories exclude each other
+  const handleCuratedChange = (value: string) => {
+    const cur = filters.curated ?? [];
+    const next = cur.includes(value) ? cur.filter(v => v !== value)
+      : value === 'any' ? ['any'] : [...cur.filter(v => v !== 'any'), value];
+    onFiltersChange({ ...filters, curated: next });
   };
 
   const handleConservationChange = (low: number | undefined, high: number | undefined) => {
@@ -270,7 +282,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
 
           {/* 1. Variant Type - Radio Buttons */}
           <div className={sectionClass('variant')}>
-            {sectionTitle('variant', 'Variant Type')}
+            {sectionTitle('variant', 'Variant type')}
             <div className="radio-group">
               <label className="radio-label">
                 <input
@@ -292,6 +304,44 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                 />
                 <span>{upload ? 'All submitted variants' : 'Potential variants'}</span>
               </label>
+            </div>
+            {(filters.variant === 'known' || (!upload && filters.variant === undefined)) && (
+              <div className="filter-group" style={{marginTop: '0.5rem'}}>
+                <label title="Known = in dbSNP, ClinVar, COSMIC or gnomAD. Pick sources to narrow it (any of them).">Known in</label>
+                <div className="button-group compact">
+                  {KNOWN_SOURCES.map(src => (
+                    <button
+                      key={src.value}
+                      className={`filter-button ${filters.knownIn?.includes(src.value) ? "selected" : ""}`}
+                      onClick={() => handleCheckboxChange("knownIn", src.value)}
+                    >
+                      {filters.knownIn?.includes(src.value)
+                        ? <i className="bi-check-lg tick"></i>
+                        : <i className="bi-plus-lg plus"></i>}
+                      {' '}{src.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* UniProt curated variants (humsavar): a main filter, browsable on its own */}
+          <div className={sectionClass('curated')}>
+            {sectionTitle('curated', 'UniProt curated')}
+            <div className="button-group compact" title="Curated human missense variants in UniProtKB/Swiss-Prot (humsavar), by classification">
+              {CURATED_CATEGORIES.map(cat => (
+                <button
+                  key={cat.value}
+                  className={`filter-button ${filters.curated?.includes(cat.value) ? "selected" : ""}`}
+                  onClick={() => handleCuratedChange(cat.value)}
+                >
+                  {filters.curated?.includes(cat.value)
+                    ? <i className="bi-check-lg tick"></i>
+                    : <i className="bi-plus-lg plus"></i>}
+                  {' '}{cat.label}
+                </button>
+              ))}
             </div>
           </div>
 
@@ -587,7 +637,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
           {/* 6. Sorting */}
           {showSorting && (
             <div className={sectionClass('sort')}>
-              {sectionTitle('sort', 'Sort Results')}
+              {sectionTitle('sort', 'Sort results')}
               <div className="filter-row">
                 <div className="filter-group">
                   <label>Sort By</label>

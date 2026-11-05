@@ -44,6 +44,24 @@ export const STABILITY_CATEGORIES = [
 
 export const VALID_STABILITY_VALUES = STABILITY_CATEGORIES.map(cat => cat.value);
 
+// Known-variant sources (BE knownIn; none selected = any source)
+export const KNOWN_SOURCES = [
+  { value: 'dbsnp', label: 'dbSNP' },
+  { value: 'clinvar', label: 'ClinVar' },
+  { value: 'cosmic', label: 'COSMIC' },
+  { value: 'gnomad', label: 'gnomAD' },
+];
+export const VALID_KNOWN_SOURCES = KNOWN_SOURCES.map(s => s.value);
+
+// UniProt curated variants (humsavar) categories (BE curated)
+export const CURATED_CATEGORIES = [
+  { value: 'any', label: 'Any' },
+  { value: 'lp_p', label: 'Pathogenic (LP/P)' },
+  { value: 'lb_b', label: 'Benign (LB/B)' },
+  { value: 'us', label: 'Uncertain (US)' },
+];
+export const VALID_CURATED_VALUES = CURATED_CATEGORIES.map(c => c.value);
+
 export const VALID_POPEVE_VALUES = ['severe', 'moderate', 'unlikely'];
 
 export const POPEVE_CATEGORIES = [

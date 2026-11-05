@@ -1,48 +1,27 @@
 // filterParams.ts
-// The interface property names ARE the URL parameter names.
+// The SearchFilterParams property names ARE the URL parameter names.
+import { SearchFilterParams } from './SearchFilters';
 
-// Array of all filter parameter keys for URL manipulation
-// These match the SearchFilterParams interface properties exactly
-export const FILTER_PARAM_KEYS = [
+// One entry per SearchFilterParams key: a filter added to the interface but not here is a type error, so the
+// URL clean-up (ResultPage deletes these keys before writing the new filters) can't miss one.
+const KEYS: Record<keyof SearchFilterParams, true> = {
   // Variant Type
-  'variant',
-
+  variant: true, knownIn: true, curated: true,
   // Functional
-  'ptm',
-  'mutagen',
-  'domain',
-  'binding',
-  'actsite',
-  'transmem',
-  'consMin',
-  'consMax',
-
+  ptm: true, mutagen: true, domain: true, binding: true, actsite: true, consMin: true, consMax: true,
   // Population
-  'disease',
-  'freq',
-
+  disease: true, freq: true,
   // Structural
-  'expModel',
-  'interact',
-  'pocket',
-  'stability',
-
+  transmem: true, expModel: true, interact: true, pocket: true, stability: true,
   // Consequence
-  'cadd',
-  'aviMin',
-  'am',
-  'popeve',
-  'esmMin',
-  'esmMax',
-
+  cadd: true, aviMin: true, am: true, popeve: true, esmMin: true, esmMax: true,
   // Sorting
-  'sort',
-  'order',
-
+  sort: true, order: true,
   // Notes (uploaded result only)
-  'notes',
-  'codes'
-] as const;
+  notes: true, codes: true,
+};
 
-// Type-safe parameter keys
-export type FilterParamKey = typeof FILTER_PARAM_KEYS[number];
+// Every filter parameter key, for URL manipulation
+export const FILTER_PARAM_KEYS = Object.keys(KEYS) as (keyof SearchFilterParams)[];
+
+export type FilterParamKey = keyof SearchFilterParams;

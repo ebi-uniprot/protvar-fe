@@ -4,7 +4,11 @@ import {
   VALID_AM_VALUES,
   VALID_POPEVE_VALUES,
   VALID_STABILITY_VALUES,
-  VALID_ALLELE_FREQ_VALUES
+  VALID_ALLELE_FREQ_VALUES,
+  VALID_KNOWN_SOURCES,
+  VALID_CURATED_VALUES,
+  KNOWN_SOURCES,
+  CURATED_CATEGORIES
 } from "./filterConstants";
 import { SearchFilterParams } from "./SearchFilters";
 import { CaddCategory } from "../../../types/CaddCategory";
@@ -15,7 +19,7 @@ import { AlleleFreqCategory } from "../../../types/AlleleFreqCategory";
 
 export const normalizeFilterValues = (selected: string[], valid: string[]): string[] => {
   const validSet = new Set(valid);
-  return selected.map(v => v.toLowerCase()).filter(v => validSet.has(v));
+  return Array.from(new Set(selected.map(v => v.toLowerCase()).filter(v => validSet.has(v))));   // once each
 };
 
 const parseBooleanParam = (searchParams: URLSearchParams, key: string): boolean | undefined => {
@@ -39,6 +43,8 @@ const parseVariantParam = (searchParams: URLSearchParams): 'known' | 'potential'
 export const extractFilters = (searchParams: URLSearchParams): SearchFilterParams => ({
   // Variant Type
   variant: parseVariantParam(searchParams),
+  knownIn: normalizeFilterValues(searchParams.getAll("knownIn"), VALID_KNOWN_SOURCES),
+  curated: normalizeFilterValues(searchParams.getAll("curated"), VALID_CURATED_VALUES),
 
   // Functional
   ptm: parseBooleanParam(searchParams, "ptm"),
@@ -90,6 +96,8 @@ export const buildFilterParams = (filters: SearchFilterParams): URLSearchParams 
 
   // Variant Type
   if (filters.variant) params.set("variant", filters.variant);
+  normalizeFilterValues(filters.knownIn, VALID_KNOWN_SOURCES).forEach(v => params.append("knownIn", v));
+  normalizeFilterValues(filters.curated, VALID_CURATED_VALUES).forEach(v => params.append("curated", v));
 
   // Functional
   if (filters.ptm === true) params.set("ptm", "true");
@@ -180,6 +188,11 @@ export const describeFilters = (f: SearchFilterParams, upload = false): FilterCh
   if (upload ? f.variant === 'known' : f.variant === 'potential')
     chips.push({ id: 'variant', label: upload ? 'Known variants only' : 'Potential variants' });
 
+  for (const v of f.knownIn ?? [])
+    chips.push({ id: `knownIn:${v}`, label: `Known in: ${KNOWN_SOURCES.find(s => s.value === v)?.label ?? v}` });
+  for (const v of f.curated ?? [])
+    chips.push({ id: `curated:${v}`, label: `UniProt curated: ${CURATED_CATEGORIES.find(c => c.value === v)?.label ?? v}` });
+
   for (const [key, label] of BOOLEAN_CHIP_LABELS) {
     if (f[key] === true) chips.push({ id: key as string, label });
   }
@@ -205,7 +218,7 @@ export const describeFilters = (f: SearchFilterParams, upload = false): FilterCh
 
 // Remove the filter atom identified by `id` from `f`.
 export const removeChip = (f: SearchFilterParams, id: string, upload = false): SearchFilterParams => {
-  if (id === 'variant') return { ...f, variant: upload ? undefined : 'known' };
+  if (id === 'variant') return { ...f, variant: upload ? undefined : 'known', knownIn: [] };
   if (id === 'conservation') return { ...f, consMin: undefined, consMax: undefined };
   if (id === 'esm1b') return { ...f, esmMin: undefined, esmMax: undefined };
   if (id.includes(':')) {
@@ -341,6 +354,10 @@ export const filterRequest = (filters: SearchFilterParams | undefined, isUpload:
     known: isUpload
       ? (filters?.variant === 'known' ? true : undefined)
       : (filters?.variant !== 'potential' ? true : undefined),
+    // sources narrow known variants only (knownIn implies known in the BE)
+    knownIn: filters?.knownIn?.length && filters.variant !== 'potential' && (!isUpload || filters.variant === 'known')
+      ? filters.knownIn : undefined,
+    curated: filters?.curated?.length ? filters.curated : undefined,
     ptm: filters?.ptm,
     mutagen: filters?.mutagen,
     domain: filters?.domain,

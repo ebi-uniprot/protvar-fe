@@ -15,6 +15,8 @@ export interface MappingRequest {
 
   // Variant Type
   known?: boolean;
+  knownIn?: string[];   // dbsnp | clinvar | cosmic | gnomad (any of)
+  curated?: string[];   // any | lp_p | lb_b | us
 
   // Functional — wired to BE filters on function_feature.type (via FeatureGroup)
   ptm?: boolean;

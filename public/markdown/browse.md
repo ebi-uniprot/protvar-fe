@@ -20,7 +20,8 @@ Each resolves to its UniProt protein(s); variants are returned across all matchi
 
 Open **Search Filters** to choose filters; each section opens from its title and shows how many of its filters are on. Filters combine — each one narrows the result further.
 
-- **Variant Type** — *Known variants* (reported in databases; the default when browsing) or *Potential variants* (every possible missense change).
+- **Variant type** — *Known variants* (in dbSNP, ClinVar, COSMIC or gnomAD; the default when browsing) or *Potential variants* (every possible missense change). With known variants, **Known in** narrows them to one or more of the sources.
+- **UniProt curated** — variants curated in UniProtKB/Swiss-Prot ([humsavar](https://www.uniprot.org/help/humsavar)): *Any*, or by classification: *Pathogenic (LP/P)*, *Benign (LB/B)*, *Uncertain (US)*. It needs no identifier, e.g. every UniProt pathogenic variant at a predicted pocket.
 - **Functional** — *PTM* (post-translational modification site), *Mutagenesis* (experimentally altered site), *Functional Domain* (domain, region, motif or notable site), *Binding Site*, *Active Site*; **Conservation** range (0–1).
 - **Population** — *Disease Association*; **Allele Frequency** (gnomAD): *Very Rare*, *Rare*, *Low*, *Common*.
 - **Structural** — *Transmembrane Region*, *Experimental Model*, *Protein-Protein Interface*, *Predicted Pocket*; **Stability** (FoldX): *Likely Destabilising* / *Unlikely to Destabilise*.
@@ -40,11 +41,11 @@ Press **Browse** to load the [Results](#results) page. **Clear** resets the form
 
 The result page has the same columns, annotation panels and [Download Panel](#download-panel) as Annotate Variants. On wide screens the filters sit in a **Filters** rail on the left (collapse it with «); on narrower screens they are in a **Search Filters** bar above the table. Change any filter, then press **Update**. Active filters show as chips above the table; click a chip's × to remove it. If nothing matches, the page says so and offers to clear the filters.
 
-**Sort Results** (result page only) orders the rows by CADD, AVI, AlphaMissense, popEVE or ESM-1b, ascending or descending. For popEVE and ESM-1b, lower scores are more damaging.
+**Sort results** (result page only) orders the rows by CADD, AVI, AlphaMissense, popEVE or ESM-1b, ascending or descending. For popEVE and ESM-1b, lower scores are more damaging.
 
 ## <a id="browse:filtering-your-uploads"></a>Filtering your uploads
 
-The same filters and sorting work on an uploaded result (`/result/<id>`), plus a **Notes** section to find lines with [notes](#messages). For an upload, **Variant Type** defaults to *All submitted variants*; choose *Known variants only* to keep just those reported in databases. The summary above the table shows how many of your lines match. A large upload is checked line by line once after it is submitted (a progress bar shows this); filters and sorting are fast after that.
+The same filters and sorting work on an uploaded result (`/result/<id>`), plus a **Notes** section to find lines with [notes](#messages). For an upload, **Variant type** defaults to *All submitted variants*; choose *Known variants only* to keep just those reported in databases. The summary above the table shows how many of your lines match. A large upload is checked line by line once after it is submitted (a progress bar shows this); filters and sorting are fast after that.
 
 ## Saving a browse
 

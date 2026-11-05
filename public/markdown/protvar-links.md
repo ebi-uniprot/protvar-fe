@@ -378,7 +378,9 @@ Filters can be appended to any browse/result URL to narrow the displayed variant
 
 | Parameter | Values | Description |
 |-----------|--------|-------------|
-| `variant` | `known` `potential` | Browse: `known` = variants reported in databases (default); `potential` = every possible change. Upload: all submitted variants by default; `known` = known variants only |
+| `variant` | `known` `potential` | Browse: `known` = variants in dbSNP, ClinVar, COSMIC or gnomAD (default); `potential` = every possible change. Upload: all submitted variants by default; `known` = known variants only |
+| `knownIn` | `dbsnp` `clinvar` `cosmic` `gnomad` | Known variants in any of these sources (repeatable, e.g. `knownIn=clinvar&knownIn=cosmic`) |
+| `curated` | `any` `lp_p` `lb_b` `us` | UniProt curated variants (humsavar): any, or pathogenic / benign / uncertain (repeatable) |
 
 ### Functional filters
 
