@@ -26,42 +26,6 @@
     box-shadow: var(--shadow-md);
 }
 
-/* ============================================
-   CARD WITH GRADIENT HEADER
-   ============================================ */
-
-.card-with-header {
-    background: var(--color-bg-secondary);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-sm);
-    overflow: hidden;
-}
-
-.card-header {
-    background: var(--gradient-blue);
-    color: white;
-    padding: var(--spacing-lg) var(--spacing-xl);
-    font-size: var(--font-size-lg);
-    font-weight: var(--font-weight-semibold);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.card-header a {
-    color: white;
-    opacity: 0.9;
-    text-decoration: none;
-    transition: opacity var(--transition-base);
-}
-
-.card-header a:hover {
-    opacity: 1;
-}
-
-.card-body {
-    padding: var(--spacing-xl);
-}
 
 /* ============================================
    ALLELE FREQUENCY CARD
@@ -515,14 +479,6 @@
         padding: var(--spacing-md);
     }
 
-    .card-header {
-        padding: var(--spacing-md) var(--spacing-lg);
-        font-size: var(--font-size-md);
-    }
-
-    .card-body {
-        padding: var(--spacing-lg);
-    }
 
     .protein-change-card {
         flex-direction: column;
@@ -591,13 +547,6 @@
         box-shadow: var(--shadow-md);
 }
 
-:root[data-theme="dark"] .card-with-header {
-        background: var(--color-bg-primary);
-}
-
-:root[data-theme="dark"] .card-header {
-        background: var(--gradient-blue-dark);
-}
 
 :root[data-theme="dark"] .structure-card:hover,
 :root[data-theme="dark"] .predicted-structure-card:hover,

@@ -647,12 +647,13 @@
     position: absolute;
     top: -7px;
     left: -2px;
-    font-size: 0.55rem;
+    font-size: 0.56rem;
     font-weight: var(--font-weight-bold);
     line-height: 1;
     padding: 1px 3px;
     border: 1px solid var(--color-primary-light);
     border-radius: 3px;
+    background: var(--color-primary-lightest);   /* slight tint, so it reads as a tag */
     color: var(--color-primary-light);
     white-space: nowrap;
     cursor: help;

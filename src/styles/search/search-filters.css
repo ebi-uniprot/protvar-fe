@@ -101,13 +101,12 @@
     margin-bottom: 0;
 }
 
+/* sentence case (not upper case): reads better, and keeps names like "UniProt" as written */
 .section-title {
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
     color: var(--color-text-primary);
     margin: 0 0 0.625rem 0;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
 }
 
 /* ============================================
@@ -177,15 +176,15 @@
 }
 
 .filter-button.selected {
-    background: rgba(1, 67, 115, 0.12);
+    background: rgba(10, 83, 148, 0.12);
     color: var(--color-brand);
-    border-color: rgba(1, 67, 115, 0.35);
+    border-color: rgba(10, 83, 148, 0.35);
     font-weight: var(--font-weight-semibold);
 }
 
 .filter-button.selected:hover {
-    background: rgba(1, 67, 115, 0.18);
-    border-color: rgba(1, 67, 115, 0.5);
+    background: rgba(10, 83, 148, 0.18);
+    border-color: rgba(10, 83, 148, 0.5);
 }
 
 /* Icon marks */
@@ -406,7 +405,7 @@
 .apply-button:hover:not(:disabled) {
     background: var(--color-brand-solid-dark);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(1, 67, 115, 0.3);
+    box-shadow: 0 4px 12px rgba(10, 83, 148, 0.3);
 }
 
 .apply-button:disabled {
@@ -748,11 +747,12 @@
     margin-bottom: 1.4rem;
 }
 
+/* semibold but small (13px) in the full text colour: distinct from the options, without outweighing the app nav
+   (15px, normal weight) */
 .search-filters--rail .section-title {
-    font-size: calc(11px * var(--font-scale));
+    font-size: calc(13px * var(--font-scale));
     font-weight: var(--font-weight-semibold);
-    letter-spacing: 0.07em;
-    color: var(--color-text-tertiary);
+    color: var(--color-text-primary);
     margin-bottom: var(--spacing-sm);
 }
 

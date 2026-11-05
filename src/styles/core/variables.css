@@ -30,17 +30,19 @@
     --color-primary-lightest: #e8eef9;
 
     /* Brand Blue (ProtVar identity — masthead, CTA buttons, active states) */
-    --color-brand: #014373;
-    --color-brand-dark: #012d5a;
+    /* The logo blue: the flat masthead, the "View in ProtVar" badge and the PV mark (public/images) */
+    --color-brand-logo: #0A5394;
+    --color-brand: #0A5394;        /* the logo blue (was navy #014373) */
+    --color-brand-dark: #084073;   /* same hue, darker: hover/pressed (was #012d5a) */
     /* Solid brand fills for buttons/badges that carry white text — stay navy in
        both themes, whereas --color-brand / --color-brand-dark flip to light blue
        in dark so they stay legible as TEXT/borders (headings, active, link hover). */
-    --color-brand-solid: #014373;
-    --color-brand-solid-dark: #012d5a;
+    --color-brand-solid: #0A5394;
+    --color-brand-solid-dark: #084073;
     --color-brand-light: #4a90b8;
     --color-brand-lighter: #8fc4dc;
     --color-brand-lightest: #e8f0f7;
-    --color-brand-gradient: linear-gradient(135deg, #4a90b8 0%, #014373 100%);
+    --color-brand-gradient: var(--color-brand-logo);   /* flat now; name kept for existing uses */
 
     /* Grays */
     --color-gray-50: #f8f9fb;
@@ -81,9 +83,6 @@
        GRADIENTS
        ============================================ */
 
-    --gradient-blue: linear-gradient(135deg, #3b5998 0%, #2f4a80 100%);
-    --gradient-blue-dark: linear-gradient(135deg, #2563ab 0%, #1e4a7a 100%);
-    --gradient-blue-light: linear-gradient(135deg, #5b7dbf 0%, #3b5998 100%);
     --gradient-gray: linear-gradient(135deg, #f6f7f9 0%, #ffffff 100%);
 
     /* Data Richness Gradients */
@@ -260,9 +259,6 @@
         --color-border-dark: #4f7188;
 
         /* Gradients - Dark Mode */
-        --gradient-blue: linear-gradient(135deg, #2563ab 0%, #1e4a7a 100%);
-        --gradient-blue-dark: linear-gradient(135deg, #1e4a7a 0%, #163a5a 100%);
-        --gradient-blue-light: linear-gradient(135deg, #6ea8fe 0%, #5a8fde 100%);
         --gradient-gray: linear-gradient(135deg, #143049 0%, #0e2438 100%);
 
         /* Data Richness Gradients - Dark Mode */

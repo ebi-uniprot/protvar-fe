@@ -120,7 +120,7 @@
 
 .protein-card:hover {
     border-color: var(--color-brand-light);
-    box-shadow: 0 2px 8px rgba(1, 67, 115, 0.08);
+    box-shadow: 0 2px 8px rgba(10, 83, 148, 0.08);
 }
 
 .protein-card-header {

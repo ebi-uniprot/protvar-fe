@@ -110,12 +110,7 @@
 .content .masthead {
     border-bottom: 1px solid rgba(0,0,0,0.15);
     margin-bottom: 0;           /* no gap between masthead and content */
-    background: linear-gradient(
-        135deg,
-        #014371 0%,
-        #025a94 50%,
-        #014371 100%
-    );
+    background: var(--color-brand-logo);   /* flat (was a navy gradient #014371 → #025a94 → #014371) */
 }
 
 /* ============================================

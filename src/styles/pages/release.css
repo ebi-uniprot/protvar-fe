@@ -17,7 +17,7 @@
     align-items: center;
     gap: 8px;
     padding: 10px 16px;
-    background: var(--color-brand-gradient);
+    background: var(--color-brand-logo);   /* flat, like the masthead */
     color: white;
     font-weight: var(--font-weight-semibold);
     font-size: var(--font-size-md);
