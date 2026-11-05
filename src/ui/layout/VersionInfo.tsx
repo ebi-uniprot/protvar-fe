@@ -5,7 +5,7 @@ import { RELEASE } from '../../constants/BrowserPaths';
 const VersionInfo: React.FC = () => {
   return (
     <div className="version-info">
-      <Link to={RELEASE} className="version-pill" title="View release notes">
+      <Link to={`${RELEASE}?tab=notes`} className="version-pill" title="View release notes">
         UI {process.env.REACT_APP_UI} · API {process.env.REACT_APP_API} · Data {process.env.REACT_APP_UNIPROT}
       </Link>
       <div className="version-panel">

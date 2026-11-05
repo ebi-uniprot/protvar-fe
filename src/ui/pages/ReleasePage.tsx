@@ -9,11 +9,12 @@ type ReleaseTab = 'notes' | 'stats';
 
 function ReleasePageContent() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const activeTab: ReleaseTab = searchParams.get('tab') === 'stats' ? 'stats' : 'notes';
+  // Statistics is the default tab; release notes at ?tab=notes (?tab=stats still works)
+  const activeTab: ReleaseTab = searchParams.get('tab') === 'notes' ? 'notes' : 'stats';
 
   const setTab = (tab: ReleaseTab) => {
     const next = new URLSearchParams(searchParams);
-    if (tab === 'notes') next.delete('tab');
+    if (tab === 'stats') next.delete('tab');   // the default: plain /release
     else next.set('tab', tab);
     setSearchParams(next, {replace: true});
   };
@@ -33,16 +34,16 @@ function ReleasePageContent() {
 
       <div className="release-tabs">
         <button
-          className={`release-tab${activeTab === 'notes' ? ' active' : ''}`}
-          onClick={() => setTab('notes')}
-        >
-          <i className="bi bi-card-list" /> Release Notes
-        </button>
-        <button
           className={`release-tab${activeTab === 'stats' ? ' active' : ''}`}
           onClick={() => setTab('stats')}
         >
           <i className="bi bi-bar-chart" /> Statistics
+        </button>
+        <button
+          className={`release-tab${activeTab === 'notes' ? ' active' : ''}`}
+          onClick={() => setTab('notes')}
+        >
+          <i className="bi bi-card-list" /> Release Notes
         </button>
       </div>
 
