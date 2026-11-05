@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="22" height="16" viewBox="0 0 22 16" role="img" aria-label="ProtVar">
+  <title>ProtVar</title>
+  <!-- compact ProtVar mark: P (logo green) V (logo orange) on the logo blue. Same font, size (11) and weight (bold) as "ProtVar" in view-in-protvar.svg -->
+  <rect width="22" height="16" rx="3" fill="#0A5394"/>
+  <text x="11" y="12" text-anchor="middle" font-family="Verdana, 'DejaVu Sans', Arial, sans-serif" font-size="11" font-weight="bold"><tspan fill="#9FCBAF">P</tspan><tspan fill="#FF9901">V</tspan></text>
+</svg>

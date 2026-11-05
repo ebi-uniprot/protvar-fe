@@ -2,10 +2,45 @@
 
 Direct links to ProtVar allow you to share specific queries, results, annotation panels, and structure views without going through the input screen.
 
+## <a id="protvar-links:link-to-us"></a>Link to ProtVar from your resource
+
+If your resource shows genes, proteins or variants, link each one to ProtVar with the pattern for the identifier you already have. No API key, no sign-up.
+
+| You have | Link | Example |
+|----------|------|---------|
+| A variant, any format | `/ProtVar/search?q=<variant>` | [`?q=rs334`](/ProtVar/search?q=rs334) |
+| Genomic position (GRCh38) | `/ProtVar/g/<chr>/<pos>/<ref>/<alt>` | [`/g/7/140753336/A/T`](/ProtVar/g/7/140753336/A/T) |
+| Protein position | `/ProtVar/p/<accession>/<pos>/<ref_AA>/<alt_AA>` | [`/p/P15056/600/V/E`](/ProtVar/p/P15056/600/V/E) |
+| Variant ID (dbSNP, ClinVar, COSMIC, UniProt VAR_) | `/ProtVar/search?q=<id>` | [`?q=VAR_004109`](/ProtVar/search?q=VAR_004109) |
+| UniProt accession | `/ProtVar/<accession>` | [`/P04637`](/ProtVar/P04637) |
+| Gene symbol | `/ProtVar/gene/<symbol>` | [`/gene/BRCA1`](/ProtVar/gene/BRCA1) |
+| PDB, Ensembl or RefSeq ID | `/ProtVar/pdb/<id>`, `/ProtVar/ensembl/<id>`, `/ProtVar/refseq/<id>` | [`/pdb/4HHB`](/ProtVar/pdb/4HHB) |
+
+Prefix each link with `https://www.ebi.ac.uk`. GRCh37 positions: add `?assembly=grch37`.
+
+- **Stable:** these patterns keep working across releases; older patterns are redirected (see [Backward Compatibility](#protvar-links:backward-compat)).
+- **Narrow the view** with the [filters](#protvar-links:s7), e.g. `/ProtVar/gene/BRCA1?am=pathogenic`, or open an annotation tab ([section 4](#protvar-links:s4)).
+- **Button:** use one of the badges below, or your own text.
+
+**Badge**, for a page or panel: ![View in ProtVar](images/view-in-protvar.svg)
+
+```html
+<a href="https://www.ebi.ac.uk/ProtVar/gene/BRCA1"><img src="https://www.ebi.ac.uk/ProtVar/images/view-in-protvar.svg" alt="View in ProtVar" height="22"></a>
+```
+
+**Compact mark**, next to an ID in a table or list: rs334 ![ProtVar](images/protvar-mark.svg)
+
+```html
+<a href="https://www.ebi.ac.uk/ProtVar/search?q=rs334" title="Open rs334 in ProtVar"><img src="https://www.ebi.ac.uk/ProtVar/images/protvar-mark.svg" alt="Open rs334 in ProtVar" width="22" height="16"></a>
+```
+
+Linking to ProtVar? Tell us at [protvar@ebi.ac.uk](mailto:protvar@ebi.ac.uk): we'll list your resource and keep your links working.
+
 ---
 
 ## Contents
 
+- [Link to ProtVar from your resource](#protvar-links:link-to-us)
 1. [Single Variant Query](#protvar-links:s1)
    - [1a. Free text](#protvar-links:s1a)
    - [1b. Direct genomic URL](#protvar-links:s1b)

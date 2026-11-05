@@ -6,11 +6,12 @@ import {ExpandableList} from "../../common/ExpandableList";
 import { getSourceRank } from "../../common/sourceRanking";
 
 const XREF_SHOW_LIMIT = 5;
-const PV_SEARCH = '/ProtVar/query?search=';
+const PV_SEARCH = '/search?q=';   // app route (the router adds /ProtVar); the current pattern, not /query?search=
 const CLINVAR_PREFIXES = ['VCV', 'RCV'];
 const COSMIC_PREFIXES = ['COSV', 'COSM', 'COSN'];
 
 const isRsId = (id: string): boolean => /^rs\d+$/i.test(id);
+const isUniprotVarId = (id: string): boolean => /^VAR_\d{6}$/i.test(id);   // UniProt variant ID (humsavar), a ProtVar input
 
 const isUuid = (id: string): boolean =>
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
@@ -31,6 +32,7 @@ const shouldShowProtVarLink = (id: string, source: string): boolean => {
   if (sourceLower.includes('clinvar')) return isClinVarId(id);
   if (sourceLower.includes('cosmic')) return isCosmicId(id);
   if (sourceLower.includes('dbsnp') || sourceLower.includes('gnomad')) return isRsId(id);
+  if (sourceLower.includes('uniprot')) return isUniprotVarId(id);
   return isRsId(id);
 };
 
@@ -101,7 +103,7 @@ function XRefList({xrefs, populationFrequencies, clinicalSignificances}: XRefLis
                         ? <ExtLink url={xref.url} text={xref.id} />
                         : <span className="id-plain">{xref.id}</span>}
                       {shouldShowProtVarLink(xref.id, source) &&
-                        <PVLink url={buildProtVarUrl(xref.id)} />
+                        <PVLink url={buildProtVarUrl(xref.id)} title={`Open ${xref.id} in ProtVar`} />
                       }
                     </span>
                   )}

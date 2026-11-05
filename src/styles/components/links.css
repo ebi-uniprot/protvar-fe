@@ -47,59 +47,32 @@
    ============================================ */
 
 .protvar-link {
+    /* 24px tall click target around the 24x16 mark (WCAG 2.2 target size) */
     display: inline-flex;
     align-items: center;
-    padding: 2px 4px;
-    text-decoration: none !important;
+    justify-content: center;
+    min-width: 28px;
+    height: 24px;
+    padding: 0 2px;
+    margin-left: var(--spacing-xs, 4px);
     border-radius: var(--radius-sm);
-    transition: all var(--transition-base);
-    margin-left: var(--spacing-sm);
+    text-decoration: none !important;
+    vertical-align: middle;
+    transition: background var(--transition-base);
+}
+
+.protvar-link img {
+    display: block;
+    border-radius: 3px;
 }
 
 .protvar-link:hover {
     background: var(--color-gray-200);
-    text-decoration: none !important;
 }
 
-.protvar-link:focus {
+.protvar-link:focus-visible {
     outline: 2px solid var(--color-primary);
-    outline-offset: 2px;
-}
-
-.protvar-link:active,
-.protvar-link:visited {
-    text-decoration: none !important;
-}
-
-.protvar-label {
-    position: relative;
-    display: inline-block;
-    font-size: 10px;
-    font-weight: var(--font-weight-bold);
-    letter-spacing: 0.3px;
-    line-height: 1;
-    padding-right: 8px;
-}
-
-.protvar-label .p-letter {
-    color: var(--color-protvar-green);
-}
-
-.protvar-label .v-letter {
-    color: var(--color-protvar-orange);
-}
-
-.protvar-label .pv-arrow {
-    position: absolute;
-    top: -1px;
-    right: 0;
-    font-family: monospace;
-    font-size: 8px;
-    color: var(--color-text-muted);
-}
-
-.protvar-link:hover .pv-arrow {
-    color: var(--color-text-primary);
+    outline-offset: 1px;
 }
 
 /* ============================================
@@ -221,14 +194,6 @@
 
 :root[data-theme="dark"] .protvar-link:hover {
         background: rgba(255, 255, 255, 0.08);
-}
-
-:root[data-theme="dark"] .protvar-link .pv-arrow {
-        color: var(--color-text-tertiary);
-}
-
-:root[data-theme="dark"] .protvar-link:hover .pv-arrow {
-        color: var(--color-text-primary);
 }
 
 :root[data-theme="dark"] .view-structure-button {

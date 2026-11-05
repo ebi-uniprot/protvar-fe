@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 interface LinkProps {
   url: string;
@@ -6,17 +7,15 @@ interface LinkProps {
   text?: string;
 }
 
+// Open something in ProtVar from within ProtVar: the compact ProtVar mark (logo P and V on the logo blue), same tab, scrolled to the top
+// (an in-app route, not an external link, so no ↗). `url` is an app route, e.g. /search?q=rs334.
 export const PVLink = ({ url,
                      title = "View in ProtVar"} : LinkProps) => {
-  return <a href={url} className="protvar-link"
-            title={title} aria-label={title}
-            target="_blank" rel="noopener noreferrer">
-    <span className="protvar-label">
-      <span className="p-letter">P</span>
-      <span className="v-letter">V</span>
-      <span className="pv-arrow">↗</span>
-    </span>
-  </a>
+  // a new result in the same page: start at its top (the router keeps the scroll position)
+  return <Link to={url} className="protvar-link" title={title} aria-label={title}
+               onClick={() => window.scrollTo({ top: 0 })}>
+    <img src={`${process.env.PUBLIC_URL}/images/protvar-mark.svg`} alt="" width={22} height={16} />
+  </Link>
 }
 
 // External link with arrow icon
