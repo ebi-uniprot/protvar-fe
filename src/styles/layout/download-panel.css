@@ -40,6 +40,29 @@
   user-select: none;
 }
 
+.dp-group--full {
+  flex-basis: 100%;
+}
+
+.dp-text {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+}
+
+.dp-option--hinted {
+  align-items: flex-start;
+}
+
+.dp-option--hinted input {
+  margin-top: 0.2rem;
+}
+
+.dp-option-hint {
+  display: block;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+}
+
 .dp-option--disabled {
   opacity: 0.45;
   cursor: not-allowed;

@@ -44,6 +44,7 @@ export interface DownloadRecord {
   resultUrl?: string       // relative URL to navigate back to the originating result page
   size?: number            // file size in bytes when status=ready
   fun?: boolean
+  pred?: boolean
   pop?: boolean
   str?: boolean
   assembly?: string

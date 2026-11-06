@@ -14,14 +14,27 @@ import {AppContext} from "../App";
 import {PagedMappingResponse} from "../../types/PagedMappingResponse";
 import {SearchFilterParams} from "../components/search/SearchFilters";
 import {isTotalCapped, isTotalUnknown} from "../../utills/PaginationFormat";
+import {useResultColumns} from "../pages/result/useResultColumns";
+import {RESULT_VIEWS, viewOf, visibleColumns} from "../../constants/resultColumns";
 
 interface DownloadForm {
   email: string
   jobName: string
   fun: boolean
+  pred: boolean
   pop: boolean
   str: boolean
+  onlyShown: boolean
 }
+
+type AnnotationKey = 'fun' | 'pred' | 'pop' | 'str';
+
+const ANNOTATIONS: { key: AnnotationKey, label: string, hint: string }[] = [
+  { key: 'fun',  label: 'Protein function', hint: 'UniProt features, comments and entry details' },
+  { key: 'pred', label: 'Predictions',      hint: 'Conservation, ESM1b, FoldX, pockets, interfaces' },
+  { key: 'pop',  label: 'Population',       hint: 'gnomAD, cross-references, diseases, co-located variants' },
+  { key: 'str',  label: 'Structures',       hint: 'Experimental PDB structures covering the residue' },
+];
 
 export interface DownloadPanelProps {
   // One of the following identifies what to download:
@@ -62,9 +75,10 @@ export function DownloadPanel(props: DownloadPanelProps) {
 
   const location = useLocation();
   const [searchParams] = useSearchParams();
-  const initialForm: DownloadForm = { email: "", jobName: "", fun: true, pop: true, str: true }
+  const initialForm: DownloadForm = { email: "", jobName: "", fun: false, pred: false, pop: false, str: false, onlyShown: false }
   const [form, setForm] = useState<DownloadForm>(initialForm)
-  const [annotations, setAnnotations] = useState<boolean>(true)
+  const { ids: columnIds } = useResultColumns()
+  const currentView = RESULT_VIEWS.find(v => v.id === viewOf(columnIds))?.label ?? 'Custom'
   const blocked = allPagesBlocked(props.result)
   const [currPage, setCurrPage] = useState<boolean>(!!blocked)
   const upload = !!props.resultId
@@ -86,12 +100,6 @@ export function DownloadPanel(props: DownloadPanelProps) {
   const updateForm = useCallback((key: string, value: any) => {
     setForm(prev => ({ ...prev, [key]: value }));
   }, []);
-
-  const toggleAnnotations = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const withAnnotations = event.target.value === 'withAnnotations';
-    setAnnotations(withAnnotations);
-    setForm(prev => ({ ...prev, fun: withAnnotations, pop: withAnnotations, str: withAnnotations }));
-  }
 
   const handleSucc = (downloadRec: DownloadRecord) => {
     addDownload(downloadRec)
@@ -127,9 +135,11 @@ export function DownloadPanel(props: DownloadPanelProps) {
       ids: props.ids,
       email: form.email,
       jobName,
-      function: form.fun ?? false,
-      population: form.pop ?? false,
-      structure: form.str ?? false,
+      function: form.fun,
+      prediction: form.pred,
+      population: form.pop,
+      structure: form.str,
+      columns: form.onlyShown ? visibleColumns(columnIds).map(c => c.id).filter(id => id !== 'details') : undefined,
       page: page ? parseInt(page) : null,
       pageSize: pageSize ? parseInt(pageSize) : null,
       assembly: props.q
@@ -146,6 +156,7 @@ export function DownloadPanel(props: DownloadPanelProps) {
         downloadRecord.pageSize = pageSize ? parseInt(pageSize) : undefined
         downloadRecord.assembly = assembly ?? undefined
         downloadRecord.fun = form.fun
+        downloadRecord.pred = form.pred
         downloadRecord.pop = form.pop
         downloadRecord.str = form.str
         downloadRecord.resultUrl = location.pathname + location.search
@@ -178,37 +189,31 @@ export function DownloadPanel(props: DownloadPanelProps) {
       )}
 
       <div className="dp-options">
-        <div className="dp-group">
-          <div className="dp-group-label">Output</div>
-          <label className="dp-option">
-            <input type="radio" name="annotations" value="withAnnotations"
-              checked={annotations} onChange={toggleAnnotations} />
-            With annotations
-          </label>
-          <label className="dp-option">
-            <input type="radio" name="annotations" value="withoutAnnotations"
-              checked={!annotations} onChange={toggleAnnotations} />
-            Mappings only
+        <div className="dp-group dp-group--full">
+          <div className="dp-group-label">Always included</div>
+          <div className="dp-text">Variant and mapping columns, all scores included</div>
+          <label className="dp-option dp-option--hinted">
+            <input type="checkbox" name="onlyShown" checked={form.onlyShown}
+              onChange={() => updateForm('onlyShown', !form.onlyShown)} />
+            <span>
+              Only columns shown in the table
+              <span className="dp-option-hint">Current view: {currentView} (change it with View in the table)</span>
+            </span>
           </label>
         </div>
 
-        <div className="dp-group">
-          <div className="dp-group-label">Annotations</div>
-          <label className={`dp-option${!annotations ? ' dp-option--disabled' : ''}`}>
-            <input type="checkbox" name="fun" checked={form.fun} disabled={!annotations}
-              onChange={(e) => updateForm(e.target.name, !form.fun)} />
-            Functional
-          </label>
-          <label className={`dp-option${!annotations ? ' dp-option--disabled' : ''}`}>
-            <input type="checkbox" name="pop" checked={form.pop} disabled={!annotations}
-              onChange={(e) => updateForm(e.target.name, !form.pop)} />
-            Population
-          </label>
-          <label className={`dp-option${!annotations ? ' dp-option--disabled' : ''}`}>
-            <input type="checkbox" name="str" checked={form.str} disabled={!annotations}
-              onChange={(e) => updateForm(e.target.name, !form.str)} />
-            Structure
-          </label>
+        <div className="dp-group dp-group--full">
+          <div className="dp-group-label">Add annotations</div>
+          {ANNOTATIONS.map(a => (
+            <label key={a.key} className="dp-option dp-option--hinted">
+              <input type="checkbox" name={a.key} checked={form[a.key]}
+                onChange={() => updateForm(a.key, !form[a.key])} />
+              <span>
+                {a.label}
+                <span className="dp-option-hint">{a.hint}</span>
+              </span>
+            </label>
+          ))}
         </div>
 
         {!props.q && <div className="dp-group">

@@ -6,22 +6,20 @@ The **Download Panel** opens as a side drawer from the **Download** button in th
 
 ## What you choose
 
-**Output**
+**Always included**
 
-- **With annotations** — include annotation columns (default).
-- **Mappings only** — variant-to-protein mapping columns only. Generates much faster.
+The variant and mapping columns, with all the table's scores, are always in the file. Tick **Only columns shown in the table** to keep just the columns of the current table view (change it with **View** in the table), plus the input and notes.
 
-Selecting *Mappings only* disables the **Annotations** checkboxes below.
+**Add annotations**
 
-**Annotations**
+Tick the groups you want added:
 
-Tick the categories you want included:
+- **Protein function** — UniProt features, comments and entry details.
+- **Predictions** — conservation, ESM1b, FoldX, pockets and interfaces.
+- **Population** — gnomAD, cross-references, diseases and co-located variants.
+- **Structures** — experimental PDB structures covering the residue.
 
-- **Functional** — UniProt residue/region/protein annotations and pathogenicity/stability predictions.
-- **Population** — co-located variants, allele frequencies, and disease associations.
-- **Structure** — experimental structures and predicted models, with pockets and interfaces where available.
-
-Each category adds time to generation. See the [Download File Format](#download-format) page for the exact columns per category.
+Each group adds time to generation. The file's first row names the columns, and they depend on what you pick, so read them by name, not by position. See the [Download File Format](#download-format) page for the exact columns per group.
 
 **Pages**
 

@@ -225,6 +225,7 @@ function DownloadsTab() {
                       </td>
                       <td className="col-center">
                         {dl.fun ? <i className="bi bi-check green" /> : <i className="bi bi-x red" />} fun
+                        {dl.pred ? <i className="bi bi-check green" /> : <i className="bi bi-x red" />} pred
                         {dl.pop ? <i className="bi bi-check green" /> : <i className="bi bi-x red" />} pop
                         {dl.str ? <i className="bi bi-check green" /> : <i className="bi bi-x red" />} str
                       </td>
@@ -314,7 +315,7 @@ function GroupedView() {
                       <span className={info.icon} />
                       <span className="grouped-download-name">{dl.jobName || dl.id.substring(0, 8)}</span>
                       <span className="grouped-download-meta">
-                        {[dl.fun && 'fun', dl.pop && 'pop', dl.str && 'str'].filter(Boolean).join('+')}
+                        {[dl.fun && 'fun', dl.pred && 'pred', dl.pop && 'pop', dl.str && 'str'].filter(Boolean).join('+')}
                         {dl.size && dl.size > 0 ? ` · ${humanFileSize(dl.size)}` : ''}
                       </span>
                       {dl.status === 'ready' && (

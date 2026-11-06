@@ -71,6 +71,7 @@ function ReleasePageContent() {
               <li>Semantic search — two new models, Qwen3 (now the default) and EmbeddingGemma; help explains how the models were compared</li>
               <li>Release page Statistics tab with live figures for the current data release</li>
               <li>Version menu shows the data release as the UniProt release, with all source versions</li>
+              <li>Download: variant and mapping columns are always included; add protein function, predictions, population and structures as you need them, or keep only the columns shown in the table</li>
               <li>Help — download format matches the CSV columns; VCF input notes</li>
               <li>Link to ProtVar: URL patterns for other resources, a "View in ProtVar" badge and a compact PV mark (Help › ProtVar Links); the PV link in cross-references opens in place</li>
             </ul>
@@ -79,18 +80,19 @@ function ReleasePageContent() {
           <div className="release-category">
             <ReleaseBadge type="api" />
             <ul>
-              <li>AVI score in mapping responses and downloads (new CSV column); sort=avi; aviMin filter</li>
-              <li>Pangolin per gene in mapping responses (gene.pangolin: score, gain, gainPos, loss, lossPos) and downloads (new CSV column Pangolin_splice_score, after AVI)</li>
+              <li>AVI score in mapping responses and downloads; sort=avi; aviMin filter</li>
+              <li>Pangolin per gene in mapping responses (gene.pangolin: score, gain, gainPos, loss, lossPos) and downloads</li>
               <li>UniProt VAR_ IDs as variant-ID input (new messages PV-407, PV-408); faster ClinVar RCV lookup</li>
               <li>Input: a line break is the only separator in /input/text and /input/file (commas and | are part of a line: CSV columns, multi-allelic VCF ALT, VCF INFO); q is one variant, read the same way</li>
               <li>Semantic search: qwen3 (default) and gemma models</li>
               <li>GET /stats — the current release's statistics (replaces /stats/latest and /stats/&#123;type&#125;/&#123;key&#125;)</li>
               <li>A non-canonical isoform given as input returns its own mapping first (with a note); genes are never dropped from a result; stable result order</li>
+              <li><strong>Breaking:</strong> download file: simpler column names, grouped, and only the groups requested (no N/A filler), so read columns by name. New columns Known_in and UniProt_curated; MANE_transcript removed. POST /download: new prediction option (function no longer includes predictions) and columns (only these result-table columns)</li>
               <li>Filters: knownIn (dbsnp, clinvar, cosmic, gnomad) and curated (any, lp_p, lb_b, us); known = any of the four sources</li>
               <li><strong>Breaking:</strong> GET /prediction/&#123;accession&#125;/&#123;position&#125; returns all predictions in one call (conserv, pocket, interface, alphamissense, popeve, esm, eve, foldx, m3d; include= to select, variantAA= to narrow). It replaces /score and /prediction/foldx, /prediction/pocket and /prediction/interaction</li>
               <li>Interface complex model moved to /prediction/interface/&#123;a&#125;/&#123;b&#125;/model (either order)</li>
               <li><strong>Breaking:</strong> GET /function/&#123;accession&#125;/&#123;position&#125; returns UniProt annotations only (features, comments, entry); its prediction fields and variantAA moved to /prediction. Mapping isoforms carry referencePredictionUri next to referenceFunctionUri</li>
-              <li>FoldX: the middle AlphaFold fragment (with numFragments) per variant, in /function, /prediction and downloads (all fragments had been returned since an April 2025 change)</li>
+              <li>FoldX: the middle AlphaFold fragment (with numFragments) per variant, in /prediction and downloads (all fragments had been returned since an April 2025 change)</li>
             </ul>
           </div>
 
