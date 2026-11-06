@@ -19,7 +19,7 @@ interface DefaultPageLayoutProps {
 const bannerText = (
   <>
     <span className="banner-lead">
-      <i className="bi bi-rocket-takeoff-fill banner-new-icon" /> ProtVar 2.1 — UniProt 2026_02 data,
+      <i className="bi bi-rocket-takeoff-fill banner-new-icon" /> ProtVar 3.0 — UniProt 2026_02 data,
       AlphaGenome Variant Impact (AVI) and Pangolin splice scores, UniProt variant IDs (VAR_) as input, and you can
       now filter and sort your own uploaded variants. See
       the{' '}<Link to={`${RELEASE}?tab=notes`}>release notes</Link> for details.

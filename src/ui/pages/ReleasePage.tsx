@@ -50,8 +50,8 @@ function ReleasePageContent() {
       {activeTab === 'stats' && <Statistics />}
 
       {activeTab === 'notes' && <div className="release-notes">
-      {/* ── v2.1 ── */}
-      <ReleaseNote isDefaultOpen title={<><span className="release-badge release-badge-version">v2.1</span> UniProt 2026_02 data, AlphaGenome Variant Impact &amp; Pangolin <small>2026</small></>}>
+      {/* ── v3.0 ── */}
+      <ReleaseNote isDefaultOpen title={<><span className="release-badge release-badge-version">v3.0</span> UniProt 2026_02 data, AlphaGenome Variant Impact &amp; Pangolin <small>2026</small></>}>
         <div className="release-categories">
           <div className="release-category">
             <ReleaseBadge type="ui" />
@@ -60,6 +60,9 @@ function ReleasePageContent() {
               <li>Pangolin splice prediction — per gene, in the predictions panel (gain and loss of splice-site usage and where) and as an optional result column</li>
               <li>UniProt variant IDs (VAR_, e.g. VAR_004109) as input, linked to their UniProtKB/Swiss-Prot variant page</li>
               <li>Variant IDs accepted in any case; ClinVar IDs with a version (RCV000424939.1)</li>
+              <li><strong>Known variants</strong> now means in dbSNP, ClinVar, COSMIC or gnomAD (was dbSNP only); a new <strong>Known in</strong> filter narrows them to one or more sources</li>
+              <li><strong>UniProt curated</strong> filter: variants curated in UniProtKB/Swiss-Prot (humsavar), any or by classification (pathogenic, benign, uncertain); usable without an identifier</li>
+              <li>FoldX: a residue covered by several AlphaFold fragments shows the middle fragment's ΔΔG again (with a note), and the stability filter uses the same value (~10% of FoldX variants)</li>
               <li>One variant per line: commas and | no longer separate variants. A VCF line with several alternative alleles gives one variant each, VCF INFO columns are ignored, CSV rows (17,7675088,C,T) and thousands separators (17 7,675,088 C T) work</li>
               <li>Filter and sort your own uploaded variants (Annotate) with the same filters as browse; a large upload shows a short "preparing" step the first time it's filtered</li>
               <li>Filters in a side panel next to the results, which you can collapse; a filtered upload shows how many of its inputs match</li>
@@ -69,6 +72,7 @@ function ReleasePageContent() {
               <li>Release page Statistics tab with live figures for the current data release</li>
               <li>Version menu shows the data release as the UniProt release, with all source versions</li>
               <li>Help — download format matches the CSV columns; VCF input notes</li>
+              <li>Link to ProtVar: URL patterns for other resources, a "View in ProtVar" badge and a compact PV mark (Help › ProtVar Links); the PV link in cross-references opens in place</li>
             </ul>
           </div>
 
@@ -82,6 +86,10 @@ function ReleasePageContent() {
               <li>Semantic search: qwen3 (default) and gemma models</li>
               <li>GET /stats — the current release's statistics (replaces /stats/latest and /stats/&#123;type&#125;/&#123;key&#125;)</li>
               <li>A non-canonical isoform given as input returns its own mapping first (with a note); genes are never dropped from a result; stable result order</li>
+              <li>Filters: knownIn (dbsnp, clinvar, cosmic, gnomad) and curated (any, lp_p, lb_b, us); known = any of the four sources</li>
+              <li><strong>Breaking:</strong> GET /prediction/&#123;accession&#125;/&#123;position&#125; returns all predictions in one call (conserv, pocket, interface, alphamissense, popeve, esm, eve, foldx, m3d; include= to select, variantAA= to narrow). It replaces /score and /prediction/foldx, /prediction/pocket and /prediction/interaction</li>
+              <li>Interface complex model moved to /prediction/interface/&#123;a&#125;/&#123;b&#125;/model (either order)</li>
+              <li>FoldX: the middle AlphaFold fragment (with numFragments) per variant, in /function, /prediction and downloads (all fragments had been returned since an April 2025 change)</li>
             </ul>
           </div>
 
@@ -92,6 +100,7 @@ function ReleasePageContent() {
               <li><strong>New dataset:</strong> AlphaGenome Variant Impact (AVI) scores for all 107.9M possible coding SNVs</li>
               <li><strong>New dataset:</strong> Pangolin splice scores (Zeng &amp; Li 2022) for 107.0M coding SNVs (99.1%), per gene</li>
               <li><strong>New dataset:</strong> UniProt humsavar 2026_02 — 83,694 curated variant IDs, 80,641 (96.4%) mapped to coding SNVs</li>
+              <li>Variant table: known sources (dbSNP, ClinVar, COSMIC, gnomAD) and UniProt curated classification per variant; FoldX as the middle fragment</li>
               <li>CADD v1.7 recomputed on the new coding regions (107.9M variants)</li>
               <li>dbSNP b156 → b157 (26.9M coding SNVs, +49%)</li>
               <li>popEVE 2025.03 → 2025.07 (single-nucleotide-reachable changes)</li>
