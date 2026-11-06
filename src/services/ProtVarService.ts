@@ -1,3 +1,4 @@
+import {PredictionInfo} from "../types/Prediction";
 import qs from 'qs';
 import axios, {AxiosResponse} from 'axios';
 import {setupCache} from 'axios-cache-interceptor/dist/index.bundle';
@@ -79,15 +80,36 @@ export function getMapping(request: MappingRequest) {
 }
 
 // Annotation
-export function getFunctionalData(url: string) {
-  return api.get<FunctionalInfo>(url).then(
-    response => {
-      if (response.data.interactions && response.data.interactions.length > 1) {
-        response.data.interactions.sort((a, b) => b.pdockq - a.pdockq);
-      }
-      return response;
+// UniProt annotations (/function) and predictions (/prediction, one call) at a position, in parallel, merged into the
+// FunctionalInfo shape the Function tab uses. The single-score fields are for the variant AA, so they're only set
+// when the prediction call was narrowed to one (variantAA).
+export function getFunctionalData(functionUrl: string, predictionUrl?: string) {
+  return Promise.all([
+    api.get<FunctionalInfo>(functionUrl),
+    predictionUrl ? api.get<PredictionInfo>(predictionUrl) : Promise.resolve(undefined),
+  ]).then(([response, prediction]) => {
+    const p = prediction?.data;
+    if (p) {
+      const one = <T,>(list?: T[]) => (p.variantAA ? list?.[0] : undefined);
+      Object.assign(response.data, {
+        pockets: p.pocket ?? [],
+        interactions: p.interface ?? [],   // highest pDockQ first
+        foldxs: p.foldx ?? [],
+        conservScore: p.conserv,
+        eveScore: one(p.eve),
+        esmScore: one(p.esm),
+        popEveScore: one(p.popeve),
+        m3dPred: one(p.m3d),
+      });
     }
-  );
+    return response;
+  });
+}
+
+// Predictions at a position (GET /prediction), optionally only some keys (include)
+export function getPredictionData(accession: string, position: number, include?: string[]) {
+  const q = include?.length ? `?include=${include.join(',')}` : '';
+  return api.get<PredictionInfo>(`${API_URL}/prediction/${accession}/${position}${q}`);
 }
 
 export function getPopulationData(url: string) {

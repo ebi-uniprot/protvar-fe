@@ -89,6 +89,7 @@ function ReleasePageContent() {
               <li>Filters: knownIn (dbsnp, clinvar, cosmic, gnomad) and curated (any, lp_p, lb_b, us); known = any of the four sources</li>
               <li><strong>Breaking:</strong> GET /prediction/&#123;accession&#125;/&#123;position&#125; returns all predictions in one call (conserv, pocket, interface, alphamissense, popeve, esm, eve, foldx, m3d; include= to select, variantAA= to narrow). It replaces /score and /prediction/foldx, /prediction/pocket and /prediction/interaction</li>
               <li>Interface complex model moved to /prediction/interface/&#123;a&#125;/&#123;b&#125;/model (either order)</li>
+              <li><strong>Breaking:</strong> GET /function/&#123;accession&#125;/&#123;position&#125; returns UniProt annotations only (features, comments, entry); its prediction fields and variantAA moved to /prediction. Mapping isoforms carry referencePredictionUri next to referenceFunctionUri</li>
               <li>FoldX: the middle AlphaFold fragment (with numFragments) per variant, in /function, /prediction and downloads (all fragments had been returned since an April 2025 change)</li>
             </ul>
           </div>

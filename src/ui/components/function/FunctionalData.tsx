@@ -20,6 +20,7 @@ import {Comment} from "../../../types/Comment";
 export interface FunctionalDataProps {
   annotation: string
   referenceFunctionUri: string
+  referencePredictionUri?: string
   refAA: string
   variantAA: string
   ensg: string
@@ -31,7 +32,7 @@ export interface FunctionalDataProps {
 }
 
 function FunctionalData(props: FunctionalDataProps) {
-  const { referenceFunctionUri, annotation, ensg, ensp } = props;
+  const { referenceFunctionUri, referencePredictionUri, annotation, ensg, ensp } = props;
   const [apiData, setApiData] = useState<FunctionalInfo>();
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set());
   const { openPocketInStructure, openInteractionInStructure } = useStructureNavigation();
@@ -63,10 +64,10 @@ function FunctionalData(props: FunctionalDataProps) {
   const dataRichness = calculateDataRichness(apiData);
 
   useEffect(() => {
-    getFunctionalData(referenceFunctionUri).then(response => {
+    getFunctionalData(referenceFunctionUri, referencePredictionUri).then(response => {
       setApiData(response.data);
     });
-  }, [referenceFunctionUri]);
+  }, [referenceFunctionUri, referencePredictionUri]);
 
   const { residues, regions } = useMemo(
     () => filterFeaturesByPosition(

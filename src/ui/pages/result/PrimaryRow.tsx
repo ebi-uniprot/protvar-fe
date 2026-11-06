@@ -409,6 +409,7 @@ export function AnnotationPanels({
               ensg={gene.ensg!}
               ensp={ensp!}
               referenceFunctionUri={isoform.referenceFunctionUri!}
+              referencePredictionUri={isoform.referencePredictionUri}
             />
           </Suspense>
         </div>

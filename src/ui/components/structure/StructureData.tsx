@@ -5,7 +5,7 @@ import PdbeMolstar from "./viewer/PdbeMolstar";
 import InteractingStructures from "./tables/InteractingStructures";
 import Loader from "../../elements/Loader";
 import {getPredictedStructure} from "../../../services/AlphafoldService";
-import {getFunctionalData, getStructureData} from "../../../services/ProtVarService";
+import {getPredictionData, getStructureData} from "../../../services/ProtVarService";
 import {PdbeStructure} from "../../../types/PdbeStructure";
 import {AlphafoldResponseElement} from "../../../types/AlphafoldResponse";
 import StructureIcon from "../../../images/structures-3d.svg";
@@ -111,15 +111,14 @@ function StructureData(props: StructureDataProps) {
       })
       .then((hasPredicted) => {
         if (hasPredicted) {
-          const url = `/function/${isoFormAccession}/${aaPosition}${variantAA ? `?variantAA=${variantAA}` : ""}`;
-          return getFunctionalData(url);
+          return getPredictionData(isoFormAccession, aaPosition, ['pocket', 'interface']);
         }
         return null;
       })
       .then((res) => {
         if (res && !isCancelled) {
-          setInteractionData(res.data.interactions ?? []);
-          setPocketData(res.data.pockets ?? []);
+          setInteractionData(res.data.interface ?? []);
+          setPocketData(res.data.pocket ?? []);
         }
       })
       .catch((err) => console.error("Error fetching structure data:", err))

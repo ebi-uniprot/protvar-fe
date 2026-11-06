@@ -82,7 +82,8 @@ export interface Isoform {
   proteinName: string;
   transcripts: Array<Transcript>;
   populationObservationsUri: string;
-  referenceFunctionUri: string;
+  referenceFunctionUri: string;    // UniProt annotations at the position
+  referencePredictionUri?: string; // predictions at the position, for the variant AA
   proteinStructureUri: string;
   amScore: AmScore;
   popEveScore?: PopEveScore;
