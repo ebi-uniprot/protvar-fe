@@ -11,7 +11,6 @@ import { NoteCorner, NoteCounts, NoteMarker, NoteRow, NotesBar, NoteText, plural
 import { ResultLayout } from "../../../types/UserPrefs";
 import { inGroup, ResultColumn, visibleColumns } from "../../../constants/resultColumns";
 import { useResultColumns } from "./useResultColumns";
-import Tool from "../../elements/Tooltip";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import {
   parseAnnotationParam,
