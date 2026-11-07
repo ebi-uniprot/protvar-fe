@@ -180,13 +180,13 @@ const prettyValue = (v: string): string =>
 
 // Flat list of chips for the active filters in `f` — one chip per value.
 // Variant type is the one filter whose default depends on the view: browse defaults to known variants (a
-// "Potential variants" chip when widened), an upload to all submitted variants ("Known variants only" chip
+// "All possible variants" chip when widened), an upload to all submitted variants ("Known variants only" chip
 // when narrowed).
 export const describeFilters = (f: SearchFilterParams, upload = false): FilterChip[] => {
   const chips: FilterChip[] = [];
 
   if (upload ? f.variant === 'known' : f.variant === 'potential')
-    chips.push({ id: 'variant', label: upload ? 'Known variants only' : 'Potential variants' });
+    chips.push({ id: 'variant', label: upload ? 'Known variants only' : 'All possible variants' });
 
   for (const v of f.knownIn ?? [])
     chips.push({ id: `knownIn:${v}`, label: `Known in: ${KNOWN_SOURCES.find(s => s.value === v)?.label ?? v}` });

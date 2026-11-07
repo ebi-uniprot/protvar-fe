@@ -302,7 +302,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                   checked={filters.variant === 'potential' || (upload && filters.variant === undefined)}
                   onChange={() => handleVariantChange('potential')}
                 />
-                <span>{upload ? 'All submitted variants' : 'Potential variants'}</span>
+                <span>{upload ? 'All submitted variants' : 'All possible variants'}</span>
               </label>
             </div>
             {(filters.variant === 'known' || (!upload && filters.variant === undefined)) && (

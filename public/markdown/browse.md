@@ -1,6 +1,6 @@
 # <a id="browse"></a>Browse Variants
 
-The **Browse Variants** tab lists every known (or potential) variant for a protein, gene or other biological identifier, or across all proteins using filters alone. Unlike Annotate Variants, you don't supply variants yourself — ProtVar returns the full set known for that target.
+The **Browse Variants** tab lists every known (or possible) variant for a protein, gene or other biological identifier, or across all proteins using filters alone. Unlike Annotate Variants, you don't supply variants yourself — ProtVar returns the full set known for that target.
 
 ![Browse Variants tab](images/browse.png)
 
@@ -20,7 +20,7 @@ Each resolves to its UniProt protein(s); variants are returned across all matchi
 
 Open **Search Filters** to choose filters; each section opens from its title and shows how many of its filters are on. Filters combine — each one narrows the result further.
 
-- **Variant type** — *Known variants* (in dbSNP, ClinVar, COSMIC or gnomAD; the default when browsing) or *Potential variants* (every possible missense change). With known variants, **Known in** narrows them to one or more of the sources.
+- **Variant type** — *Known variants* (in dbSNP, ClinVar, COSMIC or gnomAD; the default when browsing) or *All possible variants* (every possible single-base change, the known ones included). With known variants, **Known in** narrows them to one or more of the sources.
 - **UniProt curated** — variants curated in UniProtKB/Swiss-Prot ([humsavar](https://www.uniprot.org/help/humsavar)): *Any*, or by classification: *Pathogenic (LP/P)*, *Benign (LB/B)*, *Uncertain (US)*. It needs no identifier, e.g. every UniProt pathogenic variant at a predicted pocket.
 - **Functional** — *PTM* (post-translational modification site), *Mutagenesis* (experimentally altered site), *Functional Domain* (domain, region, motif or notable site), *Binding Site*, *Active Site*; **Conservation** range (0–1).
 - **Population** — *Disease Association*; **Allele Frequency** (gnomAD): *Very Rare*, *Rare*, *Low*, *Common*.
