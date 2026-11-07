@@ -40,13 +40,13 @@ export default function ColumnChooser({ layout, onLayoutChange }: {
                      checked={c.locked || ids.includes(c.id)}
                      disabled={c.locked}
                      onChange={() => toggle(c.id)} />
-              {' '}{c.label}
+              {' '}{c.label}{c.note && <span className="column-chooser-item-note">{c.note}</span>}
             </label>
           ))}
         </div>
       ))}
       <button className="btn btn-secondary" onClick={reset}>Reset columns</button>
-      <p className="column-chooser-note">Downloads always include all columns.</p>
+      <p className="column-chooser-note">Downloads include all columns unless you choose only those shown.</p>
       <strong className="column-chooser-section">Colours</strong>
       <label className="toggle-switch" title="Toggle between ProtVar standardised and original source colours">
         <input type="checkbox" checked={appState.stdColor}

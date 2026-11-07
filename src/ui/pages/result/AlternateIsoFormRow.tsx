@@ -34,11 +34,12 @@ export function getConsequenceFullName(consequence?: string): string {
 // Only reviewed (Swiss-Prot) entries have -N isoforms; any other non-canonical accession is an unreviewed entry.
 const REVIEWED_ISOFORM = /-\d+$/;
 
-export function CanonicalIcon(props: { isCanonical: boolean | undefined, accession?: string }) {
+export function CanonicalIcon(props: { isCanonical: boolean | undefined, accession?: string, sameAs?: string[] }) {
   if (props.isCanonical === undefined)
     return EmptyElement;
   else if (props.isCanonical)
-    return <Tool el="span" tip="Canonical isoform" className="protein-type-icon protein-type-icon--canonical">can</Tool>;
+    return <Tool el="span" className="protein-type-icon protein-type-icon--canonical"
+                 tip={`Canonical isoform${props.sameAs?.length ? `, also listed in UniProt as ${props.sameAs.join(', ')}` : ''}`}>can</Tool>;
   else if (!props.accession || REVIEWED_ISOFORM.test(props.accession))
     return <Tool el="span" tip="Isoform of a reviewed entry" className="protein-type-icon protein-type-icon--isoform">iso</Tool>;
   else
@@ -64,7 +65,7 @@ export function getAlternateIsoFormRow(isoformKey: string, index: number, isofor
       </Tool>
     </span>,
     protein: <span key="protein" className="card-sep cell-protein-name">{getProteinName(isoform.proteinName)}</span>,
-    aaChange: <span key="aaChange" className="card-sep"><Tool tip={aaChangeTip(aaChange)}>{aaChangeFormatted}</Tool></span>,
+    aaChange: <span key="aaChange" className="card-sep cell-mono"><Tool tip={aaChangeTip(aaChange)}>{aaChangeFormatted}</Tool></span>,
     consequence: <span key="consequence" className="card-sep cell-consequence"><Tool tip={CONSEQUENCES.get(isoform.consequences!)} pos="up-right"><ConsequenceBadge consequence={isoform.consequences} /></Tool></span>,
     popeve: <span key="popeve" className="cell-popeve" />,
   };

@@ -71,6 +71,7 @@ export interface Pangolin {
 export interface Isoform {
   accession: string;
   canonical: boolean;
+  sameAs?: string[];   // canonical only: isoforms dropped as copies of it
   canonicalAccession: string;
   isoformPosition: number;
   refCodon: string;

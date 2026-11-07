@@ -1,6 +1,6 @@
 # <a id="results"></a>Results
 
-The **Results** page is the main landing for any query. Each row is a variant; columns group into **Genomic**, **Protein**, and **Annotations**.
+The **Results** page is the main landing for any query. Each row is a variant, from its genomic position to the protein change and annotations. The ID column shows only when a line on the page has an ID.
 
 ![Result page](images/result.png)
 
@@ -13,7 +13,7 @@ Above the table:
 - **Pagination** (left; repeated below the table) — page and page size (25, 50 or 100), kept in the URL.
 - **View** — how the results look; changes apply at once and are remembered in this browser:
   - **Layout** — *Rows* (one continuous table), *Cards* (one card per input line) or *Compact* (cards with tighter spacing).
-  - **Columns** — start from a preset, *Genomic*, *Genomic + protein* (default) or *Protein*, then add or remove columns (e.g. add **AVI**); *Custom* shows when your choice matches no preset. Position, gene, isoform, amino-acid change and annotations are always shown. Downloads always include all columns.
+  - **Columns** — start from a preset, *Genomic*, *Genomic + protein* (default) or *Protein*, then add or remove columns (e.g. add **AVI**); *Custom* shows when your choice matches no preset. Position, gene, isoform, amino-acid change and annotations are always shown. Downloads include all columns unless you tick **Only columns shown in the table**.
   - **Colours** — *ProtVar colours* (standardised pathogenicity colours) or each tool's original colours.
 - **Share** — copy a link to the current view (filters, sort and page included).
 - **Save** — browse results only; adds the page to [History](#activity:activity-history).

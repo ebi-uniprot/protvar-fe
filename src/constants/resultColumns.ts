@@ -1,4 +1,4 @@
-// Result table columns, in display order. The grid, header hints and row cells are all built from this list.
+// Result table columns, in display order. The grid, header labels and row cells are all built from this list.
 // `id` is persisted in user prefs (phase 2), so never rename or reuse one.
 
 export type ColumnGroup = 'genomic' | 'protein' | 'annotations';
@@ -10,27 +10,30 @@ export type ColumnId =
 
 export interface ResultColumn {
   id: ColumnId;
-  label: string;         // header hint + chooser label
+  label: string;         // chooser label
+  note?: string;         // chooser: muted text after the label
+  header: string;        // table column header
+  tip: string;           // column header tooltip
   group: ColumnGroup;
   defaultOn: boolean;
   locked?: boolean;      // always visible: the genomic → protein bridge (position, gene, isoform, AA change)
 }
 
 export const RESULT_COLUMNS: ResultColumn[] = [
-  { id: 'id',          label: 'ID',            group: 'genomic',     defaultOn: true },
-  { id: 'position',    label: 'position',      group: 'genomic',     defaultOn: true, locked: true },
-  { id: 'gene',        label: 'gene',          group: 'genomic',     defaultOn: true, locked: true },
-  { id: 'codon',       label: 'mRNA codon',    group: 'genomic',     defaultOn: true },
-  { id: 'cadd',        label: 'CADD',          group: 'genomic',     defaultOn: true },
-  { id: 'avi',         label: 'AVI',           group: 'genomic',     defaultOn: false },
-  { id: 'pangolin',    label: 'Pangolin',      group: 'genomic',     defaultOn: false },
-  { id: 'isoform',     label: 'isoform',       group: 'protein',     defaultOn: true, locked: true },
-  { id: 'protein',     label: 'name',          group: 'protein',     defaultOn: true },
-  { id: 'aaChange',    label: 'AA change',     group: 'protein',     defaultOn: true, locked: true },
-  { id: 'consequence', label: 'consequence',   group: 'protein',     defaultOn: true },
-  { id: 'popeve',      label: 'popEVE',        group: 'protein',     defaultOn: true },
-  { id: 'am',          label: 'AlphaMissense', group: 'protein',     defaultOn: true },
-  { id: 'details',     label: 'annotations',   group: 'annotations', defaultOn: true, locked: true },
+  { id: 'id',          label: 'ID',            note: 'when available', header: 'ID',            tip: 'Variant ID',                                group: 'genomic',     defaultOn: true },
+  { id: 'position',    label: 'position',      header: 'Position',      tip: 'Chromosome, position, reference and alternative base', group: 'genomic', defaultOn: true, locked: true },
+  { id: 'gene',        label: 'gene',          header: 'Gene',          tip: 'Gene symbol',                               group: 'genomic',     defaultOn: true, locked: true },
+  { id: 'codon',       label: 'mRNA codon',    header: 'Codon',         tip: 'mRNA codon change and strand',              group: 'genomic',     defaultOn: true },
+  { id: 'cadd',        label: 'CADD',          header: 'CADD',          tip: 'CADD score',                                group: 'genomic',     defaultOn: true },
+  { id: 'avi',         label: 'AVI',           header: 'AVI',           tip: 'AlphaGenome Variant Impact score',          group: 'genomic',     defaultOn: false },
+  { id: 'pangolin',    label: 'Pangolin',      header: 'Pangolin',      tip: 'Pangolin splice prediction',                group: 'genomic',     defaultOn: false },
+  { id: 'isoform',     label: 'isoform',       header: 'Isoform',       tip: 'UniProt isoform',                           group: 'protein',     defaultOn: true, locked: true },
+  { id: 'protein',     label: 'name',          header: 'Protein',       tip: 'Protein name',                              group: 'protein',     defaultOn: true },
+  { id: 'aaChange',    label: 'AA change',     header: 'AA change',     tip: 'Amino acid change',                         group: 'protein',     defaultOn: true, locked: true },
+  { id: 'consequence', label: 'consequence',   header: 'Effect',        tip: 'Consequence on the protein',                group: 'protein',     defaultOn: true },
+  { id: 'popeve',      label: 'popEVE',        header: 'popEVE',        tip: 'popEVE score',                              group: 'protein',     defaultOn: true },
+  { id: 'am',          label: 'AlphaMissense', header: 'AM',            tip: 'AlphaMissense score',                       group: 'protein',     defaultOn: true },
+  { id: 'details',     label: 'annotations',   header: 'Annotations',   tip: 'Functional, population and structural annotations: click an icon to expand', group: 'annotations', defaultOn: true, locked: true },
 ];
 
 export const DEFAULT_COLUMN_IDS: ColumnId[] = RESULT_COLUMNS.filter(c => c.defaultOn).map(c => c.id);

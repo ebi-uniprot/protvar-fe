@@ -123,3 +123,8 @@
     font-size: var(--font-size-sm);
     color: var(--color-text-secondary);
 }
+
+.column-chooser-item-note {
+    color: var(--color-text-muted);
+    font-size: var(--font-size-xs);
+}

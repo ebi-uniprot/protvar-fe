@@ -3,7 +3,7 @@ import { PagedMappingResponse } from "../../../types/PagedMappingResponse";
 import { Message, GenomicVariant, Isoform, VariantInput } from "../../../types/MappingResponse";
 import { StringVoidFun } from "../../../constants/CommonTypes";
 import { getAlternateIsoFormRow } from "./AlternateIsoFormRow";
-import { getNewPrimaryRow, AnnotationPanels, ToggleIsoformGroupFn } from "./PrimaryRow";
+import { getIdValue, getNewPrimaryRow, AnnotationPanels, ToggleIsoformGroupFn } from "./PrimaryRow";
 import { singleVariant } from "../../../services/ProtVarService";
 import { AppContext } from "../../App";
 import MsgRow from "./MsgRow";
@@ -158,10 +158,9 @@ function ResultTable(props: ResultTableProps) {
 
   if (!props.data) return null;
 
-  const cols = visibleColumns(columnIds);
-  const genomic = inGroup(cols, 'genomic');
-  const protein = inGroup(cols, 'protein');
-  const hints = (group: ResultColumn[]) => group.map(c => c.label);
+  // the ID column only when a line on this page has one
+  const hasId = props.data.content.inputs.some(input => getIdValue(input));
+  const cols = visibleColumns(columnIds).filter(c => c.id !== 'id' || hasId);
   const cards = props.layout === 'cards' || props.layout === 'compact';
   const tableClass = `result-table${cards ? ' result-table--cards' : ''}${props.layout === 'compact' ? ' result-table--compact' : ''}`;
 
@@ -184,22 +183,11 @@ function ResultTable(props: ResultTableProps) {
     <>
     <NotesBar counts={noteCounts(props.data)} showAll={showAllNotes}
               onToggle={() => { setShowAllNotes(!showAllNotes); setOpenNotes(new Set()); }} />
-    <div className={tableClass} style={{ gridTemplateColumns: `repeat(${cols.length}, auto)` }}>
-      {/* ── Sticky two-row header ── */}
+    <div className={tableClass} style={{ gridTemplateColumns: gridColumns(cols) }}>
+      {/* ── Sticky header: one label per column, in the same tracks as the rows ── */}
       <div className="result-header">
-        <div className="result-group-header">
-          <Tool el="span" style={{ gridColumn: `span ${genomic.length}` }}
-                tip={`Gene- and nucleotide-level columns: ${hints(genomic).join(', ')}`}>
-            GENOMIC <span className="col-hints">{'· ' + hints(genomic).join(' · ')}</span>
-          </Tool>
-          <Tool el="span" style={{ gridColumn: `span ${protein.length}` }}
-                tip={`Amino-acid / protein-level columns: ${hints(protein).join(', ')}`}>
-            PROTEIN <span className="col-hints">{'· ' + hints(protein).join(' · ')}</span>
-          </Tool>
-          <Tool el="span" style={{ gridColumn: `span ${inGroup(cols, 'annotations').length}` }}
-                tip="Functional, population and structural annotations — click an icon to expand" pos="up-right">
-            ANNOTATIONS
-          </Tool>
+        <div className="result-col-header">
+          {cols.map(c => <span key={c.id} title={c.tip}>{c.header}</span>)}
         </div>
       </div>
 
@@ -237,6 +225,11 @@ interface RowNoteState {
 
 const NO_MAPPING: Message = { type: 'ERROR', text: 'No mapping found' };
 
+// Every column fits its content; the protein name, when shown, takes what is left and gives way first
+const gridColumns = (cols: ResultColumn[]) => cols.some(c => c.id === 'protein')
+  ? cols.map(c => c.id === 'protein' ? 'minmax(3rem, 1fr)' : 'max-content').join(' ')
+  : `repeat(${cols.length}, auto)`;
+
 const getTableRows = (
   data: PagedMappingResponse | null,
   isoformGroupExpanded: string,
@@ -272,7 +265,7 @@ const getTableRows = (
     input.derivedGenomicVariants.forEach((genomicVariant: GenomicVariant, genIndex: number) => {
       if (genomicVariant.genes.length === 0 && input.messages.length === 0) {
         inputRows.push(
-          <MsgRow key={`input-${inputIndex}-${genIndex}-nomapping`} index={inputIndex} message={NO_MAPPING} input={input} genomicVariant={genomicVariant} />
+          <MsgRow key={`input-${inputIndex}-${genIndex}-nomapping`} index={inputIndex} message={NO_MAPPING} showId={cols.some(c => c.id === 'id')} input={input} genomicVariant={genomicVariant} />
         );
         return;
       }
@@ -324,6 +317,7 @@ const getTableRows = (
               isLoadingIsoforms,
               cols,
               noteMarker,
+              effectiveIsoforms.length > 1 ? effectiveIsoforms.length - 1 : undefined,
             ));
             if (noteMarker && noteOpen) {
               geneRowEls.push(<NoteRow key={`row-${primaryRow}-note`} messages={input.messages} />);

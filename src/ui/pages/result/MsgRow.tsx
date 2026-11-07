@@ -11,9 +11,10 @@ interface MsgRowProps {
   input?: VariantInput;
   genomicVariant?: GenomicVariant;
   index?: number;
+  showId?: boolean;    // the table has an ID column
 }
 
-const MsgRow = ({ message, input, genomicVariant, index }: MsgRowProps) => {
+const MsgRow = ({ message, input, genomicVariant, index, showId = true }: MsgRowProps) => {
   const inputStr = input?.inputStr ?? '';
   const idValue = getIdValue(input);
   // tinted by severity, so no zebra striping
@@ -24,22 +25,22 @@ const MsgRow = ({ message, input, genomicVariant, index }: MsgRowProps) => {
     return (
       <div className={`result-row ${rowClass}`}>
         <NoteCorner type={message.type} />
-        {/* col 1: user-id */}
-        <span>
+        {/* user-id, when the table has that column */}
+        {showId && <span>
           {idValue && (
             <Tool tip="Variant ID provided by the user">
               <TextLink url={getIdUrl(idValue)} text={idValue} />
             </Tool>
           )}
-        </span>
-        {/* col 2: genomic-pos */}
+        </span>}
+        {/* genomic-pos */}
         <span>
           <Tool tip="Genomic coordinate — click to view the region in Ensembl" pos="up-left">
             <TextLink url={getEnsemblViewUrl(genomicVariant.chromosome, genomicVariant.position)} text={genomicPos} />
           </Tool>
         </span>
-        {/* cols 3–11: message spanning remaining */}
-        <span style={{ gridColumn: '3 / -1' }}>
+        {/* message spanning the remaining columns */}
+        <span style={{ gridColumn: `${showId ? 3 : 2} / -1` }}>
           <b>{inputStr}</b> <NoteText message={message} />
         </span>
       </div>

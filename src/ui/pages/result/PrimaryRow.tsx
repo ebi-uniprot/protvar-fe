@@ -103,6 +103,7 @@ export const getNewPrimaryRow = (
   isLoadingIsoforms: boolean = false,
   cols: ResultColumn[] = visibleColumns(),
   noteMarker?: React.ReactNode, // corner marker for the input's notes (first row of the input only)
+  altCount?: number,            // other isoforms, when known (filter-only browse loads them on demand)
 ) => {
   const caddAttr = caddScoreAttr(gene.caddScore?.toString());
   const amAttr   = amScoreAttr(isoform.amScore?.amClass);
@@ -110,7 +111,6 @@ export const getNewPrimaryRow = (
   // Combined genomic position: chr-pos-ref-alt
   const genomicPos = `${genomicVariant.chromosome}-${genomicVariant.position}-${genomicVariant.refBase}-${genomicVariant.altBase}`;
 
-  const strand = gene.reverseStrand ? '(-)' : '(+)';
   const codon  = isoform.refCodon && isoform.variantCodon
     ? `${isoform.refCodon}/${isoform.variantCodon}`
     : '';
@@ -161,12 +161,12 @@ export const getNewPrimaryRow = (
         </span>,
 
         // codon (mRNA / coding strand) + strand. card-sep adds dot separator before it in mobile.
-        codon: <span key="codon" className="card-sep">
+        codon: <span key="codon" className="card-sep cell-codon">
           {codon && (
             <div className="flex">
-              {codon}&nbsp;
-              <Tool tip={`mRNA codon change ${codon} on the ${strand === '(+)' ? 'positive' : 'negative'}-sense strand`}>
-                {strand}
+              <span className="cell-mono">{codon}</span>
+              <Tool tip={`mRNA codon change ${codon} on the ${gene.reverseStrand ? 'negative' : 'positive'}-sense strand`}>
+                <span className="strand-badge">{gene.reverseStrand ? '−' : '+'}</span>
               </Tool>
             </div>
           )}
@@ -216,6 +216,10 @@ export const getNewPrimaryRow = (
 
         // Isoform — toggle chevron + canonical icon + accession
         isoform: <span key="isoform" className={`isoform-cell ${isProteinInput ? 'cell-protein-input' : ''}`}>
+          <CanonicalIcon isCanonical={isoform.canonical} accession={isoform.accession} sameAs={isoform.sameAs} />
+          <Tool tip="Click to see the UniProt page for this accession">
+            <TextLink url={UNIPROT_ACCESSION_URL + isoform.accession} text={isoform.accession} />
+          </Tool>
           {hasAltIsoForm && (
             <Tool
               el="button"
@@ -226,6 +230,7 @@ export const getNewPrimaryRow = (
                 ? "Loading isoforms…"
                 : (isoformGroupExpanded !== isoformGroup ? "Show more isoforms" : "Hide isoforms")}
             >
+              {altCount ? `+${altCount}` : null}
               {isLoadingIsoforms
                 ? <span className="toggle-isoforms-loading" aria-label="loading" />
                 : (isoformGroupExpanded !== isoformGroup
@@ -233,10 +238,6 @@ export const getNewPrimaryRow = (
                     : <ChevronUpIcon  className="toggle-isoforms" />)}
             </Tool>
           )}
-          <CanonicalIcon isCanonical={isoform.canonical} accession={isoform.accession} />
-          <Tool tip="Click to see the UniProt page for this accession">
-            <TextLink url={UNIPROT_ACCESSION_URL + isoform.accession} text={isoform.accession} />
-          </Tool>
         </span>,
 
         // Protein name
@@ -245,7 +246,7 @@ export const getNewPrimaryRow = (
         </span>,
 
         // AA Change — card-sep adds dot separator before it in mobile
-        aaChange: <span key="aaChange" className={`card-sep cell-aa-change${isProteinInput ? ' cell-protein-input' : ''}`}>
+        aaChange: <span key="aaChange" className={`card-sep cell-mono cell-aa-change${isProteinInput ? ' cell-protein-input' : ''}`}>
           <Tool tip={aaChangeTip(aaChange)}>{aaChangeFormatted}</Tool>
         </span>,
 
