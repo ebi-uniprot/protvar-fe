@@ -30,10 +30,10 @@ interface DownloadForm {
 type AnnotationKey = 'fun' | 'pred' | 'pop' | 'str';
 
 const ANNOTATIONS: { key: AnnotationKey, label: string, hint: string }[] = [
-  { key: 'fun',  label: 'Protein function', hint: 'UniProt features, comments and entry details' },
-  { key: 'pred', label: 'Predictions',      hint: 'Conservation, ESM1b, FoldX, pockets, interfaces' },
+  { key: 'fun',  label: 'Protein function', hint: 'UniProt features, comments, entry details' },
+  { key: 'pred', label: 'More predictions', hint: 'Conservation, ESM1b, FoldX, Missense3D, pockets, interfaces' },
   { key: 'pop',  label: 'Population',       hint: 'gnomAD, cross-references, diseases, co-located variants' },
-  { key: 'str',  label: 'Structures',       hint: 'Experimental PDB structures covering the residue' },
+  { key: 'str',  label: 'Structures',       hint: 'PDB structures covering the residue' },
 ];
 
 export interface DownloadPanelProps {
@@ -188,51 +188,50 @@ export function DownloadPanel(props: DownloadPanelProps) {
         </dl>
       )}
 
+      {!props.q && (
+        <div className="dp-pages">
+          <div className="dp-seg" role="radiogroup" aria-label="Pages">
+            <label className={`dp-seg-item${!currPage ? ' dp-seg-item--on' : ''}${blocked ? ' dp-option--disabled' : ''}`}>
+              <input type="radio" name="currPage" value="false" disabled={!!blocked}
+                checked={!currPage} onChange={_ => setCurrPage(false)} />
+              All{props.result && !blocked && <span className="dp-count">{allCount(props.result, upload)}</span>}
+            </label>
+            <label className={`dp-seg-item${currPage ? ' dp-seg-item--on' : ''}`}>
+              <input type="radio" name="currPage" value="true"
+                checked={currPage} onChange={_ => setCurrPage(true)} />
+              Current{props.result && <span className="dp-count">page {props.result.page}</span>}
+            </label>
+          </div>
+          {blocked && <p className="dp-note dp-note--warn">{blocked}</p>}
+          {props.result && <p className="dp-note">One variant can give several rows (one per gene or isoform).</p>}
+        </div>
+      )}
+
       <div className="dp-options">
         <div className="dp-group dp-group--full">
-          <div className="dp-group-label">Always included</div>
-          <div className="dp-text">Variant and mapping columns, all scores included</div>
-          <label className="dp-option dp-option--hinted">
+          <div className="dp-group-label">Columns</div>
+          <div className="dp-group-hint">Current view: {currentView} (change it with View in the table)</div>
+          <label className="dp-option" title="All variant and mapping columns, with all scores, are included unless you tick this.">
             <input type="checkbox" name="onlyShown" checked={form.onlyShown}
               onChange={() => updateForm('onlyShown', !form.onlyShown)} />
-            <span>
-              Only columns shown in the table
-              <span className="dp-option-hint">Current view: {currentView} (change it with View in the table)</span>
-            </span>
+            Only columns shown in the table
           </label>
         </div>
 
         <div className="dp-group dp-group--full">
-          <div className="dp-group-label">Add annotations</div>
+          <div className="dp-group-label dp-group-label--row">
+            Add annotations
+            <a href={`${process.env.PUBLIC_URL}/help#download-format`} target="_blank" rel="noopener noreferrer">See all columns</a>
+          </div>
           {ANNOTATIONS.map(a => (
-            <label key={a.key} className="dp-option dp-option--hinted">
+            <label key={a.key} className="dp-option">
               <input type="checkbox" name={a.key} checked={form[a.key]}
                 onChange={() => updateForm(a.key, !form[a.key])} />
-              <span>
-                {a.label}
-                <span className="dp-option-hint">{a.hint}</span>
-              </span>
+              {a.label}<span className="dp-count">{a.hint}</span>
             </label>
           ))}
         </div>
-
-        {!props.q && <div className="dp-group">
-          <div className="dp-group-label">Pages</div>
-          <label className={`dp-option${blocked ? ' dp-option--disabled' : ''}`}>
-            <input type="radio" name="currPage" value="false" disabled={!!blocked}
-              checked={!currPage} onChange={_ => setCurrPage(false)} />
-            All{props.result && !blocked && <span className="dp-count">{allCount(props.result, upload)}</span>}
-          </label>
-          <label className="dp-option">
-            <input type="radio" name="currPage" value="true"
-              checked={currPage} onChange={_ => setCurrPage(true)} />
-            Current{props.result && <span className="dp-count">page {props.result.page}</span>}
-          </label>
-        </div>}
       </div>
-
-      {blocked && <p className="dp-note dp-note--warn">{blocked}</p>}
-      {props.result && <p className="dp-note">One variant can give several rows (one per gene or isoform).</p>}
 
       <div className="dp-fields">
         <label className="dp-field">
@@ -240,13 +239,11 @@ export function DownloadPanel(props: DownloadPanelProps) {
             Email
             {errorMsg && <span className="dp-field-error">{errorMsg}</span>}
           </span>
-          <span className="dp-field-hint">Optional — get notified when your file is ready</span>
-          <input type="email" className="dp-input" value={form.email} name="email"
+          <input type="email" className="dp-input" value={form.email} name="email" placeholder="Optional: notify me when ready"
             onChange={(e) => updateForm(e.target.name, e.target.value)} />
         </label>
         <label className="dp-field">
-          <span className="dp-field-label">Job Name</span>
-          <span className="dp-field-hint">Optional</span>
+          <span className="dp-field-label">Job name</span>
           <input type="text" className="dp-input" value={form.jobName} name="jobName"
             onChange={(e) => updateForm(e.target.name, e.target.value)}
             placeholder={jobNamePlaceholder} />

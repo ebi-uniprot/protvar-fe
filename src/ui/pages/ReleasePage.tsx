@@ -87,7 +87,8 @@ function ReleasePageContent() {
               <li>Semantic search: qwen3 (default) and gemma models</li>
               <li>GET /stats — the current release's statistics (replaces /stats/latest and /stats/&#123;type&#125;/&#123;key&#125;)</li>
               <li>A non-canonical isoform given as input returns its own mapping first (with a note); genes are never dropped from a result; stable result order</li>
-              <li><strong>Breaking:</strong> download file: simpler column names, grouped, and only the groups requested (no N/A filler), so read columns by name. New columns Known_in and UniProt_curated; MANE_transcript removed. POST /download: new prediction option (function no longer includes predictions) and columns (only these result-table columns)</li>
+              <li><strong>Breaking:</strong> download file: simpler column names, grouped, and only the groups requested (no N/A filler), so read columns by name. MANE_transcript removed. POST /download: new prediction option (function no longer includes predictions) and columns (only these result-table columns)</li>
+              <li>Mapping: an isoform with the canonical's position, change and transcripts is no longer listed separately; the canonical names it in sameAs</li>
               <li>Filters: knownIn (dbsnp, clinvar, cosmic, gnomad) and curated (any, lp_p, lb_b, us); known = any of the four sources</li>
               <li><strong>Breaking:</strong> GET /prediction/&#123;accession&#125;/&#123;position&#125; returns all predictions in one call (conserv, pocket, interface, alphamissense, popeve, esm, eve, foldx, m3d; include= to select, variantAA= to narrow). It replaces /score and /prediction/foldx, /prediction/pocket and /prediction/interaction</li>
               <li>Interface complex model moved to /prediction/interface/&#123;a&#125;/&#123;b&#125;/model (either order)</li>

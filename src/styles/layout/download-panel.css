@@ -10,10 +10,52 @@
 }
 
 .dp-options {
+  margin-bottom: 1rem;
+}
+
+.dp-pages {
+  margin-bottom: 1rem;
+}
+
+.dp-pages .dp-note {
+  margin: 0.4rem 0 0;
+}
+
+.dp-seg {
+  display: inline-flex;
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.dp-seg-item {
   display: flex;
-  gap: 1.5rem;
-  margin-bottom: 1.25rem;
-  flex-wrap: wrap;
+  align-items: center;
+  padding: 0.3rem 0.75rem;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  user-select: none;
+}
+
+.dp-seg-item + .dp-seg-item {
+  border-left: 1px solid var(--color-border-medium);
+}
+
+.dp-seg-item input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.dp-seg-item--on {
+  background: var(--color-brand-lightest);
+  font-weight: var(--font-weight-medium);
+}
+
+.dp-seg-item:focus-within {
+  outline: 2px solid var(--color-brand);
+  outline-offset: -2px;
 }
 
 .dp-group {
@@ -41,26 +83,30 @@
 }
 
 .dp-group--full {
-  flex-basis: 100%;
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--color-border-light);
 }
 
-.dp-text {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-primary);
+.dp-group--full:last-child {
+  border-bottom: 1px solid var(--color-border-light);
 }
 
-.dp-option--hinted {
-  align-items: flex-start;
+.dp-group-label--row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
 }
 
-.dp-option--hinted input {
-  margin-top: 0.2rem;
+.dp-group-label--row a {
+  font-size: var(--font-size-xs);
+  color: var(--color-brand);
+  font-weight: var(--font-weight-normal);
 }
 
-.dp-option-hint {
-  display: block;
+.dp-group-hint {
   font-size: var(--font-size-xs);
   color: var(--color-text-tertiary);
+  margin: -0.3rem 0 0.2rem;
 }
 
 .dp-option--disabled {
@@ -69,8 +115,8 @@
 }
 
 .dp-fields {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
   gap: 0.75rem;
   margin-bottom: 1.25rem;
 }
@@ -92,11 +138,6 @@
   font-size: var(--font-size-xs);
   color: var(--color-danger, #c0392b);
   font-weight: var(--font-weight-normal);
-}
-
-.dp-field-hint {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-tertiary);
 }
 
 .dp-input {

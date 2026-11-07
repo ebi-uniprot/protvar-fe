@@ -6,7 +6,7 @@ The **Download Panel** opens as a side drawer from the **Download** button in th
 
 ## What you choose
 
-**Always included**
+**Columns**
 
 The variant and mapping columns, with all the table's scores, are always in the file. Tick **Only columns shown in the table** to keep just the columns of the current table view (change it with **View** in the table), plus the input and notes.
 
@@ -15,7 +15,7 @@ The variant and mapping columns, with all the table's scores, are always in the 
 Tick the groups you want added:
 
 - **Protein function** — UniProt features, comments and entry details.
-- **Predictions** — conservation, ESM1b, FoldX, pockets and interfaces.
+- **More predictions** — conservation, ESM1b, FoldX, Missense3D, pockets and interfaces.
 - **Population** — gnomAD, cross-references, diseases and co-located variants.
 - **Structures** — experimental PDB structures covering the residue.
 

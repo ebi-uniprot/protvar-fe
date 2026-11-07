@@ -20,11 +20,11 @@ The columns come in groups, in this order. Variant and Mapping are always in the
 - [Population columns](#download-format:population-observations-columns)
 - [Structure columns](#download-format:structure-annotations-columns)
 
-With **Only columns shown in the table**, the Variant and Mapping groups keep only the columns the result table shows, plus Input and Notes. Known_in, UniProt_curated and Transcripts have no table column, so they are left out.
+With **Only columns shown in the table**, the Variant and Mapping groups keep only the columns the result table shows, plus Input and Notes. Transcripts has no table column, so it is left out.
 
 ## <a id="download-format:variant-columns"></a>Variant columns
 
-Always in the file: the line as entered, the genomic variant it was read as, and where the variant is known from.
+Always in the file: the line as entered and the genomic variant it was read as.
 
 - [Input](#download-format:user-input)
 - [Notes](#download-format:mapping-notes)
@@ -33,8 +33,6 @@ Always in the file: the line as entered, the genomic variant it was read as, and
 - [Position](#download-format:coordinate)
 - [Ref](#download-format:reference-allele)
 - [Alt](#download-format:alternative-allele)
-- [Known_in](#download-format:known-in)
-- [UniProt_curated](#download-format:uniprot-curated)
 
 <a id="download-format:user-input"></a>**Input:** This field replicates the user input with no changes to the format. Users can use this field to match their input data to the annotated output file.
 
@@ -58,10 +56,6 @@ Always in the file: the line as entered, the genomic variant it was read as, and
 <a id="download-format:reference-allele"></a>**Ref:** This is the reference allele. It is defined by the nucleotide identity at that coordinate in the reference genome build. If the user inputted nucleotide differs from the reference build the reference build nucleotide identity will be shown and not the user inputted identity. This conflict will be noted in the "Notes" column. Any user inputs except 'A', 'G', 'C', 'T' will be flagged in the "Notes" column.
 
 <a id="download-format:alternative-allele"></a>**Alt:** This is the alternative allele and will always match the user input. Any user inputs except 'A', 'G', 'C', 'T' will be flagged in the "Notes" column.
-
-<a id="download-format:known-in"></a>**Known_in:** The sources the variant is known from, separated by ";": dbSNP, ClinVar, COSMIC, gnomAD. "N/A" when none lists it.
-
-<a id="download-format:uniprot-curated"></a>**UniProt_curated:** The UniProt curated (humsavar) categories of the variant on this protein, separated by ";": LP/P (likely pathogenic or pathogenic), LB/B (likely benign or benign), US (uncertain significance). A variant can have several, as the category is per disease. "N/A" when UniProt has not curated it.
 
 ## <a id="download-format:mapping-columns"></a>Mapping columns
 
@@ -165,11 +159,12 @@ Added with **Protein function**: UniProt knowledge about the protein and residue
 
 ## <a id="download-format:predictions-columns"></a>Prediction columns
 
-Added with **Predictions**: computed residue and structure predictions.
+Added with **More predictions**: computed residue and structure predictions.
 
 - [Conservation](#download-format:conservation-score)
 - [ESM1b](#download-format:esm1b-score)
 - [FoldX](#download-format:foldx-prediction)
+- [Missense3D](#download-format:missense3d)
 - [Pockets](#download-format:predicted-pockets)
 - [Interfaces](#download-format:predicted-interactions)
 
@@ -178,6 +173,8 @@ Added with **Predictions**: computed residue and structure predictions.
 <a id="download-format:esm1b-score"></a>**ESM1b:** A 650-million-parameter protein language model trained on 250 million protein sequences across all organisms. It is log 10 scaled and the category boundaries can be seen in the ProtVar legend. Higher scores equate to variants with a higher probability of deleteriousness. [ESM1b paper](https://www.nature.com/articles/s41588-023-01465-0)
 
 <a id="download-format:foldx-prediction"></a>**FoldX:** The predicted Gibbs free energy change of the protein when the variant is introduced as calculated using the FoldX algorithm: [foldX website](https://foldxsuite.crg.eu/). Given as "foldxDdg:…;plddt:…", multiple predictions separated by "|".
+
+<a id="download-format:missense3d"></a>**Missense3D:** The Missense3D prediction of the structural effect of the variant on the AlphaFold model, followed by the damaging feature in brackets where there is one. See [Predictions](#predictions:m3d).
 
 <a id="download-format:predicted-pockets"></a>**Pockets:** This shows the residues which are predicted to form a pocket in the AlphaFold modelled protein. Each pocket is given as "pocket_id:…;rad_gyration:…;energy_per_vol:…;buriedness:…;resid:…;mean_plddt:…;score:…" and pockets are separated by "|".
 
