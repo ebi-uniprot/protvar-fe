@@ -75,14 +75,14 @@ function StructureData(props: StructureDataProps) {
 
     getStructureData(proteinStructureUri)
       .then((res) => {
-        // Sort PDB entries by resolution ascending (best quality first); NMR /
-        // electron microscopy entries (null resolution) go to the end. This
+        // Sort PDB entries by resolution ascending (best quality first); entries
+        // without one (NMR comes back as 0.0, sometimes null) go to the end. This
         // single source of ordering covers both the table display and the
         // default-selected structure (pdbeData[0]).
         const sorted = (res.data ?? []).slice().sort((a, b) => {
-          if (a.resolution == null && b.resolution == null) return 0;
-          if (a.resolution == null) return 1;
-          if (b.resolution == null) return -1;
+          if (!a.resolution && !b.resolution) return 0;
+          if (!a.resolution) return 1;
+          if (!b.resolution) return -1;
           return a.resolution - b.resolution;
         });
         if (!isCancelled) setPdbeData(sorted);
