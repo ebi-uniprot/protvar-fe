@@ -1,6 +1,7 @@
-import { useRef } from "react";
+import { MutableRefObject } from "react";
 import { pdbSettings, afSettings, interactionSettings } from "./molstarSettings";
-import {CYAN, MAGENTA, WHITE, YELLOW} from "../../../types/Colors";
+import {CYAN, MAGENTA, WHITE, YELLOW} from "../../../../../types/Colors";
+import {PvStructureViewer} from "../PvStructureViewer";
 
 const VARIANT_HIGHLIGHT_COLOR = YELLOW;
 const CHAIN_HIGHLIGHT_COLOR = MAGENTA;
@@ -8,61 +9,67 @@ const POCKET_HIGHLIGHT_COLOR = MAGENTA;
 const INTERFACE_A_HIGHLIGHT_COLOR = MAGENTA;
 const INTERFACE_B_HIGHLIGHT_COLOR = CYAN;
 
-export function useMolstarController() {
-  const ref = useRef<any>(null);
-  const loadCompleteSubscription = useRef<any>(null);
+/** PvStructureViewer backed by the <pdbe-molstar> web component held in `ref`. */
+export class MolstarAdapter implements PvStructureViewer {
+  private loadCompleteSubscription: any = null;
+
+  constructor(private readonly ref: MutableRefObject<any>) {}
+
+  private get viewer() {
+    return this.ref.current?.viewerInstance;
+  }
 
   // Safe wrapper for clearSelection - handles case where viewer isn't ready
-  const safeClearSelection = async () => {
+  private async safeClearSelection() {
     try {
-      await ref.current?.viewerInstance.visual.clearSelection();
+      await this.viewer?.visual.clearSelection();
     } catch (err) {
       // Viewer not fully ready - skip clearSelection
       // Selection will be overwritten by next select() call anyway
       console.debug('clearSelection skipped - viewer not ready');
     }
-  };
+  }
 
-  const update = async (opts: any) => {
-    await safeClearSelection();
-    await ref.current?.viewerInstance.visual.update(opts, true);
-  };
+  private async update(opts: any) {
+    await this.safeClearSelection();
+    await this.viewer?.visual.update(opts, true);
+  }
 
-  const executeWhenLoaded = async (action: () => Promise<void>) => {
+  async executeWhenLoaded(action: () => Promise<void>) {
     // Unsubscribe only OUR previous subscription, not all observers
-    if (loadCompleteSubscription.current) {
-      loadCompleteSubscription.current.unsubscribe();
-      loadCompleteSubscription.current = null;
+    if (this.loadCompleteSubscription) {
+      this.loadCompleteSubscription.unsubscribe();
+      this.loadCompleteSubscription = null;
     }
 
     // Subscribe to loadComplete event and store the subscription
-    loadCompleteSubscription.current = await ref.current?.viewerInstance.events.loadComplete.subscribe(async () => {
+    this.loadCompleteSubscription = await this.viewer?.events.loadComplete.subscribe(async () => {
       try {
         await action();
       } catch (err) {
         console.error('Error executing action after load:', err);
       }
     });
-  };
+  }
 
-  const loadPdb = async (pdbId: string, pos: number, chain?: string) => {
-    await update(pdbSettings(pdbId));
-    await executeWhenLoaded(() => highlightVariant(pos, chain));
-  };
+  async loadPdb(pdbId: string, pos: number, chain?: string) {
+    await this.update(pdbSettings(pdbId));
+    await this.executeWhenLoaded(() => this.highlightVariant(pos, chain));
+  }
 
-  const loadAf = async (url: string, pos: number) => {
-    await update(afSettings(url));
-    await executeWhenLoaded(() => highlightVariant(pos));
-  };
+  async loadAf(url: string, pos: number) {
+    await this.update(afSettings(url));
+    await this.executeWhenLoaded(() => this.highlightVariant(pos));
+  }
 
-  const loadInteraction = async (url: string, pos: number, chain: string) => {
-    await update(interactionSettings(url));
-    await executeWhenLoaded(() => highlightVariant(pos, chain));
-  };
+  async loadInteraction(url: string, pos: number, chain: string) {
+    await this.update(interactionSettings(url));
+    await this.executeWhenLoaded(() => this.highlightVariant(pos, chain));
+  }
 
-  const highlightVariant = async (pos: number, chain?: string) => {
-    await safeClearSelection();
-    await ref.current?.viewerInstance.visual.select({
+  async highlightVariant(pos: number, chain?: string) {
+    await this.safeClearSelection();
+    await this.viewer?.visual.select({
       data: [{
           start_residue_number: pos,
           end_residue_number: pos,
@@ -72,12 +79,12 @@ export function useMolstarController() {
         },
       ],
     });
-  };
+  }
 
   // Includes variant highlight
-  const highlightChain = async (pos: number, chain: string) => {
-    await safeClearSelection();
-    await ref.current?.viewerInstance.visual.select({
+  async highlightChain(pos: number, chain: string) {
+    await this.safeClearSelection();
+    await this.viewer?.visual.select({
       data: [{
           struct_asym_id: chain,
           color: CHAIN_HIGHLIGHT_COLOR
@@ -94,8 +101,8 @@ export function useMolstarController() {
   }
 
   // Includes variant highlight (spacefill)
-  const highlightPocket = async (aaPos: number, pocketResids: number[]) => {
-    await safeClearSelection();
+  async highlightPocket(aaPos: number, pocketResids: number[]) {
+    await this.safeClearSelection();
     let d = pocketResids.filter((val) => val !== aaPos).map((p) => {
       return {
         start_residue_number: p,
@@ -112,16 +119,16 @@ export function useMolstarController() {
         representationColor: VARIANT_HIGHLIGHT_COLOR
       }
     )
-    await ref.current?.viewerInstance.visual.select({
+    await this.viewer?.visual.select({
       data: d,
       nonSelectedColor: WHITE
     })
   }
 
   // Includes variant highlight (spacefill)
-  const highlightInterface = async (aresids: number[], bresids: number[], pos: number, protChain: string) => {
-    await safeClearSelection();
-    await ref.current?.viewerInstance.visual.select({
+  async highlightInterface(aresids: number[], bresids: number[], pos: number, protChain: string) {
+    await this.safeClearSelection();
+    await this.viewer?.visual.select({
       data: aresids.filter((val) => val !== pos).map((p) => {
         return {
           struct_asym_id: 'A',
@@ -158,14 +165,14 @@ export function useMolstarController() {
   }
 
   // Zooms to variant and highlights it (variant highlight is included)
-  const zoomToVariant = async (pos: number, chain?: string) => {
-    await safeClearSelection();
-    await ref.current?.viewerInstance.visual.focus([{
+  async zoomToVariant(pos: number, chain?: string) {
+    await this.safeClearSelection();
+    await this.viewer?.visual.focus([{
       start_residue_number: pos,
       end_residue_number: pos,
       ...chain && {struct_asym_id: chain}
     }])
-    await ref.current?.viewerInstance.visual.select({
+    await this.viewer?.visual.select({
       data: [{
         start_residue_number: pos,
         end_residue_number: pos,
@@ -176,29 +183,13 @@ export function useMolstarController() {
     })
   }
 
-  const resetDefault = async (pos: number, chain?: string) => {
-    await safeClearSelection();
-    await ref.current?.viewerInstance.visual.reset({camera: true});
-    await highlightVariant(pos, chain);
+  async resetDefault(pos: number, chain?: string) {
+    await this.safeClearSelection();
+    await this.viewer?.visual.reset({camera: true});
+    await this.highlightVariant(pos, chain);
   }
 
-  const reset = async () => {
-    await ref.current?.viewerInstance.visual.reset({ camera: true });
-  };
-
-  return {
-    ref,
-    update,
-    executeWhenLoaded,
-    loadPdb,
-    loadAf,
-    loadInteraction,
-    highlightVariant,
-    highlightChain,
-    highlightPocket,
-    highlightInterface,
-    zoomToVariant,
-    resetDefault,
-    reset
-  };
+  async reset() {
+    await this.viewer?.visual.reset({ camera: true });
+  }
 }

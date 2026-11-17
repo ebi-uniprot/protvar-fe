@@ -1,91 +1,58 @@
 /**
- * Minimal molstar-core viewer for a single small molecule (one amino-acid SDF).
+ * Minimal 3Dmol.js viewer for a single small molecule (one amino-acid SDF),
+ * rendered as ball-and-stick on the given canvas.
  *
- * Deliberately avoids the heavy `pdbe-molstar` plugin: it boots a trimmed
- * `PluginContext` (canvas only, no React UI) and renders the residue as
- * ball-and-stick. molstar is imported dynamically so it is code-split out of
- * the main bundle and only loaded when the 3D view is actually opened.
+ * Uses 3Dmol rather than molstar: a 3Dmol viewer is just a canvas, so two of
+ * them start instantly, and its chunk is ~1/4 the size of the molstar-core one
+ * (pdbe-molstar ships its own prebuilt molstar, which this view can't share).
+ * 3Dmol is imported dynamically so it is code-split out of the main bundle and
+ * only loaded when the 3D view is actually opened.
  */
-import type { PluginContext } from 'molstar/lib/mol-plugin/context';
-import type { Vec3 } from 'molstar/lib/mol-math/linear-algebra';
+import type { GLViewer } from '3dmol';
 
 export class ResidueViewer {
-  private plugin: PluginContext | null = null;
-  // Canonical "home" orientation (up +Y, looking down -Z) used for reset.
-  private up: Vec3 | null = null;
-  private dir: Vec3 | null = null;
+  private viewer: GLViewer | null = null;
+  // Initial framing (the SDFs are pre-aligned to a canonical pose), for reset.
+  private home: any[] | null = null;
 
   async mount(canvas: HTMLCanvasElement, container: HTMLDivElement): Promise<void> {
-    const [{ PluginContext }, { DefaultPluginSpec }, { Color }, linAlg] = await Promise.all([
-      import('molstar/lib/mol-plugin/context'),
-      import('molstar/lib/mol-plugin/spec'),
-      import('molstar/lib/mol-util/color'),
-      import('molstar/lib/mol-math/linear-algebra'),
-    ]);
-    this.up = linAlg.Vec3.create(0, 1, 0);
-    this.dir = linAlg.Vec3.create(0, 0, -1);
-    // Trim behaviors: we only render a static ball-and-stick, so the computed
-    // custom-prop behaviors (ASA, interactions, …) aren't needed. Dropping them
-    // also avoids the "Symbol … already added" warnings that come from two
-    // plugin instances re-registering the same global symbols, and speeds init.
-    const spec = DefaultPluginSpec();
-    spec.behaviors = [];
-    const plugin = new PluginContext(spec);
-    await plugin.init();
-    if (!plugin.initViewer(canvas, container)) {
-      plugin.dispose();
-      throw new Error('Could not initialise the 3D viewer.');
-    }
-    // Background follows the active theme (navy in dark, white otherwise);
-    // hide the orientation axes gizmo. (PD discriminated unions don't type
-    // cleanly here, hence the cast.)
+    const $3Dmol = await import('3dmol');
+    // Background follows the active theme (navy in dark, white otherwise).
     const dark = document.documentElement.getAttribute('data-theme') === 'dark';
-    plugin.canvas3d?.setProps({
-      renderer: { backgroundColor: Color(dark ? 0x0e2438 : 0xffffff) },
-      camera: { helper: { axes: { name: 'off', params: {} } } },
-    } as any);
-    this.plugin = plugin;
+    this.viewer = $3Dmol.createViewer(container, {
+      canvas,
+      backgroundColor: dark ? '#0e2438' : '#ffffff',
+    });
+    if (!this.viewer) throw new Error('Could not initialise the 3D viewer.');
   }
 
   async load(url: string): Promise<void> {
-    const plugin = this.plugin;
-    if (!plugin) return;
-    await plugin.clear();
-    const data = await plugin.builders.data.download({ url }, { state: { isGhost: true } });
-    const trajectory = await plugin.builders.structure.parseTrajectory(data, 'sdf');
-    const model = await plugin.builders.structure.createModel(trajectory);
-    const structure = await plugin.builders.structure.createStructure(model);
-    await plugin.builders.structure.representation.addRepresentation(structure, {
-      type: 'ball-and-stick',
-    });
-    plugin.canvas3d?.requestCameraReset();
+    const viewer = this.viewer;
+    if (!viewer) return;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`Could not load the 3D structure (${res.status}).`);
+    const sdf = await res.text();
+    if (this.viewer !== viewer) return; // disposed while fetching
+    viewer.clear();
+    viewer.addModel(sdf, 'sdf');
+    viewer.setStyle({}, { stick: { radius: 0.12 }, sphere: { scale: 0.2 } });
+    viewer.zoomTo();
+    viewer.render();
+    this.home = viewer.getView();
   }
 
   setSpin(on: boolean): void {
-    this.plugin?.canvas3d?.setProps({
-      trackball: { animate: on ? { name: 'spin', params: { speed: 1 } } : { name: 'off', params: {} } },
-    } as any);
+    this.viewer?.spin(on ? 'y' : false);
   }
 
-  /**
-   * Reset to the initial pose. requestCameraReset only re-centres/zooms and
-   * keeps the current rotation, so we recompute the focus with the canonical
-   * orientation to also undo any spin/drag.
-   */
+  /** Reset to the initial pose (undoes any spin/drag). */
   reset(): void {
-    const canvas3d = this.plugin?.canvas3d;
-    if (!canvas3d || !this.up || !this.dir) return;
-    const sphere = canvas3d.boundingSphere;
-    if (sphere.radius <= 0) {
-      canvas3d.requestCameraReset({ durationMs: 250 });
-      return;
-    }
-    const snapshot = canvas3d.camera.getFocus(sphere.center, sphere.radius, this.up, this.dir);
-    canvas3d.camera.setState(snapshot, 250);
+    if (this.viewer && this.home) this.viewer.setView(this.home);
   }
 
   dispose(): void {
-    this.plugin?.dispose();
-    this.plugin = null;
+    this.viewer?.spin(false);
+    this.viewer?.clear();
+    this.viewer = null;
   }
 }

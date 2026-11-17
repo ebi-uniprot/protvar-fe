@@ -1,6 +1,6 @@
 /**
  * Side-by-side ball-and-stick comparison of the reference and alternate amino
- * acid, each in its own minimal molstar-core viewer. Auto-spin can be toggled;
+ * acid, each in its own minimal 3Dmol viewer. Auto-spin can be toggled;
  * bumping resetNonce returns both to their initial framing. Presentational:
  * structures come from the bundled SDF assets via residueSdfUrl.
  */

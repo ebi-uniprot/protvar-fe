@@ -1,7 +1,7 @@
 import React, {useEffect, useState, useRef, useCallback} from 'react';
 import PdbeStructures from './tables/PdbeStructures';
 import PredictedStructures from './tables/PredictedStructures';
-import PdbeMolstar from "./viewer/PdbeMolstar";
+import PdbeMolstar from "./viewer/molstar/PdbeMolstar";
 import InteractingStructures from "./tables/InteractingStructures";
 import Loader from "../../elements/Loader";
 import {getPredictedStructure} from "../../../services/AlphafoldService";
@@ -15,7 +15,7 @@ import {ShareAnnotationIcon} from "../common/ShareLink";
 import {NoAnnotationData} from "../common/NoAnnotationData";
 import {hasAlphafillStructure} from "../../../services/AlphafillService";
 import {Interaction, Pocket} from "../../../types/Prediction";
-import {useMolstarController} from "./useMolstarController";
+import {useStructureViewer} from "./useStructureViewer";
 import {useStructureUrl} from "./useStructureUrl";
 import {AFConfidencePanel} from "./viewer/AFConfidencePanel";
 import {ALPHAFILL_URL} from "../../../constants/ExternalUrls";
@@ -39,7 +39,7 @@ export type PredictedStructure = AlphafoldResponseElement | AlphaFillStructure;
 
 function StructureData(props: StructureDataProps) {
   const { isoFormAccession, aaPosition, variantAA, proteinStructureUri } = props;
-  const molstar = useMolstarController();
+  const {viewer, viewerRef} = useStructureViewer();
   const urlParams = useStructureUrl();
 
   const [pdbeData, setPdbeData] = useState<PdbeStructure[]>([]);
@@ -139,51 +139,51 @@ function StructureData(props: StructureDataProps) {
 
     // Don't call update() - component is rendering with structure for the first time
     // Just subscribe to loadComplete and apply actions when ready
-    await molstar.executeWhenLoaded(async () => {
+    await viewer.executeWhenLoaded(async () => {
       try {
         if ("pdbId" in selected) {
           if (params.zoom) {
-            await molstar.zoomToVariant(selected.start, selected.chainId);
+            await viewer.zoomToVariant(selected.start, selected.chainId);
           } else if (params.chain) {
             const chainData = pdbeData.filter(d => d.pdbId === selected.pdbId);
             const targetChain = chainData.find(c => c.chainId.toUpperCase() === params.chain!.toUpperCase());
             if (targetChain) {
-              await molstar.highlightChain(targetChain.start, targetChain.chainId);
+              await viewer.highlightChain(targetChain.start, targetChain.chainId);
             }
           } else {
             // apply default highlight
-            await molstar.highlightVariant(selected.start, selected.chainId);
+            await viewer.highlightVariant(selected.start, selected.chainId);
           }
         } else if ("cifUrl" in selected) {
           if (params.zoom) {
-            await molstar.zoomToVariant(aaPosition);
+            await viewer.zoomToVariant(aaPosition);
           } else if (params.pocket) {
             const pocketMatch = params.pocket.match(/^p(\d+)$/i);
             if (pocketMatch) {
               const pocketId = parseInt(pocketMatch[1]);
               const pocket = pocketData.find(p => p.pocketId === pocketId);
               if (pocket) {
-                await molstar.highlightPocket(aaPosition, pocket.resid);
+                await viewer.highlightPocket(aaPosition, pocket.resid);
               }
             }
           } else {
-            await molstar.highlightVariant(aaPosition);
+            await viewer.highlightVariant(aaPosition);
           }
         } else if ("a" in selected && "b" in selected) {
           const protChain = selected.a === isoFormAccession ? "A" : "B";
           if (params.zoom) {
-            await molstar.zoomToVariant(aaPosition, protChain);
+            await viewer.zoomToVariant(aaPosition, protChain);
           } else if (params.interface) {
-            await molstar.highlightInterface(selected.aresidues, selected.bresidues, aaPosition, protChain);
+            await viewer.highlightInterface(selected.aresidues, selected.bresidues, aaPosition, protChain);
           } else {
-            await molstar.highlightVariant(aaPosition, protChain);
+            await viewer.highlightVariant(aaPosition, protChain);
           }
         }
       } catch (err) {
         console.error("Error applying URL actions:", err);
       }
     });
-  }, [selected, urlParams, molstar, pdbeData, pocketData, aaPosition, isoFormAccession]);
+  }, [selected, urlParams, viewer, pdbeData, pocketData, aaPosition, isoFormAccession]);
 
   // Select structure from URL or default (don't wait for viewer)
   useEffect(() => {
@@ -299,14 +299,14 @@ function StructureData(props: StructureDataProps) {
       onClick: () => {
         if ("pdbId" in selected) {
           urlParams.updateActions({ zoom: true, chain: null });
-          molstar.zoomToVariant(selected.start, selected.chainId);
+          viewer.zoomToVariant(selected.start, selected.chainId);
         } else if ("cifUrl" in selected) {
           urlParams.updateActions({ zoom: true, pocket: null });
-          molstar.zoomToVariant(aaPosition);
+          viewer.zoomToVariant(aaPosition);
         } else if ("a" in selected && "b" in selected) {
           const protChain = selected.a === isoFormAccession ? "A" : "B";
           urlParams.updateActions({ zoom: true, interface: null });
-          molstar.zoomToVariant(aaPosition, protChain);
+          viewer.zoomToVariant(aaPosition, protChain);
         }
       },
       variant: 'primary' as const
@@ -322,7 +322,7 @@ function StructureData(props: StructureDataProps) {
           label,
           onClick: () => {
             urlParams.updateActions({ chain: chain.chainId, zoom: null });
-            molstar.highlightChain(chain.start, chain.chainId);
+            viewer.highlightChain(chain.start, chain.chainId);
           }
         });
       });
@@ -334,7 +334,7 @@ function StructureData(props: StructureDataProps) {
           label,
           onClick: () => {
             urlParams.updateActions({ pocket: `p${pocket.pocketId}`, zoom: null });
-            molstar.highlightPocket(aaPosition, pocket.resid);
+            viewer.highlightPocket(aaPosition, pocket.resid);
           }
         });
       });
@@ -345,7 +345,7 @@ function StructureData(props: StructureDataProps) {
         onClick: () => {
           const protChain = selected.a === isoFormAccession ? "A" : "B";
           urlParams.updateActions({ interface: true, zoom: null });
-          molstar.highlightInterface(selected.aresidues, selected.bresidues, aaPosition, protChain);
+          viewer.highlightInterface(selected.aresidues, selected.bresidues, aaPosition, protChain);
         }
       });
     }
@@ -356,14 +356,14 @@ function StructureData(props: StructureDataProps) {
       onClick: () => {
         if ("pdbId" in selected) {
           urlParams.updateActions({ chain: null, zoom: null });
-          molstar.resetDefault(selected.start, selected.chainId);
+          viewer.resetDefault(selected.start, selected.chainId);
         } else if ("cifUrl" in selected) {
           urlParams.updateActions({ pocket: null, zoom: null });
-          molstar.resetDefault(aaPosition);
+          viewer.resetDefault(aaPosition);
         } else if ("a" in selected && "b" in selected) {
           const protChain = selected.a === isoFormAccession ? "A" : "B";
           urlParams.updateActions({ interface: null, zoom: null });
-          molstar.resetDefault(aaPosition, protChain);
+          viewer.resetDefault(aaPosition, protChain);
         }
       },
       variant: 'reset' as const
@@ -417,7 +417,7 @@ function StructureData(props: StructureDataProps) {
                     pdbeData={pdbeData}
                     selectedPdbId={"pdbId" in selected ? selected.pdbId : ""}
                     setSelected={setSelected}
-                    molstar={molstar}
+                    viewer={viewer}
                     urlParams={urlParams}
                   />
                 </div>
@@ -438,7 +438,7 @@ function StructureData(props: StructureDataProps) {
                       }}
                       aaPos={aaPosition}
                       pocketData={pocketData}
-                      molstar={molstar}
+                      viewer={viewer}
                       urlParams={urlParams}
                     />
                   </div>
@@ -454,7 +454,7 @@ function StructureData(props: StructureDataProps) {
                         setIsPaeOpen(false);
                       }}
                       aaPos={aaPosition}
-                      molstar={molstar}
+                      viewer={viewer}
                       urlParams={urlParams}
                     />
                   </div>
@@ -465,7 +465,7 @@ function StructureData(props: StructureDataProps) {
             <div className="annotation-viewer-column">
               <PdbeMolstar
                 selected={selected}
-                pdbeRef={molstar.ref}
+                pdbeRef={viewerRef}
                 controlActions={getViewerActions()}
               />
               <AFConfidencePanel

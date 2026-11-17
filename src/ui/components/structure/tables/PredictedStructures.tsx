@@ -5,7 +5,7 @@ import {PredictedStructure} from "../StructureData";
 import {HelpButton} from "../../help/HelpButton";
 import {HelpContent} from "../../help/HelpContent";
 import {Pocket} from "../../../../types/Prediction";
-import {useMolstarController} from "../useMolstarController";
+import {PvStructureViewer} from "../viewer/PvStructureViewer";
 import {useStructureUrl} from "../useStructureUrl";
 import {ExtLink} from "../../common/Link";
 
@@ -17,7 +17,7 @@ interface PredictedStructureTableProps {
   setSelected: (item: PredictedStructure) => void;
   aaPos: number;
   pocketData: Pocket[];
-  molstar: ReturnType<typeof useMolstarController>;
+  viewer: PvStructureViewer;
   urlParams: ReturnType<typeof useStructureUrl>;
 }
 
@@ -28,7 +28,7 @@ function PredictedStructures({
   setSelected,
   aaPos,
   pocketData,
-  molstar,
+  viewer,
   urlParams,
 }: PredictedStructureTableProps) {
   const cards: Array<React.JSX.Element> = [];
@@ -57,7 +57,7 @@ function PredictedStructures({
           setSelected(predStruc);
           urlParams.setStructure(isAlphaFill ? "alphafill" : "alphafold");
           urlParams.clearIncompatibleActions(isAlphaFill ? "alphafill" : "alphafold");
-          molstar.loadAf(predStruc.cifUrl, aaPos);
+          viewer.loadAf(predStruc.cifUrl, aaPos);
         }}
       >
         <span className="predicted-card-name">

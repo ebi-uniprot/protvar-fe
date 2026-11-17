@@ -4,7 +4,7 @@ import {HelpContent} from "../../help/HelpContent";
 import {HelpButton} from "../../help/HelpButton";
 import React from "react";
 import {Interaction} from "../../../../types/Prediction";
-import {useMolstarController} from "../useMolstarController";
+import {PvStructureViewer} from "../viewer/PvStructureViewer";
 import {useStructureUrl} from "../useStructureUrl";
 
 
@@ -14,7 +14,7 @@ interface InteractingStructureTableProps {
   selectedInteraction: string;
   setSelected: (item: Interaction) => void;
   aaPos: number;
-  molstar: ReturnType<typeof useMolstarController>;
+  viewer: PvStructureViewer;
   urlParams: ReturnType<typeof useStructureUrl>;
 }
 
@@ -24,7 +24,7 @@ function InteractingStructures({
   selectedInteraction,
   setSelected,
   aaPos,
-  molstar,
+  viewer,
   urlParams,
 }: InteractingStructureTableProps) {
   const rows: Array<React.JSX.Element> = [];
@@ -44,7 +44,7 @@ function InteractingStructures({
           setSelected(i);
           urlParams.setStructure("interaction", rowId);
           urlParams.clearIncompatibleActions("interaction");
-          molstar.loadInteraction(modelUrl, aaPos, protChain);
+          viewer.loadInteraction(modelUrl, aaPos, protChain);
         }}
       >
         <span className="interaction-protein" title={`Residues: ${formatRange(i.aresidues)}`}>{i.a}</span>

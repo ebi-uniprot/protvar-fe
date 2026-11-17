@@ -1,11 +1,11 @@
-import { viewerBgColor } from "../../../types/Colors";
+import { viewerBgColor } from "../../../../../types/Colors";
 
 // Computed per call so the background follows the active theme (a structure
 // reload re-applies these settings).
 const baseSettings = () => ({
   bgColor: viewerBgColor(),
   hideControls: true,
-  hideWater: true,
+  hideStructure: ["water"],
 });
 
 export const pdbSettings = (pdbId: string) => ({

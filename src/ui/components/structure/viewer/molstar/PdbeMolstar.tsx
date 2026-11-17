@@ -1,13 +1,13 @@
 import React from "react";
 import "pdbe-molstar/build/pdbe-molstar-component";
 import "pdbe-molstar/build/pdbe-molstar-light.css";
-import Loader from "../../../elements/Loader";
-import {PdbeStructure} from "../../../../types/PdbeStructure";
-import {API_URL} from "../../../../constants/const";
-import {PredictedStructure} from "../StructureData";
-import {Interaction} from "../../../../types/Prediction";
-import {viewerBgColor} from "../../../../types/Colors";
-import {ViewerControls} from "./ViewerControls";
+import Loader from "../../../../elements/Loader";
+import {PdbeStructure} from "../../../../../types/PdbeStructure";
+import {API_URL} from "../../../../../constants/const";
+import {PredictedStructure} from "../../StructureData";
+import {Interaction} from "../../../../../types/Prediction";
+import {viewerBgColor} from "../../../../../types/Colors";
+import {ViewerControls} from "../ViewerControls";
 
 interface PdbeMolstarProps {
   selected: PdbeStructure | PredictedStructure | Interaction;
@@ -66,7 +66,6 @@ const PdbeMolstar = ({ selected, pdbeRef, controlActions = [] }: PdbeMolstarProp
         hide-controls="true"
         custom-data-url={modelUrl}
         custom-data-format="pdb"
-        alphafold-view="true"
         hide-water="true"
         sequence-panel="true"
       />

@@ -23,7 +23,7 @@ import React, { Suspense, useState } from 'react';
 import { fullAminoAcidName, getKeyValue } from '../../../utills/Util';
 import { hasResidueSdf } from './aminoAcid/residueSdf';
 
-// Lazy so molstar (heavy) is only loaded when the user opens the 3D view.
+// Lazy so 3Dmol is only loaded when the user opens the 3D view.
 const AminoAcidCompare = React.lazy(() => import('./aminoAcid/AminoAcidCompare'));
 
 const aminoAcids = {

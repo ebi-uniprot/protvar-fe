@@ -2,7 +2,7 @@ import { PDB_URL_INTERFACE_BY_PROTEIN } from '../../../../constants/ExternalUrls
 import {PdbeStructure} from "../../../../types/PdbeStructure";
 import { groupBy } from "../../../../utills/Util";
 import React from "react";
-import {useMolstarController} from "../useMolstarController";
+import {PvStructureViewer} from "../viewer/PvStructureViewer";
 import {useStructureUrl} from "../useStructureUrl";
 import {ExtLink} from "../../common/Link";
 
@@ -11,11 +11,11 @@ interface PdbeStructureTableProps {
   pdbeData: PdbeStructure[];
   selectedPdbId: string;
   setSelected: any;
-  molstar: ReturnType<typeof useMolstarController>;
+  viewer: PvStructureViewer;
   urlParams: ReturnType<typeof useStructureUrl>;
 }
 
-function PdbeStructures({ isoFormAccession, pdbeData, selectedPdbId, setSelected, molstar, urlParams }: PdbeStructureTableProps) {
+function PdbeStructures({ isoFormAccession, pdbeData, selectedPdbId, setSelected, viewer, urlParams }: PdbeStructureTableProps) {
   const grouped = groupBy(pdbeData, "pdbId");
   const count = Object.keys(grouped).length;
   const cards: Array<React.JSX.Element> = [];
@@ -48,7 +48,7 @@ function PdbeStructures({ isoFormAccession, pdbeData, selectedPdbId, setSelected
           setSelected(first);
           urlParams.setStructure("pdb", first.pdbId);
           urlParams.clearIncompatibleActions("pdb");
-          molstar.loadPdb(first.pdbId, first.start, first.chainId);
+          viewer.loadPdb(first.pdbId, first.start, first.chainId);
         }}
       >
         <span className="pdb-card-id">{id}</span>
