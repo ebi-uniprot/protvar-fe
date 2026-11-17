@@ -7,19 +7,20 @@ import {API_URL} from "../../../../../constants/const";
 import {PredictedStructure} from "../../StructureData";
 import {Interaction} from "../../../../../types/Prediction";
 import {viewerBgColor} from "../../../../../types/Colors";
-import {ViewerControls} from "../ViewerControls";
+import {HOVER_COLOR} from "../viewerColors";
 
 interface PdbeMolstarProps {
   selected: PdbeStructure | PredictedStructure | Interaction;
   pdbeRef: any;
-  controlActions?: Array<{
-    label: string;
-    onClick: () => void;
-    variant?: 'primary' | 'reset';
-  }>;
+  /** Colour key shown under the controls. */
+  legend?: React.ReactNode;
+  /** Controls shown under the viewer. */
+  controls?: React.ReactNode;
+  /** Floats over the 3D view (e.g. the PAE image), so it never shifts the page. */
+  overlay?: React.ReactNode;
 }
 
-const PdbeMolstar = ({ selected, pdbeRef, controlActions = [] }: PdbeMolstarProps) => {
+const PdbeMolstar = ({ selected, pdbeRef, legend, controls, overlay }: PdbeMolstarProps) => {
   const bg = viewerBgColor();
   let pdbeComponent = <Loader />;
 
@@ -31,6 +32,9 @@ const PdbeMolstar = ({ selected, pdbeRef, controlActions = [] }: PdbeMolstarProp
         bg-color-r={String(bg.r)}
         bg-color-g={String(bg.g)}
         bg-color-b={String(bg.b)}
+        highlight-color-r={String(HOVER_COLOR.r)}
+        highlight-color-g={String(HOVER_COLOR.g)}
+        highlight-color-b={String(HOVER_COLOR.b)}
         hide-controls="true"
         molecule-id={selected.pdbId}
         alphafold-view="true"
@@ -46,6 +50,9 @@ const PdbeMolstar = ({ selected, pdbeRef, controlActions = [] }: PdbeMolstarProp
         bg-color-r={String(bg.r)}
         bg-color-g={String(bg.g)}
         bg-color-b={String(bg.b)}
+        highlight-color-r={String(HOVER_COLOR.r)}
+        highlight-color-g={String(HOVER_COLOR.g)}
+        highlight-color-b={String(HOVER_COLOR.b)}
         hide-controls="true"
         custom-data-url={selected.cifUrl}
         custom-data-format="cif"
@@ -63,9 +70,13 @@ const PdbeMolstar = ({ selected, pdbeRef, controlActions = [] }: PdbeMolstarProp
         bg-color-r={String(bg.r)}
         bg-color-g={String(bg.g)}
         bg-color-b={String(bg.b)}
+        highlight-color-r={String(HOVER_COLOR.r)}
+        highlight-color-g={String(HOVER_COLOR.g)}
+        highlight-color-b={String(HOVER_COLOR.b)}
         hide-controls="true"
         custom-data-url={modelUrl}
         custom-data-format="pdb"
+        alphafold-view="true"
         hide-water="true"
         sequence-panel="true"
       />
@@ -74,13 +85,12 @@ const PdbeMolstar = ({ selected, pdbeRef, controlActions = [] }: PdbeMolstarProp
 
   return (
     <div className="structure-viewer-wrapper">
-      {pdbeComponent}
-      <div className="viewer-instructions">
-        Click variant to see surrounding residues · Click white space to zoom out
+      <div className="pv-viewer-stage">
+        {pdbeComponent}
+        {overlay}
       </div>
-      <div className="viewer-controls-bar">
-        <ViewerControls actions={controlActions} />
-      </div>
+      {controls}
+      {legend}
     </div>
   );
 };

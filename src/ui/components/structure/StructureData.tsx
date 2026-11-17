@@ -16,8 +16,15 @@ import {NoAnnotationData} from "../common/NoAnnotationData";
 import {hasAlphafillStructure} from "../../../services/AlphafillService";
 import {Interaction, Pocket} from "../../../types/Prediction";
 import {useStructureViewer} from "./useStructureViewer";
+import {PocketColouring} from "./viewer/PvStructureViewer";
 import {useStructureUrl} from "./useStructureUrl";
-import {AFConfidencePanel} from "./viewer/AFConfidencePanel";
+import {PaeOverlay} from "./viewer/PaeOverlay";
+import {ConfidenceKey, LegendItem, ViewerLegend} from "./viewer/ViewerLegend";
+import {ViewerControls, ViewerOption, ViewerSegment, ViewerToggle} from "./viewer/ViewerControls";
+import {
+  css, DIM_CHAIN_COLOR, PDB_CHAIN_PALE, INTERFACE_PARTNER_COLOR, INTERFACE_PROTEIN_COLOR, PDB_CHAIN_DARK, PDB_CHAIN_LIGHT,
+  HYDROPHILIC_COLOR, HYDROPHOBIC_COLOR, NEGATIVE_COLOR, NEUTRAL_COLOR, POSITIVE_COLOR, PROTEIN_CHAIN_COLOR, VARIANT_COLOR,
+} from "./viewer/viewerColors";
 import {ALPHAFILL_URL} from "../../../constants/ExternalUrls";
 
 
@@ -50,6 +57,12 @@ function StructureData(props: StructureDataProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [isPaeOpen, setIsPaeOpen] = useState(false);
   const [paeUrl, setPaeUrl] = useState<string>("");
+  // Interaction models: AlphaFold pLDDT colouring instead of protein/partner.
+  const [confidenceColouring, setConfidenceColouring] = useState(false);
+  // What the viewer currently shows: "variant", "chain:B", "pocket:3" or "interface".
+  const [viewerMode, setViewerMode] = useState("variant");
+  // Pocket surface colouring (kept across pockets and structures).
+  const [pocketColouring, setPocketColouring] = useState<PocketColouring>("hydrophobicity");
   const [urlStructureWarning, setUrlStructureWarning] = useState<string | null>(null);
   const hasLoadedFromUrl = useRef(false);
 
@@ -149,6 +162,7 @@ function StructureData(props: StructureDataProps) {
             const targetChain = chainData.find(c => c.chainId.toUpperCase() === params.chain!.toUpperCase());
             if (targetChain) {
               await viewer.highlightChain(targetChain.start, targetChain.chainId);
+              setViewerMode(`chain:${targetChain.chainId}`);
             }
           } else {
             // apply default highlight
@@ -163,7 +177,8 @@ function StructureData(props: StructureDataProps) {
               const pocketId = parseInt(pocketMatch[1]);
               const pocket = pocketData.find(p => p.pocketId === pocketId);
               if (pocket) {
-                await viewer.highlightPocket(aaPosition, pocket.resid);
+                await viewer.highlightPocket(aaPosition, pocket.resid, pocketColouring);
+                setViewerMode(`pocket:${pocket.pocketId}`);
               }
             }
           } else {
@@ -175,6 +190,7 @@ function StructureData(props: StructureDataProps) {
             await viewer.zoomToVariant(aaPosition, protChain);
           } else if (params.interface) {
             await viewer.highlightInterface(selected.aresidues, selected.bresidues, aaPosition, protChain);
+            setViewerMode("interface");
           } else {
             await viewer.highlightVariant(aaPosition, protChain);
           }
@@ -183,7 +199,7 @@ function StructureData(props: StructureDataProps) {
         console.error("Error applying URL actions:", err);
       }
     });
-  }, [selected, urlParams, viewer, pdbeData, pocketData, aaPosition, isoFormAccession]);
+  }, [selected, urlParams, viewer, pdbeData, pocketData, pocketColouring, aaPosition, isoFormAccession]);
 
   // Select structure from URL or default (don't wait for viewer)
   useEffect(() => {
@@ -264,7 +280,6 @@ function StructureData(props: StructureDataProps) {
       setSelected(structureToLoad);
       if ("paeImageUrl" in structureToLoad) {
         setPaeUrl(structureToLoad.paeImageUrl);
-        setIsPaeOpen(true);
       }
     }
   }, [pdbeData, predictedData, interactionData, isLoading, urlParams]);
@@ -279,6 +294,21 @@ function StructureData(props: StructureDataProps) {
     applyUrlActionsWhenLoaded();
   }, [selected, applyUrlActionsWhenLoaded]);
 
+  // PDB entry: tell the viewer every chain of its table row, so the variant
+  // highlight colours them all. Also: a new structure starts without
+  // confidence colouring (the adapter resets it on load too).
+  useEffect(() => {
+    setConfidenceColouring(false);
+    setViewerMode("variant");
+    setIsPaeOpen(false);
+    if (selected && "pdbId" in selected) {
+      viewer.setPdbChains(pdbeData
+        .filter(d => d.pdbId === selected.pdbId)
+        .sort((a, b) => a.chainId.localeCompare(b.chainId))
+        .map(d => ({ chain: d.chainId, pos: d.start })));
+    }
+  }, [selected, pdbeData, viewer]);
+
   // Reset flags when data refetches (if user navigates to different variant)
   useEffect(() => {
     return () => {
@@ -287,89 +317,165 @@ function StructureData(props: StructureDataProps) {
     };
   }, [proteinStructureUri, isoFormAccession, aaPosition]);
 
-  // Generate viewer control actions based on selected structure
-  const getViewerActions = () => {
-    if (!selected) return [];
+  // Viewer controls for the selected structure: what to show (variant, a
+  // chain, a pocket, the interface), interaction colouring, zoom and reset.
+  const getViewerControls = () => {
+    if (!selected) return null;
+    const show = (id: string, label: string, apply: () => void): ViewerOption =>
+      ({ id, label, onSelect: () => { setViewerMode(id); apply(); } });
+    const segments: ViewerSegment[] = [];
+    const toggles: ViewerToggle[] = [];
+    let onZoom = () => {};
+    let onReset = () => {};
 
-    const actions: Array<{ label: string; onClick: () => void; variant?: 'primary' | 'reset' }> = [];
-
-    // Zoom action (always available)
-    actions.push({
-      label: "Zoom to variant",
-      onClick: () => {
-        if ("pdbId" in selected) {
+    if ("pdbId" in selected) {
+      const variant = () => viewer.highlightVariant(selected.start, selected.chainId);
+      const chains = pdbeData.filter(d => d.pdbId === selected.pdbId);
+      segments.push({ label: "Show", active: viewerMode, options: [
+        show("variant", "Variant", () => { urlParams.updateActions({ chain: null, zoom: null }); variant(); }),
+        ...chains.map(c => show(`chain:${c.chainId}`, `Chain ${c.chainId}`, () => {
+          urlParams.updateActions({ chain: c.chainId, zoom: null });
+          viewer.highlightChain(c.start, c.chainId);
+        })),
+      ]});
+      onZoom = () => {
+        if (viewerMode.startsWith("chain:")) {
+          viewer.focus([{ chain: viewerMode.slice("chain:".length) }]);
+        } else {
           urlParams.updateActions({ zoom: true, chain: null });
           viewer.zoomToVariant(selected.start, selected.chainId);
-        } else if ("cifUrl" in selected) {
+        }
+      };
+      onReset = () => { urlParams.updateActions({ chain: null, zoom: null }); viewer.resetDefault(selected.start, selected.chainId); };
+    } else if ("cifUrl" in selected) {
+      segments.push({ label: "Show", active: viewerMode, options: [
+        show("variant", "Variant", () => { urlParams.updateActions({ pocket: null, zoom: null }); viewer.highlightVariant(aaPosition); }),
+        ...pocketData.map(p => show(`pocket:${p.pocketId}`, `Pocket P${p.pocketId}`, () => {
+          urlParams.updateActions({ pocket: `p${p.pocketId}`, zoom: null });
+          viewer.highlightPocket(aaPosition, p.resid, pocketColouring);
+        })),
+      ]});
+      // While a pocket is shown: colour its surface by hydrophobicity or charge
+      const shownPocket = pocketData.find(p => viewerMode === `pocket:${p.pocketId}`);
+      if (shownPocket) {
+        const colourBy = (c: PocketColouring) => () => {
+          setPocketColouring(c);
+          viewer.highlightPocket(aaPosition, shownPocket.resid, c);
+        };
+        segments.push({ label: "Colour", active: pocketColouring, options: [
+          { id: "hydrophobicity", label: "Hydro", title: "Pocket surface by hydrophobicity", onSelect: colourBy("hydrophobicity") },
+          { id: "charge", label: "Charge", title: "Pocket surface by residue charge", onSelect: colourBy("charge") },
+        ]});
+      }
+      if ("paeImageUrl" in selected && paeUrl) {
+        toggles.push({ label: "PAE", icon: "bi-grid-3x3", title: "Predicted Aligned Error",
+          active: isPaeOpen, onToggle: () => setIsPaeOpen(open => !open) });
+      }
+      onZoom = () => {
+        const pocket = pocketData.find(p => viewerMode === `pocket:${p.pocketId}`);
+        if (pocket) {
+          viewer.focus([{ residues: pocket.resid }]);
+        } else {
           urlParams.updateActions({ zoom: true, pocket: null });
           viewer.zoomToVariant(aaPosition);
-        } else if ("a" in selected && "b" in selected) {
-          const protChain = selected.a === isoFormAccession ? "A" : "B";
+        }
+      };
+      onReset = () => { urlParams.updateActions({ pocket: null, zoom: null }); viewer.resetDefault(aaPosition); };
+    } else if ("a" in selected && "b" in selected) {
+      const protChain = selected.a === isoFormAccession ? "A" : "B";
+      segments.push({ label: "Show", active: viewerMode, options: [
+        show("variant", "Variant", () => { urlParams.updateActions({ interface: null, zoom: null }); viewer.highlightVariant(aaPosition, protChain); }),
+        show("interface", "Interface", () => {
+          urlParams.updateActions({ interface: true, zoom: null });
+          viewer.highlightInterface(selected.aresidues, selected.bresidues, aaPosition, protChain);
+        }),
+      ]});
+      // Protein/partner colouring or the model's AlphaFold pLDDT confidence
+      const colour = (on: boolean) => async () => {
+        if (on === confidenceColouring) return;
+        setConfidenceColouring(on);
+        setViewerMode("variant");
+        urlParams.updateActions({ interface: null, zoom: null });
+        await viewer.setConfidenceColouring(on);
+        await viewer.highlightVariant(aaPosition, protChain);
+      };
+      segments.push({ label: "Colour", active: confidenceColouring ? "plddt" : "chains", options: [
+        { id: "chains", label: "Chains", onSelect: colour(false) },
+        { id: "plddt", label: "pLDDT", onSelect: colour(true) },
+      ]});
+      onZoom = () => {
+        if (viewerMode === "interface") {
+          viewer.focus([{ chain: "A", residues: selected.aresidues }, { chain: "B", residues: selected.bresidues }]);
+        } else {
           urlParams.updateActions({ zoom: true, interface: null });
           viewer.zoomToVariant(aaPosition, protChain);
         }
-      },
-      variant: 'primary' as const
-    });
-
-    // Type-specific actions
-    if ("pdbId" in selected) {
-      // Chain highlighting for PDB
-      const chains = pdbeData.filter(d => d.pdbId === selected.pdbId);
-      chains.forEach((chain, idx) => {
-        const label = idx === 0 ? `Chain ${chain.chainId}` : chain.chainId;
-        actions.push({
-          label,
-          onClick: () => {
-            urlParams.updateActions({ chain: chain.chainId, zoom: null });
-            viewer.highlightChain(chain.start, chain.chainId);
-          }
-        });
-      });
-    } else if ("cifUrl" in selected) {
-      // Pocket highlighting for AlphaFold
-      pocketData.forEach((pocket, idx) => {
-        const label = idx === 0 ? `Pocket P${pocket.pocketId}` : `P${pocket.pocketId}`;
-        actions.push({
-          label,
-          onClick: () => {
-            urlParams.updateActions({ pocket: `p${pocket.pocketId}`, zoom: null });
-            viewer.highlightPocket(aaPosition, pocket.resid);
-          }
-        });
-      });
-    } else if ("a" in selected && "b" in selected) {
-      // Interface highlighting for interactions
-      actions.push({
-        label: "Interface",
-        onClick: () => {
-          const protChain = selected.a === isoFormAccession ? "A" : "B";
-          urlParams.updateActions({ interface: true, zoom: null });
-          viewer.highlightInterface(selected.aresidues, selected.bresidues, aaPosition, protChain);
-        }
-      });
+      };
+      onReset = () => { urlParams.updateActions({ interface: null, zoom: null }); viewer.resetDefault(aaPosition, protChain); };
     }
 
-    // Reset action
-    actions.push({
-      label: "Reset",
-      onClick: () => {
-        if ("pdbId" in selected) {
-          urlParams.updateActions({ chain: null, zoom: null });
-          viewer.resetDefault(selected.start, selected.chainId);
-        } else if ("cifUrl" in selected) {
-          urlParams.updateActions({ pocket: null, zoom: null });
-          viewer.resetDefault(aaPosition);
-        } else if ("a" in selected && "b" in selected) {
-          const protChain = selected.a === isoFormAccession ? "A" : "B";
-          urlParams.updateActions({ interface: null, zoom: null });
-          viewer.resetDefault(aaPosition, protChain);
-        }
-      },
-      variant: 'reset' as const
-    });
+    const zoom = onZoom, reset = onReset;
+    return (
+      <ViewerControls
+        segments={segments}
+        toggles={toggles}
+        onZoom={zoom}
+        onReset={() => { setViewerMode("variant"); reset(); }}
+      />
+    );
+  };
 
-    return actions;
+  // Colour key for what is on screen now (structure type + current view).
+  const getLegendItems = (): LegendItem[] => {
+    if (!selected) return [];
+    const variant = { label: "Variant", swatch: css(VARIANT_COLOR) };
+    const dim = (label: string) => ({ label, swatch: css(DIM_CHAIN_COLOR) });
+    if ("pdbId" in selected) {
+      const faded = { label: "Other chains (faded)", swatch: css(DIM_CHAIN_COLOR) };
+      if (viewerMode.startsWith("chain:")) {
+        const rowChains = pdbeData.filter(d => d.pdbId === selected.pdbId).length;
+        return [
+          variant,
+          { label: `Chain ${viewerMode.slice("chain:".length)}`, swatch: css(PROTEIN_CHAIN_COLOR) },
+          ...(rowChains > 1 ? [{ label: "Other protein chains", swatch: css(PDB_CHAIN_PALE) }] : []),
+          faded,
+        ];
+      }
+      return [
+        variant,
+        { label: "Protein chains", swatch: `linear-gradient(90deg, ${css(PDB_CHAIN_DARK)}, ${css(PDB_CHAIN_LIGHT)})` },
+        faded,
+      ];
+    }
+    if ("cifUrl" in selected) {
+      if (!viewerMode.startsWith("pocket:")) return [variant];
+      return pocketColouring === "charge"
+        ? [variant,
+           { label: "Positive", swatch: css(POSITIVE_COLOR) },
+           { label: "Negative", swatch: css(NEGATIVE_COLOR) },
+           { label: "Neutral", swatch: css(NEUTRAL_COLOR) }]
+        : [variant,
+           { label: "Hydrophilic → hydrophobic", swatch: `linear-gradient(90deg, ${css(HYDROPHILIC_COLOR)}, #ffffff, ${css(HYDROPHOBIC_COLOR)})` }];
+    }
+    if ("a" in selected && "b" in selected) {
+      const partner = selected.a === isoFormAccession ? selected.b : selected.a;
+      // Only what is on screen: the Interface view always uses protein/partner colours.
+      if (viewerMode === "interface") {
+        return [
+          variant,
+          { label: `${isoFormAccession} (protein)`, swatch: css(PROTEIN_CHAIN_COLOR) },
+          dim(`${partner} (partner)`),
+          { label: "Interface (protein)", swatch: css(INTERFACE_PROTEIN_COLOR) },
+          { label: "Interface (partner)", swatch: css(INTERFACE_PARTNER_COLOR) },
+        ];
+      }
+      return confidenceColouring ? [variant] : [
+        variant,
+        { label: `${isoFormAccession} (protein)`, swatch: css(PROTEIN_CHAIN_COLOR) },
+        dim(`${partner} (partner)`),
+      ];
+    }
+    return [variant];
   };
 
   if (isLoading) return <div className="annotation-loader"><Loader /></div>;
@@ -431,9 +537,6 @@ function StructureData(props: StructureDataProps) {
                         setSelected(structure);
                         if ("paeImageUrl" in structure) {
                           setPaeUrl(structure.paeImageUrl);
-                          setIsPaeOpen(true);
-                        } else {
-                          setIsPaeOpen(false);
                         }
                       }}
                       aaPos={aaPosition}
@@ -451,7 +554,6 @@ function StructureData(props: StructureDataProps) {
                       selectedInteraction={"a" in selected && "b" in selected ? (selected.a + "_" + selected.b) : ""}
                       setSelected={(interaction) => {
                         setSelected(interaction);
-                        setIsPaeOpen(false);
                       }}
                       aaPos={aaPosition}
                       viewer={viewer}
@@ -466,12 +568,15 @@ function StructureData(props: StructureDataProps) {
               <PdbeMolstar
                 selected={selected}
                 pdbeRef={viewerRef}
-                controlActions={getViewerActions()}
-              />
-              <AFConfidencePanel
-                isOpen={isPaeOpen}
-                paeImageUrl={paeUrl}
-                onClose={() => setIsPaeOpen(false)}
+                legend={<ViewerLegend items={getLegendItems()} />}
+                controls={getViewerControls()}
+                overlay={<>
+                  {isPaeOpen && paeUrl && "paeImageUrl" in selected &&
+                    <PaeOverlay paeImageUrl={paeUrl} onClose={() => setIsPaeOpen(false)} />}
+                  {("cifUrl" in selected
+                    || ("a" in selected && "b" in selected && confidenceColouring && viewerMode !== "interface")) &&
+                    <ConfidenceKey />}
+                </>}
               />
             </div>
           </div>

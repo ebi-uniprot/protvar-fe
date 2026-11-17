@@ -115,17 +115,135 @@ pdbe-molstar .msp-layout-expanded {
     z-index: var(--z-overlay);
 }
 
-/* Viewer instructions — below viewer, seamless white */
-.viewer-instructions {
-    padding: 4px 12px;
+/* Viewer controls — under the viewer: segmented "Show"/"Colour" groups, zoom/reset on the right */
+.pv-viewer-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px 12px;
+    padding: 10px 12px 8px;
+    background: var(--color-bg-elevated);
+}
+
+.pv-viewer-segments {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+}
+
+.pv-viewer-segment {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.pv-viewer-segment-label {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-secondary);
+}
+
+.pv-segmented {
+    display: inline-flex;
+    flex-wrap: wrap;
+    border: 1px solid var(--color-border-dark);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+}
+
+.pv-segmented button {
+    padding: 3px 10px;
+    font-size: var(--font-size-xs);
+    color: var(--color-primary);
     background: var(--color-bg-elevated);
     border: none;
-    font-size: 11px;
-    color: var(--color-text-tertiary);
-    font-weight: 400;
-    letter-spacing: 0.01em;
-    text-align: center;
+    border-left: 1px solid var(--color-border-dark);
+    cursor: pointer;
 }
+
+.pv-segmented button:first-child {
+    border-left: none;
+}
+
+.pv-segmented button:hover {
+    background: var(--color-primary-lightest);
+}
+
+.pv-segmented button.active {
+    background: var(--color-primary);
+    color: #ffffff;
+}
+
+.pv-viewer-actions {
+    display: inline-flex;
+    gap: 6px;
+    margin-left: auto;
+}
+
+.pv-viewer-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    font-size: var(--font-size-xs);
+    color: var(--color-text-secondary);
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border-dark);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+}
+
+.pv-viewer-action:hover {
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.pv-viewer-action.icon-only {
+    padding: 3px 7px;
+}
+
+.pv-viewer-action.active {
+    color: #ffffff;
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+:root[data-theme="dark"] .pv-viewer-controls,
+:root[data-theme="dark"] .pv-segmented button {
+    background: var(--color-bg-primary);
+}
+
+:root[data-theme="dark"] .pv-segmented button.active {
+    background: var(--color-primary);
+    color: var(--color-bg-primary);
+}
+
+/* Viewer colour key — under the controls */
+.viewer-legend {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px 16px;
+    padding: 2px 12px 12px;
+    background: var(--color-bg-elevated);
+    font-size: 11px;
+    color: var(--color-text-secondary);
+}
+
+.viewer-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.viewer-legend-swatch {
+    display: inline-block;
+    width: 14px;
+    height: 10px;
+    border-radius: 2px;
+    border: 1px solid var(--color-border-dark);
+}
+
 
 /* ============================================
    VIEWER CONTROLS (now below viewer, not overlaid)
@@ -187,67 +305,91 @@ pdbe-molstar .msp-layout-expanded {
 }
 
 /* ============================================
-   PAE PANEL (Sliding)
+   PAE OVERLAY (floats over the 3D view)
    ============================================ */
 
-.pae-panel {
+/* The 3D view; overlays (PAE) are positioned inside it */
+.pv-viewer-stage {
     position: relative;
-    background: var(--color-bg-elevated);
-    overflow: hidden;
-    max-height: 0;
-    opacity: 0;
-    transition: max-height 0.3s ease, opacity 0.3s ease;
 }
 
-.pae-panel.open {
-    max-height: 400px;
-    opacity: 1;
-}
-
-/* Small close button top-right */
-.pae-panel-close {
-    position: absolute;
-    top: 6px;
-    right: 8px;
-    background: none;
+/* Mol*'s own beige border around the canvas (its rule is .msp-plugin .msp-layout-standard) */
+pdbe-molstar .msp-plugin .msp-layout-standard {
     border: none;
-    cursor: pointer;
-    font-size: 16px;
-    color: var(--color-text-tertiary);
-    width: 22px;
-    height: 22px;
+}
+
+.pae-overlay {
+    position: absolute;
+    top: 52px;              /* below Mol*'s top-left toggle icon */
+    left: 10px;
+    z-index: 2;
+    padding: 8px 10px 10px;
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border-medium);
+    border-radius: var(--radius-md);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+/* pLDDT bands, bottom centre of the 3D view: "Confidence (pLDDT) ■ >90 ■ 90–70 …" */
+.pv-confidence-key {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
     display: flex;
     align-items: center;
-    justify-content: center;
-    border-radius: 3px;
-    transition: background 0.15s ease, color 0.15s ease;
-    z-index: 1;
+    gap: 10px;
+    padding: 4px 10px;
+    white-space: nowrap;
+    font-size: 11px;
+    color: var(--color-text-secondary);
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-md);
+    opacity: 0.92;
 }
 
-.pae-panel-close:hover {
-    background: var(--color-bg-tertiary);
-    color: var(--color-text-primary);
+.pv-confidence-key-label {
+    color: var(--color-text-tertiary);
 }
 
-.pae-panel-content {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 16px 20px;
-    padding: 12px 14px 14px;
+/* While the key is shown, lift Mol*'s hover label (bottom-right) above it */
+.pv-viewer-stage:has(.pv-confidence-key) .msp-plugin .msp-highlight-toast-wrapper {
+    bottom: 44px;
 }
 
-.pae-section {
+:root[data-theme="dark"] .pv-confidence-key {
+    background: var(--color-bg-primary);
+}
+
+.pae-overlay-title {
     display: flex;
-    flex-direction: column;
-}
-
-.pae-section-title {
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 6px;
     font-size: 11px;
     font-weight: 600;
     color: var(--color-text-tertiary);
     text-transform: uppercase;
     letter-spacing: 0.3px;
-    margin-bottom: 8px;
+}
+
+.pae-overlay-close {
+    margin-left: auto;
+    padding: 0 4px;
+    background: none;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+    color: var(--color-text-tertiary);
+}
+
+.pae-overlay-close:hover {
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-primary);
 }
 
 /* PAE image with axis labels */
@@ -435,41 +577,6 @@ pdbe-molstar .msp-layout-expanded {
 }
 
 /* ============================================
-   MODEL CONFIDENCE LEGEND
-   ============================================ */
-
-.confidence-legend {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.confidence-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 12px;
-}
-
-.af-conf {
-    width: 30px;
-    height: 12px;
-    border-radius: 2px;
-    border: 1px solid var(--color-border-medium);
-}
-
-.confidence-label {
-    color: var(--color-text-secondary);
-}
-
-/* AlphaFold PAE legend confidence colours */
-.af-conf.very-high { background: #0053D6; }
-.af-conf.high      { background: #65CBF3; }
-.af-conf.low       { background: #FFDB13; }
-.af-conf.very-low  { background: #FF7D45; }
-
-
-/* ============================================
    NO DATA STATE
    ============================================ */
 
@@ -500,12 +607,6 @@ pdbe-molstar .msp-layout-expanded {
         font-size: 11px;
     }
 
-    .pae-panel-content {
-        grid-template-columns: 1fr;
-        gap: 16px;
-        padding: 16px;
-    }
-
     .structure-table-scroll {
         max-height: 300px;
     }
@@ -526,13 +627,12 @@ pdbe-molstar .msp-layout-expanded {
 
 :root[data-theme="dark"] .structure-viewer-wrapper,
 :root[data-theme="dark"] .structure-table-card,
-:root[data-theme="dark"] .pae-panel {
+:root[data-theme="dark"] .pae-overlay {
         background: var(--color-bg-primary);
 }
 
-:root[data-theme="dark"] .viewer-instructions {
+:root[data-theme="dark"] .viewer-legend {
         background: var(--color-bg-primary);
-        color: #777;
 }
 
 :root[data-theme="dark"] .viewer-control-btn {
@@ -547,16 +647,11 @@ pdbe-molstar .msp-layout-expanded {
         color: #6ea8fe;
 }
 
-:root[data-theme="dark"] .pae-panel-header,
 :root[data-theme="dark"] .structure-table-header {
         background: linear-gradient(135deg, #2563ab 0%, #1e4a7a 100%);
 }
 
-:root[data-theme="dark"] .pae-panel-content {
-        background: var(--color-bg-primary);
-}
-
-:root[data-theme="dark"] .pae-section-title {
+:root[data-theme="dark"] .pae-overlay-title {
         color: #b0b0b0;
 }
 
@@ -601,10 +696,6 @@ pdbe-molstar .msp-layout-expanded {
         background: #6ea8fe;
         border-color: #6ea8fe;
         color: white;
-}
-
-:root[data-theme="dark"] .confidence-label {
-        color: #999;
 }
 
 :root[data-theme="dark"] .pae-image-container {

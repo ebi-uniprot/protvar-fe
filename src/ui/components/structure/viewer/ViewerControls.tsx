@@ -1,27 +1,78 @@
 import React from "react";
 
-interface ViewerControlsProps {
-  actions: {
-    label: string;
-    onClick: () => void;
-    variant?: 'primary' | 'reset';
-  }[];
+export interface ViewerOption {
+  id: string;
+  label: string;
+  /** Tooltip, e.g. the full name behind a short label. */
+  title?: string;
+  onSelect: () => void;
 }
 
-export const ViewerControls: React.FC<ViewerControlsProps> = ({ actions }) => {
-  if (actions.length === 0) return null;
+/** A labelled set of mutually exclusive options, e.g. Show: Variant | Chain B | Chain D. */
+export interface ViewerSegment {
+  label: string;
+  options: ViewerOption[];
+  active: string;
+}
 
-  return (
-    <div className="viewer-controls">
-      {actions.map((action, idx) => (
-        <button
-          key={idx}
-          className={`viewer-control-btn ${action.variant ? `btn-${action.variant}` : ''}`}
-          onClick={action.onClick}
-        >
-          {action.label}
-        </button>
+/** An on/off extra next to zoom/reset, e.g. the PAE overlay. */
+export interface ViewerToggle {
+  label: string;
+  icon: string;
+  title: string;
+  active: boolean;
+  onToggle: () => void;
+}
+
+interface ViewerControlsProps {
+  segments: ViewerSegment[];
+  toggles?: ViewerToggle[];
+  onZoom: () => void;
+  onReset: () => void;
+}
+
+/**
+ * Controls under the structure viewer: segmented groups for what is shown
+ * (the active option is filled), and one-off actions (zoom, reset) on the right.
+ */
+export const ViewerControls: React.FC<ViewerControlsProps> = ({ segments, toggles = [], onZoom, onReset }) => (
+  <div className="pv-viewer-controls">
+    <div className="pv-viewer-segments">
+      {segments.filter(s => s.options.length > 1).map((s) => (
+        <div key={s.label} className="pv-viewer-segment" role="group" aria-label={s.label}>
+          <span className="pv-viewer-segment-label">{s.label}</span>
+          <div className="pv-segmented">
+            {s.options.map((o) => (
+              <button
+                key={o.id}
+                type="button"
+                className={o.id === s.active ? "active" : ""}
+                aria-pressed={o.id === s.active}
+                title={o.title}
+                onClick={o.onSelect}
+              >
+                {o.label}
+              </button>
+            ))}
+          </div>
+        </div>
       ))}
     </div>
-  );
-};
+    <div className="pv-viewer-actions">
+      {toggles.map((t) => (
+        <button key={t.label} type="button" className={`pv-viewer-action${t.active ? " active" : ""}`}
+                aria-pressed={t.active} onClick={t.onToggle} title={t.title}>
+          <i className={`bi ${t.icon}`} aria-hidden="true" /> {t.label}
+        </button>
+      ))}
+      <button type="button" className="pv-viewer-action icon-only" onClick={onZoom}
+              title="Zoom to what is shown: the variant, chain, pocket or interface" aria-label="Zoom">
+        <i className="bi bi-zoom-in" aria-hidden="true" />
+      </button>
+      <button type="button" className="pv-viewer-action icon-only" onClick={onReset}
+              title="Reset the view and highlight" aria-label="Reset">
+        <i className="bi bi-arrow-counterclockwise" aria-hidden="true" />
+      </button>
+    </div>
+  </div>
+);

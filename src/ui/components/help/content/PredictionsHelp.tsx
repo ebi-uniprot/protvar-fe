@@ -64,7 +64,7 @@ export const AlphaFoldHelpContent: React.FC = () => (
 );
 
 // Drawer-ready wrapper — H1 + help-content container. Triggered from
-// AFConfidencePanel's "?" button next to "Predicted Aligned Error".
+// PaeOverlay's "?" button next to "Predicted Aligned Error".
 export const AlphaFoldHelp: React.FC = () => (
   <div className="help-content">
     <h1>AlphaFold</h1>
