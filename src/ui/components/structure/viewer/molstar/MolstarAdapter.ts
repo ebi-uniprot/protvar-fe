@@ -294,8 +294,4 @@ export class MolstarAdapter implements PvStructureViewer {
     await this.viewer?.visual.reset({camera: true});
     await this.highlightVariant(pos, chain);
   }
-
-  async reset() {
-    await this.viewer?.visual.reset({ camera: true });
-  }
 }

@@ -223,64 +223,6 @@
 }
 
 /* ============================================
-   VIEWER CONTROLS BAR (below viewer, not overlaid)
-   ============================================ */
-
-.viewer-controls-bar {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    flex-wrap: wrap;
-    gap: 5px;
-    padding: 6px 10px;
-    background: var(--color-bg-elevated);
-    border-top: 1px solid var(--color-border-light);
-    min-height: 36px;
-}
-
-/* Override absolute positioning for controls inside the bar */
-.viewer-controls-bar .viewer-controls {
-    position: static;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-}
-
-/* Smaller, more subtle buttons in the bar */
-.viewer-controls-bar .viewer-control-btn {
-    font-size: var(--font-size-xs);
-    padding: 4px 10px;
-    background: var(--color-bg-tertiary);
-    border-color: var(--color-border-dark);
-    box-shadow: none;
-    color: var(--color-text-secondary);
-}
-
-.viewer-controls-bar .viewer-control-btn:hover {
-    background: var(--color-bg-elevated);
-    border-color: var(--color-primary);
-    color: var(--color-primary);
-    box-shadow: none;
-}
-
-.viewer-controls-bar .viewer-control-btn.btn-primary {
-    background: var(--color-primary);
-    color: white;
-    border-color: var(--color-primary);
-}
-
-.viewer-controls-bar .viewer-control-btn.btn-primary:hover {
-    background: var(--color-primary-dark);
-    border-color: var(--color-primary-dark);
-}
-
-.viewer-controls-bar .viewer-control-btn.btn-reset {
-    background: var(--color-gray-200);
-    border-color: var(--color-gray-500);
-    color: var(--color-text-secondary);
-}
-
-/* ============================================
    POCKET GRID (Label-Value Grid)
    ============================================ */
 
@@ -396,23 +338,6 @@
 
 :root[data-theme="dark"] .no-structures-msg {
         color: var(--color-text-muted);
-}
-
-:root[data-theme="dark"] .viewer-controls-bar {
-        background: var(--color-bg-primary);
-        border-color: var(--color-border-light);
-}
-
-:root[data-theme="dark"] .viewer-controls-bar .viewer-control-btn {
-        background: var(--color-bg-elevated);
-        border-color: var(--color-border-dark);
-        color: var(--color-text-primary);
-}
-
-:root[data-theme="dark"] .viewer-controls-bar .viewer-control-btn:hover {
-        background: var(--color-bg-tertiary);
-        border-color: var(--color-primary);
-        color: var(--color-primary);
 }
 
 :root[data-theme="dark"] .pocket-grid label,

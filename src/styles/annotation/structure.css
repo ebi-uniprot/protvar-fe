@@ -244,66 +244,6 @@ pdbe-molstar .msp-layout-expanded {
     border: 1px solid var(--color-border-dark);
 }
 
-
-/* ============================================
-   VIEWER CONTROLS (now below viewer, not overlaid)
-   ============================================ */
-
-.viewer-controls {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 5px;
-}
-
-.viewer-control-btn {
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid var(--color-border-dark);
-    border-radius: 6px;
-    padding: 8px 12px;
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--color-text-primary);
-    cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    white-space: nowrap;
-}
-
-.viewer-control-btn:hover {
-    background: var(--color-bg-elevated);
-    border-color: var(--color-primary);
-    color: var(--color-primary);
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
-}
-
-.viewer-control-btn:active {
-    transform: translateY(1px);
-}
-
-.viewer-control-btn.btn-primary {
-    background: var(--color-primary);
-    color: white;
-    border-color: var(--color-primary);
-}
-
-.viewer-control-btn.btn-primary:hover {
-    background: var(--color-primary-dark);
-    border-color: var(--color-primary-dark);
-}
-
-.viewer-control-btn.btn-reset {
-    background: rgba(255, 255, 255, 0.9);
-    border-color: var(--color-gray-600);
-    color: var(--color-text-secondary);
-}
-
-.viewer-control-btn.btn-reset:hover {
-    background: var(--color-bg-elevated);
-    border-color: var(--color-gray-700);
-    color: var(--color-text-primary);
-}
-
 /* ============================================
    PAE OVERLAY (floats over the 3D view)
    ============================================ */
@@ -596,17 +536,6 @@ pdbe-molstar .msp-plugin .msp-layout-standard {
         height: 400px;
     }
 
-    .viewer-controls {
-        top: 8px;
-        right: 8px;
-        gap: 4px;
-    }
-
-    .viewer-control-btn {
-        padding: 6px 10px;
-        font-size: 11px;
-    }
-
     .structure-table-scroll {
         max-height: 300px;
     }
@@ -633,18 +562,6 @@ pdbe-molstar .msp-plugin .msp-layout-standard {
 
 :root[data-theme="dark"] .viewer-legend {
         background: var(--color-bg-primary);
-}
-
-:root[data-theme="dark"] .viewer-control-btn {
-        background: rgba(42, 42, 42, 0.95);
-        border-color: #4a4a4a;
-        color: #e0e0e0;
-}
-
-:root[data-theme="dark"] .viewer-control-btn:hover {
-        background: var(--color-bg-secondary);
-        border-color: #6ea8fe;
-        color: #6ea8fe;
 }
 
 :root[data-theme="dark"] .structure-table-header {

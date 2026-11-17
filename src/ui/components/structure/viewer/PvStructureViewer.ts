@@ -50,5 +50,4 @@ export interface PvStructureViewer {
   focus(targets: { chain?: string; residues?: number[] }[]): Promise<void>;
   /** Resets the camera and re-applies the default variant highlight. */
   resetDefault(pos: number, chain?: string): Promise<void>;
-  reset(): Promise<void>;
 }

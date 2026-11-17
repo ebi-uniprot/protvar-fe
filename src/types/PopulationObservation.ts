@@ -42,12 +42,6 @@ export interface PopulationFrequency {
     sourceName: string
 }
 
-interface VariantPrediction {
-    predictionValType: string,
-    score: number,
-    predAlgorithmNameType: string,
-}
-
 export interface ClinicalSignificance {
     type: string,
     sources: Array<string>

@@ -39,7 +39,6 @@ const PdbeMolstar = ({ selected, pdbeRef, legend, controls, overlay }: PdbeMolst
         molecule-id={selected.pdbId}
         alphafold-view="true"
         hide-water="true"
-        sequence-panel="true"
       />
     );
   } else if ("cifUrl" in selected) {
@@ -58,7 +57,6 @@ const PdbeMolstar = ({ selected, pdbeRef, legend, controls, overlay }: PdbeMolst
         custom-data-format="cif"
         alphafold-view="true"
         hide-water="true"
-        sequence-panel="true"
       />
     );
   } else if ("a" in selected && "b" in selected) {
@@ -78,7 +76,6 @@ const PdbeMolstar = ({ selected, pdbeRef, legend, controls, overlay }: PdbeMolst
         custom-data-format="pdb"
         alphafold-view="true"
         hide-water="true"
-        sequence-panel="true"
       />
     );
   }
