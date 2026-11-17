@@ -59,48 +59,38 @@ interface AminoAcidModelProps {
 }
 const AminoAcidModel = (props: AminoAcidModelProps) => {
   const { refAA, variantAA } = props;
-  const [show3d, setShow3d] = useState(false);
   const [spin, setSpin] = useState(true);
   const [resetNonce, setResetNonce] = useState(0);
-  // 3D is only offered when both residues are standard (Ter/stop has no structure).
+  // 3D whenever both residues are standard; Ter/stop has no structure, so
+  // that case falls back to the 2D images.
   const can3d = hasResidueSdf(refAA) && hasResidueSdf(variantAA);
 
   return (
     <div className="aa-model-wrapper">
       {can3d && (
         <div className="aa-model-header">
-          <div className="view-toggle">
-            <button className={!show3d ? 'active' : ''} onClick={() => setShow3d(false)}>
-              <i className="bi bi-image" /> 2D
+          <div className="aa-3d-options">
+            <button
+              type="button"
+              className="aa-3d-toggle"
+              aria-pressed={!spin}
+              onClick={() => setSpin((v) => !v)}
+            >
+              <i className={`bi ${spin ? 'bi-pause-fill' : 'bi-play-fill'}`} /> {spin ? 'Stop spin' : 'Resume spin'}
             </button>
-            <button className={show3d ? 'active' : ''} onClick={() => setShow3d(true)}>
-              <i className="bi bi-box" /> 3D
+            <button
+              type="button"
+              className="aa-3d-toggle"
+              onClick={() => setResetNonce((n) => n + 1)}
+            >
+              <i className="bi bi-arrow-counterclockwise" /> Reset
             </button>
           </div>
-          {show3d && (
-            <div className="aa-3d-options">
-              <button
-                type="button"
-                className={`aa-3d-toggle${spin ? ' active' : ''}`}
-                aria-pressed={spin}
-                onClick={() => setSpin((v) => !v)}
-              >
-                <i className="bi bi-arrow-repeat" /> Spin
-              </button>
-              <button
-                type="button"
-                className="aa-3d-toggle"
-                onClick={() => setResetNonce((n) => n + 1)}
-              >
-                <i className="bi bi-arrow-counterclockwise" /> Reset
-              </button>
-            </div>
-          )}
         </div>
       )}
 
-      <div className="aa-model-body" key={show3d ? '3d' : '2d'}>
-      {show3d && can3d ? (
+      <div className="aa-model-body">
+      {can3d ? (
         <Suspense fallback={<div className="aa-3d-loading">Loading 3D…</div>}>
           <AminoAcidCompare
             refCode={refAA}

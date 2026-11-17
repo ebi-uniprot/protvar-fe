@@ -178,18 +178,13 @@
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
-/* 2D/3D segmented toggle + (when 3D) spin/sync options, stacked top-left */
+/* 3D spin/reset options, top-left */
 .aa-model-header {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 4px;
     margin-bottom: 8px;
-}
-
-/* The shared .view-toggle pushes itself right (margin-left:auto); keep it left here. */
-.aa-model-header .view-toggle {
-    margin-left: 0;
 }
 
 .aa-3d-options {
