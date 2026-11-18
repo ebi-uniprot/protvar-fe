@@ -100,3 +100,19 @@ a:focus-visible {
 .flex1 { flex: 1; }
 .flex2 { flex: 2; }
 .flex6 { flex: 6; }
+
+/* ============================================
+   ICONS (<Icon>: Lucide svg at 1em, aligned like the old icon font)
+   ============================================ */
+
+.pv-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    vertical-align: -0.125em;
+}
+
+.pv-icon > svg {
+    flex-shrink: 0;
+}

@@ -20,6 +20,7 @@
     "cra-template-typescript": "1.1.2",
     "dompurify": "^3.0.2",
     "file-saver": "^2.0.5",
+    "lucide-react": "1.67.0",
     "marked": "^5.1.1",
     "pdbe-molstar": "3.12.0",
     "qs": "6.14.0",
