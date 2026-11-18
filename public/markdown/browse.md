@@ -16,15 +16,15 @@ Enter one or more identifiers. Press **Enter** or **+** after each one to add it
 
 Each resolves to its UniProt protein(s); variants are returned across all matching [isoforms](#glossary:isoforms). Each row is one genomic variant, listed once with every isoform it maps to (canonical first). A single identifier opens a page for that identifier (e.g. `/gene/HBB`); several identifiers, of any mix of types, open one combined result (`/search?id=…&id=…`, see [ProtVar Links](#protvar-links:s3)).
 
-## Filters
+## <a id="browse:filters"></a>Filters
 
-Open **Search Filters** to choose filters; each section opens from its title and shows how many of its filters are on. Filters combine — each one narrows the result further.
+Choose filters in **Filters**, under the search box (on a result page they sit in a rail on the left on wide screens, folding away to a tab); each section opens from its title and shows how many of its filters are on. Filters combine — each one narrows the result further.
 
 - **Variant type** — *Known variants* (in dbSNP, ClinVar, COSMIC or gnomAD; the default when browsing) or *All possible variants* (every possible single-base change, the known ones included). With known variants, **Known in** narrows them to one or more of the sources.
 - **UniProt curated** — variants curated in UniProtKB/Swiss-Prot ([humsavar](https://www.uniprot.org/help/humsavar)): *Any*, or by classification: *Pathogenic (LP/P)*, *Benign (LB/B)*, *Uncertain (US)*. It needs no identifier, e.g. every UniProt pathogenic variant at a predicted pocket.
-- **Functional** — *PTM* (post-translational modification site), *Mutagenesis* (experimentally altered site), *Functional Domain* (domain, region, motif or notable site), *Binding Site*, *Active Site*; **Conservation** range (0–1).
+- **Function** — *PTM* (post-translational modification site), *Mutagenesis* (experimentally altered site), *Functional Domain* (domain, region, motif or notable site), *Binding Site*, *Active Site*; **Conservation** range (0–1).
 - **Population** — *Disease Association*; **Allele Frequency** (gnomAD): *Very Rare*, *Rare*, *Low*, *Common*.
-- **Structural** — *Transmembrane Region*, *Experimental Model*, *Protein-Protein Interface*, *Predicted Pocket*; **Stability** (FoldX): *Likely Destabilising* / *Unlikely to Destabilise*.
+- **Structure** — *Transmembrane Region*, *Experimental Model*, *Protein-Protein Interface*, *Predicted Pocket*; **Stability** (FoldX): *Likely Destabilising* / *Unlikely to Destabilise*.
 - **Consequence** — **CADD** (< 15, 15–25, > 25), **AVI** genome-wide rank (top 10%, 1%, 0.1%), **AlphaMissense** (Benign / Ambiguous / Pathogenic), **popEVE** (Severe / Moderately / Unlikely Deleterious), **ESM-1b** range. See [Predictions](#predictions).
 
 The feature checkboxes (PTM, Mutagenesis, Functional Domain, Binding Site, Active Site, Transmembrane Region) were chosen for **variant-interpretation relevance** — each marks a region where an amino-acid change is more likely to be functionally consequential: a modified or catalytic residue, a ligand-binding site, a structural domain, a membrane-spanning segment. UniProt feature types with little standalone interpretive value — secondary-structure elements, sequence-conflict annotations and the like — are intentionally not offered as filters.
@@ -39,7 +39,7 @@ Press **Browse** to load the [Results](#results) page. **Clear** resets the form
 
 ![Browse result for UniProt P68871](images/browse_protein.png)
 
-The result page has the same columns, annotation panels and [Download Panel](#download-panel) as Annotate Variants. On wide screens the filters sit in a **Filters** rail on the left (collapse it with «); on narrower screens they are in a **Search Filters** bar above the table. Change any filter, then press **Update**. Active filters show as chips above the table; click a chip's × to remove it. If nothing matches, the page says so and offers to clear the filters.
+The result page has the same columns, annotation panels and [Download Panel](#download-panel) as Annotate Variants. On wide screens the filters sit in a **Filters** rail on the left (collapse it with «); on narrower screens they are in a **Filters** bar above the table. Change any filter, then press **Update**. Active filters show as chips above the table; click a chip's × to remove it. If nothing matches, the page says so and offers to clear the filters.
 
 **Sort results** (result page only) orders the rows by CADD, AVI, AlphaMissense, popEVE or ESM-1b, ascending or descending. For popEVE and ESM-1b, lower scores are more damaging.
 

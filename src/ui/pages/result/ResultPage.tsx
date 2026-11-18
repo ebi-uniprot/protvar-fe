@@ -1,4 +1,4 @@
-import DefaultPageLayout, { SIDE_PANEL_ID } from "../../layout/DefaultPageLayout";
+import DefaultPageLayout from "../../layout/DefaultPageLayout";
 import {LegendContent} from "../../modal/LegendContent";
 import ColumnChooser from "./ColumnChooser";
 import {useLocation, useNavigate, useParams, useSearchParams} from "react-router-dom";
@@ -33,7 +33,7 @@ import {
   filterRequest
 } from "../../components/search/filterUtils";
 import FilterChips from "../../components/search/FilterChips";
-import { createPortal } from "react-dom";
+import FilterRail from "../../components/search/FilterRail";
 import { useMediaQuery } from "../../../hooks/useMediaQuery";
 import {parseIdParam} from "../../../utills/InputTypeResolver";
 import {effectiveTotalPages, formatTotalCount} from "../../../utills/PaginationFormat";
@@ -43,6 +43,7 @@ import SearchFilters, {
   NoteCodeOption,
   SearchFilterParams
 } from "../../components/search/SearchFilters";
+import { Icon } from '../../elements/Icon';
 
 const INVALID_PAGE = `The requested page number is invalid or out of range. Displaying page ${DEFAULT_PAGE} by default.`
 const INVALID_PAGE_SIZE = `The specified page size is invalid. Using the default page size of ${DEFAULT_PAGE_SIZE} instead.`
@@ -204,14 +205,6 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
   // Wide screens put the filters in a rail beside the table (collapsible, remembered); narrower ones keep the
   // inline chip bar + expandable panel.
   const railLayout = useMediaQuery('(min-width: 1200px)')
-  const [railCollapsed, setRailCollapsed] = useState(() => !!getPrefs().filterRailCollapsed)
-  // The layout's side-panel column (filled through a portal; found after the layout mounts)
-  const [sidePanelEl, setSidePanelEl] = useState<HTMLElement | null>(null)
-  useEffect(() => setSidePanelEl(document.getElementById(SIDE_PANEL_ID)), [])
-  const toggleRail = useCallback(() => setRailCollapsed(c => {
-    setPrefs({ filterRailCollapsed: !c });
-    return !c;
-  }), [setPrefs])
   const [layout, setLayout] = useState<ResultLayout>(() => getPrefs().resultLayout ?? 'rows')
   const changeLayout = (l: ResultLayout) => { setLayout(l); setPrefs({ resultLayout: l }) }
   // An upload is named by the user's label for it in History, else by when it was submitted here (from History),
@@ -262,7 +255,7 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
     if (sessionStorage.getItem(SESSION_REDIRECT)) {
       sessionStorage.removeItem(SESSION_REDIRECT);
       toast.info(
-        <><i className="bi bi-arrow-return-left" /> You arrived via a deprecated URL —{' '}
+        <><Icon name="arrow-return-left" /> You arrived via a deprecated URL —{' '}
           <a href={`${process.env.PUBLIC_URL}/help#protvar-links`} target="_blank" rel="noopener noreferrer">
             see updated format
           </a>
@@ -625,7 +618,7 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
     return 'Browse';
   }
 
-  const sep = <i className="bi bi-chevron-compact-right"></i>;
+  const sep = <Icon name="chevron-compact-right" />;
   const contextLabel = getContextLabel();
   // Only show the separator + title when there's actually a title to show.
   // For filter-only browse, resultTitle is empty — render just the context label.
@@ -679,7 +672,7 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
   if (!loading && !data && preparing == null && loadError) {
     return (
       <div className="error-page">
-        <i className="bi bi-exclamation-triangle error-page-icon" />
+        <Icon name="exclamation-triangle" className="error-page-icon" />
         <h4 className="error-page-title">{loadError.title}</h4>
         <p className="error-page-text">{loadError.text}</p>
         <div className="error-page-actions">
@@ -694,7 +687,7 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
     const isInvalid = warning === INVALID_QUERY;
     return (
       <div className="error-page">
-        <i className={`bi ${isInvalid ? 'bi-question-circle' : 'bi-search'} error-page-icon`} />
+        <Icon name={isInvalid ? 'question-circle' : 'search'} className="error-page-icon" />
         <h4 className="error-page-title">{isInvalid ? 'Unrecognised query' : 'No results found'}</h4>
         <p className="error-page-text">
           {isInvalid
@@ -753,7 +746,7 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
   };
   const resultsBody = noMatches ? (
     <div className="result-empty">
-      <i className="bi bi-funnel result-empty__icon" aria-hidden="true" />
+      <Icon name="funnel" className="result-empty__icon" aria-hidden="true" />
       <p className="result-empty__title">No variants match these filters</p>
       <p className="result-empty__text">
         {subject && !isFilterOnly
@@ -775,20 +768,20 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
         <div className="result-table-toolbar__tools">
           <button className="btn btn-secondary columns-btn" title="Layout, columns and colours"
                   onClick={() => appState.updateState("drawer", <ColumnChooser layout={layout} onLayoutChange={changeLayout} />)}>
-            <i className="bi bi-sliders" /> View
+            <Icon name="sliders" /> View
           </button>
           <ShareLink url={shareUrl} linkText="Share" />
           {isBrowseIdentifier && (
             <i
-              className={`bi ${isSaved ? 'bi-bookmark-fill' : 'bi-bookmark'} icon-btn`}
+              className="icon-btn"
               title={isSaved ? 'Saved to history' : 'Save to history'}
               onClick={handleSaveBrowse}
-            > {isSaved ? 'Saved' : 'Save'}</i>
+            ><Icon name={isSaved ? 'bookmark-fill' : 'bookmark'} /> {isSaved ? 'Saved' : 'Save'}</i>
           )}
-          <i className="bi bi-circle-half icon-btn"
+          <i className="icon-btn"
              title="View colour legends"
              onClick={() => appState.updateState("drawer", <LegendContent />)}
-          > Legends</i>
+          ><Icon name="circle-half" /> Legends</i>
           <button
             className="btn btn-brand"
             title="Download results"
@@ -802,7 +795,7 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
                 filters={isQueryMode ? undefined : filters}
                 result={isQueryMode ? undefined : data ?? undefined} />)}
           >
-            <i className="bi bi-download" /> Download
+            <Icon name="download" /> Download
           </button>
         </div>
       </div>
@@ -885,21 +878,9 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
       </>
     ) : (
       <>
-        {sidePanelEl && createPortal(
-          // one element whose width animates (300px ↔ 36px); the panel fades out and the tab fades in
-          <aside className={`filter-rail${railCollapsed ? ' collapsed' : ''}`} aria-label="Filters">
-            <div className="filter-rail-inner" aria-hidden={railCollapsed}>
-              <SearchFilters {...filterProps} layout="rail" onCollapse={toggleRail} />
-            </div>
-            <button type="button" className="filter-rail-tab" onClick={toggleRail} aria-label="Show filters"
-                    tabIndex={railCollapsed ? 0 : -1}>
-              <span className="filter-rail-tab__top"><i className="bi bi-chevron-double-right"></i></span>
-              <span className="filter-rail-tab__label">
-                <i className="bi bi-funnel"></i> Filters{activeFilterCount ? ` (${activeFilterCount})` : ''}
-              </span>
-            </button>
-          </aside>,
-          sidePanelEl)}
+        <FilterRail activeCount={activeFilterCount}>
+          {collapse => <SearchFilters {...filterProps} layout="rail" onCollapse={collapse} />}
+        </FilterRail>
         <div className="result-chips-row">
           <FilterChips filters={localFilters} appliedFilters={filters} onFiltersChange={setLocalFilters}
                        onApply={handleApplyFilters} loading={loading || preparing != null} upload={isUploadedResult} />

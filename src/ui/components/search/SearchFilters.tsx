@@ -9,6 +9,7 @@ import {
   ALLELE_FREQ_CATEGORIES, KNOWN_SOURCES, CURATED_CATEGORIES} from "./filterConstants";
 import FilterChips from "./FilterChips";
 import RangeSlider from "./RangeSlider";
+import { Icon } from '../../elements/Icon';
 
 export interface SearchFilterParams {
   // Variant Type
@@ -66,6 +67,8 @@ interface SearchFiltersProps {
   className?: string;
   noteCodes?: NoteCodeOption[];            // uploaded result: the note codes its lines have, for the Notes group
   notesReady?: boolean;                    // uploaded result checked (its summary has counts): show the Notes group
+  defaultExpanded?: boolean;               // inline: the panel starts open (home Browse) rather than collapsed
+  openSections?: string[];                 // sections that start open even with no filters on in them
 }
 
 // A note code an upload's lines have, with its catalogue label and how many lines have it
@@ -93,11 +96,13 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                                                        onCollapse,
                                                        className = '',
                                                        noteCodes = [],
-                                                       notesReady = false
+                                                       notesReady = false,
+                                                       defaultExpanded = false,
+                                                       openSections = ['variant', 'notes', 'curated']
                                                      }) => {
   // Panel stays collapsed by default — the chip bar shows what's active, so
   // the user only opens the tall panel to add a new selection.
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(defaultExpanded);
 
   // Measure the panel's true height so the expand/collapse animates max-height
   // to an exact px target — no overshoot, so it's smooth rather than abrupt.
@@ -144,7 +149,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
   };
 
   // Sections open and close from their title; each shows how many of its filters are on. Sections with active
-  // filters (and Variant Type, Notes) start open.
+  // filters (and those in openSections: by default Variant Type, Notes, UniProt curated) start open.
   const counts: Record<string, number> = {
     variant: ((upload ? filters.variant === 'known' : filters.variant === 'potential') ? 1 : 0)
       + (filters.knownIn?.length ?? 0),
@@ -160,7 +165,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
     sort: filters.sort ? 1 : 0,
   };
   const [closed, setClosed] = useState<Record<string, boolean>>(() => Object.fromEntries(
-    Object.entries(counts).map(([id, n]) => [id, n === 0 && id !== 'variant' && id !== 'notes' && id !== 'curated'])));
+    Object.entries(counts).map(([id, n]) => [id, n === 0 && !openSections.includes(id)])));
   // re-measured when a section opens or closes too, or the panel would clip it
   useLayoutEffect(() => {
     if (panelRef.current) setPanelHeight(panelRef.current.scrollHeight);
@@ -170,7 +175,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
     <button type="button" className="section-title section-toggle" aria-expanded={!closed[id]}
             onClick={() => setClosed(c => ({ ...c, [id]: !c[id] }))}>
       <span>{title}{counts[id] > 0 && <span className="section-count">{counts[id]}</span>}</span>
-      <i className={`bi bi-chevron-${closed[id] ? 'right' : 'down'}`} aria-hidden="true" />
+      <Icon name={closed[id] ? 'chevron-right' : 'chevron-down'} />
     </button>
   );
 
@@ -248,18 +253,18 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
       {/* Collapse toggle — funnel + label grouped left, chevron (disclosure) right */}
       {isRail ? (
         <div className="filter-header filter-header--rail">
-          <span><i className="bi bi-funnel"></i>Filters</span>
+          <span><Icon name="funnel" />Filters</span>
           {onCollapse && (
             <button type="button" className="filter-rail-collapse" onClick={onCollapse}
                     aria-label="Hide filters" title="Hide filters">
-              <i className="bi bi-chevron-double-left"></i>
+              <Icon name="chevron-double-left" className="filter-chevron" />
             </button>
           )}
         </div>
       ) : (
         <button className="filter-header" onClick={toggleExpanded} aria-expanded={isExpanded}>
-          <span><i className="bi bi-funnel"></i>Search Filters</span>
-          <i className={`bi ${isExpanded ? 'bi-chevron-down' : 'bi-chevron-right'}`}></i>
+          <span><Icon name="funnel" />Filters</span>
+          <Icon name={isExpanded ? 'chevron-down' : 'chevron-right'} className="filter-chevron" />
         </button>
       )}
 
@@ -275,7 +280,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
           {onApply && (
             <div className="filter-panel-actions">
               <button className="apply-button" onClick={onApply} disabled={loading || !hasPendingChanges}>
-                <i className="bi bi-arrow-clockwise"></i> {loading ? 'Loading…' : 'Update'}
+                <Icon name="arrow-clockwise" /> {loading ? 'Loading…' : 'Update'}
               </button>
             </div>
           )}
@@ -316,8 +321,8 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                       onClick={() => handleCheckboxChange("knownIn", src.value)}
                     >
                       {filters.knownIn?.includes(src.value)
-                        ? <i className="bi-check-lg tick"></i>
-                        : <i className="bi-plus-lg plus"></i>}
+                        ? <Icon name="check-lg" className="tick" />
+                        : <Icon name="plus-lg" className="plus" />}
                       {' '}{src.label}
                     </button>
                   ))}
@@ -337,8 +342,8 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                   onClick={() => handleCuratedChange(cat.value)}
                 >
                   {filters.curated?.includes(cat.value)
-                    ? <i className="bi-check-lg tick"></i>
-                    : <i className="bi-plus-lg plus"></i>}
+                    ? <Icon name="check-lg" className="tick" />
+                    : <Icon name="plus-lg" className="plus" />}
                   {' '}{cat.label}
                 </button>
               ))}
@@ -377,7 +382,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
 
           {/* 2. Functional */}
           <div className={sectionClass('functional')}>
-            {sectionTitle('functional', 'Functional')}
+            {sectionTitle('functional', 'Function')}
 
             <div className="checkbox-group">
               <label className="checkbox-label">
@@ -465,8 +470,8 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                       onClick={() => handleCheckboxChange("freq", cat.value)}
                     >
                       {isFreqSelected(cat.value)
-                        ? <i className="bi-check-lg tick"></i>
-                        : <i className="bi-plus-lg plus"></i>}
+                        ? <Icon name="check-lg" className="tick" />
+                        : <Icon name="plus-lg" className="plus" />}
                       {' '}{cat.label}
                     </button>
                   ))}
@@ -477,7 +482,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
 
           {/* 4. Structural */}
           <div className={sectionClass('structural')}>
-            {sectionTitle('structural', 'Structural')}
+            {sectionTitle('structural', 'Structure')}
 
             <div className="checkbox-group">
               <label className="checkbox-label">
@@ -528,8 +533,8 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                       onClick={() => handleCheckboxChange("stability", cat.value)}
                     >
                       {isStabilitySelected(cat.value)
-                        ? <i className="bi-check-lg tick"></i>
-                        : <i className="bi-plus-lg plus"></i>}
+                        ? <Icon name="check-lg" className="tick" />
+                        : <Icon name="plus-lg" className="plus" />}
                       {' '}{cat.label}
                     </button>
                   ))}
@@ -553,8 +558,8 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                       onClick={() => handleCheckboxChange("cadd", cat.value)}
                     >
                       {isCaddSelected(cat.value)
-                        ? <i className="bi-check-lg tick"></i>
-                        : <i className="bi-plus-lg plus"></i>}
+                        ? <Icon name="check-lg" className="tick" />
+                        : <Icon name="plus-lg" className="plus" />}
                       {' '}{cat.label}
                     </button>
                   ))}
@@ -574,7 +579,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                           onClick={() => onFiltersChange({ ...filters, aviMin: selected ? undefined : cat.min })}
                           title={`AVI ≥ ${cat.min}`}
                         >
-                          {selected ? <i className="bi-check-lg tick"></i> : <i className="bi-plus-lg plus"></i>}
+                          {selected ? <Icon name="check-lg" className="tick" /> : <Icon name="plus-lg" className="plus" />}
                           {' '}{cat.label}
                         </button>
                       );
@@ -594,8 +599,8 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                       onClick={() => handleCheckboxChange("am", cat.value)}
                     >
                       {isAmSelected(cat.value)
-                        ? <i className="bi-check-lg tick"></i>
-                        : <i className="bi-plus-lg plus"></i>}
+                        ? <Icon name="check-lg" className="tick" />
+                        : <Icon name="plus-lg" className="plus" />}
                       {' '}{cat.label}
                     </button>
                   ))}
@@ -613,8 +618,8 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                       onClick={() => handleCheckboxChange("popeve", cat.value)}
                     >
                       {isPopEveSelected(cat.value)
-                        ? <i className="bi-check-lg tick"></i>
-                        : <i className="bi-plus-lg plus"></i>}
+                        ? <Icon name="check-lg" className="tick" />
+                        : <Icon name="plus-lg" className="plus" />}
                       {' '}{cat.label}
                     </button>
                   ))}

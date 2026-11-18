@@ -62,7 +62,7 @@
     gap: 0.4rem;
 }
 
-.filter-header i[class*="chevron"] {
+.filter-header .filter-chevron {
     color: var(--color-text-secondary);
     transition: transform var(--transition-base);
 }
@@ -73,8 +73,7 @@
    ============================================ */
 
 .filter-panel {
-    border-top: 1px solid var(--color-border-light);
-    padding: 1rem;
+    padding: 1rem;              /* no rule on top: the tinted header already sets it apart */
     background: var(--color-bg-primary);
 }
 
@@ -124,9 +123,8 @@
     display: flex;
     flex-direction: column;
     min-width: 160px;
-    flex: 1;
-    max-width: 280px;
-}
+    flex: 1;                    /* takes the width it has (a group alone in its row: the full row), so its */
+}                               /* buttons stay on one line where they fit */
 
 .filter-group > label {
     font-weight: var(--font-weight-semibold);
@@ -503,7 +501,7 @@
     .filter-button,
     .apply-button,
     .filter-header,
-    .filter-header i[class*="chevron"] {
+    .filter-header .filter-chevron {
         transition: none;
     }
 
@@ -694,7 +692,7 @@
     color: var(--color-text-primary);
 }
 
-.search-filters--rail .filter-header--rail i.bi-funnel {
+.search-filters--rail .filter-header--rail span > .pv-icon {
     color: var(--color-text-tertiary);
 }
 
@@ -714,12 +712,10 @@
     padding: 0 var(--spacing-xl) var(--spacing-xl);
 }
 
-/* Update: full width, lighter; grey when nothing is pending. A hairline keeps the sections from looking
-   like they slide under it while the rail scrolls. */
+/* Update: full width, lighter; grey when nothing is pending */
 .search-filters--rail .filter-panel-actions {
     padding: var(--spacing-md) 0;
     margin-bottom: var(--spacing-md);
-    box-shadow: 0 1px 0 var(--color-border-light);
 }
 
 .search-filters--rail .apply-button {
@@ -853,7 +849,7 @@
     text-align: left;
 }
 
-.section-toggle .bi {
+.section-toggle .pv-icon {
     font-size: var(--font-size-xs);
     color: var(--color-text-tertiary);
 }
