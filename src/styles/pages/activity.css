@@ -299,3 +299,29 @@
 .activity-retention-banner span > .pv-icon {
     margin-right: 6px;
 }
+
+/* full-download progress in the Downloads tab (same look as the upload "preparing" bar) */
+.download-progress {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: 8px;
+    font-size: 0.9em;
+    color: var(--color-text-secondary);
+}
+
+.download-progress__bar {
+    display: inline-block;
+    width: 64px;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--color-border-light);
+    overflow: hidden;
+}
+
+.download-progress__bar > span {
+    display: block;
+    height: 100%;
+    background: var(--color-brand);
+    transition: width 0.4s ease;
+}

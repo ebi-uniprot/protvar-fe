@@ -113,6 +113,9 @@ function downloadFile(url: string) {
   window.open(url, '_blank')
 }
 
+const POLL_MS = 5000
+const isPending = (d: DownloadRecord) => d.status === 'queued' || d.status === 'processing'
+
 function DownloadsTab() {
   const { getDownloads, updateDownload, deleteDownload, clearDownloads, refreshDownloadStatuses } = useStorage()
   const [downloads, setDownloads] = useState<DownloadRecord[]>(() => getDownloads())
@@ -128,14 +131,26 @@ function DownloadsTab() {
     return () => window.removeEventListener(STORAGE_CHANGE, handler as EventListener)
   }, [getDownloads])
 
-  // Refresh statuses from API on mount
+  // Refresh all statuses on mount, then poll the queued/processing ones until none are left
   useEffect(() => {
-    const local = getDownloads()
-    if (local.length === 0) return
-    const ids = local.map(d => d.id)
-    downloadStatus(ids)
-      .then(res => refreshDownloadStatuses(res.data))
-      .catch(() => setError('Failed to refresh download statuses'))
+    let cancelled = false
+    let timer: ReturnType<typeof setTimeout> | undefined
+    const poll = (ids: string[]) => {
+      downloadStatus(ids)
+        .then(res => {
+          if (cancelled) return
+          refreshDownloadStatuses(res.data)
+          const pending = getDownloads().filter(isPending).map(d => d.id)
+          if (pending.length > 0) timer = setTimeout(() => poll(pending), POLL_MS)
+        })
+        .catch(() => { if (!cancelled) setError('Failed to refresh download statuses') })
+    }
+    const ids = getDownloads().map(d => d.id)
+    if (ids.length > 0) poll(ids)
+    return () => {
+      cancelled = true
+      if (timer) clearTimeout(timer)
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -232,6 +247,12 @@ function DownloadsTab() {
                       <td>
                         <Icon name={statusInfo.icon} className={statusInfo.iconClass} /> {statusInfo.text}
                         {dl.size && dl.size > 0 ? ` (${humanFileSize(dl.size)})` : ''}
+                        {dl.status === 'processing' && dl.progress != null && (
+                          <span className="download-progress" role="status">
+                            <span className="download-progress__bar"><span style={{ width: `${dl.progress}%` }} /></span>
+                            {dl.progress >= 99 ? 'Finishing…' : `${dl.progress}%`}
+                          </span>
+                        )}
                         {dl.status === 'failed' && dl.message && (
                           <div className="activity-error-msg" title={dl.message}>{dl.message}</div>
                         )}

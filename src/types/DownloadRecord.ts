@@ -20,6 +20,7 @@ export interface DownloadStatusEntry {
   queuedAt?: string      // server ISO timestamp
   startedAt?: string
   finishedAt?: string
+  progress?: number      // full downloads: 0–100 while processing (99 = merging/zipping)
 }
 
 // Submit response shape — matches the backend DTO exactly
@@ -43,6 +44,7 @@ export interface DownloadRecord {
   resultId?: string        // cross-ref to ResultRecord.id
   resultUrl?: string       // relative URL to navigate back to the originating result page
   size?: number            // file size in bytes when status=ready
+  progress?: number        // full downloads while processing, from the server
   fun?: boolean
   pred?: boolean
   pop?: boolean

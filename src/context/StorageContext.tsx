@@ -169,6 +169,7 @@ export const StorageProvider: React.FC<{ children: ReactNode }> = ({ children })
         message: s.message,
         size: s.size,
         finishedAt: s.finishedAt,
+        progress: s.progress,
       }
     })
     write(STORE_DOWNLOADS, updated)
