@@ -5,7 +5,7 @@
 import React from 'react';
 import { Interaction } from '../../../../types/Prediction';
 import { getInteractionConfidence, ConfidenceBadge } from '../utils/confidenceUtils';
-import structureIcon from '../../../../images/structures-3d.svg';
+import { Box } from 'lucide-react';
 
 interface InteractionCardProps {
   interaction: Interaction;
@@ -26,7 +26,7 @@ export function InteractionCard({ interaction, currentAccession, index, onViewIn
           className="view-structure-button"
           title="View in 3D structure tab"
         >
-          <img src={structureIcon} alt="" className="structure-icon-sm" /> {partnerProtein}
+          <Box size={14} strokeWidth={1.75} className="structure-icon-sm" aria-hidden="true" /> {partnerProtein}
         </button>
       </span>
       <span className="pdockq-score">{interaction.pdockq.toFixed(3)}</span>

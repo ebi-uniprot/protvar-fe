@@ -7,7 +7,7 @@ import { Interaction } from '../../../../types/Prediction';
 import { InteractionCard } from './InteractionCard';
 import { EmptyState } from '../common/EmptyState';
 import { ExpandableList } from '../../common/ExpandableList';
-import structureIcon from '../../../../images/structures-3d.svg';
+import { Box } from 'lucide-react';
 import { Icon } from '../../../elements/Icon';
 
 interface InteractionListProps {
@@ -66,7 +66,7 @@ export function InteractionList({ interactions, accession, expandedSections, onT
           />
 
           <p className="struct-pred-help">
-            Click <img src={structureIcon} alt="3D structure" className="structure-icon-sm" /> to visualise the interacting structure in the structure tab.
+            Click <Box size={14} strokeWidth={1.75} className="structure-icon-sm" aria-hidden="true" /> to visualise the interacting structure in the structure tab.
           </p>
         </div>
       </div>

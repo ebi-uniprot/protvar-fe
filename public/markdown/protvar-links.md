@@ -229,7 +229,7 @@ The bare UniProt accession path (`/ProtVar/P22304`) is the **whole-protein view*
 Filters, annotation, and structure parameters can be appended:
 
 - [`/ProtVar/gene/BRCA2?cadd=high&am=pathogenic`](/ProtVar/gene/BRCA2?cadd=high&am=pathogenic)
-- [`/ProtVar/pdb/6ioz?annotation=str`](/ProtVar/pdb/6ioz?annotation=str)
+- [`/ProtVar/pdb/6ioz?ann=str`](/ProtVar/pdb/6ioz?ann=str)
 
 ---
 
@@ -288,47 +288,53 @@ When no `id=` or `q=` is provided, the search returns all variants matching the 
 
 ## <a id="protvar-links:s4"></a>4. Annotation Tab Linking
 
-Open a specific annotation panel (Functional, Population, or Structural) directly from a URL by appending `annotation=` to any variant or result URL.
+Open a specific annotation panel (Function, Population or Structure) directly from a URL by adding `ann=` (or `annotation=`) to any variant or result URL.
 
 ### Format
 
 ```
+?ann=<type>[-<row>]
 ?annotation=<type>[-<row>]
 ```
 
-| Value | Tab | Notes |
-|-------|-----|-------|
-| `fun` | Functional | |
-| `pop` | Population | |
-| `str` | Structural | |
+| Short | Long | Tab |
+|-------|------|-----|
+| `fun` | `function` | Function |
+| `pop` | `population` | Population |
+| `str` | `structure` | Structure |
 
-The optional `-<row>` suffix specifies which result row to open (1-indexed). Omitting the suffix is equivalent to `-1` — both open row 1.
+Either parameter name takes either form, so `ann=structure` and `annotation=str` also work. The address bar always shows the short form (`ann=str`).
+
+The older long names `functional` and `structural` are still accepted.
+
+The optional `-<row>` suffix specifies which result row to open (1-indexed). Omitting the suffix is equivalent to `-1`, so both open row 1.
 
 **Examples:**
 
 ```
-# Open functional tab on row 1 — these are equivalent:
-?annotation=fun
-?annotation=fun-1
+# Open the Function tab on row 1 (these are equivalent):
+?ann=fun
+?ann=fun-1
+?annotation=function
 
-# Open structural tab on row 3
-?annotation=str-3
+# Open the Structure tab on row 3
+?ann=str-3
 
-# Open population tab on row 2
-?annotation=pop-2
+# Open the Population tab on row 2
+?annotation=population-2
 ```
 
 **Combined with a variant URL:**
 
-- [`/ProtVar/p/P22304/205/A/P?annotation=fun`](/ProtVar/p/P22304/205/A/P?annotation=fun)
-- [`/ProtVar/g/19/1010539/G/C?annotation=str`](/ProtVar/g/19/1010539/G/C?annotation=str)
-- `/ProtVar/result/<id>?page=2&annotation=pop-3`
+- [`/ProtVar/p/P22304/205/A/P?ann=fun`](/ProtVar/p/P22304/205/A/P?ann=fun)
+- [`/ProtVar/g/19/1010539/G/C?ann=str`](/ProtVar/g/19/1010539/G/C?ann=str)
+- `/ProtVar/result/<id>?page=2&ann=pop-3`
 
 ---
 
 ## <a id="protvar-links:s5"></a>5. Structure Viewer Linking
 
-When the structural annotation tab is open (`annotation=str`), additional parameters control which structure is displayed and what is highlighted.
+When the Structure tab is open (`ann=str`), additional parameters control which structure is displayed and what is highlighted.
 
 ### Structure selection
 
@@ -354,27 +360,27 @@ When the structural annotation tab is open (`annotation=str`), additional parame
 | `highlightInterface` | Interaction | `true` | Highlight the interaction interface |
 | `zoom` | All | `true` | Zoom to variant position |
 
-Structure parameters are only active when `annotation=str` is also present. They are automatically removed from the URL when switching to another tab.
+Structure parameters are only active when `ann=str` (or `annotation=structure`) is also present. They are automatically removed from the URL when switching to another tab.
 
 **Examples:**
 
 ```
 # PDB with chain and zoom
-?annotation=str&structure=pdb:1ABC&highlightChain=A&zoom=true
+?ann=str&structure=pdb:1ABC&highlightChain=A&zoom=true
 
 # AlphaFold with pocket
-?annotation=str&structure=alphafold&highlightPocket=p1
+?ann=str&structure=alphafold&highlightPocket=p1
 
 # Interaction with interface
-?annotation=str&structure=interaction:P12345_P67890&highlightInterface=true
+?ann=str&structure=interaction:P12345_P67890&highlightInterface=true
 
 # Row 2, different structure
-?annotation=str-2&structure=pdb:2DEF&highlightChain=B
+?ann=str-2&structure=pdb:2DEF&highlightChain=B
 ```
 
 **Complete URL:**
 
-[`/ProtVar/p/P22304/205/A/P?annotation=str&structure=pdb:1ABC&highlightChain=A&zoom=true`](/ProtVar/p/P22304/205/A/P?annotation=str&structure=pdb:1ABC&highlightChain=A&zoom=true)
+[`/ProtVar/p/P22304/205/A/P?ann=str&structure=pdb:1ABC&highlightChain=A&zoom=true`](/ProtVar/p/P22304/205/A/P?ann=str&structure=pdb:1ABC&highlightChain=A&zoom=true)
 
 ---
 
@@ -383,7 +389,7 @@ Structure parameters are only active when `annotation=str` is also present. They
 When a Functional annotation tab is open, a specific prediction card can be scrolled to and highlighted by appending `pred=`.
 
 ```
-?annotation=fun&pred=<prediction>
+?ann=fun&pred=<prediction>
 ```
 
 | Value | Prediction |
@@ -401,7 +407,7 @@ The `pred` parameter is consumed on load and removed from the URL automatically.
 
 **Example:**
 
-[`/ProtVar/p/P22304/205/A/P?annotation=fun&pred=cadd`](/ProtVar/p/P22304/205/A/P?annotation=fun&pred=cadd)
+[`/ProtVar/p/P22304/205/A/P?ann=fun&pred=cadd`](/ProtVar/p/P22304/205/A/P?ann=fun&pred=cadd)
 
 ---
 
@@ -493,7 +499,7 @@ The following URL patterns from previous versions of ProtVar remain supported. P
 | `/ProtVar/chr<N>/<pos>[/<ref>/<alt>]` | `/ProtVar/g/<N>/<pos>[/<ref>/<alt>]` | Redirected — `chr`-prefixed path → `/g/` path |
 | `/ProtVar/<acc>/<pos>[/<ref>/<alt>]` | `/ProtVar/p/<acc>/<pos>[/<ref>/<alt>]` | Redirected — bare protein path → `/p/` path |
 | `/ProtVar/<accession>` | `/ProtVar/<accession>` | Unchanged — whole-protein view |
-| `?annotation=<functional\|structural\|population>[-row-N]` | `?annotation=<fun\|str\|pop>[-N]` | Redirected — long form canonicalised to short form |
+| `?annotation=<functional\|structural\|population>[-row-N]` | `?ann=<fun\|str\|pop>[-N]` | Redirected — any `ann=` / `annotation=` form canonicalised to the short form |
 
 > **Note:** The old backward-compat route matches paths where the first segment is `chr`-prefixed (e.g. `/ProtVar/chr19/...`, `/ProtVar/chrX/...`, `/ProtVar/chrMT/...`). Bare paths without the `chr` prefix (e.g. `/ProtVar/19/1010539/G/C`) are not redirected — use `/ProtVar/g/19/1010539/G/C` directly. The new `/g/` route itself accepts chromosomes with or without the `chr` prefix, as the chromosome parser normalises both forms.
 
@@ -532,16 +538,16 @@ The following URL patterns from previous versions of ProtVar remain supported. P
 /ProtVar/search?<filters>
 
 # Open annotation tab (row 1)
-?annotation=fun | ?annotation=str | ?annotation=pop
+?ann=fun | ?ann=str | ?ann=pop
 
 # Open annotation tab (specific row)
-?annotation=str-3
+?ann=str-3
 
 # Structure viewer
-?annotation=str&structure=pdb:1ABC&highlightChain=A&zoom=true
+?ann=str&structure=pdb:1ABC&highlightChain=A&zoom=true
 
 # Prediction highlight
-?annotation=fun&pred=cadd
+?ann=fun&pred=cadd
 
 # Filters
 ?cadd=high&am=pathogenic&disease=true&sort=cadd&order=desc

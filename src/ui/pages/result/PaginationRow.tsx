@@ -1,4 +1,5 @@
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { deleteAnnotationParam } from './annotationUrl';
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE, PERMITTED_PAGE_SIZES } from '../../../constants/const';
 import { PagedMappingResponse } from '../../../types/PagedMappingResponse';
 import { effectiveTotalPages, isTotalCapped, isTotalUnknown } from '../../../utills/PaginationFormat';
@@ -16,7 +17,7 @@ function PaginationRow({ loading, data }: PaginationRowProps) {
 
   function changePage(p: number) {
     if (!data) return;
-    searchParams.delete('annotation');
+    deleteAnnotationParam(searchParams);
     if (p === DEFAULT_PAGE) searchParams.delete('page');
     else searchParams.set('page', p.toString());
     navigate(`${location.pathname}${searchParams.size > 0 ? `?${searchParams.toString()}` : ''}`);
@@ -25,7 +26,7 @@ function PaginationRow({ loading, data }: PaginationRowProps) {
   function changePageSize(newPageSize: number) {
     if (!data) return;
     searchParams.delete('page');
-    searchParams.delete('annotation');
+    deleteAnnotationParam(searchParams);
     if (newPageSize === DEFAULT_PAGE_SIZE) searchParams.delete('pageSize');
     else searchParams.set('pageSize', newPageSize.toString());
     navigate(`${location.pathname}${searchParams.size > 0 ? `?${searchParams.toString()}` : ''}`);

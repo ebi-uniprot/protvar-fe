@@ -8,7 +8,7 @@ import { PocketCard } from './PocketCard';
 import { PocketFilter } from './PocketFilter';
 import { EmptyState } from '../common/EmptyState';
 import { ExpandableList } from '../../common/ExpandableList';
-import structureIcon from '../../../../images/structures-3d.svg';
+import { Box } from 'lucide-react';
 import { Icon } from '../../../elements/Icon';
 
 interface PocketListProps {
@@ -64,7 +64,7 @@ export function PocketList({ pockets, expandedSections, onToggle, onViewInStruct
           />
 
           <p className="struct-pred-help">
-            Click <img src={structureIcon} alt="3D structure" className="structure-icon-sm" /> to view in the structure tab.
+            Click <Box size={14} strokeWidth={1.75} className="structure-icon-sm" aria-hidden="true" /> to view in the structure tab.
           </p>
         </div>
       </div>

@@ -256,10 +256,9 @@
 }
 
 .structure-icon-sm {
-    width: 14px;
-    height: 14px;
-    vertical-align: middle;
-    opacity: 0.8;
+    flex-shrink: 0;
+    vertical-align: -2px;
+    color: var(--color-brand);
 }
 
 /* ============================================

@@ -11,6 +11,7 @@ import React, {useContext} from "react";
 import {APP_URL, AppContext} from "../../App";
 import {useLocation, useSearchParams} from "react-router-dom";
 import { Icon } from '../../elements/Icon';
+import { buildAnnotationParam, parseAnnotationKey, setAnnotationParam } from '../../pages/result/annotationUrl';
 
 interface ShareLinkProps {
   shareUrl: string,
@@ -23,28 +24,29 @@ enum ShareType {
 }
 */
 
-export const ShareLink = (props: {url: string, linkText?: string, disabled?: boolean}) => {
+export const ShareLink = (props: {url: string, linkText?: string, disabled?: boolean, className?: string}) => {
   const state = useContext(AppContext)
-  return <i className="icon-btn" title="Share"
+  return <button type="button" className={props.className ?? 'icon-btn'} title="Copy a link to share"
+            disabled={props.disabled}
             onClick={() => {
-          navigator.clipboard.writeText(props.url);
+          navigator.clipboard?.writeText(props.url).catch(() => {});   // the panel shows the link anyway
           state.updateState("drawer", <ShareContent shareUrl={props.url} title={``} />)
-        }}><Icon name="share" />{props.linkText && ` ${props.linkText}`}</i>
+        }}><Icon name="share" />{props.linkText && ` ${props.linkText}`}</button>
 }
 
-export const ShareAnnotationIcon = (props: {annotation: string}) => {
+export const ShareAnnotationIcon = (props: {annotation: string, withText?: boolean}) => {
   const state = useContext(AppContext)
   const location = useLocation();
   let [searchParams,] = useSearchParams();
 
   return <button title="Share Annotation" onClick={() => {
-    if (props.annotation) {
-      searchParams.set("annotation", props.annotation);
-    }
+    // the short URL form (?ann=fun, str-2…), not the internal row key
+    const parsed = parseAnnotationKey(props.annotation);
+    if (parsed) setAnnotationParam(searchParams, buildAnnotationParam(parsed.type, parsed.rowNumber, true));
     const shareUrl = `${APP_URL}${location.pathname}?${searchParams.toString()}`
-    navigator.clipboard.writeText(shareUrl);
+    navigator.clipboard?.writeText(shareUrl).catch(() => {});
     state.updateState("drawer", <ShareContent shareUrl={shareUrl} title={``} />)
-  }} className="icon-btn"><Icon name="share" /></button>
+  }} className={props.withText ? 'annotation-share' : 'icon-btn'}><Icon name="share" />{props.withText && ' Share'}</button>
 }
 
 const ShareContent = (props: ShareLinkProps) => {

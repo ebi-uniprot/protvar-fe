@@ -10,10 +10,6 @@ import {ResidueColumn} from './ResidueColumn';
 import {RegionColumn} from './RegionColumn';
 import { filterFeaturesByPosition } from './utils/featureUtils';
 import {useStructureNavigation} from "../../../hooks/useStructureNavigation";
-import ProteinIcon from '../../../images/proteins.svg';
-import {HelpContent} from "../help/HelpContent";
-import {HelpButton} from "../help/HelpButton";
-import {ShareAnnotationIcon} from "../common/ShareLink";
 import {NoAnnotationData} from "../common/NoAnnotationData";
 import {Comment} from "../../../types/Comment";
 import { Icon } from '../../elements/Icon';
@@ -33,9 +29,9 @@ export interface FunctionalDataProps {
 }
 
 function FunctionalData(props: FunctionalDataProps) {
-  const { referenceFunctionUri, referencePredictionUri, annotation, ensg, ensp } = props;
+  const { referenceFunctionUri, referencePredictionUri, ensg, ensp } = props;
   const [apiData, setApiData] = useState<FunctionalInfo>();
-  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set());
+  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['pockets-0', 'interfaces-0']));  // pockets + interfaces open by default
   const { openPocketInStructure, openInteractionInStructure } = useStructureNavigation();
 
   const toggleSection = (key: string) => {
@@ -91,31 +87,16 @@ function FunctionalData(props: FunctionalDataProps) {
     return <div className="annotation-loader"><Loader /></div>;
 
   if (!apiData.entryId)
-    return <NoAnnotationData icon={ProteinIcon} iconAlt="Functional information" title="Functional Information" message="No functional data available for this residue" />;
+    return <NoAnnotationData message="No functional data available for this residue" />;
 
   return (
     <div className="annotation-data-container">
-      <div className="annotation-header">
-        <div className="annotation-title">
-          <img
-            src={ProteinIcon}
-            className="annotation-icon"
-            data-fill={dataRichness.toFixed(1)}
-            alt="Functional information"
-            title={`Data richness: ${(dataRichness * 100).toFixed(0)}%`}
-          />
-          <h5>Functional Information</h5>
-          {dataRichness > 0.7 && (
-            <span className="data-richness-badge">
-              <Icon name="check-circle-fill" />
-              Rich data
-            </span>
-          )}
-        </div>
-        <div className="annotation-actions">
-          <HelpButton title="" content={<HelpContent name="function" />} />
-          <ShareAnnotationIcon annotation={annotation} />
-        </div>
+      {/* Rich data: kept for now (the panel's heading is gone; the tab names the panel) */}
+      <div className="annotation-intro">
+        <span className="annotation-desc">Residue annotations and protein features</span>
+        {dataRichness > 0.7 && (
+          <span className="data-richness-badge" title={`Data richness: ${(dataRichness * 100).toFixed(0)}%`}><Icon name="check-circle-fill" /> Rich data</span>
+        )}
       </div>
       <div className="annotation-content">
         <div className="functional-annotations-grid">

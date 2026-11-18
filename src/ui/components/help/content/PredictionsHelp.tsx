@@ -39,10 +39,8 @@ const BENIGN_EXAMPLE = {
   m3dPred:       { prediction: 'non-damaging', damagingFeature: '-' },
 };
 
-// AlphaFold help body — used inline under the AlphaFold H3 in PredictionsHelp,
-// and (wrapped by AlphaFoldHelp below) in the drawer triggered from the
-// structure viewer's AF confidence panel. Intro is phrased to make sense in
-// both contexts.
+// AlphaFold help body, under the AlphaFold H3 in PredictionsHelp (opened from the
+// Structure tab's "Predictions" link, at its structure-based part).
 export const AlphaFoldHelpContent: React.FC = () => (
   <>
     <p>
@@ -62,15 +60,6 @@ export const AlphaFoldHelpContent: React.FC = () => (
       inter-domain accuracy.
     </p>
   </>
-);
-
-// Drawer-ready wrapper — H1 + help-content container. Triggered from
-// PaeOverlay's "?" button next to "Predicted Aligned Error".
-export const AlphaFoldHelp: React.FC = () => (
-  <div className="help-content">
-    <h1>AlphaFold</h1>
-    <AlphaFoldHelpContent />
-  </div>
 );
 
 export const PredictionsHelp: React.FC = () => {

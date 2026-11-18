@@ -2,8 +2,6 @@ import React from "react";
 import {ALPHAFOLD_URL_INTERFACE_BY_PROTEIN} from '../../../../constants/ExternalUrls';
 import {formatRange} from "../../../../utills/Util";
 import {PredictedStructure} from "../StructureData";
-import {HelpButton} from "../../help/HelpButton";
-import {HelpContent} from "../../help/HelpContent";
 import {Pocket} from "../../../../types/Prediction";
 import {PvStructureViewer} from "../viewer/PvStructureViewer";
 import {useStructureUrl} from "../useStructureUrl";
@@ -77,7 +75,6 @@ function PredictedStructures({
       <div className="structure-section-header">
         Predicted Structure based on AlphaFold{' '}
         <ExtLink url={ALPHAFOLD_URL_INTERFACE_BY_PROTEIN + isoFormAccession} />
-        <HelpButton variant="inline" title="" content={<HelpContent name="predictions" />} />
       </div>
       <div className="structure-col-header predicted-col-header">
         <span></span>

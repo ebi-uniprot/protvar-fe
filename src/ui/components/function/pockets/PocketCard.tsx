@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import { Pocket } from '../../../../types/Prediction';
 import { formatRange } from '../../../../utills/Util';
 import { getPocketConfidence, getModelConfidence, ConfidenceBadge } from '../utils/confidenceUtils';
-import structureIcon from '../../../../images/structures-3d.svg';
+import { Box } from 'lucide-react';
 import { Icon } from '../../../elements/Icon';
 
 interface PocketCardProps {
@@ -47,7 +47,7 @@ export function PocketCard({ pocket, onViewInStructure }: PocketCardProps) {
           className="view-structure-button pocket-id-btn"
           title="View in 3D structure tab"
         >
-          <img src={structureIcon} alt="" className="structure-icon-sm" />
+          <Box size={14} strokeWidth={1.75} className="structure-icon-sm" aria-hidden="true" />
           <span>P{pocket.pocketId}</span>
         </button>
         <span className="pocket-metric">

@@ -1,7 +1,5 @@
 import {formatRange} from "../../../../utills/Util";
 import {API_URL} from "../../../../constants/const";
-import {HelpContent} from "../../help/HelpContent";
-import {HelpButton} from "../../help/HelpButton";
 import React from "react";
 import {Interaction} from "../../../../types/Prediction";
 import {PvStructureViewer} from "../viewer/PvStructureViewer";
@@ -59,7 +57,6 @@ function InteractingStructures({
       <div className="structure-section-header">
         Predicted Interacting Structure
         <span className="count-badge">{count}</span>
-        <HelpButton variant="inline" title="" content={<HelpContent name="predictions" />} />
       </div>
       <div className="structure-col-header interaction-col-header">
         <span>Chain A</span>

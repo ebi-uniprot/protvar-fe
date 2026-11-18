@@ -1,4 +1,9 @@
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, useContext, useState } from "react";
+import { Activity, BookOpen, Box, Users } from 'lucide-react';
+import { AppContext } from '../../App';
+import { HelpContent } from '../../components/help/HelpContent';
+import { ShareAnnotationIcon } from '../../components/common/ShareLink';
+import { Icon } from '../../elements/Icon';
 import { StringVoidFun } from "../../../constants/CommonTypes";
 import {
   CADD_INFO_URL, AM_INFO_URL,
@@ -15,9 +20,6 @@ import { aviScoreAttr, AVI_SCORE_ATTR, genomeWideRank } from "../../components/f
 import { pangolinScoreAttr, pangolinDetail, PANGOLIN_SCORE_ATTR } from "../../components/function/prediction/PangolinPred";
 import { amScoreAttr, formatAMScore } from "../../components/function/prediction/AlphaMissensePred";
 import { formatPopEveScore, getPopEveColor, getPopEveClass, POPEVE_SCORE_ATTR } from "../../components/function/prediction/PopEvePred";
-import ProteinIcon from '../../../images/proteins.svg';
-import StructureIcon from '../../../images/structures-3d.svg';
-import PopulationIcon from '../../../images/human.svg';
 import LoaderRow from "./LoaderRow";
 import { ReactComponent as ChevronDownIcon } from "../../../images/chevron-down.svg";
 import { ReactComponent as ChevronUpIcon } from "../../../images/chevron-up.svg";
@@ -46,9 +48,20 @@ export const getIdUrl = (id: string) => {
 // the alt is unknown (no readable codon, PV-113): shown as "?"
 export const aaChangeStr = (ref: string, alt?: string) => `${ref}/${alt ?? '?'}`;
 
+// The three annotation panels, in order. In the row they're icon buttons (their names in the tooltip, the first-row
+// hint and the open panel's tabs, so Population and Structure are discoverable)
+const ANNOTATIONS = {
+  FUN: { name: 'Function', tip: 'Functional annotations', Icon: Activity, help: 'function',
+         moreHelp: [{ name: 'predictions', title: 'Predictions' }, { name: 'feature-ranking', title: 'Feature ranking' }] },
+  POP: { name: 'Population', tip: 'Population observations', Icon: Users, help: 'population', moreHelp: [] },
+  STR: { name: 'Structure', tip: '3D structure', Icon: Box, help: 'structure',
+         moreHelp: [{ name: 'predictions', section: 'predictions:structure', title: 'Predictions' }] },
+} as const;
+type AnnotationType = keyof typeof ANNOTATIONS;
+
 function AnnotationButton(props: {
   rowKey: string;
-  label: 'FUN' | 'POP' | 'STR';
+  label: AnnotationType;
   canonical: boolean | undefined;
   annotationExpanded: string;
   toggleAnnotation: StringVoidFun;
@@ -56,24 +69,15 @@ function AnnotationButton(props: {
   if (!props.canonical) return EmptyElement;
 
   const isActive = props.rowKey === props.annotationExpanded;
-  const btnClass = isActive ? 'button click-icon-btn significance' : 'button click-icon-btn';
-
-  let tip = "Functional annotations (click to expand)";
-  let icon = <img src={ProteinIcon} className="click-icon" alt="protein icon" />;
-  if (props.label === 'POP') {
-    tip  = "Population observations (click to expand)";
-    icon = <img src={PopulationIcon} className="click-icon" alt="population icon" />;
-  } else if (props.label === 'STR') {
-    tip  = "3D structure (click to expand)";
-    icon = <img src={StructureIcon} className="click-icon" alt="structure icon" />;
-  }
+  const { name, tip, Icon: AnnIcon } = ANNOTATIONS[props.label];
 
   return (
-    <Tool el="button" tip={tip} pos="up-right"
+    <Tool el="button" tip={`${name}: ${tip.toLowerCase()} (click to ${isActive ? 'close' : 'open'})`} pos="up-right"
       onClick={() => props.toggleAnnotation(props.rowKey)}
-      className={btnClass}
+      className={`annotation-btn${isActive ? ' active' : ''}`}
+      aria-pressed={isActive} aria-label={name}
     >
-      {icon}
+      <AnnIcon size={18} strokeWidth={1.75} aria-hidden="true" />
     </Tool>
   );
 }
@@ -348,12 +352,16 @@ export const getNewPrimaryRow = (
 export function AnnotationPanels({
   isoformKey,
   annotationExpanded,
+  toggleAnnotation,
+  showHint = false,
   gene,
   isoform,
   genomicVariantStr,
 }: {
   isoformKey: string;
   annotationExpanded: string;
+  toggleAnnotation: StringVoidFun;
+  showHint?: boolean;   // the page's first row: point out the three annotations while none is open
   gene: Gene;
   isoform: Isoform;
   genomicVariantStr: string;
@@ -361,6 +369,14 @@ export function AnnotationPanels({
   const functionalKey  = 'functional-'  + isoformKey;
   const structuralKey  = 'structural-'  + isoformKey;
   const populationKey  = 'population-'  + isoformKey;
+  const tabKeys: [AnnotationType, string][] = [['FUN', functionalKey], ['POP', populationKey], ['STR', structuralKey]];
+  const isOpen = tabKeys.some(([, key]) => key === annotationExpanded);
+  const openType = tabKeys.find(([, key]) => key === annotationExpanded)?.[0];
+
+  // First-row hint: on every results page; dismissing hides it on this page only
+  const [hintDismissed, setHintDismissed] = useState(false);
+  const appState = useContext(AppContext);
+  const dismissHint = () => setHintDismissed(true);
 
   const enspMap = new Map<string, string[]>();
   isoform.transcripts?.forEach(({ ensp, enst }) => {
@@ -371,47 +387,93 @@ export function AnnotationPanels({
 
   return (
     <>
-      {populationKey === annotationExpanded && (
-        <div className="result-annotation">
-          <Suspense fallback={<LoaderRow />}>
-            <PopulationData
-              annotation={annotationExpanded}
-              populationObservationsUri={isoform.populationObservationsUri!}
-              variantAA={isoform.variantAA!}
-              genomicVariant={genomicVariantStr}
-            />
-          </Suspense>
+      {/* One panel at a time, full width under the row: its tab bar (switch to another annotation of this variant,
+          or close), then the open annotation */}
+      {showHint && !isOpen && !hintDismissed && isoform.canonical && (
+        <div className="explore-hint" role="note">
+          <span>Explore variant:</span>
+          {tabKeys.map(([type, key]) => {
+            const { name, Icon: AnnIcon } = ANNOTATIONS[type];
+            return (
+              <button key={type} type="button" className="explore-hint-link" onClick={() => toggleAnnotation(key)}>
+                <AnnIcon size={14} strokeWidth={1.75} aria-hidden="true" /> {name}
+              </button>
+            );
+          })}
+          <button type="button" className="explore-hint-close" onClick={dismissHint} aria-label="Dismiss" title="Dismiss">
+            <Icon name="x" />
+          </button>
         </div>
       )}
-      {structuralKey === annotationExpanded && (
+      {isOpen && (
         <div className="result-annotation">
+          <div className="annotation-tabs">
+            <div role="tablist" aria-label="Annotations" className="annotation-tablist">
+              {tabKeys.map(([type, key]) => {
+                const { name, Icon: AnnIcon } = ANNOTATIONS[type];
+                return (
+                  <button key={type} type="button" role="tab" aria-selected={key === annotationExpanded}
+                          className={`annotation-tab${key === annotationExpanded ? ' active' : ''}`}
+                          onClick={() => key !== annotationExpanded && toggleAnnotation(key)}>
+                    <AnnIcon size={16} strokeWidth={1.75} aria-hidden="true" /> {name}
+                  </button>
+                );
+              })}
+            </div>
+            <div className="annotation-tabs-actions">
+              {openType && (
+                <button type="button" className="annotation-help" title={`Help: ${ANNOTATIONS[openType].name}`}
+                        onClick={() => appState.updateState('drawer', <HelpContent name={ANNOTATIONS[openType].help} />)}>
+                  <BookOpen size={15} strokeWidth={1.75} aria-hidden="true" /> Help
+                </button>
+              )}
+              {/* the tab's other help topics (Function: Predictions, Feature ranking; Structure: Predictions) */}
+              {openType && ANNOTATIONS[openType].moreHelp.map((t: { name: string; section?: string; title: string }) => (
+                <button key={t.title} type="button" className="annotation-help-link"
+                        onClick={() => appState.updateState('drawer', <HelpContent name={t.name} section={t.section} />)}>
+                  {t.title}
+                </button>
+              ))}
+              <ShareAnnotationIcon annotation={annotationExpanded} withText />
+              <button type="button" className="annotation-tabs-close" onClick={() => toggleAnnotation(annotationExpanded)}
+                      aria-label="Close annotations">
+                <Icon name="x" /> Close
+              </button>
+            </div>
+          </div>
           <Suspense fallback={<LoaderRow />}>
-            <StructureData
-              annotation={annotationExpanded}
-              isoFormAccession={isoform.accession!}
-              aaPosition={isoform.isoformPosition!}
-              variantAA={isoform.variantAA!}
-              proteinStructureUri={isoform.proteinStructureUri!}
-            />
-          </Suspense>
-        </div>
-      )}
-      {functionalKey === annotationExpanded && (
-        <div className="result-annotation">
-          <Suspense fallback={<LoaderRow />}>
-            <FunctionalData
-              annotation={annotationExpanded}
-              caddScore={gene.caddScore?.toString()}
-              aviScore={gene.aviScore?.toString()}
-              pangolin={gene.pangolin}
-              amScore={isoform.amScore}
-              refAA={isoform.refAA!}
-              variantAA={isoform.variantAA!}
-              ensg={gene.ensg!}
-              ensp={ensp!}
-              referenceFunctionUri={isoform.referenceFunctionUri!}
-              referencePredictionUri={isoform.referencePredictionUri}
-            />
+            {populationKey === annotationExpanded && (
+              <PopulationData
+                annotation={annotationExpanded}
+                populationObservationsUri={isoform.populationObservationsUri!}
+                variantAA={isoform.variantAA!}
+                genomicVariant={genomicVariantStr}
+              />
+            )}
+            {structuralKey === annotationExpanded && (
+              <StructureData
+                annotation={annotationExpanded}
+                isoFormAccession={isoform.accession!}
+                aaPosition={isoform.isoformPosition!}
+                variantAA={isoform.variantAA!}
+                proteinStructureUri={isoform.proteinStructureUri!}
+              />
+            )}
+            {functionalKey === annotationExpanded && (
+              <FunctionalData
+                annotation={annotationExpanded}
+                caddScore={gene.caddScore?.toString()}
+                aviScore={gene.aviScore?.toString()}
+                pangolin={gene.pangolin}
+                amScore={isoform.amScore}
+                refAA={isoform.refAA!}
+                variantAA={isoform.variantAA!}
+                ensg={gene.ensg!}
+                ensp={ensp!}
+                referenceFunctionUri={isoform.referenceFunctionUri!}
+                referencePredictionUri={isoform.referencePredictionUri}
+              />
+            )}
           </Suspense>
         </div>
       )}

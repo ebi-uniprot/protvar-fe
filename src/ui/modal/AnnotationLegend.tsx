@@ -1,44 +1,23 @@
-import ProteinIcon from '../../images/proteins.svg'
-import StructureIcon from '../../images/structures-3d.svg'
-import PopulationIcon from '../../images/human.svg'
+import { Activity, Box, Users } from 'lucide-react';
+
+// The result row's annotation buttons (same icons and square style), and what each one opens
+const ITEMS = [
+  { Icon: Activity, name: 'Function', text: 'functional annotations, predictions, pockets and interfaces' },
+  { Icon: Users, name: 'Population', text: 'the variant and co-located variants in public databases' },
+  { Icon: Box, name: 'Structure', text: 'experimental and AlphaFold 3D structures' },
+];
 
 function AnnotationLegend() {
   return (
-    <div>
-      <strong>Annotations</strong>
-      <br />
-      <br />
-      <div className="flex-column">
-        <div className="flex">
-          <img
-            src={ProteinIcon}
-            className="click-icon"
-            alt="protein icon"
-            title="Functional information icon - click in below table for more details"
-          />{' '}
-          Functional Information
-        </div>
-        <div className="flex">
-          <img
-            src={PopulationIcon}
-            className="click-icon"
-            alt="Population icon"
-            title="Population Observation icon - click in below table for more details"
-          />{' '}
-          Population Observation
-        </div>
-        <div className="flex">
-          <img
-            src={StructureIcon}
-            className="click-icon"
-            alt="Structure icon"
-            title="3D Structures icon - click in below table for more details"
-          />{' '}
-          Structures
-        </div>
-      </div>
-    </div>
-  )
+    <ul className="annotation-legend">
+      {ITEMS.map(({ Icon, name, text }) => (
+        <li key={name}>
+          <span className="annotation-btn" aria-hidden="true"><Icon size={18} strokeWidth={1.75} /></span>
+          <span><strong>{name}</strong> — {text}</span>
+        </li>
+      ))}
+    </ul>
+  );
 }
 
 export default AnnotationLegend

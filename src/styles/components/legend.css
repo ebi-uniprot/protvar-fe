@@ -38,10 +38,65 @@
 
 /* popEVE "low confidence when gap freq > 0.5" footnote. */
 .legend-footnote {
-    font-size: 0.75em;
+    font-size: var(--font-size-xs);
     font-style: italic;
     margin-top: 0.4em;
-    color: #666;
+    color: var(--color-text-secondary);
+}
+
+.legend-gradient {
+    width: 8rem;
+    height: 1.2rem;
+    border-radius: 2px;
+}
+
+.legend-gradient-labels {
+    display: flex;
+    justify-content: space-between;
+    width: 8rem;
+    margin-top: 2px;
+    font-size: 0.65em;
+    color: var(--color-text-secondary);
+}
+
+.legend-ranking-tier {
+    margin-bottom: 2px;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+}
+
+.legend-ranking-features {
+    font-size: var(--font-size-xs);
+    line-height: 1.4;
+    color: var(--color-text-secondary);
+}
+
+/* the row's annotation buttons, as drawn there */
+.annotation-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+}
+
+.annotation-legend li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.annotation-legend strong {
+    color: var(--color-text-primary);
+    font-weight: var(--font-weight-semibold);
+}
+
+.annotation-legend .annotation-btn {
+    cursor: default;
 }
 
 /* Sections appended after the per-prediction grid. */

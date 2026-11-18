@@ -19,8 +19,7 @@ import {ResultRecord} from "../../../types/ResultRecord";
 import {ResultLayout} from "../../../types/UserPrefs";
 import {useStorage} from "../../../context/StorageContext";
 import {APP_URL} from "../../App";
-import {HelpButton} from "../../components/help/HelpButton";
-import {HelpContent} from "../../components/help/HelpContent";
+import PageHelp from "../../components/help/PageHelp";
 import {ShareLink} from "../../components/common/ShareLink";
 import {usePageMeta} from "../../../hooks/usePageMeta";
 import Loader from "../../elements/Loader";
@@ -552,7 +551,6 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
   const isBrowseIdentifier = mode === 'browse' && !isFilterOnly &&
     !(input && (location.pathname.startsWith(RESULT + '/') || isDataset));
   const shareUrl = `${APP_URL}${location.pathname}${location.search}`
-  const helpName = isQueryMode ? 'protvar-links' : 'results';
 
   // Determine the browse identifier used as the history record id
   const browseHistoryId = isBrowseIdentifier
@@ -766,22 +764,22 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
           )}
         </div>
         <div className="result-table-toolbar__tools">
-          <button className="btn btn-secondary columns-btn" title="Layout, columns and colours"
+          {/* one style for the tools; Download stays the primary action */}
+          <button type="button" className="tool-btn" title="Layout, columns and colours"
                   onClick={() => appState.updateState("drawer", <ColumnChooser layout={layout} onLayoutChange={changeLayout} />)}>
             <Icon name="sliders" /> View
           </button>
-          <ShareLink url={shareUrl} linkText="Share" />
+          <ShareLink url={shareUrl} linkText="Share" className="tool-btn" />
           {isBrowseIdentifier && (
-            <i
-              className="icon-btn"
-              title={isSaved ? 'Saved to history' : 'Save to history'}
-              onClick={handleSaveBrowse}
-            ><Icon name={isSaved ? 'bookmark-fill' : 'bookmark'} /> {isSaved ? 'Saved' : 'Save'}</i>
+            <button type="button" className={`tool-btn${isSaved ? ' active' : ''}`}
+                    title={isSaved ? 'Saved to history' : 'Save to history'} onClick={handleSaveBrowse}>
+              <Icon name={isSaved ? 'bookmark-fill' : 'bookmark'} /> {isSaved ? 'Saved' : 'Save'}
+            </button>
           )}
-          <i className="icon-btn"
-             title="View colour legends"
-             onClick={() => appState.updateState("drawer", <LegendContent />)}
-          ><Icon name="circle-half" /> Legends</i>
+          <button type="button" className="tool-btn" title="Colour legends"
+                  onClick={() => appState.updateState("drawer", <LegendContent />)}>
+            <Icon name="circle-half" /> Legends
+          </button>
           <button
             className="btn btn-brand"
             title="Download results"
@@ -830,7 +828,11 @@ function ResultPageContent({ mode: modeProp, queryType, idType }: ResultPageProp
             : `${formatTotalCount(data)} variants`
         }</span>
       )}
-      <HelpButton title="" content={<HelpContent name={helpName}/>}/>
+      {/* Help for this page, on the right as on the home page */}
+      <PageHelp topics={isQueryMode
+        ? [{ name: 'results', title: 'Results' }, { name: 'protvar-links', title: 'Links' }]
+        : [{ name: 'results', title: 'Results' }, { name: 'browse', title: 'Filters', section: 'browse:filters' },
+           { name: 'download-format', title: 'Download format' }]} />
     </div>
 
     {/* ── Upload summary: what happened to the lines ── */}

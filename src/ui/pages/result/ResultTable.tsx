@@ -17,7 +17,11 @@ import {
   buildAnnotationKey,
   buildAnnotationParam,
   parseAnnotationKey,
-  clearAnnotationSpecificParams
+  clearAnnotationSpecificParams,
+  ANN_PARAM,
+  getAnnotationParam,
+  setAnnotationParam,
+  deleteAnnotationParam
 } from "./annotationUrl";
 
 interface ResultTableProps {
@@ -59,15 +63,15 @@ function ResultTable(props: ResultTableProps) {
   }, [props.data]);
 
   useEffect(() => {
-    const annotationParam = searchParams.get('annotation');
+    const annotationParam = getAnnotationParam(searchParams);
     if (!annotationParam) { setAnnotationExpanded(''); return; }
     const parsed = parseAnnotationParam(annotationParam);
     if (parsed) {
       const canonical = buildAnnotationParam(parsed.type, parsed.rowNumber, true);
-      if (canonical !== annotationParam) {
-        // Long form (e.g. "functional-row-1") → redirect to short canonical form ("fun")
+      if (canonical !== searchParams.get(ANN_PARAM) || searchParams.has('annotation')) {
+        // any other form (annotation=function-2, ann=structural…) → the short one (ann=fun-2, ann=str)
         const newParams = new URLSearchParams(searchParams);
-        newParams.set('annotation', canonical);
+        setAnnotationParam(newParams, canonical);
         navigate(`${location.pathname}?${newParams.toString()}`, { replace: true });
         return;
       }
@@ -128,14 +132,14 @@ function ResultTable(props: ResultTableProps) {
       const parsed = parseAnnotationKey(newAnnotation);
       if (parsed) {
         const param = buildAnnotationParam(parsed.type, parsed.rowNumber, true);
-        newParams.set("annotation", param);
+        setAnnotationParam(newParams, param);
         const oldParsed = oldAnnotation ? parseAnnotationKey(oldAnnotation) : null;
         if (!oldParsed || parsed.type !== oldParsed.type || parsed.rowNumber !== oldParsed.rowNumber) {
           clearAnnotationSpecificParams(newParams, parsed.type);
         }
       }
     } else {
-      newParams.delete("annotation");
+      deleteAnnotationParam(newParams);
       clearAnnotationSpecificParams(newParams, null);
     }
 
@@ -352,6 +356,8 @@ const getTableRows = (
               <AnnotationPanels
                 isoformKey={primaryKey}
                 annotationExpanded={annotationExpanded}
+                toggleAnnotation={toggleAnnotation}
+                showHint={primaryRow === 1}
                 gene={gene}
                 isoform={primaryIsoform}
                 genomicVariantStr={genomicVariantStr}

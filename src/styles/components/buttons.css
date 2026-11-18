@@ -124,6 +124,40 @@
    ICON BUTTON
    ============================================ */
 
+/* Toolbar tools (View, Share, Save, Legends): one outlined style, the same size as the primary button beside them */
+.tool-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 1px solid var(--color-border-medium);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-primary);
+    color: var(--color-text-secondary);
+    font: inherit;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.2;
+    cursor: pointer;
+    transition: border-color var(--transition-base), color var(--transition-base), background var(--transition-base);
+}
+
+.tool-btn:hover:not(:disabled) {
+    border-color: var(--color-brand-light);
+    color: var(--color-brand);
+}
+
+.tool-btn.active {
+    border-color: var(--color-brand-lighter);
+    background: var(--color-brand-lightest);
+    color: var(--color-brand);
+}
+
+.tool-btn:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
 .icon-btn {
     background: var(--color-bg-elevated);
     border: 1px solid var(--color-border-dark);

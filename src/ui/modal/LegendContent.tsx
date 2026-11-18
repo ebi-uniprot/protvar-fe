@@ -28,15 +28,8 @@ function LegendSection({ title, children }: { title: string; children: React.Rea
 function GradientBar({ gradient, labels }: { gradient: string; labels: string[] }) {
   return (
     <>
-      <div style={{ background: gradient, width: '8rem', height: '1.2rem', borderRadius: 2 }} />
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        width: '8rem',
-        fontSize: '0.65em',
-        color: '#666',
-        marginTop: 2,
-      }}>
+      <div className="legend-gradient" style={{ background: gradient }} />
+      <div className="legend-gradient-labels">
         {labels.map((l, i) => <span key={i}>{l}</span>)}
       </div>
     </>
@@ -94,10 +87,10 @@ function FeatureRankingLegend() {
               marginTop: 2,
             }} />
             <div>
-              <div style={{ fontSize: '0.75rem', fontWeight: 600, color: meta.color, marginBottom: 2 }}>
+              <div className="legend-ranking-tier">
                 {meta.label}
               </div>
-              <div style={{ fontSize: '0.7rem', color: '#666', lineHeight: 1.4 }}>
+              <div className="legend-ranking-features">
                 {features.map(f => f.label).join(', ')}
               </div>
             </div>
@@ -123,12 +116,12 @@ export function LegendContent() {
         </label>
       </div>
 
-      <h6 className="legend-content-title">Result Legends</h6>
+      <h6 className="legend-content-title">Legends</h6>
 
       {/* Two-column grid */}
       <div className="legend-grid">
 
-        <LegendSection title="CADD phred-like score">
+        <LegendSection title="CADD (phred-like score)">
           <LegendCategories attrs={Object.values(CADD_SCORE_ATTR)} stdColor={stdColor} />
         </LegendSection>
 
@@ -144,7 +137,7 @@ export function LegendContent() {
           <LegendCategories attrs={Object.values(AM_SCORE_ATTR)} stdColor={stdColor} />
         </LegendSection>
 
-        <LegendSection title="ESM1b LLR score">
+        <LegendSection title="ESM-1b (LLR score)">
           <EsmLegend stdColor={stdColor} />
         </LegendSection>
 
@@ -166,15 +159,17 @@ export function LegendContent() {
           <ConservLegend stdColor={stdColor} />
         </LegendSection>
 
-        <LegendSection title="GnomAD allele frequency">
+        <LegendSection title="gnomAD allele frequency">
           <LegendCategories attrs={Object.values(AF_ATTR)} stdColor={false} />
         </LegendSection>
 
       </div>
 
-      {/* Annotation icons — AnnotationLegend has its own heading */}
+      {/* the row's annotation buttons */}
       <div className="legend-annotation-wrap">
-        <AnnotationLegend />
+        <LegendSection title="Annotations">
+          <AnnotationLegend />
+        </LegendSection>
       </div>
 
       {/* UniProt feature ranking */}

@@ -2,10 +2,6 @@ import React, { useEffect, useState } from 'react';
 import Loader from '../../elements/Loader';
 import {getPopulationData} from "../../../services/ProtVarService";
 import {PopulationObservation, Variant} from "../../../types/PopulationObservation";
-import PopulationIcon from "../../../images/human.svg";
-import {HelpButton} from "../help/HelpButton";
-import {HelpContent} from "../help/HelpContent";
-import {ShareAnnotationIcon} from "../common/ShareLink";
 import {NoAnnotationData} from "../common/NoAnnotationData";
 import {PopulationAlleleFreq} from "./PopulationAlleleFreq";
 import SubmittedVariantDetails from "./SubmittedVariantDetails";
@@ -56,7 +52,7 @@ function PopulationData(props: PopulationDataProps) {
 
   const proteinVariants = poApiData.variants || [];
   if (proteinVariants.length === 0 && (!poApiData.freqMap || Object.keys(poApiData.freqMap).length === 0)) {
-    return <NoAnnotationData icon={PopulationIcon} iconAlt="Population observation" title="Population Observation" message="No population observation data available" />;
+    return <NoAnnotationData message="No population observation data available" />;
   }
 
   const submittedVariants = proteinVariants.filter(variant => variant.alternativeSequence === variantAA);
@@ -90,28 +86,13 @@ function PopulationData(props: PopulationDataProps) {
 
   return (
     <div className="annotation-data-container">
-      <div className="annotation-header">
-            <div className="annotation-title">
-              <img
-                src={PopulationIcon}
-                className="annotation-icon"
-                data-fill={dataRichness.toFixed(1)}
-                alt="Population observation"
-                title={`Data richness: ${(dataRichness * 100).toFixed(0)}%`}
-              />
-              <h5>Population Observation</h5>
-              {dataRichness > 0.7 && (
-                <span className="data-richness-badge">
-                  <Icon name="check-circle-fill" />
-                  Rich data
-                </span>
-              )}
-            </div>
-            <div className="annotation-actions">
-              <HelpButton title="" content={<HelpContent name="population"/>}/>
-              <ShareAnnotationIcon annotation={props.annotation}/>
-            </div>
-          </div>
+      {/* Rich data: kept for now (the panel's heading is gone; the tab names the panel) */}
+      <div className="annotation-intro">
+        <span className="annotation-desc">Co-located variants and disease associations</span>
+        {dataRichness > 0.7 && (
+          <span className="data-richness-badge" title={`Data richness: ${(dataRichness * 100).toFixed(0)}%`}><Icon name="check-circle-fill" /> Rich data</span>
+        )}
+      </div>
 
           <div className="annotation-grid">
             {/* Left Column: Submitted Variant */}

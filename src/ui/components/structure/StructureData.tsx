@@ -8,10 +8,6 @@ import {getPredictedStructure} from "../../../services/AlphafoldService";
 import {getPredictionData, getStructureData} from "../../../services/ProtVarService";
 import {PdbeStructure} from "../../../types/PdbeStructure";
 import {AlphafoldResponseElement} from "../../../types/AlphafoldResponse";
-import StructureIcon from "../../../images/structures-3d.svg";
-import {HelpContent} from "../help/HelpContent";
-import {HelpButton} from "../help/HelpButton";
-import {ShareAnnotationIcon} from "../common/ShareLink";
 import {NoAnnotationData} from "../common/NoAnnotationData";
 import {hasAlphafillStructure} from "../../../services/AlphafillService";
 import {Interaction, Pocket} from "../../../types/Prediction";
@@ -480,32 +476,16 @@ function StructureData(props: StructureDataProps) {
   };
 
   if (isLoading) return <div className="annotation-loader"><Loader /></div>;
-  if (!selected) return <NoAnnotationData icon={StructureIcon} iconAlt="3D structure" title="3D Structures"
-    message={urlStructureWarning ?? "No structural data available for this protein"} />;
+  if (!selected) return <NoAnnotationData message={urlStructureWarning ?? "No structural data available for this protein"} />;
 
   return (
     <div className="annotation-data-container">
-          <div className="annotation-header">
-            <div className="annotation-title">
-              <img
-                src={StructureIcon}
-                className="annotation-icon"
-                data-fill={dataRichness.toFixed(1)}
-                alt="3D structure"
-                title={`Data richness: ${(dataRichness * 100).toFixed(0)}%`}
-              />
-              <h5>3D Structures</h5>
-              {dataRichness > 0.7 && (
-                <span className="data-richness-badge">
-                  <Icon name="check-circle-fill" />
-                  Rich data
-                </span>
-              )}
-            </div>
-            <div className="annotation-actions">
-              <HelpButton title="" content={<HelpContent name="structure"/>}/>
-              <ShareAnnotationIcon annotation={props.annotation}/>
-            </div>
+          {/* Rich data: kept for now (the panel's heading is gone; the tab names the panel) */}
+          <div className="annotation-intro">
+            <span className="annotation-desc">Experimental and predicted structures</span>
+            {dataRichness > 0.7 && (
+              <span className="data-richness-badge" title={`Data richness: ${(dataRichness * 100).toFixed(0)}%`}><Icon name="check-circle-fill" /> Rich data</span>
+            )}
           </div>
           {urlStructureWarning && (
             <div className="structure-url-notice">

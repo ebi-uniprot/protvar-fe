@@ -75,16 +75,20 @@ const AminoAcidModel = (props: AminoAcidModelProps) => {
               type="button"
               className="aa-3d-toggle"
               aria-pressed={!spin}
+              title={spin ? 'Stop spin' : 'Resume spin'}
+              aria-label={spin ? 'Stop spin' : 'Resume spin'}
               onClick={() => setSpin((v) => !v)}
             >
-              <Icon name={spin ? 'pause-fill' : 'play-fill'} /> {spin ? 'Stop spin' : 'Resume spin'}
+              <Icon name={spin ? 'pause-fill' : 'play-fill'} />
             </button>
             <button
               type="button"
               className="aa-3d-toggle"
+              title="Reset view"
+              aria-label="Reset view"
               onClick={() => setResetNonce((n) => n + 1)}
             >
-              <Icon name="arrow-counterclockwise" /> Reset
+              <Icon name="arrow-counterclockwise" />
             </button>
           </div>
         </div>

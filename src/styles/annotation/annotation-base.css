@@ -16,7 +16,7 @@
    ============================================ */
 
 .annotation-data-container {
-    padding: var(--spacing-xl);
+    padding: var(--spacing-md) var(--spacing-xl) var(--spacing-xl);   /* the tab bar sits right above: a short top */
     overflow-x: auto;
 }
 
@@ -25,8 +25,8 @@
    ============================================ */
 
 .annotation-content {
-    /* Base content area */
-    margin-top: var(--spacing-xl);
+    /* Base content area (no top margin: the panel's heading is gone, the tab names it) */
+    margin-top: 0;
 }
 
 /* Grid layout for two-column annotations */

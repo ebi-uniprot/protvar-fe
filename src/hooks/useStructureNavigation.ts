@@ -6,6 +6,7 @@
 import { useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {Interaction, Pocket} from "../types/Prediction";
+import { getAnnotationParam, setAnnotationParam } from '../ui/pages/result/annotationUrl';
 
 /**
  * Extract row number from annotation parameter
@@ -35,10 +36,10 @@ export function useStructureNavigation() {
    */
   const openPocketInStructure = useCallback((pocket: Pocket) => {
     const params = new URLSearchParams(location.search);
-    const rowNumber = extractRowNumber(params.get('annotation'));
+    const rowNumber = extractRowNumber(getAnnotationParam(params));
 
     // Set annotation to structural tab (preserving row number)
-    params.set('annotation', `str${rowNumber}`);
+    setAnnotationParam(params, `str${rowNumber}`);
 
     // Set structure to AlphaFold prediction
     params.set('structure', 'alphafold');
@@ -58,11 +59,11 @@ export function useStructureNavigation() {
    */
   const openInteractionInStructure = useCallback((interaction: Interaction) => {
     const params = new URLSearchParams(location.search);
-    const rowNumber = extractRowNumber(params.get('annotation'));
+    const rowNumber = extractRowNumber(getAnnotationParam(params));
     const interactionId = `${interaction.a}_${interaction.b}`;
 
     // Set annotation to structural tab (preserving row number)
-    params.set('annotation', `str${rowNumber}`);
+    setAnnotationParam(params, `str${rowNumber}`);
 
     // Set structure to specific interaction
     params.set('structure', `interaction:${interactionId}`);

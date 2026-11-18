@@ -8,8 +8,6 @@ import {Feature} from "../../../types/FunctionalInfo";
 import {Interaction, Pocket} from "../../../types/Prediction";
 import {EmptyState} from "./common/EmptyState";
 import {FeatureList} from "./features/FeatureList";
-import { HelpButton } from "../help/HelpButton";
-import { HelpContent } from "../help/HelpContent";
 import {PocketList} from "./pockets/PocketList";
 import {InteractionList} from "./interactions/InteractionList";
 
@@ -37,7 +35,6 @@ export function RegionColumn(props: RegionColumnProps) {
             <span className="count-badge" style={{ marginLeft: 6 }}>{props.regions.length}</span>
           )}
         </span>
-        <HelpButton variant="inline" title="" content={<HelpContent name="feature-ranking" />} />
       </div>
 
       {props.regions.length === 0 ? (
@@ -53,7 +50,6 @@ export function RegionColumn(props: RegionColumnProps) {
 
       <div className="section-title">
         <span>Structure Predictions</span>
-        <HelpButton variant="inline" title="" content={<HelpContent name="predictions" />} />
       </div>
 
       <PocketList

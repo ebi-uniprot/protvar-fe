@@ -10,9 +10,7 @@ import {AmScore, TranslatedSequence} from "../../../types/MappingResponse";
 import {EmptyState} from "./common/EmptyState";
 import {FeatureList} from "./features/FeatureList";
 import AminoAcidModel from "./AminoAcidModel";
-import {HelpButton} from "../help/HelpButton";
 import {Prediction} from "./prediction/Prediction";
-import {HelpContent} from "../help/HelpContent";
 
 
 interface ResidueColumnProps {
@@ -42,7 +40,6 @@ export function ResidueColumn(props: ResidueColumnProps) {
             <span className="count-badge" style={{ marginLeft: 6 }}>{props.residues.length}</span>
           )}
         </span>
-        <HelpButton variant="inline" title="" content={<HelpContent name="feature-ranking" />} />
       </div>
 
       {props.residues.length === 0 ? (
@@ -61,7 +58,6 @@ export function ResidueColumn(props: ResidueColumnProps) {
       <div className="predictions-section">
         <div className="section-title">
           <span>Predictions</span>
-          <HelpButton variant="inline" title="" content={<HelpContent name="predictions" />} />
         </div>
 
         <Prediction
