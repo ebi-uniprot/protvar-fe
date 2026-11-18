@@ -44,6 +44,7 @@ import {
   UNIPROT_HOME_URL,
   VARSITE_URL, AVI_INFO_URL, PANGOLIN_INFO_URL
 } from "../../constants/ExternalUrls";
+import { Icon } from '../elements/Icon';
 
 function AboutPageContent() {
   useEffect(() => {
@@ -76,15 +77,15 @@ function AboutPageContent() {
         <h6 className="about-section-title">Resources</h6>
         <div className="about-resources">
           <a className="about-resource-card" href={PROTVAR_VIDEO_URL} target="_blank" rel="noreferrer">
-            <i className="bi bi-play-circle about-resource-icon" />
+            <Icon name="play-circle" className="about-resource-icon" />
             <span>Launch webinar</span>
           </a>
           <a className="about-resource-card" href="ProtVar_Jan_2024.pdf" target="_blank" rel="noreferrer">
-            <i className="bi bi-file-pdf about-resource-icon" />
+            <Icon name="file-pdf" className="about-resource-icon" />
             <span>Presentation (Jan 2024)</span>
           </a>
           <a className="about-resource-card" href="ProtVar_tutorial.pdf" target="_blank" rel="noreferrer">
-            <i className="bi bi-file-pdf about-resource-icon" />
+            <Icon name="file-pdf" className="about-resource-icon" />
             <span>Tutorial (Sep 2023)</span>
           </a>
         </div>
@@ -94,7 +95,7 @@ function AboutPageContent() {
       <section className="about-section">
         <h6 className="about-section-title">How to cite</h6>
         <div className="about-cite-box">
-          <i className="bi bi-quote about-cite-icon" />
+          <Icon name="quote" className="about-cite-icon" />
           <p>
             James D Stephenson, Prabhat Totoo, David F Burke, Jürgen Jänes, Pedro Beltrao, Maria J Martin,
             ProtVar: mapping and contextualizing human missense variation,{' '}

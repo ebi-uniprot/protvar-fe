@@ -2,6 +2,7 @@ import RegionProteinProps from "./RegionProteinProps";
 import { EmptyElement } from '../../../../constants/ConstElement';
 import {Comment} from "../../../../types/Comment";
 import React from "react";
+import { Icon } from '../../../elements/Icon';
 
 function RegionProtein(props: RegionProteinProps & {
   title: string;
@@ -24,7 +25,7 @@ function RegionProtein(props: RegionProteinProps & {
         onClick={() => toggleProteinRegion(title)}
         aria-expanded={isExpanded}
       >
-        <i className="bi bi-chevron-right chevron-icon"></i>
+        <Icon name="chevron-right" className="chevron-icon" />
         <span className="protein-info-title">{title}</span>
         <span className="count-badge">{components.length}</span>
       </button>

@@ -4,6 +4,7 @@ import {TITLE} from "../../constants/const";
 import {useSearchParams} from "react-router-dom";
 import ReleaseNotes, {ReleaseBadge, ReleaseNote} from "./release/ReleaseNote";
 import Statistics from "./release/Statistics";
+import { Icon } from '../elements/Icon';
 
 type ReleaseTab = 'notes' | 'stats';
 
@@ -37,13 +38,13 @@ function ReleasePageContent() {
           className={`release-tab${activeTab === 'stats' ? ' active' : ''}`}
           onClick={() => setTab('stats')}
         >
-          <i className="bi bi-bar-chart" /> Statistics
+          <Icon name="bar-chart" /> Statistics
         </button>
         <button
           className={`release-tab${activeTab === 'notes' ? ' active' : ''}`}
           onClick={() => setTab('notes')}
         >
-          <i className="bi bi-card-list" /> Release Notes
+          <Icon name="card-list" /> Release Notes
         </button>
       </div>
 

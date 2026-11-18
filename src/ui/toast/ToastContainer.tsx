@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { toastEmitter, ToastMessage } from './toast'
+import { Icon } from '../elements/Icon';
 
 const ICONS: Record<string, string> = {
-  info:    'bi-info-circle-fill',
-  success: 'bi-check-circle-fill',
-  warning: 'bi-exclamation-triangle-fill',
-  error:   'bi-x-circle-fill',
+  info:    'info-circle-fill',
+  success: 'check-circle-fill',
+  warning: 'exclamation-triangle-fill',
+  error:   'x-circle-fill',
 }
 
 export function ToastContainer() {
@@ -26,7 +27,7 @@ export function ToastContainer() {
     <div className="toast-container" role="region" aria-label="Notifications" aria-live="polite">
       {toasts.map(t => (
         <div key={t.id} className={`pv-toast pv-toast--${t.type}`}>
-          <i className={`bi ${ICONS[t.type]} pv-toast__icon`} />
+          <Icon name={ICONS[t.type]} className="pv-toast__icon" />
           <span className="pv-toast__msg">{t.message}</span>
           <button
             className="pv-toast__close"

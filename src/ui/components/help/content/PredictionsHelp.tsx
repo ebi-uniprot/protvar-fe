@@ -17,6 +17,7 @@ import { POCKET_CONFIDENCE_BANDS, INTERACTION_CONFIDENCE_BANDS } from '../../fun
 import { LegendCategories } from '../../common/LegendCategories';
 import { AFConfidenceLegend } from '../../structure/alphafoldConfidence';
 import {PUBMED_URL} from "../../../../constants/ExternalUrls";
+import { Icon } from '../../../elements/Icon';
 
 const PATHOGENIC_EXAMPLE = {
   conservScore:  { score: 0.93 },
@@ -117,7 +118,7 @@ export const PredictionsHelp: React.FC = () => {
       <h2 id="predictions:radar">
         ProtVar Score Radar{' '}
         <span className="experimental-text-badge">
-          <i className="bi bi-flask" /> experimental
+          <Icon name="flask" /> experimental
         </span>
       </h2>
       <p>

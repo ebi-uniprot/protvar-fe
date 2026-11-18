@@ -2,6 +2,7 @@ import DefaultPageLayout from "../layout/DefaultPageLayout";
 import { useEffect } from "react";
 import { TITLE } from "../../constants/const";
 import {CONTACT_FORM_URL} from "../../constants/ExternalUrls";
+import { Icon } from '../elements/Icon';
 
 function ContactPageContent() {
   useEffect(() => {
@@ -16,7 +17,7 @@ function ContactPageContent() {
         <div className="contact-intro-text">
           <p>Use the form below to send us feedback, report an issue, or ask a question about ProtVar.</p>
           <p className="contact-alt">
-            <i className="bi bi-envelope" />
+            <Icon name="envelope" />
             Prefer email?&nbsp;<a href="mailto:protvar@ebi.ac.uk">protvar@ebi.ac.uk</a>
           </p>
         </div>

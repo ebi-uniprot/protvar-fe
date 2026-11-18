@@ -5,6 +5,7 @@ import Spaces from "../../../elements/Spaces";
 import {STD_BENIGN_COLOR, STD_PATHOGENIC_COLOR, STD_UNCERTAIN_COLOR} from "./PredictionConstants";
 import { CopyLink } from '../../common/CopyLink';
 import React from "react";
+import { Icon } from '../../../elements/Icon';
 
 const PRECISION: number = 1 // dp
 
@@ -40,7 +41,7 @@ function EsmPredIcon(props: {esm?: EsmScore, stdColor: boolean }) {
     const color = props.stdColor ? esmAttr?.stdColor :
       ESM_COLOR_GRADIENT.rgbAt(props.esm.score/ ESM_MAX_SCORE).toHexString()
     return <div>
-      <i className="bi bi-circle-fill" style={{color: color}}></i>
+      <Icon name="circle-fill" style={{color: color}} />
       <Spaces/>{esmAttr && <>
         {esmAttr.text}
       </>}

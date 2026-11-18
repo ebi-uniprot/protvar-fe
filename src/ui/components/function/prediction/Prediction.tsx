@@ -16,6 +16,7 @@ import {Missense3dPred} from "./Missense3dPred";
 import {usePredictionHighlight} from "../../../../hooks/usePredictionHighlight";
 import {PredictionWrapper} from "./PredictionWrapper";
 import {PredictionRadar} from "./PredictionRadar";
+import { Icon } from '../../../elements/Icon';
 
 export type PredictionCategory = {
   text: string,
@@ -61,10 +62,10 @@ export const Prediction = (props: PredictionProps) => {
         <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: '0.5rem' }}>
           <div className="view-toggle" style={{ marginLeft: 0 }}>
             <button className={view === 'table' ? 'active' : ''} onClick={() => setView('table')}>
-              <i className="bi bi-table" /> Table
+              <Icon name="table" /> Table
             </button>
             <button className={view === 'chart' ? 'active' : ''} onClick={() => setView('chart')}>
-              <i className="bi bi-radar" /> Chart<sup><i className="bi bi-flask" title="Experimental feature" /></sup>
+              <Icon name="radar" /> Chart<sup><Icon name="flask" title="Experimental feature" /></sup>
             </button>
           </div>
         </div>

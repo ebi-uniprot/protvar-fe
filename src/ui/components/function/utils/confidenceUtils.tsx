@@ -3,6 +3,7 @@
  */
 
 import React from 'react';
+import { Icon } from '../../../elements/Icon';
 
 export interface ConfidenceLevel {
   threshold: number;
@@ -14,25 +15,25 @@ export interface ConfidenceLevel {
 export const CONFIDENCE_LEVELS = {
   VERY_HIGH: {
     threshold: 900,
-    icon: 'bi-caret-up-fill',
+    icon: 'caret-up-fill',
     className: 'pocket-conf vhigh',
     label: 'very high',
   },
   HIGH: {
     threshold: 800,
-    icon: 'bi-caret-up-fill',
+    icon: 'caret-up-fill',
     className: 'pocket-conf high',
     label: 'high',
   },
   LOW: {
     threshold: 0,
-    icon: 'bi-caret-down-fill',
+    icon: 'caret-down-fill',
     className: 'pocket-conf low',
     label: 'low',
   },
   VERY_LOW: {
     threshold: 0,
-    icon: 'bi-caret-down-fill',
+    icon: 'caret-down-fill',
     className: 'pocket-conf vlow',
     label: 'very low',
   },
@@ -85,13 +86,13 @@ export function ConfidenceBadge({ level, compact }: ConfidenceBadgeProps) {
   if (compact) {
     return (
       <span title={`${level.label} confidence`}>
-        <i className={`bi ${level.icon} ${level.className}`}></i>
+        <Icon name={level.icon} className={level.className} />
       </span>
     );
   }
   return (
     <>
-      <i className={`bi ${level.icon} ${level.className}`}></i> {level.label}
+      <Icon name={level.icon} className={level.className} /> {level.label}
     </>
   );
 }
@@ -130,7 +131,7 @@ export const INTERACTION_CONFIDENCE_BANDS = [
  */
 export const POCKET_FILTER_OPTIONS = [
   { value: -1, label: 'Show all' },
-  { value: 0, label: <><i className={`bi ${CONFIDENCE_LEVELS.VERY_HIGH.icon} ${CONFIDENCE_LEVELS.VERY_HIGH.className}`} /> &gt;900 - {CONFIDENCE_LEVELS.VERY_HIGH.label}</> },
-  { value: 1, label: <><i className={`bi ${CONFIDENCE_LEVELS.HIGH.icon} ${CONFIDENCE_LEVELS.HIGH.className}`} /> 800-900 - {CONFIDENCE_LEVELS.HIGH.label}</> },
-  { value: 2, label: <><i className={`bi ${CONFIDENCE_LEVELS.LOW.icon} ${CONFIDENCE_LEVELS.LOW.className}`} /> &lt;800 - {CONFIDENCE_LEVELS.LOW.label}</> },
+  { value: 0, label: <><Icon name={CONFIDENCE_LEVELS.VERY_HIGH.icon} className={CONFIDENCE_LEVELS.VERY_HIGH.className} /> &gt;900 - {CONFIDENCE_LEVELS.VERY_HIGH.label}</> },
+  { value: 1, label: <><Icon name={CONFIDENCE_LEVELS.HIGH.icon} className={CONFIDENCE_LEVELS.HIGH.className} /> 800-900 - {CONFIDENCE_LEVELS.HIGH.label}</> },
+  { value: 2, label: <><Icon name={CONFIDENCE_LEVELS.LOW.icon} className={CONFIDENCE_LEVELS.LOW.className} /> &lt;800 - {CONFIDENCE_LEVELS.LOW.label}</> },
 ];

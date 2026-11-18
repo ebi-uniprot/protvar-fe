@@ -14,6 +14,7 @@ import {HelpButton} from '../../components/help/HelpButton'
 import {ActivityHelp} from '../../components/help/content/ActivityHelp'
 import Spaces from '../../elements/Spaces'
 import {STORE_DOWNLOADS, STORE_HISTORY} from '../../../constants/storage'
+import { Icon } from '../../elements/Icon';
 
 type Tab = 'history' | 'downloads'
 
@@ -52,7 +53,7 @@ function HistoryTab() {
       <div className="activity-list-header">
         <span>{records.length} entr{records.length === 1 ? 'y' : 'ies'}</span>
         {records.length > 1 && (
-          <button className="bi bi-trash icon-btn icon-btn-danger" onClick={handleDeleteAll}> Delete all</button>
+          <button className="icon-btn icon-btn-danger" onClick={handleDeleteAll}><Icon name="trash" /> Delete all</button>
         )}
       </div>
       <div className="table-scroll">
@@ -89,14 +90,14 @@ function HistoryTab() {
                       <NavLink to={record.url} className="activity-result-link">
                         {record.name ?? record.id}
                       </NavLink>
-                      <i className="bi bi-pencil icon-btn" onClick={() => setEditingId(record.id)} />
+                      <Icon name="pencil" className="icon-btn" onClick={() => setEditingId(record.id)} />
                     </span>
                   )}
                 </td>
                 <td className="col-center">
                   <ShareLink url={`${APP_URL}${record.url}`} />
                   <Spaces count={2} />
-                  <button className="bi bi-trash icon-btn icon-btn-danger" title="Delete" onClick={() => handleDelete(record.id)} />
+                  <button className="icon-btn icon-btn-danger" title="Delete" onClick={() => handleDelete(record.id)}><Icon name="trash" /></button>
                 </td>
               </tr>
             ))}
@@ -164,13 +165,13 @@ function DownloadsTab() {
       {error && <p className="activity-error">{error}</p>}
 
       {downloads.length === 0 ? (
-        <p>No downloads yet. Use the <i className="bi bi-download" /> Download button on any result page.</p>
+        <p>No downloads yet. Use the <Icon name="download" /> Download button on any result page.</p>
       ) : (
         <>
           <div className="activity-list-header">
             <span>{downloads.length} download{downloads.length !== 1 ? 's' : ''}</span>
             {downloads.length > 1 && (
-              <button className="bi bi-trash icon-btn icon-btn-danger" onClick={handleDeleteAll}> Delete all</button>
+              <button className="icon-btn icon-btn-danger" onClick={handleDeleteAll}><Icon name="trash" /> Delete all</button>
             )}
           </div>
           <div className="table-scroll">
@@ -205,7 +206,7 @@ function DownloadsTab() {
                         ) : (
                           <span className="activity-name-cell" onClick={() => setEditingId(dl.id)}>
                             {dl.jobName || <i>Unnamed</i>}
-                            <i className="bi bi-pencil icon-btn" />
+                            <Icon name="pencil" className="icon-btn" />
                           </span>
                         )}
                       </td>
@@ -224,13 +225,13 @@ function DownloadsTab() {
                         {dl.assembly && (dl.assembly.toLowerCase() !== 'auto') && ` ${dl.assembly}`}
                       </td>
                       <td className="col-center">
-                        {dl.fun ? <i className="bi bi-check green" /> : <i className="bi bi-x red" />} fun
-                        {dl.pred ? <i className="bi bi-check green" /> : <i className="bi bi-x red" />} pred
-                        {dl.pop ? <i className="bi bi-check green" /> : <i className="bi bi-x red" />} pop
-                        {dl.str ? <i className="bi bi-check green" /> : <i className="bi bi-x red" />} str
+                        {dl.fun ? <Icon name="check" className="green" /> : <Icon name="x" className="red" />} fun
+                        {dl.pred ? <Icon name="check" className="green" /> : <Icon name="x" className="red" />} pred
+                        {dl.pop ? <Icon name="check" className="green" /> : <Icon name="x" className="red" />} pop
+                        {dl.str ? <Icon name="check" className="green" /> : <Icon name="x" className="red" />} str
                       </td>
                       <td>
-                        <span className={statusInfo.icon} /> {statusInfo.text}
+                        <Icon name={statusInfo.icon} className={statusInfo.iconClass} /> {statusInfo.text}
                         {dl.size && dl.size > 0 ? ` (${humanFileSize(dl.size)})` : ''}
                         {dl.status === 'failed' && dl.message && (
                           <div className="activity-error-msg" title={dl.message}>{dl.message}</div>
@@ -238,19 +239,19 @@ function DownloadsTab() {
                       </td>
                       <td className="col-center">
                         <button
-                          className="bi bi-download icon-btn"
+                          className="icon-btn"
                           title="Download file"
                           disabled={dl.status !== 'ready'}
                           onClick={() => downloadFile(dl.fileUrl)}
-                        />
+                        ><Icon name="download" /></button>
                         <Spaces count={2} />
                         <ShareLink url={dl.fileUrl} disabled={dl.status !== 'ready'} />
                         <Spaces count={2} />
                         <button
-                          className="bi bi-trash icon-btn icon-btn-danger"
+                          className="icon-btn icon-btn-danger"
                           title="Delete"
                           onClick={() => handleDelete(dl.id)}
-                        />
+                        ><Icon name="trash" /></button>
                       </td>
                     </tr>
                   )
@@ -312,7 +313,7 @@ function GroupedView() {
                   const info = DOWNLOAD_STATUS_INFO[dl.status]
                   return (
                     <li key={dl.id} className="grouped-download-item">
-                      <span className={info.icon} />
+                      <Icon name={info.icon} className={info.iconClass} />
                       <span className="grouped-download-name">{dl.jobName || dl.id.substring(0, 8)}</span>
                       <span className="grouped-download-meta">
                         {[dl.fun && 'fun', dl.pred && 'pred', dl.pop && 'pop', dl.str && 'str'].filter(Boolean).join('+')}
@@ -320,10 +321,10 @@ function GroupedView() {
                       </span>
                       {dl.status === 'ready' && (
                         <button
-                          className="bi bi-download icon-btn"
+                          className="icon-btn"
                           title="Download"
                           onClick={() => downloadFile(dl.fileUrl)}
-                        />
+                        ><Icon name="download" /></button>
                       )}
                       <span className="grouped-download-date">
                         {getRelativeTime(parseDateString(dl.requestedAt))}
@@ -345,7 +346,7 @@ function GroupedView() {
             return (
               <div key={dl.id} className="grouped-item">
                 <div className="grouped-item-header">
-                  <span className={info.icon} />
+                  <Icon name={info.icon} className={info.iconClass} />
                   <span className="grouped-download-name">{dl.jobName || dl.id.substring(0, 8)}</span>
                   <span className="grouped-item-date">
                     {getRelativeTime(parseDateString(dl.requestedAt))}
@@ -377,15 +378,15 @@ function RetentionBanner() {
   return (
     <div className="activity-retention-banner" role="note">
       <span>
-        <i className="bi bi-info-circle" /> Submitted entries are kept for{' '}
+        <Icon name="info-circle" /> Submitted entries are kept for{' '}
         <strong>90 days</strong>; download files for <strong>30 days</strong>.
       </span>
       <button
-        className="bi bi-x-lg icon-btn"
+        className="icon-btn"
         title="Don't show this again"
         onClick={dismiss}
         aria-label="Dismiss retention notice"
-      />
+      ><Icon name="x-lg" /></button>
     </div>
   )
 }
@@ -423,13 +424,13 @@ function ActivityPageContent() {
           className={`activity-tab${activeTab === 'history' ? ' active' : ''}`}
           onClick={() => setTab('history')}
         >
-          <i className="bi bi-clock-history" /> History
+          <Icon name="clock-history" /> History
         </button>
         <button
           className={`activity-tab${activeTab === 'downloads' ? ' active' : ''}`}
           onClick={() => setTab('downloads')}
         >
-          <i className="bi bi-download" /> Downloads
+          <Icon name="download" /> Downloads
         </button>
         {activeTab === 'history' && (
           <div className="view-toggle" title="Switch view">
@@ -437,13 +438,13 @@ function ActivityPageContent() {
               className={view === 'flat' ? 'active' : ''}
               onClick={() => setView('flat')}
             >
-              <i className="bi bi-list-ul" /> List
+              <Icon name="list-ul" /> List
             </button>
             <button
               className={view === 'grouped' ? 'active' : ''}
               onClick={() => setView('grouped')}
             >
-              <i className="bi bi-diagram-3" /> Grouped
+              <Icon name="diagram-3" /> Grouped
             </button>
           </div>
         )}

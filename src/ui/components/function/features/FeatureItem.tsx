@@ -7,6 +7,7 @@ import React from 'react';
 import { Feature } from '../../../../types/FunctionalInfo';
 import { getPositionLabel } from '../utils/featureUtils';
 import Evidences from '../../common/Evidences';
+import { Icon } from '../../../elements/Icon';
 
 interface FeatureItemProps {
   itemKey: string;
@@ -35,7 +36,7 @@ export function FeatureItem({ itemKey, feature, isExpanded, onToggle }: FeatureI
             aria-expanded={isExpanded}
             title={isExpanded ? 'Hide evidences' : 'Show evidences'}
           >
-            <i className={`bi bi-${isExpanded ? 'journal-text' : 'journal'}`}></i>
+            <Icon name={isExpanded ? 'journal-text' : 'journal'} />
           </button>
         )}
       </div>

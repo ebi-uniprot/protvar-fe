@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Icon } from '../../elements/Icon';
 
 interface CitationEntry {
   Authors: string;
@@ -148,7 +149,7 @@ const Citation: React.FC = () => {
             disabled={total < 2}
             aria-label="Previous citation"
           >
-            <i className="bi bi-chevron-left" />
+            <Icon name="chevron-left" />
           </button>
           <span className="carousel-counter">{currentIndex + 1} / {total}</span>
           <button
@@ -158,7 +159,7 @@ const Citation: React.FC = () => {
             disabled={total < 2}
             aria-label="Next citation"
           >
-            <i className="bi bi-chevron-right" />
+            <Icon name="chevron-right" />
           </button>
         </div>
       </div>

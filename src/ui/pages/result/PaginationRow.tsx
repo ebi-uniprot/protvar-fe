@@ -2,6 +2,7 @@ import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE, PERMITTED_PAGE_SIZES } from '../../../constants/const';
 import { PagedMappingResponse } from '../../../types/PagedMappingResponse';
 import { effectiveTotalPages, isTotalCapped, isTotalUnknown } from '../../../utills/PaginationFormat';
+import { Icon } from '../../elements/Icon';
 
 interface PaginationRowProps {
   loading: boolean;
@@ -57,10 +58,10 @@ function PaginationRow({ loading, data }: PaginationRowProps) {
     <div className="pagination-row">
       <div className="pagination-nav">
         <button className="btn btn-secondary btn-sm" onClick={() => changePage(1)} disabled={atFirst}>
-          <i className="bi bi-chevron-double-left" />
+          <Icon name="chevron-double-left" />
         </button>
         <button className="btn btn-secondary btn-sm" onClick={() => changePage(data!.page - 1)} disabled={atFirst}>
-          <i className="bi bi-chevron-left" />
+          <Icon name="chevron-left" />
         </button>
         <span
           className="pagination-info"
@@ -80,7 +81,7 @@ function PaginationRow({ loading, data }: PaginationRowProps) {
           disabled={atLast}
           title={atLast ? lastHint : undefined}
         >
-          <i className="bi bi-chevron-right" />
+          <Icon name="chevron-right" />
         </button>
         {!unknown && (
           <button
@@ -89,7 +90,7 @@ function PaginationRow({ loading, data }: PaginationRowProps) {
             disabled={atLast}
             title={atLast ? lastHint : undefined}
           >
-            <i className="bi bi-chevron-double-right" />
+            <Icon name="chevron-double-right" />
           </button>
         )}
       </div>

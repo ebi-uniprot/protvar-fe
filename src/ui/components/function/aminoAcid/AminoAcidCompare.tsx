@@ -7,6 +7,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ResidueViewer } from './residueViewer';
 import { residueSdfUrl } from './residueSdf';
+import { Icon } from '../../../elements/Icon';
 
 interface AminoAcidCompareProps {
   /** Three-letter residue codes (any case), e.g. "ALA" / "ser". */
@@ -115,7 +116,7 @@ export default function AminoAcidCompare({
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', gap: 12, alignItems: 'center' }}>
           {pane(refCanvas, refContainer, refName ?? refCode)}
-          <i className="bi bi-chevron-right aa-change-arrow" />
+          <Icon name="chevron-right" className="aa-change-arrow" />
           {pane(altCanvas, altContainer, altName ?? altCode)}
         </div>
       )}

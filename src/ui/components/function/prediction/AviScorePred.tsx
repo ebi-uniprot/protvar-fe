@@ -2,6 +2,7 @@ import { PredictionCategory } from "./Prediction";
 import { STD_COLOR_GRADIENT } from "./PredictionConstants";
 import { CopyLink } from '../../common/CopyLink';
 import Spaces from "../../../elements/Spaces";
+import { Icon } from '../../../elements/Icon';
 
 const PRECISION: number = 1 // dp
 
@@ -33,7 +34,7 @@ export const AviScorePred = (props: { avi?: string, stdColor: boolean }) => {
     <div>AVI</div>
     <div>{score.toFixed(PRECISION)}</div>
     <div title={`AlphaGenome Variant Impact (AVI): ${genomeWideRank(score)} of all possible SNVs. A rank, not a pathogenicity classification.`}>
-      <i className="bi bi-circle-fill" style={{color: props.stdColor ? attr.stdColor : attr.color}}></i>
+      <Icon name="circle-fill" style={{color: props.stdColor ? attr.stdColor : attr.color}} />
       <Spaces/>{attr.text}
     </div>
     <CopyLink predictionType="avi" />

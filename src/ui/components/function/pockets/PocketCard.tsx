@@ -7,6 +7,7 @@ import { Pocket } from '../../../../types/Prediction';
 import { formatRange } from '../../../../utills/Util';
 import { getPocketConfidence, getModelConfidence, ConfidenceBadge } from '../utils/confidenceUtils';
 import structureIcon from '../../../../images/structures-3d.svg';
+import { Icon } from '../../../elements/Icon';
 
 interface PocketCardProps {
   pocket: Pocket;
@@ -26,7 +27,7 @@ function PocketResidues({ resid }: { resid: number[] }) {
         onClick={() => setExpanded(e => !e)}
         title={expanded ? 'Hide residues' : 'Show residues'}
       >
-        <i className={`bi ${expanded ? 'bi-chevron-up' : 'bi-chevron-down'}`} />
+        <Icon name={expanded ? 'chevron-up' : 'chevron-down'} />
       </button>
       {expanded && <span className="pocket-residues-list">{formatRange(resid)}</span>}
     </>

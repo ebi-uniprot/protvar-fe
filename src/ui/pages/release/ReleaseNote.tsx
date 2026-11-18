@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import { Icon } from '../../elements/Icon';
 
 type ReleaseNoteProps = {
   title: React.ReactNode;
@@ -13,7 +14,7 @@ export const ReleaseNote: React.FC<ReleaseNoteProps> = ({title, children, isDefa
     <div className="release-note">
       <div className="release-note-header" onClick={() => setIsOpen(!isOpen)}>
         <span>{title}</span>
-        <i className={`bi bi-chevron-${isOpen ? 'up' : 'down'} release-note-chevron`} />
+        <Icon name={isOpen ? 'chevron-up' : 'chevron-down'} className="release-note-chevron" />
       </div>
       {isOpen && <div className="release-note-content">{children}</div>}
     </div>

@@ -1,5 +1,6 @@
 import React, {useContext, useEffect, useState} from "react";
 import {AppContext} from "../../App";
+import { Icon } from '../../elements/Icon';
 
 export const SideDrawer = () => {
   const state = useContext(AppContext)
@@ -37,7 +38,7 @@ export const SideDrawer = () => {
             onClick={handleToggleWidth}
             title={width === '50%' ? 'Expand drawer' : 'Collapse drawer'}
           >
-            <i className={`bi bi-${width === '50%' ? 'arrows-angle-expand' : 'arrows-angle-contract'}`}></i>
+            <Icon name={width === '50%' ? 'arrows-angle-expand' : 'arrows-angle-contract'} />
             {width === '50%' ? 'Expand' : 'Collapse'}
           </button>
           <button
@@ -45,7 +46,7 @@ export const SideDrawer = () => {
             onClick={() => state.updateState("drawer", undefined)}
             title="Close drawer"
           >
-            <i className="bi bi-x-lg"></i>
+            <Icon name="x-lg" />
             Close
           </button>
         </div>

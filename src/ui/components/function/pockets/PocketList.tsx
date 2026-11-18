@@ -9,6 +9,7 @@ import { PocketFilter } from './PocketFilter';
 import { EmptyState } from '../common/EmptyState';
 import { ExpandableList } from '../../common/ExpandableList';
 import structureIcon from '../../../../images/structures-3d.svg';
+import { Icon } from '../../../elements/Icon';
 
 interface PocketListProps {
   pockets: Pocket[];
@@ -36,7 +37,7 @@ export function PocketList({ pockets, expandedSections, onToggle, onViewInStruct
         onClick={() => onToggle(SECTION_KEY)}
         aria-expanded={isExpanded}
       >
-        <i className="bi bi-chevron-right chevron-icon" />
+        <Icon name="chevron-right" className="chevron-icon" />
         <span>Pockets containing variant <span className="count-badge">{pockets.length}</span></span>
       </button>
 

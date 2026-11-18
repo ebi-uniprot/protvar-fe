@@ -10,6 +10,7 @@ import { TITLE } from '../../../constants/const';
 import { modelRank } from '../../../constants/semanticSearch';
 import { HelpButton } from '../../components/help/HelpButton';
 import { HelpContent } from '../../components/help/HelpContent';
+import { Icon } from '../../elements/Icon';
 
 const PAGE_SIZE = 10;
 const DEFAULT_MODEL = 'qwen3';
@@ -127,7 +128,7 @@ function ResultCard({ result, onView }: { result: GroupedResult; onView: (acc: s
       </div>
       <div className="protein-card-footer">
         <button className="btn btn-secondary view-variants-btn" onClick={() => onView(result.accession)}>
-          View variants <i className="bi bi-arrow-right" />
+          View variants <Icon name="arrow-right" />
         </button>
       </div>
     </div>
@@ -279,7 +280,7 @@ function SemanticSearchPageContent() {
 
       {query && (
         <p className="semantic-ai-notice">
-          <i className="bi bi-info-circle" />
+          <Icon name="info-circle" />
           These results are AI-ranked by semantic similarity. Relevance varies
           depending on your search terms — use them as a starting point and
           verify important findings against the annotated data.
@@ -288,21 +289,21 @@ function SemanticSearchPageContent() {
 
       {loading && page === 0 && (
         <div className="search-state">
-          <i className="bi bi-hourglass-split search-state-icon" />
+          <Icon name="hourglass-split" className="search-state-icon" />
           <p>Searching…</p>
         </div>
       )}
 
       {error && (
         <div className="search-state search-state--error">
-          <i className="bi bi-exclamation-circle search-state-icon" />
+          <Icon name="exclamation-circle" className="search-state-icon" />
           <p>{error}</p>
         </div>
       )}
 
       {!loading && !error && totalProteins === 0 && query && (
         <div className="search-state">
-          <i className="bi bi-search search-state-icon" />
+          <Icon name="search" className="search-state-icon" />
           <p>No results found for <em>"{query}"</em>. Try a different term.</p>
         </div>
       )}
@@ -313,7 +314,7 @@ function SemanticSearchPageContent() {
           {functionGrouped.length > 0 && (
             <section className="search-results-section">
               <h6 className="results-section-title">
-                <i className="bi bi-diagram-3" /> Protein function
+                <Icon name="diagram-3" /> Protein function
               </h6>
               <div className="search-results">
                 {functionGrouped.map(r => (
@@ -327,7 +328,7 @@ function SemanticSearchPageContent() {
           {populationGrouped.length > 0 && (
             <section className="search-results-section">
               <h6 className="results-section-title">
-                <i className="bi bi-geo-alt" /> Variants
+                <Icon name="geo-alt" /> Variants
               </h6>
               <div className="search-results">
                 {populationGrouped.map(r => (
@@ -347,7 +348,7 @@ function SemanticSearchPageContent() {
           )}
           {loading && page > 0 && (
             <div className="search-state">
-              <i className="bi bi-hourglass-split search-state-icon" />
+              <Icon name="hourglass-split" className="search-state-icon" />
               <p>Loading more…</p>
             </div>
           )}

@@ -3,6 +3,7 @@ import axios from "axios";
 import Notify from "../elements/Notify";
 import {emailValidate} from "../../utills/Validator";
 import {useStorage} from "../../context/StorageContext";
+import { Icon } from '../elements/Icon';
 
 function Subscribe() {
   const [email, setEmail] = useState("");
@@ -41,14 +42,14 @@ function Subscribe() {
       {subscribed ? (
         <div className="subscribe-confirmed">
           <span className="subscribe-confirmed-text">
-            <i className="bi bi-check-circle-fill subscribe-confirmed-icon" />
+            <Icon name="check-circle-fill" className="subscribe-confirmed-icon" />
             Thanks for subscribing!
           </span>
           <button
             className="subscribe-again-btn"
             onClick={() => setSubscribed(false)}
           >
-            <i className="bi bi-arrow-counterclockwise" /> Subscribe again
+            <Icon name="arrow-counterclockwise" /> Subscribe again
           </button>
         </div>
       ) : (

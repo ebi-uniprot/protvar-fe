@@ -3,6 +3,7 @@ import axios from 'axios';
 import { IdUrl } from "./Evidences";
 import {ExtLink} from "./Link";
 import {PUBMED_EUTILS_URL} from "../../../constants/ExternalUrls";
+import { Icon } from '../../elements/Icon';
 
 // Shared instance for PubMed API
 const pubmedApi = axios.create({
@@ -127,7 +128,7 @@ const PubMedList: React.FC<PubMedListProps> = ({
             onClick={allExpanded ? collapseAll : expandAll}
             title={allExpanded ? "Collapse all" : "Expand all"}
           >
-            <i className={`bi bi-${allExpanded ? 'dash-square' : 'plus-square'}`}></i>
+            <Icon name={allExpanded ? 'dash-square' : 'plus-square'} />
           </button>
         )}
 
@@ -141,7 +142,7 @@ const PubMedList: React.FC<PubMedListProps> = ({
                 onClick={() => toggleArticleDetails(id)}
                 title={isExpanded ? "Hide details" : "Show details"}
               >
-                <i className={`bi bi-book${isExpanded ? '-fill' : ''}`}></i>
+                <Icon name={isExpanded ? 'book-fill' : 'book'} />
               </button>
             </span>
           );
@@ -169,23 +170,23 @@ const PubMedList: React.FC<PubMedListProps> = ({
             </div>
             {article.loading ? (
               <div className="pubmed-article-loading">
-                <i className="bi bi-hourglass-split"></i>
+                <Icon name="hourglass-split" />
                 <em>Loading...</em>
               </div>
             ) : article.error ? (
               <div className="pubmed-article-error">
-                <i className="bi bi-exclamation-triangle"></i>
+                <Icon name="exclamation-triangle" />
                 <em>{article.error}</em>
               </div>
             ) : (
               <>
                 <div className="pubmed-article-title">
-                  <i className="bi bi-file-text"></i>
+                  <Icon name="file-text" />
                   <span>{article.title}</span>
                 </div>
                 {article.authors.length > 0 && (
                   <div className="pubmed-article-authors">
-                    <i className="bi bi-people"></i>
+                    <Icon name="people" />
                     <span>
                       {article.authors.slice(0, 3).join(', ')}
                       {article.authors.length > 3 && ` +${article.authors.length - 3} more`}

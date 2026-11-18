@@ -2,12 +2,13 @@ import { Link } from 'react-router-dom';
 import { CONTACT, HOME } from '../../constants/BrowserPaths';
 import DefaultPageLayout from '../layout/DefaultPageLayout';
 import { useNoindex } from '../../hooks/useNoindex';
+import { Icon } from '../elements/Icon';
 
 const APIErrorContent = () => {
   useNoindex();
   return (
   <div className="error-page">
-    <i className="bi bi-exclamation-circle error-page-icon" />
+    <Icon name="exclamation-circle" className="error-page-icon" />
     <h4 className="error-page-title">Something went wrong</h4>
     <p className="error-page-text">
       We couldn&apos;t complete your request — one of our services may be

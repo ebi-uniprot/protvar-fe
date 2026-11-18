@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { DOWNLOAD_STATUS_INFO } from '../../../../types/DownloadRecord'
 import { HELP } from '../../../../constants/BrowserPaths'
+import { Icon } from '../../../elements/Icon';
 
 export const ActivityHelp = () => (
   <div className="help-content">
@@ -28,7 +29,7 @@ export const ActivityHelp = () => (
       <li>
         <strong>Browse</strong> — <Link to={`${HELP}#results`}>result pages</Link> reached by
         biological identifier (UniProt, Gene, PDB, Ensembl, RefSeq). These are <em>not</em>{' '}
-        saved automatically — use the <i className="bi bi-bookmark" /> <strong>Save</strong>{' '}
+        saved automatically — use the <Icon name="bookmark" /> <strong>Save</strong>{' '}
         button in the result page toolbar to add them to your history. Saved browse entries
         are kept until you delete them.
       </li>
@@ -38,15 +39,15 @@ export const ActivityHelp = () => (
       as they are single-input lookups designed for quick sharing rather than ongoing analysis.
     </p>
     <p>
-      Use <i className="bi bi-pencil" /> to rename, <i className="bi bi-share" /> to share,
-      and <i className="bi bi-trash" /> to delete entries.
+      Use <Icon name="pencil" /> to rename, <Icon name="share" /> to share,
+      and <Icon name="trash" /> to delete entries.
     </p>
 
     <h2 id="activity:activity-downloads">Downloads</h2>
     <img src={`${process.env.PUBLIC_URL}/images/activity_downloads.png`} alt="Activity Downloads tab" />
     <p>
       Downloads can be requested from any <Link to={`${HELP}#results`}>result page</Link>{' '}
-      using the <i className="bi bi-download" /> <strong>Download</strong> button in the
+      using the <Icon name="download" /> <strong>Download</strong> button in the
       toolbar — see <Link to={`${HELP}#download-panel`}>Download Panel</Link> for the
       full set of options.
     </p>
@@ -75,21 +76,21 @@ export const ActivityHelp = () => (
     <p><strong>Retention</strong></p>
     <p>
       Generated files and their status are kept for 30 days. After that, the entry shows as{' '}
-      <em>Expired</em> and you can clear it with <i className="bi bi-trash" />.
+      <em>Expired</em> and you can clear it with <Icon name="trash" />.
     </p>
 
     <p><strong>Download status</strong></p>
     <ul>
-      <li><span className={DOWNLOAD_STATUS_INFO.queued.icon} /> <em>{DOWNLOAD_STATUS_INFO.queued.text}:</em> Job submitted, awaiting a worker.</li>
-      <li><span className={DOWNLOAD_STATUS_INFO.processing.icon} /> <em>{DOWNLOAD_STATUS_INFO.processing.text}:</em> File is being generated — check back shortly.</li>
-      <li><span className={DOWNLOAD_STATUS_INFO.ready.icon} /> <em>{DOWNLOAD_STATUS_INFO.ready.text}:</em> File is prepared and available for download.</li>
-      <li><span className={DOWNLOAD_STATUS_INFO.failed.icon} /> <em>{DOWNLOAD_STATUS_INFO.failed.text}:</em> Generation didn't complete; the row shows a brief reason.</li>
-      <li><span className={DOWNLOAD_STATUS_INFO.expired.icon} /> <em>{DOWNLOAD_STATUS_INFO.expired.text}:</em> Past the 30-day retention window — file no longer available.</li>
+      <li><Icon name={DOWNLOAD_STATUS_INFO.queued.icon} className={DOWNLOAD_STATUS_INFO.queued.iconClass} /> <em>{DOWNLOAD_STATUS_INFO.queued.text}:</em> Job submitted, awaiting a worker.</li>
+      <li><Icon name={DOWNLOAD_STATUS_INFO.processing.icon} className={DOWNLOAD_STATUS_INFO.processing.iconClass} /> <em>{DOWNLOAD_STATUS_INFO.processing.text}:</em> File is being generated — check back shortly.</li>
+      <li><Icon name={DOWNLOAD_STATUS_INFO.ready.icon} className={DOWNLOAD_STATUS_INFO.ready.iconClass} /> <em>{DOWNLOAD_STATUS_INFO.ready.text}:</em> File is prepared and available for download.</li>
+      <li><Icon name={DOWNLOAD_STATUS_INFO.failed.icon} className={DOWNLOAD_STATUS_INFO.failed.iconClass} /> <em>{DOWNLOAD_STATUS_INFO.failed.text}:</em> Generation didn't complete; the row shows a brief reason.</li>
+      <li><Icon name={DOWNLOAD_STATUS_INFO.expired.icon} className={DOWNLOAD_STATUS_INFO.expired.iconClass} /> <em>{DOWNLOAD_STATUS_INFO.expired.text}:</em> Past the 30-day retention window — file no longer available.</li>
     </ul>
 
     <p>
-      Use <i className="bi bi-pencil" /> to rename, <i className="bi bi-download" /> to download,
-      and <i className="bi bi-trash" /> to delete entries.
+      Use <Icon name="pencil" /> to rename, <Icon name="download" /> to download,
+      and <Icon name="trash" /> to delete entries.
     </p>
   </div>
 )

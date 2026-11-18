@@ -5,6 +5,7 @@ import {Foldx} from "../../../../types/Prediction";
 import {aminoAcid3to1Letter} from "../../../../utills/Util";
 import { CopyLink } from '../../common/CopyLink';
 import React from "react";
+import { Icon } from '../../../elements/Icon';
 
 // Legend bands for FoldX ΔΔG — threshold at 2 kcal/mol, matching FoldxPredIcon.
 // No separate non-std colour: FoldX has always used the standardised palette.
@@ -47,7 +48,7 @@ function FoldxPredIcon(props: { foldx?: Foldx }) {
     const color = props.foldx.foldxDdg >= 2 ? STD_PATHOGENIC_COLOR : STD_BENIGN_COLOR
     const text = props.foldx.foldxDdg >= 2 ? 'likely to be destabilising' : 'unlikely to be destabilising'
     return <div>
-      <i className="bi bi-circle-fill" style={{color: color}}></i>
+      <Icon name="circle-fill" style={{color: color}} />
       <Spaces/>{text}
     </div>
   }

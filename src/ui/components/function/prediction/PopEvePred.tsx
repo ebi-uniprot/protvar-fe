@@ -5,6 +5,7 @@ import Spaces from "../../../elements/Spaces";
 import { CopyLink } from '../../common/CopyLink';
 import React from "react";
 import tinygradient from "tinygradient";
+import { Icon } from '../../../elements/Icon';
 
 /* -------------------------------------------------- */
 /* PopEve gradient colors (from original website)     */
@@ -90,7 +91,7 @@ function PopEvePredIcon(props: { popeve?: PopEveScore, stdColor: boolean }) {
     const isLowConfidence = props.popeve.gapFreq > 0.5;
     const color = props.stdColor ? POPEVE_SCORE_ATTR[cls].stdColor : getPopEveColor(props.popeve.popeve);
     return <div>
-      <i className="bi bi-circle-fill" style={{color}}></i>
+      <Icon name="circle-fill" style={{color}} />
       <Spaces/>{POPEVE_SCORE_ATTR[cls].text}{isLowConfidence && ' (low confidence)'}
     </div>
   }

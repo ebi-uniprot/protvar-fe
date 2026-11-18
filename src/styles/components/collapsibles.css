@@ -128,10 +128,6 @@
     font-style: italic;
 }
 
-.struct-pred-help .bi-eye {
-    color: var(--color-primary);
-}
-
 /* ============================================
    GENOMIC LOCATION COLLAPSIBLES
    ============================================ */

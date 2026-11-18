@@ -3,6 +3,7 @@ import { API_URL } from '../../../../constants/const';
 import { HelpCommandBlock } from '../shared/HelpCommandBlock';
 import { HelpPromptCard } from '../shared/HelpPromptCard';
 import {MCP_SPEC_URL} from "../../../../constants/ExternalUrls";
+import { Icon } from '../../../elements/Icon';
 
 // The MCP endpoint mirrors the API base URL for whichever environment the
 // front-end is pointed at: .../ProtVar/api  ->  .../ProtVar/mcp
@@ -47,7 +48,7 @@ export const McpHelp: React.FC = () => {
       <h1 id="mcp">
         ProtVar MCP{' '}
         <span className="experimental-text-badge">
-          <i className="bi bi-flask" /> experimental
+          <Icon name="flask" /> experimental
         </span>
       </h1>
 

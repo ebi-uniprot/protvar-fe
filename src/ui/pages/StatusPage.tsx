@@ -7,22 +7,23 @@ import {getRelativeTime, parseDateString} from '../../utills/DateUtil'
 import {modelRank} from '../../constants/semanticSearch'
 import {useStats} from '../../context/StatsContext'
 import {formatNumber} from './release/Statistics'
+import { Icon } from '../elements/Icon';
 
 const POLL_INTERVAL_MS = 30_000
 const MAX_POLL_DURATION_MS = 15 * 60 * 1000   // give up after 15 min of an idle/forgotten tab
 
 const STATE_INFO: Record<OverallState, { label: string; cls: string; icon: string }> = {
-  up:       { label: 'Operational', cls: 'status-up',       icon: 'bi bi-check-circle-fill' },
-  degraded: { label: 'Degraded',    cls: 'status-degraded', icon: 'bi bi-exclamation-circle-fill' },
-  down:     { label: 'Down',        cls: 'status-down',      icon: 'bi bi-x-circle-fill' },
-  unknown:  { label: 'Unknown',     cls: 'status-unknown',   icon: 'bi bi-question-circle-fill' },
+  up:       { label: 'Operational', cls: 'status-up',       icon: 'check-circle-fill' },
+  degraded: { label: 'Degraded',    cls: 'status-degraded', icon: 'exclamation-circle-fill' },
+  down:     { label: 'Down',        cls: 'status-down',      icon: 'x-circle-fill' },
+  unknown:  { label: 'Unknown',     cls: 'status-unknown',   icon: 'question-circle-fill' },
 }
 
 function StateIndicator({state}: {state: OverallState}) {
   const info = STATE_INFO[state] ?? STATE_INFO.unknown
   return (
     <span className={`status-pill ${info.cls}`}>
-      <i className={info.icon} /> {info.label}
+      <Icon name={info.icon} /> {info.label}
     </span>
   )
 }
@@ -100,12 +101,12 @@ function StatusPageContent() {
 
       {error && hasBackendData && (
         <div className="status-error status-error--inline">
-          <i className="bi bi-exclamation-triangle-fill" /> Last refresh failed. Showing the previous successful check.
+          <Icon name="exclamation-triangle-fill" /> Last refresh failed. Showing the previous successful check.
         </div>
       )}
       {error && !hasBackendData && (
         <div className="status-error status-error--inline">
-          <i className="bi bi-exclamation-triangle-fill" /> Backend unreachable. Database, submissions and downloads
+          <Icon name="exclamation-triangle-fill" /> Backend unreachable. Database, submissions and downloads
           run inside the cluster and can only be checked through the API — their state is unknown until the API is back.
         </div>
       )}
@@ -138,7 +139,7 @@ function ReleaseStatsTable() {
     <>
       <h6 className="status-section-header">Release statistics</h6>
       {outOfSync > 0 && <p className="stats-out-of-sync">
-        <i className="bi bi-exclamation-triangle-fill" /> {outOfSync} figure(s) counted from a table the API does not serve.
+        <Icon name="exclamation-triangle-fill" /> {outOfSync} figure(s) counted from a table the API does not serve.
       </p>}
       <table className="stats-table">
         <thead>

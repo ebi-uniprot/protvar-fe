@@ -499,7 +499,7 @@
     color: var(--color-text-tertiary);
 }
 
-.prediction-row .bi-circle-fill {
+.prediction-row .pv-icon {
     font-size: 10px;
     flex-shrink: 0;
 }

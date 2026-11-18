@@ -22,6 +22,7 @@ import ter from '../../../images/ter.png';
 import React, { Suspense, useState } from 'react';
 import { fullAminoAcidName, getKeyValue } from '../../../utills/Util';
 import { hasResidueSdf } from './aminoAcid/residueSdf';
+import { Icon } from '../../elements/Icon';
 
 // Lazy so 3Dmol is only loaded when the user opens the 3D view.
 const AminoAcidCompare = React.lazy(() => import('./aminoAcid/AminoAcidCompare'));
@@ -76,14 +77,14 @@ const AminoAcidModel = (props: AminoAcidModelProps) => {
               aria-pressed={!spin}
               onClick={() => setSpin((v) => !v)}
             >
-              <i className={`bi ${spin ? 'bi-pause-fill' : 'bi-play-fill'}`} /> {spin ? 'Stop spin' : 'Resume spin'}
+              <Icon name={spin ? 'pause-fill' : 'play-fill'} /> {spin ? 'Stop spin' : 'Resume spin'}
             </button>
             <button
               type="button"
               className="aa-3d-toggle"
               onClick={() => setResetNonce((n) => n + 1)}
             >
-              <i className="bi bi-arrow-counterclockwise" /> Reset
+              <Icon name="arrow-counterclockwise" /> Reset
             </button>
           </div>
         </div>
@@ -107,7 +108,7 @@ const AminoAcidModel = (props: AminoAcidModelProps) => {
             <img className="img-size" src={getImageByKey(refAA)} alt={refAA} />
             <span className="aa-model-label">{fullAminoAcidName(refAA)}</span>
           </div>
-          <i className="bi bi-chevron-right aa-change-arrow"></i>
+          <Icon name="chevron-right" className="aa-change-arrow" />
           <div className="aa-model-item">
             <img className="img-size" src={getImageByKey(variantAA)} alt={variantAA} />
             <span className="aa-model-label">{fullAminoAcidName(variantAA)}</span>

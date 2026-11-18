@@ -4,6 +4,7 @@ import Spaces from "../../../elements/Spaces";
 import {PRECISION, STD_BENIGN_COLOR, STD_PATHOGENIC_COLOR, STD_UNCERTAIN_COLOR} from "./PredictionConstants";
 import { CopyLink } from '../../common/CopyLink';
 import React from "react";
+import { Icon } from '../../../elements/Icon';
 
 export const AM_SCORE_ATTR: {[key: string]: PredictionCategory} = {
   BENIGN: { color: '#3853a4', stdColor: STD_BENIGN_COLOR, text: 'benign' },
@@ -31,7 +32,7 @@ function AlphaMissensePredIcon(props: { am?: AmScore, stdColor: boolean }) {
   if (props.am) {
     let cls = props.am.amClass as keyof PredictionCategory
     return <div>
-      <i className="bi bi-circle-fill" style={{color: (props.stdColor ? AM_SCORE_ATTR[cls].stdColor : AM_SCORE_ATTR[cls].color)}}></i>
+      <Icon name="circle-fill" style={{color: (props.stdColor ? AM_SCORE_ATTR[cls].stdColor : AM_SCORE_ATTR[cls].color)}} />
       <Spaces/>{AM_SCORE_ATTR[cls].text}
     </div>
   }

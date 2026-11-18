@@ -1,6 +1,7 @@
 import React from 'react';
 import { describeFilters, removeChip, restoreChip } from "./filterUtils";
 import { SearchFilterParams } from "./SearchFilters";
+import { Icon } from '../../elements/Icon';
 
 interface FilterChipsProps {
   filters: SearchFilterParams;             // staged (locally edited) filters
@@ -55,7 +56,7 @@ const FilterChips: React.FC<FilterChipsProps> = ({ filters, appliedFilters, onFi
             aria-label={`${c.staged ? 'Restore' : 'Remove'} ${c.label}`}
             title={c.staged ? 'Restore' : 'Remove'}
           >
-            <i className={`bi ${c.staged ? 'bi-arrow-counterclockwise' : 'bi-x-lg'}`}></i>
+            <Icon name={c.staged ? 'arrow-counterclockwise' : 'x-lg'} />
           </button>
           <span className="filter-chip__label">{c.label}</span>
         </span>
@@ -70,7 +71,7 @@ const FilterChips: React.FC<FilterChipsProps> = ({ filters, appliedFilters, onFi
           aria-label="Apply filter changes and reload results"
           title={hasPendingChanges ? 'Apply changes' : 'No pending changes'}
         >
-          <i className="bi bi-arrow-clockwise"></i>
+          <Icon name="arrow-clockwise" />
         </button>
       )}
     </div>

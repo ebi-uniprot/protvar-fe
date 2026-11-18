@@ -1,4 +1,5 @@
 import React from 'react';
+import { Icon } from '../../elements/Icon';
 
 // Score-category legend used in both the legend drawer (LegendContent) and
 // the predictions help (PredictionsHelp). One row per item: marker · range
@@ -33,9 +34,9 @@ export const LegendCategories: React.FC<{
       return (
         <li key={i} className="legend-category">
           {attr.icon ? (
-            <i className={`bi ${attr.icon}${attr.iconClass ? ` ${attr.iconClass}` : ''}`} />
+            <Icon name={attr.icon} className={attr.iconClass} />
           ) : (
-            <i className="bi bi-circle-fill" style={{ color: dotColor }} />
+            <Icon name="circle-fill" style={{ color: dotColor }} />
           )}
           {attr.range ? <em className="legend-category-range">{attr.range}</em> : <span />}
           <span>{attr.text}</span>

@@ -7,6 +7,7 @@ import {STD_BENIGN_COLOR, STD_PATHOGENIC_COLOR} from "./PredictionConstants";
 import {PredictionCategory} from "./Prediction";
 import {ExtLink} from "../../common/Link";
 import {MISSENSE3D_URL} from "../../../../constants/ExternalUrls";
+import { Icon } from '../../../elements/Icon';
 
 // Legend bands for Missense3D — binary class, matching the prediction values
 // returned by the API ("damaging" / "non-damaging"). No separate non-std colour.
@@ -44,7 +45,7 @@ export const Missense3dPred = ({functionalData, refAA, variantAA}: Missense3dPre
       <div>Missense3D <ExtLink url={m3dUrl} title="View in Missense3D" /></div>
       <div></div>
       <div>
-        <i className="bi bi-circle-fill" style={{color: predColor}}></i>
+        <Icon name="circle-fill" style={{color: predColor}} />
         <Spaces/>{predText}
         {displayText !== '-' && (
           <span className="m3d-feature" title={isTruncated ? formattedText : undefined}>{displayText}</span>

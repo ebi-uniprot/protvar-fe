@@ -124,6 +124,7 @@
     transition: all 0.2s ease;
     line-height: 1;
     text-decoration: none;
+    gap: 4px;
 }
 
 .help-icon:hover {
@@ -132,15 +133,10 @@
     color: var(--color-primary);
 }
 
-.help-icon i {
-    font-size: 13px;
-    vertical-align: middle;
+.help-icon svg {
+    flex-shrink: 0;
 }
 
-/* Swap outline → filled icon on hover via CSS */
-.help-icon:hover .bi-question-circle::before {
-    content: "\f505";  /* bi-question-circle-fill unicode */
-}
 
 /* Share button */
 .icon-btn {

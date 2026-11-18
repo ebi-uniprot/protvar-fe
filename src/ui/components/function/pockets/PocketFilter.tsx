@@ -6,6 +6,7 @@
 import React, { useState, useMemo } from 'react';
 import { Pocket } from '../../../../types/Prediction';
 import { getPocketConfidence, CONFIDENCE_LEVELS, ConfidenceLevel } from '../utils/confidenceUtils';
+import { Icon } from '../../../elements/Icon';
 
 interface PocketFilterProps {
   pockets: Pocket[];
@@ -47,7 +48,7 @@ export function PocketFilter({ pockets, onFilter }: PocketFilterProps) {
           onClick={() => handlePill(level.label)}
           title={activeLabel === level.label ? 'Clear filter' : `Show ${level.label} only`}
         >
-          <i className={`bi ${level.icon} ${level.className}`} /> {level.label}
+          <Icon name={level.icon} className={level.className} /> {level.label}
         </button>
       ))}
       {activeLabel && (

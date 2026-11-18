@@ -3,6 +3,7 @@ import { EmptyElement } from "../../../../constants/ConstElement";
 import { INTACT_URL } from "../../../../constants/ExternalUrls";
 import {IntAct, IntActComment} from "../../../../types/Comment";
 import {ExtLink} from "../../common/Link";
+import { Icon } from '../../../elements/Icon';
 
 interface IntActsProps extends RegionProteinProps {
   accession: string
@@ -40,7 +41,7 @@ function IntActs(props: IntActsProps) {
             onClick={() => toggleProteinRegion(key)}
             aria-expanded={isExpanded}
           >
-            <i className="bi bi-chevron-right chevron-icon"></i>
+            <Icon name="chevron-right" className="chevron-icon" />
             <span className="protein-info-title">Interactions</span>
             <span className="count-badge">{intActComments[0].interactions.length}</span>
           </button>

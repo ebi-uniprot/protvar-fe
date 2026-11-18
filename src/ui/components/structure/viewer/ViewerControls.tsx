@@ -1,4 +1,5 @@
 import React from "react";
+import { Icon } from '../../../elements/Icon';
 
 export interface ViewerOption {
   id: string;
@@ -62,16 +63,16 @@ export const ViewerControls: React.FC<ViewerControlsProps> = ({ segments, toggle
       {toggles.map((t) => (
         <button key={t.label} type="button" className={`pv-viewer-action${t.active ? " active" : ""}`}
                 aria-pressed={t.active} onClick={t.onToggle} title={t.title}>
-          <i className={`bi ${t.icon}`} aria-hidden="true" /> {t.label}
+          <Icon name={t.icon} /> {t.label}
         </button>
       ))}
       <button type="button" className="pv-viewer-action icon-only" onClick={onZoom}
               title="Zoom to what is shown: the variant, chain, pocket or interface" aria-label="Zoom">
-        <i className="bi bi-zoom-in" aria-hidden="true" />
+        <Icon name="zoom-in" aria-hidden="true" />
       </button>
       <button type="button" className="pv-viewer-action icon-only" onClick={onReset}
               title="Reset the view and highlight" aria-label="Reset">
-        <i className="bi bi-arrow-counterclockwise" aria-hidden="true" />
+        <Icon name="arrow-counterclockwise" aria-hidden="true" />
       </button>
     </div>
   </div>

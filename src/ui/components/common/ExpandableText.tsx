@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import {PUBMED_URL} from "../../../constants/ExternalUrls";
+import { Icon } from '../../elements/Icon';
 
 interface ExpandableTextProps {
   text: string;
@@ -70,8 +71,8 @@ export const ExpandableText: React.FC<ExpandableTextProps> = ({
           title={expanded ? 'Show less' : 'Show more'}
         >
           {expanded
-            ? <i className="bi bi-chevron-bar-up" />
-            : <i className="bi bi-three-dots" />
+            ? <Icon name="chevron-bar-up" />
+            : <Icon name="three-dots" />
           }
         </button>
       )}

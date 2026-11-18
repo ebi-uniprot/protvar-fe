@@ -8,6 +8,7 @@ import { InteractionCard } from './InteractionCard';
 import { EmptyState } from '../common/EmptyState';
 import { ExpandableList } from '../../common/ExpandableList';
 import structureIcon from '../../../../images/structures-3d.svg';
+import { Icon } from '../../../elements/Icon';
 
 interface InteractionListProps {
   interactions: Interaction[];
@@ -34,7 +35,7 @@ export function InteractionList({ interactions, accession, expandedSections, onT
         onClick={() => onToggle(SECTION_KEY)}
         aria-expanded={isExpanded}
       >
-        <i className="bi bi-chevron-right chevron-icon" />
+        <Icon name="chevron-right" className="chevron-icon" />
         <span>Protein-protein interfaces containing variant <span className="count-badge">{interactions.length}</span></span>
       </button>
 

@@ -10,7 +10,6 @@ import DownloadPage from "./pages/download/DownloadPage";
 import HelpPage from "./pages/help/HelpPage";
 import {PagedMappingResponse} from "../types/PagedMappingResponse";
 import ResultPage from "./pages/result/ResultPage";
-import "bootstrap-icons/font/bootstrap-icons.css"
 import ResultListPage from "./pages/result/ResultListPage";
 import ActivityPage from "./pages/activity/ActivityPage";
 import StatusPage from "./pages/StatusPage";

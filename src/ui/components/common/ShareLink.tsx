@@ -10,6 +10,7 @@ import {
 import React, {useContext} from "react";
 import {APP_URL, AppContext} from "../../App";
 import {useLocation, useSearchParams} from "react-router-dom";
+import { Icon } from '../../elements/Icon';
 
 interface ShareLinkProps {
   shareUrl: string,
@@ -24,11 +25,11 @@ enum ShareType {
 
 export const ShareLink = (props: {url: string, linkText?: string, disabled?: boolean}) => {
   const state = useContext(AppContext)
-  return <i className="bi bi-share icon-btn" title="Share"
+  return <i className="icon-btn" title="Share"
             onClick={() => {
           navigator.clipboard.writeText(props.url);
           state.updateState("drawer", <ShareContent shareUrl={props.url} title={``} />)
-        }}>{props.linkText && ` ${props.linkText}`}</i>
+        }}><Icon name="share" />{props.linkText && ` ${props.linkText}`}</i>
 }
 
 export const ShareAnnotationIcon = (props: {annotation: string}) => {
@@ -43,7 +44,7 @@ export const ShareAnnotationIcon = (props: {annotation: string}) => {
     const shareUrl = `${APP_URL}${location.pathname}?${searchParams.toString()}`
     navigator.clipboard.writeText(shareUrl);
     state.updateState("drawer", <ShareContent shareUrl={shareUrl} title={``} />)
-  }} className="bi bi-share icon-btn"></button>
+  }} className="icon-btn"><Icon name="share" /></button>
 }
 
 const ShareContent = (props: ShareLinkProps) => {

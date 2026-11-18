@@ -1,4 +1,5 @@
 import React from 'react';
+import { Icon } from '../../elements/Icon';
 
 // AlphaFold pLDDT confidence bands — the colour + label pairs for the
 // per-residue model confidence legend. Single source of truth for the
@@ -18,7 +19,7 @@ export const AFConfidenceLegend: React.FC = () => (
   <div className="flex-column">
     {ALPHAFOLD_CONF.map(c => (
       <div key={c.text} className="flex">
-        <span className="padding-left-right-1x"><i className="bi bi-square-fill" style={{color: c.color}}></i></span>
+        <span className="padding-left-right-1x"><Icon name="square-fill" style={{color: c.color}} /></span>
         <div className="flex1">{c.text}</div>
       </div>
     ))}

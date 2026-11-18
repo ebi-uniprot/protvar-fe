@@ -13,6 +13,7 @@ import CoLocatedVariantDetails from "./coLocated/CoLocatedVariantDetails";
 import AssociatedDiseases from "./common/AssociatedDiseases";
 import XRefList from "./common/XRefList";
 import PopulationFrequencyDetails from "./common/PopulationFrequencyDetails";
+import { Icon } from '../../elements/Icon';
 
 interface PopulationDataProps {
   annotation: string
@@ -101,7 +102,7 @@ function PopulationData(props: PopulationDataProps) {
               <h5>Population Observation</h5>
               {dataRichness > 0.7 && (
                 <span className="data-richness-badge">
-                  <i className="bi bi-check-circle-fill"></i>
+                  <Icon name="check-circle-fill" />
                   Rich data
                 </span>
               )}

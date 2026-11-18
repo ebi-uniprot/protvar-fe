@@ -16,6 +16,7 @@ import {HelpButton} from "../help/HelpButton";
 import {ShareAnnotationIcon} from "../common/ShareLink";
 import {NoAnnotationData} from "../common/NoAnnotationData";
 import {Comment} from "../../../types/Comment";
+import { Icon } from '../../elements/Icon';
 
 export interface FunctionalDataProps {
   annotation: string
@@ -106,7 +107,7 @@ function FunctionalData(props: FunctionalDataProps) {
           <h5>Functional Information</h5>
           {dataRichness > 0.7 && (
             <span className="data-richness-badge">
-              <i className="bi bi-check-circle-fill"></i>
+              <Icon name="check-circle-fill" />
               Rich data
             </span>
           )}

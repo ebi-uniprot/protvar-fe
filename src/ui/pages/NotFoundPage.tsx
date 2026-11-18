@@ -2,12 +2,13 @@ import { Link } from 'react-router-dom';
 import {CONTACT, HOME} from '../../constants/BrowserPaths';
 import DefaultPageLayout from '../layout/DefaultPageLayout';
 import { useNoindex } from '../../hooks/useNoindex';
+import { Icon } from '../elements/Icon';
 
 const NotFoundPageContent = () => {
   useNoindex();
   return (
     <div className="error-page">
-      <i className="bi bi-compass error-page-icon" />
+      <Icon name="compass" className="error-page-icon" />
       <h4 className="error-page-title">Page not found</h4>
       <p className="error-page-text">
         The page you&apos;re looking for doesn&apos;t exist or may have moved.

@@ -3,6 +3,7 @@ import {STD_COLOR_GRADIENT} from "./PredictionConstants";
 import Spaces from "../../../elements/Spaces";
 import { CopyLink } from '../../common/CopyLink';
 import React from "react";
+import { Icon } from '../../../elements/Icon';
 
 const PRECISION: number = 1 // dp
 
@@ -36,7 +37,7 @@ function CADDIcon(props: { cadd?: string, stdColor: boolean }) {
   let caddAttr = caddScoreAttr(props.cadd)
   if (caddAttr) {
     return <div>
-      <i className="bi bi-circle-fill" style={{color: (props.stdColor ? caddAttr.stdColor : caddAttr.color)}}></i>
+      <Icon name="circle-fill" style={{color: (props.stdColor ? caddAttr.stdColor : caddAttr.color)}} />
       <Spaces/>{caddAttr.text}
     </div>
   }

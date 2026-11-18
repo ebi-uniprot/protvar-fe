@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { PredictionType, PREDICTION_HIGHLIGHT_CLASS } from '../../../hooks/usePredictionHighlight';
 import { toast } from '../../toast/toast';
+import { Icon } from '../../elements/Icon';
 
 interface CopyLinkProps {
   predictionType: PredictionType;
@@ -47,7 +48,7 @@ export function CopyLink({ predictionType, title }: CopyLinkProps) {
       title={title || `Copy link to ${predictionType} prediction`}
       aria-label={`Copy link to ${predictionType} prediction`}
     >
-      <i className={`bi ${copied ? 'bi-check2' : 'bi-link-45deg'}`} />
+      <Icon name={copied ? 'check2' : 'link-45deg'} />
     </button>
   );
 }

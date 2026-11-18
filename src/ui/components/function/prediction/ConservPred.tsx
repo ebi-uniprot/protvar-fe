@@ -8,6 +8,7 @@ import {
 } from "./PredictionConstants";
 import { CopyLink } from '../../common/CopyLink';
 import React from "react";
+import { Icon } from '../../../elements/Icon';
 
 export const CONSERV_SCORE_ATTR: PredictionCategory[] = [
   {color: '#732faf', stdColor: STD_COLOR_GRADIENT.rgbAt(0).toHexString(),     text: 'very low',    range: '0–0.15',   tip: 'Very low conservation = 0-0.15' },
@@ -41,7 +42,7 @@ function ConservPredIcon(props: { conserv?: ConservScore, stdColor: boolean }) {
     const colorAtPos = colorGrad.rgbAt(props.conserv!.score).toHexString()
     const scoreAttr = conservScoreAttr(props.conserv!.score)
     return <div>
-      <i className="bi bi-circle-fill" style={{color: colorAtPos }}></i>
+      <Icon name="circle-fill" style={{color: colorAtPos }} />
       <Spaces/>{scoreAttr.text}
     </div>
 }

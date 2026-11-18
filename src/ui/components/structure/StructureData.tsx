@@ -26,6 +26,7 @@ import {
   HYDROPHILIC_COLOR, HYDROPHOBIC_COLOR, NEGATIVE_COLOR, NEUTRAL_COLOR, POSITIVE_COLOR, PROTEIN_CHAIN_COLOR, VARIANT_COLOR,
 } from "./viewer/viewerColors";
 import {ALPHAFILL_URL} from "../../../constants/ExternalUrls";
+import { Icon } from '../../elements/Icon';
 
 
 
@@ -368,7 +369,7 @@ function StructureData(props: StructureDataProps) {
         ]});
       }
       if ("paeImageUrl" in selected && paeUrl) {
-        toggles.push({ label: "PAE", icon: "bi-grid-3x3", title: "Predicted Aligned Error",
+        toggles.push({ label: "PAE", icon: "grid-3x3", title: "Predicted Aligned Error",
           active: isPaeOpen, onToggle: () => setIsPaeOpen(open => !open) });
       }
       onZoom = () => {
@@ -496,7 +497,7 @@ function StructureData(props: StructureDataProps) {
               <h5>3D Structures</h5>
               {dataRichness > 0.7 && (
                 <span className="data-richness-badge">
-                  <i className="bi bi-check-circle-fill"></i>
+                  <Icon name="check-circle-fill" />
                   Rich data
                 </span>
               )}
@@ -508,7 +509,7 @@ function StructureData(props: StructureDataProps) {
           </div>
           {urlStructureWarning && (
             <div className="structure-url-notice">
-              <i className="bi bi-exclamation-triangle-fill"></i>
+              <Icon name="exclamation-triangle-fill" />
               {urlStructureWarning}
               <button className="structure-url-notice-close" onClick={() => setUrlStructureWarning(null)}>×</button>
             </div>

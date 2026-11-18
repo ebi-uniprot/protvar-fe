@@ -5,6 +5,7 @@ import {TITLE} from "../../../constants/const";
 import {HelpContent} from "../../components/help/HelpContent";
 import {ProtVarLinksCard} from "./ProtVarLinksCard";
 import {HELP} from "../../../constants/BrowserPaths";
+import { Icon } from '../../elements/Icon';
 
 interface HelpItem {
   name: string;
@@ -21,7 +22,7 @@ interface HelpSection {
 export const HELP_SECTIONS: HelpSection[] = [
   {
     label: 'Getting Started',
-    icon: 'bi-rocket-takeoff',
+    icon: 'rocket-takeoff',
     items: [
       {
         name: 'annotate',
@@ -37,7 +38,7 @@ export const HELP_SECTIONS: HelpSection[] = [
   },
   {
     label: 'Understanding Results',
-    icon: 'bi-table',
+    icon: 'table',
     items: [
       { name: 'results',    title: 'Results' },
       { name: 'messages',   title: 'Messages and notes' },
@@ -48,7 +49,7 @@ export const HELP_SECTIONS: HelpSection[] = [
   },
   {
     label: 'Predictions & Tools',
-    icon: 'bi-cpu',
+    icon: 'cpu',
     items: [
       { name: 'predictions',     title: 'Predictions' },
       { name: 'feature-ranking', title: 'UniProt Feature Ranking' },
@@ -56,7 +57,7 @@ export const HELP_SECTIONS: HelpSection[] = [
   },
   {
     label: 'Downloads & Activity',
-    icon: 'bi-download',
+    icon: 'download',
     items: [
       { name: 'download-panel',  title: 'Download Panel' },
       { name: 'download-format', title: 'Download File Format' },
@@ -65,21 +66,21 @@ export const HELP_SECTIONS: HelpSection[] = [
   },
   {
     label: 'URL Linking & Sharing',
-    icon: 'bi-link-45deg',
+    icon: 'link-45deg',
     items: [
       { name: 'protvar-links', title: 'ProtVar Links' },
     ],
   },
   {
     label: 'AI Access',
-    icon: 'bi-robot',
+    icon: 'robot',
     items: [
       { name: 'mcp', title: 'ProtVar MCP' },
     ],
   },
   {
     label: 'Reference',
-    icon: 'bi-book',
+    icon: 'book',
     items: [
       { name: 'glossary',     title: 'Glossary' },
       { name: 'further-info', title: 'Further Information' },
@@ -119,7 +120,7 @@ function HelpPageContent() {
         {HELP_SECTIONS.map((section) => (
           <div key={section.label} className="help-nav-section">
             <div className="help-nav-section-label">
-              <i className={`bi ${section.icon}`} />
+              <Icon name={section.icon} />
               {section.label}
             </div>
             <ul className="help-nav-items">

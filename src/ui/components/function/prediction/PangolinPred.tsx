@@ -3,6 +3,7 @@ import { STD_COLOR_GRADIENT } from "./PredictionConstants";
 import { CopyLink } from '../../common/CopyLink';
 import Spaces from "../../../elements/Spaces";
 import { Pangolin } from "../../../../types/MappingResponse";
+import { Icon } from '../../../elements/Icon';
 
 const PRECISION: number = 2 // dp
 
@@ -40,7 +41,7 @@ export const PangolinPred = (props: { pangolin?: Pangolin, stdColor: boolean }) 
     <div>Pangolin</div>
     <div>{p.score.toFixed(PRECISION)}</div>
     <div title={`Pangolin splice prediction (max of gain and loss of splice-site usage within ±50 nt): ${detail ?? 'no change predicted'}. Not a pathogenicity classification.`}>
-      <i className="bi bi-circle-fill" style={{color: props.stdColor ? attr.stdColor : attr.color}}></i>
+      <Icon name="circle-fill" style={{color: props.stdColor ? attr.stdColor : attr.color}} />
       <Spaces/>{attr.text}{detail && <small> ({detail})</small>}
     </div>
     <CopyLink predictionType="pangolin" />
