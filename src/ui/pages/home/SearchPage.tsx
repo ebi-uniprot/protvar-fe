@@ -1,12 +1,13 @@
 // SearchPage.tsx
 import React, { useState, useRef, useEffect, ChangeEvent } from 'react';
 import {Link, useNavigate, useSearchParams} from "react-router-dom";
-import {HelpContent} from "../../components/help/HelpContent";
-import {HelpButton} from "../../components/help/HelpButton";
+import {ArrowRight, ChevronDown, ChevronUp, Clipboard, Database, FileText, FileUp, FlaskConical, List, LucideIcon,
+  Search, Sparkles, TextAlignStart, X} from "lucide-react";
+import PageHelp, {HelpTopic} from "../../components/help/PageHelp";
 import {useStorage} from "../../../context/StorageContext";
 import {ResultRecord, submissionExpiresAt} from "../../../types/ResultRecord";
 import {getDatasets, uploadFile, uploadText} from "../../../services/ProtVarService";
-import {API_ERROR, DATASET, HELP, RESULT, SEARCH, SEMANTIC_SEARCH} from "../../../constants/BrowserPaths";
+import {API_ERROR, DATASET, RESULT, SEARCH, SEMANTIC_SEARCH} from "../../../constants/BrowserPaths";
 import {Dataset} from "../../../types/Dataset";
 import {readFirstLineFromFile} from "../../../utills/FileUtil";
 import { DEFAULT_SEARCH_FILTERS } from '../../components/search/defaultFilters';
@@ -14,16 +15,9 @@ import SearchFilters, {
   SearchFilterParams
 } from '../../components/search/SearchFilters';
 import {buildFilterParams} from "../../components/search/filterUtils";
-import {parseIdParam} from "../../../utills/InputTypeResolver";
+import {parseIdParam, singleIdPath} from "../../../utills/InputTypeResolver";
 import {hasPrimaryFilter, PRIMARY_FILTER_PROMPT} from "../../../utills/PrimaryFilter";
-import {ID_GENE, ID_PDB, ID_ENSEMBL, ID_REFSEQ} from "../../../constants/BrowserPaths";
-import {ANNOTATE_CARDS, BROWSE_CARDS, CARDS_SHOWN, ExampleCard, PASTE_BOX, SEMANTIC_CARDS} from "../../../constants/Example";
-
-interface ExampleData {
-  label: string;
-  value: string;
-  tip?: string;
-}
+import {ANNOTATE_CARDS, BROWSE_CARDS, FORMAT_EXAMPLES, ID_EXAMPLES, PASTE_BOX, SEMANTIC_CARDS} from "../../../constants/Example";
 
 type SearchMode = 'annotate' | 'browse' | 'semantic'; // annotate=variant annotation; browse=by identifier and/or filters; semantic=free-text search
 export type GenomeAssembly = 'auto' | 'grch38' | 'grch37';
@@ -34,99 +28,27 @@ const TAB_PARAM = 'tab';
 const tabToMode = (tab: string | null): SearchMode =>
   tab === 'browse' || tab === 'semantic' ? tab : 'annotate';
 
-const EXAMPLES: Record<SearchMode, ExampleData[]> = {
-  // By format: together the chips cover every supported input form (see input-formats help)
+// Help for each mode, on the right of its title (each opens in the help drawer). Results has its own, on the result page.
+const MODE_HELP: Record<SearchMode, HelpTopic[]> = {
   annotate: [
-    {
-      label: 'Genomic',
-      value: '7\t140753336\trs113488022\tA\tT\n' +
-        '12-25245350-C-T\n' +
-        '17 7675088 C T\n' +
-        '7:55191822:T:G\n' +
-        'chr11:5227002 T>A\n' +
-        '19 44908684 T/C\n' +
-        'MT 3460 G A',
-      tip: 'VCF, gnomAD, chromosome/position (space, colon, > or /), mitochondrial'
-    },
-    {
-      label: 'HGVS g.',
-      value: 'NC_000007.14:g.140753336A>T\n' +
-        'chr11:g.5227002T>A',
-      tip: 'HGVS genomic, with an NC_ accession or a chromosome'
-    },
-    {
-      label: 'HGVS c.',
-      value: 'NM_000518.5:c.20A>T\n' +
-        'NM_004333.6(BRAF):c.1799T>A\n' +
-        'NM_000546.6:c.524G>A p.(Arg175His)\n' +
-        'NM_000249.4:c.543C>T',
-      tip: 'HGVS coding, optionally with the gene or the protein change'
-    },
-    {
-      label: 'UniProt',
-      value: 'P15056 V600E\n' +
-        'P01116 p.G12D\n' +
-        'P02649 Cys130Arg\n' +
-        'p00533 leu858arg\n' +
-        'P38398 61 C/G\n' +
-        'Q30201 282 Cys Tyr\n' +
-        'P04637 R213*\n' +
-        'P40692 G181=',
-      tip: 'UniProt accession + change: 1- or 3-letter, any case, stop (*) and silent (=)'
-    },
-    {
-      label: 'HGVS p.',
-      value: 'NP_000509.1:p.Glu7Val\n' +
-        'NP_000537.3:p.Arg213Ter',
-      tip: 'HGVS protein'
-    },
-    {
-      label: 'Variant IDs',
-      value: 'rs334\n' +
-        'VCV000000642.133\n' +
-        'RCV000007540\n' +
-        'COSV56056643\n' +
-        'COSM521\n' +
-        'COSN190667\n' +
-        'VAR_004109',
-      tip: 'dbSNP, ClinVar (VCV with a version, RCV), COSMIC (COSV, COSM, COSN), UniProt (VAR_)'
-    },
-    {
-      label: 'Position only',
-      value: '17 7675088\n' +
-        '7 140753336 A\n' +
-        '11:5227002:na:na\n' +
-        'P01116 12\n' +
-        'P15056 600 Val\n' +
-        'P04637 M1?',
-      tip: 'Without the alternative (or both alleles / amino acids): every possible change at the position'
-    },
-    {
-      label: 'GRCh37',
-      value: '7 140453136 A T\n' +
-        '11 5248232 T A\n' +
-        '12 25398284 C T\n' +
-        '17 7578406 C T',
-      tip: 'GRCh37 positions: detected and converted to GRCh38'
-    },
+    { name: 'annotate', title: 'Annotate' },
+    { name: 'input-formats', title: 'Supported formats' },
+    { name: 'assembly-detection', title: 'Assembly detection' },
   ],
   browse: [
-    { label: 'UniProt ID', value: 'P04637', tip: 'TP53' },
-    { label: 'Gene Symbol', value: 'BRCA1' },
-    { label: 'Ensembl Gene', value: 'ENSG00000141510', tip: 'TP53' },
-    { label: 'RefSeq ID', value: 'NM_000492.4', tip: 'CFTR' },
-    { label: 'PDB ID', value: '4HHB', tip: 'Haemoglobin' }
+    { name: 'browse', title: 'Browse' },
+    { name: 'browse', title: 'Filters', section: 'browse:filters' },
   ],
-  semantic: []  // cards only (SEMANTIC_CARDS)
+  semantic: [
+    { name: 'semantic-search', title: 'Semantic search' },
+  ],
 };
 
+// Semantic Search: example questions shown before "more"
+const QUESTIONS_SHOWN = 4;
 
-const findExampleLabel = (input: string): string | null =>
-  Object.values(EXAMPLES)
-    .flat()
-    .find(example => example.value === input)?.label ?? null;
-
-
+// Annotate's worksheet: rows of line numbers shown at least, before the box grows
+const MIN_LINES = 9;
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
@@ -173,13 +95,7 @@ const SearchPage: React.FC = () => {
 
   function buildSingleIdUrl(raw: string): string {
     const { type, value } = parseIdParam(raw);
-    switch (type) {
-      case 'gene':    return `${ID_GENE}/${value}`;
-      case 'pdb':     return `${ID_PDB}/${value}`;
-      case 'ensembl': return `${ID_ENSEMBL}/${value}`;
-      case 'refseq':  return `${ID_REFSEQ}/${value}`;
-      default:        return `/${value}`; // uniprot and fallback — bare accession path
-    }
+    return singleIdPath(type, value);
   }
 
   const cleanInput = (input: string): string => {
@@ -195,11 +111,10 @@ const SearchPage: React.FC = () => {
   };
 
 
-  const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
+  const acceptFile = (file: File | undefined) => {
     if (!file) return;
 
-    if (!file.type.startsWith('text/')) {
+    if (file.type && !file.type.startsWith('text/')) {
       setError('Unsupported file type');
       return;
     }
@@ -214,6 +129,16 @@ const SearchPage: React.FC = () => {
     setVariantInput(''); // Clear text input when file is uploaded
   };
 
+  const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => acceptFile(event.target.files?.[0]);
+
+  // Annotate: a file dropped anywhere on the worksheet
+  const [dragOver, setDragOver] = useState(false);
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(false);
+    acceptFile(e.dataTransfer.files?.[0]);
+  };
+
   const handleRemoveFile = () => {
     setUploadedFile(null);
     setError('');
@@ -222,49 +147,23 @@ const SearchPage: React.FC = () => {
     }
   };
 
-  const [showAllCards, setShowAllCards] = useState(false);
 
-  // Example cards open their result straight away (a single variant, a filtered browse or a semantic search)
-  const renderCards = (cards: ExampleCard[], title: string) => (
-    <>
-      <h6>{title}</h6>
-      <div className="story-cards">
-        {(showAllCards ? cards : cards.slice(0, CARDS_SHOWN)).map(card => (
-          <button key={card.name} type="button" className="story-card"
-                  onClick={() => navigate(card.to)} title={card.note}>
-            <span className="story-name">{card.name}</span>
-            {card.detail && <span className="story-change">{card.detail}</span>}
-            <span className="story-input"><code>{card.code}</code></span>
-            <span className="story-format">{card.tag}</span>
-          </button>
-        ))}
-      </div>
-      {cards.length > CARDS_SHOWN && (
-        <button type="button" className="story-more" onClick={() => setShowAllCards(v => !v)}>
-          {showAllCards ? 'Fewer' : `${cards.length - CARDS_SHOWN} more`}
-          <i className={`bi bi-chevron-${showAllCards ? 'up' : 'down'}`} />
-        </button>
-      )}
-    </>
-  );
+  const [showAllQuestions, setShowAllQuestions] = useState(false);
 
-  const handleExampleClick = (example: ExampleData) => {
-    switch (activeMode) {
-      case 'annotate':
-        setVariantInput(example.value);
-        setUploadedFile(null); // Clear file if text example is used
-        break;
-      case 'browse':
-        // Add as chip if not already present
-        if (!browseIds.includes(example.value)) {
-          setBrowseIds(prev => [...prev, example.value]);
-        }
-        break;
-      case 'semantic':
-        setTextInput(example.value);
-        break;
+  // Annotate's worksheet: line numbers on the left, kept in step with the textarea's scroll
+  const gutterRef = useRef<HTMLDivElement>(null);
+  const variantLines = variantInput.split('\n');
+  const gutterLines = Math.max(MIN_LINES, variantLines.length);
+
+  // Browse: Enter or a comma turns the typed text into a token; Backspace on an empty input removes the last one
+  const handleBrowseKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' || e.key === ',') {
+      e.preventDefault();
+      if (browseInputText.trim()) addBrowseId();
+      else if (e.key === 'Enter') handleSearch();
+    } else if (e.key === 'Backspace' && !browseInputText && browseIds.length) {
+      removeBrowseId(browseIds.length - 1);
     }
-    setError('');
   };
 
   const handleTextSearch = () => {
@@ -301,10 +200,8 @@ const SearchPage: React.FC = () => {
   async function getRecordName(id: string): Promise<string> {
     const trimmedInput = variantInput.trim()
     if (trimmedInput) {
-      const exampleLabel = findExampleLabel(trimmedInput)
-      if (exampleLabel) {
-        return exampleLabel;
-      }
+      const example = FORMAT_EXAMPLES.find(f => f.value === trimmedInput);
+      if (example) return `${example.label} examples`;
       return trimmedInput.split("\n")[0]
         .replace(/\s+/g, " ") // normalize spaces
         .trim() || "";
@@ -425,308 +322,275 @@ const SearchPage: React.FC = () => {
     if (activeMode === 'annotate') {
       return !variantInput.trim() && !uploadedFile;
     } else if (activeMode === 'browse') {
-      return browseIds.length === 0 && !browseInputText.trim() && !hasPrimaryFilter(searchFilters);
+      return false; // with nothing to browse, the click explains what's needed (PRIMARY_FILTER_PROMPT)
     } else if (activeMode === 'semantic') {
       return !textInput.trim();
     }
     return true;
   };
 
+  // Every form: an icon, a title and one short line; the rest of the explaining lives in Help (the ? buttons)
+  const formTitle = (Icon: LucideIcon, title: string, line: string, tag?: React.ReactNode) => (
+    <div className="form-title">
+      <span className="form-title-icon"><Icon size={22} strokeWidth={1.75} aria-hidden="true" /></span>
+      <div>
+        <h1>{title}{tag}</h1>
+        <p>{line}</p>
+      </div>
+      <PageHelp topics={MODE_HELP[activeMode]} />
+    </div>
+  );
+
+  const submitLabel = activeMode === 'annotate' ? 'Annotate' : activeMode === 'browse' ? 'Browse' : 'Search';
+  const submitButton = (
+    <button type="button" className="form-submit" onClick={handleSearch} disabled={isSubmitDisabled() || loading}>
+      {loading ? 'Working…' : submitLabel}
+      <ArrowRight size={16} strokeWidth={2} aria-hidden="true" />
+    </button>
+  );
+
   return (
-    <div className="search-container">
-      {/* Search Mode Tabs */}
+    <>
+    {/* Mode bar: the one place to switch mode; full width, pinned to the top while the page scrolls */}
+    <nav className="mode-bar" aria-label="Search modes">
       <div className="search-modes">
-        <button
-          className={`mode-tab ${activeMode === 'annotate' ? 'active' : ''}`}
-          onClick={() => handleModeChange('annotate')}
-        >
-          <span className="icon"><i className="bi bi-clipboard-data"></i></span>
-          Annotate Variants
+        <button className={`mode-tab ${activeMode === 'annotate' ? 'active' : ''}`}
+                onClick={() => handleModeChange('annotate')}>
+          <Clipboard size={16} strokeWidth={1.75} aria-hidden="true" /> Annotate
         </button>
-        <button
-          className={`mode-tab ${activeMode === 'browse' ? 'active' : ''}`}
-          onClick={() => handleModeChange('browse')}
-        >
-          <span className="icon"><i className="bi bi-card-list"></i></span>
-          Browse Variants
+        <button className={`mode-tab ${activeMode === 'browse' ? 'active' : ''}`}
+                onClick={() => handleModeChange('browse')}>
+          <List size={16} strokeWidth={1.75} aria-hidden="true" /> Browse
         </button>
-        <button
-          className={`mode-tab ${activeMode === 'semantic' ? 'active' : ''}`}
-          onClick={() => handleModeChange('semantic')}
-        >
-          <span className="icon"><i className="bi bi-body-text"></i></span>
-          <span className="tab-label-experimental">
-            Semantic Search
-            <i className="bi bi-flask experimental-badge" title="Experimental feature" />
-          </span>
+        <button className={`mode-tab ${activeMode === 'semantic' ? 'active' : ''}`}
+                onClick={() => handleModeChange('semantic')}>
+          <TextAlignStart size={16} strokeWidth={1.75} aria-hidden="true" /> Semantic Search
         </button>
       </div>
+    </nav>
 
-      {/* Search Panel */}
-      <div className="search-panel">
-        {/* Variant List Mode */}
+    <div className="search-container">
+
+      <div className="search-form">
+        {/* ── Annotate: a worksheet — numbered lines, a file dropped on it, assembly and Annotate in its toolbar ── */}
         {activeMode === 'annotate' && (
-          <div className="search-content">
-            <div className="variant-controls-row">
-              <div className="input-method-toggle">
-                <button
-                  className={`method-btn ${!uploadedFile ? 'active' : ''}`}
-                  onClick={() => setUploadedFile(null)}
-                >
-                  <i className="bi bi-keyboard" /> Type / Paste
-                </button>
-                <button
-                  className={`method-btn ${uploadedFile ? 'active' : ''}`}
-                  onClick={() => fileInputRef.current?.click()}
-                >
-                  <i className="bi bi-file-earmark-arrow-up" /> Upload File
-                </button>
-              </div>
+          <>
+            {formTitle(Clipboard, 'Annotate variants', 'Paste a list or upload a file, in any supported format.')}
 
-              <div className="genome-assembly-inline">
-                <span className="assembly-label">
-                  Assembly
-                  <HelpButton title="" content={<HelpContent name="assembly-detection" />} />
-                </span>
-                <div className="input-method-toggle assembly-toggle">
-                  <button
-                    className={`method-btn ${genomeAssembly === 'auto' ? 'active' : ''}`}
-                    onClick={() => setGenomeAssembly('auto')}
-                    title="Automatically detect genome assembly from input"
-                  >Auto</button>
-                  <button
-                    className={`method-btn ${genomeAssembly === 'grch38' ? 'active' : ''}`}
-                    onClick={() => setGenomeAssembly('grch38')}
-                    title="GRCh38 / hg38"
-                  >GRCh38</button>
-                  <button
-                    className={`method-btn ${genomeAssembly === 'grch37' ? 'active' : ''}`}
-                    onClick={() => setGenomeAssembly('grch37')}
-                    title="GRCh37 / hg19"
-                  >GRCh37</button>
+            <div className={`composer${dragOver ? ' composer--drop' : ''}`}
+                 onDragOver={e => { e.preventDefault(); setDragOver(true); }}
+                 onDragLeave={() => setDragOver(false)}
+                 onDrop={handleDrop}>
+              {uploadedFile ? (
+                <div className="composer-file">
+                  <FileText size={20} strokeWidth={1.75} aria-hidden="true" />
+                  <span className="composer-file-name">{uploadedFile.name}</span>
+                  <span className="composer-file-size">{(uploadedFile.size / 1024).toFixed(1)} KB</span>
+                  <button type="button" className="composer-icon-btn" onClick={handleRemoveFile}
+                          aria-label="Remove file" title="Remove file"><X size={16} aria-hidden="true" /></button>
                 </div>
-              </div>
-            </div>
-
-            {uploadedFile ? (
-              <div className="file-upload-display">
-                <div className="uploaded-file">
-                  <div className="file-info">
-                    <span className="file-icon">📄</span>
-                    <span className="file-name">{uploadedFile.name}</span>
-                    <span className="file-size">
-                      ({(uploadedFile.size / 1024).toFixed(1)} KB)
-                    </span>
+              ) : (
+                <div className="worksheet">
+                  <div className="worksheet-gutter" ref={gutterRef} aria-hidden="true">
+                    {Array.from({ length: gutterLines }, (_, i) => <span key={i}>{i + 1}</span>)}
                   </div>
-                  <button className="remove-file-btn" onClick={handleRemoveFile}>
-                    ×
-                  </button>
-                </div>
-                <div className="file-help">
-                  Accepts .txt, .tsv, .csv, .vcf files up to 10MB
-                </div>
-              </div>
-            ) : (
-              <div className="input-group">
-                <label className="input-label">Enter your variants (one per line)</label>
-                <textarea
-                  className="input-field textarea"
-                  placeholder={PASTE_BOX}
-                  value={variantInput}
-                  onChange={(e) => setVariantInput(e.target.value)}
-                />
-                <div className="examples">
-                  {renderCards(ANNOTATE_CARDS, 'Try a well-known variant')}
-                  <h6 className="examples-by-format">
-                    Or fill the box by format
-                    <HelpButton title="" content={<HelpContent name="input-formats" />} />
-                  </h6>
-                  <div className="example-tags">
-                    {EXAMPLES[activeMode].map((example, index) => (
-                      <span
-                        key={index}
-                        className="example-tag"
-                        onClick={() => handleExampleClick(example)}
-                        title={example.tip}
-                      >
-                        {example.label}
-                      </span>
-                    ))}
-                  </div>
-                  {datasets.length > 0 && (
-                    <p className="example-dataset">
-                      Or explore a ready-made dataset:{' '}
-                      {datasets.map((d, i) => (
-                        <React.Fragment key={d.name}>
-                          {i > 0 && ', '}
-                          <Link to={`${DATASET}/${d.name}`} title={d.description}>{d.title}</Link>
-                          {' '}({d.lineCount.toLocaleString()} variants{d.sourceVersion ? `, ${d.sourceVersion}` : ''})
-                        </React.Fragment>
-                      ))}
-                    </p>
-                  )}
-                </div>
-              </div>
-            )}
-
-            <input
-              type="file"
-              ref={fileInputRef}
-              style={{display: 'none'}}
-              accept=".txt,.tsv,.csv,.vcf"
-              onChange={handleFileUpload}
-            />
-          </div>
-        )}
-
-        {/* Browse by ID Mode */}
-        {activeMode === 'browse' && (
-          <div className="search-content">
-            <div className="input-group">
-              <label className="input-label">Browse all mapped variants for a protein, gene or other identifier, or across all proteins with filters</label>
-
-              {/* Chips */}
-              {browseIds.length > 0 && (
-                <div className="browse-chips">
-                  {browseIds.map((id, index) => (
-                    <span key={index} className="browse-chip">
-                      {id}
-                      <button
-                        type="button"
-                        className="browse-chip-remove"
-                        onClick={() => removeBrowseId(index)}
-                        aria-label={`Remove ${id}`}
-                      >×</button>
-                    </span>
-                  ))}
+                  <textarea
+                    className="worksheet-input"
+                    aria-label="Variants, one per line"
+                    placeholder={PASTE_BOX}
+                    value={variantInput}
+                    spellCheck={false}
+                    onChange={(e) => setVariantInput(e.target.value)}
+                    onScroll={(e) => { if (gutterRef.current) gutterRef.current.scrollTop = e.currentTarget.scrollTop; }}
+                  />
                 </div>
               )}
 
-              {/* Input row */}
-              <div className="browse-input-row">
-                <div className="browse-input-wrapper">
-                  <input
-                    type="text"
-                    className="input-field"
-                    placeholder={browseIds.length > 0 ? "Add another identifier..." : "P68871 or HBB or ENSG00000244734"}
-                    value={browseInputText}
-                    onChange={(e) => setBrowseInputText(e.target.value)}
-                    onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addBrowseId(); } }}
-                  />
-                  <button
-                    type="button"
-                    className="browse-add-btn"
-                    onClick={addBrowseId}
-                    disabled={!browseInputText.trim()}
-                    title="Add identifier"
-                  >
-                    <i className="bi bi-plus-lg"></i>
-                  </button>
-                </div>
-                <button
-                  type="button"
-                  className="browse-go-btn"
-                  onClick={handleSearch}
-                  disabled={isSubmitDisabled() || loading}
-                  title="Browse"
-                >
-                  <i className="bi bi-search"></i>
+              <div className="composer-toolbar">
+                <button type="button" className="composer-upload" onClick={() => fileInputRef.current?.click()}>
+                  <FileUp size={16} strokeWidth={1.75} aria-hidden="true" /> Upload or drop a file
                 </button>
-              </div>
-
-              <div className="examples">
-                {renderCards(BROWSE_CARDS, 'Try a ready-made view')}
-                <h6 className="examples-by-format">Or add an identifier by type</h6>
-                <div className="example-tags">
-                  {EXAMPLES[activeMode].map((example, index) => (
-                    <span
-                      key={index}
-                      className="example-tag"
-                      onClick={() => handleExampleClick(example)}
-                      title={example.tip}
-                    >
-                      {example.label}
-                    </span>
-                  ))}
-                </div>
+                <label className="composer-select" title="Genome assembly of genomic inputs">
+                  Assembly
+                  <select value={genomeAssembly} onChange={e => setGenomeAssembly(e.target.value as GenomeAssembly)}>
+                    <option value="auto">Auto</option>
+                    <option value="grch38">GRCh38</option>
+                    <option value="grch37">GRCh37</option>
+                  </select>
+                </label>
+                <span className="composer-spacer" />
+                {(variantInput || uploadedFile) && (
+                  <button type="button" className="composer-clear" onClick={handleClear}>Clear</button>
+                )}
+                {submitButton}
               </div>
             </div>
-          </div>
+
+            {/* Under the box: a button per format, filling the box with examples of it */}
+            <div className="format-examples" role="group" aria-label="Fill the box with examples">
+              <span className="format-examples-label">Fill with examples:</span>
+              {FORMAT_EXAMPLES.map(f => (
+                <button key={f.label} type="button" className="format-example" title={f.tip}
+                        onClick={() => { setVariantInput(f.value); setUploadedFile(null); setError(''); }}>
+                  {f.label}
+                </button>
+              ))}
+            </div>
+
+            <input type="file" ref={fileInputRef} style={{display: 'none'}} accept=".txt,.tsv,.csv,.vcf"
+                   onChange={handleFileUpload} />
+
+            {/* Well-known variants: compact cards, each opening its result */}
+            <div className="variant-cards">
+              <span className="variant-cards-label">Try a well-known variant</span>
+              <div className="variant-cards-grid">
+                {ANNOTATE_CARDS.map(card => (
+                  <button key={card.name} type="button" className="variant-card" onClick={() => navigate(card.to)}
+                          title={card.note}>
+                    <span className="variant-card-head">
+                      <strong>{card.name}</strong>
+                      <span className="variant-card-tag">{card.tag}</span>
+                    </span>
+                    <span className="variant-card-detail">{card.detail} · <code>{card.code}</code></span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Ready-made datasets: a whole upload, not one variant, so a line of its own */}
+            {datasets.map(d => (
+              <Link key={d.name} className="dataset-link" to={`${DATASET}/${d.name}`} title={d.description}>
+                <Database size={16} strokeWidth={1.75} aria-hidden="true" />
+                <span className="dataset-link-label">Dataset</span>
+                <strong>{d.title}</strong>
+                <span className="dataset-link-meta">
+                  {d.lineCount.toLocaleString()} variants{d.sourceVersion ? ` · ${d.sourceVersion}` : ''}
+                </span>
+                <ArrowRight size={14} aria-hidden="true" />
+              </Link>
+            ))}
+          </>
         )}
 
-        {/* Semantic Search Mode */}
-        {activeMode === 'semantic' && (
-          <div className="search-content">
-            <div className="input-group">
-              <label className="input-label">Find proteins by disease, phenotype, or functional description</label>
+        {/* ── Browse: IDs as tokens in one line; ready-made views as tiles; filters in the rail ── */}
+        {activeMode === 'browse' && (
+          <>
+            {formTitle(List, 'Browse variants',
+              'Every variant in a protein, gene or structure, or across all proteins with filters.')}
+
+            <div className="composer composer--line">
+              <Search size={18} strokeWidth={1.75} className="composer-lead" aria-hidden="true" />
+              {browseIds.map((id, index) => (
+                <span key={id} className="token">
+                  {id}
+                  <button type="button" onClick={() => removeBrowseId(index)} aria-label={`Remove ${id}`}>
+                    <X size={12} aria-hidden="true" />
+                  </button>
+                </span>
+              ))}
               <input
                 type="text"
-                className="input-field"
-                placeholder="loss of DNA mismatch repair in Lynch syndrome"
-                value={textInput}
-                onChange={(e) => setTextInput(e.target.value)}
+                aria-label="Gene, protein or other identifier"
+                placeholder={browseIds.length ? 'Add another' : 'Gene, protein, Ensembl, RefSeq or PDB ID'}
+                value={browseInputText}
+                onChange={(e) => setBrowseInputText(e.target.value)}
+                onKeyDown={handleBrowseKeyDown}
+                onBlur={() => browseInputText.trim() && addBrowseId()}
               />
-              {
-                //Search through variant annotations, disease associations, and functional descriptions
-              }
-              <p className="browse-hint">
-                <i className="bi bi-info-circle"></i>
-                Experimental AI search — results are ranked by meaning, not exact
-                matches, and accuracy varies by query. <Link to={`${HELP}#semantic-search`}>Learn more</Link>
-              </p>
-              <div className="examples">
-                {renderCards(SEMANTIC_CARDS, 'Try a search')}
+              {submitButton}
+            </div>
+
+            {/* Under the box: an example of each identifier type, added as a token */}
+            <div className="format-examples" role="group" aria-label="Add an example identifier">
+              <span className="format-examples-label">Add an example:</span>
+              {ID_EXAMPLES.map(ex => (
+                <button key={ex.label} type="button" className="format-example" title={ex.tip}
+                        onClick={() => { if (!browseIds.includes(ex.value)) setBrowseIds(prev => [...prev, ex.value]); setError(''); }}>
+                  {ex.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Filters under the box, open, first section only: no side rail, so switching tabs moves nothing */}
+            <SearchFilters
+              filters={searchFilters}
+              onFiltersChange={setSearchFilters}
+              showSorting={false}
+              defaultExpanded
+              openSections={['variant']}
+            />
+
+            {/* Ready-made views: compact cards, as Annotate's well-known variants; each opens its result */}
+            <div className="variant-cards">
+              <span className="variant-cards-label">Try a ready-made view</span>
+              <div className="variant-cards-grid">
+                {BROWSE_CARDS.map(card => (
+                  <button key={card.name} type="button" className="variant-card" onClick={() => navigate(card.to)}
+                          title={card.note}>
+                    <span className="variant-card-head">
+                      <strong>{card.name}</strong>
+                      <span className="variant-card-tag">{card.tag}</span>
+                    </span>
+                    <span className="variant-card-detail">
+                      {card.detail}
+                      {card.code.toLowerCase() !== card.tag.toLowerCase() && <> · <code>{card.code}</code></>}
+                    </span>
+                  </button>
+                ))}
               </div>
             </div>
-          </div>
+          </>
         )}
 
-        {/* Search Filters Toggle - Only for Browse Mode */}
-        {activeMode === 'browse' && (
-          <SearchFilters
-            filters={searchFilters}
-            onFiltersChange={setSearchFilters}
-            showSorting={false}
-          />
+        {/* ── Semantic Search: ask in words — a roomy question box, example questions as sentences ── */}
+        {activeMode === 'semantic' && (
+          <>
+            {formTitle(TextAlignStart, 'Search by description', 'Describe a disease, drug response or mechanism.',
+              <span className="form-tag" tabIndex={0}
+                    title="Experimental AI search — results are ranked by meaning, not exact matches, and accuracy varies by query.">
+                <FlaskConical size={12} aria-hidden="true" /> Experimental
+              </span>)}
+
+            <div className="composer">
+              <textarea
+                className="composer-question"
+                aria-label="Describe what you are looking for"
+                placeholder="e.g. loss of DNA mismatch repair in Lynch syndrome"
+                value={textInput}
+                onChange={(e) => setTextInput(e.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSearch(); } }}
+              />
+              <div className="composer-toolbar">
+                <span className="composer-spacer" />
+                {submitButton}
+              </div>
+            </div>
+
+            {/* Semantic Search keeps its own look: example questions as a list of full sentences */}
+            <div className="question-list">
+              {(showAllQuestions ? SEMANTIC_CARDS : SEMANTIC_CARDS.slice(0, QUESTIONS_SHOWN)).map(card => (
+                <button key={card.name} type="button" className="question" onClick={() => navigate(card.to)}>
+                  <Sparkles size={15} strokeWidth={1.75} className="question-icon" aria-hidden="true" />
+                  <span className="question-text">{card.code}</span>
+                  <span className="question-tag">{card.tag}</span>
+                  <ArrowRight size={14} aria-hidden="true" />
+                </button>
+              ))}
+            </div>
+            {SEMANTIC_CARDS.length > QUESTIONS_SHOWN && (
+              <button type="button" className="form-more" onClick={() => setShowAllQuestions(v => !v)}>
+                {showAllQuestions ? 'Fewer' : `${SEMANTIC_CARDS.length - QUESTIONS_SHOWN} more`}
+                {showAllQuestions ? <ChevronUp size={14} aria-hidden="true" /> : <ChevronDown size={14} aria-hidden="true" />}
+              </button>
+            )}
+          </>
         )}
 
-        {/* Error Display */}
-        {error && (
-          <div className="error-message">
-            <span className="error-icon">⚠️</span>
-            {error}
-          </div>
-        )}
-
-        {/* Why the Browse button is disabled — a disabled button gives no
-            feedback on its own, so explain the requirement right above it. */}
-        {activeMode === 'browse' && isSubmitDisabled() && !loading && (
-          <p className="browse-hint">
-            <i className="bi bi-info-circle"></i> {PRIMARY_FILTER_PROMPT}
-          </p>
-        )}
-
-        {/* Action Buttons */}
-        <div className="action-buttons">
-          <button
-            className="btn btn-brand"
-            onClick={handleSearch}
-            disabled={isSubmitDisabled() || loading}
-          >
-            {activeMode === 'annotate'
-              ? <><i className="bi bi-send-fill" /> Submit</>
-              : activeMode === 'semantic'
-              ? <><i className="bi bi-search" /> Search</>
-              : <><i className="bi bi-search" /> Browse</>
-            }
-          </button>
-          <button className="btn btn-secondary" onClick={handleClear}>
-            <i className="bi bi-x-lg" /> Clear
-          </button>
-        </div>
+        {error && <div className="error-message" role="alert">{error}</div>}
       </div>
 
     </div>
+    </>
   );
 };
 

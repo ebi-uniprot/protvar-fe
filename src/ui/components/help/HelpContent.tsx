@@ -9,6 +9,7 @@ import { MessagesHelp } from './content/MessagesHelp';
 
 interface HelpContentProps {
   name: string;
+  section?: string;   // an anchor id in the topic (e.g. browse:filters): opened scrolled to it
 }
 
 const HelpNotFound: React.FC<{ name: string }> = ({ name }) => (
@@ -21,7 +22,7 @@ const HelpNotFound: React.FC<{ name: string }> = ({ name }) => (
   </div>
 );
 
-export const HelpContent: React.FC<HelpContentProps> = ({ name }) => {
+export const HelpContent: React.FC<HelpContentProps> = ({ name, section }) => {
   const { getMarkdownContent } = useMarkdown();
   const [content, setContent] = useState<React.JSX.Element | null>(null);
   const [loading, setLoading] = useState(true);
@@ -50,6 +51,13 @@ export const HelpContent: React.FC<HelpContentProps> = ({ name }) => {
     };
     loadContent();
   }, [name, getMarkdownContent]);
+
+  // Open at the section once the topic has rendered
+  useEffect(() => {
+    if (!section || loading) return;
+    const frame = requestAnimationFrame(() => document.getElementById(section)?.scrollIntoView({ block: 'start' }));
+    return () => cancelAnimationFrame(frame);
+  }, [section, loading, content]);
 
   return (
     <div>

@@ -5,623 +5,630 @@
  */
 
 /* ============================================
-   HOME HERO  (HomePage.tsx)
-   ============================================ */
-
-.home-hero {
-    max-width: 760px;
-    margin: 0 auto;
-    padding: 1.5rem 2rem 0.25rem;
-    text-align: center;
-}
-
-/* "Protein Variation" wordmark — Prot/Var emphasised (bold, brand colour) */
-.home-hero-title {
-    font-size: 2rem;
-    font-weight: var(--font-weight-normal);
-    color: var(--color-text-secondary);
-    letter-spacing: 0.3px;
-    margin: 0 0 0.6rem;
-}
-
-.home-hero-title strong {
-    font-weight: var(--font-weight-bold);
-    color: var(--color-brand);
-}
-
-.home-hero-lead {
-    max-width: 680px;
-    margin: 0 auto 0.5rem;
-    font-size: 1rem;
-    line-height: 1.6;
-    color: var(--color-text-primary);
-}
-
-.home-hero-sub {
-    max-width: 620px;
-    margin: 0 auto;
-    font-size: 0.95rem;
-    line-height: 1.5;
-    color: var(--color-text-secondary);
-}
-
-/* Small pointer to Help, in place of the old Direct-Access grid on home */
-.home-links-pointer {
-    max-width: 1200px;
-    margin: 1rem auto 0;
-    padding: 0 2rem;
-    text-align: center;
-    font-size: var(--font-size-sm);
-    color: var(--color-text-muted);
-}
-
-.home-links-pointer a {
-    color: var(--color-primary);
-}
-
-/* ============================================
    SEARCH CONTAINER
    ============================================ */
 
 .search-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
+    /* Left-anchored, in line with the tabs: opening the Browse filter rail narrows the page from the right
+       without moving the form */
+    padding: 2rem 0;
     color: var(--color-text-primary);
     line-height: var(--line-height-relaxed);
 }
 
 /* ============================================
-   SEARCH HEADER
+   MODE BAR — Annotate / Browse / Semantic Search, pinned under the masthead while the page scrolls
    ============================================ */
 
-.search-header {
-    text-align: center;
-    margin-bottom: 2rem;
+.mode-bar {
+    position: sticky;
+    top: 0;
+    /* Edge to edge and flush with the masthead: undo .main-content's padding (page-layout.css) */
+    margin: calc(-1 * var(--spacing-lg)) calc(-1 * var(--spacing-2xl)) 0;
+    z-index: var(--z-sticky);
+    background: var(--color-bg-primary);
+    border-bottom: 1px solid var(--color-border-light);
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.05);
 }
 
-.search-header p {
-    color: var(--color-text-secondary);
-    font-size: 1.1rem;
+@media screen and (max-width: 900px) {
+    /* The mobile icon strip is pinned there already (and switches mode too): scroll with the page */
+    .mode-bar { position: static; margin: calc(-1 * var(--spacing-md)) calc(-1 * var(--spacing-lg)) 0; }
 }
 
-/* ============================================
-   SEARCH MODE TABS
-   ============================================ */
+@media screen and (max-width: 480px) {
+    .mode-bar { margin: calc(-1 * var(--spacing-sm)) calc(-1 * var(--spacing-md)) 0; }
+}
 
+/* Pinned to the left of the content area: the tabs never move, whatever the page below does */
 .search-modes {
     display: flex;
-    background: var(--color-brand-lightest);
-    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-    padding: 0.25rem;
-    gap: 0.125rem;
+    gap: 4px;
+    padding: 0 var(--spacing-lg);
+    box-sizing: border-box;
 }
 
 .mode-tab {
-    flex: 1;
-    padding: 0.875rem 1.25rem;
-    text-align: center;
-    cursor: pointer;
-    border: none;
-    background: transparent;
-    color: var(--color-text-secondary);
-    font-weight: var(--font-weight-medium);
-    transition: all var(--transition-base);
-    border-radius: var(--radius-lg);
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 0.4rem;
+    gap: 7px;
+    height: 48px;
+    padding: 0 14px;
+    border: none;
+    border-bottom: 2px solid transparent;
+    background: transparent;
+    color: var(--color-text-secondary);
+    font: inherit;
+    font-size: var(--font-size-md);
+    cursor: pointer;
     position: relative;
-}
-
-.tab-label-experimental {
-    position: relative;
-}
-
-.experimental-badge {
-    position: absolute;
-    top: -6px;
-    right: -14px;
-    font-size: 0.65rem;
-    opacity: 0.7;
 }
 
 .mode-tab:hover:not(.active) {
-    background: rgba(255, 255, 255, 0.8);
-    color: var(--color-text-primary);
+    color: var(--color-brand);
 }
 
 .mode-tab.active {
-    background: var(--color-brand-logo);   /* flat, like the masthead */
-    color: white;
-    box-shadow: 0 2px 8px rgba(10, 83, 148, 0.3);
-}
-
-.mode-tab .icon {
-    font-size: 1rem;
-    line-height: 1;
-}
-
-/* ============================================
-   SEARCH PANEL (white card below tabs)
-   ============================================ */
-
-.search-panel {
-    background: var(--color-bg-primary);
-    border-radius: 0 0 var(--radius-xl) var(--radius-xl);
-    box-shadow: var(--shadow-sm);
-    padding: 1.5rem;
-    border: 1px solid var(--color-brand-lightest);
-    border-top: none;
-}
-
-.search-content {
-    margin-bottom: 1rem;
-}
-
-/* ============================================
-   VARIANT CONTROLS ROW
-   (type/paste toggle + assembly select)
-   ============================================ */
-
-.variant-controls-row {
-    display: flex;
-    gap: 2rem;
-    margin-bottom: 1.25rem;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-}
-
-/* Input method toggle (Type/Paste vs Upload) */
-/* Subtle segmented toggle — matches the 2D/3D & Table/Chart .view-toggle style.
-   Brand (dark) blue is reserved for primary action buttons only. */
-.input-method-toggle {
-    display: flex;
-    border: 1px solid var(--color-border-medium);
-    border-radius: var(--radius-md);
-    overflow: hidden;
-}
-
-.method-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    padding: 0.4rem 0.875rem;
-    border: none;
-    border-right: 1px solid var(--color-border-medium);
-    background: none;
-    color: var(--color-text-secondary);
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-medium);
-    cursor: pointer;
-    transition: background var(--transition-fast), color var(--transition-fast);
-    white-space: nowrap;
-}
-
-.method-btn:last-child {
-    border-right: none;
-}
-
-.method-btn.active {
-    background: var(--color-primary-lightest);
-    color: var(--color-primary);
-}
-
-.method-btn:hover:not(.active) {
-    background: var(--color-bg-tertiary);
-    color: var(--color-primary);
-}
-
-/* Genome assembly inline */
-.genome-assembly-inline {
-    display: flex;
-    align-items: center;
-    gap: 0.625rem;
-}
-
-.assembly-label {
-    font-size: var(--font-size-md);
-    font-weight: var(--font-weight-medium);
-    color: var(--color-text-secondary);
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-    white-space: nowrap;
-}
-
-/* Compact variant of the segmented toggle used for genome assembly */
-.assembly-toggle .method-btn {
-    padding: 0.3rem 0.6rem;
-    font-size: var(--font-size-sm);
-}
-
-/* ============================================
-   INPUT GROUP
-   ============================================ */
-
-.input-group {
-    margin-bottom: 1rem;
-}
-
-.input-label {
-    display: block;
-    margin-bottom: 0.4rem;
+    color: var(--color-brand);
+    border-bottom-color: var(--color-active);
     font-weight: var(--font-weight-semibold);
-    font-size: var(--font-size-md);
-    color: var(--color-text-primary);
 }
 
-.input-field {
-    width: 100%;
-    padding: 0.625rem 0.75rem;
-    border: 2px solid var(--color-border-medium);
-    border-radius: var(--radius-lg);
-    font-size: var(--font-size-md);
-    font-weight: var(--font-weight-normal);
-    color: var(--color-text-primary);
-    background: var(--color-bg-primary);
-    transition: border-color var(--transition-base), box-shadow var(--transition-base);
-}
-
-.input-field::placeholder {
-    font-family: var(--font-family-mono);
-    font-weight: var(--font-weight-normal);
+/* Help for this page: on the right of the form's title */
+.page-help {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 2px;
+    margin-left: auto;
+    align-self: flex-start;
+    padding-top: 4px;
     color: var(--color-text-tertiary);
+    font-size: var(--font-size-sm);
+    white-space: nowrap;
 }
 
-.input-field:focus {
-    outline: none;
-    border-color: var(--color-brand-light);
-    box-shadow: 0 0 0 3px rgba(10, 83, 148, 0.1);
+.page-help-label {
+    margin: 0 4px 0 5px;
 }
 
-.input-field.textarea {
-    min-height: 150px;
-    resize: vertical;
-    font-family: var(--font-family-mono);
-    font-size: var(--font-size-base);
-    font-weight: var(--font-weight-normal);
-    white-space: pre-wrap;
+.page-help-link {
+    padding: 4px 7px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--color-brand);
+    font: inherit;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.page-help-link:hover {
+    background: var(--color-brand-lightest);
+    text-decoration: none;
 }
 
 /* ============================================
-   FILE UPLOAD
+   FORMS — one per mode: a title, a "composer" box with its controls inside, then examples.
+   Explanations live in Help (the ? buttons), not on the page.
    ============================================ */
 
-.file-upload-display {
-    min-height: 100px;
+.search-form {
+    max-width: 880px;
+    padding-left: 12px;         /* lines up with the tab labels */
     display: flex;
     flex-direction: column;
+    gap: 16px;
+}
+
+/* Title: icon tile + heading + one short line */
+.form-title {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 4px;
+}
+
+.form-title-icon {
+    display: inline-flex;
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
+    border-radius: 12px;
+    background: var(--color-brand-lightest);
+    color: var(--color-brand);
 }
 
-.uploaded-file {
+.form-title h1 {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    background: var(--color-bg-tertiary);
-    border: 2px solid var(--color-border-medium);
-    border-radius: var(--radius-lg);
-    padding: 0.875rem 1.25rem;
-    max-width: 420px;
-}
-
-.file-info {
-    display: flex;
-    align-items: center;
-    gap: 0.625rem;
-    flex: 1;
-}
-
-.file-icon {
-    font-size: 1.4rem;
-}
-
-.file-name {
-    font-weight: var(--font-weight-medium);
+    gap: 8px;
+    margin: 0;
+    font-size: 1.375rem;
+    font-weight: var(--font-weight-semibold);
     color: var(--color-text-primary);
 }
 
-.file-size {
+.form-title p {
+    margin: 2px 0 0;
     color: var(--color-text-secondary);
-    font-size: var(--font-size-sm);
 }
 
-.remove-file-btn {
-    background: #ef4444;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 22px;
-    height: 22px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: bold;
-    flex-shrink: 0;
-    transition: background-color var(--transition-base);
-}
-
-.remove-file-btn:hover {
-    background: #dc2626;
-}
-
-.file-help {
-    font-size: var(--font-size-sm);
-    color: var(--color-text-secondary);
-    text-align: center;
-}
-
-/* ============================================
-   BROWSE MODE — CHIP INPUT
-   ============================================ */
-
-.browse-chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    margin-bottom: 0.4rem;
-}
-
-.browse-chip {
+.form-tag {
+    cursor: help;
     display: inline-flex;
     align-items: center;
-    gap: 0.25rem;
-    padding: 0.2rem 0.55rem;
-    background: var(--color-brand-lightest);
-    border: 1px solid var(--color-brand-lighter);
+    gap: 4px;
+    padding: 2px 8px;
     border-radius: var(--radius-full);
-    font-size: var(--font-size-md);
-    color: var(--color-brand);
+    background: #fff4e0;
+    color: #8a5a00;
+    font-size: 11px;
     font-weight: var(--font-weight-medium);
 }
 
-.browse-chip-remove {
-    background: none;
-    border: none;
-    padding: 0;
-    line-height: 1;
-    cursor: pointer;
-    color: var(--color-brand-light);
-    font-size: 1rem;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
+/* The composer: one rounded box holding the input and its toolbar */
+.composer {
+    border: 1px solid var(--color-border-medium);
+    border-radius: 14px;
+    background: var(--color-bg-primary);
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-.browse-chip-remove:hover {
-    color: #c0392b;
-}
-
-.browse-input-row {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-}
-
-/* Hint explaining why the Browse button is disabled. */
-.browse-hint {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.4rem;
-    margin: 0.5rem 0 0;
-    font-size: var(--font-size-sm);
-    color: var(--color-text-secondary);
-}
-
-.browse-hint i {
-    color: var(--color-brand);
-    margin-top: 0.1rem;
-    flex-shrink: 0;
-}
-
-.browse-input-wrapper {
-    position: relative;
-    flex: 1;
-}
-
-.browse-input-wrapper .input-field {
-    width: 100%;
-    margin: 0;
-    padding-right: 2.5rem;
-}
-
-.browse-add-btn {
-    position: absolute;
-    right: 6px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 28px;
-    height: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: transparent;
-    color: var(--color-text-secondary);
-    border: none;
-    border-radius: var(--radius-md);
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background var(--transition-base), color var(--transition-base);
-}
-
-.browse-add-btn:hover:not(:disabled) {
-    background: var(--color-border-light);
-    color: var(--color-text-primary);
-}
-
-.browse-add-btn:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
-}
-
-.browse-go-btn {
-    flex-shrink: 0;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--color-brand-solid);
-    color: white;
-    border: none;
-    border-radius: var(--radius-lg);
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background var(--transition-base);
-}
-
-.browse-go-btn:hover:not(:disabled) {
-    background: var(--color-brand-solid-dark);
-}
-
-.browse-go-btn:disabled {
-    background: var(--color-brand-lighter);
-    cursor: not-allowed;
-    opacity: 0.6;
-}
-
-/* ============================================
-   EXAMPLE TAGS
-   ============================================ */
-
-.examples {
-    margin-top: 1.25rem;
-}
-
-.examples h6 {
-    margin: 0 0 0.625rem 0;
-    color: var(--color-text-secondary);
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-semibold);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-}
-
-.example-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-}
-
-/* Brand-tinted at rest (navy text on a pale-blue pill) so the example
-   formats read clearly; fills solid brand on hover. Uses --color-brand*
-   tokens only — theming / dark mode carry through. */
-.example-tag {
-    background: var(--color-brand-lightest);
-    color: var(--color-brand);
-    padding: 0.35rem 0.65rem;
-    border-radius: var(--radius-full);
-    font-size: var(--font-size-sm);
-    cursor: pointer;
-    transition: all var(--transition-base);
-    user-select: none;
-    border: 1px solid var(--color-brand-light);
-}
-
-.example-tag:hover {
-    background: var(--color-primary-lightest);
-    color: var(--color-brand);
+.composer:focus-within {
     border-color: var(--color-brand-light);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-xs);
+    box-shadow: 0 0 0 3px rgba(10, 83, 148, 0.12);
 }
 
-/* Dark: navy brand text would be illegible on the dark tint — use light blue */
-:root[data-theme="dark"] .example-tag,
-:root[data-theme="dark"] .example-tag:hover {
-    color: var(--color-primary-light);
+.composer--drop {
+    border-style: dashed;
+    border-color: var(--color-brand);
+    background: var(--color-brand-lightest);
 }
 
-/* Well-known variant cards (Annotate): name, change, the query and its format; a click runs it */
-.story-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(11.5rem, 1fr));
-    gap: 0.5rem;
-}
-
-.story-card {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.15rem;
-    text-align: left;
-    padding: 0.55rem 0.7rem;
-    background: var(--color-bg-elevated);
+.composer textarea,
+.composer input {
+    border: 0;
+    outline: none;
+    background: transparent;
     color: var(--color-text-primary);
-    border: 1px solid var(--color-brand-light);
-    border-radius: var(--radius-lg);
-    cursor: pointer;
-    transition: all var(--transition-base);
     font: inherit;
 }
 
-.story-card:hover,
-.story-card:focus-visible {
-    background: var(--color-brand-lightest);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-xs);
+.composer textarea:focus-visible,
+.composer input:focus-visible {
+    outline: none;              /* the composer shows focus */
 }
 
-.story-name {
-    font-weight: var(--font-weight-semibold);
-    color: var(--color-brand);
+/* Annotate: numbered lines beside the textarea, scrolled together */
+.worksheet {
+    display: flex;
+    height: 240px;
+    font-family: var(--font-family-mono, ui-monospace, monospace);
+    font-size: 14px;
+    line-height: 24px;
 }
 
-.story-change {
+.worksheet-gutter {
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 auto;
+    min-width: 2.5em;
+    padding: 12px 10px 12px 14px;
+    overflow: hidden;
+    text-align: right;
+    color: var(--color-text-muted);
+    background: var(--color-bg-secondary);
+    border-right: 1px solid var(--color-border-light);
+    border-radius: 14px 0 0 0;
+    user-select: none;
+}
+
+.worksheet-input {
+    flex: 1;
+    min-width: 0;
+    padding: 12px 16px;
+    resize: none;
+    font: inherit !important;
+    line-height: 24px;
+    white-space: pre;
+    overflow: auto;
+}
+
+/* Annotate: the format examples, one line under the box */
+.format-examples {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-top: -6px;
+}
+
+.format-examples-label {
+    margin-right: 2px;
+    color: var(--color-text-tertiary);
     font-size: var(--font-size-sm);
 }
 
-.story-input code {
-    font-size: var(--font-size-sm);
-    color: var(--color-text-secondary);
-    background: none;
-    padding: 0;
-    overflow-wrap: anywhere; /* wrap at spaces; split only tokens too long for the card (HGVS) */
-}
-
-.story-format {
-    align-self: flex-end;
-    font-size: 0.75rem;
+/* Small, tag-like */
+.format-example {
+    padding: 2px 9px;
+    border: 1px solid var(--color-border-light);
+    border-radius: 6px;
+    background: var(--color-bg-primary);
     color: var(--color-brand);
-    background: var(--color-brand-lightest);
-    border-radius: var(--radius-full);
-    padding: 0 0.45rem;
-}
-
-:root[data-theme="dark"] .story-name,
-:root[data-theme="dark"] .story-format {
-    color: var(--color-primary-light);
-}
-
-.story-more {
-    margin: 0.4rem 0 0;
-    padding: 0;
-    background: none;
-    border: none;
-    color: var(--color-brand);
-    font-size: var(--font-size-sm);
+    font: inherit;
+    font-size: 12.5px;
+    line-height: 20px;
     cursor: pointer;
+}
+
+.format-example:hover {
+    border-color: var(--color-brand-lighter);
+    background: var(--color-brand-lightest);
+}
+
+.composer-file {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 96px;
+    padding: 0 18px;
+    color: var(--color-brand);
+}
+
+.composer-file-name {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+}
+
+.composer-file-size {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+}
+
+/* Toolbar along the bottom of the composer */
+.composer-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 10px;
+    border-top: 1px solid var(--color-border-light);
+}
+
+.composer-spacer {
+    flex: 1;
+}
+
+.composer-upload {
     display: inline-flex;
     align-items: center;
-    gap: 0.25rem;
+    gap: 6px;
+    height: 32px;
+    padding: 0 12px;
+    border: 1px dashed var(--color-border-dark);
+    border-radius: 8px;
+    background: transparent;
+    color: var(--color-text-secondary);
+    font: inherit;
+    font-size: var(--font-size-sm);
+    cursor: pointer;
 }
 
-:root[data-theme="dark"] .story-more {
-    color: var(--color-primary-light);
+.composer-upload:hover {
+    border-color: var(--color-brand);
+    color: var(--color-brand);
 }
 
-.examples h6.examples-by-format {
-    margin-top: 1rem;
+.composer-select {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 6px;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+}
+
+.composer-select select {
+    border: 0;
+    background: transparent;
+    color: var(--color-brand);
+    font: inherit;
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+}
+
+.composer-clear,
+.composer-icon-btn {
+    display: inline-flex;
+    align-items: center;
+    height: 32px;
+    padding: 0 10px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--color-text-secondary);
+    font: inherit;
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+}
+
+.composer-icon-btn {
+    margin-left: auto;
+    padding: 0 8px;
+}
+
+.composer-clear:hover,
+.composer-icon-btn:hover {
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-primary);
+}
+
+/* The primary action: always in the composer's bottom-right / line end */
+.form-submit {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 36px;
+    padding: 0 16px;
+    border: 0;
+    border-radius: 10px;
+    background: var(--color-brand-solid);
+    color: #fff;
+    font: inherit;
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.form-submit:hover:not(:disabled) {
+    background: var(--color-brand-solid-dark);
+}
+
+.form-submit:disabled {
+    opacity: 0.45;
+    cursor: default;
+}
+
+/* Browse: one line with ID tokens */
+.composer--line {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px 8px;
+    min-height: 52px;
+    padding: 7px 7px 7px 14px;
+    box-sizing: border-box;
+}
+
+.composer-lead {
+    flex-shrink: 0;
+    color: var(--color-text-tertiary);
+}
+
+.composer--line input {
+    flex: 1;
+    min-width: 12rem;
+    height: 34px;
+    font-size: var(--font-size-md);
+}
+
+.token {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    padding: 3px 4px 3px 10px;
+    border-radius: 8px;
+    background: var(--color-brand-lightest);
+    color: var(--color-brand);
+    font-family: var(--font-family-mono, ui-monospace, monospace);
+    font-size: 13px;
+}
+
+.token button {
+    display: inline-flex;
+    padding: 2px;
+    border: 0;
+    border-radius: 4px;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+}
+
+.token button:hover {
+    background: rgba(10, 83, 148, 0.12);
+}
+
+/* Semantic: example questions as a list of full sentences */
+.question-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.question {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 14px;
+    border: 1px solid var(--color-border-light);
+    border-radius: 12px;
+    background: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.question:hover {
+    border-color: var(--color-brand-lighter);
+    box-shadow: var(--shadow-sm);
+}
+
+.question-icon {
+    flex-shrink: 0;
+    color: #c07a00;
+}
+
+.question-text {
+    flex: 1;
+}
+
+.question-tag {
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-xs);
+}
+
+:root[data-theme="dark"] .question-icon {
+    color: #ffb340;
+}
+
+.form-more {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--color-brand);
+    font: inherit;
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+}
+
+/* Semantic: a roomy question box */
+.composer-question {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    height: 96px;
+    padding: 16px 18px;
+    resize: none;
+    font-size: 1rem !important;
+    line-height: 1.5;
+}
+
+.composer-question + .composer-toolbar {
+    border-top: 0;
+}
+
+/* Annotate: well-known variants as compact cards, 3 across */
+.variant-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.variant-cards-label {
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-sm);
+}
+
+.variant-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 8px;
+}
+
+.variant-card {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 10px 12px;
+    border: 1px solid var(--color-border-light);
+    border-radius: 10px;
+    background: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.variant-card:hover {
+    border-color: var(--color-brand-lighter);
+    box-shadow: var(--shadow-sm);
+}
+
+.variant-card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+}
+
+.variant-card-head strong {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+}
+
+.variant-card-tag {
+    padding: 0 6px;
+    border-radius: 6px;
+    background: var(--color-brand-lightest);
+    color: var(--color-brand);
+    font-size: 10.5px;
+    white-space: nowrap;
+}
+
+.variant-card-detail {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+}
+
+.variant-card-detail code {
+    font-family: var(--font-family-mono);
+    font-size: 0.95em;
+}
+
+/* Browse's filters under the box: in the page's flow (not the results' sticky bar, which would slide under the
+   pinned mode bar) */
+.search-form .search-filters {
+    position: static;
+    margin-bottom: 0;
+}
+
+.dataset-link {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border: 1px solid var(--color-border-light);
+    border-radius: 10px;
+    color: var(--color-text-primary);
+    text-decoration: none;
+}
+
+.dataset-link:hover {
+    border-color: var(--color-brand-lighter);
+    background: var(--color-brand-lightest);
+    text-decoration: none;
+}
+
+.dataset-link svg {
+    color: var(--color-brand);
+}
+
+.dataset-link-label {
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-sm);
+}
+
+.dataset-link-meta {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+}
+
+:root[data-theme="dark"] .form-tag {
+    background: rgba(255, 153, 1, 0.15);
+    color: #ffc266;
 }
 
 /* ============================================
@@ -629,27 +636,12 @@
    ============================================ */
 
 .error-message {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
     background: #fef2f2;
     border: 1px solid #fecaca;
     border-radius: var(--radius-lg);
-    padding: 0.875rem 1rem;
-    margin-bottom: 1rem;
+    padding: 0.75rem 1rem;
     color: #dc2626;
     font-size: var(--font-size-md);
-}
-
-/* ============================================
-   ACTION BUTTONS
-   ============================================ */
-
-.action-buttons {
-    display: flex;
-    gap: 0.875rem;
-    justify-content: center;
-    margin-top: 1rem;
 }
 
 /* ============================================
@@ -662,53 +654,11 @@
     }
 
     .search-modes {
-        flex-direction: column;
+        padding: 0 0.5rem;
+        overflow-x: auto;
     }
 
-    .variant-controls-row {
-        flex-direction: column;
-        gap: 0.75rem;
-        align-items: stretch;
+    .composer-toolbar {
+        flex-wrap: wrap;
     }
-
-    .genome-assembly-inline {
-        justify-content: space-between;
-    }
-
-    .action-buttons {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .action-buttons .btn {
-        text-align: center;
-        justify-content: center;
-    }
-
-    .example-tags {
-        justify-content: flex-start;
-    }
-
-    .example-tag {
-        flex: 1;
-        text-align: center;
-        min-width: calc(50% - 0.2rem);
-    }
-}
-
-@media (max-width: 480px) {
-    .search-panel {
-        padding: 1rem;
-    }
-
-    .uploaded-file {
-        max-width: 100%;
-    }
-}
-
-/* "Or explore a ready-made dataset" under the Annotate examples */
-.example-dataset {
-    margin: 0.75rem 0 0;
-    font-size: 0.9rem;
-    color: var(--color-text-secondary);
 }

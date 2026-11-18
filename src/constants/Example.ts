@@ -69,8 +69,6 @@ export const SEMANTIC_CARDS: ExampleCard[] = [
   semantic("Early-onset Alzheimer's", 'mutations causing early-onset Alzheimer disease', 'Disease'),
 ];
 
-// How many cards show before "more"
-export const CARDS_SHOWN = 4;
 
 // Paste-box placeholder: sickle cell (HBB Glu7Val) written five ways
 export const PASTE_BOX = `NP_000509.1:p.Glu7Val
@@ -78,3 +76,40 @@ export const PASTE_BOX = `NP_000509.1:p.Glu7Val
 rs334
 NC_000011.10:g.5227002T>A
 VAR_002863`;
+
+// Annotate: one example set per input format; a format button fills the box with its set.
+// Together they cover every supported input form (see the input-formats help).
+export interface FormatExample {
+  label: string;
+  value: string;
+  tip: string;
+}
+
+export const FORMAT_EXAMPLES: FormatExample[] = [
+  { label: 'Genomic', tip: 'VCF, gnomAD, chromosome/position (space, colon, > or /), mitochondrial',
+    value: '7\t140753336\trs113488022\tA\tT\n12-25245350-C-T\n17 7675088 C T\n7:55191822:T:G\nchr11:5227002 T>A\n'
+      + '19 44908684 T/C\nMT 3460 G A' },
+  { label: 'HGVS g.', tip: 'HGVS genomic, with an NC_ accession or a chromosome',
+    value: 'NC_000007.14:g.140753336A>T\nchr11:g.5227002T>A' },
+  { label: 'HGVS c.', tip: 'HGVS coding, optionally with the gene or the protein change',
+    value: 'NM_000518.5:c.20A>T\nNM_004333.6(BRAF):c.1799T>A\nNM_000546.6:c.524G>A p.(Arg175His)\nNM_000249.4:c.543C>T' },
+  { label: 'HGVS p.', tip: 'HGVS protein', value: 'NP_000509.1:p.Glu7Val\nNP_000537.3:p.Arg213Ter' },
+  { label: 'Protein', tip: 'UniProt accession + change: 1- or 3-letter, any case, stop (*) and silent (=)',
+    value: 'P15056 V600E\nP01116 p.G12D\nP02649 Cys130Arg\np00533 leu858arg\nP38398 61 C/G\nQ30201 282 Cys Tyr\n'
+      + 'P04637 R213*\nP40692 G181=' },
+  { label: 'Variant IDs', tip: 'dbSNP, ClinVar (VCV with a version, RCV), COSMIC (COSV, COSM, COSN), UniProt (VAR_)',
+    value: 'rs334\nVCV000000642.133\nRCV000007540\nCOSV56056643\nCOSM521\nCOSN190667\nVAR_004109' },
+  { label: 'Position only', tip: 'Without the alternative (or both alleles / amino acids): every possible change at the position',
+    value: '17 7675088\n7 140753336 A\n11:5227002:na:na\nP01116 12\nP15056 600 Val\nP04637 M1?' },
+  { label: 'GRCh37', tip: 'GRCh37 positions: detected and converted to GRCh38',
+    value: '7 140453136 A T\n11 5248232 T A\n12 25398284 C T\n17 7578406 C T' },
+];
+
+// Browse: one example identifier per type; a button adds it to the box as a token
+export const ID_EXAMPLES: FormatExample[] = [
+  { label: 'UniProt', value: 'P04637', tip: 'UniProt accession: P04637 (TP53)' },
+  { label: 'Gene', value: 'BRCA1', tip: 'Gene symbol: BRCA1' },
+  { label: 'Ensembl', value: 'ENSG00000141510', tip: 'Ensembl gene, transcript, protein or exon: ENSG00000141510 (TP53)' },
+  { label: 'RefSeq', value: 'NM_000492.4', tip: 'RefSeq transcript or protein: NM_000492.4 (CFTR)' },
+  { label: 'PDB', value: '4HHB', tip: 'PDB structure: 4HHB (haemoglobin)' },
+];
