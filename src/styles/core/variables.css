@@ -21,6 +21,9 @@
     /* Logo/Icon colors */
     --color-protvar-green: #9fcbaf;
     --color-protvar-orange: #ff9901;
+    /* "You are here": the active tab's underline, the active sidebar item's bar. The logo orange, deepened to
+       pass 3:1 on white (the logo's own #ff9901 is 2.1:1); dark uses the logo orange itself. */
+    --color-active: #d97706;
 
     /* Primary Blue (component accent) */
     --color-primary: #3b5998;
@@ -217,6 +220,7 @@
            Solid brand fills use --color-brand-solid (kept navy) instead. */
         --color-brand: #6ea8fe;
         --color-brand-dark: #9ec5fe;
+        --color-active: #ff9901;
 
         /* Light tints are only ever used as backgrounds/hovers/accents — give
            them dark-blue variants so pale-blue pills don't stay light. The

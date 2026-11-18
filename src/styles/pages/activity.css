@@ -28,7 +28,7 @@
 
 .activity-tab.active {
     color: var(--color-brand);
-    border-bottom-color: var(--color-brand);
+    border-bottom-color: var(--color-active);
 }
 
 .view-toggle {
@@ -296,6 +296,6 @@
     color: var(--color-text-secondary);
 }
 
-.activity-retention-banner .bi-info-circle {
+.activity-retention-banner span > .pv-icon {
     margin-right: 6px;
 }

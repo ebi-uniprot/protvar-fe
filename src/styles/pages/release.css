@@ -208,7 +208,7 @@
 
 .release-tab.active {
     color: var(--color-brand);
-    border-bottom-color: var(--color-brand);
+    border-bottom-color: var(--color-active);
 }
 
 .release-data-note {

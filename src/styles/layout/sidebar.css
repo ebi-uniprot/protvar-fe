@@ -27,8 +27,6 @@
 
 .sidebar.expanded {
     width: var(--sidebar-width);
-    overflow-y: auto;
-    overflow-x: hidden;
 }
 
 /* ============================================
@@ -64,7 +62,9 @@
    ============================================ */
 
 .sidebar-nav {
-    flex: 1;
+    flex: 1;                    /* app links at the top, site links + foot at the bottom */
+    display: flex;
+    flex-direction: column;
     overflow-y: auto;
     overflow-x: hidden;
 }
@@ -105,7 +105,7 @@
 .sidebar-link.active {
     background: var(--color-brand-lightest);
     color: var(--color-brand);
-    border-left: 3px solid var(--color-brand);
+    border-left: 3px solid var(--color-active);
     font-weight: var(--font-weight-medium);
 }
 
@@ -268,7 +268,7 @@
     .mobile-nav-item.active {
         color: var(--color-brand);
         background: var(--color-brand-lightest);
-        border-top: 2px solid var(--color-brand);
+        border-top: 3px solid var(--color-active);
     }
 
     .mobile-nav-item:hover {
@@ -290,4 +290,34 @@
         text-align: center;
         line-height: 14px;
     }
+}
+
+/* ============================================
+   SITE LINKS (About, Help, API, Release, Contact) — at the bottom, quieter than the app nav
+   ============================================ */
+
+.sidebar-site-links {
+    border-top: 1px solid var(--color-border-light);
+    margin-top: auto;           /* pushed to the bottom */
+    padding: 6px 0 10px;
+}
+
+.sidebar-site-links .sidebar-link {
+    padding-top: 6px;
+    padding-bottom: 6px;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-tertiary);
+}
+
+.sidebar-site-links .sidebar-link i {
+    font-size: 13px;
+}
+
+.sidebar:not(.expanded) .sidebar-site-links .sidebar-link {
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+.sidebar:not(.expanded) .sidebar-site-links .sidebar-link i {
+    font-size: 16px;
 }
