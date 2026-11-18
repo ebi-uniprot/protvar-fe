@@ -9,8 +9,6 @@
    ============================================ */
 
 .search-container {
-    /* Left-anchored, in line with the tabs: opening the Browse filter rail narrows the page from the right
-       without moving the form */
     padding: 2rem 0;
     color: var(--color-text-primary);
     line-height: var(--line-height-relaxed);
@@ -115,8 +113,10 @@
    ============================================ */
 
 .search-form {
+    /* Centred in the content area; the same width on every tab, with nothing beside it, so switching tabs
+       moves nothing */
     max-width: 880px;
-    padding-left: 12px;         /* lines up with the tab labels */
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
     gap: 16px;
