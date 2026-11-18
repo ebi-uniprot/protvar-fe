@@ -98,6 +98,14 @@ export const Prediction = (props: PredictionProps) => {
         <div className="no-predictions">No pathogenicity predictions available for this variant</div>
       )*/}
 
+      {/* AVI - AlphaGenome Variant Impact: AlphaMissense plus splicing and regulation, so it leads */}
+      <PredictionWrapper
+        predictionType="avi"
+        isHighlighted={highlightedPrediction === 'avi'}
+      >
+        <AviScorePred avi={props.aviScore} stdColor={state.stdColor} />
+      </PredictionWrapper>
+
       {/* AlphaMissense - Newest, best performance, widely trusted */}
       <PredictionWrapper
         predictionType="alphamissense"
@@ -112,14 +120,6 @@ export const Prediction = (props: PredictionProps) => {
         isHighlighted={highlightedPrediction === 'cadd'}
       >
         <CaddScorePred cadd={props.caddScore} stdColor={state.stdColor} />
-      </PredictionWrapper>
-
-      {/* AVI - AlphaGenome Variant Impact, genomic like CADD */}
-      <PredictionWrapper
-        predictionType="avi"
-        isHighlighted={highlightedPrediction === 'avi'}
-      >
-        <AviScorePred avi={props.aviScore} stdColor={state.stdColor} />
       </PredictionWrapper>
 
       {/* Pangolin - splice prediction for this gene, genomic */}

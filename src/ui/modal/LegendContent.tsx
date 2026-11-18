@@ -125,7 +125,7 @@ export function LegendContent() {
           <LegendCategories attrs={Object.values(CADD_SCORE_ATTR)} stdColor={stdColor} />
         </LegendSection>
 
-        <LegendSection title="AVI genome-wide rank">
+        <LegendSection title="AlphaGenome Variant Impact (AVI)">
           <LegendCategories attrs={AVI_SCORE_ATTR} stdColor={stdColor} />
         </LegendSection>
 

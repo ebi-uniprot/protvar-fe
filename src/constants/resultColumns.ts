@@ -25,14 +25,14 @@ export const RESULT_COLUMNS: ResultColumn[] = [
   { id: 'gene',        label: 'gene',          header: 'Gene',          tip: 'Gene symbol',                               group: 'genomic',     defaultOn: true, locked: true },
   { id: 'codon',       label: 'mRNA codon',    header: 'Codon',         tip: 'mRNA codon change and strand',              group: 'genomic',     defaultOn: true },
   { id: 'cadd',        label: 'CADD',          header: 'CADD',          tip: 'CADD score',                                group: 'genomic',     defaultOn: true },
-  { id: 'avi',         label: 'AVI',           header: 'AVI',           tip: 'AlphaGenome Variant Impact score',          group: 'genomic',     defaultOn: false },
+  { id: 'avi',         label: 'AVI',           note: 'AlphaGenome Variant Impact', header: 'AVI',           tip: 'AlphaGenome Variant Impact score',          group: 'genomic',     defaultOn: true },
   { id: 'pangolin',    label: 'Pangolin',      header: 'Pangolin',      tip: 'Pangolin splice prediction',                group: 'genomic',     defaultOn: false },
   { id: 'isoform',     label: 'isoform',       header: 'Isoform',       tip: 'UniProt isoform',                           group: 'protein',     defaultOn: true, locked: true },
   { id: 'protein',     label: 'name',          header: 'Protein',       tip: 'Protein name',                              group: 'protein',     defaultOn: true },
   { id: 'aaChange',    label: 'AA change',     header: 'AA change',     tip: 'Amino acid change',                         group: 'protein',     defaultOn: true, locked: true },
   { id: 'consequence', label: 'consequence',   header: 'Effect',        tip: 'Consequence on the protein',                group: 'protein',     defaultOn: true },
   { id: 'popeve',      label: 'popEVE',        header: 'popEVE',        tip: 'popEVE score',                              group: 'protein',     defaultOn: true },
-  { id: 'am',          label: 'AlphaMissense', header: 'AM',            tip: 'AlphaMissense score',                       group: 'protein',     defaultOn: true },
+  { id: 'am',          label: 'AM',            note: 'AlphaMissense', header: 'AM',            tip: 'AlphaMissense score',                       group: 'protein',     defaultOn: false },   // AVI shown instead (it includes AlphaMissense)
   { id: 'details',     label: 'annotations',   header: 'Annotations',   tip: 'Functional, population and structural annotations: click an icon to expand', group: 'annotations', defaultOn: true, locked: true },
 ];
 

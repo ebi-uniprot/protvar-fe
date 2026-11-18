@@ -31,7 +31,7 @@ export const AviScorePred = (props: { avi?: string, stdColor: boolean }) => {
   if (isNaN(score)) return <></>
   const attr = aviScoreAttr(score)
   return <div className="prediction-row">
-    <div>AVI</div>
+    <div>AlphaGenome Variant Impact (AVI)</div>
     <div>{score.toFixed(PRECISION)}</div>
     <div title={`AlphaGenome Variant Impact (AVI): ${genomeWideRank(score)} of all possible SNVs. A rank, not a pathogenicity classification.`}>
       <Icon name="circle-fill" style={{color: props.stdColor ? attr.stdColor : attr.color}} />

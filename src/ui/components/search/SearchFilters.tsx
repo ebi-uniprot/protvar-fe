@@ -568,7 +568,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
 
               {AVI_ENABLED && (
                 <div className="filter-group">
-                  <label>AVI genome-wide rank</label>
+                  <label>AlphaGenome Variant Impact (AVI)</label>
                   <div className="button-group">
                     {AVI_CATEGORIES.map(cat => {
                       const selected = filters.aviMin === cat.min;
