@@ -37,20 +37,6 @@
     color: var(--color-text-primary);
 }
 
-/* Inline help icon — borderless blue filled i, pushed to far right in section header */
-.help-icon-inline {
-    margin-left: auto;
-    font-size: 13px;
-    color: var(--color-primary);
-    cursor: pointer;
-    flex-shrink: 0;
-    opacity: 0.8;
-    transition: opacity 0.15s ease;
-}
-
-.help-icon-inline:hover {
-    opacity: 1;
-}
 
 /* Count badge inside section header */
 .count-badge {

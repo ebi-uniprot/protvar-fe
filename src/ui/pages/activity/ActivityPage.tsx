@@ -10,8 +10,7 @@ import {humanFileSize} from '../../../utills/Util'
 import {APP_URL} from '../../App'
 import {PV_FTP, TITLE} from '../../../constants/const'
 import {ShareLink} from '../../components/common/ShareLink'
-import {HelpButton} from '../../components/help/HelpButton'
-import {ActivityHelp} from '../../components/help/content/ActivityHelp'
+import PageHelp from '../../components/help/PageHelp'
 import Spaces from '../../elements/Spaces'
 import {STORE_DOWNLOADS, STORE_HISTORY} from '../../../constants/storage'
 import { Icon } from '../../elements/Icon';
@@ -414,7 +413,7 @@ function ActivityPageContent() {
     <div className="container">
       <div className="page-header-row">
         <h5 className="page-header">Activity</h5>
-        <HelpButton title="" content={<ActivityHelp />} />
+        <PageHelp topics={[{ name: 'activity', title: 'History & downloads' }]} />
       </div>
 
       <RetentionBanner />

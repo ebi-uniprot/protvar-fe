@@ -1,36 +1,7 @@
 /**
- * Help (?) and icon buttons, and the "Rich data" badge.
+ * Icon buttons and the "Rich data" badge.
  * (The panel heading and its data-richness icon gradient are gone: the tab names the panel.)
  */
-
-/* Help button — icon only, borderless at rest so it sits cleanly in page headers */
-.help-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 3px 6px;
-    background: transparent;
-    border: 1px solid transparent;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    font-size: 13px;
-    font-family: inherit;
-    color: var(--color-text-secondary);
-    transition: all 0.2s ease;
-    line-height: 1;
-    text-decoration: none;
-    gap: 4px;
-}
-
-.help-icon:hover {
-    background: var(--color-bg-elevated);
-    border-color: var(--color-primary);
-    color: var(--color-primary);
-}
-
-.help-icon svg {
-    flex-shrink: 0;
-}
 
 /* Share button */
 .icon-btn {
@@ -90,14 +61,12 @@
    DARK MODE
    ============================================ */
 
-:root[data-theme="dark"] .help-icon,
 :root[data-theme="dark"] .icon-btn {
         background: transparent;
         border-color: var(--color-border-medium);
         color: var(--color-text-secondary);
 }
 
-:root[data-theme="dark"] .help-icon:hover,
 :root[data-theme="dark"] .icon-btn:hover {
         background: var(--color-bg-secondary);
         border-color: var(--color-primary);

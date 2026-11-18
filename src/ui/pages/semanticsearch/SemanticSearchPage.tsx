@@ -8,8 +8,7 @@ import {
 } from '../../../types/VectorSearch';
 import { TITLE } from '../../../constants/const';
 import { modelRank } from '../../../constants/semanticSearch';
-import { HelpButton } from '../../components/help/HelpButton';
-import { HelpContent } from '../../components/help/HelpContent';
+import PageHelp from '../../components/help/PageHelp';
 import { Icon } from '../../elements/Icon';
 
 const PAGE_SIZE = 10;
@@ -251,31 +250,34 @@ function SemanticSearchPageContent() {
   return (
     <div className="container">
       <div className="semantic-header">
-        <h5 className="page-header">
-          {query ? <>Results for <em>"{query}"</em></> : 'Semantic Search'}
-        </h5>
-        <div className="semantic-toolbar">
-          {!loading && !error && totalProteins > 0 && (
-            <span className="result-count">
-              {functionGrouped.length} protein{functionGrouped.length !== 1 ? 's' : ''}
-              {' · '}
-              {populationGrouped.length} variant group{populationGrouped.length !== 1 ? 's' : ''}
-            </span>
-          )}
-          {orderedModels.length > 1 && (
-            <select
-              className="model-select"
-              value={selectedModel}
-              onChange={handleModelChange}
-              title="Embedding model"
-            >
-              {orderedModels.map(m => (
-                <option key={m.id} value={m.id}>{m.label}</option>
-              ))}
-            </select>
-          )}
-          <HelpButton title="" content={<HelpContent name="semantic-search" />} variant="inline" />
+        {/* the heading, with the counts under it */}
+        <div className="semantic-title">
+          <h5 className="page-header">
+            {query ? <>Results for <em>"{query}"</em></> : 'Semantic Search'}
+          </h5>
+          {/* the model first (it stays put while results load), then the counts */}
+          <div className="semantic-meta">
+            {orderedModels.length > 1 && (
+              <label className="model-pick">
+                Ranked by
+                <select className="model-select" value={selectedModel} onChange={handleModelChange}
+                        title="The embedding model that ranks the results">
+                  {orderedModels.map(m => (
+                    <option key={m.id} value={m.id}>{m.label}</option>
+                  ))}
+                </select>
+              </label>
+            )}
+            {!loading && !error && totalProteins > 0 && (
+              <span className="result-count">
+                {functionGrouped.length} protein{functionGrouped.length !== 1 ? 's' : ''}
+                {' · '}
+                {populationGrouped.length} variant group{populationGrouped.length !== 1 ? 's' : ''}
+              </span>
+            )}
+          </div>
         </div>
+        <PageHelp topics={[{ name: 'semantic-search', title: 'Semantic Search' }]} />
       </div>
 
       {query && (

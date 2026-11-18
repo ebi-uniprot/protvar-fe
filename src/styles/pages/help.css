@@ -61,10 +61,8 @@
     margin-left: 1em;
 }
 
+/* inline code: the monospace says it's code, no chip behind it (lighter, and links stay clean) */
 .help-content code {
-    background: var(--color-bg-secondary);
-    padding: 2px 5px;
-    border-radius: var(--radius-sm);
     font-family: var(--font-family-mono);
     font-size: 0.9em;
 }

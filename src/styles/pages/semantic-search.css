@@ -21,10 +21,15 @@
     color: var(--color-brand);
 }
 
-.semantic-toolbar {
+.semantic-title {
     display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.semantic-title .page-header {
+    margin: 0;
 }
 
 /* Caution that results are AI-ranked, not exact matches. */
@@ -57,19 +62,51 @@
     color: var(--color-text-tertiary);
 }
 
-.model-select {
+.semantic-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0 8px;
     font-size: var(--font-size-sm);
-    padding: 0.2rem 0.5rem;
-    border: 1px solid var(--color-border-medium);
-    border-radius: var(--radius-sm);
-    background: var(--color-bg-secondary);
-    color: var(--color-text-secondary);
+    color: var(--color-text-tertiary);
+}
+
+/* "Ranked by Qwen3 ▾ · 10 proteins · …": a quiet inline control, then the counts */
+.model-pick + .result-count::before {
+    content: '·';
+    margin-right: 8px;
+}
+
+.model-pick {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin: 0;
+}
+
+.model-select {
+    field-sizing: content;   /* as wide as the chosen name (where supported) */
+    padding: 1px 2px;
+    border: 0;
+    border-bottom: 1px dashed var(--color-brand-light);
+    border-radius: 0;
+    background: none;
+    color: var(--color-brand);
+    font: inherit;
+    font-weight: var(--font-weight-medium);
     cursor: pointer;
 }
 
-.model-select:focus {
+.model-select:hover {
+    border-bottom-style: solid;
+}
+
+/* no focus ring after picking (browsers draw one on a select even from the mouse): a solid underline instead */
+.model-select:focus,
+.model-select:focus-visible {
     outline: none;
-    border-color: var(--color-brand);
+    box-shadow: none;
+    border-bottom-style: solid;
 }
 
 /* ============================================

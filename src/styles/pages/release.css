@@ -300,9 +300,6 @@
 }
 
 .release-note-content code {
-    background: var(--color-bg-tertiary);
-    padding: 2px 4px;
-    border-radius: var(--radius-sm);
     font-family: var(--font-family-mono);
     font-size: 0.9em;
 }
