@@ -27,17 +27,6 @@
     color: var(--color-text-primary);
 }
 
-.footer-links {
-    margin-top: 1rem;
-}
-
-.footer-links p {
-    font-size: var(--font-size-base);
-    color: var(--color-text-secondary);
-    margin: 0.4rem 0;
-    line-height: var(--line-height-normal);
-}
-
 .ref-link {
     color: var(--color-brand);
     text-decoration: underline;
@@ -306,6 +295,80 @@
     font-weight: var(--font-weight-medium);
     min-width: 2.5rem;
     text-align: center;
+}
+
+/* the citations stacked in one cell: the tallest sets the height, only the current one is shown */
+.carousel-stack {
+    display: grid;
+}
+
+.carousel-slide {
+    grid-area: 1 / 1;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease, visibility 0s 0.3s;
+}
+
+.carousel-slide.current {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .carousel-slide, .carousel-slide.current { transition: none; }
+}
+
+/* "All 71 citations →": the full list, on the right of the controls */
+.carousel-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: auto;
+    font-size: var(--font-size-sm);
+    color: var(--color-brand);
+    text-decoration: none;
+}
+
+.carousel-all:hover {
+    text-decoration: underline;
+}
+
+/* Citations page: grouped by year, each a numbered entry */
+.citations-intro {
+    margin: 0 0 1.5rem;
+    color: var(--color-text-secondary);
+}
+
+.citations-year h6 {
+    margin: 1.5rem 0 0.5rem;
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+}
+
+.citations-year ol {
+    margin: 0;
+    padding-left: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.citations-year li {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    line-height: 1.5;
+}
+
+.citations-year li a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.citations-year li a:hover {
+    color: var(--color-brand);
+    text-decoration: underline;
 }
 
 /* ============================================

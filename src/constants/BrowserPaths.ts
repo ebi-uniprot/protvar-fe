@@ -1,4 +1,5 @@
 export const ABOUT = "/about"
+export const CITATIONS = "/citations"   // research using ProtVar: the full list
 export const CONTACT = "/contact"
 export const RESULT = "/result" //[/:input]
 export const DATASET = "/dataset" // /dataset/:input — a ready-made dataset by name (GET /datasets)

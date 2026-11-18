@@ -1,10 +1,6 @@
 import FooterStatus from './FooterStatus';
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { CookieConsent } from "react-cookie-consent";
-import { CONTACT } from '../../../constants/BrowserPaths';
-import Subscribe from "../Subscribe";
-import Citation from './Citation';
 import EMBLEBILogo from '../../../images/embl-ebi-logo.svg';
 import openTargetsLogo from '../../../images/open-targets-logo.png';
 import uniprotLogo from '../../../images/uniprot-logo.svg';
@@ -12,7 +8,6 @@ import ensemblLogo from '../../../images/ensembl-logo.png';
 import vepGif from '../../../images/vep.jpeg';
 import pdbeLogo from '../../../images/pdbe-logo.png';
 import decipherLogo from '../../../images/decipher.png';
-import {ExtLink} from "../../components/common/Link";
 import {
   CC_BY_URL,
   DECIPHER_URL,
@@ -24,80 +19,12 @@ import {
   ENSEMBL_VEP_URL,
   OPEN_TARGETS_URL,
   PDBE_URL,
-  PROTVAR_PAPER_URL,
-  PROTVAR_TWITTER_URL,
   UNIPROT_HOME_URL
 } from "../../../constants/ExternalUrls";
 
 const Footer: React.FC = () => {
   return (
     <footer id="footer-target">
-      {/* Citation and Twitter content section */}
-      <div className="footer-content-section">
-        <div className="citation-container">
-          <h5>Cite ProtVar</h5>
-          <p className="citation-text">
-            James D Stephenson, Prabhat Totoo, David F Burke, Jürgen Jänes, Pedro Beltrao, Maria J Martin,
-            ProtVar: mapping and contextualizing human missense variation, <i>Nucleic Acids Research</i>, 2024;&nbsp;
-            <ExtLink url={PROTVAR_PAPER_URL} text={PROTVAR_PAPER_URL} />
-          </p>
-
-          {/* Citation Carousel */}
-          <Citation />
-
-          <div className="footer-links">
-            <p>
-              Please{' '}
-              <Link to={CONTACT} title="Contact us" className="ref-link">
-                contact us
-              </Link>{' '}
-              with queries or suggestions.
-            </p>
-            <p>
-              Licensed under{' '}
-              <a className="ref-link" href={CC_BY_URL}
-                 target="_blank" rel="noreferrer">Creative Commons Attribution 4.0</a>.
-            </p>
-          </div>
-        </div>
-
-        <div className="twitter-container">
-          <h5>Latest Updates</h5>
-          <div className="twitter-content">
-            <a className="twitter-timeline"
-               data-width="350"
-               data-height="280"
-               data-theme="light"
-               data-chrome="noheader nofooter noborders transparent"
-               href={PROTVAR_TWITTER_URL + "?ref_src=twsrc%5Etfw"}>
-              Tweets by EBIProtVar
-            </a>
-            <div className="twitter-fallback">
-              <i className="pv-icon" aria-hidden="true">
-                {/* X logo: Lucide has no brand icons */}
-                <svg width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
-                </svg>
-              </i>
-              {' '}Follow{' '}
-              <a href={PROTVAR_TWITTER_URL} target="_blank" rel="noreferrer">@EBIProtVar</a>
-              {' '}for the latest updates.
-            </div>
-          </div>
-          <div className="social-signup-section">
-            <a
-              className="twitter-follow-button"
-              data-size="large"
-              data-show-screen-name="false"
-              href={PROTVAR_TWITTER_URL}
-            >
-              Follow @EBIProtVar
-            </a>
-            <Subscribe />
-          </div>
-        </div>
-      </div>
-
       {/* Partners section */}
       <div className="pv-footer">
         <div className="partners-section">
@@ -143,6 +70,9 @@ const Footer: React.FC = () => {
             <a href={EMBL_URL} target="_blank" rel="noreferrer">European Molecular Biology Laboratory</a>
             <span className="ebi-footer-sep">·</span>
             <a href={EBI_TERMS_URL} target="_blank" rel="noreferrer">Terms of use</a>
+            <span className="ebi-footer-sep">·</span>
+            Licensed under{' '}
+            <a href={CC_BY_URL} target="_blank" rel="noreferrer">CC BY 4.0</a>
           </p>
         </div>
       </div>

@@ -3,9 +3,10 @@ import {Route, Routes} from "react-router-dom";
 import HomePage from "./pages/home/HomePage";
 import APIErrorPage from "./pages/APIErrorPage";
 import AboutPage from "./pages/AboutPage";
+import CitationsPage from "./pages/CitationsPage";
 import ReleasePage from "./pages/ReleasePage";
 import ContactPage from "./pages/ContactPage";
-import {ABOUT, ACTIVITY, API_ERROR, CONTACT, DATASET, DOWNLOAD, G_QUERY, HELP, HOME, ID_ENSEMBL, ID_GENE, ID_PDB, ID_REFSEQ, P_QUERY, QUERY, RELEASE, RESULT, SEARCH, SEMANTIC_SEARCH, STATUS} from "../constants/BrowserPaths";
+import {ABOUT, ACTIVITY, CITATIONS, API_ERROR, CONTACT, DATASET, DOWNLOAD, G_QUERY, HELP, HOME, ID_ENSEMBL, ID_GENE, ID_PDB, ID_REFSEQ, P_QUERY, QUERY, RELEASE, RESULT, SEARCH, SEMANTIC_SEARCH, STATUS} from "../constants/BrowserPaths";
 import DownloadPage from "./pages/download/DownloadPage";
 import HelpPage from "./pages/help/HelpPage";
 import {PagedMappingResponse} from "../types/PagedMappingResponse";
@@ -121,6 +122,7 @@ export default function App() {
 
           <Route path={API_ERROR} element={<APIErrorPage />} />
           <Route path={ABOUT} element={<AboutPage />} />
+          <Route path={CITATIONS} element={<CitationsPage />} />
           <Route path={RELEASE} element={<ReleasePage />} />
           <Route path={CONTACT} element={<ContactPage />} />
           <Route path={ACTIVITY} element={<ActivityPage />} />

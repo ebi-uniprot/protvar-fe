@@ -48,6 +48,7 @@
 .default-page-layout > .page-content {
     grid-column: 3;
     grid-row: 1;
+    align-self: stretch;   /* the full row height, so the Cite / Research block can sit at its foot */
 }
 
 /* ============================================
@@ -57,6 +58,13 @@
 .page-content {
     position: relative;
     min-width: 0;       /* prevent grid blowout */
+    display: flex;      /* the Cite / Research block sits at the foot of the column */
+    flex-direction: column;
+}
+
+/* pushed to the bottom: level with the sidebar's foot on short pages, after the content on long ones */
+.page-content > .footer-content-section {
+    margin-top: auto;
 }
 
 .main-content {

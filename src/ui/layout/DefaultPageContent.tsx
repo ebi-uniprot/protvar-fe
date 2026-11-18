@@ -1,4 +1,5 @@
 import React from "react";
+import CiteSection from "./Footer/CiteSection";
 
 const DefaultPageContent = (props: { children: React.JSX.Element }) => {
   return (
@@ -6,6 +7,7 @@ const DefaultPageContent = (props: { children: React.JSX.Element }) => {
       <div className="main-content">
         {props.children}
       </div>
+      <CiteSection />
     </div>
   )
 }
