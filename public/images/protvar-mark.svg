@@ -1,6 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="22" height="16" viewBox="0 0 22 16" role="img" aria-label="ProtVar">
-  <title>ProtVar</title>
-  <!-- compact ProtVar mark: P (logo green) V (logo orange) on the logo blue. Same font, size (11) and weight (bold) as "ProtVar" in view-in-protvar.svg -->
-  <rect width="22" height="16" rx="3" fill="#0A5394"/>
-  <text x="11" y="12" text-anchor="middle" font-family="Verdana, 'DejaVu Sans', Arial, sans-serif" font-size="11" font-weight="bold"><tspan fill="#9FCBAF">P</tspan><tspan fill="#FF9901">V</tspan></text>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" role="img" aria-label="ProtVar"><title>ProtVar</title><!-- compact ProtVar mark for other sites: the logo ring + variant atom on the logo blue --><rect width="16" height="16" rx="3.5" fill="#0A5394"/><g fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polyline points="4.4,4.5 2.6,10.0 7.3,13.4 12.0,10.0" stroke="#9FCBAF"/><polyline points="4.4,4.5 10.2,4.5 12.0,10.0" stroke="#FF9901"/></g><circle cx="11.96" cy="10.01" r="2.1" fill="#FF9901" stroke="#0A5394" stroke-width="0.9"/></svg>

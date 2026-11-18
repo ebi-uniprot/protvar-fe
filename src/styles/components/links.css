@@ -47,11 +47,11 @@
    ============================================ */
 
 .protvar-link {
-    /* 24px tall click target around the 24x16 mark (WCAG 2.2 target size) */
+    /* 24px click target around the 16x16 mark (WCAG 2.2 target size) */
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 28px;
+    min-width: 24px;
     height: 24px;
     padding: 0 2px;
     margin-left: var(--spacing-xs, 4px);
@@ -61,9 +61,19 @@
     transition: background var(--transition-base);
 }
 
-.protvar-link img {
+/* Logo ring mark, no tile: deeper green / orange on light pages, the logo's own pale ones in dark */
+.pv-mark {
     display: block;
-    border-radius: 3px;
+    --pv-mark-green: #4E9A72;
+    --pv-mark-orange: #E68000;
+}
+.pv-mark-ring { stroke: var(--pv-mark-green); }
+.pv-mark-var  { stroke: var(--pv-mark-orange); }
+.pv-mark-atom { fill: var(--pv-mark-orange); }
+
+:root[data-theme="dark"] .pv-mark {
+    --pv-mark-green: #9FCBAF;
+    --pv-mark-orange: #FF9901;
 }
 
 .protvar-link:hover {
@@ -110,10 +120,6 @@
     outline: 2px solid var(--color-primary);
     outline-offset: 2px;
     border-radius: 2px;
-}
-
-.view-structure-button .bi-eye {
-    font-size: var(--font-size-md);
 }
 
 

@@ -31,7 +31,7 @@ Prefix each link with `https://www.ebi.ac.uk`. GRCh37 positions: add `?assembly=
 **Compact mark**, next to an ID in a table or list: rs334 ![ProtVar](images/protvar-mark.svg)
 
 ```html
-<a href="https://www.ebi.ac.uk/ProtVar/search?q=rs334" title="Open rs334 in ProtVar"><img src="https://www.ebi.ac.uk/ProtVar/images/protvar-mark.svg" alt="Open rs334 in ProtVar" width="22" height="16"></a>
+<a href="https://www.ebi.ac.uk/ProtVar/search?q=rs334" title="Open rs334 in ProtVar"><img src="https://www.ebi.ac.uk/ProtVar/images/protvar-mark.svg" alt="Open rs334 in ProtVar" width="16" height="16"></a>
 ```
 
 Linking to ProtVar? Tell us at [protvar@ebi.ac.uk](mailto:protvar@ebi.ac.uk): we'll list your resource and keep your links working.
