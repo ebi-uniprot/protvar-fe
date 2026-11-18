@@ -7,7 +7,7 @@ import {PopulationAlleleFreq} from "./PopulationAlleleFreq";
 import SubmittedVariantDetails from "./SubmittedVariantDetails";
 import CoLocatedVariantDetails from "./coLocated/CoLocatedVariantDetails";
 import AssociatedDiseases from "./common/AssociatedDiseases";
-import XRefList from "./common/XRefList";
+import XRefList, { isSingleBaseChange } from "./common/XRefList";
 import PopulationFrequencyDetails from "./common/PopulationFrequencyDetails";
 import { Icon } from '../../elements/Icon';
 
@@ -157,6 +157,7 @@ function PopulationData(props: PopulationDataProps) {
                 xrefs={selectedVariant.xrefs}
                 populationFrequencies={selectedVariant.populationFrequencies}
                 clinicalSignificances={selectedVariant.clinicalSignificances}
+                protVarLinks={isSingleBaseChange(selectedVariant.genomicLocation)}
               />
               <PopulationFrequencyDetails populationFrequencies={selectedVariant.populationFrequencies} />
               <AssociatedDiseases associations={selectedVariant.association} />

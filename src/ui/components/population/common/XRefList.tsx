@@ -38,13 +38,20 @@ const shouldShowProtVarLink = (id: string, source: string): boolean => {
 
 const buildProtVarUrl = (id: string): string => `${PV_SEARCH}${id}`;
 
+// ProtVar maps single-nucleotide changes only. A variant whose genomic change spans more than one base
+// (e.g. g.140753336_140753337delinsTT) can't be opened in ProtVar, so its IDs get no ProtVar link.
+// No locations given: keep the links.
+export const isSingleBaseChange = (genomicLocation?: string[]): boolean =>
+  !genomicLocation?.length || genomicLocation.every(loc => /:g\.\d+[ACGT]>[ACGT]$/i.test(loc));
+
 interface XRefListProps {
   xrefs?: DbReferenceObject[];
   populationFrequencies?: PopulationFrequency[];
   clinicalSignificances?: ClinicalSignificance[];
+  protVarLinks?: boolean;   // false: the variant can't be mapped by ProtVar (multi-base), so no PV links
 }
 
-function XRefList({xrefs, populationFrequencies, clinicalSignificances}: XRefListProps) {
+function XRefList({xrefs, populationFrequencies, clinicalSignificances, protVarLinks = true}: XRefListProps) {
   if (!xrefs || xrefs.length === 0) return null;
 
   const groupedXrefs = xrefs.reduce((acc, xref) => {
@@ -102,7 +109,7 @@ function XRefList({xrefs, populationFrequencies, clinicalSignificances}: XRefLis
                       {xref.url
                         ? <ExtLink url={xref.url} text={xref.id} />
                         : <span className="id-plain">{xref.id}</span>}
-                      {shouldShowProtVarLink(xref.id, source) &&
+                      {protVarLinks && shouldShowProtVarLink(xref.id, source) &&
                         <PVLink url={buildProtVarUrl(xref.id)} title={`Open ${xref.id} in ProtVar`} />
                       }
                     </span>
