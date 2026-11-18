@@ -469,3 +469,62 @@
         width: 110px;
     }
 }
+
+/* ============================================
+   STATUS + VERSIONS — a slim line above the EBI footer
+   ============================================ */
+
+.footer-status {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 16px;
+    padding: 10px 1.5rem;
+    background: var(--color-bg-secondary);
+    border-top: 1px solid var(--color-border-light);
+    font-size: var(--font-size-xs);
+    color: var(--color-text-secondary);
+}
+
+.footer-status-state {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.footer-status-state a {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+}
+
+.footer-status-state a:hover {
+    color: var(--color-brand);
+    text-decoration: underline;
+}
+
+.footer-status .navbar-status {
+    margin-left: 0;
+}
+
+/* the version pill, quiet on the light footer; its data-version list opens upwards */
+.footer-status .version-pill {
+    background: transparent;
+    border: 0;
+    padding: 0;
+    height: auto;
+    color: var(--color-text-secondary);
+    font-weight: var(--font-weight-normal);
+}
+
+.footer-status .version-pill:hover {
+    color: var(--color-brand);
+    text-decoration: underline;
+}
+
+.footer-status .version-panel {
+    top: auto;
+    bottom: calc(100% + 6px);
+    left: 0;
+    right: auto;
+    border-radius: var(--radius-md);
+}

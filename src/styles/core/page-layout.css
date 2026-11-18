@@ -108,6 +108,8 @@
    ============================================ */
 
 .content .masthead {
+    position: relative;
+    z-index: calc(var(--z-sticky) + 1);   /* its search panel opens over the pinned mode bar / filter rail */
     border-bottom: 1px solid rgba(0,0,0,0.15);
     margin-bottom: 0;           /* no gap between masthead and content */
     background: var(--color-brand-logo);   /* flat (was a navy gradient #014371 → #025a94 → #014371) */
@@ -150,6 +152,33 @@
 /* ============================================
    BANNER (dismissible info bar above content)
    ============================================ */
+
+/* Announcement above the masthead: slides open / closed by animating the grid row from 0 to its content height */
+.banner-slide {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    visibility: hidden;         /* closed: out of the tab order, once the slide has finished */
+    transition: grid-template-rows 0.3s ease, opacity 0.3s ease, visibility 0s 0.3s;
+}
+
+.banner-slide.open {
+    grid-template-rows: 1fr;
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s;
+}
+
+.banner-slide-inner {
+    min-height: 0;
+    overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .banner-slide {
+        transition: none;
+    }
+}
 
 .banner {
     display: flex;

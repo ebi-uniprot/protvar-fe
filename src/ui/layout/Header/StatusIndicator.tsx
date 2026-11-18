@@ -4,7 +4,7 @@ import {STATUS} from '../../../constants/BrowserPaths'
 import {useStatus} from '../../../context/StatusContext'
 import {OverallState, overallState, StatusResponse} from '../../../types/StatusResponse'
 
-const STATE_LABEL: Record<OverallState, string> = {
+export const STATE_LABEL: Record<OverallState, string> = {
   up:        'All systems operational',
   degraded:  'Some features unavailable',
   down:      'Service unavailable',

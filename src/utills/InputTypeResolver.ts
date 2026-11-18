@@ -1,4 +1,18 @@
 import {Identifier, IDENTIFIER_TYPES, IdentifierType, INPUT_TYPES, InputType} from "../types/InputType";
+import {ID_ENSEMBL, ID_GENE, ID_PDB, ID_REFSEQ} from "../constants/BrowserPaths";
+
+/** The browse page for one identifier: /gene/BRCA2, /ensembl/ENSG…, /refseq/NM_…, /pdb/1A3N, or /P68871 (UniProt). */
+export function singleIdPath(type: IdentifierType, value: string): string {
+  // Accessions are always upper case (p15056 → P15056); gene symbols stay as typed (C19orf12), PDB IDs too
+  if (type === 'uniprot' || type === 'ensembl' || type === 'refseq') value = value.toUpperCase();
+  switch (type) {
+    case 'gene':    return `${ID_GENE}/${value}`;
+    case 'pdb':     return `${ID_PDB}/${value}`;
+    case 'ensembl': return `${ID_ENSEMBL}/${value}`;
+    case 'refseq':  return `${ID_REFSEQ}/${value}`;
+    default:        return `/${value}`; // uniprot and fallback — bare accession path
+  }
+}
 
 // 32-char hex — identifies an uploaded result (resultId), not a browsable identifier
 export const INPUT_ID_REGEX = /^[a-f0-9]{32}$/;
@@ -6,10 +20,10 @@ export const INPUT_ID_REGEX = /^[a-f0-9]{32}$/;
 export function resolve(input: string): InputType | null {
   const trimmed = input.trim();
 
-  const ensemblRegex = /^ENS[GTP]\d{11}(\.\d+)?$/i;
+  const ensemblRegex = /^ENS[GTPE]\d{11}(\.\d+)?$/i;        // gene, transcript, protein, exon (as the backend)
   const uniprotRegex = /^([OPQ][0-9][A-Z0-9]{3}[0-9]|[A-NR-Z]([0-9][A-Z][A-Z0-9]{2}){1,2}[0-9])(-[1-9][0-9]*)?$/i;
   const pdbRegex = /^[0-9][A-Za-z0-9]{3}$/;
-  const refseqRegex = /^(NM|NP)_\d{6,}(\.\d+)?$/i;
+  const refseqRegex = /^(NC|NM|NP|NG|LRG|NR)_\d{6,}(\.\d+)?$/i;  // bare accession only; with a ':' it is HGVS (as the backend)
   const geneRegex = /^[A-Za-z0-9\-_]{2,}$/;
 
   if (ensemblRegex.test(trimmed)) return 'ensembl';
@@ -29,10 +43,10 @@ export function resolve(input: string): InputType | null {
 export function resolveIdentifier(input: string): IdentifierType | null {
   const trimmed = input.trim();
 
-  const ensemblRegex = /^ENS[GTP]\d{11}(\.\d+)?$/i;
+  const ensemblRegex = /^ENS[GTPE]\d{11}(\.\d+)?$/i;        // gene, transcript, protein, exon (as the backend)
   const uniprotRegex = /^([OPQ][0-9][A-Z0-9]{3}[0-9]|[A-NR-Z]([0-9][A-Z][A-Z0-9]{2}){1,2}[0-9])(-[1-9][0-9]*)?$/i;
   const pdbRegex = /^[0-9][A-Za-z0-9]{3}$/;
-  const refseqRegex = /^(NM|NP)_\d{6,}(\.\d+)?$/i;
+  const refseqRegex = /^(NC|NM|NP|NG|LRG|NR)_\d{6,}(\.\d+)?$/i;  // bare accession only; with a ':' it is HGVS (as the backend)
   const geneRegex = /^[A-Za-z0-9\-_]{2,}$/;
 
   // Skip uploaded result IDs — they're not biological identifiers

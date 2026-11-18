@@ -1,101 +1,220 @@
 /**
  * search-box.css
- * Compact search box for the navbar/header (dark background context).
- * Replaces local SearchBox.css.
+ * Header search: a solid white pill on the blue masthead (icon | input | orange Search button),
+ * and the panel that opens under it.
  */
 
 .search-box {
     position: relative;
     display: flex;
     align-items: center;
+    gap: 10px;
     width: 300px;
+    height: 40px;
+    box-sizing: border-box;
+    padding: 0 5px 0 16px;
+    background: #ffffff;
+    border-radius: var(--radius-full);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
+    transition: box-shadow var(--transition-fast);
+}
+
+/* Focus: a soft orange halo (the logo's accent) instead of a hard outline */
+.search-box:focus-within {
+    box-shadow: 0 0 0 3px rgba(255, 153, 1, 0.45), 0 1px 2px rgba(0, 0, 0, 0.18);
+}
+
+.search-box-icon {
+    flex-shrink: 0;
+    font-size: 15px;
+    line-height: 1;
+    color: #52606d;
 }
 
 .search-input {
-    width: 100%;
-    height: 36px;
-    padding: 8px 40px 8px 14px;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: var(--radius-full);
-    color: #ffffff;
-    font-size: var(--font-size-md);
-    font-family: inherit;
-    transition: all var(--transition-base);
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    padding: 0;
+    border: 0;
     outline: none;
-    box-sizing: border-box;
-    line-height: normal;
+    background: transparent;
+    color: #1f2933;
+    font-family: inherit;
+    font-size: var(--font-size-md);
 }
 
-.search-input:hover {
-    background: rgba(255, 255, 255, 0.09);
-    border-color: rgba(255, 255, 255, 0.18);
-}
-
-.search-input:focus {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.18);
-    caret-color: #ffffff;
+.search-input:focus-visible {
+    outline: none;              /* the pill shows focus (orange halo); the global input outline drew bars at its ends */
 }
 
 .search-input::placeholder {
-    color: rgba(255, 255, 255, 0.55);
+    color: #7b8794;
     opacity: 1;
 }
 
-.search-icon-button {
-    position: absolute;
-    right: 4px;
-    top: 4px;
-    width: 28px;
-    height: 28px;
-    background: transparent;
-    border: none;
+.search-submit {
+    flex-shrink: 0;
+    height: 30px;
+    padding: 0 16px;
+    border: 0;
     border-radius: var(--radius-full);
+    background: #FF9901;
+    color: #1f2933;
+    font-family: inherit;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
     cursor: pointer;
-    transition: all var(--transition-base);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    outline: none;
+    transition: background var(--transition-fast), opacity var(--transition-fast);
 }
 
-.search-icon-button:hover:not(:disabled) {
-    background: rgba(255, 255, 255, 0.12);
+.search-submit:hover:not(:disabled) {
+    background: #ffad33;
 }
 
-.search-icon-button:disabled {
-    opacity: 0.4;
+.search-submit:focus-visible {
+    outline: 2px solid #0A5394;
+    outline-offset: 2px;
 }
 
-.search-icon-button:focus {
-    outline: 2px solid rgba(255, 255, 255, 0.3);
-    outline-offset: 1px;
+/* Nothing to search yet: present but quiet */
+.search-submit:disabled {
+    opacity: 0.55;
+    cursor: default;
 }
 
-.search-icon {
-    color: rgba(255, 255, 255, 0.5);
-    font-size: var(--font-size-md);
-    line-height: 1;
+/* Dark theme: a navy pill (white would glare), same orange button */
+:root[data-theme="dark"] .search-box {
+    background: var(--color-bg-elevated);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.18);
 }
 
-.search-icon-button:hover:not(:disabled) .search-icon {
-    color: rgba(255, 255, 255, 0.8);
+:root[data-theme="dark"] .search-box:focus-within {
+    box-shadow: 0 0 0 3px rgba(255, 153, 1, 0.45);
 }
 
-.search-icon-button:disabled .search-icon {
-    color: rgba(255, 255, 255, 0.3);
+:root[data-theme="dark"] .search-box-icon,
+:root[data-theme="dark"] .search-input::placeholder {
+    color: var(--color-text-tertiary);
+}
+
+:root[data-theme="dark"] .search-input {
+    color: var(--color-text-primary);
 }
 
 @media screen and (max-width: 480px) {
     .search-box {
         width: 100%;
-        max-width: 280px;
+        height: 38px;
+        padding-left: 12px;
     }
 
-    .search-input {
-        font-size: var(--font-size-base);
-        height: 34px;
-        padding: 7px 36px 7px 12px;
+    .search-submit {
+        padding: 0 12px;
     }
+}
+
+/* ============================================
+   PANEL — opens under the box on focus: what Enter will do, examples, formats
+   ============================================ */
+
+.search-box-panel {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    z-index: var(--z-dropdown);
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border-medium);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    padding: 6px;
+    text-align: left;
+    color: var(--color-text-primary);
+}
+
+.search-box-panel-go {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 8px 10px;
+    margin-bottom: 4px;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: var(--color-brand-lightest);
+    color: var(--color-text-primary);
+    font: inherit;
+    font-size: var(--font-size-base);
+    text-align: left;
+    cursor: pointer;
+}
+
+.search-box-panel-go:hover {
+    background: var(--color-primary-lightest);
+}
+
+.search-box-panel-go i {
+    color: var(--color-brand);
+}
+
+.search-box-panel-go span {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.search-box-panel-go kbd {
+    font-family: inherit;
+    font-size: 11px;
+    color: var(--color-text-tertiary);
+    border: 1px solid var(--color-border-medium);
+    border-radius: 4px;
+    padding: 0 5px;
+}
+
+.search-box-panel-try {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 4px;
+}
+
+.search-box-panel-label {
+    font-size: 11px;
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+    margin-right: 2px;
+}
+
+.search-box-panel-chip {
+    padding: 3px 10px;
+    border: 1px solid var(--color-border-medium);
+    border-radius: var(--radius-full);
+    background: transparent;
+    color: var(--color-brand);
+    font-family: var(--font-family-mono, monospace);
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.search-box-panel-chip:hover,
+.search-box-panel-chip:focus-visible {
+    background: var(--color-brand-lightest);
+    border-color: var(--color-brand);
+}
+
+.search-box-panel-hint {
+    margin: 2px 4px 4px;
+    font-size: var(--font-size-xs);
+    line-height: 1.45;
+    color: var(--color-text-secondary);
+}
+
+.search-box-panel-hint a {
+    color: var(--color-brand);
 }

@@ -1,18 +1,17 @@
 import React, { useState } from 'react';
 import { useStorage } from '../../../context/StorageContext';
 import { FontSize, Theme } from '../../../types/UserPrefs';
+import { Icon } from '../../elements/Icon';
 
-const FONT_SIZES: { key: FontSize; title: string }[] = [
+export const FONT_SIZES: { key: FontSize; title: string }[] = [
   { key: 'sm', title: 'Small text' },
   { key: 'md', title: 'Medium text' },
   { key: 'lg', title: 'Large text' },
 ];
 
-// Theme toggle + AAA text-size controls, shown in the masthead utility cluster
-// (next to status + version). Writes to user prefs (persisted) and reflects the
-// choice on <html> via data-theme / data-font-size, which drive the CSS
-// variables in styles/core/variables.css.
-const AppearanceControls: React.FC = () => {
+// Theme + text size: user prefs (persisted), reflected on <html> via data-theme / data-font-size, which drive the
+// CSS variables in styles/core/variables.css. Used by the header's display menu and the narrow-screen menu.
+export function useAppearance() {
   const { getPrefs, setPrefs } = useStorage();
   const [theme, setTheme] = useState<Theme>(() => getPrefs().theme);
   const [fontSize, setFontSize] = useState<FontSize>(() => getPrefs().fontSize);
@@ -29,6 +28,12 @@ const AppearanceControls: React.FC = () => {
     document.documentElement.setAttribute('data-font-size', next);
   };
 
+  return { theme, fontSize, applyTheme, applyFontSize };
+}
+
+// Compact theme toggle + AAA text size (the narrow-screen menu)
+const AppearanceControls: React.FC = () => {
+  const { theme, fontSize, applyTheme, applyFontSize } = useAppearance();
   const nextTheme: Theme = theme === 'dark' ? 'light' : 'dark';
 
   return (
@@ -40,7 +45,7 @@ const AppearanceControls: React.FC = () => {
         title={`Switch to ${nextTheme} theme`}
         aria-label={`Switch to ${nextTheme} theme`}
       >
-        <i className={`bi ${theme === 'dark' ? 'bi-sun' : 'bi-moon'}`} />
+        <Icon name={theme === 'dark' ? 'sun' : 'moon'} />
       </button>
 
       <span className="navbar-appearance-sep" aria-hidden="true" />

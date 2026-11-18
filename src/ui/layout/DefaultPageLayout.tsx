@@ -8,6 +8,7 @@ import Sidebar from "./Sidebar/Sidebar";
 import Navbar from "./Header/Navbar";
 import Footer from "./Footer/Footer";
 import {useStorage, STORAGE_CHANGE} from "../../context/StorageContext";
+import { Icon } from '../elements/Icon';
 
 /** Grid column between the app sidebar and the page content; a page portals a side panel into it. */
 export const SIDE_PANEL_ID = 'page-side-panel'
@@ -19,7 +20,7 @@ interface DefaultPageLayoutProps {
 const bannerText = (
   <>
     <span className="banner-lead">
-      <i className="bi bi-rocket-takeoff-fill banner-new-icon" /> ProtVar 3.0 — UniProt 2026_02 data,
+      <Icon name="rocket-takeoff-fill" className="banner-new-icon" /> ProtVar 3.0 — UniProt 2026_02 data,
       AlphaGenome Variant Impact (AVI) and Pangolin splice scores, UniProt variant IDs (VAR_) as input, and you can
       now filter and sort your own uploaded variants. See
       the{' '}<Link to={`${RELEASE}?tab=notes`}>release notes</Link> for details.
@@ -27,7 +28,7 @@ const bannerText = (
     Questions or feedback? Email{' '}
     <a href="mailto:protvar@ebi.ac.uk">protvar@ebi.ac.uk</a>.
     <div>
-      <i className="bi bi-stars banner-new-icon" />{' '}
+      <Icon name="stars" className="banner-new-icon" />{' '}
       Explore what's new:{' '}
       <Link to={`${HELP}#browse`}>Filter your uploads</Link>{' · '}
       <Link to={`${HELP}#predictions`}>AVI &amp; Pangolin scores</Link>{' · '}
@@ -39,17 +40,13 @@ const bannerText = (
 );
 
 function DefaultPageLayout({ content }: DefaultPageLayoutProps) {
-  const [showBanner, setShowBanner] = useState(bannerText != null);
+  // Read the dismissal up front: each page mounts its own layout, so starting from "shown" and hiding it in an
+  // effect would replay the slide-closed animation on every navigation.
+  const [showBanner, setShowBanner] = useState(() => bannerText != null && !sessionStorage.getItem(SESSION_BANNER));
   const { getHistory, getDownloads, getPrefs } = useStorage()
   const [isExpanded, setIsExpanded] = useState(() => getPrefs().sidebarExpanded)
   const [numResults, setNumResults] = useState<number>(() => getHistory().length)
   const [numDownloads, setNumDownloads] = useState<number>(() => getDownloads().length)
-
-  useEffect(() => {
-    if (sessionStorage.getItem(SESSION_BANNER)) {
-      setShowBanner(false)
-    }
-  }, [])
 
   useEffect(() => {
     const handleStorageChange = (e: CustomEvent) => {
@@ -70,6 +67,19 @@ function DefaultPageLayout({ content }: DefaultPageLayoutProps) {
   return (
     <>
       <div id="content" className="content">
+        {/* Announcement: full width above the masthead, dismissible for the session */}
+        {/* Stays mounted so hiding / showing it can slide (see .banner-slide) */}
+        <div className={`banner-slide${showBanner ? ' open' : ''}`}>
+          <div className="banner-slide-inner">
+            <div className="banner">
+              <button className="dismiss-button" onClick={handleDismiss} aria-label="Dismiss">
+                <Icon name="x" />
+              </button>
+              <div className="banner-content">{bannerText}</div>
+            </div>
+          </div>
+        </div>
+
         <div id="masthead" className="masthead">
           <div className="masthead-inner">
             <Navbar onShowBanner={!showBanner ? () => { sessionStorage.removeItem(SESSION_BANNER); setShowBanner(true); } : undefined} />
@@ -88,7 +98,7 @@ function DefaultPageLayout({ content }: DefaultPageLayoutProps) {
 
             <div id={SIDE_PANEL_ID} className="page-side-panel"/>
 
-            <DefaultPageContent banner={showBanner ? { text: bannerText, onDismiss: handleDismiss } : null}>
+            <DefaultPageContent>
               {content}
             </DefaultPageContent>
           </div>
