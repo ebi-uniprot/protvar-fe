@@ -1,8 +1,7 @@
 // SearchPage.tsx
 import React, { useState, useRef, useEffect, ChangeEvent } from 'react';
 import {Link, useNavigate, useSearchParams} from "react-router-dom";
-import {ArrowRight, ChevronDown, ChevronUp, Clipboard, Database, FileText, FileUp, FlaskConical, List, LucideIcon,
-  Search, Sparkles, TextAlignStart, X} from "lucide-react";
+import { ArrowRight, ChevronDown, ChevronUp, Clipboard, Database, FileText, FileUp, FlaskConical, Globe, List, LucideIcon, Search, Sparkles, TextAlignStart, X } from 'lucide-react';
 import PageHelp, {HelpTopic} from "../../components/help/PageHelp";
 import {useStorage} from "../../../context/StorageContext";
 import {ResultRecord, submissionExpiresAt} from "../../../types/ResultRecord";
@@ -329,10 +328,10 @@ const SearchPage: React.FC = () => {
     return true;
   };
 
-  // Every form: an icon, a title and one short line; the rest of the explaining lives in Help (the ? buttons)
-  const formTitle = (Icon: LucideIcon, title: string, line: string, tag?: React.ReactNode) => (
+  // Every form: a title and one short line (the mode tab above already carries the icon); the rest of the
+  // explaining lives in Help, on the right
+  const formTitle = (_Icon: LucideIcon, title: string, line: string, tag?: React.ReactNode) => (
     <div className="form-title">
-      <span className="form-title-icon"><Icon size={22} strokeWidth={1.75} aria-hidden="true" /></span>
       <div>
         <h1>{title}{tag}</h1>
         <p>{line}</p>
@@ -524,7 +523,7 @@ const SearchPage: React.FC = () => {
             <div className="variant-cards">
               <span className="variant-cards-label">Try a ready-made view</span>
               <div className="variant-cards-grid">
-                {BROWSE_CARDS.map(card => (
+                {BROWSE_CARDS.filter(card => card.code !== 'all genes').map(card => (
                   <button key={card.name} type="button" className="variant-card" onClick={() => navigate(card.to)}
                           title={card.note}>
                     <span className="variant-card-head">
@@ -539,6 +538,17 @@ const SearchPage: React.FC = () => {
                 ))}
               </div>
             </div>
+
+            {/* Filters with no ID (across all proteins): a line of its own, as Annotate's dataset */}
+            {BROWSE_CARDS.filter(card => card.code === 'all genes').map(card => (
+              <Link key={card.name} className="dataset-link" to={card.to} title={card.note}>
+                <Globe size={16} strokeWidth={1.75} aria-hidden="true" />
+                <span className="dataset-link-label">Across all proteins</span>
+                <strong>{card.name}</strong>
+                <span className="dataset-link-meta">{card.detail}</span>
+                <ArrowRight size={14} aria-hidden="true" />
+              </Link>
+            ))}
           </>
         )}
 
@@ -566,7 +576,8 @@ const SearchPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Semantic Search keeps its own look: example questions as a list of full sentences */}
+            {/* Example questions: one list of full sentences, as the other modes' examples (a label, quiet rows) */}
+            <span className="variant-cards-label">Try a question</span>
             <div className="question-list">
               {(showAllQuestions ? SEMANTIC_CARDS : SEMANTIC_CARDS.slice(0, QUESTIONS_SHOWN)).map(card => (
                 <button key={card.name} type="button" className="question" onClick={() => navigate(card.to)}>

@@ -122,24 +122,12 @@
     gap: 16px;
 }
 
-/* Title: icon tile + heading + one short line */
+/* Title: heading + one short line (the mode tab above carries the icon) */
 .form-title {
     display: flex;
     align-items: center;
     gap: 14px;
     margin-bottom: 4px;
-}
-
-.form-title-icon {
-    display: inline-flex;
-    flex: 0 0 44px;
-    width: 44px;
-    height: 44px;
-    align-items: center;
-    justify-content: center;
-    border-radius: 12px;
-    background: var(--color-brand-lightest);
-    color: var(--color-brand);
 }
 
 .form-title h1 {
@@ -213,6 +201,7 @@
     line-height: 24px;
 }
 
+/* line numbers: smaller and fainter than the text, on the box's own background (same 24px rows, so they line up) */
 .worksheet-gutter {
     display: flex;
     flex-direction: column;
@@ -221,10 +210,11 @@
     padding: 12px 10px 12px 14px;
     overflow: hidden;
     text-align: right;
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
     color: var(--color-text-muted);
-    background: var(--color-bg-secondary);
+    opacity: 0.75;
     border-right: 1px solid var(--color-border-light);
-    border-radius: 14px 0 0 0;
     user-select: none;
 }
 
@@ -254,12 +244,12 @@
     font-size: var(--font-size-sm);
 }
 
-/* Small, tag-like */
+/* Quiet text buttons: no outlines, a light tint on hover */
 .format-example {
-    padding: 2px 9px;
-    border: 1px solid var(--color-border-light);
+    padding: 2px 7px;
+    border: 0;
     border-radius: 6px;
-    background: var(--color-bg-primary);
+    background: none;
     color: var(--color-brand);
     font: inherit;
     font-size: 12.5px;
@@ -268,7 +258,6 @@
 }
 
 .format-example:hover {
-    border-color: var(--color-brand-lighter);
     background: var(--color-brand-lightest);
 }
 
@@ -447,27 +436,38 @@
 .question-list {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    margin-top: -8px;           /* close under its label */
+    border: 1px solid var(--color-border-light);
+    border-radius: 12px;
+    overflow: hidden;
 }
 
+/* rows in one list, a muted rule between them (as the Filters sections); a light tint on hover */
 .question {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 11px 14px;
-    border: 1px solid var(--color-border-light);
-    border-radius: 12px;
+    padding: 10px 14px;
+    border: 0;
+    border-top: 1px solid color-mix(in srgb, var(--color-border-light) 55%, transparent);
     background: var(--color-bg-primary);
     color: var(--color-text-primary);
     font: inherit;
     text-align: left;
     cursor: pointer;
-    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    transition: background var(--transition-fast);
+}
+
+.question:first-child {
+    border-top: 0;
 }
 
 .question:hover {
-    border-color: var(--color-brand-lighter);
-    box-shadow: var(--shadow-sm);
+    background: var(--color-bg-secondary);
+}
+
+.question:hover .question-text {
+    color: var(--color-brand);
 }
 
 .question-icon {
@@ -533,6 +533,7 @@
 .variant-cards-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    grid-auto-rows: 1fr;     /* every card the same height, whichever wraps */
     gap: 8px;
 }
 
@@ -541,9 +542,9 @@
     flex-direction: column;
     gap: 3px;
     padding: 10px 12px;
-    border: 1px solid var(--color-border-light);
+    border: 1px solid transparent;          /* soft fill, no outline; the outline comes on hover */
     border-radius: 10px;
-    background: var(--color-bg-primary);
+    background: var(--color-bg-secondary);
     color: var(--color-text-primary);
     font: inherit;
     text-align: left;
@@ -553,7 +554,11 @@
 
 .variant-card:hover {
     border-color: var(--color-brand-lighter);
-    box-shadow: var(--shadow-sm);
+    background: var(--color-bg-primary);
+}
+
+.variant-card:hover .variant-card-head strong {
+    color: var(--color-brand);
 }
 
 .variant-card-head {
@@ -568,12 +573,10 @@
     font-weight: var(--font-weight-semibold);
 }
 
+/* the source (dbSNP, COSMIC…): small plain text, not a pill */
 .variant-card-tag {
-    padding: 0 6px;
-    border-radius: 6px;
-    background: var(--color-brand-lightest);
-    color: var(--color-brand);
-    font-size: 10.5px;
+    color: var(--color-text-tertiary);
+    font-size: 11px;
     white-space: nowrap;
 }
 
@@ -592,24 +595,49 @@
 .search-form .search-filters {
     position: static;
     margin-bottom: 0;
+    /* on the home page: one thin outline, no tinted band or shadow, so it sits under the box, not over it */
+    border: 1px solid var(--color-border-light);
+    background: var(--color-bg-primary);
+    box-shadow: none;
 }
 
+.search-form .search-filters .filter-header {
+    padding: 0.55rem 1rem;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+}
+
+.search-form .search-filters .filter-header:hover {
+    background: var(--color-bg-secondary);
+}
+
+.search-form .search-filters .filter-panel {
+    padding-top: 0.25rem;
+}
+
+/* a muted rule between the sections: there to group them, not to be seen first */
+.search-form .search-filters .filter-section {
+    border-bottom-color: color-mix(in srgb, var(--color-border-light) 55%, transparent);
+}
+
+/* a ready-made dataset: one quiet line under the cards */
 .dataset-link {
     align-self: flex-start;
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 8px 12px;
-    border: 1px solid var(--color-border-light);
-    border-radius: 10px;
+    padding: 4px 0;
     color: var(--color-text-primary);
     text-decoration: none;
 }
 
 .dataset-link:hover {
-    border-color: var(--color-brand-lighter);
-    background: var(--color-brand-lightest);
     text-decoration: none;
+}
+
+.dataset-link:hover strong {
+    color: var(--color-brand);
+    text-decoration: underline;
 }
 
 .dataset-link svg {
