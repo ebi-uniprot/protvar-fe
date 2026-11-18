@@ -58,13 +58,15 @@ export interface Gene {
 }
 
 // Pangolin splice prediction: max increase (gain, 0..1) and decrease (loss, -1..0) of splice-site usage within
-// ±50 nt, at positions relative to the variant; score = max(gain, |loss|)
+// ±50 nt, at positions relative to the variant; score = max(gain, |loss|). label: the BE's call when a gain or
+// loss is significant ("Splice gain predicted" / "Splice loss predicted" / "Splice site change predicted"), else null
 export interface Pangolin {
   score: number;
   gain: number;
   gainPos: number;
   loss: number;
   lossPos: number;
+  label?: string | null;
 }
 
 // TODO clean up unused commented properties below

@@ -197,9 +197,11 @@ export const PredictionsHelp: React.FC = () => {
       </p>
       <p>
         A coding variant can look harmless at the protein level and still disrupt splicing, especially near an exon
-        edge. Genes can overlap, so each gene has its own score. Pangolin publishes no categories; ProtVar's bands
-        use 0.2 and 0.5, cut-offs commonly used for splice predictors (borrowed from SpliceAI practice). They
-        describe the size of the predicted splicing change, not whether the variant is pathogenic.
+        edge. Genes can overlap, so each gene has its own score. Pangolin publishes no categories. ProtVar calls a
+        gain or loss significant when the changed splice site is within 2 nucleotides of the variant and the score
+        is over 0.2, or within 8 nucleotides and over 0.8, and labels it "Splice gain predicted", "Splice loss
+        predicted", or "Splice site change predicted" when both are significant. The label describes a predicted
+        splicing change, not whether the variant is pathogenic.
       </p>
       <LegendCategories attrs={PANGOLIN_SCORE_ATTR} stdColor={stdColor} />
 

@@ -17,7 +17,7 @@ import Tool from "../../elements/Tooltip";
 import { TextLink } from "../../components/common/Link";
 import { caddScoreAttr, formatCaddScore } from "../../components/function/prediction/CaddScorePred";
 import { aviScoreAttr, AVI_SCORE_ATTR, genomeWideRank } from "../../components/function/prediction/AviScorePred";
-import { pangolinScoreAttr, pangolinDetail, PANGOLIN_SCORE_ATTR } from "../../components/function/prediction/PangolinPred";
+import { pangolinAttr, pangolinDetail, PANGOLIN_SCORE_ATTR } from "../../components/function/prediction/PangolinPred";
 import { amScoreAttr, formatAMScore } from "../../components/function/prediction/AlphaMissensePred";
 import { formatPopEveScore, getPopEveColor, getPopEveClass, POPEVE_SCORE_ATTR } from "../../components/function/prediction/PopEvePred";
 import LoaderRow from "./LoaderRow";
@@ -204,11 +204,11 @@ export const getNewPrimaryRow = (
           })()}
         </span>,
 
-        // Pangolin splice prediction for this gene: max(gain, |loss|), banded at 0.2 / 0.5 (see PangolinPred)
+        // Pangolin splice prediction for this gene: max(gain, |loss|), coloured by the BE label (see PangolinPred)
         pangolin: <span key="pangolin" data-card-label="Pangolin" className="cell-pangolin na-badge">
           {gene.pangolin && (() => {
             const p = gene.pangolin;
-            const attr = pangolinScoreAttr(p.score);
+            const attr = pangolinAttr(p);
             return <Tool className="score-box"
                          style={{ backgroundColor: stdColor ? attr.stdColor : attr.color,
                                   color: !stdColor && attr === PANGOLIN_SCORE_ATTR[0] ? '#0b3d39' : undefined }}

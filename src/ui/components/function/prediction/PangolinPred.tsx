@@ -8,18 +8,18 @@ import { Icon } from '../../../elements/Icon';
 const PRECISION: number = 2 // dp
 
 // Pangolin (Zeng & Li 2022) predicts the change in splice-site usage; score = max(gain, |loss|), 0..1.
-// Pangolin publishes no categories: 0.2 and 0.5 are cut-offs commonly used for splice predictors (borrowed from
-// SpliceAI practice), so the bands describe the predicted effect size, not a pathogenicity call. Single hue (teal).
+// The BE labels a gain or loss as significant (rule from James Stephenson): the changed splice site is within 2 nt
+// of the variant and the score is over 0.2, or within 8 nt and over 0.8. Not a pathogenicity call. Single hue (teal).
 export const PANGOLIN_SCORE_ATTR: PredictionCategory[] = [
-  { color: '#c7e9e5', stdColor: STD_COLOR_GRADIENT.rgbAt(0).toHexString(),   text: 'little or no predicted splice change', range: '<0.20' },
-  { color: '#4fb3a9', stdColor: STD_COLOR_GRADIENT.rgbAt(0.6).toHexString(), text: 'possible splice change',               range: '0.20–0.49' },
-  { color: '#0f6b63', stdColor: STD_COLOR_GRADIENT.rgbAt(1).toHexString(),   text: 'likely splice change',                 range: '≥0.50' },
+  { color: '#c7e9e5', stdColor: STD_COLOR_GRADIENT.rgbAt(0).toHexString(), text: 'no significant splice change',  range: 'neither significant' },
+  { color: '#0f6b63', stdColor: STD_COLOR_GRADIENT.rgbAt(1).toHexString(), text: 'Splice gain predicted',        range: 'gain significant' },
+  { color: '#0f6b63', stdColor: STD_COLOR_GRADIENT.rgbAt(1).toHexString(), text: 'Splice loss predicted',        range: 'loss significant' },
+  { color: '#0f6b63', stdColor: STD_COLOR_GRADIENT.rgbAt(1).toHexString(), text: 'Splice site change predicted', range: 'both significant' },
 ]
 
-export function pangolinScoreAttr(score: number): PredictionCategory {
-  if (score >= 0.5) return PANGOLIN_SCORE_ATTR[2]
-  if (score >= 0.2) return PANGOLIN_SCORE_ATTR[1]
-  return PANGOLIN_SCORE_ATTR[0]
+// category for the BE's label (none when no gain or loss is significant)
+export function pangolinAttr(p: Pangolin): PredictionCategory {
+  return PANGOLIN_SCORE_ATTR.find(a => a.text === p.label) ?? PANGOLIN_SCORE_ATTR[0]
 }
 
 const nt = (pos: number) => `${pos > 0 ? '+' : ''}${pos} nt`
@@ -35,12 +35,12 @@ export function pangolinDetail(p: Pangolin): string | null {
 export const PangolinPred = (props: { pangolin?: Pangolin, stdColor: boolean }) => {
   const p = props.pangolin
   if (!p) return <></>
-  const attr = pangolinScoreAttr(p.score)
+  const attr = pangolinAttr(p)
   const detail = pangolinDetail(p)
   return <div className="prediction-row">
     <div>Pangolin</div>
     <div>{p.score.toFixed(PRECISION)}</div>
-    <div title={`Pangolin splice prediction (max of gain and loss of splice-site usage within ±50 nt): ${detail ?? 'no change predicted'}. Not a pathogenicity classification.`}>
+    <div title={`Pangolin splice prediction (max of gain and loss of splice-site usage within ±50 nt): ${detail ?? 'no change predicted'}. Significant: splice site within 2 nt and score over 0.2, or within 8 nt and over 0.8. Not a pathogenicity classification.`}>
       <Icon name="circle-fill" style={{color: props.stdColor ? attr.stdColor : attr.color}} />
       <Spaces/>{attr.text}{detail && <small> ({detail})</small>}
     </div>
