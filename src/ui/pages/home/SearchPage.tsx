@@ -427,7 +427,7 @@ const SearchPage: React.FC = () => {
 
             {/* Under the box: a button per format, filling the box with examples of it */}
             <div className="format-examples" role="group" aria-label="Fill the box with examples">
-              <span className="format-examples-label">Fill with examples:</span>
+              <span className="format-examples-label">Show examples by format:</span>
               {FORMAT_EXAMPLES.map(f => (
                 <button key={f.label} type="button" className="format-example" title={f.tip}
                         onClick={() => { setVariantInput(f.value); setUploadedFile(null); setError(''); }}>

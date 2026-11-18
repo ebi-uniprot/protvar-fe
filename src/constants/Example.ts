@@ -15,22 +15,27 @@ export interface ExampleCard {
 const q = (input: string) => `${SEARCH}?q=${encodeURIComponent(input)}`;
 
 // --- Annotate: well-known variants, one per input type (the format chips cover the rest)
-const variant = (name: string, detail: string, input: string, tag: string, note: string): ExampleCard =>
-  ({ name, detail, code: input, tag, to: q(input), note });
+// view: extra URL params to open the result at, e.g. a panel and a highlighted prediction (ann=fun&pred=foldx)
+const variant = (name: string, detail: string, input: string, tag: string, note: string, view?: string): ExampleCard =>
+  ({ name, detail, code: input, tag, to: q(input) + (view ? `&${view}` : ''), note });
 
 export const ANNOTATE_CARDS: ExampleCard[] = [
-  variant('Sickle cell', 'HBB Glu7Val', 'rs334', 'dbSNP',
+  variant('Sickle cell anaemia associated variant', 'HBB Glu7Val', 'rs334', 'dbSNP',
     'The classic disease variant; Glu6Val in the older numbering without the initial Met'),
-  variant('Melanoma driver', 'BRAF Val600Glu', 'COSV56056643', 'COSMIC',
+  variant('Melanoma driver variant', 'BRAF Val600Glu', 'COSV56056643', 'COSMIC',
     'The most common BRAF cancer mutation, target of BRAF inhibitors'),
-  variant('Hidden splice defect', 'MLH1 Gly181= (synonymous)', 'NM_000249.4:c.543C>T', 'HGVS c.',
-    'No amino-acid change, yet pathogenic for Lynch syndrome (ClinVar, expert panel): Pangolin predicts a strong splicing effect (0.84)'),
-  variant('Tumour suppressor hotspot', 'TP53 Arg175His', 'VAR_005932', 'UniProt VAR',
-    'The most frequent TP53 mutation in cancer'),
-  variant('Pancreatic cancer driver', 'KRAS Gly12Asp', '12-25245350-C-T', 'gnomAD',
-    'A KRAS hotspot in pancreatic, colorectal and lung cancer'),
-  variant('Factor V Leiden', 'F5 Arg534Gln', 'VCV000000642', 'ClinVar',
-    'Common inherited clotting risk; AlphaMissense calls it benign, a reminder that predictors miss gain-of-function effects'),
+  variant('Splice-altering synonymous variant', 'MLH1 Gly181= (synonymous)', 'NM_000249.4:c.543C>T', 'HGVS c.',
+    'No amino-acid change, yet pathogenic for Lynch syndrome (ClinVar, expert panel): Pangolin predicts a strong splicing effect (0.84)',
+    'ann=fun&pred=pangolin'),
+  variant('Structure altering variant', 'TP53 Arg175His', 'VAR_005932', 'UniProt VAR',
+    'The most frequent TP53 mutation in cancer; opens on its FoldX stability prediction',
+    'ann=fun&pred=foldx'),
+  variant('Warfarin sensitivity', 'F9 Ala37Val', 'VAR_083981', 'UniProt VAR',
+    'Hypersensitivity to warfarin, commonly caused by a change to valine in European populations and threonine in South Asian populations',
+    'ann=pop'),
+  variant('EGFR pocket variant', 'EGFR Thr790Met', 'P00533 T790M', 'Protein',
+    'The bulky methionine can interfere with ligand binding; opens on the AlphaFill model',
+    'ann=str&structure=alphafill&zoom=true'),
 ];
 
 // --- Browse: an identifier (or none) with preset filters; known variants only (browse default)
