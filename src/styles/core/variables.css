@@ -47,6 +47,10 @@
     --color-brand-lightest: #e8f0f7;
     --color-brand-gradient: var(--color-brand-logo);   /* flat now; name kept for existing uses */
 
+    /* The page's bookends: the header in the brand blue, the institutional footer in a deep navy from it */
+    --color-header-bg: var(--color-brand-logo);
+    --color-footer-bg: #0b2b47;
+
     /* Grays */
     --color-gray-50: #f8f9fb;
     --color-gray-100: #f6f7f9;
@@ -254,6 +258,10 @@
            cards/panels separate on dense views like the result tables) */
         --color-bg-primary: #0e2438;
         --color-bg-secondary: #1c3a54;
+
+        /* bookends: a deeper brand blue header (the light one glares on a dark page); the footer below the page */
+        --color-header-bg: #0b3d68;
+        --color-footer-bg: #081a2b;
         --color-bg-tertiary: #21415c;
         --color-bg-elevated: #22455f;
 

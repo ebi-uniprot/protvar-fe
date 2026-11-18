@@ -7,7 +7,7 @@
     grid-template-columns: 2fr 1fr;
     gap: 2rem;
     padding: 2rem 1.5rem;
-    background-color: var(--color-bg-tertiary);
+    background-color: var(--color-bg-secondary);   /* the one tint for secondary bands */
     border-top: 1px solid var(--color-border-medium);
 }
 
@@ -69,8 +69,8 @@
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    padding: 1.5rem;
-    background-color: var(--color-bg-primary);
+    padding: 1.5rem 1.5rem 0.75rem;
+    background-color: var(--color-bg-secondary);   /* partners + status: one band */
     border-top: 1px solid var(--color-border-light);
 }
 
@@ -96,6 +96,11 @@
     transition: opacity var(--transition-slow);
 }
 
+/* the logos with a white background (Ensembl, VEP) lose it on the tinted band (light theme) */
+:root:not([data-theme="dark"]) .collaborator-img {
+    mix-blend-mode: multiply;
+}
+
 .partner-logos a:hover .collaborator-img {
     opacity: 0.75;
 }
@@ -115,7 +120,7 @@
    ============================================ */
 
 .ebi-footer {
-    background: #333;
+    background: var(--color-footer-bg);   /* deep navy from the brand blue (was a neutral #333) */
     color: #ccc;
     font-size: 12px;
 }
@@ -542,9 +547,8 @@
     flex-wrap: wrap;
     align-items: center;
     gap: 6px 16px;
-    padding: 10px 1.5rem;
-    background: var(--color-bg-secondary);
-    border-top: 1px solid var(--color-border-light);
+    padding: 6px 1.5rem 14px;
+    background: var(--color-bg-secondary);   /* continues the partners band, no rule between */
     font-size: var(--font-size-xs);
     color: var(--color-text-secondary);
 }

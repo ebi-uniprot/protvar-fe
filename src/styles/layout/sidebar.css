@@ -41,7 +41,7 @@
     min-height: var(--sidebar-rail-width);
     border: none;
     border-bottom: 1px solid var(--color-border-light);
-    background: var(--color-bg-tertiary);
+    background: var(--color-bg-secondary);    /* the one tint for secondary bands */
     color: var(--color-text-tertiary);
     cursor: pointer;
     flex-shrink: 0;

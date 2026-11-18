@@ -120,7 +120,7 @@
     z-index: calc(var(--z-sticky) + 1);   /* its search panel opens over the pinned mode bar / filter rail */
     border-bottom: 1px solid rgba(0,0,0,0.15);
     margin-bottom: 0;           /* no gap between masthead and content */
-    background: var(--color-brand-logo);   /* flat (was a navy gradient #014371 → #025a94 → #014371) */
+    background: var(--color-header-bg);   /* the brand blue; deeper in dark mode */
 }
 
 /* ============================================
