@@ -133,7 +133,9 @@ export const getNewPrimaryRow = (
   const aaChangeFormatted = `${isoform.refAA}${isoform.isoformPosition}${isoform.variantAA ?? '?'}`;
 
   const idValue = getIdValue(input);
-  const rowClass = `result-row ${index % 2 === 0 ? 'row-even' : 'row-odd'}${noteMarker ? ' has-note' : ''}`;
+  // an annotation of this row is open below it
+  const isSelected = [functionalKey, populationKey, structuralKey].includes(annotationExpanded);
+  const rowClass = `result-row ${index % 2 === 0 ? 'row-even' : 'row-odd'}${noteMarker ? ' has-note' : ''}${isSelected ? ' row-selected' : ''}`;
 
   const cells: Record<ColumnId, React.ReactNode> = {
         // User ID
@@ -406,7 +408,7 @@ export function AnnotationPanels({
         </div>
       )}
       {isOpen && (
-        <div className="result-annotation">
+        <div className={`result-annotation result-annotation--${openType?.toLowerCase()}`}>
           <div className="annotation-tabs">
             <div role="tablist" aria-label="Annotations" className="annotation-tablist">
               {tabKeys.map(([type, key]) => {

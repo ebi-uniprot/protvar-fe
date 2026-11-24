@@ -1123,3 +1123,45 @@
 .result-table--compact .result-card .card-row > * {
     padding-block: 2px;
 }
+
+/* Row whose annotation panel is open: a darker tint */
+.result-row.row-selected,
+.result-row.row-selected:hover {
+    background: #dbe5f6;
+}
+
+:root[data-theme="dark"] .result-row.row-selected,
+:root[data-theme="dark"] .result-row.row-selected:hover {
+    background: rgba(110, 168, 254, 0.18);
+}
+
+/* Open panel colour-coded by annotation (Version2 design): Function teal, Population amber, Structure green.
+   The panel stays neutral; the hue shows as the open tab's outline, top strip and icon, and the line under
+   the tab bar. Hues sit away from the table's blue; all three share one lightness/chroma (OKLCH L.60 C.11). */
+.result-annotation--fun { --ann-accent: #0090a9; }
+.result-annotation--pop { --ann-accent: #a67628; }
+.result-annotation--str { --ann-accent: #4a925c; }
+
+:root[data-theme="dark"] .result-annotation--fun { --ann-accent: #3db6cf; }
+:root[data-theme="dark"] .result-annotation--pop { --ann-accent: #cd9a50; }
+:root[data-theme="dark"] .result-annotation--str { --ann-accent: #6fb880; }
+
+.result-annotation .annotation-tabs {
+    border-bottom: 2px solid var(--ann-accent);
+}
+
+/* only the open tab overlaps the line (a hovered tab's background would otherwise cover half of it) */
+.result-annotation .annotation-tab {
+    height: 36px;
+    margin-bottom: 0;
+}
+
+.result-annotation .annotation-tab.active {
+    margin-bottom: -2px;
+    border-color: var(--ann-accent);
+    box-shadow: inset 0 1px 0 var(--ann-accent);   /* + the 1px border = 2px, same as the line below */
+}
+
+.result-annotation .annotation-tab.active svg {
+    color: var(--ann-accent);
+}
